@@ -1,4 +1,4 @@
- \newcommand{\version}{Draft Version 3.15}
+ \newcommand{\version}{Working Draft Version 3.15}
 
 % This file was initially converted to LaTeX by Writer2LaTeX ver. 1.1.8
 % (see http://writer2latex.sourceforge.net for more info)
@@ -15,42 +15,40 @@
 %\pdfcommenttrue
 \pdfcommentfalse
 
-\documentclass[%
+\documentclass[10pt,%
 \ifpretendfinal
 final%
 \else
 draft%
 \fi,
 %final,
-a4paper,
-wd]{isov2}
-%% Cleaning up things that isov2 gets wrong
-\makeatletter
-% Other packages define a more modern variant of \ifpdf
-\let\ifpdf\@undefined
-% Need to use the mathematical \begin{definition}…\end{definition} environment; that's incompatible with \definition from isov2; therefore we rename the latter
-\let\termdefinition\definition
-\let\definition\@undefined
-% manipulate the section counter, so that AMS-style theorems work
-\def\c@section{0}
-\makeatother
+]{scrreprt}
+
+
+
 
 %% Hacks
-\usepackage{savesym}
+%\usepackage{savesym}
 
 %% Font and language
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{textcomp}
-\usepackage{lmodern}
-\usepackage[scaled=.8]{beramono}
+%\usepackage{lmodern} % FN: commented out since OMG wants its own fonts
+%\usepackage[scaled=.8]{beramono} % FN: commented out since OMG wants its own fonts
+\usepackage{courier}
+\usepackage{helvet}
+
 % set up Unicode symbols
 \DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
 
+
+
+
 %% Math
 % \usepackage{mathtools}
-% reintroducing a math-style \begin{definition}...\end{definition} environment
+% reintroducing a math-style \begin{definition}…\end{definition} environment
 % \usepackage{amsthm}
 % \theoremstyle{definition}
 % \newtheorem{definition}{Definition}
@@ -85,9 +83,10 @@ wd]{isov2}
 \newcommand*{\vs}{vs.\@\xspace}
 \newcommand*{\wrt}{w.r.t.\@\xspace}
 % Quotes
-\usepackage[babel]{csquotes}
+\usepackage[babel]{csquotes} 
 \MakeAutoQuote{“}{”}
 \MakeAutoQuote*{‘}{’}
+% FN: can we remove that? the quotation marks lead to errors in my editor, so I removed them in the source code anyway. 
 
 %% Hyperref
 \usepackage[
@@ -172,6 +171,7 @@ author=,date=,id=,replyto=,type=}{}%
 %\usebox{CommentPrefix}
 #2}}
 
+
 \newcommand*{\reply}[2][]{%
 \initComment{#1}%
 \pdfreply[author=\CommentAuthor,color=CommentColor,date=\CommentDate,id=\CommentId,replyto=\CommentReplyTo]{%
@@ -186,29 +186,34 @@ author=,date=,id=,replyto=,type=}{}%
 
 % Hyperlinks don't work inside pdfcomment's PDF comments :-(
 \newcommand*{\todonoteURL}[1]{#1}
-\else % \ifpdfcomment
-\ifdr@ftd@c
-\usepackage[show]{ed}
-\else
-\usepackage[hide]{ed}
-\fi
+%\else % \ifpdfcomment
+%\ifdr@ftd@c
+%\usepackage[show]{ed}
+%\else
+%\usepackage[hide]{ed}
+%\fi
 % \usepackage[obeyDraft,textsize=tiny]{todonotes} % must load after tikz
 
-\newcommand*{\todonote}[2][]{%
+%FN I commented the above out, because I could not get it to work, instead I include
+\usepackage[show]{ed} 
+
+
+
+\renewcommand*{\todonote}[2][]{% FN: Changed newcommand to renewcommand
 \initComment{#1}%
 % TODO set color according to type
 % TODO display author (unless empty)
 % TODO display date (unless empty)
 \ednote{\CommentPrefix #2}}
 
-\newcommand*{\reply}[2][]{%
+\renewcommand*{\reply}[2][]{% FN: Changed newcommand to renewcommand
 \initComment{#1}%
 % TODO set color according to type
 % TODO display author (unless empty)
 % TODO display date (unless empty)
 \ednote{Reply: \CommentPrefix #2}}
 
-\newcommand*{\markupcomment}[3][]{%
+\renewcommand*{\markupcomment}[3][]{% FN: Changed newcommand to renewcommand
 \initComment{#1}%
 % TODO set color according to type
 % TODO display author (unless empty)
@@ -218,18 +223,22 @@ author=,date=,id=,replyto=,type=}{}%
 % dummy versions of some pdfcomment commands
 \renewcommand*{\textLF}{\\}
 
-\newcommand*{\todonoteURL}[1]{\url{#1}}
-\fi % \ifpdfcomment
+\renewcommand*{\todonoteURL}[1]{\url{#1}}
+%\fi % \ifpdfcomment FN: commented this out
 \makeatother
 \newcommand*{\ticket}[1]{\todonoteURL{http://trac.informatik.uni-bremen.de:8080/OntoIOp/ticket/#1}}
 
 % comment commands for frequent users
 \newcommand*{\CLnote}[2][author=Christoph Lange]{%
-\todonote[author=Christoph Lange,#1]{#2}}
+\todonote[author=Christoph Lange,#1]{#2} 
+}
+
+
+
 
 %% ISO structures not defined by isov2.cls, and additional semantic macros
 % cross-reference to a normative reference
-\newcommand*{\nisref}[1]{[#1]}
+\newcommand*{\nitem}[1]{[#1]}
 % reference from the definition of one term to another defined term
 \newcommand*{\termref}[1]{\textit{#1}}
 % subject field restriction of a term
@@ -255,7 +264,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand*{\hasto}{\textbf{has to}\xspace}
 
 % abbreviations
-\newcommand*{\IS}{OMG Standard\xspace}
+\newcommand*{\IS}{International Standard\xspace}
 
 %% Math macros
 %\newcommand{\Mod}{\ensuremath{\mathrm{Mod}}}
@@ -336,10 +345,6 @@ author=,date=,id=,replyto=,type=}{}%
   #5,&\mBox{otherwise}
 \end{array}\right.}
 
-%% Proper ISO preamble starts here
-\standard{OntoIOp -- DOL -- \version}
-\yearofedition{\today}
-\languageofedition{(E)}
 
 
 
@@ -360,85 +365,303 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\FOLToCL}{\translate\FOL\CL}
 
 %% Common Logic
+
+
 \newcommand{\holds}[1]{\ensuremath\mathtt{Holds}_{#1}\xspace}
 \newcommand{\apply}[1]{\ensuremath\mathtt{App}_{#1}\xspace}
 
 
-\begin{document}
-\pagenumbering{arabic}
+% FN: Latex Hacks by Fabian 
 
-\title{% We don't have an introductory title
-}{Ontology Integration and Interoperability (OntoIOp)}{
-%Part 1: The Distributed Ontology Language (DOL)
+% Sourcecode from isov2.cls
+\newcommand{\outofscopename}{The following are outside the scope of this }
+\newcommand{\pagename}{Page}
+%\newcommand{\tablename}{Table}
+\newcommand{\tbpname}{To be published.}
+\newcommand{\annexrefname}{annex}
+\newcommand{\clauserefname}{clause}
+\newcommand{\examplerefname}{example}
+\newcommand{\figurerefname}{Figure}
+\newcommand{\noterefname}{note}
+\newcommand{\tablerefname}{Table}
+\newcommand{\pagerefname}{page}
+%\newcommand{\abstractname}{}
+%\newcommand{\appendixname}{}
+%\newcommand{\chaptername}{}
+%\newcommand{\partname}{}
+\newcommand{\refname}{}
+\newcommand{\isourl}[1]{\texttt{<}\url{#1}\texttt{>}}
+\newcommand{\aref}[1]{\annexrefname~\ref{#1}}
+\newcommand{\bref}[1]{[\ref{#1}]}
+\newcommand{\cref}[1]{\clauserefname~\ref{#1}}
+\newcommand{\eref}[1]{\examplerefname~\ref{#1}}
+\newcommand{\fref}[1]{\figurerefname~\ref{#1}}
+\newcommand{\nref}[1]{\noterefname~\ref{#1}}
+\newcommand{\tref}[1]{\tablerefname~\ref{#1}}
+\newcommand{\pref}[1]{\pagerefname~\pageref{#1}}
+
+
+\newcommand{\rtm}[0]{\small{\textregistered\xspace}}
+\newcommand{\OMGparagraph}[1]{
+\vspace{3pt}
+{\centerline {#1}}
+\vspace{3pt}
 }
 
-\begin{cover}
+\newenvironment{symbols}[0]{\begin{longtable}{p{.15\textwidth}p{.84\textwidth}}}{\end{longtable}}
+\newcommand{\symboldef}[2]{ #1 & #2 \\}
 
-{\bf \Large \today~~ \version}
+%\renewcommand{\termref}[1]{#1} 
+\usepackage{textcomp}
 
-\todonote[author=Christoph Lange,date=D:201108212124+02'00']{How to read such comments:\textLF
-TODO: something that the authors are aware of and will do later\textLF
-Q-ALL: a question to everyone whom it concerns (usually all experts)\textLF
-Q-AUT: a question to the closer circle of authors of this document (i.e. the project team plus maybe a few others)\textLF
-@Person: Immediate question or request for help\textLF
-FYI: a note to inform the reader (any suggestions for rephrasing the text in a way that makes such a note obsolete are welcome)}
+\usepackage{longtable}
+
+\newcommand{\sectionWN}[1]{ \section*{#1}   \addcontentsline{toc}{section}{#1}  } 
+
+
+
+
+
+% Temporary Hacks (to be removed later or cleaned up) 
+\newcommand{\clause}[1]{\chapter{#1}}
+\newcommand{\sclause}[1]{\section{#1}}
+\newcommand{\ssclause}[1]{\subsection{#1}}
+\newcommand{\sssclause}[1]{\subsubsection{#1}}
+\newcommand{\termdefinition}[2]{\subsection*{#1}#2}
+\newcommand{\nisref}[1]{#1}
+
+
+\renewcommand{\subjectfield}[1]{#1}
+\renewcommand{\bref}[1]{#1}
+
+\newcommand{\normannex}[1]{ \chapter{Annex (normative): #1} }
+\newcommand{\infannex}[1]{ \chapter{Annex (informative): #1} }
+\newenvironment{definitions}[0]{\medskip }{}
+\newenvironment{note}[0]{\ \\ \textsc{Note} \quad}{}
+\newenvironment{example}[0]{\ \newline \textsc{Example}\quad }{}
+%\newenvironment{symbols}[0]{\medskip
+%	 \begin{tabbing} 
+%	OWL 2 Full XXXX  \= Text \kill
+%}{\end{tabbing}}
+
+%\usepackage{cleveref}
+%\renewcommand*{\todonote}[2][]{}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  FRONTMATTER:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\frontmatter
+
+% own memoir pagestyle
+
+\pagestyle{headings}  % switches on printing of running heads
+
+\begin{flushright}
+Date: \today
+\end{flushright}
+\begin{flushleft}
+\includegraphics{omglogo.jpeg}
+
+
+\bigskip\bigskip
+\bigskip\bigskip
+\bigskip
+%\HUGE{a}
+{\fontsize{30}{36}\selectfont Ontology, Model, and Specification Integration and Interoperability (OntoIOp)}
+
+\bigskip
+Version 1.0
+
+\bigskip\bigskip\bigskip\bigskip\bigskip\bigskip\
+
+\vskip\medskipamount % or other desired dimension
+\leaders\vrule width \textwidth\vskip2pt % or other desired thickness
+\vskip 12pt 
+\nointerlineskip
+
+OMG Document Number: \\
+Normative reference: \\
+Machine readable files(s): \\
+Normative: \\
+Non-normative: \\
+ 
+
+\vskip 12pt
+\leaders\vrule width \textwidth\vskip2pt % or other desired thickness
+\vskip\medskipamount % ditto
+\nointerlineskip
+\end{flushleft}
+
+\pagenumbering{gobble}% Remove page numbers (and reset to 1)
+\thispagestyle{empty}
+\clearpage
+
+\pagenumbering{roman} 
+
+
+\noindent Copyright \copyright 2014, Object Management Group, Inc.\\
+Copyright \copyright 2008, company name \\
+Copyright \copyright 2008, company name \\
+
+
+
+\OMGparagraph {USE OF SPECIFICATION - TERMS, CONDITIONS \& NOTICES}
+The material in this document details an Object Management Group specification in accordance with the terms, conditions and notices set forth below. This document does not represent a commitment to implement any portion of this specification in any company's products. The information contained in this document is subject to change without notice.
+
+\OMGparagraph{LICENSES}
+The companies listed above have granted to the Object Management Group, Inc. (OMG) a nonexclusive, royalty-free, paid up, worldwide license to copy and distribute this document and to modify this document and distribute copies of the modified version. Each of the copyright holders listed above has agreed that no person shall be deemed to have infringed the copyright in the included material of any such copyright holder by reason of having used the specification set forth herein or having conformed any computer software to the specification.
+Subject to all of the terms and conditions below, the owners of the copyright in this specification hereby grant you a fully-paid up, non-exclusive, nontransferable, perpetual, worldwide license (without the right to sublicense), to use this specification to create and distribute software and special purpose specifications that are based upon this specification, and to use, copy, and distribute this specification as provided under the Copyright Act; provided that: (1) both the copyright notice identified above and this permission notice appear on any copies of this specification; (2) the use of the specifications is for informational purposes and will not be copied or posted on any network computer or broadcast in any media and will not be otherwise resold or transferred for commercial purposes; and (3) no modifications are made to this specification. This limited permission automatically terminates without notice if you breach any of these terms or conditions. Upon termination, you will destroy immediately any copies of the specifications in your possession or control. 
+
+\OMGparagraph{PATENTS}
+The attention of adopters is directed to the possibility that compliance with or adoption of OMG specifications may require use of an invention covered by patent rights. OMG shall not be responsible for identifying patents for which a license may be required by any OMG specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. OMG specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents.
+
+\OMGparagraph{GENERAL USE RESTRICTIONS}
+Any unauthorized use of this specification may violate copyright laws, trademark laws, and communications regulations and statutes. This document contains information which is protected by copyright. All Rights Reserved. No part of this work covered by copyright herein may be reproduced or used in any form or by any means--graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems--without permission of the copyright owner.
+
+
+
+
+\OMGparagraph{DISCLAIMER OF WARRANTY}
+WHILE THIS PUBLICATION IS BELIEVED TO BE ACCURATE, IT IS PROVIDED ``AS IS'' AND MAY CONTAIN ERRORS OR MISPRINTS. THE OBJECT MANAGEMENT GROUP AND THE COMPANIES LISTED ABOVE MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS PUBLICATION, INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF TITLE OR OWNERSHIP, IMPLIED WARRANTY OF MERCHANTABILITY OR WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE OR USE.  IN NO EVENT SHALL THE OBJECT MANAGEMENT GROUP OR ANY OF THE COMPANIES LISTED ABOVE BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELIANCE OR COVER DAMAGES, INCLUDING LOSS OF PROFITS, REVENUE, DATA OR USE, INCURRED BY ANY USER OR ANY THIRD PARTY IN CONNECTION WITH THE FURNISHING, PERFORMANCE, OR USE OF THIS MATERIAL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. 
+
+The entire risk as to the quality and performance of software developed using this specification is borne by you. This disclaimer of warranty constitutes an essential part of the license granted to you to use this specification.
+
+\OMGparagraph{RESTRICTED RIGHTS LEGEND}
+Use, duplication or disclosure by the U.S. Government  is subject to the restrictions set forth in subparagraph (c) (1) (ii) of The Rights in Technical Data and Computer Software Clause at DFARS 252.227-7013 or in subparagraph (c)(1) and (2) of the Commercial Computer Software - Restricted Rights clauses at 48 C.F.R. 52.227-19 or as specified in 48 C.F.R. 227-7202-2 of the DoD F.A.R. Supplement and its successors, or as specified in 48 C.F.R. 12.212 of the Federal Acquisition Regulations and its successors, as applicable. The specification copyright owners are as indicated above and may be contacted through the Object Management Group, 140 Kendrick Street, Needham, MA 02494, U.S.A.
+
+\OMGparagraph{TRADEMARKS}
+MDA\rtm, Model Driven Architecture\rtm, UML\rtm, UML Cube logo\rtm, OMG Logo\rtm, CORBA\rtm\ and XMI\rtm\ are registered trademarks of the Object Management Group, Inc., and Object Management Group\texttrademark\xspace, OMG\texttrademark\xspace , Unified Modeling Language\texttrademark\xspace, Model Driven Architecture Logo\texttrademark\xspace, Model Driven Architecture Diagram\texttrademark\xspace, CORBA logos\texttrademark\xspace, XMI Logo\texttrademark\xspace, CWM\texttrademark\xspace, CWM Logo\texttrademark\xspace, IIOP\texttrademark\xspace , IMM\texttrademark\xspace , MOF\texttrademark\xspace , OMG Interface Definition Language (IDL)\texttrademark\xspace , and OMG  SysML\texttrademark\xspace\   are trademarks of the Object Management Group. All other products or company names mentioned are used for identification purposes only, and may be trademarks of their respective owners.
+
+\OMGparagraph{COMPLIANCE}
+The copyright holders listed above acknowledge that the Object Management Group (acting itself or through its designees) is and shall at all times be the sole entity that may authorize developers, suppliers and sellers of computer software to use certification marks, trademarks or other special designations to indicate compliance with these materials.
+Software developed under the terms of this license may claim compliance or conformance with this specification if and only if the software compliance is of a nature fully matching the applicable compliance points as stated in the specification. Software developed only partially matching the applicable compliance points may claim only that the software was based on this specification, but may not claim compliance or conformance with this specification. In the event that testing suites are implemented or approved by Object Management Group, Inc., software developed using this specification may claim compliance or conformance with the specification only if the software satisfactorily completes the testing suites.
+
+\newpage 
+\OMGparagraph{\large{\textbf{OMG's Issue Reporting Procedure}}}
+All OMG specifications are subject to continuous review and improvement. As part of this process we encourage readers to report any ambiguities, inconsistencies, or inaccuracies they may find by completing the Issue Reporting Form listed on the main web page http://www.omg.org, under Documents, Report a Bug/Issue (http://www.omg.org/technology/agreement.htm).
+
+\renewcommand{\contentsname}{Table of Contents}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   MAINMATTER --
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\mainmatter
+%\addtocmark{Introduction} % additional mark in the TOC
+%:MM
+
+
+
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+\sectionWN{OMG}
+
+Founded in 1989, the Object Management Group, Inc. (OMG) is an open membership, not-for-profit computer industry standards consortium that produces and maintains computer industry specifications for interoperable, portable, and reusable enterprise applications in distributed, heterogeneous environments. Membership includes Information Technology vendors, end users, government agencies, and academia. 
+
+OMG member companies write, adopt, and maintain its specifications following a mature, open process. OMG's specifications implement the Model Driven Architecture\textregistered\xspace (MDA\textregistered\xspace), maximizing ROI through a full-lifecycle approach to enterprise integration that covers multiple operating systems, programming languages, middleware and networking infrastructures, and software development environments. OMG's specifications include: UML\textregistered\xspace (Unified Modeling Language\texttrademark\xspace); CORBA\textregistered\xspace (Common Object Request Broker Architecture); CWM\texttrademark\xspace (Common Warehouse Metamodel); and industry-specific standards for dozens of vertical markets.
+
+More information on the OMG is available at http://www.omg.org/.
+
+
+\sectionWN{OMG Specifications}	
+
+As noted, OMG specifications address middleware, modeling and vertical domain frameworks. All OMG Specifications are available from the OMG website at:
+
+\url{http://www.omg.org/spec}
+
+\noindent Specifications are organized by the following categories:
+\begin{itemize}
+	\item  Business Modeling Specifications
+	\item Middleware Specifications
+	\begin{itemize}
+		\item CORBA/IIOP
+		\item Data Distribution Services
+		\item Specialized CORBA
+	\end{itemize}				
+	\item IDL/Language Mapping Specifications
+	\item Modeling and Metadata Specifications
+	\begin{itemize}	
+		\item UML, MOF, CWM, XMI
+		\item UML Profile										
+	\end{itemize}			
+	\item Modernization Specifications
+	\item Platform Independent Model (PIM), Platform Specific Model (PSM), Interface Specifications
+	\begin{itemize}	
+		\item CORBAServices
+		\item CORBAFacilities
+	\end{itemize}			
+	\item OMG Domain Specifications
+	\item CORBA Embedded Intelligence Specifications
+	\item CORBA Security Specifications
+\end{itemize}	
+
+\bigskip 
+\noindent
+All of OMG's formal specifications may be downloaded without charge from our website. (Products implementing OMG specifications are available from individual suppliers.) Copies of specifications, available in PostScript and PDF format, may be obtained from the Specifications Catalog cited above or by contacting the Object Management Group, Inc. at:
+
+\bigskip
+\noindent 
+OMG Headquarters \\
+140 Kendrick Street \\
+Building A, Suite 300 \\
+Needham, MA 02494 \\
+USA\\
+Tel: +1-781-444-0404\\
+Fax: +1-781-444-0320\\
+Email: \url{pubs@omg.org}\\
+
+\noindent Certain OMG specifications are also available as ISO standards. Please consult \url{http://www.iso.org}.
+
   
-%\clearpage
-\end{cover}
-\begin{foreword}
-%  \fwdbp
-%  \fwdnopatents
-
-  
-\end{foreword}
-\pagenumbering{arabic}
 
 
-\pagenumbering{arabic}
 
-\begin{introduction}
-An ontology is a formal description of the concepts and relationships
-that are of interest to an agent or a community of agents. Today,
-ontologies are applied in eBusiness, eHealth, eGovernment, eInclusion,
-eLearning, smart environments, ambient assisted living (AAL), and
-virtually all other information-rich endeavours. Ontologies have been
-used initially and principally for data and database integration
-through providing a common representation of the subject domain onto
-which the data sources can be mapped meaningfully. Over the years, the
-purpose has broadened beyond data and services interoperability to
-include a wide range of tasks and ontologies are used in information
-systems at run-time, such as being a component in \emph{in silico}
-scientific workflows, used for natural language processing, in
-ontology-driven querying of digital libraries, user profiling in
-recommender systems, adaptive e-Learning tools, and
-more.\todonote[author=Terry
-Longstreth,date=D:201110060000+02'00']{Terry Longstreth:
-  Interoperability in this context seems to be mutual consistency?
-  Fostering Mutual Consistency among disjoint ontological formalisms
-  (intensions) and their realisations (extensions). TM: yes, but more
-  than that: also interfacability, such that the joint use in a common
-  application scenario is enabled.}
 
-  In complex applications, which involve multiple ontologies with overlapping concept spaces, data mapping is also required on a higher level of abstraction, viz.\ between different ontologies, and is then called ontology alignment.  While ontology alignment is most commonly studied for ontologies formalized\CLnote{spell-check everything for British} in the same ontology language, the different ontologies used by complex applications may also be written in different ontology languages. This international standard faces this diversity not by proposing yet another ontology language that would subsume all the others.  Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) to compare and integrate ontologies that are written in different formalisms. It specifies DOL (Distributed Ontology Language), a formal language for expressing not only ontologies but also links between ontologies formalized in different ontology languages.
+\sectionWN{Typographical Conventions}
+The type styles shown below are used in this document to distinguish programming statements from ordinary English. However, these conventions are not used in tables or section headings where no distinction is necessary.
 
-Thus, it gives interoperability a formal grounding and makes heterogeneous ontologies and services based on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences, and compliance).
+\medskip \noindent
+Times/Times New Roman - 10 pt.:  Standard body text
 
-Ontology languages are declarative languages for making ontological distinctions formally precise. They are distinguished by the following features:
+\medskip \noindent
+{\fontencoding{T1}\fontfamily{phv}\fontseries{b}\fontshape{n}\selectfont
+Helvetica/Arial - 10 pt. Bold: } OMG Interface Definition Language (OMG IDL) and syntax elements.
 
-\begin{description}
-\item[Logic] Most commonly, ontology languages are based on a description logic or some other subset of first order logic, but in some cases, also higher-order, modal, paraconsistent and other logics are used.
-\item[Modularity] means of structuring an ontology into reusable parts, reusing parts of other ontologies, mapping imported symbols to those in the importing ontology, and asserting additional properties about imported symbols.
-\item[Annotation] means of attaching human-readable descriptions to ontology symbols, addressing knowledge engineers and service developers, but also end users of ontology-based services.\ednote{TODO Christoph: reformulate. DOL enables the use of annotations}
-\end{description}
-Whereas the first feature determines the expressivity of the language and the possibilities for automated reasoning (decidability, tractability, etc.), the latter two intend to facilitate ontology engineering as well as the engineering of ontology-based software.
 
-Within the DOL framework, existing ontologies in conforming established languages such as OWL or Common Logic remain as they are, acknowledging the wide tool support these languages enjoy.  DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. DOL's modularity and annotation constructs can either be embedded into existing ontologies as non-disruptive annotations, or they can be provided as standoff markup, pointing to the ontologies they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported ontology languages.
+\medskip \noindent
+\texttt{\textbf {Courier - 10 pt. Bold:}}  Programming language elements.
 
-\scopeclause{}
+\medskip \noindent
+{\fontencoding{T1}\fontfamily{phv}\fontseries{m}\fontshape{n}\selectfont
+Helvetica/Arial - 10 pt.: } Exceptions
 
+\medskip\noindent
+NOTE:   Terms that appear in italics are defined in the glossary. Italic text also represents the name of a document, specification, or other publication.
+
+\sectionWN{Issues}	
+The reader is encouraged to report any technical or editing issues/problems with this specification to \url{http://www.omg.org/report_issue.htm}.
+
+
+
+
+
+
+
+
+
+
+\chapter{Scope}
+\pagenumbering{arabic} 
 This \IS specifies the Distributed Ontology Language (DOL) designed to achieve ontology integration and interoperability. DOL is a language for distributed knowledge representation across multiple ontologies, particularly ontologies that have been formalized in different ontology languages.
 
-The following features are essential to the design of this \IS\CLnote[date=D:201110060000+02'00']{Proposal for restructuring this (due to Michael Grüninger):\textLF
+The following features are essential to the design of this \IS
+\CLnote{[date=D:201110060000+02'00']Proposal for restructuring this (due to Michael Gr{\"u}ninger):
+\textLF
 \begin{enumerate}
 \item heterogeneity
 \item modularity
@@ -450,14 +673,14 @@ The following features are essential to the design of this \IS\CLnote[date=D:201
 \end{enumerate}
 \item writing ontologies that have multiple parts
 \end{enumerate}
-\item mappings (or should we say “links”)
+\item mappings (or should we say ``links'')
 \item annotation
 \end{enumerate}
 }:
 
 \begin{itemize}
 \item DOL is a declarative language with a formal semantics for modular ontologies that consist of structured ontologies that are possibly heterogeneous, i.e.\ are written within the same or in different ontology languages, and made available at different Web locations.
-\item DOL provides a superset of the modularization and annotation facilities of a number of commonly used ontology languages, including OWL \nisref{W3C/TR REC-owl2-syntax:2009} and Common Logic \nisref{ISO/IEC 24707:2007}\footnote{See \cref{c:req:extensible} for details.}.
+\item DOL provides a superset of the modularization and annotation facilities of a number of commonly used ontology languages, including OWL \nitem{W3C/TR REC-owl2-syntax:2009} and Common Logic \nitem{ISO/IEC 24707:2007}\footnote{See \cref{c:req:extensible} for details.}.
 \item DOL is an open, extensible standard that is not restricted to a fixed set of supported ontology language but specifies criteria for any existing or future ontology language to conform with DOL.
 \item Existing ontologies in languages conforming with DOL remain as they are; they can be enriched with DOL's modularity and annotation constructs in a non-disruptive way.
 \end{itemize}
@@ -478,55 +701,61 @@ and sentences
 \end{enumerate}
 
 
-\begin{outofscope}{\IS}
-\item the (re)definition of elementary ontology languages, \ie languages that allow for declaring ontology non-logical symbols\CLnote[type=todo]{We somehow need to rephrase this (here and elsewhere); it reads quite ugly.  Maybe just say “non-logical symbols”?  Or, if absolutely necessary, reorder the words into “non-logical ontology symbols”.} and
+The following are outside the scope of this \IS:
+\begin{enumerate}
+\item the (re)definition of elementary ontology languages, \ie languages that allow for declaring ontology non-logical symbols 
+\CLnote[type=todo]{We somehow need to rephrase this (here and elsewhere); it reads quite ugly.  Maybe just say ``non-logical symbols''?  Or, if absolutely necessary, reorder the words into ``non-logical ontology symbols''.} 
+and
 stating sentences about them
 \item algorithms for obtaining links between ontologies
 \item concrete ontologies and their conceptualization and application
 %% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
 % \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
 \item mappings between services and devices, and definitions of service and device interoperability.
-\end{outofscope}
+\end{enumerate}
+
 This \IS describes the syntax and the semantics of the Distributed Ontology Language (DOL) by defining an abstract syntax and an associated model-theoretic semantics for DOL. DOL does not provide a new elementary ontology language, but provides a layer to be used on top of existing elementary ontology languages which enables ontology engineers to formally express links between ontologies written in different languages and stored at different Web locations. The purpose of such distributed ontologies is enabling a greater extent of interoperability between data and services in complex application settings.
-\end{introduction}
 
-\normrefsclause\label{c:nrefs}
+\chapter{Conformance}
+\chapter{Normative References}
 
-\normrefbp{\IS}
 
-\begin{nreferences}
+\begin{itemize}
 % OLD text
 % The following referenced documents are indispensable for the application of this document. For dated references, only
 % the edition cited applies. For undated references, the latest edition of the referenced document (including any
 % amendments) applies.
-  \isref{W3C/TR REC-owl2-syntax:2009}{OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax. W3C Recommendation, 27 October 2009. \url{http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/}}
-  \isref{ISO/IEC 14977:1996}{Information technology – Syntactic metalanguage – Extended BNF}
-  \isref{W3C/TR REC-xml:2008}{Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
-  \isref{W3C/TR REC-owl2-profiles:2009}{OWL 2 Web Ontology Language: Profiles. W3C Recommendation, 27 October 2009. \url{http://www.w3.org/TR/2009/REC-owl2-profiles-20091027/}}
-  \isref{ISO/IEC 24707:2007}{Information technology – Common Logic (CL): a framework for a family of logic-based languages}
-  \isref{OMG Document ptc/2010-11-14:}{OMG Unified Modeling Language™ (OMG UML), Superstructure, Version 2.4. \url{http://www.omg.org/spec/UML/2.4/Superstructure}. Section 7 (Classes)}
-  \isref{IETF/RFC 3986}{Uniform Resource Identifier (URI): Generic Syntax. January 2005. \url{http://tools.ietf.org/html/rfc3986}}
-  \isref{IETF/RFC 3987}{Internationalized Resource Identifiers (IRIs). January 2005. \url{http://tools.ietf.org/html/rfc3987}}
-  \isref{IETF/RFC 5147}{URI Fragment Identifiers for the text/plain Media Type.  April 2008. \url{http://tools.ietf.org/html/rfc5147}}
-  \isref{W3C/TR REC-rdf-concepts:2004}{Resource Description Framework (RDF): Concepts and Abstract Syntax.  W3C Recommendation, 02 February 2004.  \url{http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/}}
-  \isref{W3C/TR REC-xml-names:2009}{Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009. \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
-  \isref{W3C/TR REC-rdfa-core-20120607}{RDFa Core 1.1.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 07 June 2012. \url{http://www.w3.org/TR/2012/REC-rdfa-core-20120607/}}
+  \item{W3C/TR REC-owl2-syntax:2009}{OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax. W3C Recommendation, 27 October 2009. \url{http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/}}
+  \item{ISO/IEC 14977:1996}{Information technology – Syntactic metalanguage – Extended BNF}
+  \item{W3C/TR REC-xml:2008}{Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
+  \item{W3C/TR REC-owl2-profiles:2009}{OWL 2 Web Ontology Language: Profiles. W3C Recommendation, 27 October 2009. \url{http://www.w3.org/TR/2009/REC-owl2-profiles-20091027/}}
+  \item{ISO/IEC 24707:2007}{Information technology – Common Logic (CL): a framework for a family of logic-based languages}
+  \item{OMG Document ptc/2010-11-14:}{OMG Unified Modeling Language™ (OMG UML), Superstructure, Version 2.4. \url{http://www.omg.org/spec/UML/2.4/Superstructure}. Section 7 (Classes)}
+  \item{IETF/RFC 3986}{Uniform Resource Identifier (URI): Generic Syntax. January 2005. \url{http://tools.ietf.org/html/rfc3986}}
+  \item{IETF/RFC 3987}{Internationalized Resource Identifiers (IRIs). January 2005. \url{http://tools.ietf.org/html/rfc3987}}
+  \item{IETF/RFC 5147}{URI Fragment Identifiers for the text/plain Media Type.  April 2008. \url{http://tools.ietf.org/html/rfc5147}}
+  \item{W3C/TR REC-rdf-concepts:2004}{Resource Description Framework (RDF): Concepts and Abstract Syntax.  W3C Recommendation, 02 February 2004.  \url{http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/}}
+  \item{W3C/TR REC-xml-names:2009}{Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009. \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
+  \item{W3C/TR REC-rdfa-core-20120607}{RDFa Core 1.1.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 07 June 2012. \url{http://www.w3.org/TR/2012/REC-rdfa-core-20120607/}}
   % This standard has no unique year, as it consist of multiple parts (see http://tools.ietf.org/html/rfc3629#ref-ISO.10646)
-  \isref{ISO/IEC 10646}{Information technology – Universal Multiple-Octet coded Character Set (UCS)}
-  %\isref{W3C/TR REC-rdf-sparql-query:2008}{SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
-  \isref{W3C/TR REC-rdf-schema:2004}{RDF Vocabulary Description Language 1.0: RDF Schema. W3C Recommendation, 10 February 2004.\\ \url{http://www.w3.org/TR/2004/REC-rdf-schema-20040210/}}
-  \isref{W3C/TR REC-rdf-mt:2004}{RDF Semantics.  W3C Recommendation, 02 February 2004.  \url{http://www.w3.org/TR/2004/REC-rdf-mt-20040210/}}
-\end{nreferences}
+  \item{ISO/IEC 10646}{Information technology – Universal Multiple-Octet coded Character Set (UCS)}
+  %\item{W3C/TR REC-rdf-sparql-query:2008}{SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
+  \item{W3C/TR REC-rdf-schema:2004}{RDF Vocabulary Description Language 1.0: RDF Schema. W3C Recommendation, 10 February 2004.\\ \url{http://www.w3.org/TR/2004/REC-rdf-schema-20040210/}}
+  \item{W3C/TR REC-rdf-mt:2004}{RDF Semantics.  W3C Recommendation, 02 February 2004.  \url{http://www.w3.org/TR/2004/REC-rdf-mt-20040210/}}
+\end{itemize}
 \todonote[author=Christoph Lange,date=D:201107301339+02'00',type=q-all]{I have listed them roughly in the order of occurrence: OK?}
 
 
-\defclause
+
+
+\chapter{Terms and Definitions}
 
 For the purposes of this document, the following terms and definitions apply.
 
 \sclause{Ontologies}
 
 \begin{definitions}
+
   \termdefinition{ontology}{set of expressions (like \termref{non-logical symbols}, \termref{sentences} and \termref{structuring} elements) in a  given \termref{ontology language}}%
 \begin{note}
 	An \termref{ontology} can be written in different \termref{ontology language} \termref{serializations}.
@@ -539,7 +768,7 @@ For the purposes of this document, the following terms and definitions apply.
   
   \termdefinition{non-logical symbol}{atomic expression or syntactic constituent of an \termref{ontology} that requires an interpretation through a \termref{model}}
   \begin{example}
-    Non-logical symbols in OWL \nisref{W3C/TR REC-owl2-syntax:2009} (there called “entities”) comprise
+    Non-logical symbols in OWL \nisref{W3C/TR REC-owl2-syntax:2009} (there called ``entities'') comprise
     \begin{itemize}
     \item individuals (denoting objects from the domain of discourse),
     \item classes (denoting sets of objects; also called concepts), and
@@ -572,7 +801,7 @@ For the purposes of this document, the following terms and definitions apply.
   
   \termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms)}
   
-  \termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.\CLnote[type=fyi]{From Common Logic, I changed “unit of logical text” to “term”.}}
+  \termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.\CLnote[type=fyi]{From Common Logic, I changed ``unit of logical text'' to ``term''.}}
   \begin{note}
     In a \termref{model}, on the one hand, a sentence is always true or false. In an \termref{ontology}, on the other hand, a sentence can have several logical statuses: it can be an axiom, if postulated to be true; a theorem, if proven from other axioms and theorems; a conjecture, if expecting to be proven from other axioms and theorems; or have another of many possible statuses.
   \end{note}
@@ -599,10 +828,10 @@ For the purposes of this document, the following terms and definitions apply.
 \begin{definitions}
   \termdefinition{resource\subjectfield{web}}{something that can be globally identified}
   \begin{note}
-    \nisref{IETF/RFC 3986:2005, Section 1.1} deliberately defines a resource as “in a general sense \textelp{} whatever might be identified by \textins*{an IRI}”.  The original source refers to URIs, but DOL uses the compatible IRI standard \nisref{IETF/RFC 3987:2005} for identification.
+    \nisref{IETF/RFC 3986:2005, Section 1.1} deliberately defines a resource as ``in a general sense \textelp{} whatever might be identified by \textins*{an IRI}''.  The original source refers to URIs, but DOL uses the compatible IRI standard \nisref{IETF/RFC 3987:2005} for identification.
   \end{note}
   \begin{example}
-    Familiar examples include an electronic document, an image, a source of information with a consistent purpose (\eg, “today's weather report for Los Angeles”), a service (\eg, an HTTP-to-SMS gateway), and a collection of other resources. A resource is not necessarily accessible via the Internet; \eg, human beings, corporations, and bound books in a library can also be resources. Likewise, abstract concepts can be resources, such as the operators and operands of a mathematical equation, the types of a relationship (\eg, “parent” or “employee”), or numeric values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
+    Familiar examples include an electronic document, an image, a source of information with a consistent purpose (\eg, ``today's weather report for Los Angeles''), a service (\eg, an HTTP-to-SMS gateway), and a collection of other resources. A resource is not necessarily accessible via the Internet; \eg, human beings, corporations, and bound books in a library can also be resources. Likewise, abstract concepts can be resources, such as the operators and operands of a mathematical equation, the types of a relationship (\eg, ``parent'' or ``employee''), or numeric values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
   \end{example}
   \termdefinition{element\subjectfield{ontology}\todonote[author=Christoph Lange,date=D:201111151622+01'00',type=fyi]{This term is adopted from OWL 2, where it is used, but in a non-normative context.}}{any \termref{resource} in an \termref{ontology} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{ontology} itself, ...) or a named set of such \termref{resources}}
   
@@ -611,11 +840,12 @@ For the purposes of this document, the following terms and definitions apply.
     The linked data principles (adapted from \bref{BernersLee:LinkedData2006} and its paraphrase at \bref{Wikipedia:LinkedData2011}) are the following:
     \begin{enumerate}
     \item Use IRIs as names for things.
-    \item Use HTTP IRIs so that these things can be referred to and looked up (“dereferenced”) by people and user agents.\footnote{I.e., the IRI is treated as a URL (uniform resource locator).}
+    \item Use HTTP IRIs so that these things can be referred to and looked up (``dereferenced'') by people and user agents.\footnote{I.e., the IRI is treated as a URL (uniform resource locator).}
     \item Provide useful machine-processable (plus optionally human-readable) information about the thing when its IRI is dereferenced, using standard formats.
     \item Include links to other, related IRIs in the exposed data to improve discovery of other related information on the Web.
     \end{enumerate}
   \end{note}
+
   \begin{note}
     RDF, serialized as RDF/XML \bref{W3C:REC-rdf-syntax-grammar-20040210}, is the most common format for publishing linked data.  However, its usage is not mandatory.
   \end{note}
@@ -632,16 +862,16 @@ For the purposes of this document, the following terms and definitions apply.
     Formally, an annotation is given as a $(\text{subject}, \text{predicate}, \text{object})$ triple as defined by \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 6}.  The subject of an annotation is an \termref{element} of an ontology.  The predicate is an RDF property defined in an external ontology and describes in what way the annotation object is related to the annotation subject.
   \end{note}
   \begin{note}
-    According to note~\ref{note:annotation-rdf} it is possible to interpret annotations under an RDF semantics.  “Without a logical semantics” in this definition means that annotations to an ontology are not considered sentences of the ontology.
+    According to note~\ref{note:annotation-rdf} it is possible to interpret annotations under an RDF semantics.  ``Without a logical semantics'' in this definition means that annotations to an ontology are not considered sentences of the ontology.
   \end{note}
 
-  % \termdefinition{datatype}{“consists of a lexical space, a value space and a lexical-to-value mapping \textins{and} is identified by one or more URI
-  %   references” \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 5}}
+  % \termdefinition{datatype}{``consists of a lexical space, a value space and a lexical-to-value mapping \textins{and} is identified by one or more URI
+  %   references'' \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 5}}
   % \begin{note}
-  %   “Datatypes are used \textelp{} in the representation of values such as integers, floating point numbers and dates.” \nisref{W3C/TR REC-rdf-concepts:2004, Section 3.3}     
+  %   ``Datatypes are used \textelp{} in the representation of values such as integers, floating point numbers and dates.'' \nisref{W3C/TR REC-rdf-concepts:2004, Section 3.3}     
   % \end{note}
   
-  % \termdefinition{literal}{“contains one or two named components. All literals have a lexical form being a Unicode\todonote[author=Christoph Lange,date=D:201109071635+02'00',type=q-all]{The RDF spec cites Unicode here; do we also have to cite Unicode, or can we ``inherit'' that from the RDF spec?  Note that meanwhile we have \nisref{ISO/IEC 10646}.} [UNICODE] string, which SHOULD be in Normal Form C [NFC]. Plain literals have a lexical form and optionally a language tag as defined by [RFC-3066], normalized to lowercase. Typed literals have a lexical form and a datatype URI being an RDF URI reference.” \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 6.5}}
+  % \termdefinition{literal}{``contains one or two named components. All literals have a lexical form being a Unicode\todonote[author=Christoph Lange,date=D:201109071635+02'00',type=q-all]{The RDF spec cites Unicode here; do we also have to cite Unicode, or can we ``inherit'' that from the RDF spec?  Note that meanwhile we have \nisref{ISO/IEC 10646}.} [UNICODE] string, which SHOULD be in Normal Form C [NFC]. Plain literals have a lexical form and optionally a language tag as defined by [RFC-3066], normalized to lowercase. Typed literals have a lexical form and a datatype URI being an RDF URI reference.'' \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 6.5}}
   % \begin{note}
   %   Literals are used to identify values such as numbers and dates by means of a lexical representation. Anything represented by a literal could also be represented by a URI, but it is often more convenient or intuitive to use literals. \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 3.4}    
   % \end{note}
@@ -755,7 +985,7 @@ An \termref{extension} $O_2$ of an \termref{ontology} $O_1$ is a weak definition
     Cited and slightly adapted from \bref{SuarezFigueroaEtAl:OntologyGlossary2008}
   \end{note}
   \begin{note}
-    The goal of module extraction is “decomposing an ontology into smaller, more manageable modules with appropriate dependencies” \bref{DAquin:OntologyExtraction2010}
+    The goal of module extraction is ``decomposing an ontology into smaller, more manageable modules with appropriate dependencies'' \bref{DAquin:OntologyExtraction2010}
   \end{note}
   \begin{example}
     Consider an OWL DL ontology about wines, from which we would like to extract a module about white wines. That module would contain the declaration of the non-logical symbol ``white wine'', all declarations of non-logical symbols related to ``white wine'', and all sentences about all of these non-logical symbols.
@@ -770,12 +1000,11 @@ An \termref{extension} $O_2$ of an \termref{ontology} $O_1$ is a weak definition
     See \bref{circ1}, \bref{circ2}.
   \end{note}
 
-
 \sclause{Links Between Ontologies}
 
   \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{ontology} $O_1$ and an \termref{non-logical symbol} $e_2$ from an ontology $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from \termref{non-logical symbols} from $O_2$
   \begin{note}
-  A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context (``equivalence'' for alignments, and ``equality'' for logical links)\CLnote[type=q-aut]{For interpretations that is the only viable way, but for alignments?  Is there any reasonable “implied default”, or should we let R default to something like owl:sameAs?}; when $c$ is omitted, it defaults to $1$.}
+  A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context (``equivalence'' for alignments, and ``equality'' for logical links)\CLnote[type=q-aut]{For interpretations that is the only viable way, but for alignments?  Is there any reasonable ``implied default'', or should we let R default to something like owl:sameAs?}; when $c$ is omitted, it defaults to $1$.}
   \end{note}
 
   \begin{note}
@@ -886,10 +1115,10 @@ and annotations}
     Serializations serve as standard formats for exchanging ontologies between tools.
   \end{note}
   \begin{example}
-    OWL uses the term “serialization”; the following are standard OWL serializations: OWL functional-style syntax, OWL XML, OWL Manchester syntax, plus any serialization of RDF (\eg RDF/XML, Turtle, ...)
+    OWL uses the term ``serialization''; the following are standard OWL serializations: OWL functional-style syntax, OWL XML, OWL Manchester syntax, plus any serialization of RDF (\eg RDF/XML, Turtle, ...)
   \end{example}
   \begin{example}
-    Common Logic uses the term “dialect”; the following are standard Common Logic dialects: Common Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (GCIF), eXtended Common Logic Markup Language (XCL).
+    Common Logic uses the term ``dialect''; the following are standard Common Logic dialects: Common Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (GCIF), eXtended Common Logic Markup Language (XCL).
   \end{example}
 
   \termdefinition{standoff markup}{way of providing \termref{annotations} to subjects in external resources, without embedding them into the original resource (here: \termref{ontology})}
@@ -952,7 +1181,7 @@ and annotations}
   
 \sclause{Interoperability}
 
-~\todonote[author=Christoph Lange,type=todo]{possibly define some notion of “interoperability” that is tailored to this international standard.  At least we need to be able to speak about overall consistency, alignments, etc.}\\
+~\todonote[author=Christoph Lange,type=todo]{possibly define some notion of ``interoperability'' that is tailored to this international standard.  At least we need to be able to speak about overall consistency, alignments, etc.}\\
 ~\todonote[author=Christoph Lange,type=fyi]{Definitions in earlier drafts were not quite helpful:\textLF
 {\textbullet} ontology integration := ``combination of different ontologies into a coherent whole, via alignments''\textLF
 {\textbullet}ontology interoperability := ``relation among ontologies (via ontology alignments) with the goal of using them jointly in an application scenario''\textLF
@@ -993,12 +1222,12 @@ TODO Michael: explain the relationship to other notions of interoperability (fro
 \end{note}
 \end{definitions}
 
-\symabbclause
+\chapter{Symbols}
 
 As listed below, these symbols and abbreviations are generally for the main clauses of the standard. Some annexes may introduce their own symbols and abbreviations which will be grouped together within that annex.
 
 \begin{symbols}
-\symboldef{CASL}{Common Algebraic Specification Language, specified by the Common Frame\-work Initiative}
+\symboldef{CASL}{Common Algebraic Specification Language, specified by the Common Framework Initiative}
 \symboldef{CGIF}{Conceptual Graph Interchange Format}
 \symboldef{CL}{Common Logic }
 \symboldef{CLIF}{Common Logic Interchange Format}
@@ -1028,7 +1257,49 @@ As listed below, these symbols and abbreviations are generally for the main clau
 \symboldef{XML}{eXtensible Markup Language}
 \end{symbols}
 
-\clause{Requirements and design overview}
+
+\chapter{Additional Information}
+An ontology is a formal description of the concepts and relationships
+that are of interest to an agent or a community of agents. Today,
+ontologies are applied in eBusiness, eHealth, eGovernment, eInclusion,
+eLearning, smart environments, ambient assisted living (AAL), and
+virtually all other information-rich endeavours. Ontologies have been
+used initially and principally for data and database integration
+through providing a common representation of the subject domain onto
+which the data sources can be mapped meaningfully. Over the years, the
+purpose has broadened beyond data and services interoperability to
+include a wide range of tasks and ontologies are used in information
+systems at run-time, such as being a component in \emph{in silico}
+scientific workflows, used for natural language processing, in
+ontology-driven querying of digital libraries, user profiling in
+recommender systems, adaptive e-Learning tools, and
+more.\todonote[author=Terry
+Longstreth,date=D:201110060000+02'00']{Terry Longstreth:
+  Interoperability in this context seems to be mutual consistency?
+  Fostering Mutual Consistency among disjoint ontological formalisms
+  (intensions) and their realisations (extensions). TM: yes, but more
+  than that: also interfacability, such that the joint use in a common
+  application scenario is enabled.}
+
+  In complex applications, which involve multiple ontologies with overlapping concept spaces, data mapping is also required on a higher level of abstraction, viz.\ between different ontologies, and is then called ontology alignment.  While ontology alignment is most commonly studied for ontologies formalized\CLnote{spell-check everything for British} in the same ontology language, the different ontologies used by complex applications may also be written in different ontology languages. This international standard faces this diversity not by proposing yet another ontology language that would subsume all the others.  Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) to compare and integrate ontologies that are written in different formalisms. It specifies DOL (Distributed Ontology Language), a formal language for expressing not only ontologies but also links between ontologies formalized in different ontology languages.
+
+Thus, it gives interoperability a formal grounding and makes heterogeneous ontologies and services based on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences, and compliance).
+
+Ontology languages are declarative languages for making ontological distinctions formally precise. They are distinguished by the following features:
+
+\begin{description}
+\item[Logic] Most commonly, ontology languages are based on a description logic or some other subset of first order logic, but in some cases, also higher-order, modal, paraconsistent and other logics are used.
+\item[Modularity] means of structuring an ontology into reusable parts, reusing parts of other ontologies, mapping imported symbols to those in the importing ontology, and asserting additional properties about imported symbols.
+\item[Annotation] means of attaching human-readable descriptions to ontology symbols, addressing knowledge engineers and service developers, but also end users of ontology-based services.\ednote{TODO Christoph: reformulate. DOL enables the use of annotations}
+\end{description}
+Whereas the first feature determines the expressivity of the language and the possibilities for automated reasoning (decidability, tractability, etc.), the latter two intend to facilitate ontology engineering as well as the engineering of ontology-based software.
+
+Within the DOL framework, existing ontologies in conforming established languages such as OWL or Common Logic remain as they are, acknowledging the wide tool support these languages enjoy.  DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. DOL's modularity and annotation constructs can either be embedded into existing ontologies as non-disruptive annotations, or they can be provided as standoff markup, pointing to the ontologies they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported ontology languages.
+
+%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%% 
+\chapter{Requirements and design overview}
 
 \CLnote[type=todo]{Get rid of formal \should/\shall language (e.g.\ in clause headers: \should/\shall applies to conforming implementations anyway, rather than to this standard itself!) – not necessary in an informative clause. TM: I did this in the clause headings, and for the design part also in the clause texts.}
 
@@ -1040,13 +1311,13 @@ However, DOL cannot be used for writing new basic ontologies.}
 
 \todonote{add ref to annex K}
 
-\sclause{DOL requirements}\label{c:req:overview}
+\section{DOL requirements}\label{c:req:overview}
 
-DOL has been designed and developed with several requirements in mind, all arising from its intended role of enabling ontology interoperability. The use of “{\should}” in the rest of clause 5 indicates a desired goal but is not required of DOL (in accordance with Annex H of ISO/IEC Directives -- Part 2).
+DOL has been designed and developed with several requirements in mind, all arising from its intended role of enabling ontology interoperability. The use of ``{\should}'' in the rest of clause 5 indicates a desired goal but is not required of DOL (in accordance with Annex H of ISO/IEC Directives -- Part 2).
 
 \CLnote[type=todo]{give quick overview here.  Create clause 5.2 for requirements, and 5.3 for design overview. TM: done}
 
-\ssclause{DOL is free, generally applicable, open, and extensible.}\label{c:req:extensible}
+\subsection{DOL is free, generally applicable, open, and extensible.}\label{c:req:extensible}
 
 DOL \should be
 \begin{description}
@@ -1063,9 +1334,9 @@ DOL \shall be applicable to any ontology language that has a formal, logic-based
 \item[informative] F-logic,  UML class diagrams, OBO (see appendix~\ref{a:ext-graph} for a longer list)
 \end{description}
 
-\ssclause{DOL is a logic-agnostic metalanguage, in the sense that its constructs can be used for many different logics.}\label{c:req:agnostic}
+\subsection{DOL is a logic-agnostic metalanguage, in the sense that its constructs can be used for many different logics.}\label{c:req:agnostic}
 
-\CLnote{here and elsewhere: remove “shall” from section headers}
+\CLnote{here and elsewhere: remove ``shall'' from section headers}
 
 DOL \shall provide syntactic constructs for structuring ontologies regardless of the logic their sentences are formalized in. DOL \should provide syntactic constructs for
 
@@ -1082,7 +1353,7 @@ DOL \shall provide an initial vocabulary for expressing relations in corresponde
 
 DOL \shallnot provide an annotation vocabulary, i.e.\ it \shall neither provide annotation properties nor datatypes to be used with literal annotation objects. Instead, an informative annex \shall recommend existing annotation vocabularies for use with DOL.
 
-\ssclause{DOL has user- and machine-readable serializations.}
+\subsection{DOL has user- and machine-readable serializations.}
 
 \CLnote[type=q-all]{We need to revise this following the agreement to drop the XML and RDF serializations.}In the interest of wide applicability and tool support, DOL \should support multiple alternative serializations.  In particular, there \should be a text serialization targeting human readers and writers, as well as serializations optimized for machine processability.
 
@@ -1103,7 +1374,7 @@ An ontology implemented in DOL \should be able to comprise parts formalized in a
 
 Existing ontologies in existing XML serializations (\eg XCL) or text serializations (\eg OWL Manchester Syntax) \should validate as DOL ontologies with a minimum amount of syntactic adaptation. Existing ontology files/documents \should be usable in a DOL context without the need for modification.
 
-\ssclause{DOL has a well-defined formal, logic-based semantics.}\label{c:req:semantics}
+\subsection{DOL has a well-defined formal, logic-based semantics.}\label{c:req:semantics}
 
 The structural elements and structural links of DOL \should have a formal, logic-based semantics.
 
@@ -1133,12 +1404,12 @@ Reductions of DOL to conforming ontology languages, as well as approximations of
 
 \todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{provide example of integrating two ontologies in a single-sorted logic by translating into many-sorted logic, where only many-sorted logic would guarantee consistency}
 
-\sclause{DOL design}\label{c:design:overview}
+\section{DOL design}\label{c:design:overview}
 
 We give an overview of the most important and innovative language
 constructs of DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
-\ssclause{DOL allows for expressing logically heterogeneous ontologies and literal reuse of existing ontologies.}
+\subsection{DOL allows for expressing logically heterogeneous ontologies and literal reuse of existing ontologies.}
 
 DOL allows for expressing logically heterogeneous ontologies, \ie to
 combine, in the same DOL document, sentences and structured ontologies
@@ -1156,7 +1427,7 @@ Lange,date=D:201109201457+02'00',type=todo]{Figure out what this
 abstract syntax category \syntax{Onto} in
 clause~\ref{c:abstract-syntax}.
 
-\ssclause{DOL allows for expressing links between ontologies.}\label{c:req:links}
+\subsection{DOL allows for expressing links between ontologies.}\label{c:req:links}
 
 DOL provides a syntax for expressing links between ontologies -- logical links as well as alignments.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}. This international standard specifies a set of logical link types and a set of non-logical link types.
 
@@ -1179,7 +1450,7 @@ clause~\ref{c:abstract-syntax}.
 DOL need not be able to fully represent logical translations but is
 capable of referring to them.
 
-\todonote[author=Christoph Lange,date=D:201111231324+01'00',type=q-aut]{We had this comment here; what does it mean?  “DOL only maps symbols to expressions”}
+\todonote[author=Christoph Lange,date=D:201111231324+01'00',type=q-aut]{We had this comment here; what does it mean?  ``DOL only maps symbols to expressions''}
 
 DOL also allows for combining/merging ontologies along such links, see
 the rule for \syntax{combination} for the abstract syntax category
@@ -1192,7 +1463,7 @@ the rule for \syntax{combination} for the abstract syntax category
 \label{f:DOL-mapping}
 \end{figure}
 
-\ssclause{DOL allows for expressing ontologies and links at different levels of detail}\label{c:explicit}
+\subsection{DOL allows for expressing ontologies and links at different levels of detail}\label{c:explicit}
 
 Ontologies and ontology links expressed in DOL can be based on a
 number of implicit assumptions about which ontology language
@@ -1213,7 +1484,7 @@ The following list covers the possible cases where DOL allows for making informa
 
 ~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{ask Michael Grüninger for his mereology example in CL}
 
-\ssclause{DOL allows for rich annotation and documentation of ontologies.}\label{c:req:annotation}
+\subsection{DOL allows for rich annotation and documentation of ontologies.}\label{c:req:annotation}
 
 \todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL will allow for identifying anything of relevance in a distributed ontology, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.}DOL allows for annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations allow for fine-grained embedding of annotations into ontologies. % up to the granularity of literate programming.
 
@@ -1228,7 +1499,7 @@ A list of RDF vocabularies for annotating ontologies is recommended as an annex 
 
 \sclause{Abstract syntax categories}
 
-DOL provides abstract syntax categories for\todonote[author=Christoph Lange,date=D:201111071952+01'00',type=q-aut]{In the previous draft we had more fine-grained categories: ontology languages, ontology language translation, links between ontologies, ontology combination (are these the colimits that we now call “combinations”?)}
+DOL provides abstract syntax categories for\todonote[author=Christoph Lange,date=D:201111071952+01'00',type=q-aut]{In the previous draft we had more fine-grained categories: ontology languages, ontology language translation, links between ontologies, ontology combination (are these the colimits that we now call ``combinations''?)}
 \begin{itemize}
 \item heterogeneous ontologies (which can be basic ontologies in some
 ontology language, or unions, translations, minimizations, combinations,
@@ -1241,7 +1512,7 @@ ontology language and/or serialization)
  
 Additionally, the categories of the abstract syntaxes of any conforming ontology languages (\cf \cref{c:conform:logic}) are also DOL abstract syntax categories.
 
-The following subclauses, one per abstract syntax category, specify the abstract syntax of DOL in EBNF \nisref{ISO/IEC 14977:1996}.  Note that ISO EBNF lacks an operator for “at least one repetition”.  This standard therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
+The following subclauses, one per abstract syntax category, specify the abstract syntax of DOL in EBNF \nisref{ISO/IEC 14977:1996}.  Note that ISO EBNF lacks an operator for ``at least one repetition''.  This standard therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 
 \sclause{Distributed Ontologies}\label{c:dist-onto}
 
@@ -1358,7 +1629,7 @@ optionally marked as consistent, using \syntax{ConsStrength}.\footnote{More prec
 list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
 denotes a logic reduction to a
 less expressive ontology language. A \syntax{SymbolMapItems}, used in
-ontology \syntax{Translation}s,  maps symbols to symbols\CLnote[type=fyi]{On 2012-07-18 we decided not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics in an ontology language independent way would require additional institution infrastructure – and the same effect can be achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a “best practice”?)}, or a logic
+ontology \syntax{Translation}s,  maps symbols to symbols\CLnote[type=fyi]{On 2012-07-18 we decided not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics in an ontology language independent way would require additional institution infrastructure – and the same effect can be achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?)}, or a logic
 translation. An ontology language translation \syntax{OntoLangTrans} or \syntax{ApproxMethod}
 can be either specified by its name (optionally qualified with
 source and target ontology language), or be inferred as the default
@@ -1401,6 +1672,7 @@ ApproxMethodRef  = IRI ;
 ExtractionMethod = IRI ;
 \end{lstlisting}
 
+
 \sclause{Links}
 
 A link provides a connection between two ontologies.
@@ -1438,10 +1710,10 @@ ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleTyp
 ModuleName           = IRI ;
 ModuleType           = 'module-type' , Onto , Onto ;
 
-AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType<\footnote{Note that this grammar uses “type” as in “the type of a function”, whereas the Alignment API uses “type” for the totality/injectivity of the relation/function.  For the latter, this grammar uses “cardinality”.}> 
+AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType<\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}> 
                                       { Correspondence } ;
 AlignName            = IRI ;
-AlignCards           = AlignCardForward , AlignCardBackward<\CLnote[type=todo]{mention that the default is twice “injective and total”}> ;
+AlignCards           = AlignCardForward , AlignCardBackward<\CLnote[type=todo]{mention that the default is twice ``injective and total''}> ;
 AlignCardForward     = 'align-card-forward' , AlignCard ;
 AlignCardBackward    = 'align-card-backward' , AlignCard ;
 AlignCard            = 'injective-and-total'
@@ -1452,7 +1724,7 @@ AlignType            = 'align-type' , Onto , Onto ;
 
 Correspondence       = CorrespondenceBlock
                      | SingleCorrespondence
-                     | 'default-correspondence'<\CLnote[type=todo]{add concrete syntax, plus explanation: applies current default correspondence to all non-logical symbols with the same local names, using the “same local name” algorithm presented elsewhere}> ;
+                     | 'default-correspondence'<\CLnote[type=todo]{add concrete syntax, plus explanation: applies current default correspondence to all non-logical symbols with the same local names, using the ``same local name'' algorithm presented elsewhere}> ;
 CorrespondenceBlock  = 'correspondence-block' , [ RelationRef ] , [ Confidence ]<\CLnote[type=todo]{How do we say that at least one of these should be given?}>
                                                 { Correspondence } ;
 SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationRef ] , [ Confidence ] ,
@@ -1518,7 +1790,7 @@ In accordance with best practices for publishing ontologies on the Web, identifi
 % \item[module] a name that identifies a module within an ontology
 % \item[symbol] a name that identifies a non-logical symbol, named import, or sentence within a module\todonote[type=todo,author=Christoph Lange]{list the other things we would like to identify in this component}
 % \end{description}
-% It is recommended that these “DOL IRIs” be used whenever an ontology or a module of an ontology is primarily implemented in DOL.
+% It is recommended that these ``DOL IRIs'' be used whenever an ontology or a module of an ontology is primarily implemented in DOL.
 
 In accordance with semantic web best practices such as the OWL Manchester Syntax \bref{W3C:NOTE-owl2-manchester-syntax-20091027}, this \IS does not allow relative IRIs, and does not offer a mechanism for defining a base IRI, against which relative IRIs could be resolved.
 
@@ -1541,8 +1813,8 @@ The CURIE abbreviation mechanism works by binding prefixes to IRIs.  A CURIE con
 
 DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core-20120607, Section 6} with the following changes:
 \begin{itemize}
-\item DOL does not allow for declaring a “default prefix” mapping \CLnote[type=q-aut]{Are such explanatory notes OK here?}(covering CURIEs such as \syntax{:name}).
-\item DOL does allow for declaring a “no prefix” mapping (covering CURIEs such as \syntax{name}).
+\item DOL does not allow for declaring a ``default prefix'' mapping \CLnote[type=q-aut]{Are such explanatory notes OK here?}(covering CURIEs such as \syntax{:name}).
+\item DOL does allow for declaring a ``no prefix'' mapping (covering CURIEs such as \syntax{name}).
 \item DOL does not make use of the \syntax{safe\_curie} production.
 \item DOL does not allow binding a relative IRI to a prefix.
 \item Concrete syntaxes of DOL are encouraged but \notrequired to support CURIEs.\footnote{This is a concession to having an RDF-based concrete syntax among the normative concrete syntaxes.  RDFa is the only standardized RDF serialization to support CURIEs so far.  Other serializations, such as RDF/XML or Turtle, support a subset of the CURIE syntax, whereas some machine-oriented serializations, including N-Triples, only support full IRIs.}
@@ -1551,7 +1823,7 @@ DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, we can restate the CURIE grammar supported by DOL as follows:
 \begin{lstlisting}[language=ebnf,escapechar=@]
 CURIE     = [ Prefix ] , Reference ;
-Prefix    = NCName , ':' (* @\rm see “NCName” in \nisref{W3C/TR REC-xml-names:2009}, Section 3@ *) ;
+Prefix    = NCName , ':' (* @\rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3@ *) ;
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty 
             (* @\rm as defined in \nisref{IETF/RFC 3987}@ *) ;
@@ -1639,8 +1911,8 @@ While CURIEs used for identifying parts of a distributed ontology (\cf \cref{c:c
 
 \sclause{DOL Serializations}
 Say how existing ontologies in existing serializations have to be adapted/wrapped (or ideally: not adapted at all!) in
-order to become valid ontologies in some DOL serialization.\todonote[id=wrapping,author=Christoph Lange,date=D:201108052348+02'00',type=todo]{Essential points are:-- need to be able to say: “the file at URL U is in OWL 2 Manchester syntax”-- maybe use packaging/wrapping format-- compare MIME types, HTTP content negotiation (but don't go too deep into communication protocols)}%
-\reply[replyto=wrapping,author=Till Mossakowski,date=D:201108191719+02'00']{Maybe we can implement something like the Linux command “file”?}
+order to become valid ontologies in some DOL serialization.\todonote[id=wrapping,author=Christoph Lange,date=D:201108052348+02'00',type=todo]{Essential points are:-- need to be able to say: ``the file at URL U is in OWL 2 Manchester syntax''-- maybe use packaging/wrapping format-- compare MIME types, HTTP content negotiation (but don't go too deep into communication protocols)}%
+\reply[replyto=wrapping,author=Till Mossakowski,date=D:201108191719+02'00']{Maybe we can implement something like the Linux command ``file''?}
 
 
 \sclause{Annotations}
@@ -1708,17 +1980,17 @@ it. Some parts (namely symbol maps, \syntax{combination}s
  and the construct \syntax{monomorphic};
 these are marked in {\institutionsOnly bold italics}) of the abstract
 syntax need a more sophisticated and more general category-theoretic
-foundation in terms of institutions [\bref{Institutions}]. More
+foundation in terms of institutions [\ref{Institutions}]. More
 specifically, the notion of institute needs to be replaced by that of
-institutional logic [\bref{Meseguer89}], and analogously for
-comorphisms [\bref{Comorphisms}].
-% and the Grothendieck construction [\bref{GrothendieckInstitutions}].
+institutional logic [\ref{Meseguer89}], and analogously for
+comorphisms [\ref{Comorphisms}].
+% and the Grothendieck construction [\ref{GrothendieckInstitutions}].
 
 Details of the mapping of the abstract syntax into the semantic
 domains given by the heterogeneous logic environment will be provided later.
 
 %An extension of this semantic background to non-monotonic logics,
-%using the theory of [\bref{ArieliAvron2000}], needs still to be worked out.
+%using the theory of [\ref{ArieliAvron2000}], needs still to be worked out.
 
 % \begin{tikzpicture}[%
 % hookarrow/.style={right hook->},
@@ -1740,7 +2012,7 @@ domains given by the heterogeneous logic environment will be provided later.
 % \begin{diagram}
 % \text{monotone institute} & \rInto & \text{institution}                  \\
 % \dInto                    &               & \dInto                             \\
-% \text{institute}          & \rInto        & \text{“non-monotonic institution”} \\
+% \text{institute}          & \rInto        & \text{``non-monotonic institution''} \\
 % \end{diagram}
 % \]
 
@@ -2279,7 +2551,7 @@ where $\rho$ is the institute comorphism from the heterogeneous logical
 environment named by \syntax{OntoLangTransRef}. This is defined
 only if $\rho:sem(LR_1)\to sem(LR_2)$ and $L=sem(LR_1)$.
 
-\CLnote{We need some “algorithm” for handling \syntax{LolaRef}s that are actually \syntax{LanguageRef}s, not \syntax{LogicRef}s.  Suppose a translation lang1$\to$lang2 is referenced, let e(lang) be the logic that exactly captures the expressivity of lang.  For lang1$\to$lang2 there might be a “language-side” default translation, which does not have a corresponding “logic-side” mapping at all, or whose exactly corresponding “logic-side” mapping is not the default for e(lang1)$\to$e(lang2).}
+\CLnote{We need some ``algorithm'' for handling \syntax{LolaRef}s that are actually \syntax{LanguageRef}s, not \syntax{LogicRef}s.  Suppose a translation lang1$\to$lang2 is referenced, let e(lang) be the logic that exactly captures the expressivity of lang.  For lang1$\to$lang2 there might be a ``language-side'' default translation, which does not have a corresponding ``logic-side'' mapping at all, or whose exactly corresponding ``logic-side'' mapping is not the default for e(lang1)$\to$e(lang2).}
 
 $sem(L,\syntax{'anonymous-trans' } LR_1\ LR_2)=\rho$
 where $\rho$ is the unique institute comorphism from the heterogeneous
@@ -2410,6 +2682,7 @@ Provide some examples
 special cases to be described
 
 
+
 \clause{Conformance}
 
 This clause defines conformance criteria for languages and logics that
@@ -2421,7 +2694,7 @@ Logic, RDF and RDFS, as well as translations among these, in its
 normative annexes.
 
 It is expected that DOL will be used for more languages than this
-normative set of DOL-conformant\CLnote[type=fyi]{coherently rephrased from “compliant” to “conformant”} languages. There will be a
+normative set of DOL-conformant\CLnote[type=fyi]{coherently rephrased from ``compliant'' to ``conformant''} languages. There will be a
 \textbf{registry for DOL-conformant languages and translations} hosted
 at \url{http://ontohub.org}.  This will ensure that this International
 Standard remains interoperable with past, present and future ontology
@@ -2444,7 +2717,7 @@ expected to become the basis for normative activities.
 %
 %\begin{description}
 %\item[Entailment conformance] An ontology language is entailment conformant with DOL if
-%its logic is presented as a (not necessarily monotonic) entailment system.\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{if we want belief revision, we need to talk about "lists of sentences" (i.e. something ordered)}\footnote{Text that goes into “terms and definitions”: an entailment system consists of a set of sentences $\Sen(\Sigma)$ and a relation $\operatorname{\vdash}\subseteq \mathcal{P}(\Sen(\Sigma))\times \Sen(\Sigma)$, indexed by signatures $\Sigma$ and compatible with signature morphisms.}
+%its logic is presented as a (not necessarily monotonic) entailment system.\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{if we want belief revision, we need to talk about "lists of sentences" (i.e. something ordered)}\footnote{Text that goes into ``terms and definitions'': an entailment system consists of a set of sentences $\Sen(\Sigma)$ and a relation $\operatorname{\vdash}\subseteq \mathcal{P}(\Sen(\Sigma))\times \Sen(\Sigma)$, indexed by signatures $\Sigma$ and compatible with signature morphisms.}
 %
 %\item[Semantic conformance] 
 %\end{description}
@@ -2493,7 +2766,7 @@ conformant with DOL if its constructs have no impact on the semantics.
 The annotation language aspect \shall may be non-empty; it \shall
 provide the facility to express comments.
 
-~\CLnote{say something about “infrastructure theories”, i.e. axiomatizations of one logic in another logic.  Providers of ontology language translations MAY also provide these (given that the translation is theoroidal).  Note the possible trade-off between readability and theorem proving complexity (as the infrastructure axioms may be complex) -- so maybe we should encourage multiple alternative translations to co-exist.}
+~\CLnote{say something about ``infrastructure theories'', i.e. axiomatizations of one logic in another logic.  Providers of ontology language translations MAY also provide these (given that the translation is theoroidal).  Note the possible trade-off between readability and theorem proving complexity (as the infrastructure axioms may be complex) -- so maybe we should encourage multiple alternative translations to co-exist.}
 
 We define the following levels of conformance of the abstract syntax of a basic ontology language with DOL, listed from highest to lowest:
 
@@ -2533,7 +2806,7 @@ These are the conformance levels, listed from highest to lowest:
 \item[XML conformance]
 The given serialization has to be specified as an XML schema, which satisfies all of the following conditions:
 \begin{itemize}
-\item The elements of the schema belong to one or more non-empty XML namespaces.\todonote[author=Christoph Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous ontology we can recognize that a sentence is, \eg, stated in OWL, without explicitly “tagging” it as “OWL” (which we would have to do in the case of a serialization that is merely text conformant).}
+\item The elements of the schema belong to one or more non-empty XML namespaces.\todonote[author=Christoph Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous ontology we can recognize that a sentence is, \eg, stated in OWL, without explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case of a serialization that is merely text conformant).}
 \item The schema shall not forbid attributes from foreign namespaces (here: the DOL namespace) on any elements\todonote[author=Christoph Lange,date=D:201110051433+02'00']{Maybe we also need child elements from different namespaces?}
 \end{itemize}
 
@@ -2580,7 +2853,7 @@ For any conforming ontology language, logic, and serialization of an ontology la
 
 \sclause{Conformance of a serialization with DOL}\label{c:conform:dialect}
 
-While \cref{c:conform:serialization} covered the conformance of serializations of \emph{basic} ontology languages with DOL, this clause addresses serializations of DOL itself.  This international standard specifies one text-based serialization in \aref{a:text-syntax}, but one can specify further serializations according to the following conformance criteria.\todonote[author=Christoph Lange,date=D:201111041524+01'00',type=fyi]{This section is analogous to Common Logic's “Dialect Conformance”.}
+While \cref{c:conform:serialization} covered the conformance of serializations of \emph{basic} ontology languages with DOL, this clause addresses serializations of DOL itself.  This international standard specifies one text-based serialization in \aref{a:text-syntax}, but one can specify further serializations according to the following conformance criteria.\todonote[author=Christoph Lange,date=D:201111041524+01'00',type=fyi]{This section is analogous to Common Logic's ``Dialect Conformance''.}
 
 It is required that a specification of a conforming serialization be given as a set of mappings from the abstract syntax (\cf \cref{c:abstract-syntax}), where each production rule of the abstract syntax is mapped to a production rule of the concrete syntax.  Instead of such an explicit mapping, an implicit mapping may be provided via a self-contained EBNF for the concrete syntax, whose nonterminal symbols have to match the nonterminal symbols of the EBNF of the abstract syntax.\todonote[type=todo,author=Christoph Lange]{Say that in a more formal way! -- Is it comprehensible?  Does it sufficiently state what we have in mind?}
 
@@ -2603,8 +2876,26 @@ We expect most DOL-aware applications to support a fixed (possibly extensible) s
 
 ~\CLnote{applications need to be able to expand CURIEs into IRIs when requested}
 
+
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 \clause{Keyword index}
 /to be supplemented in the final version/
+
+
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\part*{Annex}
+\addcontentsline{toc}{part}{Annex}
+
+\appendix
 
 \normannex{DOL text serialization}\label{a:text-syntax}
 
@@ -2637,7 +2928,7 @@ BoundPrefix              = ':' | Prefix (* @\rm see definition in \cref{c:curies
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
 \end{lstlisting}
 
-Note that we denote the empty prefix (called “no prefix” in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \bref{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \bref{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
 
 \ssclause{Heterogeneous Ontologies}\label{a:dol-text:ontologies}
 
@@ -2691,7 +2982,7 @@ ConsStrength         = Conservative
                      | '%def'
                      | '%implied' ;
 Conservative         = '%ccons'
-                     | '%mcons'<\CLnote[type=q-aut]{Do we want the CASL-style “cons” as a synonym for “mcons” in the standard?  Or just in Hets, as a “hidden feature”? TM: I would say: the latter. CL: OK, I wanted to file this as a Hets ticket, but Trac was down.  Let's do it some other time and then remove this comment.}> ;
+                     | '%mcons'<\CLnote[type=q-aut]{Do we want the CASL-style ``cons'' as a synonym for ``mcons'' in the standard?  Or just in Hets, as a ``hidden feature''? TM: I would say: the latter. CL: OK, I wanted to file this as a Hets ticket, but Trac was down.  Let's do it some other time and then remove this comment.}> ;
 
 InterfaceSignature   = SymbolItems ;
 
@@ -2704,7 +2995,7 @@ OntoOrLinkRef        = IRI ;
 <\institutionsOnly CombinedElement~~~~~= [ Id , ':' ] , OntoOrLinkRef ;>
 <\institutionsOnly ExcludeExtensions~~~~= 'excluding' , ExtensionRef , \{ ',' , ExtensionRef \} ;>
 
-OntoDefn             = 'ontology' , OntoName , '=' , [ ConsStrength ] , Onto , [ 'end' ]<\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as “end” is not really always optional.  This is the “underlined end” from the CASL specification, but there is no such construct in ISO EBNF.}> ;
+OntoDefn             = 'ontology' , OntoName , '=' , [ ConsStrength ] , Onto , [ 'end' ]<\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> ;
 
 Symbol               = IRI ;
 <\institutionsOnly SymbolMap~~~~~~~~~~~~= Symbol , '↦' , Symbol ;>
@@ -2788,7 +3079,7 @@ SingleCorrespondence = SymbolRef , [ RelationRef ] ,
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
 TermOrSymbolRef      = Term | SymbolRef (* Term is logic-specific *) ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)}>
-RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply “HasInstance” and “InstanceOf”, which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>'$\ni$' | '$\in$' | '$\mapsto$' | IRI ;
+RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>'$\ni$' | '$\in$' | '$\mapsto$' | IRI ;
 Confidence           = Double ? where Double <$\in [0,1]$> ? ;
 \end{lstlisting}
 
@@ -2804,7 +3095,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 
 \sclause{Lexical Symbols}
 
-The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, ontologies can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of ontologies, the DOL text serialization particularly allows for using the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about “display formats of lexical symbols”, for example.}
+The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, ontologies can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of ontologies, the DOL text serialization particularly allows for using the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
 \ssclause{Key Words and Signs}\label{c:keywords}
 
@@ -2911,7 +3202,7 @@ _:property rdf:type     rdf:Property ;
            rdfs:comment "documentation" .
 \end{lstlisting}
 
-\todonote[type=q-aut,author=Christoph Lange]{we need to define “sublogic” as a term – how?  I guess that would include the notion of an “OWL profile”}
+\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''}
 \newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
 \ctable[
 caption={Properties of the RDF vocabulary for describing ontology languages},
@@ -2940,7 +3231,7 @@ pos=h,
 The semantic conformance of OWL 2 (as specified in \nisref{W3C/TR REC-owl2-syntax:2009}) with DOL is established in \bref{OntoGraph}.
 
 The OWL XML serialization satisfies the criteria for XML conformance.  The mapping of OWL 2 to RDF graphs satisfies the criteria for RDF conformance\CLnote{This is not exactly true, as some things, e.g. imports, can't be identified.}.  The OWL 2 Manchester syntax satisfies the criteria for text conformance.
-~\CLnote{also need conformance propositional logic; use PL “profile” of the CASL “IFIP standard”}
+~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 
 OWL can be formalised as an institute as follows:
 \begin{definition}\label{DL} \defsty{\OWL2 DL.} 
@@ -3436,7 +3727,7 @@ institution-based heterogeneous logical environment. [Details to be
 given.]
 
 We will give (as normative annexes) one such environment.  These will
-define the “default translations” that we assume.
+define the ``default translations'' that we assume.
 
 \infannex{Example Uses of all DOL Constructs}
 
@@ -3514,7 +3805,7 @@ combine CombinedElements excluding IRIs  &  \\\hline
 
 distributed ontology Mereology
 
-logic log:Propositional syntax ser:Prop/Hets       %% non-standard serialization built into Hets
+logic log:Propositional syntax ser:Prop/Hets       %% non-standard serialization built into Hets 
 ontology Taxonomy = %mcons      %% basic taxonomic information about mereology reused from DOLCE
   props PT, T, S, AR, PD
   . S $\vee$ T $\vee$ AR $\vee$ PD $\longrightarrow$ PT                                                    %% PT is the top concept
@@ -3810,9 +4101,9 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
   \end{itemize}
   Thus, an adequate formalization of this scenario has to be heterogeneous.  For example, one could imagine the following axioms:
   \begin{description}
-  \item[light switch] “light is switched on if and only if someone is in the room and it is dark outside” – this could be formalized in propositional logic as $\mathrm{light\_on}\equiv\mathrm{person\_in\_room}\wedge\mathrm{dark\_outside}$.
-  \item[freezer] “a vegetarian pizza is a pizza whose toppings are all vegetarian” – this could be formalized in description logic as $\mathrm{VegetarianPizza}\equiv\mathrm{Pizza}\sqcap \forall \mathrm{hasTopping}.\mathrm{Vegetarian}$
-  \item[wheelchair] “two areas in a house (\eg a working area in a room) are either the same, or intersecting, or bordering, or separated, or one is part of the other” – this could be formalized as an RCC-style spatial calculus in first-order logic as $$\begin{array}{ll}\forall a_1, a_2 . & \mathrm{equal}(a_1, a_2) \veebar \mathrm{overlapping}(a_1, a_2) \veebar \mathrm{bordering}(a_1, a_2) \veebar \mathrm{disconnected}(a_1, a_2) \\
+  \item[light switch] ``light is switched on if and only if someone is in the room and it is dark outside'' – this could be formalized in propositional logic as $\mathrm{light\_on}\equiv\mathrm{person\_in\_room}\wedge\mathrm{dark\_outside}$.
+  \item[freezer] ``a vegetarian pizza is a pizza whose toppings are all vegetarian'' – this could be formalized in description logic as $\mathrm{VegetarianPizza}\equiv\mathrm{Pizza}\sqcap \forall \mathrm{hasTopping}.\mathrm{Vegetarian}$
+  \item[wheelchair] ``two areas in a house (\eg a working area in a room) are either the same, or intersecting, or bordering, or separated, or one is part of the other'' – this could be formalized as an RCC-style spatial calculus in first-order logic as $$\begin{array}{ll}\forall a_1, a_2 . & \mathrm{equal}(a_1, a_2) \veebar \mathrm{overlapping}(a_1, a_2) \veebar \mathrm{bordering}(a_1, a_2) \veebar \mathrm{disconnected}(a_1, a_2) \\
 &\veebar \mathrm{part\_of}(a_1, a_2) \veebar \mathrm{part\_of}(a_2, a_1).\end{array}$$
   \end{description}
   
@@ -3820,34 +4111,34 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
 \end{usecase}
 
 \begin{usecase}{Interpreting the OWL formalization of the DOLCE foundational ontology in First-order logic}{potential use case}{Logical links}
-  DOLCE is a foundational ontology that has primarily been formalized in the first-order logic ontology language KIF (a predecessor of Common Logic), but also in OWL (“DOLCE Lite”) \bref{dolce}. This ‘OWLized’ version was targeting use in semantic web services and domain ontology interoperability, and to provide the generic categories and relationships to aid domain ontology development. DOLCE has been used also for semantic middleware, and in OWL-formalised ontologies of neuroimaging, computing, ecology, and data mining and optimization.
-  Given the differences in expressivity, DOLCE Lite had to simplify certain notions.  For example, the DOLCE Lite formalization of “temporary parthood” (something is part of something else at a certain point or interval in time) omits any information about the time, as OWL only supports binary predicates (a.k.a.\ “properties”).  That leaves ambiguities for modeling a view from DOLCE Lite to the first-order DOLCE, as such a view would have to reintroduce the third (temporal) component of such predicates:
+  DOLCE is a foundational ontology that has primarily been formalized in the first-order logic ontology language KIF (a predecessor of Common Logic), but also in OWL (``DOLCE Lite'') \bref{dolce}. This ‘OWLized’ version was targeting use in semantic web services and domain ontology interoperability, and to provide the generic categories and relationships to aid domain ontology development. DOLCE has been used also for semantic middleware, and in OWL-formalised ontologies of neuroimaging, computing, ecology, and data mining and optimization.
+  Given the differences in expressivity, DOLCE Lite had to simplify certain notions.  For example, the DOLCE Lite formalization of ``temporary parthood'' (something is part of something else at a certain point or interval in time) omits any information about the time, as OWL only supports binary predicates (a.k.a.\ ``properties'').  That leaves ambiguities for modeling a view from DOLCE Lite to the first-order DOLCE, as such a view would have to reintroduce the third (temporal) component of such predicates:
   \begin{itemize}
   \item Should a relation asserted in terms of DOLCE Lite be assumed to hold for \emph{all} possible points/intervals in time, \ie should it be universally quantified?
   \item Or should such a relation be assumed to hold for \emph{some} points/intervals in time, \ie should it be existentially quantified?
-  \item Or should a concrete value for the temporal component be assumed, \eg “0” or “now”?
+  \item Or should a concrete value for the temporal component be assumed, \eg ``0'' or ``now''?
   \end{itemize}
   
   DOL would allow for formalizing all of these views and, given suitable consistency checking tools, allow for analyzing whether any such view would satisfy all further axioms that the first-order DOLCE states about temporal parthood.
 \end{usecase}
 
 \begin{usecase}{Extending the OWL Time ontology to a more comprehensive coverage of time}{potential use case}{Logical links}
-The OWL Time ontology\footnote{\url{http://www.w3.org/TR/2006/WD-owl-time-20060927/}} covers temporal concepts such as instants and intervals and has been designed for describing the temporal content of Web pages and the temporal properties of Web services.  While OWL is suitable for these intended applications, only a first-order axiomatization is capable of faithfully capturing all relevant notions, such as the trichotomy of the “before” relation: One instant is either before another one, or at the same time, or after.  Moreover, a relationship between facts expressed in terms of instants and facts expressed in terms of intervals (both of which is, independently, possible in OWL), can only be established via first-order logic, \eg by declaring an interval of length zero equivalent to an instant. 
+The OWL Time ontology\footnote{\url{http://www.w3.org/TR/2006/WD-owl-time-20060927/}} covers temporal concepts such as instants and intervals and has been designed for describing the temporal content of Web pages and the temporal properties of Web services.  While OWL is suitable for these intended applications, only a first-order axiomatization is capable of faithfully capturing all relevant notions, such as the trichotomy of the ``before'' relation: One instant is either before another one, or at the same time, or after.  Moreover, a relationship between facts expressed in terms of instants and facts expressed in terms of intervals (both of which is, independently, possible in OWL), can only be established via first-order logic, \eg by declaring an interval of length zero equivalent to an instant. 
 
 A separate first-order axiomatization of OWL Time exists
-[\bref{OWLTime},\bref{OWLSTime}].  DOL would instead allow for modeling
+[\ref{OWLTime},\ref{OWLSTime}].  DOL would instead allow for modeling
 OWL Time as one coherent heterogeneous ontology, using OWL and, \eg,
 Common Logic.\CLnote{This is also a use case for multiple namespaces:
   OWL supports namespaces, CL doesn't.}  For the temporal description
 logic $\mathcal{DLR_{US}}$ for knowledge bases and logic-based
-temporal conceptual data modelling [\bref{Artale02},\bref{Artale07a}];
+temporal conceptual data modelling [\ref{Artale02},\ref{Artale07a}];
 $\mathcal{DLR_{US}}$ combines the propositional temporal logic with
 the {\em Since} and {\em Until} operators and the (non-temporal)
 description logic $\mathcal{DLR}$ and can be regarded as an expressive
 fragment of the first-order temporal logic $L^{since, until}$. Within
 DOL, this would enable one to have `lightweight' time aspects with OWL
 Time, which are then properly formalised with $\mathcal{DLR_{US}}$ or
-a leaner variant TDL-Lite [\bref{Artale07time}], where notions such as
+a leaner variant TDL-Lite [\ref{Artale07time}], where notions such as
 (some time) ``before'' are given a formal semantics of the intended
 meaning that the plain OWL Times human-readable object property does
 not have. The latter, then, would enable the modeller to represent the
@@ -3864,7 +4155,7 @@ the ontology about, e.g., the distinction how a human brain is part of
 a human (humans cannot live without it), versus how a hand is part of
 a human (humans can live without it), versus how the hand is part of,
 say, a boxer, which is essential to the boxer but only for has long as
-he is a boxer [\bref{AGK08}].
+he is a boxer [\ref{AGK08}].
 
 \end{usecase}
 
@@ -3877,7 +4168,7 @@ to the term \termref{structured ontology} in this international standard}
   \item[direct relations] maps (signature morphisms), definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
   \end{description}
 
-  DOL provides built-in support for a subset of the “direct relations” and specifies a formal semantics for them.  In addition, it allows for implementing the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV (\cf \aref{a:meta-vocab}), and it allows for implementing one or multiple Common Logic ontologies plus their annotations as one coherent distributed ontology.
+  DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it allows for implementing the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV (\cf \aref{a:meta-vocab}), and it allows for implementing one or multiple Common Logic ontologies plus their annotations as one coherent distributed ontology.
 \end{usecase}
 
 \begin{usecase}{Extending OWL with datatypes defined in CASL}{potential use case}{...}
@@ -3913,7 +4204,12 @@ pos=h,
 
 \clearpage
 
+
 \infannex{Bibliography}
+
+The bibliography will be added later 
+
+\end{document}
 \begin{references}
   \reference{KIFER, M., LAUSEN, G.\ and WU, J.,}{Logical Foundations of Object-Oriented and Frame-Based Languages,}{Journal of the ACM 42, pp. 741--843, July 1995}\label{flogic}
   \reference{MUNGALL, C.\ and IRELAND, A.,}{The OBO Flat File Format Specification, version 1.4 (Draft), 8 December 2010,}{\url{http://www.geneontology.org/GO.format.obo-1_4.shtml}}\label{obo}
@@ -4007,7 +4303,7 @@ Universal?', 2010.}
 \end{references}
 
 
-\end{document}
+
 
 
 
@@ -4194,3 +4490,6 @@ Translations from SROIQ(D) to \Flogic are discussed in \cite{Bruijn:2008}.
 %%% End: 
 
 
+
+
+\end{document}
