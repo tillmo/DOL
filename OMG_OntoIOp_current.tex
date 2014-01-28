@@ -26,7 +26,6 @@ draft%
 
 
 
-
 %% Hacks
 %\usepackage{savesym}
 
@@ -717,9 +716,201 @@ stating sentences about them
 This \IS describes the syntax and the semantics of the Distributed Ontology Language (DOL) by defining an abstract syntax and an associated model-theoretic semantics for DOL. DOL does not provide a new elementary ontology language, but provides a layer to be used on top of existing elementary ontology languages which enables ontology engineers to formally express links between ontologies written in different languages and stored at different Web locations. The purpose of such distributed ontologies is enabling a greater extent of interoperability between data and services in complex application settings.
 
 \chapter{Conformance}
+
+This clause defines conformance criteria for languages and logics that
+can be used with the distributed ontology language DOL, as well as
+conformance criteria for serializations, translations and
+applications. This International Standard describes the conformance
+with DOL of a number of ontology languages, namely OWL 2, Common
+Logic, RDF and RDFS, as well as translations among these, in its
+normative annexes.
+
+It is expected that DOL will be used for more languages than this
+normative set of DOL-conformant\CLnote[type=fyi]{coherently rephrased from ``compliant'' to ``conformant''} languages. There will be a
+\textbf{registry for DOL-conformant languages and translations} hosted
+at \url{http://ontohub.org}.  This will ensure that this International
+Standard remains interoperable with past, present and future ontology
+languages, even if they do not appear in this standard or do not even have
+been standardized (yet).  The
+registry shall also include descriptions of DOL-conformant languages
+and translations (as well as other information needed by implementors
+and users) in machine-processable form.  
+
+There will be Maintenance Authority (MA)\ednote{ or, depending on
+  advisability, a Registration Authority} established to maintain the
+registry as an informative resource governed by the standard.  The
+registry contents itself will not be normative; however, it is
+expected to become the basis for normative activities.
+
+
+\sclause{Conformance of an ontology language/a logic with DOL}\label{c:conform:logic}
+
+
+%
+%\begin{description}
+%\item[Entailment conformance] An ontology language is entailment conformant with DOL if
+%its logic is presented as a (not necessarily monotonic) entailment system.\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{if we want belief revision, we need to talk about "lists of sentences" (i.e. something ordered)}\footnote{Text that goes into ``terms and definitions'': an entailment system consists of a set of sentences $\Sen(\Sigma)$ and a relation $\operatorname{\vdash}\subseteq \mathcal{P}(\Sen(\Sigma))\times \Sen(\Sigma)$, indexed by signatures $\Sigma$ and compatible with signature morphisms.}
+%
+%\item[Semantic conformance] 
+%\end{description}
+
+An ontology language is conformant with DOL if either
+\begin{itemize}
+\item it satisfies the following conditions:
+\begin{enumerate}
+\item its abstract syntax is given by an EBNF grammar,
+\item at least one concrete syntax is given by a serialisation (see below), 
+\item its logical language aspect (for expressing basic ontologies) is conformant, and in particular has a semantics (see below),
+\item  its
+structuring language aspect (for expressing structured ontologies and relations
+between those) is conformant (see below), and
+\item its annotation language aspect (for expressing comments and annotations)
+is conformant (see below).
+\end{enumerate}
+\item there exists a translation of it into a conformant language.
+\end{itemize}
+
+For the second condition, \cf the
+translation of OBO1.4 to OWL, giving a formal semantics to OBO1.4).
+\todonote{turn this into a note}
+
+The \emph{logical language aspect} of an ontology language
+is %semantically
+conformant with DOL if each logic corresponding to a profile (including
+the logic corresponding to the whole logical language aspect) is presented as an
+institute. It may additionally be presented as an institution, leading
+to the possibility of interpreting additional DOL language constructs.
+\footnote{Institutes and institutions are necessarily monotonic;
+  conformance criteria for non-monotonic logics are still under
+  development. However, minimization provides non-monotonic reasoning
+  in DOL.}
+Note that one ontology language can have several sublanguages or profiles 
+corresponding to several logics (for example, OWL 2 has profiles
+EL, RL and QL, apart from the whole OWL 2 itself).
+
+
+The \emph{structuring language aspect}  of an ontology language
+is conformant with DOL if it can be mapped to DOL's structuring language
+in a semantics-preserving way. The structuring language aspect \may be empty.
+
+The \emph{annotation language aspect} of an ontology language is
+conformant with DOL if its constructs have no impact on the semantics.
+The annotation language aspect \shall may be non-empty; it \shall
+provide the facility to express comments.
+
+~\CLnote{say something about ``infrastructure theories'', i.e. axiomatizations of one logic in another logic.  Providers of ontology language translations MAY also provide these (given that the translation is theoroidal).  Note the possible trade-off between readability and theorem proving complexity (as the infrastructure axioms may be complex) -- so maybe we should encourage multiple alternative translations to co-exist.}
+
+We define the following levels of conformance of the abstract syntax of a basic ontology language with DOL, listed from highest to lowest:
+
+\begin{description}
+\item[Full IRI conformance] The abstract syntax enforces that IRIs be used for identifying all symbols and entities.
+\item[No mandatory use of IRIs] The abstract syntax does not enforce that IRIs be used for identifying all entities.  Note that this includes the case of optionally supporting IRIs without enforcing their use (such as in Common Logic).
+\end{description}
+
+Any conforming language and logic shall have a machine-processable description as detailed in \cref{c:conform:description}.
+
+\ssclause{Conformance of language/logic translations with DOL}
+
+A logic translation is conformant with DOL if it is presented
+either as an institute morphism or as an institute comorphism.  If the
+languages are presented additionally as institutions, the translations
+\may also be presented as an institution morphism or an institution
+comorphism.
+
+A language translation is conformant with DOL if it is a mapping
+between the abstract syntaxes that restricts to a conformant logic
+translation when restricted to the logical language aspect. Language
+translations \may also translate the structuring language aspect, in
+this case, they \shall preserve the semantics of the structuring
+language aspect.  Furthermore, language translations \should preserve
+comments and annotations.  All comments attached to a sentence (or
+symbol) in the source \should be attached to its translation in the
+target (if there are more than one sentences (resp.\ symbols)
+expressing the translation, to at least one of them).
+
+
+\sclause{Conformance of a serialization of an ontology language with DOL}\label{c:conform:serialization}
+
+We define four levels of conformance of a serialization of an ontology language with DOL.
+
+These are the conformance levels, listed from highest to lowest:
+\begin{description}
+\item[XML conformance]
+The given serialization has to be specified as an XML schema, which satisfies all of the following conditions:
+\begin{itemize}
+\item The elements of the schema belong to one or more non-empty XML namespaces.\todonote[author=Christoph Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous ontology we can recognize that a sentence is, \eg, stated in OWL, without explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case of a serialization that is merely text conformant).}
+\item The schema shall not forbid attributes from foreign namespaces (here: the DOL namespace) on any elements\todonote[author=Christoph Lange,date=D:201110051433+02'00']{Maybe we also need child elements from different namespaces?}
+\end{itemize}
+
+\item[RDF conformance]
+The given serialization has to be specified as an RDF vocabulary, which satisfies all of the following conditions:
+\begin{itemize}
+\item The elements of the vocabulary belong to one or more RDF namespaces identified by absolute URIs.
+\item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an ontology.\todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
+\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL) to be stated about arbitrary subjects\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
+\end{itemize}
+
+\item[Text conformance]
+The given serialization has to satisfy all of the following conditions:
+\begin{itemize}
+\item The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.
+\item The serialization shall provide a designated comment construct that can be placed sufficiently flexible as to be uniquely associated with any non-comment construct of the language.  That means, for example, one of the following:
+  \begin{itemize}
+  \item The serialization provides a construct that indicates the start and end of a comment and may be placed before/after each token that represents a structural element of an ontology.
+  \item The serialization provides line-based comments (ranging from an indicated position to the end of a line) but at the same time allows for flexibly placing line breaks before/after each token that represents a structural element of an ontology.
+  \end{itemize}
+\end{itemize}
+
+\item[Standoff markup conformance]
+An ontology language is standoff markup conformant with DOL if one of its serializations conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.  Note that conformance with \mimetype{text/plain} is a prerequisite for using, for example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying text ranges.
+\end{description}
+
+~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
+
+Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs as a means of abbreviating IRIs, listed from highest to lowest:
+\begin{description}
+\item[Prefixed CURIE conformance] The given serialization allows that non-logical symbol identifiers have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}).  The serialization is \notrequired to support CURIEs with no prefix.\\
+  Informative comment: In this case, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a basic ontology to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+\item[Unprefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
+  Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the basic ontology to IRIs, which are located in one flat namespace.
+\end{description}
+
+\CLnote[type=todo]{add the possibility to provide an alternative CURIE separate character in the conformance declaration, as mentioned in \cref{c:map-ids}}
+
+Any conforming serialization of an ontology language shall have a machine-processable description as detailed in \cref{c:conform:description}.
+
+\sclause{Machine-processable description of conforming languages, logics, and serializations}\label{c:conform:description}
+
+For any conforming ontology language, logic, and serialization of an ontology language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:rdf-logic-vocab}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
+
+\sclause{Conformance of a serialization with DOL}\label{c:conform:dialect}
+
+While \cref{c:conform:serialization} covered the conformance of serializations of \emph{basic} ontology languages with DOL, this clause addresses serializations of DOL itself.  This international standard specifies one text-based serialization in \aref{a:text-syntax}, but one can specify further serializations according to the following conformance criteria.\todonote[author=Christoph Lange,date=D:201111041524+01'00',type=fyi]{This section is analogous to Common Logic's ``Dialect Conformance''.}
+
+It is required that a specification of a conforming serialization be given as a set of mappings from the abstract syntax (\cf \cref{c:abstract-syntax}), where each production rule of the abstract syntax is mapped to a production rule of the concrete syntax.  Instead of such an explicit mapping, an implicit mapping may be provided via a self-contained EBNF for the concrete syntax, whose nonterminal symbols have to match the nonterminal symbols of the EBNF of the abstract syntax.\todonote[type=todo,author=Christoph Lange]{Say that in a more formal way! -- Is it comprehensible?  Does it sufficiently state what we have in mind?}
+
+\sclause{Conformance of a document with DOL}\label{c:conform:document}
+
+A document conforms with DOL if it contains a well-formed DOL ontology.  That means, in particular, that any information related to logics has to be made explicit (as foreseen by the DOL abstract syntax specified in \cref{c:abstract-syntax}), such as:
+\begin{itemize}
+\item the logic of each ontology that is part of the distributed ontology
+\item the translation that is employed between two logics (unless it is one of the default translations specified in \aref{a:graph})
+\end{itemize}
+However, details about aspects of an ontology that do not have a formal, logic-based semantics, may be left implicit.  For example, a conforming document may omit explicit references to matching algorithms that have been employed in obtaining an alignment.
+
+\sclause{Conformance of an application with DOL}\label{c:conform:application}
+
+In practice, DOL-aware \emph{applications} are also allowed to deal with documents that are not conforming with DOL according to the criteria established in \cref{c:conform:document}.  However, an application only \emph{conforms} with DOL if it is capable of producing DOL-conforming documents as its output when requested.
+
+We expect most DOL-aware applications to support a fixed (possibly extensible) set of ontology languages conforming with DOL.  It is, for example, possible that a DOL-aware application only supports OWL and Common Logic.  In that case, the application is allowed to process documents that mix OWL and Common Logic ontologies \emph{without} explicitly declaring the respective logics, as the respective syntaxes of OWL and Common Logic allow for telling such ontologies apart by looking at the keywords used.  However, for DOL conformance, that application has to be capable of exporting documents with explicit references to the logics used.
+
+~\CLnote{applications need to strip DOL annotations from embedded fragments in other ontology languages}
+
+~\CLnote{applications need to be able to expand CURIEs into IRIs when requested}
+
+
+
 \chapter{Normative References}
-
-
 \begin{itemize}
 % OLD text
 % The following referenced documents are indispensable for the application of this document. For dated references, only
@@ -2682,199 +2873,6 @@ Provide some examples
 special cases to be described
 
 
-
-\clause{Conformance}
-
-This clause defines conformance criteria for languages and logics that
-can be used with the distributed ontology language DOL, as well as
-conformance criteria for serializations, translations and
-applications. This International Standard describes the conformance
-with DOL of a number of ontology languages, namely OWL 2, Common
-Logic, RDF and RDFS, as well as translations among these, in its
-normative annexes.
-
-It is expected that DOL will be used for more languages than this
-normative set of DOL-conformant\CLnote[type=fyi]{coherently rephrased from ``compliant'' to ``conformant''} languages. There will be a
-\textbf{registry for DOL-conformant languages and translations} hosted
-at \url{http://ontohub.org}.  This will ensure that this International
-Standard remains interoperable with past, present and future ontology
-languages, even if they do not appear in this standard or do not even have
-been standardized (yet).  The
-registry shall also include descriptions of DOL-conformant languages
-and translations (as well as other information needed by implementors
-and users) in machine-processable form.  
-
-There will be Maintenance Authority (MA)\ednote{ or, depending on
-  advisability, a Registration Authority} established to maintain the
-registry as an informative resource governed by the standard.  The
-registry contents itself will not be normative; however, it is
-expected to become the basis for normative activities.
-
-
-\sclause{Conformance of an ontology language/a logic with DOL}\label{c:conform:logic}
-
-
-%
-%\begin{description}
-%\item[Entailment conformance] An ontology language is entailment conformant with DOL if
-%its logic is presented as a (not necessarily monotonic) entailment system.\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{if we want belief revision, we need to talk about "lists of sentences" (i.e. something ordered)}\footnote{Text that goes into ``terms and definitions'': an entailment system consists of a set of sentences $\Sen(\Sigma)$ and a relation $\operatorname{\vdash}\subseteq \mathcal{P}(\Sen(\Sigma))\times \Sen(\Sigma)$, indexed by signatures $\Sigma$ and compatible with signature morphisms.}
-%
-%\item[Semantic conformance] 
-%\end{description}
-
-An ontology language is conformant with DOL if either
-\begin{itemize}
-\item it satisfies the following conditions:
-\begin{enumerate}
-\item its abstract syntax is given by an EBNF grammar,
-\item at least one concrete syntax is given by a serialisation (see below), 
-\item its logical language aspect (for expressing basic ontologies) is conformant, and in particular has a semantics (see below),
-\item  its
-structuring language aspect (for expressing structured ontologies and relations
-between those) is conformant (see below), and
-\item its annotation language aspect (for expressing comments and annotations)
-is conformant (see below).
-\end{enumerate}
-\item there exists a translation of it into a conformant language.
-\end{itemize}
-
-For the second condition, \cf the
-translation of OBO1.4 to OWL, giving a formal semantics to OBO1.4).
-\todonote{turn this into a note}
-
-The \emph{logical language aspect} of an ontology language
-is %semantically
-conformant with DOL if each logic corresponding to a profile (including
-the logic corresponding to the whole logical language aspect) is presented as an
-institute. It may additionally be presented as an institution, leading
-to the possibility of interpreting additional DOL language constructs.
-\footnote{Institutes and institutions are necessarily monotonic;
-  conformance criteria for non-monotonic logics are still under
-  development. However, minimization provides non-monotonic reasoning
-  in DOL.}
-Note that one ontology language can have several sublanguages or profiles 
-corresponding to several logics (for example, OWL 2 has profiles
-EL, RL and QL, apart from the whole OWL 2 itself).
-
-
-The \emph{structuring language aspect}  of an ontology language
-is conformant with DOL if it can be mapped to DOL's structuring language
-in a semantics-preserving way. The structuring language aspect \may be empty.
-
-The \emph{annotation language aspect} of an ontology language is
-conformant with DOL if its constructs have no impact on the semantics.
-The annotation language aspect \shall may be non-empty; it \shall
-provide the facility to express comments.
-
-~\CLnote{say something about ``infrastructure theories'', i.e. axiomatizations of one logic in another logic.  Providers of ontology language translations MAY also provide these (given that the translation is theoroidal).  Note the possible trade-off between readability and theorem proving complexity (as the infrastructure axioms may be complex) -- so maybe we should encourage multiple alternative translations to co-exist.}
-
-We define the following levels of conformance of the abstract syntax of a basic ontology language with DOL, listed from highest to lowest:
-
-\begin{description}
-\item[Full IRI conformance] The abstract syntax enforces that IRIs be used for identifying all symbols and entities.
-\item[No mandatory use of IRIs] The abstract syntax does not enforce that IRIs be used for identifying all entities.  Note that this includes the case of optionally supporting IRIs without enforcing their use (such as in Common Logic).
-\end{description}
-
-Any conforming language and logic shall have a machine-processable description as detailed in \cref{c:conform:description}.
-
-\ssclause{Conformance of language/logic translations with DOL}
-
-A logic translation is conformant with DOL if it is presented
-either as an institute morphism or as an institute comorphism.  If the
-languages are presented additionally as institutions, the translations
-\may also be presented as an institution morphism or an institution
-comorphism.
-
-A language translation is conformant with DOL if it is a mapping
-between the abstract syntaxes that restricts to a conformant logic
-translation when restricted to the logical language aspect. Language
-translations \may also translate the structuring language aspect, in
-this case, they \shall preserve the semantics of the structuring
-language aspect.  Furthermore, language translations \should preserve
-comments and annotations.  All comments attached to a sentence (or
-symbol) in the source \should be attached to its translation in the
-target (if there are more than one sentences (resp.\ symbols)
-expressing the translation, to at least one of them).
-
-
-\sclause{Conformance of a serialization of an ontology language with DOL}\label{c:conform:serialization}
-
-We define four levels of conformance of a serialization of an ontology language with DOL.
-
-These are the conformance levels, listed from highest to lowest:
-\begin{description}
-\item[XML conformance]
-The given serialization has to be specified as an XML schema, which satisfies all of the following conditions:
-\begin{itemize}
-\item The elements of the schema belong to one or more non-empty XML namespaces.\todonote[author=Christoph Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous ontology we can recognize that a sentence is, \eg, stated in OWL, without explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case of a serialization that is merely text conformant).}
-\item The schema shall not forbid attributes from foreign namespaces (here: the DOL namespace) on any elements\todonote[author=Christoph Lange,date=D:201110051433+02'00']{Maybe we also need child elements from different namespaces?}
-\end{itemize}
-
-\item[RDF conformance]
-The given serialization has to be specified as an RDF vocabulary, which satisfies all of the following conditions:
-\begin{itemize}
-\item The elements of the vocabulary belong to one or more RDF namespaces identified by absolute URIs.
-\item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an ontology.\todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
-\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL) to be stated about arbitrary subjects\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
-\end{itemize}
-
-\item[Text conformance]
-The given serialization has to satisfy all of the following conditions:
-\begin{itemize}
-\item The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.
-\item The serialization shall provide a designated comment construct that can be placed sufficiently flexible as to be uniquely associated with any non-comment construct of the language.  That means, for example, one of the following:
-  \begin{itemize}
-  \item The serialization provides a construct that indicates the start and end of a comment and may be placed before/after each token that represents a structural element of an ontology.
-  \item The serialization provides line-based comments (ranging from an indicated position to the end of a line) but at the same time allows for flexibly placing line breaks before/after each token that represents a structural element of an ontology.
-  \end{itemize}
-\end{itemize}
-
-\item[Standoff markup conformance]
-An ontology language is standoff markup conformant with DOL if one of its serializations conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.  Note that conformance with \mimetype{text/plain} is a prerequisite for using, for example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying text ranges.
-\end{description}
-
-~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
-
-Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs as a means of abbreviating IRIs, listed from highest to lowest:
-\begin{description}
-\item[Prefixed CURIE conformance] The given serialization allows that non-logical symbol identifiers have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}).  The serialization is \notrequired to support CURIEs with no prefix.\\
-  Informative comment: In this case, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a basic ontology to IRIs in multiple namespaces (\cf \cref{c:map-ids})
-\item[Unprefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
-  Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the basic ontology to IRIs, which are located in one flat namespace.
-\end{description}
-
-\CLnote[type=todo]{add the possibility to provide an alternative CURIE separate character in the conformance declaration, as mentioned in \cref{c:map-ids}}
-
-Any conforming serialization of an ontology language shall have a machine-processable description as detailed in \cref{c:conform:description}.
-
-\sclause{Machine-processable description of conforming languages, logics, and serializations}\label{c:conform:description}
-
-For any conforming ontology language, logic, and serialization of an ontology language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:rdf-logic-vocab}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
-
-\sclause{Conformance of a serialization with DOL}\label{c:conform:dialect}
-
-While \cref{c:conform:serialization} covered the conformance of serializations of \emph{basic} ontology languages with DOL, this clause addresses serializations of DOL itself.  This international standard specifies one text-based serialization in \aref{a:text-syntax}, but one can specify further serializations according to the following conformance criteria.\todonote[author=Christoph Lange,date=D:201111041524+01'00',type=fyi]{This section is analogous to Common Logic's ``Dialect Conformance''.}
-
-It is required that a specification of a conforming serialization be given as a set of mappings from the abstract syntax (\cf \cref{c:abstract-syntax}), where each production rule of the abstract syntax is mapped to a production rule of the concrete syntax.  Instead of such an explicit mapping, an implicit mapping may be provided via a self-contained EBNF for the concrete syntax, whose nonterminal symbols have to match the nonterminal symbols of the EBNF of the abstract syntax.\todonote[type=todo,author=Christoph Lange]{Say that in a more formal way! -- Is it comprehensible?  Does it sufficiently state what we have in mind?}
-
-\sclause{Conformance of a document with DOL}\label{c:conform:document}
-
-A document conforms with DOL if it contains a well-formed DOL ontology.  That means, in particular, that any information related to logics has to be made explicit (as foreseen by the DOL abstract syntax specified in \cref{c:abstract-syntax}), such as:
-\begin{itemize}
-\item the logic of each ontology that is part of the distributed ontology
-\item the translation that is employed between two logics (unless it is one of the default translations specified in \aref{a:graph})
-\end{itemize}
-However, details about aspects of an ontology that do not have a formal, logic-based semantics, may be left implicit.  For example, a conforming document may omit explicit references to matching algorithms that have been employed in obtaining an alignment.
-
-\sclause{Conformance of an application with DOL}\label{c:conform:application}
-
-In practice, DOL-aware \emph{applications} are also allowed to deal with documents that are not conforming with DOL according to the criteria established in \cref{c:conform:document}.  However, an application only \emph{conforms} with DOL if it is capable of producing DOL-conforming documents as its output when requested.
-
-We expect most DOL-aware applications to support a fixed (possibly extensible) set of ontology languages conforming with DOL.  It is, for example, possible that a DOL-aware application only supports OWL and Common Logic.  In that case, the application is allowed to process documents that mix OWL and Common Logic ontologies \emph{without} explicitly declaring the respective logics, as the respective syntaxes of OWL and Common Logic allow for telling such ontologies apart by looking at the keywords used.  However, for DOL conformance, that application has to be capable of exporting documents with explicit references to the logics used.
-
-~\CLnote{applications need to strip DOL annotations from embedded fragments in other ontology languages}
-
-~\CLnote{applications need to be able to expand CURIEs into IRIs when requested}
 
 
 
