@@ -1,0 +1,23 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{fourier}
+\renewcommand{\sfdefault}{Myriad-LF}
+\usepackage[scaled=.8]{beramono}
+% Minion and Myriad fonts – comment these lines if you don't have them!
+% (http://lglinux.blogspot.com/2007/09/myriad-and-minion-for-latex.html)
+\usepackage[minionint,mathlf]{MinionPro}
+\usepackage{tikz}
+\input{DOL-tikz-preamble}
+\begin{document}
+  \begin{tikzpicture}[ontoiop]
+    % Common Logic
+    \node[label=Common Logic,language,fill=cl] (cl) {};
+    % OWL
+    \node[label=below:OWL,language,fill=owl,below left=of cl] (owl) {};
+    % RDFS
+    \node[label=below:RDFS,language,fill=rdfs,below right=of cl] (rdfs) {};
+    \draw[translation] (owl) to (cl);
+    \draw[translation] (rdfs) to (cl);
+  \end{tikzpicture}
+\end{document}

@@ -1,0 +1,208 @@
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{lstsemantic}[2012/01/23]
+\RequirePackage{listings}
+% listing language definitions for several language of the following kinds:
+% * ontology languages
+% * markup languages
+% * other semantic web languages
+% * other languages occurring in the above contexts
+% 
+% for some related languages see also https://svn.kwarc.info/repos/stex/trunk/sty/etc/lstomdoc.sty
+% 
+% compiled by Christoph Lange (Universität Bremen, Jacobs University Bremen)
+% 2010–2012
+% christoph.lange@jacobs-university.de
+
+% Common Logic 1.0 Interchange Format (CLIF)
+% http://iso-commonlogic.org/
+% partial specification
+\lstdefinelanguage{clif}%
+{morekeywords={%
+and,%
+cl-comment,%
+cl-imports,%
+cl-module,%
+cl-text,%
+exists,%
+forall,%
+if,%
+iff,%
+not,%
+or,%
+},
+alsoletter=-,%
+}[keywords]
+
+% Relax NG Compact
+% http://relaxng.org/compact-20021121.html
+% partial specification
+\lstdefinelanguage{rnc}%
+{morekeywords={%
+default,namespace,datatypes,%
+start,%
+element,%
+attribute,%
+text,%
+empty},
+morestring=[b]",%
+}[keywords,strings]
+
+% Distributed Ontology Language (DOL), text serialization
+% ISO WD 17347
+% http://ontolog.cim3.net/cgi-bin/wiki.pl?OntoIOp
+% partial specification; the whole DOL language is currently experimental
+\lstdefinelanguage{dolText}%
+{morekeywords={%
+end,%
+hide,reveal,translate,project,%
+distributed-ontology,logic,syntax,language,%
+ontology,and,then,%
+combine,%
+interpretation,view,alignment,module,for,of,to,relation,%
+circ,var,minimize,%
+with,%
+prefix},
+alsoletter=-,%
+morecomment=[l]{\%\%\ },%
+morecomment=[n]{\%[}{]\%},%
+morecomment=[s]{\%\{}{\}\%},%
+}[keywords,comments]
+
+% HetCASL
+% http://www.dfki.de/sks/hets/
+% partial specification
+\lstdefinelanguage{HetCASL}%
+{morekeywords={%
+end,%
+hide,reveal,along,%
+library,from,get,%
+logic,%
+spec,and,then,%
+interpretation,view,to,%
+with,%
+implied},
+morecomment=[l]{\%\%\ },%
+morecomment=[n]{\%[}{]\%},%
+morecomment=[s]{\%\{}{\}\%},%
+}[keywords,comments]
+
+% Extended Backus-Naur Form
+% http://en.wikipedia.org/wiki/Extended_Backus–Naur_Form
+\lstdefinelanguage{ebnf}%
+{morestring=[b]',%
+morestring=[b]",%
+morecomment=[s]{?}{?},%
+morecomment=[s]{(*}{*)},%
+}
+
+% OWL (Web Ontology Language) 2 Functional-style Syntax
+% http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/
+% partial specification
+\lstdefinelanguage{owl2fun}%
+{morekeywords={SubClassOf,%
+ObjectIntersectionOf,ObjectUnionOf,ObjectOneOf,%
+ObjectAllValuesFrom,ObjectSomeValuesFrom,ObjectHasValue,%
+ObjectExactCardinality,%
+DataOneOf,%
+DataHasValue,%
+EquivalentClasses,%
+DifferentIndividuals}}[keywords]
+
+% OWL (Web Ontology Language) 2 Manchester Syntax
+% http://www.w3.org/TR/2009/NOTE-owl2-manchester-syntax-20091027/
+% complete specification
+\lstdefinelanguage{owl2Manchester}%
+{morekeywords={%
+AnnotationProperty,Annotations,Asymmetric,%
+Characteristics,Class,%
+Datatype,DifferentFrom,DifferentIndividuals,DisjointClasses,DisjointProperties,DisjointUnionOf,DisjointWith,Domain,%
+EquivalentClasses,EquivalentProperties,EquivalentTo,%
+Facts,Functional,%
+HasKey,%
+Import,Individual,InverseFunctional,InverseOf,Irreflexive,%
+ObjectProperty,%
+Ontology,%
+Prefix,%
+Range,Reflexive,%
+SameAs,SameIndividual,Self,SubClassOf,SubPropertyChain,SubPropertyOf,Symmetric,%
+Transitive,Types,%
+and,%
+exactly,%
+inverse,%
+langPattern,length,%
+max,maxLength,min,minLength,%
+not,%
+only,or,%
+pattern,%
+some,%
+that,%
+value},%
+morecomment=[l]{\#\ },%
+morestring=[b]",%
+}[keywords,comments,strings]
+
+% N3 Logic (also usable for Turtle RDF serialization)
+% http://www.w3.org/TeamSubmission/n3/
+% partial specification
+\lstdefinelanguage{N3}%
+{morekeywords={@forAll,@forSome,@prefix,a,is,of},%
+morecomment=[l]{\#\ },%
+morestring=[b]",%
+morestring=[b]{"""}}[keywords,comments,strings]
+
+% XQuery 1.0
+% http://www.w3.org/TR/2010/REC-xquery-20101214/
+% partial specification
+\lstdefinelanguage{xquery}%
+{morekeywords={for,in,let,return,%
+eq,and,not,%
+declare,default,function,element,variable,external,%
+as,%
+copy,modify,replace,with,delete,insert,node,nodes,first,into,%
+module,namespace,import,at},%
+ morestring=[b]',%
+ morecomment=[n]{(:}{:)}}[keywords,strings]
+
+% Regular XML RDF
+% http://www.dajobe.org/papers/xmleurope2004/
+% "full" specification (well, it's trivial)
+\lstdefinelanguage{rxr}[]{XML}%
+{keywordsprefix={rxr:}}[keywords]
+
+% RDF/XML
+% http://www.w3.org/TR/2004/REC-rdf-syntax-grammar-20040210/
+% "full" specification (well, it's trivial)
+\lstdefinelanguage{RDF/XML}[]{XML}%
+{keywordsprefix={rdf:}}[keywords]
+
+% XInclude 1.0
+% http://www.w3.org/TR/2006/REC-xinclude-20061115/
+% "full" specification (well, it's trivial)
+\lstdefinelanguage{XInclude}[]{XML}%
+{keywordsprefix={xi:}}[keywords]
+
+% XHTML+RDFa 1.0
+% http://www.w3.org/TR/2008/REC-rdfa-syntax-20081014
+% full specification
+\lstdefinelanguage{XHTML+RDFa}[]{HTML}%
+{morekeywords={about,content,datatype,href,property,rel,resource,rev,src,typeof}}[keywords]
+
+% MathML notation definitions
+% http://www.w3.org/TR/2008/WD-MathML3-20080409/chapter8.html
+% full specification (but the language is experimental and has not been admitted as a part of MathML so far)
+\lstdefinelanguage{ntn}[]{XML}%
+{morekeywords={notation,prototype,expr,rendering,render}}
+
+% HTTP headers
+% http://tools.ietf.org/html/rfc2616
+% partial specification
+\lstdefinelanguage{HTTP}%
+{morekeywords={GET,Host,Accept}}
+
+% OpenMath Content Dictionaries with OpenMath objects
+% http://www.openmath.org/standard/om20-2004-06-30/
+% complete specification
+\lstdefinelanguage{omWithCD}[]{XML}%
+  {morekeywords={OMS,OMV,OMI,OMB,OMSTR,OMF,OMA,OMBIND,OMBVAR,OME,OMATTR,OMATP,OMOBJ,CD,CDBase,CDName,CDURL,CDReviewDate,CDStatus,CDVersion,CDRevision,CDUses,CDDefinition,Name,Description,Role,CMP,FMP},
+  sensitive=true}
+

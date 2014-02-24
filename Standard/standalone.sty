@@ -1,0 +1,544 @@
+%%
+%% This is file `standalone.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% standalone.dtx  (with options: `sty')
+%% 
+%% Copyright (c) 2010 by Martin Scharrer <martin@scharrer-online.de>
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%% 
+%%    http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2008/05/04 or later.
+%% 
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is Martin Scharrer.
+%% 
+%% This work consists of the files standalone.dtx, standalone.ins
+%% and the derived file standalone.sty.
+%% 
+% $Id: standalone.dtx 2451 2011-04-07 11:40:38Z martin $
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{standalone} [2011/04/07 v0.4a Package to include TeX sub-files with preambles]
+\expandafter\newif\csname ifstandalone\endcsname
+\standalonefalse
+\@ifundefined{ifstandalonebeamer}{%
+\expandafter\newif\csname ifstandalonebeamer\endcsname
+\standalonebeamerfalse
+}{}%
+\@ifundefined{onlyifstandalone}
+  {\let\onlyifstandalone\@gobble}
+  {}
+\newif\ifsa@subpreambles
+\newif\ifsa@sortsubpreambles
+\newif\ifsa@printsubpreambles
+\DeclareOption{subpreambles}{%
+  \sa@subpreamblestrue
+}
+\DeclareOption{sort}{%
+  \sa@subpreamblestrue
+  \sa@sortsubpreamblestrue
+}
+\DeclareOption{print}{%
+  \sa@subpreamblestrue
+  \sa@printsubpreamblestrue
+}
+\DeclareOption{comments}{%
+  \def\sa@percent{\@makeother\%}%
+}
+\DeclareOption{nocomments}{%
+  \def\sa@percent{}%
+}
+\DeclareOption{mode=none}{%
+    \let\sa@mode\relax
+}
+\DeclareOption{mode=pdf|tex}{%
+    \def\sa@mode{0}%
+}
+\DeclareOption{mode=tex}{%
+    \def\sa@mode{1}%
+}
+\DeclareOption{mode=pdf}{%
+    \def\sa@mode{2}%
+}
+\DeclareOption{mode=build}{%
+    \def\sa@mode{3}%
+}
+\DeclareOption{mode=buildnew}{%
+    \def\sa@mode{4}%
+}
+\ProcessOptions*\relax
+\ifsa@printsubpreambles
+  \ifsa@sortsubpreambles\else
+    \@ifundefined{sa@percent}{%
+      \def\sa@percent{\@makeother\%}%
+    }{}%
+  \fi
+\fi
+\@ifundefined{finkpath}{%
+  \def\sa@rmspace#1 \empty{#1}%
+  \def\sa@chkext#1.#2 \empty#3{%
+    \ifx\empty#3\empty
+      \sa@rmspace#1\empty.#2%
+    \else
+      #1.#2%
+      \expandafter\sa@rmrest
+    \fi
+  }%
+  \def\sa@rmrest tex \empty{}%
+  \def\sa@filepath{\expandafter\sa@chkext\@filef@und\empty.tex \empty\empty}%
+}{%
+  \def\sa@filepath{\expandafter\expandafter\expandafter\sa@rmdotslash\expandafter\finkdir\finkfile\empty./\empty}%
+  \def\sa@rmdotslash#1./#2\empty{%
+    \ifx\empty#1\empty
+      \sa@@rmdotslash#2%
+    \else
+      \ifx\empty#2\empty
+        #1%
+      \else
+        \sa@@rmdotslash#1./#2%
+      \fi
+    \fi
+  }
+  \def\sa@@rmdotslash#1./\empty{#1}%
+}
+\ifsa@subpreambles
+\newwrite\sa@out
+\def\sa@write{\immediate\write\sa@out}%
+\ifsa@printsubpreambles
+\long\def\sa@removeonlyifstandalone#1\onlyifstandalone{%
+  \g@addto@macro\sa@preamble{#1}%
+  \@ifnextchar\sa@endmarker
+    {\@gobble}%
+    {\expandafter\sa@gobbleeol\expandafter\sa@removeonlyifstandalone\expandafter^^J\@gobble}%
+}
+\fi
+\ifsa@sortsubpreambles
+\newcommand{\sa@usepackagewithoutoptions}[2][]{%
+  \sa@orig@usepackage{#2}%
+}
+\def\sa@endmarker{%
+  \@gobble{sa@endmarker}%
+}
+\ifsa@printsubpreambles
+\AtEndDocument{%
+  \sa@write{\@percentchar\space Packages required by sub-files:}%
+  \expandafter\@for\expandafter\pkg\expandafter:\expandafter=\sa@collpkgs\do{%
+    \ifx\pkg\empty\else
+      \sa@write{%
+        \string\usepackage%
+        \expandafter\ifx\csname sa@pkgopts@\pkg\endcsname\empty\else%
+          [\csname sa@pkgopts@\pkg\endcsname]%
+        \fi
+        {\pkg}%
+        \expandafter\ifx\csname sa@pkgdate@\pkg\endcsname\relax\else%
+          [\csname sa@pkgdate@\pkg\endcsname]%
+        \fi
+        }%
+    \fi
+  }%
+  \ifx\sa@collpgflibs\empty\else
+  \sa@write{^^J\@percentchar\space PGF libraries required by sub-files:}%
+  \expandafter\@for\expandafter\lib\expandafter:\expandafter=\sa@collpgflibs\do{%
+    \ifx\lib\empty\else
+      \sa@write{\string\usepgflibrary{\lib}}%
+    \fi
+  }%
+  \fi
+  \ifx\sa@colltikzlibs\empty\else
+  \sa@write{^^J\@percentchar\space TikZ libraries required by sub-files:}%
+  \expandafter\@for\expandafter\lib\expandafter:\expandafter=\sa@colltikzlibs\do{%
+    \ifx\lib\empty\else
+      \sa@write{\string\usetikzlibrary{\lib}}%
+    \fi
+  }%
+  \fi
+  \ifx\sa@colltikztiminglibs\empty\else
+  \sa@write{^^J\@percentchar\space TikZ-Timing libraries required by sub-files:}%
+  \expandafter\@for\expandafter\lib\expandafter:\expandafter=\sa@colltikztiminglibs\do{%
+    \ifx\lib\empty\else
+      \sa@write{%
+        \string\usetikztiminglibrary%
+        \expandafter\ifx\csname sa@tikztimingopts@\lib\endcsname\empty\else%
+          [\csname sa@tikztimingopts@\lib\endcsname]%
+        \fi
+        {\lib}%
+        \expandafter\ifx\csname sa@tikztimingdate@\lib\endcsname\relax\else%
+          [\csname sa@tikztimingdate@\lib\endcsname]%
+        \fi
+        }%
+    \fi
+  }%
+  \fi
+  \sa@write{\expandafter\unexpanded\expandafter{\sa@preamble}}%
+  \message{^^JPackage 'standalone' INFO: See file '\jobname.stp' for list of sub-preambles.^^J}%
+  \immediate\closeout\sa@out
+}
+\long\def\sa@removepackages#1\usepackage{%
+  \sa@removepgflibs#1\usepgflibrary\sa@endmarker
+  \@ifnextchar\sa@endmarker
+    {\@gobble}%
+    {\sa@sortpackages}%
+}
+\long\def\sa@removepgflibs#1\usepgflibrary{%
+  \sa@removetikzlibs#1\usetikzlibrary\sa@endmarker
+  \@ifnextchar\sa@endmarker
+    {\@gobble}%
+    {\sa@sortpgflibs}%
+}
+\long\def\sa@removetikzlibs#1\usetikzlibrary{%
+  \sa@removetikztiminglibs#1\usetikztiminglibrary\sa@endmarker
+  \@ifnextchar\sa@endmarker
+    {\@gobble}%
+    {\sa@sorttikzlibs}%
+}
+\long\def\sa@removetikztiminglibs#1\usetikztiminglibrary{%
+  \sa@removeonlyifstandalone#1\onlyifstandalone\sa@endmarker
+  \@ifnextchar\sa@endmarker
+    {\@gobble}%
+    {\sa@sorttikztiminglibs}%
+}
+\def\sa@collpkgs{}%
+\newcommand\sa@sortpackages[2][]{%
+  \@ifnextchar[%]
+    {\sa@@sortpackages{#1}{#2}}%
+    {\sa@@sortpackages{#1}{#2}[]}%
+}
+\def\sa@@sortpackages#1#2[#3]{%
+  \@for\pkg:=#2\do {%
+    \@ifundefined{sa@pkgopts@\pkg}%
+      {%
+        \expandafter\g@addto@macro\expandafter\sa@collpkgs\expandafter{\expandafter,\pkg}%
+        \global\@namedef{sa@pkgopts@\pkg}{#1}%
+        \global\@namedef{sa@pkgopt@\pkg @}{}%
+        \ifx\relax#1\relax\else
+          \@for\opt:=#1\do{\global\@namedef{sa@pkgopt@\pkg @\opt}{}}%
+        \fi
+      }%
+      {%
+        \ifx\relax#1\relax\else
+          \@for\opt:=#1\do{%
+            \@ifundefined{sa@pkgopt@\pkg @\opt}%
+              {%
+                \expandafter\g@addto@macro\csname sa@pkgopts@\pkg\expandafter\endcsname\expandafter{\expandafter,\opt}%
+                \global\@namedef{sa@pkgopt@\pkg @\opt}{}%
+              }{}%
+          }%
+        \fi
+      }%
+    \ifx\relax#3\relax\else
+    \@ifundefined{sa@pkgdate@\pkg}%
+      {\global\@namedef{sa@pkgdate@\pkg}{#3}}%
+      {%
+        \ifnum\expandafter\expandafter
+         \expandafter\sa@@getdate\csname sa@pkgdate@\pkg\endcsname//00\relax<\sa@@getdate#3//00\relax
+          \global\@namedef{sa@pkgdate@\pkg}{#3}%
+        \fi
+      }%
+    \fi
+  }%
+  \sa@gobbleeol\sa@removepackages^^J%
+}
+\def\sa@@getdate#1/#2/#3#4#5\relax{#1#2#3#4}
+\def\sa@collpgflibs{}%
+\def\sa@sortpgflibs#1{%
+  \@for\lib:=#1\do {%
+    \@ifundefined{sa@pgflib@\lib}%
+      {%
+        \expandafter\g@addto@macro\expandafter\sa@collpgflibs\expandafter{\expandafter,\lib}%
+        \global\@namedef{sa@pgflib@\lib}{}%
+      }%
+      {}%
+  }%
+  \sa@gobbleeol\sa@removepgflibs^^J%
+}
+\def\sa@colltikzlibs{}%
+\def\sa@sorttikzlibs#1{%
+  \@for\lib:=#1\do {%
+    \@ifundefined{sa@tikzlib@\lib}%
+      {%
+        \expandafter\g@addto@macro\expandafter\sa@colltikzlibs\expandafter{\expandafter,\lib}%
+        \global\@namedef{sa@tikzlib@\lib}{}%
+      }%
+      {}%
+  }%
+  \sa@gobbleeol\sa@removetikzlibs^^J%
+}
+\def\sa@colltikztiminglibs{}%
+\newcommand\sa@sorttikztiminglibs[2][]{%
+  \@ifnextchar[%]
+    {\sa@@sorttikztiminglibs{#1}{#2}}%
+    {\sa@@sorttikztiminglibs{#1}{#2}[]}%
+}
+\def\sa@@sorttikztiminglibs#1#2[#3]{%
+  \@for\lib:=#2\do {%
+    \@ifundefined{sa@tikztimingopts@\lib}%
+      {%
+        \expandafter\g@addto@macro\expandafter\sa@colltikztiminglibs\expandafter{\expandafter,\lib}%
+        \global\@namedef{sa@tikztimingopts@\lib}{#1}%
+        \global\@namedef{sa@tikztimingopt@\lib @}{}%
+        \ifx\relax#1\relax\else
+          \@for\opt:=#1\do{\global\@namedef{sa@tikztimingopt@\lib @\opt}{}}%
+        \fi
+      }%
+      {%
+        \ifx\relax#1\relax\else
+          \@for\opt:=#1\do{%
+            \@ifundefined{sa@tikztimingopt@\lib @\opt}%
+              {%
+                \expandafter\g@addto@macro\csname sa@tikztimingopts@\lib\expandafter\endcsname\expandafter{\expandafter,\opt}%
+                \global\@namedef{sa@tikztimingopt@\lib @\opt}{}%
+              }{}%
+          }%
+        \fi
+      }%
+    \ifx\relax#3\relax\else
+    \@ifundefined{sa@tikztimingdate@\lib}%
+      {\global\@namedef{sa@tikztimingdate@\lib}{#3}}%
+      {%
+        \begingroup
+        \edef\@tempa{{\csname sa@tikztimingdate@\lib\endcsname}{#3}}%
+        \expandafter\sa@getlargerdate\@tempa
+        \expandafter\xdef\csname sa@tikztimingdate@\lib\endcsname{\sa@thedate}%
+        \endgroup
+      }%
+    \fi
+  }%
+  \sa@gobbleeol\sa@removetikztiminglibs^^J%
+}
+\def\sa@gobbleopt#1[#2]{%
+  \@ifnextchar^^J%
+    {\sa@gobbleeol{#1}}{#1}%
+}
+\else
+\def\sa@scanpackages#1\usepackage{%
+  \@ifnextchar\sa@endmarker
+    {\@gobble}%
+    {\sa@collectpackage}
+}
+\newcommand\sa@collectpackage[2][]{%
+  \ifx\relax#1\relax\else
+    \g@addto@macro\sa@collopts{\PassOptionsToPackage{#1}{#2}}%
+  \fi
+  \sa@scanpackages
+}
+\fi
+\def\sa@collopts{}
+\AtEndOfPackage{\sa@collopts\let\sa@collopts\relax}
+\fi
+\def\standalonepreambles{%
+  \begingroup
+  \endlinechar=\m@ne
+  \@makeother\#%
+}
+\def\endstandalonepreambles{%
+  \endgroup
+  \endinput
+}
+\long\gdef\subpreamble#1#2\endsubpreamble{%
+  \expandafter\gdef\csname prevsubpreamble@#1\endcsname{#2}%
+  \ifsa@sortsubpreambles
+    \sa@scanpackages#2\usepackage\sa@endmarker
+  \fi
+}
+\def\endsubpreamble{}%
+\ifsa@printsubpreambles
+  \immediate\openout\sa@out=\jobname.stp\relax
+\else
+\begingroup
+  \setbox\@tempboxa\hbox{%
+  \InputIfFileExists{\jobname.sta}{}{\PackageInfo{standalone}{STA file not found!}{}{}}%
+  }%
+\endgroup
+
+\AtBeginDocument{%
+  \let\subpreamble\@gobble
+  \let\endsubpreamble\relax
+  \let\standalonepreambles\relax
+  \let\endstandalonepreambles\relax
+  \ifsa@sortsubpreambles
+    \let\sa@orig@usepackage\usepackage
+    \let\usepackage\sa@usepackagewithoutoptions
+  \fi
+  \InputIfFileExists{\jobname.sta}{}{}%
+  \ifsa@sortsubpreambles
+    \let\usepackage\sa@orig@usepackage
+  \fi
+  \immediate\openout\sa@out=\jobname.sta\relax
+  \immediate\write\sa@out{\string\standalonepreambles}%
+}
+\AtEndDocument{%
+  \sa@write{\string\endstandalonepreambles}%
+  \immediate\closeout\sa@out
+}
+\fi
+\fi
+\def\sa@gobbleeol#1^^J{%
+  \@ifnextchar^^J%
+    {\sa@gobbleeol{#1}}{#1}%
+}
+\def\sa@gobbleline#1^^J{}%
+\long\def\standaloneignore#1\documentclass{%
+  \sa@documentclass
+}
+\@namedef{standaloneignore\space}{\standaloneignore}
+\newcommand{\sa@documentclass}[2][]{%
+  \let\document\sa@document
+  \begingroup
+  \ifsa@subpreambles
+    \@ifundefined{sa@written@\sa@filepath}%
+      {%
+        \ifsa@printsubpreambles
+          \ifsa@sortsubpreambles
+            \begingroup
+              \edef\@tempa{^^J\@percentchar\space Preamble from file '\sa@filepath'^^J}%
+              \expandafter\g@addto@macro\expandafter\sa@preamble\expandafter{\@tempa}%
+            \endgroup
+          \else
+            \sa@write{^^J\@percentchar\space Preamble from file '\sa@filepath'}%
+          \fi
+        \else
+          \sa@write{\string\subpreamble{\sa@filepath}}%
+        \fi
+      }{}%
+    \global\@namedef{subpreamble@\sa@filepath}{}%
+    \ifsa@printsubpreambles
+      \endlinechar=`\^^J%
+    \else
+      \endlinechar=\m@ne
+    \fi
+    \@makeother\#%
+    \@nameuse{sa@percent}%
+  \fi
+  \def\sa@gobbleto{document}%
+  \sa@gobbleeol\sa@gobble^^J%
+}
+\def\sa@preamble{}%
+\long\def\sa@gobble#1\begin#2{%
+  \def\@tempa{#2}%
+  \ifx\@tempa\sa@gobbleto
+    \ifsa@subpreambles
+      \expandafter\g@addto@macro\csname subpreamble@\sa@filepath\endcsname{#1}%
+      \@ifundefined{sa@written@\sa@filepath}%
+        {%
+          \ifsa@printsubpreambles
+            \ifsa@sortsubpreambles
+              \sa@removepackages#1\usepackage\sa@endmarker
+            \else
+              \begingroup
+              \let\sa@preamble\empty
+              \sa@removeonlyifstandalone#1\onlyifstandalone\sa@endmarker
+              \expandafter\sa@write\expandafter{\expandafter\unexpanded\expandafter{\sa@preamble}}%
+              \endgroup
+            \fi
+          \else
+            \sa@write{\unexpanded{#1}}%
+            \sa@write{\string\endsubpreamble}%
+          \fi
+        }{}%
+      \global\@namedef{sa@written@\sa@filepath}{}%
+      \ifsa@printsubpreambles
+        \def\next{%
+          \endgroup
+          \PackageWarning{standalone}{Running 'standalone' package in sub-preamble print mode. All body content of file `\sa@filepath' is ignored!}{}{}%
+          \hbox to 1pt{\vbox to 1pt{}}%
+          \endinput
+          %\sa@gobbleline
+        }%
+      \else
+      \expandafter
+      \ifx
+      \csname prevsubpreamble@\sa@filepath \expandafter\endcsname
+      \csname     subpreamble@\sa@filepath \endcsname
+        \def\next{\expandafter\endgroup\expandafter\begin\expandafter{\sa@gobbleto}}%
+      \else
+        %\expandafter\show\csname prevsubpreamble@\sa@filepath \endcsname
+        %\expandafter\show\csname     subpreamble@\sa@filepath \endcsname
+        \def\next{%
+          \endgroup
+          \PackageWarning{standalone}{Sub-preamble of file '\sa@filepath' has changed. Content will be ignored. Please rerun LaTeX!}{}{}%
+          \immediate\write\@mainaux{%
+            \@percentchar\space standalone package info: Rerun LaTeX!
+          }%
+          \hbox to 1pt{\vbox to 1pt{}}%
+          \endinput
+          %\sa@gobbleline
+        }%
+      \fi
+      \fi
+    \else
+      \def\next{\expandafter\endgroup\expandafter\begin\expandafter{\sa@gobbleto}}%
+    \fi
+  \else
+    \ifsa@subpreambles
+      \expandafter\g@addto@macro\csname subpreamble@\sa@filepath\endcsname{#1\begin{#2}}%
+      \@ifundefined{sa@written@\sa@filepath}%
+        {\sa@write{\unexpanded{#1\begin{#2}}}}{}%
+    \fi
+    \def\next{\sa@gobble}%
+  \fi
+  \next
+}
+\@ifundefined{standalone}
+  {\newenvironment{standalone}[1][]{}{}}
+  {}
+\@ifundefined{standaloneframe}
+  {\@ifundefined{beamer@newenv}
+    {\newenvironment{standaloneframe}[1][]{%
+      \@ifnextchar[%]
+        {\sa@framegobbleopt}{\sa@framegobbleargs}}{}%
+    }
+    {\newenvironment<>{standaloneframe}[1][]{%
+      \@ifnextchar[%]
+        {\sa@framegobbleopt}{\sa@framegobbleargs}}{}%
+    }
+   \def\sa@framegobbleopt[#1]{\sa@framegobbleargs}
+   \def\sa@framegobbleargs{%
+     \@ifnextchar\bgroup
+       {\sa@framegobbleargs@}%
+       {}%
+   }
+   \def\sa@framegobbleargs@#1{%
+    \@ifnextchar\bgroup
+      {\@gobble}%
+      {}%
+   }
+  }
+  {}
+\let\sa@orig@document\document
+\let\sa@orig@enddocument\enddocument
+\def\document{%
+  \sa@orig@document
+  \let\documentclass\sa@documentclass
+  \ignorespaces
+}
+\def\sa@document{%
+  \let\enddocument\sa@enddocument
+  \sa@atbegindocument
+}
+\def\sa@enddocument{%
+  \sa@atenddocument
+  \aftergroup\sa@@enddocument
+}
+\def\sa@@enddocument{%
+  %\let\document\sa@orig@document
+  \let\enddocument\sa@orig@enddocument
+  \endinput
+}
+\def\sa@atbegindocument{%
+  \ignorespaces
+}%
+\def\sa@atenddocument{%
+  \unskip
+}%
+\endinput
+%%
+%% End of file `standalone.sty'.
