@@ -661,7 +661,7 @@ This \IS specifies the Distributed Ontology, Modeling and Specification Language
 
 DOL does not provide a new elementary OMS language, but provides a
 layer to be used on top of existing elementary OMS languages which
-enables OMS engineers to formally express links between OMSs written
+enables OMS engineers to formally express mappings between OMSs written
 in different languages and stored at different Web locations. The
 purpose of such distributed OMSs is enabling a greater extent of
 interoperability between data and services in complex application
@@ -685,10 +685,10 @@ as well as complex mappings and relations between OMSs.
 The following are within the scope of this \IS:
 \begin{enumerate}
 \item\label{it:scope-heterogeneous} heterogeneous OMSs that combine parts written in different languages
-\item links between (possibly structured and/or heterogeneous) OMSs (mapping
+\item mappings between (possibly structured and/or heterogeneous) OMSs (mapping
 OMS symbols to OMS symbols)
 \item \label{it:scope-translation} translations between different OMS languages conformant with DOL (translating whole OMSs to another language)
-\item\label{it:scope-annotation} annotation and documentation of OMSs, links between OMSs, symbols,
+\item\label{it:scope-annotation} annotation and documentation of OMSs, mappings between OMSs, symbols,
 and sentences
 \item recommendations of vocabularies for annotating and documenting OMSs
 \item a syntax for embedding the constructs mentioned under (\ref{it:scope-heterogeneous})–(\ref{it:scope-annotation}) as annotations into existing OMSs
@@ -704,7 +704,7 @@ The following are outside the scope of this \IS:
 \CLnote[type=todo]{We somehow need to rephrase this (here and elsewhere); it reads quite ugly.  Maybe just say ``non-logical symbols''?  Or, if absolutely necessary, reorder the words into ``non-logical ontology symbols''.} 
 and
 stating sentences about them
-\item algorithms for obtaining links between OMSs
+\item algorithms for obtaining mappings between OMSs
 \item concrete OMSs and their conceptualization and application
 %% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
 % \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
@@ -1190,11 +1190,11 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     See \bref{circ1}, \bref{circ2}.
   \end{note}
 
-\sclause{Links Between OMSs}
+\sclause{Mappings Between OMSs}
 
   \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from \termref{non-logical symbols} from $O_2$
   \begin{note}
-  A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context (``equivalence'' for alignments, and ``equality'' for logical links)\CLnote[type=q-aut]{For interpretations that is the only viable way, but for alignments?  Is there any reasonable ``implied default'', or should we let R default to something like owl:sameAs?}; when $c$ is omitted, it defaults to $1$.}
+  A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context (``equivalence'' for alignments, and ``equality'' for logical OMS mappings)\CLnote[type=q-aut]{For interpretations that is the only viable way, but for alignments?  Is there any reasonable ``implied default'', or should we let R default to something like owl:sameAs?}; when $c$ is omitted, it defaults to $1$.}
   \end{note}
 
   \begin{note}
@@ -1203,17 +1203,17 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
 
   \termdefinition{link\subjectfield{OMSs}\todonote[author=Christoph Lange,date=D:201108252257+02'00',type=q-all]{Is this the correct way of stating that I mean ``the term link, when used in the context of ontologies''?}}{relationship between two \termref{OMSs}, typically given as a set of \termref{correspondences}}
   
-  \termdefinition{logical link}{\termref{link} that has a formal, logic-based semantics}
+  \termdefinition{logical OMS mapping}{\termref{OMS mapping} that has a formal, logic-based semantics}
   \begin{note}
-    Logical links are given as sets of correspondences, which are required to be \emph{signature morphisms}.
+    Logical OMS mappings are given as sets of correspondences, which are required to be \emph{signature morphisms}.
   \end{note}
   \begin{note}
-Some specific kinds of logical links will be introduced below.  
+Some specific kinds of logical OMS mappings will be introduced below.  
   \end{note}
 
-  \termdefinition{interpretation\synonym view}{\termref{logical link} that postulates a relation between two \termref{OMSs}}
+  \termdefinition{interpretation\synonym view}{\termref{logical OMS mapping} that postulates a relation between two \termref{OMSs}}
   \begin{note}
-    An interpretation typically leads to proof obligations, \ie one has to prove that axioms of the source OMS of the link are theorems in the target OMS.
+    An interpretation typically leads to proof obligations, \ie one has to prove that axioms of the source OMS of the mapping are theorems in the target OMS.
   \end{note}
   \begin{note}
     When an interpretation is given as a set of correspondences, these are given as tuples, where the type of relationship is given by the specific kind of interpretation. 
@@ -1222,7 +1222,7 @@ Some specific kinds of logical links will be introduced below.
 \ednote{the DOL structuring language should include constructs for claiming that two OMSs are equivalent, see \url{http://www.informatik.uni-bremen.de/~okutz/hyperontologies.pdf}, p.42ff.}
 
   \termdefinition{equivalence}
-{\termref{logical link} ensuring that two \termref{OMSs} share the
+{\termref{logical OMS mapping} ensuring that two \termref{OMSs} share the
   same definable concepts}
   \begin{note}
     Two OMSs are equivalent if they have a common definitional extension.
@@ -1234,9 +1234,9 @@ Some specific kinds of logical links will be introduced below.
     Adapted from \bref{CuencaGrauEtAl:ExtractingModulesOntologies2007}
   \end{note}
 
-  \termdefinition{module relation}{\termref{logical link} stating that one \termref{OMS} is a \termref{module} of the other one.}
+  \termdefinition{module relation}{\termref{logical OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
 
-  \termdefinition{virtual import}{\termref{logical link} between two
+  \termdefinition{virtual import}{\termref{logical OMS mapping} between two
     \termref{OMSs} such that one OMS behaves as if it were
     imported into the other}
   \begin{note}
@@ -1249,19 +1249,19 @@ Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim
     Importing $O_1$ into $O_2$ turns $O_2$ into an extension of $O_1$.
   \end{note}
   
-  \termdefinition{renaming}{\termref{logical link} assigning new names
+  \termdefinition{renaming}{\termref{logical OMS mapping} assigning new names
    to some \termref{non-logical symbols} of an \termref{OMS}}
 
-  \termdefinition{reduction}{\termref{logical link} reducing an \termref{OMS} to a smaller \termref{signature}}
+  \termdefinition{reduction}{\termref{logical OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
 
   \termdefinition{union}{aggregation of several \termref{OMSs}
     to a new \termref{OMS} where (only) identically-named
     \termref{non-logical symbols} of the involved \termref{OMSs} are identified}
 
-  \termdefinition{combination}{aggregation of several \termref{OMSs} along \termref{links} to a new \termref{OMS} where (only) the linked
+  \termdefinition{combination}{aggregation of several \termref{OMSs} along \termref{OMS mappings} to a new \termref{OMS} where (only) the mapped
   \termref{non-logical symbols} of the involved \termref{OMSs} are identified}
 
-  \termdefinition{alignment}{flexible, relational \termref{link} that does not always have a formal, logic-based semantics}
+  \termdefinition{alignment}{flexible, relational \termref{OMS mapping} that does not always have a formal, logic-based semantics}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMSs}}
 \end{definitions}
@@ -1283,7 +1283,7 @@ Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim
 
   \termdefinition{logical language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that allows for expressing \termref{non-logical symbols} and \termref{sentences} in a logical language}
 
-  \termdefinition{structuring language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that covers \termref{structured OMSs} as well as the relations of \termref{basic OMSs} and \termref{structured OMSs} to each other, including, but not limited to \termref{imports}, \termref{links}, \termref{conservative extensions}, and the handling of prefixes for CURIEs}
+  \termdefinition{structuring language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that covers \termref{structured OMSs} as well as the relations of \termref{basic OMSs} and \termref{structured OMSs} to each other, including, but not limited to \termref{imports}, \termref{OMS mappings}, \termref{conservative extensions}, and the handling of prefixes for CURIEs}
 
   \termdefinition{annotation language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that allows for expressing comments
 and annotations}
@@ -1401,14 +1401,14 @@ TODO Michael: explain the relationship to other notions of interoperability (fro
 \sclause{Distributed OMSs and the Distributed Ontology, Modeling and Specification Language}
 
 \begin{definitions}
-  \termdefinition{distributed OMS\synonym hyperontology}{collection of \termref{OMSs,} possibly written in different \termref{OMS languages}, linked by \termref{links}}
+  \termdefinition{distributed OMS\synonym hyperontology}{collection of \termref{OMSs,} possibly written in different \termref{OMS languages}, linked by \termref{OMS mappings}}
 
   \termdefinition{distributed ontology, modeling and specification language\synonym
   DOL}{language for formalizing \termref{distributed OMSs}, whose syntax and semantics are specified in this \IS}
 
 \begin{note}
  When viewed as an \termref{OMS language}, DOL has \termref{OMSs} as its
-\termref{non-logical symbols}, and \termref{links} as its \termref{sentences}.
+\termref{non-logical symbols}, and \termref{OMS mappings} as its \termref{sentences}.
 \end{note}
 \end{definitions}
 
@@ -1471,7 +1471,7 @@ Longstreth,date=D:201110060000+02'00']{Terry Longstreth:
   than that: also interfacability, such that the joint use in a common
   application scenario is enabled.}
 
-  In complex applications, which involve multiple OMSs with overlapping concept spaces, data mapping is also required on a higher level of abstraction, viz.\ between different OMSs, and is then called OMS alignment.  While OMS alignment is most commonly studied for OMSs formalized\CLnote{spell-check everything for British} in the same OMS language, the different OMSs used by complex applications may also be written in different OMS languages. This \IS faces this diversity not by proposing yet another OMS language that would subsume all the others.  Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) to compare and integrate OMSs that are written in different formalisms. It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for expressing not only OMSs but also links between OMSs formalized in different OMS languages.
+  In complex applications, which involve multiple OMSs with overlapping concept spaces, data mapping is also required on a higher level of abstraction, viz.\ between different OMSs, and is then called OMS alignment.  While OMS alignment is most commonly studied for OMSs formalized\CLnote{spell-check everything for British} in the same OMS language, the different OMSs used by complex applications may also be written in different OMS languages. This \IS faces this diversity not by proposing yet another OMS language that would subsume all the others.  Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) to compare and integrate OMSs that are written in different formalisms. It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for expressing not only OMSs but also mappings between OMSs formalized in different OMS languages.
 
 Thus, it gives interoperability a formal grounding and makes heterogeneous OMSs and services based on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences, and compliance).
 
@@ -1535,7 +1535,7 @@ DOL \shall provide syntactic constructs for structuring OMSs regardless of the l
 \begin{itemize}
 \item basic and structured OMSs (and facilities to identify them in a globally unique way),
 \item explicit extraction of modules from existing OMSs, \markupcomment[author=Christoph Lange,type=q-aut]{such that, \eg, changes in the OMS can be propagated to the extracted module}{This rather sounds like a use case description to me than like a requirement.  Move it somewhere else?  Where?}.
-\item links between OMSs (\cf \cref{c:req:links}), including interpretations, relations between OMSs and their modules, as well as alignments.
+\item mappings between OMSs (\cf \cref{c:req:links}), including interpretations, relations between OMSs and their modules, as well as alignments.
 \end{itemize}
 DOL \shallnot provide its own constructs for expressing sentences.  Instead, it \shall \textit{inherit} the logical language aspects of conforming OMS languages.  It \should be possible to literally include sentences expressed in such OMS languages in a DOL OMS.
 
@@ -1568,7 +1568,7 @@ Existing OMSs in existing XML serializations (\eg XCL) or text serializations (\
 
 \subsection{DOL has a well-defined formal, logic-based semantics.}\label{c:req:semantics}
 
-The structural elements and structural links of DOL \should have a formal, logic-based semantics.
+The structural elements and structural mappings of DOL \should have a formal, logic-based semantics.
 
 This \IS specifies OMS language translations between conforming languages:\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{we shall establish the conformance of an initial set of languages with DOL. As a part of that work we deliver the "onto-logical translation graph" between these languages. Anyone, who wants to establish the conformance of another language with DOL, has to add a node to the graph, and at least one edge from/to an existing node.}
 
@@ -1619,11 +1619,11 @@ Lange,date=D:201109201457+02'00',type=todo]{Figure out what this
 abstract syntax category \syntax{Onto} in
 clause~\ref{c:abstract-syntax}.
 
-\subsection{DOL allows for expressing links between OMSs.}\label{c:req:links}
+\subsection{DOL allows for expressing mappings between OMSs.}\label{c:req:links}
 
-DOL provides a syntax for expressing links between OMSs -- logical links as well as alignments.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}. This \IS specifies a set of logical link types and a set of non-logical link types.
+DOL provides a syntax for expressing mappings between OMSs -- logical OMS Mappings as well as alignments.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}. This \IS specifies a set of logical OMS mapping types and a set of non-logical OMS mapping types.
 
-Logical links supported by DOL include:
+Logical OMS mappings supported by DOL include:
 \begin{itemize}
 \item imports (particularly including imports that lead to conservative extensions), see the
 abstract syntax categories \syntax{OntoRef} and \syntax{ExtensionOnto} in
@@ -1631,11 +1631,11 @@ clause~\ref{c:abstract-syntax}.
 \item interpretations, see the
 abstract syntax category \syntax{IntprDefn} in
 clause~\ref{c:abstract-syntax}.
-\item links between OMSs and their modules, see the
+\item mappings between OMSs and their modules, see the
 abstract syntax category \syntax{ModuleRelDefn} in
 clause~\ref{c:abstract-syntax}.
 \end{itemize}
-DOL allows for expressing signature translations in such links, see the
+DOL allows for expressing signature translations in such OMS mappings, see the
 abstract syntax category \syntax{SymbolMapItems} in
 clause~\ref{c:abstract-syntax}.
 
@@ -1644,20 +1644,20 @@ capable of referring to them.
 
 \todonote[author=Christoph Lange,date=D:201111231324+01'00',type=q-aut]{We had this comment here; what does it mean?  ``DOL only maps symbols to expressions''}
 
-DOL also allows for combining/merging OMSs along such links, see
+DOL also allows for combining/merging OMSs along such OMS mappings, see
 the rule for \syntax{combination} for the abstract syntax category
 \syntax{Onto} in clause~\ref{c:abstract-syntax}.
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{illustrations/DOLfig.pdf}
-  \caption{Linking two OMSs formulated in different OMS languages}
+  \caption{Mapping between two OMSs formulated in different OMS languages}
 \label{f:DOL-mapping}
 \end{figure}
 
-\subsection{DOL allows for expressing OMSs and links at different levels of detail}\label{c:explicit}
+\subsection{DOL allows for expressing OMSs and OMS mappings at different levels of detail}\label{c:explicit}
 
-OMSs and OMS links expressed in DOL can be based on a
+OMSs and OMS mappings expressed in DOL can be based on a
 number of implicit assumptions about which OMS language
 translation or which ontoloy matcher has been employed.  Depending on
 the OMS engineering workflow or application setting, it can be
@@ -1691,12 +1691,12 @@ A list of RDF vocabularies for annotating OMSs is recommended as an annex to thi
 
 \sclause{Abstract syntax categories}
 
-DOL provides abstract syntax categories for\todonote[author=Christoph Lange,date=D:201111071952+01'00',type=q-aut]{In the previous draft we had more fine-grained categories: OMS languages, OMS language translation, links between OMSs, OMS combination (are these the colimits that we now call ``combinations''?)}
+DOL provides abstract syntax categories for\todonote[author=Christoph Lange,date=D:201111071952+01'00',type=q-aut]{In the previous draft we had more fine-grained categories: OMS languages, OMS language translation, mappings between OMSs, OMS combination (are these the colimits that we now call ``combinations''?)}
 \begin{itemize}
 \item heterogeneous OMSs (which can be basic OMSs in some
 OMS language, or unions, translations, minimizations, combinations,
 approximations of OMSs, among others)
-\item distributed OMSs (items in distributed OMSs are: OMS definitions, link definitions, and qualifications choosing the logic,
+\item distributed OMSs (items in distributed OMSs are: OMS definitions, OMS mapping definitions, and qualifications choosing the logic,
 OMS language and/or serialization)
 \item identifiers
 \item annotations
@@ -1709,11 +1709,11 @@ The following subclauses, one per abstract syntax category, specify the abstract
 \sclause{Distributed OMSs}\label{c:dist-onto}
 
 A distributed OMS consists of at least one (possibly
-heterogeneous) OMS, plus, optionally, links between its
+heterogeneous) OMS, plus, optionally, mappings between its
 participating (heterogeneous) OMSs.  More specifically, a
 distributed OMS consists of a name, followed by a list of
 \syntax{DistOntoItem}s.  A \syntax{DistOntoItem} is either an
-OMS definition (\syntax{OntoDefn}), or a link between OMSs
+OMS definition (\syntax{OntoDefn}), or a mapping between OMSs
 (\syntax{LinkDefn}), or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{DistOntoItem}s.  Alternatively, a distributed
@@ -1725,7 +1725,7 @@ DistOnto                 = [ PrefixMap ] , DistOntoDefn
                          | OntoInConformingLanguage ;
 DistOntoDefn             = 'dist-onto-defn' , DistOntoName , { DistOntoItem } ;
 OntoInConformingLanguage = ? language and serialization specific ? ;
-DistOntoItem             = OntoDefn | LinkDefn | Qualification ;
+DistOntoItem             = OntoDefn | MappingDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
@@ -1737,7 +1737,7 @@ DistOntoName             = IRI ;
   • download-items (encourage linked data best practices instead)\textLF
   • item-name-map (to be replaced by namespaces??)\textLF
   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
-  • indirect-link (will always use full IRIs, and abbreviate them by syntactic namespaces)}
+  • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
 
 At the beginning of a distributed OMS, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
 
@@ -1808,7 +1808,7 @@ Conservative         = 'consequence-conservative' | 'model-conservative' ;
 
 InterfaceSignature   = 'interface-signature' , SymbolItems ;
 
-CombinedElements     = OntoOrLink [ Id ] <\CLnote{or should we leave \syntax{OntoOrIntprRef}?  Does combination have a semantics for (informal) alignments? TM: indeed yes, at least if we ignore confidence values (or all are equal to 1). Then, an (informal) alignment leads to a span of logical links, and this can be used in the combination. This feature will greatly increase the use of combinations. I will work this out in the semantics.}>Ref { OntoOrLinkRef } ;
+CombinedElements     = OntoOrMapping [ Id ] <\CLnote{or should we leave \syntax{OntoOrIntprRef}?  Does combination have a semantics for (informal) alignments? TM: indeed yes, at least if we ignore confidence values (or all are equal to 1). Then, an (informal) alignment leads to a span of logical mappings, and this can be used in the combination. This feature will greatly increase the use of combinations. I will work this out in the semantics.}>Ref { OntoOrMappingRef } ;
 ExcludeExtensions    = 'exclude-imports' , { ExtensionRef } ;
 
 ImportName           = IRI ;
@@ -1840,7 +1840,7 @@ Term             = ? an expression specific to a basic OMS language ? ;
 OntoName         = IRI ;
                  
 OntoRef          = IRI ;
-OntoOrLinkRef    = IRI ;
+OntoOrMappingRef    = IRI ;
 ExtensionRef     = IRI ;
                  
 LoLaRef          = LanguageRef | LogicRef ;
@@ -1865,10 +1865,10 @@ ExtractionMethod = IRI ;
 \end{lstlisting}
 
 
-\sclause{Links}
+\sclause{OMS Mappings}
 
-A link provides a connection between two OMSs.
-A link definition is the definition of either a named interpretation
+A OMS mapping provides a connection between two OMSs.
+A OMS mapping definition is the definition of either a named interpretation
 (\syntax{IntprDefn}), a named declaration of the relation between a module of an OMS and the whole OMS (\syntax{ModuleRelDefn}), or a named alignment (\syntax{AlignDefn}).
 The \syntax{SymbolMapItems} in an interpretation always
 must lead to a signature morphism; a proof obligation expressing
@@ -1885,7 +1885,7 @@ actually is a module of some other OMS with respect
 to the \syntax{InterfaceSignature}.
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-LinkDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
+MappingDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
 
 IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , IntprType ,
                                       { LogicTranslation } , <\institutionsOnly [ SymbolMapItems ]> ;
@@ -1932,7 +1932,7 @@ Double               = ? a number $\in [0,1]$ ? ;
 
 \CLnote[type=todo]{cite Alignment API for \syntax{RelationRef}; recommend linked data for \syntax{RelationRef = IRI}, or recommend registry?}
 
-A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a non-logical symbol twice is an error. Mapping two source non-logical symbols to the same target non-logical symbol is legal, this then is a non-injective link.}.  Applications \shall implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely defined – in detail:
+A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a non-logical symbol twice is an error. Mapping two source non-logical symbols to the same target non-logical symbol is legal, this then is a non-injective OMS mapping.}.  Applications \shall implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely defined – in detail:
 
 \begin{algorithmic}
   \REQUIRE $O_s, O_t$ are OMSs
@@ -2041,7 +2041,7 @@ While DOL uses IRIs as identifiers throughout, basic OMS languages do not necess
 \item Common Logic \nisref{ISO/IEC 24707:2007} supports them but does not enforce their use.
 \item F-logic \bref{flogic} does not use them at all.
 \end{itemize}
-However, DOL links as well as \CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of SymbolRef}certain operations on OMSs require making unambiguous references to non-logical symbols of basic OMSs (\syntax{SymbolRef}).  Therefore, DOL provides a function that maps global identifiers used within basic OMSs to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
+However, DOL OMS mappings as well as \CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of SymbolRef}certain operations on OMSs require making unambiguous references to non-logical symbols of basic OMSs (\syntax{SymbolRef}).  Therefore, DOL provides a function that maps global identifiers used within basic OMSs to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
 
 CURIEs that have a prefix may not be acceptable identifiers in every serialization of a basic OMS language, as the standard CURIE separator character, the colon (\syntax{:}), may not be allowed in identifiers.  \CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we agreed on this – but does it really make sense?  Are there any relevant OMS language serializations that do not allow : in identifiers (or that do allow it theoretically but discourage it in practice) but allow some other non-letter character?}Therefore, the declaration of DOL-conformance of the respective serialization (cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative CURIE separator character}, or it \may forbid the use of prefixed CURIEs altogether.
 
@@ -2121,7 +2121,7 @@ abstract syntax:
 \item[Direct Model-Theoretic Semantics] On the level of basic
   OMSs, this semantics reuses the existing semantics of the
   involved logics, as well as translations between these logics.  The
-  semantics of structured DOL OMSs and links is specified on
+  semantics of structured DOL OMSs and OMS mappings is specified on
   top of this.
 \item[Translational Semantics] The semantics of Common Logic is
   employed for all basic OMS languages, taking advantage of the
@@ -2330,7 +2330,7 @@ $\Delta$ also satisfy $\varphi$.
 %   $M\models\varphi$.
 % \end{proof}
 
-Corridors are the links between rooms. A corridor maps both sentences
+Corridors are the mappings between rooms. A corridor maps both sentences
 and models (syntax and semantics). Models are mapped in reverse
 direction. The rationale behind this is as follows: usually, the
 target room is either logically more expressive or well-suited for
@@ -2547,7 +2547,7 @@ $sem(L,Q_1\ldots Q_n)=sem(\ldots sem(sem(L,Q_1),Q_2),\ldots,Q_n)$
 $sem(\Gamma,L,\syntax{Qualification})=(\Gamma,L')$ 
 where $L'=sem(L,\syntax{Qualification})$.
 
-Equations for \syntax{OntoDefn} and \syntax{LinkDefn} are given below.
+Equations for \syntax{OntoDefn} and \syntax{MappingDefn} are given below.
 
 \semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOnto})=(I,\Sigma',\cM')}
 
@@ -2754,7 +2754,7 @@ $sem(L,\syntax{'default-trans' , LolaRef})=\rho$
 where $\rho$ is the unique institute comorphism from the heterogeneous
 logical environment running from $L$ to $sem(\syntax{LolaRef})$.
 
-\semdom{sem(\Gamma,L,\syntax{LinkDefn})=(\Gamma',L)}
+\semdom{sem(\Gamma,L,\syntax{MappingDefn})=(\Gamma',L)}
 See equations for \syntax{IntprDefn}, \syntax{EquivDefn} and \syntax{AlignDefn}.
 
 \semdom{sem(\Gamma,L,\syntax{IntprDefn})=(\Gamma',L)}
@@ -2914,7 +2914,7 @@ DistOnto                 = [ PrefixMap ] , DistOntoDefn
                          | OntoInConformingLanguage ;
 DistOntoDefn             = 'distributed OMS' , DistOntoName , { DistOntoItem } ;
 OntoInConformingLanguage = ? language-specific ? ;
-DistOntoItem             = OntoDefn | LinkDefn | Qualification ;
+DistOntoItem             = OntoDefn | MappingDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
 LogicQual                = 'logic' , LogicRef ;
@@ -2988,10 +2988,10 @@ InterfaceSignature   = SymbolItems ;
 ImportName           = '%(' , IRI , ')%' ;
 ExtensionName        = '%(' , IRI , ')%' ;
 
-OntoOrLinkRef        = IRI ;
+OntoOrMappingRef        = IRI ;
 
 <\institutionsOnly CombinedElements~~~~~= CombinedElement \{ ',' , CombinedElement \} ;>
-<\institutionsOnly CombinedElement~~~~~= [ Id , ':' ] , OntoOrLinkRef ;>
+<\institutionsOnly CombinedElement~~~~~= [ Id , ':' ] , OntoOrMappingRef ;>
 <\institutionsOnly ExcludeExtensions~~~~= 'excluding' , ExtensionRef , \{ ',' , ExtensionRef \} ;>
 
 OntoDefn             = 'ontology' , OntoName , '=' , [ ConsStrength ] , Onto , [ 'end' ]<\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> ;
@@ -3032,12 +3032,12 @@ ExtractionMethod     = IRI ;
 
 \end{lstlisting}
 
-\ssclause{Links}
+\ssclause{OMS Mappings}
 
 \newcommand*{\lessthan}{<}
 \newcommand*{\greaterthan}{>}
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]
-LinkDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
+MappingDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
 
 IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , [ 'end' ]
                      | IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , '=' ,
@@ -4089,7 +4089,7 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
   Porting DO-ROAM to DOL would allow for coherently representing the aligned ontologies as one distributed OMS, and it would allow for maintaining the user interface labels as annotations inside the ontology.
 \end{usecase}
 
-\begin{usecase}{Connecting devices of differing complexity in an Ambient Assisted Living setting}{core ontology (not DOL-based) and service environment exists – the DOL-based extensions not yet}{Logical links across different logics, connection to linked open datasets}
+\begin{usecase}{Connecting devices of differing complexity in an Ambient Assisted Living setting}{core ontology (not DOL-based) and service environment exists – the DOL-based extensions not yet}{Logical OMS mappings across different logics, connection to linked open datasets}
   Consider the following ambient assisted living (AAL) scenario:
   \begin{quote}
     Clara instructs her \textbf{wheelchair} to get her to the \textbf{kitchen} (\textbf{\underline{next door}} to the \textbf{living room}.  For \textbf{dinner}, she would like to take a \textit{pizza} from the \textbf{freezer} and bake it in the \textbf{oven}.  (Her diet is \textit{vegetarian}.)  \textbf{\underline{Afterwards}} she needs to rest in \textbf{bed}.
@@ -4108,10 +4108,10 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
 &\veebar \mathrm{part\_of}(a_1, a_2) \veebar \mathrm{part\_of}(a_2, a_1).\end{array}$$
   \end{description}
   
-  DOL would be capable of expressing all that within one distributed OMS of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including logical links from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
+  DOL would be capable of expressing all that within one distributed OMS of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including logical OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
 \end{usecase}
 
-\begin{usecase}{Interpreting the OWL formalization of the DOLCE foundational ontology in First-order logic}{potential use case}{Logical links}
+\begin{usecase}{Interpreting the OWL formalization of the DOLCE foundational ontology in First-order logic}{potential use case}{Logical OMS mappings}
   DOLCE is a foundational ontology that has primarily been formalized in the first-order logic ontology language KIF (a predecessor of Common Logic), but also in OWL (``DOLCE Lite'') \bref{dolce}. This ‘OWLized’ version was targeting use in semantic web services and domain ontology interoperability, and to provide the generic categories and relationships to aid domain ontology development. DOLCE has been used also for semantic middleware, and in OWL-formalised ontologies of neuroimaging, computing, ecology, and data mining and optimization.
   Given the differences in expressivity, DOLCE Lite had to simplify certain notions.  For example, the DOLCE Lite formalization of ``temporary parthood'' (something is part of something else at a certain point or interval in time) omits any information about the time, as OWL only supports binary predicates (a.k.a.\ ``properties'').  That leaves ambiguities for modeling a view from DOLCE Lite to the first-order DOLCE, as such a view would have to reintroduce the third (temporal) component of such predicates:
   \begin{itemize}
@@ -4123,7 +4123,7 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
   DOL would allow for formalizing all of these views and, given suitable consistency checking tools, allow for analyzing whether any such view would satisfy all further axioms that the first-order DOLCE states about temporal parthood.
 \end{usecase}
 
-\begin{usecase}{Extending the OWL Time ontology to a more comprehensive coverage of time}{potential use case}{Logical links}
+\begin{usecase}{Extending the OWL Time ontology to a more comprehensive coverage of time}{potential use case}{Logical OMS mappings}
 The OWL Time ontology\footnote{\url{http://www.w3.org/TR/2006/WD-owl-time-20060927/}} covers temporal concepts such as instants and intervals and has been designed for describing the temporal content of Web pages and the temporal properties of Web services.  While OWL is suitable for these intended applications, only a first-order axiomatization is capable of faithfully capturing all relevant notions, such as the trichotomy of the ``before'' relation: One instant is either before another one, or at the same time, or after.  Moreover, a relationship between facts expressed in terms of instants and facts expressed in terms of intervals (both of which is, independently, possible in OWL), can only be established via first-order logic, \eg by declaring an interval of length zero equivalent to an instant. 
 
 A separate first-order axiomatization of OWL Time exists
