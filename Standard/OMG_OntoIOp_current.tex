@@ -431,7 +431,7 @@ author=,date=,id=,replyto=,type=}{}%
 
 
 \renewcommand{\subjectfield}[1]{#1}
-\renewcommand{\bref}[1]{#1}
+%\renewcommand{\bref}[1]{#1}
 
 \newcommand{\normannex}[1]{ \chapter{Annex (normative): #1} }
 \newcommand{\infannex}[1]{ \chapter{Annex (informative): #1} }
@@ -640,8 +640,7 @@ Helvetica/Arial - 10 pt. Bold: } OMG Interface Definition Language (OMG IDL) and
 Helvetica/Arial - 10 pt.: } Exceptions
 
 \medskip\noindent
-NOTE:   Terms that appear in italics are defined in the glossary. Italic text also represents the name of a document, specification, or other publication.
-
+NOTE: Italic text represents names defined in the specification or the name of a document, specification, or other publication.  
 \sectionWN{Issues}	
 The reader is encouraged to report any technical or editing issues/problems with this specification to \url{http://www.omg.org/report_issue.htm}.
 
@@ -656,7 +655,8 @@ The reader is encouraged to report any technical or editing issues/problems with
 
 \chapter{Scope}
 \pagenumbering{arabic} 
-This \IS specifies the Distributed Ontology, Modeling and Specification Language (DOL) designed to achieve integration and interoperability of ontologies, specifications and models (OMSs for short). DOL is a language for distributed knowledge representation across multiple OMSs, particularly OMSs that have been formalized in different OMS languages.\ednote{we should say that we answer to the RFP --- see other OMG specs on how doing this. Also: compare the scope in 6.2 of the RFP}
+This \IS specifies the Distributed Ontology, Modeling and Specification Language (DOL) designed to achieve integration and interoperability of ontologies, specifications and models (OMSs for short). DOL is a language for distributed knowledge representation across multiple OMSs, particularly OMSs that have been formalized in different OMS languages. This \IS responds to the OntoIOp Request for Proposals. \nitem{RFP}
+
 
 DOL does not provide a new elementary OMS language, but provides a
 layer to be used on top of existing elementary OMS languages which
@@ -675,7 +675,7 @@ OMS mapping. In particular, it enables writing structured OMSs
 as well as complex mappings and relations between OMSs.
 \item DOL is a declarative language with a formal semantics.
 % for modular OMSs that consist of structured OMSs that are possibly heterogeneous, i.e.\ are written within the same or in different OMS languages, and made available at different Web locations.
-\item DOL provides a superset of the modularization, Web awareness and annotation facilities of a number of commonly used OMS languages, including OWL \nitem{W3C/TR REC-owl2-syntax:2009}, RDF\ednote{reference needed}, Common Logic \nitem{ISO/IEC 24707:2007} and UML\ednote{reference needed}\footnote{See \cref{c:req:extensible} for details.}.
+\item DOL provides a superset of the modularization, Web awareness and annotation facilities of a number of commonly used OMS languages, including OWL \nitem{OWL2}, RDF \nitem{RDF}, Common Logic \nitem{ISO/IEC 24707:2007} and UML \nitem{UML}.\footnote{See \cref{c:req:extensible} for details.}
 \item DOL is an open, extensible standard that is not restricted to a fixed set of supported OMS language but specifies criteria for any existing or future OMS language to conform with DOL.
 \item Existing OMSs in languages conforming with DOL remain as they are; they can be enriched with DOL's modularity and annotation constructs in a non-disruptive way.
 \end{itemize}
@@ -899,7 +899,7 @@ However, details about aspects of an OMS that do not have a formal, logic-based 
 
 In practice, DOL-aware \emph{applications} may also deal with documents that are not conforming with DOL according to the criteria established in \cref{c:conform:document}.  However, an application only \emph{conforms} with DOL if it is capable of producing DOL-conforming documents as its output when requested.
 
-We expect most DOL-aware applications to support a fixed (possibly extensible) set of OMS languages conforming with DOL.  It is, for example, possible that a DOL-aware application only supports OWL and Common Logic.  In that case, the application may process documents that mix OWL and Common Logic ontologies \emph{without} explicitly declaring the respective logics, as the respective syntaxes of OWL and Common Logic allow for telling such ontologies apart by looking at the keywords used.  However, for DOL conformance, that application has to be capable of exporting documents with explicit references to the logics used.
+We expect most DOL-aware applications to support a fixed (possibly extensible) set of OMS languages conforming with DOL.  It is, for example, possible that a DOL-aware application only supports OWL and Common Logic.  In that case, the application may process documents that mix OWL and Common Logic ontologies \emph{without} explicitly declaring the respective logics, as the respective syntaxes of OWL and Common Logic can be distinguished by examining the different keywords.  However, for DOL conformance, that application has to be capable of exporting documents with explicit references to the logics used.
 
 ~\CLnote{applications need to strip DOL annotations from embedded fragments in other OMS languages}
 
@@ -1281,12 +1281,11 @@ Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim
 
  \termdefinition{language aspect}{set of language constructs of a given language, not necessarily forming a sublanguage}
 
-  \termdefinition{logical language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that allows for expressing \termref{non-logical symbols} and \termref{sentences} in a logical language}
+  \termdefinition{logical language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that enables the expression of \termref{non-logical symbols} and \termref{sentences} in a logical language}
 
   \termdefinition{structuring language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that covers \termref{structured OMSs} as well as the relations of \termref{basic OMSs} and \termref{structured OMSs} to each other, including, but not limited to \termref{imports}, \termref{OMS mappings}, \termref{conservative extensions}, and the handling of prefixes for CURIEs}
 
-  \termdefinition{annotation language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that allows for expressing comments
-and annotations}
+  \termdefinition{annotation language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that enables the  expression of comments and annotations}
 
   \termdefinition{profile}{\termref{sublanguage} of an \termref{OMS language} that targets specific applications or reasoning methods}
   \begin{example}
@@ -1601,16 +1600,11 @@ Reductions of DOL to conforming OMS languages, as well as approximations of DOL 
 We give an overview of the most important and innovative language
 constructs of DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
-\subsection{DOL allows for expressing logically heterogeneous OMSs and literal reuse of existing OMSs.}
-
-DOL allows for expressing logically heterogeneous OMSs, \ie to
-combine, in the same DOL document, sentences and structured OMSs
-expressed in different conforming OMS languages and logics.  It
-is possible to reuse sentences or structured OMSs of previously
-existing OMSs in conforming languages by literally including
-them into a DOL OMS.  A minimum of wrapping constructs and other
-annotations (\eg for disambiguating in what language a sentence has
-been expressed) are provided.\todonote[author=Christoph
+\subsection{DOL enables expression of logically heterogeneous OMSs and literal reuse of existing OMSs.}
+DOL is a mechanism for expressing logically heterogeneous OSMs. It can be used to combine sentences and structured OSMs expressed in different conforming OSM languages
+and logics into single documents or modules. With DOL, sentences or structured OSMs of previously existing OSMs in
+conforming languages can be reused by literally including them into a DOL OSM. A minimum of wrapping constructs and other annotations (e.g. for identifying the language of a sentence ) are provided. 
+\todonote[author=Christoph
 Lange,date=D:201109201457+02'00',type=todo]{Figure out what this
   feedback item from Michael Grüninger (?) means: say that there
   should be a syntax for relationships btw. OMSs as well as a
@@ -1619,7 +1613,7 @@ Lange,date=D:201109201457+02'00',type=todo]{Figure out what this
 abstract syntax category \syntax{Onto} in
 clause~\ref{c:abstract-syntax}.
 
-\subsection{DOL allows for expressing mappings between OMSs.}\label{c:req:links}
+\subsection{DOL includes provisions for expressing mappings between OMSs.}\label{c:req:links}
 
 DOL provides a syntax for expressing mappings between OMSs -- logical OMS Mappings as well as alignments.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}. This \IS specifies a set of logical OMS mapping types and a set of non-logical OMS mapping types.
 
@@ -1635,7 +1629,7 @@ clause~\ref{c:abstract-syntax}.
 abstract syntax category \syntax{ModuleRelDefn} in
 clause~\ref{c:abstract-syntax}.
 \end{itemize}
-DOL allows for expressing signature translations in such OMS mappings, see the
+DOL allows such links to express signature translations in such OMS mappings, see the
 abstract syntax category \syntax{SymbolMapItems} in
 clause~\ref{c:abstract-syntax}.
 
@@ -1644,7 +1638,7 @@ capable of referring to them.
 
 \todonote[author=Christoph Lange,date=D:201111231324+01'00',type=q-aut]{We had this comment here; what does it mean?  ``DOL only maps symbols to expressions''}
 
-DOL also allows for combining/merging OMSs along such OMS mappings, see
+DOL can also be used to combine or merge OMSs along such OMS mappings, see
 the rule for \syntax{combination} for the abstract syntax category
 \syntax{Onto} in clause~\ref{c:abstract-syntax}.
 
@@ -1655,20 +1649,20 @@ the rule for \syntax{combination} for the abstract syntax category
 \label{f:DOL-mapping}
 \end{figure}
 
-\subsection{DOL allows for expressing OMSs and OMS mappings at different levels of detail}\label{c:explicit}
+\subsection{DOL enables the representation of OMSs and OMS mappings at different levels of detail}\label{c:explicit}
 
 OMSs and OMS mappings expressed in DOL can be based on a
 number of implicit assumptions about which OMS language
-translation or which ontoloy matcher has been employed.  Depending on
+translation or which ontology matcher has been employed.  Depending on
 the OMS engineering workflow or application setting, it can be
-useful to keep these assumptions implicit, or to make them explicit.
-DOL allows for keeping such assumptions implicit if desired.
-It also allows for explicitly writing them down as annotations
+useful to keep these assumptions implicit or to make them explicit.
+DOL permits to leave such assumptions implicit if desired. However, it also enables the user to 
+capture these assumptions explicitly as annotations
 to the OMS.  This \IS specifies a
 translation that expands any DOL OMS with implicit assumptions
 into its explicit counterpart.
 
-The following list covers the possible cases where DOL allows for making information implicit or explicit:
+The following list covers the possible cases where DOL provides a choice between representing information implicitly or  explicitly:
 \begin{description}
 \item[default OMS language translations] A heterogeneous OMS can import several (structured) OMSs expressed in different conforming logics, for which suitable translations have been defined in the logic graph provided in \aref{a:graph} or in an extension to it that has been provided when establishing the conformance of some other logic with DOL.  Determining the semantics of the heterogeneous OMS requires a translation into a common target language to be applied (\cf \cref{c:req:semantics}).  This translation is determined via a lookup in the transitive closure of the logic graph.  Depending on the reasoners available in the given application setting, it can, however, be necessary to employ a different translation.  Authors can express which one to employ.  In a multi-step translation, it is possible to implicitly apply as many default translations as possible, and to concentrate on making explicit only those translations that deviate from the default.\CLnote[type=q-aut]{Will this situation be the same for default approximations, or to we need to add an extra item to the list?}
 \item[different matching algorithms] OMS alignments, which DOL is able to express, may have been obtained by running different OMS matching algorithms.  If, in a given OMS engineering workflow, the information on which algorithm has been applied is clear from the context, it is possible to omit it in the alignment expressed in DOL.  Otherwise, \eg if the next person working on the OMS requires that information, it is possible to make it explicit.\todonote{TM: the alignment itself should be there explicitly. right? But then the information about the matching algorithm that has produced it is a mere annotation without semantics, isn't it?\\ CL: I agree with you. OK, so we will replace this with approximation algorithms.}
@@ -1676,11 +1670,11 @@ The following list covers the possible cases where DOL allows for making informa
 
 ~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{ask Michael Grüninger for his mereology example in CL}
 
-\subsection{DOL allows for rich annotation and documentation of OMSs.}\label{c:req:annotation}
+\subsection{DOL provides a mechanism for rich annotation and documentation of OMSs.}\label{c:req:annotation}
 
-\todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL will allow for identifying anything of relevance in a distributed OMS, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.}DOL allows for annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations allow for fine-grained embedding of annotations into OMSs. % up to the granularity of literate programming.
+\todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL provides the mechanism for  identifying anything of relevance in a distributed OMS, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.} DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMSs. % up to the granularity of literate programming.
 
-The DOL serializations also allow for annotating existing OMSs via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language; for XML serializations of OMS languages, RDFa extensions are specified, so that DOL RDF can be embedded.
+The DOL serializations also supports the annotation of existing OMSs via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language; for XML serializations of OMS languages, RDFa extensions are specified, so that DOL RDF can be embedded.
 
 A list of RDF vocabularies for annotating OMSs is recommended as an annex to this \IS.
 
@@ -2005,8 +1999,8 @@ The CURIE abbreviation mechanism works by binding prefixes to IRIs.  A CURIE con
 
 DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core-20120607, Section 6} with the following changes:
 \begin{itemize}
-\item DOL does not allow for declaring a ``default prefix'' mapping \CLnote[type=q-aut]{Are such explanatory notes OK here?}(covering CURIEs such as \syntax{:name}).
-\item DOL does allow for declaring a ``no prefix'' mapping (covering CURIEs such as \syntax{name}).
+\item DOL does not support the declaration of a ``default prefix'' mapping \CLnote[type=q-aut]{Are such explanatory notes OK here?}(covering CURIEs such as \syntax{:name}).
+\item DOL does support the declaration  of a ``no prefix'' mapping (covering CURIEs such as \syntax{name}).
 \item DOL does not make use of the \syntax{safe\_curie} production.
 \item DOL does not allow binding a relative IRI to a prefix.
 \item Concrete syntaxes of DOL are encouraged but \notrequired to support CURIEs.\footnote{This is a concession to having an RDF-based concrete syntax among the normative concrete syntaxes.  RDFa is the only standardized RDF serialization to support CURIEs so far.  Other serializations, such as RDF/XML or Turtle, support a subset of the CURIE syntax, whereas some machine-oriented serializations, including N-Triples, only support full IRIs.}
@@ -3094,7 +3088,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 
 \sclause{Lexical Symbols}
 
-The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMSs can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of OMSs, the DOL text serialization particularly allows for using the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
+The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMSs can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of OMSs, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
 \ssclause{Key Words and Signs}\label{c:keywords}
 
@@ -4086,7 +4080,7 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
 \begin{usecase}{Generating multilingual labels for menus in a user interface}{exists (but not yet DOL-based)}{Aligning (multiple OWL ontologies), Annotation}
   DO-ROAM (\textbf{D}ata and \textbf{O}ntology driven \textbf{R}oute-finding \textbf{O}f \textbf{A}ctivity-oriented \textbf{M}obility\footnote{\url{http://www.do-roam.org}}) is a web service with an interactive frontend that extends OpenStreetMap by an ontology-based search for located activities and opening hours \bref{do-roam}.  The service is driven by a set of different OWL ontologies that have been aligned to each other using the Falcon matching tool \bref{HuQu-08}.  The user interface of the DO-ROAM web frontend offers multilingual labels, which are maintained in close connection to the underlying ontologies.
 
-  Porting DO-ROAM to DOL would allow for coherently representing the aligned ontologies as one distributed OMS, and it would allow for maintaining the user interface labels as annotations inside the ontology.
+  Porting DO-ROAM to DOL would enable the coherent representation of the aligned ontologies as one distributed OMS, and it would enable  the maintenance of the user interface labels as annotations inside the ontology.
 \end{usecase}
 
 \begin{usecase}{Connecting devices of differing complexity in an Ambient Assisted Living setting}{core ontology (not DOL-based) and service environment exists – the DOL-based extensions not yet}{Logical OMS mappings across different logics, connection to linked open datasets}
@@ -4120,14 +4114,14 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
   \item Or should a concrete value for the temporal component be assumed, \eg ``0'' or ``now''?
   \end{itemize}
   
-  DOL would allow for formalizing all of these views and, given suitable consistency checking tools, allow for analyzing whether any such view would satisfy all further axioms that the first-order DOLCE states about temporal parthood.
+  DOL would support the formalization of  all of these views and, given suitable consistency checking tools, the analyzation of  whether any such view would satisfy all further axioms that the first-order DOLCE states about temporal parthood.
 \end{usecase}
 
 \begin{usecase}{Extending the OWL Time ontology to a more comprehensive coverage of time}{potential use case}{Logical OMS mappings}
 The OWL Time ontology\footnote{\url{http://www.w3.org/TR/2006/WD-owl-time-20060927/}} covers temporal concepts such as instants and intervals and has been designed for describing the temporal content of Web pages and the temporal properties of Web services.  While OWL is suitable for these intended applications, only a first-order axiomatization is capable of faithfully capturing all relevant notions, such as the trichotomy of the ``before'' relation: One instant is either before another one, or at the same time, or after.  Moreover, a relationship between facts expressed in terms of instants and facts expressed in terms of intervals (both of which is, independently, possible in OWL), can only be established via first-order logic, \eg by declaring an interval of length zero equivalent to an instant. 
 
 A separate first-order axiomatization of OWL Time exists
-[\bref{OWLTime},\bref{OWLSTime}].  DOL would instead allow for modeling
+[\bref{OWLTime},\bref{OWLSTime}].  DOL would instead provide the mechanism of modeling
 OWL Time as one coherent heterogeneous ontology, using OWL and, \eg,
 Common Logic.\CLnote{This is also a use case for multiple namespaces:
   OWL supports namespaces, CL doesn't.}  For the temporal description
@@ -4169,7 +4163,7 @@ to the term \termref{structured OMS} in this \IS}
   \item[direct relations] maps (signature morphisms), definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
   \end{description}
 
-  DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it allows for implementing the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV (\cf \aref{a:meta-vocab}), and it allows for implementing one or multiple Common Logic ontologies plus their annotations as one coherent distributed OMS.
+  DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV (\cf \aref{a:meta-vocab}), and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent distributed OMS.
 \end{usecase}
 
 \begin{usecase}{Extending OWL with datatypes defined in CASL}{potential use case}{...}
@@ -4212,6 +4206,10 @@ The bibliography will be added later
 
 \end{document}
 \begin{references}
+ \reference{W3C}{OWL 2 Web Ontology Language}{https://www.w3.org/standards/techs/owl#w3c_all}\label{OWL2}
+ \reference{W3C}{Resource Description Framework (RDF))}{http://www.w3.org/standards/techs/rdf#w3c_all}\label{RDF}
+ \reference{Object Management Group}{Unified Modeling Language}{http://www.omg.org/spec/UML/}\label{UML}
+ \reference{Object Management Group}{Ontology, Model and Specification Integration and Interoperability Request For Proposal}{OMG Document Number ad/13-12-02}\label{RFP}
   \reference{KIFER, M., LAUSEN, G.\ and WU, J.,}{Logical Foundations of Object-Oriented and Frame-Based Languages,}{Journal of the ACM 42, pp. 741--843, July 1995}\label{flogic}
   \reference{MUNGALL, C.\ and IRELAND, A.,}{The OBO Flat File Format Specification, version 1.4 (Draft), 8 December 2010,}{\url{http://www.geneontology.org/GO.format.obo-1_4.shtml}}\label{obo}
   \reference{DAVID, J., EUZENAT, J., SCHARFFE, F.\ and TROJAHN DOS SANTOS, C.,}{Alignment API and Alignment Server, Version 4.2,}{\url{http://alignapi.gforge.inria.fr/}}
