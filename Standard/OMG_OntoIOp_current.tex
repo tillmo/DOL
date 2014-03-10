@@ -655,7 +655,14 @@ The reader is encouraged to report any technical or editing issues/problems with
 
 \chapter{Scope}
 \pagenumbering{arabic} 
-This \IS specifies the Distributed Ontology, Modeling and Specification Language (DOL) designed to achieve integration and interoperability of ontologies, specifications and models (OMSs for short). DOL is a language for distributed knowledge representation across multiple OMSs, particularly OMSs that have been formalized in different OMS languages. This \IS responds to the OntoIOp Request for Proposals. \nitem{RFP}
+
+This \IS specifies the Distributed Ontology, Modeling and
+Specification Language (DOL) designed to achieve integration and
+interoperability of ontologies, specifications and models (OMSs for
+short). DOL is a language for distributed knowledge representation
+across multiple OMSs, particularly OMSs that have been formalized in
+different OMS languages. This \IS responds to the OntoIOp Request for
+Proposals \nitem{RFP}.
 
 
 DOL does not provide a new elementary OMS language, but provides a
@@ -720,10 +727,16 @@ conformance criteria for serializations, translations and
 applications. This \IS describes the conformance
 with DOL of a number of OMS languages, namely OWL 2, Common
 Logic, RDF and RDFS, as well as translations among these, in its
-normative annexes.
+normative annexes.\ednote{normative or informative?
+The RFP says: ``Informative annexes shall establish the conformance of a number of
+relevant logical languages. An initial set of language translations may be
+part of an informative annex,\\
+ Conformance of the following subset of logical languages (see 6.1
+above) shall be established: OWL2 (with profiles EL, RL, QL, see
+[OWL2-Profiles]), CLIF [CL], RDF, UML class diagrams; \ldots''}
 
 It is expected that DOL will be used for more languages than this
-normative set of DOL-conformant\CLnote[type=fyi]{coherently rephrased from ``compliant'' to ``conformant''} languages. There will be a
+normative set of DOL-conformant languages. There will be a
 \textbf{registry for DOL-conformant languages and translations} hosted
 at \url{http://ontohub.org}.  This will ensure that this 
 \IS remains interoperable with past, present and future OMS
@@ -733,7 +746,7 @@ registry shall also include descriptions of DOL-conformant languages
 and translations (as well as other information needed by implementors
 and users) in machine-processable form.  
 
-There will be Maintenance Authority (MA)\ednote{ or, depending on
+There will be Maintenance Authority (MA)\footnote{ or, depending on
   advisability, a Registration Authority} established to maintain the
 registry as an informative resource governed by the standard.  The
 registry contents itself will not be normative; however, it is
@@ -751,36 +764,41 @@ expected to become the basis for normative activities.
 %\item[Semantic conformance] 
 %\end{description}
 
-An OMS language is conformant with DOL if either
-\begin{itemize}
-\item it satisfies the following conditions:
+An OMS language is conformant with DOL if it satisfies the following conditions:
 \begin{enumerate}
-\item its abstract syntax is given by an EBNF grammar,
-\item at least one concrete syntax is given by a serialisation (see below), 
-\item its logical language aspect (for expressing basic OMSs) is conformant, and in particular has a semantics (see below),
-\item  its
+\item its abstract syntax specified as an SMOF compliant meta model
+or as an EBNF grammer;\ednote{Since EBNF is quite popular, we should
+not be overly restrictive here}
+\item a human-readable lexical concrete syntax in EBNF and a
+serialization in XML (for the latter, preferably XMI shall be used);
+\item complete round-trip mappings from the human-readable concrete syntax
+to the abstract syntax and vice versa;
+\item either there exists a translation of it into a conformant
+  language\footnote {For example, consider the translation of OBO1.4
+    to OWL, giving a formal semantics to OBO1.4).}, or:
+\begin{enumerate}
+\item the logical language aspect (for expressing basic OMSs) is conformant, and in particular has a semantics (see below),
+\item  the
 structuring language aspect (for expressing structured OMSs and relations
 between those) is conformant (see below), and
-\item its annotation language aspect (for expressing comments and annotations)
+\item the annotation language aspect (for expressing comments and annotations)
 is conformant (see below).
 \end{enumerate}
-\item there exists a translation of it into a conformant language.
-\end{itemize}
+\end{enumerate}
 
-For the second condition, \cf the
-translation of OBO1.4 to OWL, giving a formal semantics to OBO1.4).
-\todonote{turn this into a note}
 
 The \emph{logical language aspect} of an OMS language
 is %semantically
 conformant with DOL if each logic corresponding to a profile (including
 the logic corresponding to the whole logical language aspect) is presented as an
-institute. It may additionally be presented as an institution, leading
-to the possibility of interpreting additional DOL language constructs.
-\footnote{Institutes and institutions are necessarily monotonic;
+institution \cite{GoguenBurstall92}.
+% It may additionally be presented as an institution, leading
+%to the possibility of interpreting additional DOL language constructs.%
+\footnote{Institutions are necessarily monotonic;
   conformance criteria for non-monotonic logics are still under
   development. However, minimization provides non-monotonic reasoning
-  in DOL.}
+  in DOL. A further possibility to include non-monotonic logics
+  is to construe entailments between formulas as sentences of the institution.}
 Note that one OMS language can have several sublanguages or profiles 
 corresponding to several logics (for example, OWL 2 has profiles
 EL, RL and QL, apart from the whole OWL 2 itself).
@@ -809,10 +827,11 @@ Any conforming language and logic shall have a machine-processable description a
 \ssclause{Conformance of language/logic translations with DOL}
 
 A logic translation is conformant with DOL if it is presented
-either as an institute morphism or as an institute comorphism.  If the
-languages are presented additionally as institutions, the translations
-\may also be presented as an institution morphism or an institution
-comorphism.
+either as an institution morphism or as an institution comorphism.  
+%If the
+%languages are presented additionally as institutions, the translations
+%\may also be presented as an institution morphism or an institution
+%comorphism.
 
 A language translation is conformant with DOL if it is a mapping
 between the abstract syntaxes that restricts to a conformant logic
@@ -828,10 +847,12 @@ expressing the translation, to at least one of them).
 
 \sclause{Conformance of a serialization of an OMS language with DOL}\label{c:conform:serialization}
 
-We define four levels of conformance of a serialization of an OMS language with DOL.
-
-These are the conformance levels, listed from highest to lowest:
+We define five levels of conformance of a serialization of an OMS language with
+ DOL, listed from highest to lowest:
 \begin{description}
+\item[XMI conformance]
+An XMI serialization has been automatically derived from the SMOF specification
+of the abstract syntax, using MOF 2 XMI Mapping.
 \item[XML conformance]
 The given serialization has to be specified as an XML schema, which satisfies all of the following conditions:
 \begin{itemize}
@@ -844,7 +865,7 @@ The given serialization has to be specified as an RDF vocabulary, which satisfie
 \begin{itemize}
 \item The elements of the vocabulary belong to one or more RDF namespaces identified by absolute URIs.
 \item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS.\todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
-\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL) to be stated about arbitrary subjects\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
+\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL) to be stated about arbitrary subjects.\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
 \end{itemize}
 
 \item[Text conformance]
@@ -872,7 +893,19 @@ Independently from the conformance levels given above, there is the following hi
   Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the basic OMS to IRIs, which are located in one flat namespace.
 \end{description}
 
-\CLnote[type=todo]{add the possibility to provide an alternative CURIE separate character in the conformance declaration, as mentioned in \cref{c:map-ids}}
+CURIEs that have a prefix may not be acceptable identifiers in every
+serialization of a basic OMS language, as the standard CURIE separator
+character, the colon (\syntax{:}), may not be allowed in identifiers.
+\CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we
+  agreed on this – but does it really make sense?  Are there any
+  relevant OMS language serializations that do not allow : in
+  identifiers (or that do allow it theoretically but discourage it in
+  practice) but allow some other non-letter character?}Therefore, the
+declaration of DOL-conformance of the respective serialization
+(cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative
+  CURIE separator character}, or it \may forbid the use of prefixed
+CURIEs altogether.
+
 
 Any conforming serialization of an OMS language shall have a machine-processable description as detailed in \cref{c:conform:description}.
 
@@ -882,15 +915,22 @@ For any conforming OMS language, logic, and serialization of an OMS language, it
 
 \sclause{Conformance of a serialization with DOL}\label{c:conform:dialect}
 
-While \cref{c:conform:serialization} covered the conformance of serializations of \emph{basic} OMS languages with DOL, this clause addresses serializations of DOL itself.  This \IS specifies one text-based serialization in \aref{a:text-syntax}, but one can specify further serializations according to the following conformance criteria.\todonote[author=Christoph Lange,date=D:201111041524+01'00',type=fyi]{This section is analogous to Common Logic's ``Dialect Conformance''.}
+While \cref{c:conform:serialization} covered the conformance of
+serializations of \emph{basic} OMS languages with DOL, this clause
+addresses serializations of DOL itself.  This \IS specifies one
+text-based serialization in \aref{a:text-syntax}, but one can specify
+further serializations according to the following conformance
+criteria.\todonote[author=Christoph
+  Lange,date=D:201111041524+01'00',type=fyi]{This section is analogous
+  to Common Logic's ``Dialect Conformance''.}
 
-It is required that a specification of a conforming serialization be given as a set of mappings from the abstract syntax (\cf \cref{c:abstract-syntax}), where each production rule of the abstract syntax is mapped to a production rule of the concrete syntax.  Instead of such an explicit mapping, an implicit mapping may be provided via a self-contained EBNF for the concrete syntax, whose nonterminal symbols have to match the nonterminal symbols of the EBNF of the abstract syntax.\todonote[type=todo,author=Christoph Lange]{Say that in a more formal way! -- Is it comprehensible?  Does it sufficiently state what we have in mind?}
+It is required that a specification of a conforming serialization be given as a set of mappings from the abstract syntax (\cf \cref{c:abstract-syntax}), where each SMOF class of the abstract syntax is mapped to a non-terminal of the concrete syntax.
 
 \sclause{Conformance of a document with DOL}\label{c:conform:document}
 
-A document conforms with DOL if it contains a well-formed DOL OMS.  That means, in particular, that any information related to logics has to be made explicit (as foreseen by the DOL abstract syntax specified in \cref{c:abstract-syntax}), such as:
+A document conforms with DOL if it contains a DOL text that is well-formed according to the grammar.  That means, in particular, that any information related to logics has to be made explicit (as foreseen by the DOL abstract syntax specified in \cref{c:abstract-syntax}), such as:
 \begin{itemize}
-\item the logic of each OMS that is part of the distributed OMS
+\item the logic of each OMS that is part of the DOL document,
 \item the translation that is employed between two logics (unless it is one of the default translations specified in \aref{a:graph})
 \end{itemize}
 However, details about aspects of an OMS that do not have a formal, logic-based semantics, may be left implicit.  For example, a conforming document may omit explicit references to matching algorithms that have been employed in obtaining an alignment.
@@ -1332,7 +1372,7 @@ Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim
   \termdefinition{logical metaframework}{framework for the mathematical formalisation of possible \termref{logics}}
 
 
-  \termdefinition{institute}{\termref{logical metaframework} based on set
+  \termdefinition{institution}{\termref{logical metaframework} based on set
     theory and order theory}
 \begin{note}
  See clause~\ref{c:semantics} for a formal definition.
@@ -4202,7 +4242,9 @@ pos=h,
 
 \infannex{Bibliography}
 
-The bibliography will be added later 
+
+\bibliographystyle{plain} 
+\bibliography{dol}
 
 \end{document}
 \begin{references}
