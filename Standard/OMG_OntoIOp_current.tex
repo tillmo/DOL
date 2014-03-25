@@ -471,7 +471,7 @@ Date: \today
 {\fontsize{30}{36}\selectfont Ontology, Model, and Specification Integration and Interoperability (OntoIOp)}
 
 \bigskip
-Version 1.0
+Version 0.5
 
 \bigskip\bigskip\bigskip\bigskip\bigskip\bigskip\
 
@@ -809,10 +809,9 @@ or as an EBNF grammer;\ednote{Since EBNF is quite popular, we should
 not be overly restrictive here}
 \item its logical language aspect (for expressing basic OMSs) is conformant,
  and in particular has a semantics (see below),
-\item a human-readable lexical concrete syntax in EBNF and a
-serialization in XML (for the latter, preferably XMI shall be used);
-\item complete round-trip mappings from the human-readable concrete syntax
-to the abstract syntax and vice versa;
+\item it has at least one serialization in the sense of section~\ref{c:conform:serialization};
+%\item complete round-trip mappings from the human-readable serialization
+%to the abstract syntax and vice versa;
 \item either there exists a translation of it into a conformant
   language\footnote {For example, consider the translation of OBO1.4
     to OWL, giving a formal semantics to OBO1.4).}, or:
@@ -892,6 +891,7 @@ expressing the translation, to at least one of them).
 
 
 \sclause{Conformance of a serialization of an OMS language with DOL}\label{c:conform:serialization}
+\ednote{It is possible to have high-level summaries (e.g. of the intuition behind some formal specification) in an OMG standard. We agreed that ChristophLange should provide this for the conformance criteria (specifically for the conformance of a serialization, which is something ChristophLange had originally come up with).}
 
 We define four levels of conformance of a serialization of an OMS language with DOL.
 
@@ -970,18 +970,6 @@ Any conforming serialization of an OMS language shall have a machine-processable
 
 For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:rdf-logic-vocab}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
 
-\sclause{Conformance of a serialization with DOL}\label{c:conform:dialect}
-
-While \cref{c:conform:serialization} covered the conformance of
-serializations of \emph{basic} OMS languages with DOL, this clause
-addresses serializations of DOL itself.  This \IS specifies one
-text-based serialization in \aref{a:text-syntax}, but one can specify
-further serializations according to the following conformance
-criteria.\todonote[author=Christoph
-  Lange,date=D:201111041524+01'00',type=fyi]{This section is analogous
-  to Common Logic's ``Dialect Conformance''.}
-
-It is required that a specification of a conforming serialization be given as a set of mappings from the abstract syntax (\cf \cref{c:abstract-syntax}), where each SMOF class of the abstract syntax is mapped to a non-terminal of the concrete syntax.
 
 \sclause{Conformance of a document with DOL}\label{c:conform:document}
 
@@ -1426,19 +1414,10 @@ Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim
    relation between OMS languages and their logics and serializations.
   \end{note}
 
-  \termdefinition{logical metaframework}{framework for the mathematical formalisation of possible \termref{logics}}
-
-
-  \termdefinition{institution}{\termref{logical metaframework} based on set
-    theory and order theory}
+ \termdefinition{institution}{metaframework mathematically formalising
+the notion of a \termref{logic}}
 \begin{note}
  See clause~\ref{c:semantics} for a formal definition.
-\end{note}
-
- \termdefinition{institution}{\termref{logical metaframework} based on category theory,  also covering the semantics of
-   \termref{renamings} and \termref{combinations}}
-\begin{note}
- See annex~\ref{an:institution} for a formal definition.
 \end{note}
 
   \termdefinition{logic translation}{mapping of a source
