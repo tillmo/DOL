@@ -900,14 +900,17 @@ expressing the translation, to at least one of them).
 
 
 \sclause{Conformance of a serialization of an OMS language with DOL}\label{c:conform:serialization}
-\ednote{It is possible to have high-level summaries (e.g. of the intuition behind some formal specification) in an OMG standard. We agreed that ChristophLange should provide this for the conformance criteria (specifically for the conformance of a serialization, which is something ChristophLange had originally come up with).}
+
+Rationale: The main reason for the following specifications is identifier injection.  DOL is capable of assigning identifiers to entities (symbols, axioms, modules, etc.) inside fragments of OMS languages that occur in a DOL document, even if that OMS language doesn't support such identifiers by its own means.  Such identifiers will be visible to a DOL tool, but not to a tool that only supports the OMS language.  To achieve this without breaking the formal semantics of that OMS language, we make use of annotation or commenting features that the OMS language supports, in order to place such identifiers inside annotations/comments.  Depending on the nature of the concrete given serialization of the OMS language, be it plain text, some serialization of RDF, XML, or some other structured text format, we can be more specific about what the annotation/commenting facilities of that serialization must look like in order to support this identifier injection.  Well-behaved XML and RDF schemas support identifier injection in a “nice” way (rather than using text-level comments).  In the worst case we can't inject anything into an OMS language fragment, because the OMS language serialization simply wouldn't allow us to write suitable comments, but we'd have to point into it from the outer space by using standoff markup.\\
+Further conformance criteria in this section are introduced to facilitate the convenient reuse of verbatim fragments of OMS language inside a DOL document.\\
+Independently from these criteria, we distinguish different levels of conformance of a serialization w.r.t.\ its means of conveniently abbreviating long IRI identifiers.
 
 We define four levels of conformance of a serialization of an OMS language with DOL.
 
 \begin{description}
 \item[XMI conformance]
 An XMI serialization has been automatically derived from the SMOF specification
-of the abstract syntax, using MOF 2 XMI Mapping.
+of the abstract syntax, using MOF 2 XMI Mapping.\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there.}
 \item[XML conformance]
 The given serialization has to be specified as an XML schema, which satisfies
  all of the following conditions:
@@ -919,7 +922,8 @@ The given serialization has to be specified as an XML schema, which satisfies
    explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
     of  a serialization that is merely text conformant).}
 \item The schema shall not forbid attributes from foreign namespaces (here: the
- DOL namespace) on any elements\todonote[author=Christoph
+ DOL namespace) on any elements\ednote{Christoph (2014-03-26): the rationale is that in an XML serialization we wouldn't want to inject identifiers into completely unstructured XML comments (<!-- 
+… -->) but rather into well-structured attributes from some DOL namespace to-be-defined (think of <axiom dol:id="foo-ax">)}\todonote[author=Christoph
   Lange,date=D:201110051433+02'00']{Maybe we also need child elements from
    different namespaces?}
 \end{itemize}
@@ -930,8 +934,8 @@ The given serialization has to be specified as an RDF vocabulary, which
 \begin{itemize}
 \item The elements of the vocabulary belong to one or more RDF namespaces
  identified by absolute URIs.
-\item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS.\todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
-\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL) to be stated about arbitrary subjects.\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
+\item \ednote{Christoph (2014-03-26): The rationale is that RDF in principle allows for identifying everything, so an RDF-based serialization of an OMS language should not forbid making use of such RDF constructs that do allow for identifying arbitrary things.}The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS.\todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
+\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL\ednote{Christoph (2014-03-26): I think we are no longer explicity recommending annotation vocabularies such as OMV, but nevertheless an RDF serialization of an OMS language must allow annotations to things, using RDF properties that do not belong to the RDF vocabulary of the OMS language.  It should treat them like OWL treats annotation properties, i.e.\ as not changing the formal semantics.}) to be stated about arbitrary subjects.\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
 \end{itemize}
 
 \item[Text conformance]
