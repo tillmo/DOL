@@ -243,7 +243,7 @@ author=,date=,id=,replyto=,type=}{}%
 % subject field restriction of a term
 \newcommand*{\subjectfield}[1]{ {\textlangle}#1{\textrangle}}
 % synonym of a term
-\newcommand*{\synonym}{\\}
+\newcommand*{\synonym}{,\\}
 % MIME type
 \newcommand*{\mimetype}[1]{\textit{#1}}
 % Font style for syntactic features only supported with institutions
@@ -1031,17 +1031,24 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
 
-  \termdefinition{OMS (ontology, specification or model)}{set of expressions (like \termref{non-logical symbols}, \termref{sentences} and \termref{structuring} elements) in a  given \termref{OMS language}}%
+  \termdefinition{OMS (ontology, specification or model)}{set of expressions (like \termref{non-logical symbols}, \termref{sentences} and \termref{structuring} elements) in a given \termref{OMS language} (or several such languages)}%
 \begin{note}
 	An \termref{OMS} can be written in different \termref{OMS language} \termref{serializations}.
 \end{note}	
 
-  \termdefinition{OMS language}{language that is used for the formal specification of \termref{OMSs}, equipped with a formal, declarative, logic-based semantics, plus non-logical \termref{annotations}}
+  \termdefinition{OMS language}{language  equipped with a formal, declarative, logic-based semantics, plus non-logical \termref{annotations}}
+  \begin{note}
+  An OMS language is used for the formal specification of \termref{OMSs}.
+  \end{note}
   \begin{example}
     OMS languages include OWL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
   \end{example}
   
   \termdefinition{non-logical symbol\synonym OMS symbol}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}}
+  \begin{note}
+  The notion of ``atomic sentence'' used in logic is different, it usually
+  may involve several non-logical symbols.
+  \end{note}
   \begin{example}
     Non-logical symbols in OWL \nisref{W3C/TR REC-owl2-syntax:2009} (there called ``entities'') comprise
     \begin{itemize}
@@ -1063,15 +1070,23 @@ For the purposes of this document, the following terms and definitions apply.
     quantifiers.
   \end{example}
   
-  \termdefinition{signature}{set of all \termref{non-logical symbols} of an \termref{OMS}}
-  
+  \termdefinition{vocabulary \synonym signature}{set (or otherwise structured entity) of \termref{non-logical symbols} of an \termref{OMS}}
+   \begin{note}
+     The signature of a term is the set of all non-logical symbvols occuring
+     in the \termref{term}. The signature of an \termref{OMS language} is the
+     set of all non-logical symbols possible in that language.     
+   \end{note}
+   \begin{note}
+    The signature of an OMS is usually uniquely determined.
+   \end{note}
   \termdefinition{model}{semantic interpretation of all \termref{non-logical symbols} of a \termref{signature}}
   \begin{note}
     A model of an OMS is a model of the signature of the OMS
     that moreover \termref{satisfies} all the \termref{axioms} of the OMS.
   \end{note}
   \begin{note}
-  This term is not to be confused with model in the sense of modeling.
+  This term is not to be confused with model in the sense of modeling (i.e.,
+  the ``M'' in OMS).
   \end{note}
   
   \termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms)}
@@ -1108,9 +1123,11 @@ For the purposes of this document, the following terms and definitions apply.
   \begin{example}
     Familiar examples include an electronic document, an image, a source of information with a consistent purpose (\eg, ``today's weather report for Los Angeles''), a service (\eg, an HTTP-to-SMS gateway), and a collection of other resources. A resource is not necessarily accessible via the Internet; \eg, human beings, corporations, and bound books in a library can also be resources. Likewise, abstract concepts can be resources, such as the operators and operands of a mathematical equation, the types of a relationship (\eg, ``parent'' or ``employee''), or numeric values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
   \end{example}
-  \termdefinition{element\subjectfield{OMS}\todonote[author=Christoph Lange,date=D:201111151622+01'00',type=fyi]{This term is adopted from OWL 2, where it is used, but in a non-normative context. TM: in OWL2, the term is of course ``element ontology''. Is ``element OSM'' really useful?}}{any \termref{resource} in an \termref{OMS} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{OMS} itself, ...) or a named set of such \termref{resources}.}
+  \termdefinition{element (of an OMS)}{any \termref{resource} in an \termref{OMS} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{OMS} itself, ...) or a named set of such \termref{resources}.}
   
   \termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \cite{BernersLee:LinkedData2006}}
+\ednote{also add:
+Bizer, C., Heath, T., \& Berners-Lee, T. (2009). Linked data-the story so far. International journal on semantic web and information systems, 5(3), 1-22.}
   \begin{note}
     The linked data principles (adapted from \cite{BernersLee:LinkedData2006} and its paraphrase at \cite{Wikipedia:LinkedData2011}) are the following:
     \begin{enumerate}
@@ -1137,7 +1154,7 @@ For the purposes of this document, the following terms and definitions apply.
     Formally, an annotation is given as a $(\text{subject}, \text{predicate}, \text{object})$ triple as defined by \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 6}.  The subject of an annotation is an \termref{element} of an OMS.  The predicate is an RDF property defined in an external OMS and describes in what way the annotation object is related to the annotation subject.
   \end{note}
   \begin{note}
-    According to note~\ref{note:annotation-rdf} it is possible to interpret annotations under an RDF semantics.  ``Without a logical semantics'' in this definition means that annotations to an OMS are not considered sentences of the OMS.
+    According to note~\ref{note:annotation-rdf} it is possible to interpret annotations under an RDF semantics.  ``Without a logical semantics'' in this definition means that annotations to an OMS are not considered sentences of that OMS.
   \end{note}
 
   % \termdefinition{datatype}{``consists of a lexical space, a value space and a lexical-to-value mapping \textins{and} is identified by one or more URI
@@ -1182,6 +1199,7 @@ For the purposes of this document, the following terms and definitions apply.
 {\termref{OMS} that results from other \termref{OMSs} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
 
   \termdefinition{subOMS}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are subsets of those present in a given larger \termref{OMS}}
+\ednote{introduce ``approximant'' or ``uniform interpolant''}
 
   \termdefinition{extension}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are supersets of those present in a given smaller \termref{OMS}}
 
@@ -1248,7 +1266,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     Each implied extension is also a definitional extension but not vice versa.
   \end{note}
 
-  \termdefinition{module}{\termref{subOMS} that \termref{conservatively extends} to the whole \termref{OMS}}
+  \termdefinition{module}{\termref{subOMS} that \termref{conservatively extends to} the whole \termref{OMS}}
 %\todonote[author=Christoph Lange]{a more formal definition, from \todonoteURL{http://iswc2011.semanticweb.org/fileadmin/iswc/Papers/PostersDemos/iswc11pd_submission_75.pdf}: Modules are subsets of
 %OMSs that preserve all entailments over a set of terms $\Sigma$ called seed signature.  Modules based on syntactic locality are defined in Cuenca Grau, B., Horrocks, I., Kazakov, Y., Sattler, U.: Modular reuse of ontologies: Theory and practice. J. of Artif. Intell. Research 31, 273–318 (2008)}}
   \begin{note}
@@ -1262,6 +1280,13 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
   \begin{note}
     The goal of module extraction is ``decomposing an OMS into smaller, more manageable modules with appropriate dependencies'' \cite{DAquin:OntologyExtraction2010}
   \end{note}
+\ednote{I wouldnt say that thats a good reference for being a reference.
+Some options are described in:
+d'Aquin, M., Schlicht, A., Stuckenschmidt, H., Sabou, M.: Criteria and evaluation for ontology modularization techniques. In: Modular Ontologies, LNCS, vol. 5445, pp. 67–89. Springer (2009)
+Parent, C., Spaccaprieta, S.: An overview of modularity. In: Modular Ontologies, LNCS, vol. 5445, chap. 2, pp. 5–23. Springer (2009)
+or, more generally, that whole book. or, looking at some goals specifically: 
+Borgo, S.: Goals of modularity: A voice from the foundational viewpoint. In: Proceedings of the Fifth Workshop on Modular Ontologies (WoMO 11), Frontiers in Artificial Intelligence and Applications, vol. 230, pp. 1–6. IOS Press (2011). Ljubljana, Slovenia, August}
+
   \begin{example}
     Consider an OWL DL ontology about wines, from which we would like to extract a module about white wines. That module would contain the declaration of the non-logical symbol ``white wine'', all declarations of non-logical symbols related to ``white wine'', and all sentences about all of these non-logical symbols.
   \end{example}
@@ -1277,6 +1302,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
 
 \sclause{Mappings Between OMSs}
 
+\ednote{define OMS mapping}
   \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from \termref{non-logical symbols} from $O_2$
   \begin{note}
   A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context (``equivalence'' for alignments, and ``equality'' for logical OMS mappings)\CLnote[type=q-aut]{For interpretations that is the only viable way, but for alignments?  Is there any reasonable ``implied default'', or should we let R default to something like owl:sameAs?}; when $c$ is omitted, it defaults to $1$.}
@@ -1321,11 +1347,11 @@ Some specific kinds of logical OMS mappings will be introduced below.
 
   \termdefinition{module relation}{\termref{logical OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
 
-  \termdefinition{virtual import}{\termref{logical OMS mapping} between two
+  \termdefinition{import}{\termref{logical OMS mapping} between two
     \termref{OMSs} such that one OMS behaves as if it were
-    imported into the other}
+    included into the other}
   \begin{note}
-Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration
+Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration
   \end{note}
   \begin{note}
     The purpose of $O_2$ importing $O_1$ is to make non-logical symbols and sentences of $O_1$ available in $O_2$.
@@ -1333,22 +1359,41 @@ Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim
   \begin{note}
     Importing $O_1$ into $O_2$ turns $O_2$ into an extension of $O_1$.
   \end{note}
+  \begin{note}
+    An owl:import in OWL is an import.
+  \end{note}
   
-  \termdefinition{renaming}{\termref{logical OMS mapping} assigning new names
+  \termdefinition{renaming}{assignment of new names
    to some \termref{non-logical symbols} of an \termref{OMS}}
-
+\begin{note}
+A renaming results in a \termref{logical OMS mapping} between the
+original and the renamed OMS.
+\end{note}
   \termdefinition{reduction}{\termref{logical OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
 
   \termdefinition{union}{aggregation of several \termref{OMSs}
-    to a new \termref{OMS} where (only) identically-named
-    \termref{non-logical symbols} of the involved \termref{OMSs} are identified}
+    to a new \termref{OMS}, without any renaming}
 
-  \termdefinition{combination}{aggregation of several \termref{OMSs} along \termref{OMS mappings} to a new \termref{OMS} where (only) the mapped
-  \termref{non-logical symbols} of the involved \termref{OMSs} are identified}
+  \termdefinition{combination}{aggregation of several \termref{OMSs} along \termref{OMS mappings} to a new \termref{OMS} where some of the
+  \termref{non-logical symbols} of the involved \termref{OMSs} can be renamed into
+the same symbol}
+\begin{example}
+\ednote{todo}
+\end{example}
 
   \termdefinition{alignment}{flexible, relational \termref{OMS mapping} that does not always have a formal, logic-based semantics}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMSs}}
+
+\ednote{somewhere along the line, it probably would be good to refer to the terminology from the 'standard' book on ontology matching by 
+Euzenat, J., Shvaiko, P.: Ontology Matching. Springer (2013)
+chapter 2 has a bunch of definitions.
+an extract of some relevant definitions from that reference, and application to the [foundational] ontology matching using aligning, mapping, and merging can be found e.g., in:
+Khan, Z., Keet, C.M. Addressing issues in foundational ontology mediation. 5th International Conference on Knowledge Engineering and Ontology Development (KEOD'13), Vilamoura, Portugal, 19-22 September. Filipe, J. and Dietz, J. (Eds.), SCITEPRESS, pp5-16.
+http://www.meteck.org/files/KEOD13KKalign.pdf
+%
+if you don't have access to the book, I can send you that chapter 2.}
+
 \end{definitions}
 
 \sclause{Features of OMS Languages}
@@ -1372,16 +1417,26 @@ Semantically, a virtual import of $O_2$ into $O_1$ is equivalent to the verbatim
 
   \termdefinition{annotation language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that enables the  expression of comments and annotations}
 
-  \termdefinition{profile}{\termref{sublanguage} of an \termref{OMS language} that targets specific applications or reasoning methods}
+  \termdefinition{profile}{(syntactic) \termref{sublanguage} of an \termref{OMS language} interpreting according to a particular \termref{logic}
+that targets specific applications or reasoning methods}
   \begin{example}
     Profiles of OWL 2 include OWL 2 EL, OWL 2 QL, OWL 2 RL, OWL 2 DL, and OWL 2 Full.
   \end{example}
   \begin{note}
   Profiles typically correspond to \termref{sublogics}.
   \end{note}
+  \begin{note}
+  Profiles can have different \termref{logics}, even with completely
+  different semantics, e.g.\ OWL 2 DL versus OWL 2 Full.
+  \end{note}
+  \begin{note}
+    The logic needs to support the language.
+  \end{note}
+  
 \end{definitions}
 
 \sclause{OMS Language Serializations}
+\ednote{Christoph: incorporate Maria's comments}
 
 \begin{definitions}
   \termdefinition{serialization}{specific syntactic encoding of a given \termref{OMS language}}
@@ -1439,9 +1494,13 @@ the notion of a \termref{logic}}
   A unique maximal approximation need not exist.
 \end{note}
 
-\termdefinition{sublogic}{syntactic restriction of a \termref{logic}}
+\termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semnatics}
 
   \termdefinition{heterogeneous OMS}{\termref{OMS} whose parts are supported by different \termref{logics}}
+\begin{example}
+\ednote{todo}
+\end{example}
+
 \end{definitions}
   
 \sclause{Interoperability}
