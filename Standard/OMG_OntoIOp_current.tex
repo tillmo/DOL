@@ -765,13 +765,7 @@ conformance criteria for serializations, translations and
 applications. This \IS describes the conformance
 with DOL of a number of OMS languages, namely OWL 2, Common
 Logic, RDF and RDFS, as well as translations among these, in its
-normative annexes.\ednote{normative or informative?
-The RFP says: ``Informative annexes shall establish the conformance of a number of
-relevant logical languages. An initial set of language translations may be
-part of an informative annex,\\
- Conformance of the following subset of logical languages (see 6.1
-above) shall be established: OWL2 (with profiles EL, RL, QL, see
-[OWL2-Profiles]), CLIF [CL], RDF, UML class diagrams; \ldots''}
+informative annexes.
 
 It is expected that DOL will be used for more languages than this
 normative set of DOL-conformant languages. There will be a
@@ -812,8 +806,7 @@ We also define different conformance levels w.r.t.\ the usage of IRIs as identif
 An OMS language is conformant with DOL if it satisfies the following conditions:
 \begin{enumerate}
 \item its abstract syntax specified as an SMOF compliant meta model
-or as an EBNF grammer;\ednote{Since EBNF is quite popular, we should
-not be overly restrictive here}
+or as an EBNF grammar;
 \item its logical language aspect (for expressing basic OMSs) is conformant,
  and in particular has a semantics (see below),
 \item it has at least one serialization in the sense of section~\ref{c:conform:serialization};
@@ -1142,9 +1135,7 @@ For the purposes of this document, the following terms and definitions apply.
   \end{example}
   \termdefinition{element (of an OMS)}{any \termref{resource} in an \termref{OMS} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{OMS} itself, ...) or a named set of such \termref{resources}.}
   
-  \termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \cite{BernersLee:LinkedData2006}}
-\ednote{also add:
-Bizer, C., Heath, T., \& Berners-Lee, T. (2009). Linked data-the story so far. International journal on semantic web and information systems, 5(3), 1-22.}
+  \termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \cite{BernersLee:LinkedData2006,BizerHeath09}}
   \begin{note}
     The linked data principles (adapted from \cite{BernersLee:LinkedData2006} and its paraphrase at \cite{Wikipedia:LinkedData2011}) are the following:
     \begin{enumerate}
@@ -1216,7 +1207,6 @@ Bizer, C., Heath, T., \& Berners-Lee, T. (2009). Linked data-the story so far. I
 {\termref{OMS} that results from other \termref{OMSs} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
 
   \termdefinition{subOMS}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are subsets of those present in a given larger \termref{OMS}}
-\ednote{introduce ``approximant'' or ``uniform interpolant''}
 
   \termdefinition{extension}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are supersets of those present in a given smaller \termref{OMS}}
 
@@ -1295,18 +1285,17 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     Cited and slightly adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}
   \end{note}
   \begin{note}
-    The goal of module extraction is ``decomposing an OMS into smaller, more manageable modules with appropriate dependencies'' \cite{DAquin:OntologyExtraction2010}
+    The goal of module extraction is ``decomposing an OMS into smaller, more manageable modules with appropriate dependencies'' \cite{DBLP:series/lncs/5445}
   \end{note}
-\ednote{I wouldnt say that thats a good reference for being a reference.
-Some options are described in:
-d'Aquin, M., Schlicht, A., Stuckenschmidt, H., Sabou, M.: Criteria and evaluation for ontology modularization techniques. In: Modular Ontologies, LNCS, vol. 5445, pp. 67–89. Springer (2009)
-Parent, C., Spaccaprieta, S.: An overview of modularity. In: Modular Ontologies, LNCS, vol. 5445, chap. 2, pp. 5–23. Springer (2009)
-or, more generally, that whole book. or, looking at some goals specifically: 
-Borgo, S.: Goals of modularity: A voice from the foundational viewpoint. In: Proceedings of the Fifth Workshop on Modular Ontologies (WoMO 11), Frontiers in Artificial Intelligence and Applications, vol. 230, pp. 1–6. IOS Press (2011). Ljubljana, Slovenia, August}
 
   \begin{example}
     Consider an OWL DL ontology about wines, from which we would like to extract a module about white wines. That module would contain the declaration of the non-logical symbol ``white wine'', all declarations of non-logical symbols related to ``white wine'', and all sentences about all of these non-logical symbols.
   \end{example}
+
+\termdefinition{approximant \synonym uniform interpolant}{
+best possible (in the sense of a maximal set of logical consequences)
+approximation of an OMS in a smaller \termref{signature} or
+\termref{OMS language}}
 
 \termdefinition{closed world assumption}{presumption that what is
     not known to be true, is false}
@@ -1319,7 +1308,6 @@ Borgo, S.: Goals of modularity: A voice from the foundational viewpoint. In: Pro
 
 \sclause{Mappings Between OMSs}
 
-\ednote{define OMS mapping}
   \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from \termref{non-logical symbols} from $O_2$
   \begin{note}
   A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context (``equivalence'' for alignments, and ``equality'' for logical OMS mappings)\CLnote[type=q-aut]{For interpretations that is the only viable way, but for alignments?  Is there any reasonable ``implied default'', or should we let R default to something like owl:sameAs?}; when $c$ is omitted, it defaults to $1$.}
@@ -1329,7 +1317,7 @@ Borgo, S.: Goals of modularity: A voice from the foundational viewpoint. In: Pro
      A confidence value of $1$ does not imply logical equivalence (\cf \cite{KutzEtAl:ChineseWhispers2010} for a worked-out example).
   \end{note}
 
-  \termdefinition{link\subjectfield{OMSs}\todonote[author=Christoph Lange,date=D:201108252257+02'00',type=q-all]{Is this the correct way of stating that I mean ``the term link, when used in the context of ontologies''?}}{relationship between two \termref{OMSs}, typically given as a set of \termref{correspondences}}
+  \termdefinition{OMS mapping \synonym link\subjectfield{OMSs}\todonote[author=Christoph Lange,date=D:201108252257+02'00',type=q-all]{Is this the correct way of stating that I mean ``the term link, when used in the context of ontologies''?}}{relationship between two \termref{OMSs}, typically given as a set of \termref{correspondences}}
   
   \termdefinition{logical OMS mapping}{\termref{OMS mapping} that has a formal, logic-based semantics}
   \begin{note}
@@ -1346,8 +1334,6 @@ Some specific kinds of logical OMS mappings will be introduced below.
   \begin{note}
     When an interpretation is given as a set of correspondences, these are given as tuples, where the type of relationship is given by the specific kind of interpretation. 
   \end{note}
-
-\ednote{the DOL structuring language should include constructs for claiming that two OMSs are equivalent, see \url{http://www.informatik.uni-bremen.de/~okutz/hyperontologies.pdf}, p.42ff.}
 
   \termdefinition{equivalence}
 {\termref{logical OMS mapping} ensuring that two \termref{OMSs} share the
@@ -1388,28 +1374,28 @@ original and the renamed OMS.
 \end{note}
   \termdefinition{reduction}{\termref{logical OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
 
-  \termdefinition{union}{aggregation of several \termref{OMSs}
-    to a new \termref{OMS}, without any renaming}
-
-  \termdefinition{combination}{aggregation of several \termref{OMSs} along \termref{OMS mappings} to a new \termref{OMS} where some of the
-  \termref{non-logical symbols} of the involved \termref{OMSs} can be renamed into
-the same symbol}
-\begin{example}
-\ednote{todo}
-\end{example}
-
   \termdefinition{alignment}{flexible, relational \termref{OMS mapping} that does not always have a formal, logic-based semantics}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMSs}}
+  \begin{note}
+    For both matching and alignment, see \cite{DBLP:books/daglib/0032976,KhanKeet13}.
+  \end{note}
 
-\ednote{somewhere along the line, it probably would be good to refer to the terminology from the 'standard' book on ontology matching by 
-Euzenat, J., Shvaiko, P.: Ontology Matching. Springer (2013)
-chapter 2 has a bunch of definitions.
-an extract of some relevant definitions from that reference, and application to the [foundational] ontology matching using aligning, mapping, and merging can be found e.g., in:
-Khan, Z., Keet, C.M. Addressing issues in foundational ontology mediation. 5th International Conference on Knowledge Engineering and Ontology Development (KEOD'13), Vilamoura, Portugal, 19-22 September. Filipe, J. and Dietz, J. (Eds.), SCITEPRESS, pp5-16.
-http://www.meteck.org/files/KEOD13KKalign.pdf
-%
-if you don't have access to the book, I can send you that chapter 2.}
+  \termdefinition{union}{aggregation of several \termref{OMSs}
+    to a new \termref{OMS}, without any renaming}
+
+  \termdefinition{combination}{aggregation of several \termref{OMSs}
+    along \termref{OMS mappings} to a new \termref{OMS} where some of
+    the \termref{non-logical symbols} of the involved \termref{OMSs}
+    can be renamed into the same symbol}
+\begin{example}
+Consider an ontology involving a concept \texttt{Person},
+and another one involving \texttt{Human being}, and an \termref{alignment}
+that relates these to concepts. In the combination of the ontologies
+along the alignment, there is only one concept, representing both
+\texttt{Person} and \texttt{Human being}.
+\end{example}
+
 
 \end{definitions}
 
@@ -1515,7 +1501,7 @@ the notion of a \termref{logic}}
 
   \termdefinition{heterogeneous OMS}{\termref{OMS} whose parts are supported by different \termref{logics}}
 \begin{example}
-\ednote{todo}
+\ednote{todo. Maybe take it from section 7?}
 \end{example}
 
 \end{definitions}
