@@ -1055,7 +1055,18 @@ For the purposes of this document, the following terms and definitions apply.
   \begin{example}
     OMS languages include OWL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
   \end{example}
-  
+ \ednote{Are query languages, like SPARQL, considered by OntoIOp to be
+   OMS languages? That is an interesting point. I tend to say "yes",
+   because we definitely want to have them in. However, query
+   languages do not fit exactly into the scheme of the OntoIOp notion
+   of OMS language (and the underlying notion of institution), because
+   the latter is about satisfaction of sentences in models, whereas a
+   query language is about computing answer substitutions to
+   queries. However, there is research about how to relate and
+   reconcile both (also in the institution community). I think we
+   should devote an OntoIOp telecon to this topic.}
+
+
   \termdefinition{non-logical symbol\synonym OMS symbol}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}}
   \begin{note}
   The notion of ``atomic sentence'' used in logic is different, it usually
@@ -1081,8 +1092,10 @@ For the purposes of this document, the following terms and definitions apply.
     This is opposed to logical symbols in Common Logic, e.g.\ logical connectives and
     quantifiers.
   \end{example}
-  
-  \termdefinition{vocabulary \synonym signature}{set (or otherwise structured entity) of \termref{non-logical symbols} of an \termref{OMS}}
+
+\termdefinition{vocabulary \synonym signature}{set (or otherwise
+  structured entity) of \termref{non-logical symbols} of an
+  \termref{OMS}}
    \begin{note}
      The signature of a term is the set of all non-logical symbvols occuring
      in the \termref{term}. The signature of an \termref{OMS language} is the
@@ -1388,7 +1401,7 @@ original and the renamed OMS.
     to a new \termref{OMS}, without any renaming}
 
   \termdefinition{combination}{aggregation of several \termref{OMSs}
-    along \termref{OMS mappings} to a new \termref{OMS} where some of
+    along a \termref{diagram} of \termref{OMS mappings} to a new \termref{OMS} where some of
     the \termref{non-logical symbols} of the involved \termref{OMSs}
     can be renamed into the same symbol}
 \begin{example}
@@ -1399,7 +1412,21 @@ along the alignment, there is only one concept, representing both
 \texttt{Person} and \texttt{Human being}.
 \end{example}
 
+  \termdefinition{diagram} graph of \termref{OMSs} and \termref{OMS mappings} showing how the OMS are interlinked
 
+  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{diagram}}
+\ednote{Does OntoIOp have terminology for an entity that is
+  "shared" among equivalent OMSs? (e.g. an entity that is
+  effectively an equivalence class of OMSs) --> No (note that the
+  OntoIOp terminology for entity is non-logical symbol, or OMS
+  symbol).  However, the notion of diagram implicitly has something
+  like this, because a diagram relates different OMS via mapping and
+  alignments, and you could say that two symbols are equivalent w.r.t
+  the diagram if they are mapped to the same symbol in the combination
+  (colimit) induced by the diagram. Indeed, I could be a good idea to
+  add this terminology to the standard. But note that this kind of
+  equivalence is not absolute, but always relative to some
+  diagram. (Aha, we need an entry for "diagram" as well).}
 \end{definitions}
 
 \sclause{Features of OMS Languages}
@@ -1454,6 +1481,8 @@ that targets specific applications or reasoning methods}
   \begin{example}
     Common Logic uses the term ``dialect''; the following are standard Common Logic dialects: Common Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (GCIF), eXtended Common Logic Markup Language (XCL).
   \end{example}
+
+   \termdefinition{document}{result of serializing an OMS using a given serialization}
 
   \termdefinition{standoff markup}{way of providing \termref{annotations} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS})}
 \end{definitions}
