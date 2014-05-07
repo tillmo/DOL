@@ -1022,7 +1022,7 @@ We expect most DOL-aware applications to support a fixed (possibly extensible) s
 
 
 \chapter{Normative References}
-\begin{itemize}
+\begin{enumerate}
 % OLD text
 % The following referenced documents are indispensable for the application of this document. For dated references, only
 % the edition cited applies. For undated references, the latest edition of the referenced document (including any
@@ -1044,7 +1044,9 @@ We expect most DOL-aware applications to support a fixed (possibly extensible) s
   %\item{W3C/TR REC-rdf-sparql-query:2008}{SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
   \item{W3C/TR REC-rdf-schema:2004}{RDF Vocabulary Description Language 1.0: RDF Schema. W3C Recommendation, 10 February 2004.\\ \url{http://www.w3.org/TR/2004/REC-rdf-schema-20040210/}}
   \item{W3C/TR REC-rdf-mt:2004}{RDF Semantics.  W3C Recommendation, 02 February 2004.  \url{http://www.w3.org/TR/2004/REC-rdf-mt-20040210/}}
-\end{itemize}
+\end{enumerate}
+\ednote{more, see RFP}
+\ednote{introduce a separate reference scheme for normative references}
 \todonote[author=Christoph Lange,date=D:201107301339+02'00',type=q-all]{I have listed them roughly in the order of occurrence: OK?}
 
 
@@ -1072,7 +1074,18 @@ For the purposes of this document, the following terms and definitions apply.
   \begin{example}
     OMS languages include OWL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
   \end{example}
-  
+ \ednote{Are query languages, like SPARQL, considered by OntoIOp to be
+   OMS languages? That is an interesting point. I tend to say "yes",
+   because we definitely want to have them in. However, query
+   languages do not fit exactly into the scheme of the OntoIOp notion
+   of OMS language (and the underlying notion of institution), because
+   the latter is about satisfaction of sentences in models, whereas a
+   query language is about computing answer substitutions to
+   queries. However, there is research about how to relate and
+   reconcile both (also in the institution community). I think we
+   should devote an OntoIOp telecon to this topic.}
+
+
   \termdefinition{non-logical symbol\synonym OMS symbol}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}}
   \begin{note}
   The notion of ``atomic sentence'' used in logic is different, it usually
@@ -1098,8 +1111,10 @@ For the purposes of this document, the following terms and definitions apply.
     This is opposed to logical symbols in Common Logic, e.g.\ logical connectives and
     quantifiers.
   \end{example}
-  
-  \termdefinition{vocabulary \synonym signature}{set (or otherwise structured entity) of \termref{non-logical symbols} of an \termref{OMS}}
+
+\termdefinition{vocabulary \synonym signature}{set (or otherwise
+  structured entity) of \termref{non-logical symbols} of an
+  \termref{OMS}}
    \begin{note}
      The signature of a term is the set of all non-logical symbvols occuring
      in the \termref{term}. The signature of an \termref{OMS language} is the
@@ -1311,10 +1326,11 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     Consider an OWL DL ontology about wines, from which we would like to extract a module about white wines. That module would contain the declaration of the non-logical symbol ``white wine'', all declarations of non-logical symbols related to ``white wine'', and all sentences about all of these non-logical symbols.
   \end{example}
 
-\termdefinition{approximant \synonym uniform interpolant}{
+\termdefinition{approximant}{
 best possible (in the sense of a maximal set of logical consequences)
 approximation of an OMS in a smaller \termref{signature} or
 \termref{OMS language}}
+\ednote{reference, synonym: uniform interpolant}
 
 \termdefinition{closed world assumption}{presumption that what is
     not known to be true, is false}
@@ -1404,7 +1420,7 @@ original and the renamed OMS.
     to a new \termref{OMS}, without any renaming}
 
   \termdefinition{combination}{aggregation of several \termref{OMSs}
-    along \termref{OMS mappings} to a new \termref{OMS} where some of
+    along a \termref{diagram} of \termref{OMS mappings} to a new \termref{OMS} where some of
     the \termref{non-logical symbols} of the involved \termref{OMSs}
     can be renamed into the same symbol}
 \begin{example}
@@ -1415,7 +1431,21 @@ along the alignment, there is only one concept, representing both
 \texttt{Person} and \texttt{Human being}.
 \end{example}
 
+  \termdefinition{diagram} graph of \termref{OMSs} and \termref{OMS mappings} showing how the OMS are interlinked
 
+  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{diagram}}
+\ednote{Does OntoIOp have terminology for an entity that is
+  "shared" among equivalent OMSs? (e.g. an entity that is
+  effectively an equivalence class of OMSs) --> No (note that the
+  OntoIOp terminology for entity is non-logical symbol, or OMS
+  symbol).  However, the notion of diagram implicitly has something
+  like this, because a diagram relates different OMS via mapping and
+  alignments, and you could say that two symbols are equivalent w.r.t
+  the diagram if they are mapped to the same symbol in the combination
+  (colimit) induced by the diagram. Indeed, I could be a good idea to
+  add this terminology to the standard. But note that this kind of
+  equivalence is not absolute, but always relative to some
+  diagram. (Aha, we need an entry for "diagram" as well).}
 \end{definitions}
 
 \sclause{Features of OMS Languages}
@@ -1458,7 +1488,6 @@ that targets specific applications or reasoning methods}
 \end{definitions}
 
 \sclause{OMS Language Serializations}
-\ednote{Christoph: incorporate Maria's comments}
 
 \begin{definitions}
   \termdefinition{serialization}{specific syntactic encoding of a given \termref{OMS language}}
@@ -1466,11 +1495,13 @@ that targets specific applications or reasoning methods}
     Serializations serve as standard formats for exchanging OMSs between tools.
   \end{note}
   \begin{example}
-    OWL uses the term ``serialization''; the following are standard OWL serializations: OWL functional-style syntax, OWL XML, OWL Manchester syntax, plus any serialization of RDF (\eg RDF/XML, Turtle, ...)
+    OWL uses the term ``serialization''; the following are standard OWL serializations: OWL functional-style syntax, OWL/XML, OWL Manchester syntax, plus any standard serialization of RDF (\eg RDF/XML, Turtle, \dots).  However, RDF/XML is the only one tools are required to implement.
   \end{example}
   \begin{example}
     Common Logic uses the term ``dialect''; the following are standard Common Logic dialects: Common Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (GCIF), eXtended Common Logic Markup Language (XCL).
   \end{example}
+
+   \termdefinition{document}{result of serializing an OMS using a given serialization}
 
   \termdefinition{standoff markup}{way of providing \termref{annotations} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS})}
 \end{definitions}
@@ -1569,6 +1600,7 @@ TODO Michael: explain the relationship to other notions of interoperability (fro
 \end{definitions}
 
 \chapter{Symbols}
+\ednote{add OMG stuff}
 
 As listed below, these symbols and abbreviations are generally for the main clauses of the \IS. Some annexes may introduce their own symbols and abbreviations which will be grouped together within that annex.
 
@@ -1605,6 +1637,34 @@ As listed below, these symbols and abbreviations are generally for the main clau
 
 
 \chapter{Additional Information}
+
+
+\ednote{have a look at ODM's Additional Information}
+\ednote{this could be put in section 1 (if possible with OMG), or turned into informative
+  notes, or deleted}
+
+An ontology is a formal description of the concepts and relationships
+that are of interest to an agent or a community of agents. Today,
+ontologies are applied in eBusiness, eHealth, eGovernment, eInclusion,
+eLearning, smart environments, ambient assisted living (AAL), and
+virtually all other information-rich endeavours. Ontologies have been
+used initially and principally for data and database integration
+through providing a common representation of the subject domain onto
+which the data sources can be mapped meaningfully. Over the years, the
+purpose has broadened beyond data and services interoperability to
+include a wide range of tasks and ontologies are used in information
+systems at run-time, such as being a component in \emph{in silico}
+scientific workflows, used for natural language processing, in
+ontology-driven querying of digital libraries, user profiling in
+recommender systems, adaptive e-Learning tools, and
+more.\todonote[author=Terry
+Longstreth,date=D:201110060000+02'00']{Terry Longstreth:
+  Interoperability in this context seems to be mutual consistency?
+  Fostering Mutual Consistency among disjoint ontological formalisms
+  (intensions) and their realisations (extensions). TM: yes, but more
+  than that: also interfacability, such that the joint use in a common
+  application scenario is enabled.}
+
 
 [This page is left intentionally blank.]
 
@@ -3379,7 +3439,7 @@ pos=h,
   specifiesSemanticsOf & Logic & OMSLanguage
   \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsLogic.}\ML
   supportsSerialization & OMSLanguage & Serialization
-  \PropertyDocumentation{OMSs in the subject OMS language can be serialized in the object serialization.  Note that the serialization should be as specific as possible, \ie one should not say that ``OWL can be serialized in XML'' and ``Common Logic can be serialized in XML'', but instead ``OWL can be serialized in OWL XML'' and ``Common Logic can be serialized in XCL'', taking into account that OWL XML and XCL are two different XML languages.}\ML
+  \PropertyDocumentation{OMSs in the subject OMS language can be serialized in the object serialization.  Note that the serialization should be as specific as possible, \ie one should not say that ``OWL can be serialized in XML'' and ``Common Logic can be serialized in XML'', but instead ``OWL can be serialized in OWL/XML'' and ``Common Logic can be serialized in XCL'', taking into account that OWL/XML and XCL are two different XML languages.}\ML
   serializes & Serialization & OMSLanguage
   \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsSerialization.}\LL
 }
@@ -3388,7 +3448,7 @@ pos=h,
 
 The semantic conformance of OWL 2 (as specified in \nisref{W3C/TR REC-owl2-syntax:2009}) with DOL is established in \cite{OntoGraph}.
 
-The OWL XML serialization satisfies the criteria for XML conformance.  The mapping of OWL 2 to RDF graphs satisfies the criteria for RDF conformance\CLnote{This is not exactly true, as some things, e.g. imports, can't be identified.}.  The OWL 2 Manchester syntax satisfies the criteria for text conformance.
+The OWL/XML serialization satisfies the criteria for XML conformance.  The mapping of OWL 2 to RDF graphs satisfies the criteria for RDF conformance\CLnote{This is not exactly true, as some things, e.g. imports, can't be identified.}.  The OWL 2 Manchester syntax satisfies the criteria for text conformance.
 ~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 
 OWL can be formalised as an institute as follows:
