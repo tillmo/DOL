@@ -1,3 +1,9 @@
+%todo
+%[08:15] TillMossakowski1: p.1: is just about ontologies. Some words about models and specifications should be added. Probably the RFP is a source here.
+%[08:38] TillMossakowski1: section 7: section titles should probably taken from RFP, since we improved them there
+%[08:42] FabianNeuhaus: Include a section on usage scenarios and goals as section 7. The design decisions would then answer to scenarios. Reuse material from RFP
+%[08:49] TillMossakowski1: in section 4, the terms should have the same font size as their explanations
+
  \newcommand{\version}{Working Draft Version 3.15}
 
 % This file was initially converted to LaTeX by Writer2LaTeX ver. 1.1.8
@@ -741,7 +747,7 @@ Longstreth,date=D:201110060000+02'00']{Terry Longstreth:
   \todonote{Include a sentence each about models and specifications}
 
  In complex applications, which involve multiple OMSs with overlapping concept spaces, data mapping is also required on a higher level of abstraction, viz.\ between different OMSs, and is then called OMS alignment. 
-  While OMS alignment is most commonly studied for OMSs formalized\CLnote{spell-check everything for British} in the same OMS language, the different OMSs used by complex applications may also be written in different OMS languages. 
+  While OMS alignment is most commonly studied for OMSs formalized\CLnote{spell-check everything for British. TM: why British? OMG is an American organization.} in the same OMS language, the different OMSs used by complex applications may also be written in different OMS languages. 
  This \IS faces this diversity not by proposing yet another OMS language that would subsume all the others.  
   Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) to compare and integrate OMSs that are written in different formalisms.
   It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for expressing not only OMSs but also mappings between OMSs formalized in different OMS languages.
@@ -1093,10 +1099,12 @@ For the purposes of this document, the following terms and definitions apply.
 
 
   \termdefinition{non-logical symbol\synonym OMS symbol}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}}
+{\color{red}
   \begin{note}
   The notion of ``atomic sentence'' used in logic is different, it usually
   may involve several non-logical symbols.
   \end{note}
+}
   \begin{example}
     Non-logical symbols in OWL \nisref{W3C/TR REC-owl2-syntax:2009} (there called ``entities'') comprise
     \begin{itemize}
@@ -1118,6 +1126,7 @@ For the purposes of this document, the following terms and definitions apply.
     quantifiers.
   \end{example}
 
+{\color{red}
 \termdefinition{vocabulary \synonym signature}{set (or otherwise
   structured entity) of \termref{non-logical symbols} of an
   \termref{OMS}}
@@ -1138,6 +1147,7 @@ For the purposes of this document, the following terms and definitions apply.
   This term is not to be confused with model in the sense of modeling (i.e.,
   the ``M'' in OMS).
   \end{note}
+}
   
   \termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms)}
   
@@ -1319,6 +1329,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
   \begin{note}
     The conservative extension can be either model-theoretic or consequence-theoretic; without qualification, the consequence-theoretic version is used.
   \end{note}
+\ednote{this is about coverage only. Should we also care about safety?}
 
   \termdefinition{module extraction}{activity of obtaining from an \termref{OMS} concrete \termref{modules} to be used for a particular purpose (\eg to contain a particular sub-\termref{signature} of the original \termref{OMS})}
   \begin{note}
@@ -1332,11 +1343,15 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     Consider an OWL DL ontology about wines, from which we would like to extract a module about white wines. That module would contain the declaration of the non-logical symbol ``white wine'', all declarations of non-logical symbols related to ``white wine'', and all sentences about all of these non-logical symbols.
   \end{example}
 
+{\color{red}
 \termdefinition{approximant}{
 best possible (in the sense of a maximal set of logical consequences)
 approximation of an OMS in a smaller \termref{signature} or
 \termref{OMS language}}
-\ednote{reference, synonym: uniform interpolant}
+\begin{note}
+ Technically, an approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
+\end{note}
+}
 
 \termdefinition{closed world assumption}{presumption that what is
     not known to be true, is false}
@@ -1425,6 +1440,7 @@ original and the renamed OMS.
   \termdefinition{union}{aggregation of several \termref{OMSs}
     to a new \termref{OMS}, without any renaming}
 
+{\color{red}
   \termdefinition{combination}{aggregation of several \termref{OMSs}
     along a \termref{diagram} of \termref{OMS mappings} to a new \termref{OMS} where some of
     the \termref{non-logical symbols} of the involved \termref{OMSs}
@@ -1440,18 +1456,13 @@ along the alignment, there is only one concept, representing both
   \termdefinition{diagram} graph of \termref{OMSs} and \termref{OMS mappings} showing how the OMS are interlinked
 
   \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{diagram}}
-\ednote{Does OntoIOp have terminology for an entity that is
-  "shared" among equivalent OMSs? (e.g. an entity that is
-  effectively an equivalence class of OMSs) --> No (note that the
-  OntoIOp terminology for entity is non-logical symbol, or OMS
-  symbol).  However, the notion of diagram implicitly has something
-  like this, because a diagram relates different OMS via mapping and
-  alignments, and you could say that two symbols are equivalent w.r.t
-  the diagram if they are mapped to the same symbol in the combination
-  (colimit) induced by the diagram. Indeed, I could be a good idea to
-  add this terminology to the standard. But note that this kind of
-  equivalence is not absolute, but always relative to some
-  diagram. (Aha, we need an entry for "diagram" as well).}
+ \begin{note}
+  Sharing is always relative to a given diagram that
+  relates different OMS. That is, two given OMS symbols
+  can share w.r.t.\ one diagram, and not share w.r.t.\ some
+  other diagram.
+ \end{note}
+}
 \end{definitions}
 
 \sclause{Features of OMS Languages}
@@ -1507,7 +1518,9 @@ that targets specific applications or reasoning methods}
     Common Logic uses the term ``dialect''; the following are standard Common Logic dialects: Common Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (GCIF), eXtended Common Logic Markup Language (XCL).
   \end{example}
 
+{\color{red}
    \termdefinition{document}{result of serializing an OMS using a given serialization}
+}
 
   \termdefinition{standoff markup}{way of providing \termref{annotations} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS})}
 \end{definitions}
@@ -1805,22 +1818,15 @@ Whereas the first feature determines the expressivity of the language and the po
 Within the DOL framework, existing OMSs in conforming established languages such as OWL or Common Logic remain as they are, acknowledging the wide tool support these languages enjoy.  DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. DOL's modularity and annotation constructs can either be embedded into existing OMSs as non-disruptive annotations, or they can be provided as standoff markup, pointing to the OMSs they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported OMS languages.
 
 
-\begin{description}
-\item[Logic] Most commonly, OMS languages are based on a description logic or some other subset of first order logic, but in some cases, also higher-order, modal, paraconsistent and other logics are used.
-\item[Modularity] means of structuring an OMS into reusable parts, reusing parts of other OMSs, mapping imported symbols to those in the importing OMS, and asserting additional properties about imported symbols.
-\item[Annotation] means of attaching human-readable descriptions to OMS symbols, addressing knowledge engineers and service developers, but also end users of OMS-based services.\ednote{TODO Christoph: reformulate. DOL enables the use of annotations}
-\end{description}
-Whereas the first feature determines the expressivity of the language and the possibilities for automated reasoning (decidability, tractability, etc.), the latter two intend to facilitate OMS engineering as well as the engineering of OMS-based software.
-
-Within the DOL framework, existing OMSs in conforming established languages such as OWL or Common Logic remain as they are, acknowledging the wide tool support these languages enjoy.  DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. DOL's modularity and annotation constructs can either be embedded into existing OMSs as non-disruptive annotations, or they can be provided as standoff markup, pointing to the OMSs they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported OMS languages.
-
 \section{Overview of DOL}\label{c:req:overview}
 DOL is a language enabling OMS interoperability. 
 DOL is
+\begin{description}
 \item[free] DOL is freely available for unrestricted use.
 \item[generally applicable] DOL is neither be restricted to OMSs in a specific domain, nor to foundational OMSs, nor to OMSs represented in a specific OMS language, nor to OMSs stored in any specific repositories.
 \item[open] DOL supports mapping, integrating, and annotating OMSs across arbitrary internet locations.  It makes use of existing open standards wherever suitable.  The criteria for extending DOL (see next item) are transparent and explicit.
 \item[extensible] DOL provides a framework into which any existing, and, desirably, any future OMS language can be plugged.
+\end{description}
 DOL is applicable to any OMS language that has a formal, logic-based semantics or a semantics defined by translation to another OMS language with such a formal semantics. The annotation framework of DOL is additionally be applicable to the non-logical constructs of such languages. This \IS specifies formal criteria for establishing the conformance of an OMS language with DOL.  Annexes establish the conformance of a number of relevant OMS languages with DOL; a registry shall offer the possibility to add further (also non-standardized) languages:\CLnote[date=D:201201100956+01'00']{John Sowa: Make it modular with a simple core that can run efficiently on small systems, but can grow indefinitely to support as much as anyone could desire.}
 DOL provides syntactic constructs for structuring OMSs regardless of the logic their sentences are formalized in. DOL provides syntactic constructs for
 DOL does provide its own constructs for expressing sentences.  Instead, it \textit{inherits} the logical language aspects of conforming OMS languages.  It is possible to literally include sentences expressed in such OMS languages in a DOL OMS.
@@ -1832,7 +1838,7 @@ The \textbf{text serialization} in particular offers a syntax for abbreviating i
 An OMS implemented in DOL can comprise parts formalized in any OMS language; any serialization of DOL can literally include such parts, regardless of the OMS language serialization they have been written in. \todonote[author=Christoph Lange,date=D:201109200256+02'00',type=fyi]{advanced namespacing is the solution that addresses this requirement} Additionally, an OMS implemented in DOL can refer to any external OMSs formalized in any OMS language, as long as they can be identified in a globally unique way.
 Existing OMSs in existing XML serializations (\eg XCL) or text serializations (\eg OWL Manchester Syntax) validate as DOL OMSs with a minimum amount of syntactic adaptation. Existing OMS files/documents are usable in a DOL context without the need for modification.
 
-
+{\color{red}
 DOL does not provide a new elementary OMS language, but provides a
 layer to be used on top of existing elementary OMS languages which
 enables OMS engineers to formally express mappings between OMSs written
@@ -1840,6 +1846,7 @@ in different languages and stored at different Web locations. The
 purpose of such distributed OMSs is enabling a greater extent of
 interoperability between data and services in complex application
 settings.
+}
 
 The following features are essential to the design of this \IS:
 
