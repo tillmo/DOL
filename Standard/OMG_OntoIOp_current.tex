@@ -487,7 +487,7 @@ Date: \today
 {\fontsize{30}{36}\selectfont Ontology, Model, and Specification Integration and Interoperability (OntoIOp)}
 
 \bigskip
-Version 0.55
+Version 0.56
 
 \bigskip\bigskip\bigskip\bigskip\bigskip\bigskip\
 
@@ -738,14 +738,16 @@ several OMS in a common application scenario, as well as about
 coherence and consistency, ensuring at an early stage of the
 development that a coherent system can be reached.
 
-
- In complex applications, which involve multiple OMSs with overlapping concept spaces, data mapping is also required on a higher level of abstraction, viz.\ between different OMSs, and is then called OMS alignment. 
-  While OMS alignment is most commonly studied for OMSs formalized\CLnote{spell-check everything for British. TM: why British? OMG is an American organization.} in the same OMS language, the different OMSs used by complex applications may also be written in different OMS languages. 
+In complex applications, which involve multiple OMSs with overlapping concept spaces, data mapping may also be  between different OMSs, and is then called OMS alignment. 
+  While OMS alignment is most commonly studied for OMSs formalized\CLnote{spell-check everything for American English.} in the same OMS language, the different OMSs used by complex applications may also be written in different OMS languages even of different expressiveness. 
  This \IS faces this diversity not by proposing yet another OMS language that would subsume all the others.  
   Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) to compare and integrate OMSs that are written in different formalisms.
   It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for expressing not only OMSs but also mappings between OMSs formalized in different OMS languages.
 
 Thus, DOL gives interoperability a formal grounding and makes heterogeneous OMSs and services based on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences, and compliance).
+}
+
+\ednote{State somewhere: A DOL theory is at level M1 in MDA speak, the same level as an UML diagram. Also a DOL distributed OMS, containing interpretations, alignments between OMS etc. is at level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in MOF.}
 
 \section{Features within Scope}
 % Can't use \begin{inscope}, as that creates an itemize environment
@@ -1063,6 +1065,21 @@ refer to this section if definitions of terms are needed.}
 
 For the purposes of this document, the following terms and definitions apply.
 
+\sclause{Distributed OMSs and the Distributed Ontology, Modeling and Specification Language}
+
+\begin{definitions}
+  \termdefinition{distributed OMS\synonym hyperontology}{collection of named \termref{OMSs,} possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings} and named \termref{OMS graphs}}
+
+  \termdefinition{distributed ontology, modeling and specification language\synonym
+  DOL}{language for formalizing \termref{distributed OMSs}, whose syntax and semantics are specified in this \IS}
+
+\begin{note}
+ When viewed as an \termref{OMS language}, DOL has \termref{OMSs} as its
+\termref{non-logical symbols}, and \termref{OMS mappings} as its \termref{sentences}.
+\end{note}
+\end{definitions}
+
+
 \sclause{OMSs}
 
 \begin{definitions}
@@ -1072,7 +1089,7 @@ For the purposes of this document, the following terms and definitions apply.
 	An \termref{OMS} can be written in different \termref{OMS language} \termref{serializations}.
 \end{note}	
 
-  \termdefinition{OMS language}{language  equipped with a formal, declarative, logic-based semantics, plus non-logical \termref{annotations}}
+  \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics, plus non-logical \termref{annotations}}
   \begin{note}
   An OMS language is used for the formal specification of \termref{OMSs}.
   \end{note}
@@ -1120,11 +1137,11 @@ For the purposes of this document, the following terms and definitions apply.
   \end{example}
 
 {\color{red}
-\termdefinition{vocabulary \synonym signature}{set (or otherwise
+\termdefinition{vocabulary\synonym signature}{set (or otherwise
   structured entity) of \termref{non-logical symbols} of an
   \termref{OMS}}
    \begin{note}
-     The signature of a term is the set of all non-logical symbvols occuring
+     The signature of a term is the set of all non-logical symbols occuring
      in the \termref{term}. The signature of an \termref{OMS language} is the
      set of all non-logical symbols possible in that language.     
    \end{note}
@@ -1244,7 +1261,11 @@ For the purposes of this document, the following terms and definitions apply.
 
 \sclause{Structured OMSs}
 \begin{definitions}
-\termdefinition{basic OMS}{set of \termref{non-logical symbols}, \termref{sentences}, \termref{annotations} about them, which is used as a building block for a larger \termref{OMS}}
+\termdefinition{basic OMS}{\termref{signature} equipped with a set of \termref{sentences} and \termref{annotations}, which may be used as a building block for a larger \termref{OMS}}
+  \begin{note}
+    The sentences must use only those non-logical symbols that are present in the signature.
+  \end{note}
+
 
 \termdefinition{structured OMS}
 {\termref{OMS} that results from other \termref{OMSs} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
@@ -1337,12 +1358,15 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
   \end{example}
 
 {\color{red}
-\termdefinition{approximant}{
-best possible (in the sense of a maximal set of logical consequences)
-approximation of an OMS in a smaller \termref{signature} or
+\termdefinition{approximant}{approximation (in the sense of a logically implied theory, possibly after
+suitable translation) 
+of an OMS in a smaller \termref{signature} or
 \termref{OMS language}}
+\termdefinition{maximum approximant}{
+best possible (in the sense of a maximum set of logical consequences)
+\termref{approximant} of an OMS in a smaller \termref{signature} or \termref{OMS language}}
 \begin{note}
- Technically, an approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
+ Technically, a maximum approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
 \end{note}
 }
 
@@ -1432,12 +1456,18 @@ original and the renamed OMS.
 
   \termdefinition{union}{aggregation of several \termref{OMSs}
     to a new \termref{OMS}, without any renaming}
+ 
+\termdefinition{OMS graph} graph with \termref{OMSs} as nodes and \termref{OMS mappings} as edges, showing how the OMS are interlinked
+  \ednote{add note with examples of what can be these links}
+  \begin{note}
+    An OMS graph is a diagram of OMS in the sense of category theory, but different from a diagram
+    in the sense of model-driven architecture.
+  \end{note}
+  \ednote{clarify the difference to distributed OMS}
+
 
 {\color{red}
-  \termdefinition{combination}{aggregation of several \termref{OMSs}
-    along a \termref{diagram} of \termref{OMS mappings} to a new \termref{OMS} where some of
-    the \termref{non-logical symbols} of the involved \termref{OMSs}
-    can be renamed into the same symbol}
+  \termdefinition{combination}{aggregation of all the OMS in a \termref{OMS graph}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS graph}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
 and another one involving \texttt{Human being}, and an \termref{alignment}
@@ -1446,14 +1476,13 @@ along the alignment, there is only one concept, representing both
 \texttt{Person} and \texttt{Human being}.
 \end{example}
 
-  \termdefinition{diagram} graph of \termref{OMSs} and \termref{OMS mappings} showing how the OMS are interlinked
-
-  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{diagram}}
+ 
+  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{OMS graph}}
  \begin{note}
-  Sharing is always relative to a given diagram that
+  Sharing is always relative to a given OMS graph that
   relates different OMS. That is, two given OMS symbols
-  can share w.r.t.\ one diagram, and not share w.r.t.\ some
-  other diagram.
+  can share w.r.t.\ one OMS graph, and not share w.r.t.\ some
+  other OMS graph.
  \end{note}
 }
 \end{definitions}
@@ -1597,19 +1626,7 @@ interoperability concerning the creation, meaning, computation, use, transfer, a
 TODO Michael: explain the relationship to other notions of interoperability (from existing standards)
 \end{note}
 
-\sclause{Distributed OMSs and the Distributed Ontology, Modeling and Specification Language}
 
-\begin{definitions}
-  \termdefinition{distributed OMS\synonym hyperontology}{collection of \termref{OMSs,} possibly written in different \termref{OMS languages}, linked by \termref{OMS mappings}}
-
-  \termdefinition{distributed ontology, modeling and specification language\synonym
-  DOL}{language for formalizing \termref{distributed OMSs}, whose syntax and semantics are specified in this \IS}
-
-\begin{note}
- When viewed as an \termref{OMS language}, DOL has \termref{OMSs} as its
-\termref{non-logical symbols}, and \termref{OMS mappings} as its \termref{sentences}.
-\end{note}
-\end{definitions}
 
 \chapter{Symbols}
 \ednote{add OMG stuff}
