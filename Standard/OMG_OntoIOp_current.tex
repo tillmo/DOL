@@ -2065,7 +2065,9 @@ LogicReduction       = 'logic-reduction' , OntoLangTrans ;
 SymbolItems          = 'symbol-items' , ( Symbol , { Symbol } ) ;
 SymbolMapItems       = 'symbol-map-items' , ( SymbolOrMap , { SymbolOrMap } ) ;<\todonote[author=Christoph Lange,type=todo]{say that this default may be overridden by specific logics, such as CASL}>
 
-Extraction           = 'extraction', Conservative, InterfaceSignature, ExtractionMethod ;
+Extraction           = 'extraction', ModuleProperties, InterfaceSignature ;
+
+ModuleProperties = Conservative | 'minimal' | 'safe' | 'depleting'; 
 
 Approximation        = 'approximation' , ApproxMethod ;<\todonote[author=Till Mossakowski,type=todo]{can we identify Approximation with ApproxMethod?\\ CL: At least in our concrete syntax it's easier to keep them separate; please have a look at the corresponding concrete syntax (and revise \emph{that} if necessary).}>
 
@@ -3208,13 +3210,13 @@ BasicOnto            = OntoInConformingLanguage ;
 MinimizableOnto      = BasicOnto
                      | OntoRef , [ ImportName ] ; 
 ExtendingOnto        = MinimizableOnto
-                     | MinimizeKeyword , '{' , MinimizableOnto , '}' ;
+                     | MinimizeKeyword , '{' , MinimizableOnto , '}' 
+                     | Onto , Extraction ;
 MinimizeKeyword      = 'minimize' | 'closed-world' ;
 Onto                 = ExtendingOnto
                      | Onto , MinimizeKeyword , CircMin , [ CircVars ]
                      | Onto , Translation
                      | Onto , Reduction
-                     | Onto , Extraction
                      | Onto , Approximation
                      | Onto , 'and' , [ ConsStrength ] , Onto 
                      | Onto , 'then' , ExtensionOnto
@@ -3239,7 +3241,8 @@ LogicReduction       = 'along' , OntoLangTrans ;
 SymbolItems          = Symbol { ',' , Symbol } ;
 SymbolMapItems       = SymbolOrMap { ',' , SymbolOrMap } ;
 
-Extraction           = 'extract' , Conservative , InterfaceSignature, 'with', ExtractionMethod
+Extraction           = 'extract' , ModuleProperties , InterfaceSignature;
+ModuleProperties =  Conservative | '%min' | '%depliting' | '%safe'  
 
 Approximation        = 'approximate' , ApproxMethod ;
 
