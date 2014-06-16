@@ -432,7 +432,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\sclause}[1]{\section{#1}}
 \newcommand{\ssclause}[1]{\subsection{#1}}
 \newcommand{\sssclause}[1]{\subsubsection{#1}}
-\newcommand{\termdefinition}[2]{\subsection*{#1}#2}
+\newcommand{\termdefinition}[2]{\subsubsection*{\normalsize #1}#2}
 \newcommand{\nisref}[1]{#1}
 
 
@@ -457,7 +457,7 @@ author=,date=,id=,replyto=,type=}{}%
 %color highlight, for editing
 \usepackage{color}
 
-\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\red}[1]{\color{red}{#1}}
 
 
 
@@ -716,7 +716,7 @@ distributed knowledge representation across multiple OMSs, particularly OMSs
 OntoIOp Request for Proposals\nitem{RFP}.
 different OMS languages. This \IS responds to the OntoIOp Request for
 Proposals \nitem{RFP}.
-{\color{red}
+
 
 
 \section{Background Information}
@@ -745,7 +745,7 @@ In complex applications, which involve multiple OMSs with overlapping concept sp
   It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for expressing not only OMSs but also mappings between OMSs formalized in different OMS languages.
 
 Thus, DOL gives interoperability a formal grounding and makes heterogeneous OMSs and services based on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences, and compliance).
-}
+
 
 \ednote{State somewhere: A DOL theory is at level M1 in MDA speak, the same level as an UML diagram. Also a DOL distributed OMS, containing interpretations, alignments between OMS etc. is at level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in MOF.}
 
@@ -1109,12 +1109,12 @@ For the purposes of this document, the following terms and definitions apply.
 
 
   \termdefinition{non-logical symbol\synonym OMS symbol}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}}
-{\color{red}
+
   \begin{note}
   The notion of ``atomic sentence'' used in logic is different, it usually
   may involve several non-logical symbols.
   \end{note}
-}
+
   \begin{example}
     Non-logical symbols in OWL \nisref{W3C/TR REC-owl2-syntax:2009} (there called ``entities'') comprise
     \begin{itemize}
@@ -1136,7 +1136,7 @@ For the purposes of this document, the following terms and definitions apply.
     quantifiers.
   \end{example}
 
-{\color{red}
+
 \termdefinition{vocabulary\synonym signature}{set (or otherwise
   structured entity) of \termref{non-logical symbols} of an
   \termref{OMS}}
@@ -1157,7 +1157,7 @@ For the purposes of this document, the following terms and definitions apply.
   This term is not to be confused with model in the sense of modeling (i.e.,
   the ``M'' in OMS).
   \end{note}
-}
+
   
   \termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms)}
   
@@ -1357,7 +1357,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     Consider an OWL DL ontology about wines, from which we would like to extract a module about white wines. That module would contain the declaration of the non-logical symbol ``white wine'', all declarations of non-logical symbols related to ``white wine'', and all sentences about all of these non-logical symbols.
   \end{example}
 
-{\color{red}
+
 \termdefinition{approximant}{approximation (in the sense of a logically implied theory, possibly after
 suitable translation) 
 of an OMS in a smaller \termref{signature} or
@@ -1368,7 +1368,7 @@ best possible (in the sense of a maximum set of logical consequences)
 \begin{note}
  Technically, a maximum approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
 \end{note}
-}
+
 
 \termdefinition{closed world assumption}{presumption that what is
     not known to be true, is false}
@@ -1466,7 +1466,7 @@ original and the renamed OMS.
   \ednote{clarify the difference to distributed OMS}
 
 
-{\color{red}
+
   \termdefinition{combination}{aggregation of all the OMS in a \termref{OMS graph}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS graph}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
@@ -1484,7 +1484,7 @@ along the alignment, there is only one concept, representing both
   can share w.r.t.\ one OMS graph, and not share w.r.t.\ some
   other OMS graph.
  \end{note}
-}
+
 \end{definitions}
 
 \sclause{Features of OMS Languages}
@@ -1540,9 +1540,9 @@ that targets specific applications or reasoning methods}
     Common Logic uses the term ``dialect''; the following are standard Common Logic dialects: Common Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (GCIF), eXtended Common Logic Markup Language (XCL).
   \end{example}
 
-{\color{red}
+
    \termdefinition{document}{result of serializing an OMS using a given serialization}
-}
+
 
   \termdefinition{standoff markup}{way of providing \termref{annotations} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS})}
 \end{definitions}
@@ -1700,7 +1700,88 @@ Longstreth,date=D:201110060000+02'00']{Terry Longstreth:
 %%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%% 
-\chapter{Design overview}
+
+\chapter{Usage Scenarios}
+
+%\section{Problem Statement}	%Logical languages are used in several fields of computing for the development of formal, machine-processable texts that carry a formal semantics. Among those fields are 1) ontologies formalizing domain knowledge, 2) formal models of systems, and 3) the formal specification of systems. Relevant languages include, but are not limited to:%?	the ontology languages OWL [OWL2], RDF [RDF, RDF-Semantics, RDFS [RDFS],%?	the modeling language UML [UML] (fUML [FUML] equips part of UML with a formal semantics)%?	general-purpose first-order languages: TPTP FOF, TPTP TFF [TPTP], F-logic [FLogic], Common Logic [CL]%?	more specialized specification logics like modal logics, temporal logics, higher-order logics, TPTP THF [TPTP]%?	more complex fully-fledged specification languages like VDM [VDM], B [B], Z [Z], CASL [CASL]%?	the rule languages in the RIF [RIF] (Rule Interchange Format) and RuleML [RuleML] families of languages, as well as in OMG PRR (at least as far they are based on monotonic logics; for non-monotonic logics, see the non-mandatory requirements section)%%This great diversity of languages is partly justified by the requirements of the domains and application areas they target, as reflected in the different technical properties of the languages. However, this diversity makes interoperability among ontologies, models, specifications and systems that are implemented using these languages more difficult. Moreover, it is not possible to find a single logical language into which all others can be mapped; rather, it is necessary to adopt a heterogeneous approach to interoperability. The submission team for the Ontology Definition Metamodel (ODM) reached a similar conclusion years ago, and elected to represent the abstract syntax of several of these languages rather than attempt to develop a new language that could be mapped to each of them. Ontologies, specifications and models will (for the purpose of this document) henceforth be abbreviated as OSM, if all three can be treated in the same way. Note that the underlying logical notion is that of a logical theory.(All terms introduced in italics are defined in the glossary below.)%%Related to the diversity of languages, there is considerable variation in the operations and relations on OSMs that are in use today:%?	matching and alignment of different ontologies covering one domain. Note that the task of finding of alignments is outside the scope of this RFP; proposals are sought that will provide a metalanguage for documenting such alignments only.%?	interpretation and refinement of OSMs%?	module extraction ? selection of small parts (suiting particular purposes) of large OSMs%?	approximation ? enabling modeling in an expressive language, with simulation and reasoning designed for performance, transaction-oriented, real-time (or near-real time), lighter weight languages %?	querying%?	ontology-based database access/data management%?	bridges between different axiomatizations, e.g. distributed description logics, E-connections%?	translations of OSMs to other languages%?	combinations of OSMs%%Heterogeneity can be seen at both the level of the logical languages as well as within the OSMs themselves. There are many domains in which multiple OSMs exist, in some cases axiomatized in the same language, and in other cases axiomatized in different logical languages. This leads to several challenges in the design and deployment of OSMs, which have been addressed by current research in ontological engineering, formal software specification and formal modeling:%%?	How can we support sharability and reusability of OSMs within the same domain?%%?	How can we merge OSMs in different domains, particularly in the cases in which the OSMs are axiomatized in different logical languages?%%?	What notions of modularity play a role when only part of an OSM is being shared or reused?%%?	What are the relationships between versions of an OSM axiomatized in different logical languages?%%These challenges can be illustrated by the following set of use cases:\section{Use case Onto-1: Interoperability between OWL and FOL ontologies}In order to achieve interoperability, during ontology development it is often necessary to describe concepts in a language more expressive than OWL. 
+Therefore, it is common practice to informally annotate OWL ontologies with FOL axioms (e.g., Keet's mereotopological ontology [Part-Whole], 
+Dolce Lite [Dolce-lite], BFO-OWL). OWL is used because of better tool support, FOL because of greater expressiveness. However, relegating FOL axioms to 
+informal annotations means that these are not available for machine processing. Another example of this problem is the following: For formally representing concept schemes (including taxonomies, thesauri and classification schemes) and 
+provenance information there are the two W3C standards SKOS (Simple Knowledge Organization System) and PROV, as well as ISO and other domain-specific 
+standards for metadata representation. The semantics for the SKOS and PROV languages are largely specified as OWL ontologies; however, as OWL cannot 
+capture the full semantics, the rest is specified using some informal first-order rules . In other words, valid instance models that use SKOS or PROV may be 
+required to satisfy both OWL and FOL axioms. When solving reasoning tasks over either SKOS or PROV ontologies, OWL reasoners are not able to consider the 
+FOL axioms. Hence, the information contained in these axioms is lost.The OntoIOp metalanguage will allow the user to replace such informal annotations by formal axioms in a suitable ontology language. The relation between the 
+OWL ontology and the FOL axioms is that of a heterogeneous import. In the result, both the OWL and the FOL axioms are amenable to e.g. automated consistency 
+checks and theorem proving. Hence, all available information can be used in the reasoning process.\section{Use Case Onto-2: Ontology integration by means of a foundational ontology}One major use case for ontologies in industry is to achieve interoperability and data integration. However, if ontologies are developed independently and used 
+within the same domain, the differences between the ontologies may actually impede interoperability. One strategy to avoid this problem is the use of a shared 
+foundational ontology (e.g., DOLCE or BFO), which can be used to harmonize different domain ontologies. One challenge for this approach is that foundational 
+ontologies typically rely on expressive ontology languages (e.g., Common Logic), while domain ontologies may be represented in languages that are optimized for 
+performance (e.g., OWL EL). For this reason, currently the role of the foundational ontology is mainly to provide a conceptual framework that may be reused by the 
+domain ontologies; further, watered-down versions of the foundational ontologies in OWL (like DOLCE-lite or the OWL version of BFO) are used as basis for the 
+development of domain ontologies, be this as is, in an even less expressive version (e.g. a DOLCE-lite in OWL 2 EL), or only a relevant subset thereof (e.g., only 
+the branch of endurants). A sample orchestration of interactions between the foundational and domain ontologies in various languages is depicted in the figure below. The OntoIOp metalanguage will provide the framework for integrating different domain ontologies, aligning these to foundational ontologies [Alignment1-2] and 
+combining the aligned ontologies into a coherent integrated ontology ? even across different ontology languages. Thus, the OntoIOp metalanguage will enable 
+ontology developers to utilize the complete, and most expressive, foundational ontologies for ontology integration and validation purposes. 
+ \section{Use Case Onto-3: Module extraction from large ontologies}Especially in the biomedical domain, ontologies tend to become very large (e.g. SNOMED CT, FMA) with over 100000 concepts and relationships. Yet, none of 
+these ontologies covers all aspects of a domain, and frequently provide coverage at various levels of specificity, with excessive detail in some areas that may not 
+be required for all usage scenarios. Often, for a given knowledge representation problem in industry, only relevant knowledge from two such large reference 
+ontologies needs to be integrated, so a comprehensive integration would be both unfeasible and unwieldy. Hence, parts (modules) of these ontologies are obtained 
+by selecting the concepts and relationships (roles) relevant for the intended application. An integrated version will then be based on these excerpts from the original 
+ontologies (i.e., modules). For example, the Juvenile Rheumatoid Arthritis ontology JRAO has been created using modules from the NCI thesaurus and GALEN 
+medical ontology. The OntoIOp metalanguage will support the description of such subsets (modules) of ontologies, as well as their alignment and integration. \section{Use case Onto-4: Interoperability between closed-world data and open-world metadata}Data collection has become easier and much more widespread over the years. This data has to be assigned a meaning somehow, which occurs traditionally in the 
+form of metadata annotations. For instance, consider geographical datasets derived from satellite data and raw sensor readings. Current implementations in, e.g., 
+ecological economics require manual annotation of datasets with the information relevant for their processes. While there have been attempts to standardize such 
+information, metadata for datasets of simulation results are more difficult to standardize. Moreover, it is resource-consuming to link the data to the metadata, to 
+ensure the metadata itself is of good quality and consistent, and to actually exploit the metadata when querying the data for data analysis. The data is usually represented in a database or RDF triple store, which work with a closed world assumption on the dataset, and are not expressive enough to 
+incorporate the metadata ?background knowledge?, such as the conditions for validity of the physical laws in the model of the object of observation. These metadata 
+require a more expressive language, such as OWL or Common Logic, which operate under an open-world semantics. However, it is unfeasible to translate the 
+whole large dataset into OWL or first-order logic. To ?meet in the middle?, it is possible to declare bridge rules (i.e., a mapping layer) that can link the metadata to 
+the data. This approach can be used for intelligent data analysis that combines the data and metadata through querying the system. It enables the analysis of the 
+data on the conceptual layer, instead of users having to learn the SQL/SPARQL query languages and how the data is stored. There are various tools and theories 
+to realize this, which is collectively called Ontology-Based Data Access/Management, see also [OBDA].The languages for representing the metadata or ontology, for representing the bridge rules or mapping assertions, and for representing the data are different yet 
+they need to be orchestrated and handled smoothly in the system, be this for data analytics for large enterprises, for formulating policies, or in silico biology in the 
+sciences. The OntoIOp metalanguage will provide the framework for expressing such bridge rules in a systematic way, maintaining these, and building tools for them. \section{Use Case Onto-5: Verification of rules translating Dublin Core into PROV}The Dublin Core Metadata terms, which have been formalized as an RDF Schema vocabulary, developed initially by the digital library community, are less comprehensive but more widely used than PROV (cf. Use Case Onto-1). The rules for translating Dublin Core to the OWL subset of PROV (and, with restrictions, vice versa) are not known to yield valid instances of the PROV data model, i.e. they are not known to yield OWL ontologies consistent w.r.t. the OWL axioms that capture part of the PROV data model. This may disrupt systems that would like to reason about the provenance of an entity, and thus the assessment of the entity?s quality, reliability or trustworthiness.The Dublin Core to PROV ontology translation  is expressed partly by a symbol mapping and partly by FOL rules. These FOL rules are implemented by CONSTRUCT patterns in the SPARQL RDF query language (e.g., \url{http://www.w3.org/TR/2013/NOTE-prov-dc-20130430/#dct-creator}). SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which is different from the model-theoretic semantics of the OWL and RDFS languages; nevertheless SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules between ontologies in RDF-based languages in a subset of FOL.The OntoIOp metalanguage will not only support the reuse of the existing Dublin Core RDFS and PROV OWL ontologies as modules of a distributed ontology, but it will also be able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.\section{Use case Spec-1: Specification Refinements}Especially in safety-critical areas such as medical systems, the automotive industry, avionics and the aerospace industry, but also for microprocessor design, often 
+a formal software and hardware development process is used in order to ensure the correct functioning of systems. Typically, a requirement specification is refined 
+into a design specification and then an implementation, often involving several intermediate steps (see e.g. the V-model [V-model], although this does not require 
+formal specification).There are numerous specification formalisms in use, including the OMG?s SysML language; moreover, often during development, the formalism needs to be 
+changed (e.g. from a specification to a programming language, or from a temporal logic to a state machine). For each of these formalisms, notions of refinement 
+have been defined and implemented. However, the lack of a standardized, logically sound language and methodology for such refinement hinders interoperability 
+among different development efforts and the reuse of refinements.The OntoIOp metalanguage will provide the capability to represent refinement that is equally applicable to all OntoIOp-conforming logical languages, and that will 
+cover at least the most relevant of the industrial use cases of specification refinement.\section{Use case Spec-2: Modularity of Specifications}In the context of use case Spec-1, often specifications become so large that it is necessary to structure them in a modular way, both for human readability, 
+maintainability, and for more efficient tool support. The lack of a standard for such modular structuring hinders interoperability among different development efforts 
+and the reuse of specifications.The OntoIOp metalanguage will provide a notion of structured modular specification that is equally applicable to all OntoIOp-conforming logical languages.	\section{Use case Model-1: Coherent semantics for multi-language models}	Often a single problem area within a given domain must be described using several formalisms, due to user community requirements, expressiveness, tool support 
+and usage, and so forth. A challenge is that typically the different formalizations are written by different people using different logics, and, thus, their overall 
+consistency is hard to maintain.The need for the use of multiple ontology languages, even within the OMG community, is also reflected by the OMG Ontology Definition Metamodel (ODM), which 
+provides a number of syntactic transformations between such languages.One example is the OMG Date-Time Vocabulary (DTV). DTV has been formulated in different languages, each of which addresses different audiences:
+\begin{itemize}\item	 SBVR: business users\item 	UML (class diagrams and OCL): software implementers\item 	OWL: ontology developers and users\item 	Common Logic: (foundational) ontology developers and users
+\end{itemize}With the OntoIOp metalanguage, one can e.g.
+\begin{itemize}\item 	formally relate the different formalizations used for DTV, relate the different formalizations using translations,\item 	check consistency across the different formalizations (using suitable tools),\item 	extract sub-modules covering specific aspects, and\item 	specify the OWL version to be an approximation of the Common Logic version (using a heterogeneous interpretation of OSMs).
+\end{itemize}Note that the last point does not specify what information is lost in the approximation. Indeed, the OntoIOp metalanguage will provide the means to specify requirements on the approximation, e.g. that it maximally preserves the information. Use case Model-2: Consistency among UML diagrams of different typesA typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
+requirements. Typical questions that arise in this context are e.g.
+\begin{itemize}
+\item	  whether the sequential composition of actions in an interaction diagram is justified by an accompanying OCL specification,\item 	whether cooperating state machines comply with pre-/post-conditions and invariants\item 	if the behavior prescribed in an interaction diagram is realizable by several state machines cooperating according to a composite structure diagram.
+\end{itemize}
+Such questions are currently hard to answer in a systematic manner. One method to answer these questions and find such errors is a check for semantic 
+consistency. Under some restrictions, the proof of semantic consistency can be (at least partially) performed using model-checking tools like Hugo/RT [HugoRT]. 
+Once a formal semantics for the different diagram types has been chosen (see e.g. [HetUML]), it is possible to use the OntoIOp metalanguage to specify in which 
+sense the diagrams need to be consistent, and check this by suitable tools.\section{Use case Model-3: Refinements between UML diagrams of different types, and their reuse}A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
+sequence diagrams and OCL constraints. Assume further that this model is not directly implemented, but first refined to a UML behavior state machine (which then 
+can be automatically or semi-automatically transformed into some implementation using standard UML tools). However, there is no standardized language to 
+express, document and maintain the refinement relation itself (UML only allows very simple refinements, namely between state machines). This hinders both the 
+reuse of such refinements in different contexts, as well as the interoperability of tools proving such refinements to be correct. The OntoIOp metalanguage will 
+address these problems by providing a standardized notation with formal semantics for such refinements. Refinements expressed in this language could e.g. be 
+parameterized and reused in different contexts.\section{Summary of use cases}These use cases illustrate that in ontology design, in formal specification, and in model-driven development, the same problem arises: the use of heterogeneous 
+formal representations leads to interoperability challenges. There are ad-hoc solutions to these challenges, and specialized languages and tools are used in 
+practice. However, there is no standardized approach or representation metalanguage to enable more accurate and consistent alignment, integration, and mapping 
+among these specifications and the tools that implement them.
+The OntoIOp standard will provide a standardized metalanguage for dealing with this variety of formalisms, with a well-defined semantics and model theory. The 
+metalanguage will distill best practices of modularity and metarelations (such as refinement and alignment) across the three areas of ontology design, formal 
+specification, and model-driven development. It will lead to the ability to specify the basis for formal interoperability even among heterogeneous OSMs. The 
+metalanguage will help to solve the problems described in the use cases above. It also will foster the development of OSM libraries, tools and workflows that 
+enable a better exchange and reuse of OSMs. Eventually, this will also lead to better, easier developed and maintained systems based on these OSM
+
+\chapter{Design Overview}
 %
 %\ednote{replace this section by saying how we respond to the RFP}
 %
@@ -1815,7 +1896,7 @@ the overall guiding principles and constraints of DOL's syntax and semantics.
 We give an overview of the most important and innovative language
 constructs of DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
-{\color{red}
+
 DOL gives interoperability a formal grounding and makes heterogeneous OMSs and services based on them amenable to checking of coherence (e.g. consistency, conservativity, intended consequences, and compliance). OMS languages are declarative languages for making ontological distinctions formally precise. They are distinguished by the following features:
 
 \begin{description}
@@ -1856,7 +1937,7 @@ in different languages and stored at different Web locations. The
 purpose of such distributed OMSs is enabling a greater extent of
 interoperability between data and services in complex application
 settings.
-}
+
 
 The following features are essential to the design of this \IS:
 
