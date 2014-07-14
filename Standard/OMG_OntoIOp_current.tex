@@ -797,9 +797,8 @@ It is expected that DOL will be used for more languages than this
 normative set of DOL-conformant languages. There will be a
 \textbf{registry for DOL-conformant languages and translations} hosted
 at \url{http://ontohub.org}.  This will ensure that this 
-\IS remains interoperable with past, present and future OMS
-languages, even if they do not appear in this \IS or do not even have
-been standardized (yet).  The
+\IS remains interoperable with past, present and even future OMS
+languages.  The
 registry shall also include descriptions of DOL-conformant languages
 and translations (as well as other information needed by implementors
 and users) in machine-processable form.  
@@ -1181,23 +1180,31 @@ For the purposes of this document, the following terms and definitions apply.
 
   \termdefinition{satisfaction relation}{relation between models and sentences indicating which sentences hold true in the model}
 
-{\color{red}
-  \termdefinition{query}{\termref{sentence} containing \termref{variables}
+  \termdefinition{query}{\termref{sentence} containing \termref{query variables}
    that can be instantiated by a \termref{substitution}}
 
-  \termdefinition{variable}{\termref{symbol} that will be used in a \termref{substitution}}
+  \termdefinition{query variable}{\termref{symbol} that will be used in a \termref{query} and a \termref{substitution}}
   \begin{note}
-   From an abstract point of view, variables are just symbols; they are used in a way
+   From an abstract point of view, query variables are just symbols; 
+   they are used in a way
    that they will be substituted using a substitution.
-   Many OMS languages have special notations for variables.
+   Many OMS languages have special notations for (query) variables.
+  \end{note}
+  \begin{note}
+   Usually, query variables are the free variables of a sentence, whereas there
+   can be other (bound) variables.
+  \end{note}
+  \begin{note}
+  If there are no variables in an OMS language, constants can be used as query
+  variables.
   \end{note}
 
-  \termdefinition{substitution}{\termref{logical OMS mapping} that maps \termref{variables} of one \termref{OMS} to complex \termref{terms} of another OMS}
+  \termdefinition{substitution}{\termref{logical OMS mapping} that maps \termref{query variables} of one \termref{OMS} to complex \termref{terms} of another OMS}
 
   \termdefinition{answer substitution}{\termref{substitution} that, when applied to
    a given \termref{query}, turns the latter into a logical consequence of a
    given \termref{OMS}}
-}
+\ednote{we have to revisit this once we design the abstract syntax of queries etc.}
 
 \end{definitions}  
 
@@ -1735,6 +1742,15 @@ specification and formal modeling:
 \end{itemize}
 
 These challenges can be illustrated by the following set of use cases.
+These use cases illustrate that in ontology design, in formal
+specification, and in model-driven development, the same problem
+arises: the use of heterogeneous formal representations leads to
+interoperability challenges. There are ad-hoc solutions to these
+challenges, and specialized languages and tools are used in
+practice. However, there is no standardized approach or representation
+metalanguage to enable more accurate and consistent alignment,
+integration, and mapping among these specifications and the tools that
+implement them.
 
 
 
@@ -1924,16 +1940,12 @@ reuse of such refinements in different contexts, as well as the interoperability
 address these problems by providing a standardized notation with formal semantics for such refinements. Refinements expressed in this language could e.g. be 
 parameterized and reused in different contexts.
 
-\section{Summary of use cases}
-These use cases illustrate that in ontology design, in formal specification, and in model-driven development, the same problem arises: the use of heterogeneous 
-formal representations leads to interoperability challenges. There are ad-hoc solutions to these challenges, and specialized languages and tools are used in 
-practice. However, there is no standardized approach or representation metalanguage to enable more accurate and consistent alignment, integration, and mapping 
-among these specifications and the tools that implement them.
+\section{Conclusion}
 
 In the next sections, we will detail the metalanguage DOL for dealing with this variety of formalisms, with syntax, well-defined semantics and model theory. DOL 
  will distill best practices of modularity and metarelations (such as refinement and alignment) across the three areas of ontology design, formal 
 specification, and model-driven development. It will lead to the ability to specify the basis for formal interoperability even among heterogeneous OSMs. DOL will help to solve the problems described in the use cases above. It also will foster the development of OSM libraries, tools and workflows that 
-enable a better exchange and reuse of OSMs. Eventually, this will also lead to better, easier developed and maintained systems based on these OSM
+enable a better exchange and reuse of OSMs. Eventually, this will also lead to better, easier developed and maintained systems based on these OSMs.
 
 
 \chapter{Design Overview}
