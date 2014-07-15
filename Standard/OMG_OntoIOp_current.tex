@@ -1802,7 +1802,7 @@ ontologies typically rely on expressive ontology languages (e.g., Common Logic),
 performance (e.g., OWL EL). For this reason, currently the role of the foundational ontology is mainly to provide a conceptual framework that may be reused by the 
 domain ontologies; further, watered-down versions of the foundational ontologies in OWL (like DOLCE-lite or the OWL version of BFO) are used as basis for the 
 development of domain ontologies, be this as is, in an even less expressive version (e.g., a DOLCE-lite in OWL 2 EL), or only a relevant subset thereof (e.g., only 
-the branch of endurants). A sample orchestration of interactions between the foundational and domain ontologies in various languages is depicted in the figure below.\ednote{Fabian: refer to figure} 
+the branch of endurants). A sample orchestration of interactions between the foundational and domain ontologies in various languages is depicted in Figure \ref{f:DOL-mapping} below.
 
 DOL  provides the framework for integrating different domain ontologies, aligning these to foundational ontologies [Alignment1-2] and 
 combining the aligned ontologies into a coherent integrated ontology -- even across different ontology languages. Thus, DOL  enables 
@@ -2198,12 +2198,10 @@ A list of RDF vocabularies for annotating OMS is recommended as an annex to this
 
 
 \clause{DOL abstract syntax}\label{c:abstract-syntax}
-\CLnote[type=todo]{split into two clauses: one for abstract syntax, one for semantics. TM: done}
-
 
 \sclause{Abstract syntax categories}
 
-DOL provides abstract syntax categories for\todonote[author=Christoph Lange,date=D:201111071952+01'00',type=q-aut]{In the previous draft we had more fine-grained categories: OMS languages, OMS language translation, mappings between OMS, OMS combination (are these the colimits that we now call ``combinations''?)}
+DOL provides abstract syntax categories for
 \begin{itemize}
 \item heterogeneous OMS (which can be basic OMS in some
 OMS language, or unions, translations, minimizations, combinations,
@@ -2220,13 +2218,13 @@ The following subclauses, one per abstract syntax category, specify the abstract
 
 \sclause{Distributed OMS}\label{c:dist-onto}
 
-A distributed OMS consists of at least one (possibly
-heterogeneous) OMS, plus, optionally, mappings between its
+A distributed OMS consists of named (possibly
+heterogeneous) OMS, and mappings between its
 participating (heterogeneous) OMS.  More specifically, a
 distributed OMS consists of a name, followed by a list of
 \syntax{DistOntoItem}s.  A \syntax{DistOntoItem} is either an
 OMS definition (\syntax{OntoDefn}), or a mapping between OMS
-(\syntax{LinkDefn}), or a \syntax{Qualification} selecting a specific
+(\syntax{MappingDefn}), or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{DistOntoItem}s.  Alternatively, a distributed
 OMS can also be the verbatim inclusion of an OMS written in
@@ -2292,7 +2290,7 @@ Onto                 = ExtendingOnto
                      | 'extension' , Onto , ExtensionOnto
                      | 'qual-onto' , { Qualification } , Onto
                      | 'bridge' , Onto, { Translation } , Onto
-                     | <\institutionsOnly 'combination' , CombinedElements , ExcludeExtensions> ;
+                     | 'combination' , Graph ;
 
 CircMin              = Symbol , { Symbol } ;
 CircVars             = { Symbol } ;
@@ -2322,9 +2320,6 @@ Conservative         = 'consequence-conservative' | 'model-conservative' ;
 
 InterfaceSignature   = 'interface-signature' , SymbolItems ;
 
-CombinedElements     = OntoOrMapping [ Id ] <\CLnote{or should we leave \syntax{OntoOrIntprRef}?  Does combination have a semantics for (informal) alignments? TM: indeed yes, at least if we ignore confidence values (or all are equal to 1). Then, an (informal) alignment leads to a span of logical mappings, and this can be used in the combination. This feature will greatly increase the use of combinations. I will work this out in the semantics.}>Ref { OntoOrMappingRef } ;
-ExcludeExtensions    = 'exclude-imports' , { ExtensionRef } ;
-
 ImportName           = IRI ;
 ExtensionName        = IRI ;
 \end{lstlisting}
@@ -2343,13 +2338,13 @@ translation or approximation method between a given source and target (where eve
 may be omitted; it is then inferred as the OMS language of the
 current OMS).
 
-\begin{lstlisting}[language=ebnf,escapeinside={<>}]
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
 OntoDefn         = 'onto-defn' , OntoName , [ ConsStrength ] , Onto ;
                  
 Symbol           = IRI ;
-SymbolMap        = <\institutionsOnly 'symbol-map' , Symbol , Symbol> ;
-SymbolOrMap      = Symbol | <\institutionsOnly SymbolMap> ;
-Term             = ? an expression specific to a basic OMS language ? ;
+SymbolMap        = (\institutionsOnly 'symbol-map' , Symbol , Symbol) ;
+SymbolOrMap      = Symbol | <\institutionsOnly SymbolMap) ;
+Term             = (\mbox{$<$})an expression specific to a basic OMS language(\mbox{$>$}) ;
                  
 OntoName         = IRI ;
                  
@@ -2366,13 +2361,13 @@ SyntaxRef        = IRI ;
 OntoLangTrans    = 'named-trans' , OntoLangTransRef
                  | 'qual-trans' , OntoLangTransRef , LoLaRef , LoLaRef
                  | 'anonymous-trans' , LoLaRef , LoLaRef
-                 | 'default-trans' , LoLaRef<\CLnote[type=todo]{need to figure out which of these we actually want to keep.  named-trans and default-trans are sufficient, because the other ones contain redundant information that is only stated once more for clarity.  (Source and target logic of qual-trans are clear from inspecting the translation, and the source logic of anonymous-trans is clear from the OMS that is translated.)}> ;
+                 | 'default-trans' , LoLaRef(\CLnote[type=todo]{need to figure out which of these we actually want to keep.  named-trans and default-trans are sufficient, because the other ones contain redundant information that is only stated once more for clarity.  Source and target logic of qual-trans are clear from inspecting the translation, and the source logic of anonymous-trans is clear from the OMS that is translated.}) ;
                  
 OntoLangTransRef = IRI ;
                  
 ApproxMethod     = 'named-approx', ApproxMethodRef
                  | 'qual-approx' , ApproxMethodRef , LoLaRef
-                 | 'default-approx' , LoLaRef<\CLnote[type=todo]{These alternatives are coherent with what we discussed about the approximation syntax with defaults, but they are different from OntoLangTrans.  But see the comment for OntoLangTrans above.}> ;
+                 | 'default-approx' , LoLaRef(\CLnote[type=todo]{These alternatives are coherent with what we discussed about the approximation syntax with defaults, but they are different from OntoLangTrans.  But see the comment for OntoLangTrans above.}) ;
 ApproxMethodRef  = IRI ;
 
 ExtractionMethod = IRI ;
@@ -2399,10 +2394,10 @@ actually is a module of some other OMS with respect
 to the \syntax{InterfaceSignature}.
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-MappingDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
+MappingDefn             = IntprDefn | EquivDefn | GraphDefn | ModuleRelDefn | AlignDefn;
 
 IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , IntprType ,
-                                      { LogicTranslation } , <\institutionsOnly [ SymbolMapItems ]> ;
+                                      { LogicTranslation } , [ SymbolMapItems ] ;
 IntprName            = IRI ;
 IntprType            = 'intpr-type' , Onto , Onto ;
 
@@ -2410,6 +2405,11 @@ EquivDefn            = 'equiv-defn' , EquivName , EquivType , Onto ;
 EquivName            = IRI ;
 EquivType            = 'equiv-type' , Onto , Onto ;
 
+GraphDefn            = 'graph-defn', GraphName, Graph ;
+GraphName            = IRI ;
+Graph                = 'graph', CombinedElements , ExcludeExtensions
+CombinedElements     = 'combined-elements', { OntoOrMappingRef } ;
+ExcludeExtensions    = 'exclude-imports' , { ExtensionRef } ;
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
