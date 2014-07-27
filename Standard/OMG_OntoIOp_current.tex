@@ -2310,15 +2310,15 @@ LogicReduction       = 'logic-reduction' , OMSLangTrans ;
 SymbolItems          = 'symbol-items' , ( Symbol , { Symbol } ) ;
 SymbolMapItems       = 'symbol-map-items' , ( SymbolOrMap , { SymbolOrMap } ) ;<\todonote[author=Christoph Lange,type=todo]{say that this default may be overridden by specific logics, such as CASL}>
 
-Extraction           = 'extraction', ModuleProperties, InterfaceSignature ;
+Extraction           = 'extraction', ModuleProperties, [ InterfaceSignature ] ;
 
-ModuleProperties = Conservative | 'minimal' | 'safe' | 'depleting'; 
+ModuleProperties     = Conservative | 'minimal' | 'safe' | 'depleting'; 
 
-Approximation        = 'approximation' , ApproxMethod ;<\todonote[author=Till Mossakowski,type=todo]{can we identify Approximation with ApproxMethod?\\ CL: At least in our concrete syntax it's easier to keep them separate; please have a look at the corresponding concrete syntax (and revise \emph{that} if necessary).}>
+Approximation        = 'approximation' , InterfaceSignature , [ LogicRef ] ;
 
 ExtensionOMS         = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
 
-ConsStrength         = Conservative | <\institutionsOnly 'monomorphic'>
+ConsStrength         = Conservative | 'monomorphic'
                      | 'weak-definitional' | 'definitional' | 'implied' ;
 
 Conservative         = 'consequence-conservative' | 'model-conservative' ;
@@ -2347,14 +2347,14 @@ current OMS).
 OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
                  
 Symbol           = IRI ;
-SymbolMap        = (\institutionsOnly 'symbol-map' , Symbol , Symbol) ;
-SymbolOrMap      = Symbol | <\institutionsOnly SymbolMap) ;
+SymbolMap        = 'symbol-map' , Symbol , Symbol ;
+SymbolOrMap      = Symbol | SymbolMap ;
 Term             = (\mbox{$<$})an expression specific to a basic OMS language(\mbox{$>$}) ;
                  
 OMSName          = IRI ;
                  
 OMSRef           = IRI ;
-OMSOrMappingRef  = IRI ;
+OMSOrMappingorGraphRef  = IRI ;
 ExtensionRef     = IRI ;
                  
 LoLaRef          = LanguageRef | LogicRef ;
@@ -2412,8 +2412,8 @@ EquivType            = 'equiv-type' , OMS , OMS ;
 
 GraphDefn            = 'graph-defn', GraphName, Graph ;
 GraphName            = IRI ;
-Graph                = 'graph', CombinedElements , ExcludeExtensions
-CombinedElements     = 'combined-elements', { OMSOrMappingRef } ;
+Graph                = 'graph', GraphElements , ExcludeExtensions
+GraphElements        = 'graph-elements', { OMSOrMappingorGraphRef } ;
 ExcludeExtensions    = 'exclude-imports' , { ExtensionRef } ;
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
@@ -2684,14 +2684,18 @@ languages and OMS language translations. Below, also notions of
 provide formalisations of the terms ``logic'',
 resp.\ ``logic translation''. 
 
+
+\ednote{use institutions here}
 The notion of institute deliberately avoids the use of category theory
 in order to keep the mathematical background simple.  Most of the
 abstract syntax can be interpreted using institutes, but not all of
-it. Some parts (namely symbol maps, \syntax{combination}s
- and the construct \syntax{monomorphic};
-these are marked in {\institutionsOnly bold italics}) of the abstract
-syntax need a more sophisticated and more general category-theoretic
-foundation in terms of institutions [\cite{Institutions}]. More
+it. 
+%Some parts (namely symbol maps, \syntax{combination}s
+% and the construct \syntax{monomorphic};
+%these are marked in {\institutionsOnly bold italics}) of the abstract
+%syntax need a more sophisticated and more general category-theoretic
+%foundation in terms of institutions [\cite{Institutions}]. 
+More
 specifically, the notion of institute needs to be replaced by that of
 institutional logic [\cite{Meseguer89}], and analogously for
 comorphisms [\cite{Comorphisms}].
@@ -3469,7 +3473,7 @@ OMS                 = ExtendingOMS
                      | OMS , 'then' , ExtensionOMS
                      | { Qualification } , ':' , GroupOMS
                      | OMS, 'bridge', { Translation } , OMS
-                     | <\institutionsOnly 'combine' , CombinedElements , [ ExcludeExtensions ] > ;
+                     | 'combine' , GraphElements , [ ExcludeExtensions ] ;
                        <\CLnote{combine O1 O2 takes all views coming into O1 and O2 into consideration}>
 
 CircMin = Symbol , {  Symbol } ;
@@ -3496,7 +3500,7 @@ Approximation        = 'approximate' , ApproxMethod ;
 ExtensionOMS        = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
 
 ConsStrength         = Conservative
-                     | '<\institutionsOnly \%mono>'
+                     | '%mono'
                      | '%wdef'
                      | '%def'
                      | '%implied' ;
@@ -3508,20 +3512,20 @@ InterfaceSignature   = SymbolItems ;
 ImportName           = '%(' , IRI , ')%' ;
 ExtensionName        = '%(' , IRI , ')%' ;
 
-OMSOrMappingRef        = IRI ;
+OMSOrMappingorGraphRef        = IRI ;
 
-<\institutionsOnly CombinedElements~~~~~= CombinedElement \{ ',' , CombinedElement \} ;>
-<\institutionsOnly CombinedElement~~~~~= [ Id , ':' ] , OMSOrMappingRef ;>
-<\institutionsOnly ExcludeExtensions~~~~= 'excluding' , ExtensionRef , \{ ',' , ExtensionRef \} ;>
+GraphElements        = CombinedElement \{ ',' , CombinedElement \} ;
+CombinedElement      = [ Id , ':' ] , OMSOrMappingorGraphRef ;
+ExcludeExtensions    = 'excluding' , ExtensionRef , \{ ',' , ExtensionRef \} ;
 
 OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model'
 
 OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , [ 'end' ]<\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> ;
 
 Symbol               = IRI ;
-<\institutionsOnly SymbolMap~~~~~~~~~~~~= Symbol , '↦' , Symbol ;>
+SymbolMap            = Symbol , '↦' , Symbol ;
 SymbolOrMap          = Symbol
-                     | <\institutionsOnly SymbolMap> ;
+                     | SymbolMap ;
 
 OMSName             = IRI ;
 IntprName            = IRI ;
@@ -3563,7 +3567,7 @@ MappingDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
 
 IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , [ 'end' ]
                      | IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , '=' ,
-                       { LogicTranslation } , <\institutionsOnly [ SymbolMapItems ]> , [ 'end' ] ;
+                       { LogicTranslation } , [ SymbolMapItems ] , [ 'end' ] ;
 
 IntprKeyword         = 'interpretation' | 'view' ;
 IntprName            = IRI ;
@@ -4318,8 +4322,8 @@ logic IRI : OMS  &  \\\hline
 language IRI : OMS  &  \\\hline
 serialization IRI : OMS  &  \\\hline
 OMS bridge Translation OMS  & Publications \\\hline
-combine CombinedElements  & Alignments, Publications \\\hline
-combine CombinedElements excluding IRIs  &  \\\hline
+combine GraphElements  & Alignments, Publications \\\hline
+combine GraphElements excluding IRIs  &  \\\hline
 \end{tabular}
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
