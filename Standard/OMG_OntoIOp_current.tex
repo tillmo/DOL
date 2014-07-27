@@ -2236,16 +2236,16 @@ OMS can also be the verbatim inclusion of an OMS written in
 an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
-DistOMS                 = [ PrefixMap ] , DistOMSDefn
+DistOMS                  = [ PrefixMap ] , DistOMSDefn
                          | OMSInConformingLanguage ;
-DistOMSDefn             = 'dist-oms-defn' , DistOMSName , { DistOMSItem } ;
-OMSInConformingLanguage = ($<$)language and serialization specific($>$) ;
-DistOMSItem             = OMSDefn | MappingDefn | Qualification ;
+DistOMSDefn              = 'dist-oms-defn' , DistOMSName , { DistOMSItem } ;
+OMSInConformingLanguage  = ($<$)language and serialization specific($>$) ;
+DistOMSItem              = OMSDefn | MappingDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
 SyntaxQual               = 'syntax-select' , SyntaxRef ;
-DistOMSName             = IRI ;
+DistOMSName              = IRI ;
 \end{lstlisting}
 ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
   • logic-select now mandatory (no default logic) and tree-scoped\textLF
@@ -2280,12 +2280,12 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 % and HetCASL (see HetCASL summary)
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]
-BasicOMS            = OMSInConformingLanguage ;
-MinimizableOMS      = BasicOMS
+BasicOMS             = OMSInConformingLanguage ;
+MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
-ExtendingOMS        = MinimizableOMS
+ExtendingOMS         = MinimizableOMS
                      | 'minimize' , MinimizableOMS ;
-OMS                 = ExtendingOMS
+OMS                  = ExtendingOMS
                      | 'minimize-symbols' , OMS , CircMin , CircVars
                      | 'translation' , OMS , Translation
                      | 'reduction' , OMS , Reduction
@@ -2316,7 +2316,7 @@ ModuleProperties = Conservative | 'minimal' | 'safe' | 'depleting';
 
 Approximation        = 'approximation' , ApproxMethod ;<\todonote[author=Till Mossakowski,type=todo]{can we identify Approximation with ApproxMethod?\\ CL: At least in our concrete syntax it's easier to keep them separate; please have a look at the corresponding concrete syntax (and revise \emph{that} if necessary).}>
 
-ExtensionOMS        = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
+ExtensionOMS         = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
 
 ConsStrength         = Conservative | <\institutionsOnly 'monomorphic'>
                      | 'weak-definitional' | 'definitional' | 'implied' ;
@@ -2344,17 +2344,17 @@ may be omitted; it is then inferred as the OMS language of the
 current OMS).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
-OMSDefn         = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
+OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
                  
 Symbol           = IRI ;
 SymbolMap        = (\institutionsOnly 'symbol-map' , Symbol , Symbol) ;
 SymbolOrMap      = Symbol | <\institutionsOnly SymbolMap) ;
 Term             = (\mbox{$<$})an expression specific to a basic OMS language(\mbox{$>$}) ;
                  
-OMSName         = IRI ;
+OMSName          = IRI ;
                  
-OMSRef          = IRI ;
-OMSOrMappingRef    = IRI ;
+OMSRef           = IRI ;
+OMSOrMappingRef  = IRI ;
 ExtensionRef     = IRI ;
                  
 LoLaRef          = LanguageRef | LogicRef ;
@@ -2363,12 +2363,12 @@ LanguageRef      = IRI ;
 LogicRef         = IRI ;
 SyntaxRef        = IRI ;
                  
-OMSLangTrans    = 'named-trans' , OMSLangTransRef
+OMSLangTrans     = 'named-trans' , OMSLangTransRef
                  | 'qual-trans' , OMSLangTransRef , LoLaRef , LoLaRef
                  | 'anonymous-trans' , LoLaRef , LoLaRef
                  | 'default-trans' , LoLaRef(\CLnote[type=todo]{need to figure out which of these we actually want to keep.  named-trans and default-trans are sufficient, because the other ones contain redundant information that is only stated once more for clarity.  Source and target logic of qual-trans are clear from inspecting the translation, and the source logic of anonymous-trans is clear from the OMS that is translated.}) ;
                  
-OMSLangTransRef = IRI ;
+OMSLangTransRef  = IRI ;
                  
 ApproxMethod     = 'named-approx', ApproxMethodRef
                  | 'qual-approx' , ApproxMethodRef , LoLaRef
@@ -2399,7 +2399,7 @@ actually is a module of some other OMS with respect
 to the \syntax{InterfaceSignature}.
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-MappingDefn             = IntprDefn | EquivDefn | GraphDefn | ModuleRelDefn | AlignDefn;
+MappingDefn          = IntprDefn | EquivDefn | GraphDefn | ModuleRelDefn | AlignDefn;
 
 IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , IntprType ,
                                       { LogicTranslation } , [ SymbolMapItems ] ;
