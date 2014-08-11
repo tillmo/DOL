@@ -1463,6 +1463,7 @@ original and the renamed OMS.
   \termdefinition{reduction}{\termref{logical OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
 
   \termdefinition{alignment}{flexible, relational \termref{OMS mapping} that does not always have a formal, logic-based semantics}
+    \ednote{this is too vague, and we have given formal semantics to a large class of alignments. It calls at least for more discussion.}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}}
   \begin{note}
@@ -2208,11 +2209,12 @@ A list of RDF vocabularies for annotating OMS is recommended as an annex to this
 
 DOL provides abstract syntax categories for
 \begin{itemize}
+\item distributed OMS (items in distributed OMS are: OMS definitions, OMS mapping definitions, and qualifications choosing the logic,
+OMS language and/or serialization)
 \item heterogeneous OMS (which can be basic OMS in some
 OMS language, or unions, translations, minimizations, combinations,
 approximations of OMS, among others)
-\item distributed OMS (items in distributed OMS are: OMS definitions, OMS mapping definitions, and qualifications choosing the logic,
-OMS language and/or serialization)
+\item OMS mappings \todonote[author=Mihai Codescu]{It was missing, but I think it should be here.}
 \item identifiers
 \item annotations
 \end{itemize}
@@ -2248,7 +2250,7 @@ SyntaxQual               = 'syntax-select' , SyntaxRef ;
 DistOMSName              = IRI ;
 \end{lstlisting}
 ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
-  • logic-select now mandatory (no default logic) and tree-scoped\textLF
+  • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
   • download-items (encourage linked data best practices instead)\textLF
   • item-name-map (to be replaced by namespaces??)\textLF
   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
@@ -2268,7 +2270,7 @@ expressive logic (that is,
 some non-logical symbols are hidden, but the semantic effect of sentences involving these is kept),
 \item an approximation of an OMS, normally in a sublogic, using a given approximation method (with the effect that sentences not expressible in the sublogic are weakened or removed),
 \item a union of OMS,
-\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied,
+\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMSs?},
 \item a module extracted from an OMS, using a restriction signature,
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
@@ -2319,7 +2321,7 @@ Approximation        = 'approximation' , InterfaceSignature , [ LogicRef ] ;
 ExtensionOMS         = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
 
 ConsStrength         = Conservative | 'monomorphic'
-                     | 'weak-definitional' | 'definitional' | 'implied' ;
+                     | 'weak-definitional' | 'definitional' | 'implied' ;<\todonote[author=Mihai Codescu,type=todo]{Does it make sense to have implied as a type of conservativity? Better have a new category with alternatives implied and ConsStrength.}>
 
 Conservative         = 'consequence-conservative' | 'model-conservative' ;
 
@@ -2329,8 +2331,11 @@ ImportName           = IRI ;
 ExtensionName        = IRI ;
 \end{lstlisting}
 
-An OMS definition \syntax{OMSDefn} names an OMS. It can be
-optionally marked as consistent, using \syntax{ConsStrength}.\footnote{More precisely, \syntax{'consequence-conservative'} here requires the OMS to have a non-trivial set of logical consequences, while \syntax{'model-conservative'} requires its satisfiability.}. An
+An OMS definition \syntax{OMSDefn} names an OMS.  \todonote[author=Mihai Codescu,type=todo]{move this to distributed OMS?}
+
+It can be
+optionally marked as consistent, using \syntax{ConsStrength}.\footnote{More precisely, \syntax{'consequence-conservative'} here requires the OMS to have a non-trivial set of logical consequences, while \syntax{'model-conservative'} requires its satisfiability.}
+ \todonote[author=Mihai Codescu,type=todo]{Use Conservative instead of ConsStrength, or explain what happens for mono, weak-def, def, implied}. An
 \syntax{SymbolItems}, used in an OMS \syntax{Reduction}, is a
 list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
 denotes a logic reduction to a
@@ -2388,8 +2393,10 @@ The \syntax{SymbolMapItems} in an interpretation always
 must lead to a signature morphism; a proof obligation expressing
 that the (translated) source OMS logically follows from
 the target OMS is generated. In contrast to this,
-an alignment just provides a connection between two OMS
-without logical semantics, using a set of \syntax{Correspondence}s.
+\ednote{MC: 
+an alignment expresses semantic relations between the entities of two OMS}
+an alignment just provides a connection between two OMS without logical semantics, 
+using a set of \syntax{Correspondence}s.
 Each correspondence may map some OMS non-logical symbol to another one
 (possibly given by a term) and an optional confidence value.
 Moreover, the relation between the two non-logical symbols can be explicitly
@@ -2414,15 +2421,15 @@ GraphDefn            = 'graph-defn', GraphName, Graph ;
 GraphName            = IRI ;
 Graph                = 'graph', GraphElements , ExcludeExtensions
 GraphElements        = 'graph-elements', { OMSOrMappingorGraphRef } ;
-ExcludeExtensions    = 'exclude-imports' , { ExtensionRef } ;
+ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorGraphRef } ; \todonote[author=Mihai Codescu]{We can exclude nodes, links or subgraphs. I have changed from ExtensionRef}
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
 ModuleName           = IRI ;
 ModuleType           = 'module-type' , OMS , OMS ;
 
-AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType<\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}> 
-                                      { Correspondence } ;
+AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType <\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}>, 
+                                    AlignSem,   { Correspondence } ;
 AlignName            = IRI ;
 AlignCards           = AlignCardForward , AlignCardBackward<\CLnote[type=todo]{mention that the default is twice ``injective and total''}> ;
 AlignCardForward     = 'align-card-forward' , AlignCard ;
@@ -2432,6 +2439,9 @@ AlignCard            = 'injective-and-total'
                      | 'total'
                      | 'neither-injective-nor-total' ;
 AlignType            = 'align-type' , OMS , OMS ;
+AlignSem            = 'single-domain' 
+                    | 'global-domain' 
+                    | 'contextualized-domain'<\todonote[author=Mihai Codescu,type=todo]{This should be explained somewhere before.}> ;
 
 Correspondence       = CorrespondenceBlock
                      | SingleCorrespondence
