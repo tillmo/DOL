@@ -3,7 +3,6 @@
 %todo
 % language/logic/mapping registration process - maybe in a different document
 
-% syntax of modules (see IFIP slides)
 % more useful EBNF (see CASL RefMan)
 
 % This file was initially converted to LaTeX by Writer2LaTeX ver. 1.1.8
@@ -2171,7 +2170,6 @@ DOL is
 DOL is applicable to any OMS language that has a formal, logic-based semantics or a semantics defined by translation to another OMS language with such a formal semantics. The annotation framework of DOL is additionally applicable to the non-logical constructs of such languages. This \IS specifies formal criteria for establishing the conformance of an OMS language with DOL.  Annexes establish the conformance of a number of relevant OMS languages with DOL; a registry shall offer the possibility to add further (also non-standardized) languages:\CLnote[date=D:201201100956+01'00']{John Sowa: Make it modular with a simple core that can run efficiently on small systems, but can grow indefinitely to support as much as anyone could desire.}
 DOL provides syntactic constructs for structuring OMS regardless of the logic their sentences are formalized in. 
 DOL does provide its own constructs for expressing sentences.  Instead, it \textit{inherits} the logical language aspects of conforming OMS languages.  It is possible to literally include sentences expressed in such OMS languages in a DOL OMS.
-DOL provides an initial set of built-in approximation methods and module extraction selectors.  Additionally, it provides a means of referring to approximation methods and module extraction selectors defined externally of this \IS.\todonote[author=Christoph Lange,date=D:201111030047+01'00',type=fyi]{In practice we will use IRIs for that purpose.}
 DOL provides an initial vocabulary for expressing relations in correspondences (as part of alignments between OMS).  Additionally, it provides a means of reusing relation types defined externally of this \IS.
 DOL does not provide an annotation vocabulary, i.e.\ it neither provides annotation properties nor datatypes to be used with literal annotation objects. Instead, an informative annex recommends existing annotation vocabularies for use with DOL.
 \CLnote[type=q-all]{We need to revise this following the agreement to drop the XML and RDF serializations.}In the interest of wide applicability and tool support, DOL  supports multiple alternative serializations.  In particular, there is a text serialization targeting human readers and writers, as well as serializations optimized for machine processability.
@@ -2352,7 +2350,7 @@ language,
 expressive logic (that is,
 some non-logical symbols are hidden, but the semantic effect of sentences involving these is kept),
 \item a module extracted from an OMS, using a restriction signature,
-\item an approximation of an OMS, normally in a sublogic, using a given approximation method (with the effect that sentences not expressible in the sublogic are replaced with a suitable approximation),
+\item an approximation of an OMS, in a subsignature od sublogic, with the effect that sentences not expressible in the subsignature resp.\ sublogic are replaced with a suitable approximation,
 \item \red{a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,}
 \item a union of several OMS,
 \item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMSs?},
@@ -2413,11 +2411,16 @@ ConsStrength         = Conservative | 'monomorphic'
 
 Conservative         = 'consequence-conservative' | 'model-conservative' ;
 
-InterfaceSignature   = 'interface-signature' , SymbolItems ;
+InterfaceSignature   = 'keep-signature' , SymbolItems ;
+                     | 'remove-signature' , SymbolItems ;
 
 ImportName           = IRI ;
 ExtensionName        = IRI ;
 \end{lstlisting}
+\ednote{Alternatively, we could use one type of \Syntax{InterfaceSignature}
+only, and instead use different constructors for \Syntax{Extraction}
+and \Syntax{Approximation}. This would be a bit more verbose, but a bit
+more coherent with position of non-terminals in the concrete syntax.}
 
 An OMS definition \syntax{OMSDefn} names an OMS.  \todonote[author=Mihai Codescu,type=todo]{move this to distributed OMS?}
 
@@ -2429,10 +2432,10 @@ list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
 denotes a logic reduction to a
 less expressive OMS language. A \syntax{SymbolMapItems}, used in
 OMS \syntax{Translation}s,  maps symbols to symbols\CLnote[type=fyi]{On 2012-07-18 we decided not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics in an OMS language independent way would require additional institution infrastructure – and the same effect can be achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?)}, or a logic
-translation. An OMS language translation \syntax{OMSLangTrans} or \syntax{ApproxMethod}
+translation. An OMS language translation \syntax{OMSLangTrans} 
 can be either specified by its name (optionally qualified with
 source and target OMS language), or be inferred as the default
-translation or approximation method between a given source and target (where even the source
+translation between a given source and target (where even the source
 may be omitted; it is then inferred as the OMS language of the
 current OMS).
 
@@ -2464,12 +2467,6 @@ OMSLangTrans     = 'named-trans' , OMSLangTransRef
                  
 OMSLangTransRef  = IRI ;
                  
-ApproxMethod     = 'named-approx', ApproxMethodRef
-                 | 'qual-approx' , ApproxMethodRef , LoLaRef
-                 | 'default-approx' , LoLaRef(\CLnote[type=todo]{These alternatives are coherent with what we discussed about the approximation syntax with defaults, but they are different from OMSLangTrans.  But see the comment for OMSLangTrans above.}) ;
-ApproxMethodRef  = IRI ;
-
-ExtractionMethod = IRI ;
 \end{lstlisting}
 
 
@@ -2829,9 +2826,11 @@ SymbolItems          = Symbol { ',' , Symbol } ;
 SymbolMapItems       = SymbolOrMap { ',' , SymbolOrMap } ;
 
 Extraction           = 'extract' , ModuleProperties , InterfaceSignature;
+                     | 'remove' , ModuleProperties , InterfaceSignature;
 ModuleProperties     =  Conservative | '%min' | '%depliting' | '%safe' ; 
 
-Approximation        = 'approximate' , ApproxMethod ;
+Approximation        = 'forget' , InterfaceSignature , [ 'with', LogicRef ] ;
+Approximation        = 'keep' , InterfaceSignature , [ 'with', LogicRef ] ;
 
 Filtering            = 'filter', BasicOMS ;
 
@@ -2886,13 +2885,6 @@ OMSLangTrans        = OMSLangTransRef
 
 OMSLangTransRef     = IRI ;
 
-ApproxMethod         = 'with' , ApproxMethodRef
-                     | 'in' , LoLaRef , 'with' , ApproxMethodRef
-                     | 'in' , LoLaRef ;
-
-ApproxMethodRef      = IRI ;
-
-ExtractionMethod     = IRI ;
 
 \end{lstlisting}
 
