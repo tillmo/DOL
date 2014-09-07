@@ -2750,6 +2750,278 @@ order to become valid OMS in some DOL serialization.\todonote[id=wrapping,author
 \todonote{this subclause will be moved to annex M}
 ~\todonote[author=Christoph Lange,date=D:201108061340+02'00',type=todo]{Properly integrate this text from our LaRC 2011 paper} Annotations always have a subject, which is identified by an IRI. Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a distributed OMS may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
 
+\clause{DOL text serialization}\label{a:text-syntax}
+
+\sclause{Document type}
+
+\begin{description}
+\item[MIME type] \mimetype{application/dol+text}\todonote[author=Christoph Lange,type=fyi]{just a placeholder so far, needs discussion}
+\item[Filename extension] .dol\todonote[author=Christoph Lange]{the most intuitive one, but gives the text serialization a privileged role over the others}
+\end{description}
+
+\sclause{Concrete Syntax}\label{a:dol-text:concrete}
+
+\ssclause{Distributed OMS}
+
+\begin{lstlisting}[language=ebnf,escapechar=@,morecomment={[l]{\%\%\ }}]
+DistOMS                 = [ PrefixMap ] , DistOMSDefn
+                         | OMSInConformingLanguage ;
+DistOMSDefn             = 'distributed OMS' , DistOMSName , { DistOMSItem } ;
+OMSInConformingLanguage = ? language-specific ? ;
+DistOMSItem             = OMSDefn | MappingDefn | Qualification ;
+Qualification            = LanguageQual | LogicQual | SyntaxQual ;
+LanguageQual             = 'language' , LanguageRef ;
+LogicQual                = 'logic' , LogicRef ;
+SyntaxQual               = 'serialization' , SyntaxRef ;
+DistOMSName             = IRI ;
+
+PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
+PrefixBinding            = BoundPrefix , IRIBoundToPrefix ;
+BoundPrefix              = ':' | Prefix (* @\rm see definition in \cref{c:curies} @ *)@\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}@ ;
+IRIBoundToPrefix         = '<' , FullIRI , '>' ;
+\end{lstlisting}
+
+Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+
+\ssclause{Heterogeneous OMS}\label{a:dol-text:OMS}
+
+\ednote{TODO: merge ALIGN-TYPE with INTPR-TYPE}
+
+\begin{lstlisting}[language=ebnf,escapeinside={<>}]
+BasicOMS            = OMSInConformingLanguage ;
+MinimizableOMS      = BasicOMS
+                     | OMSRef , [ ImportName ] ; 
+ExtendingOMS        = MinimizableOMS
+                     | MinimizeKeyword , '{' , MinimizableOMS , '}' 
+                     | OMS , Extraction ;
+MinimizeKeyword      = 'minimize' | 'closed-world' ;
+OMS                 = ExtendingOMS
+                     | OMS , MinimizeKeyword , CircMin , [ CircVars ]
+                     | OMS , Translation
+                     | OMS , Reduction
+                     | OMS , Approximation
+                     | OMS , 'and' , [ ConsStrength ] , OMS 
+                     | OMS , 'then' , ExtensionOMS
+                     | { Qualification } , ':' , GroupOMS
+                     | OMS, 'bridge', { Translation } , OMS
+                     | 'combine' , GraphElements , [ ExcludeExtensions ] ;
+                       <\CLnote{combine O1 O2 takes all views coming into O1 and O2 into consideration}>
+
+CircMin = Symbol , {  Symbol } ;
+CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
+
+GroupOMS            = '{' , OMS , '}'
+                     | OMSRef ;
+
+Translation          = 'with' , { LogicTranslation } , [ SymbolMapItems ] ;
+LogicTranslation     = 'translation' , OMSLangTrans ;
+                      
+Reduction            = 'hide' , { LogicReduction } , [ SymbolItems ]
+                     | 'reveal' , [ SymbolMapItems ] ;
+LogicReduction       = 'along' , OMSLangTrans ;
+
+SymbolItems          = Symbol { ',' , Symbol } ;
+SymbolMapItems       = SymbolOrMap { ',' , SymbolOrMap } ;
+
+Extraction           = 'extract' , ModuleProperties , InterfaceSignature;
+ModuleProperties =  Conservative | '%min' | '%depliting' | '%safe'  
+
+Approximation        = 'approximate' , ApproxMethod ;
+
+ExtensionOMS        = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
+
+ConsStrength         = Conservative
+                     | '%mono'
+                     | '%wdef'
+                     | '%def'
+                     | '%implied' ;
+Conservative         = '%ccons'
+                     | '%mcons'<\CLnote[type=q-aut]{Do we want the CASL-style ``cons'' as a synonym for ``mcons'' in the standard?  Or just in Hets, as a ``hidden feature''? TM: I would say: the latter. CL: OK, I wanted to file this as a Hets ticket, but Trac was down.  Let's do it some other time and then remove this comment.}> ;
+
+InterfaceSignature   = SymbolItems ;
+
+ImportName           = '%(' , IRI , ')%' ;
+ExtensionName        = '%(' , IRI , ')%' ;
+
+OMSOrMappingorGraphRef        = IRI ;
+
+GraphElements        = CombinedElement \{ ',' , CombinedElement \} ;
+CombinedElement      = [ Id , ':' ] , OMSOrMappingorGraphRef ;
+ExcludeExtensions    = 'excluding' , ExtensionRef , \{ ',' , ExtensionRef \} ;
+
+OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model'
+
+OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , [ 'end' ]<\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> ;
+
+Symbol               = IRI ;
+SymbolMap            = Symbol , '|->' , Symbol ;
+SymbolOrMap          = Symbol
+                     | SymbolMap ;
+
+OMSName             = IRI ;
+IntprName            = IRI ;
+
+OMSRef              = IRI ;
+IntprRef             = IRI ;
+ExtensionRef         = IRI ;
+
+LanguageRef          = IRI ;
+LogicRef             = IRI ;
+SyntaxRef            = IRI ;
+
+LoLaRef              = LanguageRef
+                     | LogicRef ;
+
+OMSLangTrans        = OMSLangTransRef
+                     | OMSLangTransRef , ':' , LoLaRef , '<$\to$>' , LoLaRef
+                     | LoLaRef , '<$\to$>' , LoLaRef
+                     | '<$\to$>' , LoLaRef ;
+
+OMSLangTransRef     = IRI ;
+
+ApproxMethod         = 'with' , ApproxMethodRef
+                     | 'in' , LoLaRef , 'with' , ApproxMethodRef
+                     | 'in' , LoLaRef ;
+
+ApproxMethodRef      = IRI ;
+
+ExtractionMethod     = IRI ;
+
+\end{lstlisting}
+
+\ssclause{OMS Mappings}
+
+\newcommand*{\lessthan}{<}
+\newcommand*{\greaterthan}{>}
+\begin{lstlisting}[language=ebnf,escapeinside={<>}]
+MappingDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
+
+IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , [ 'end' ]
+                     | IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , '=' ,
+                       { LogicTranslation } , [ SymbolMapItems ] , [ 'end' ] ;
+
+IntprKeyword         = 'interpretation' | 'view' ;
+IntprName            = IRI ;
+IntprType            = GroupOMS , 'to' , GroupOMS ;
+
+EquivDefn            = EquivKeyword , EquivName , ':' , EquivType , '=' , OMS , [ 'end' ] ;
+EquivKeyword         = 'equivalence' ;
+EquivName            = IRI ;
+EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS ;
+
+ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
+                       'for' , InterfaceSignature ;
+ModuleName           = IRI ;
+ModuleType           = OMS , 'of' , OMS ;
+
+AlignDefn            = 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , [ 'end' ]
+                     | 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , '=' ,
+                       Correspondence , { ',' , Correspondence } , [ 'end' ] ;
+
+AlignName            = IRI ;
+AlignCards           = AlignCardForward , AlignCardBackward ;
+AlignCardForward     = AlignCard ;
+AlignCardBackward    = AlignCard ;
+AlignCard            = '1' | '?' | '+' | '*' ;
+AlignType            = GroupOMS , 'to' , GroupOMS<\CLnote[type=q-aut]{would it make sense to merge this with IntprType?}> ;
+
+Correspondence       = CorrespondenceBlock
+                     | SingleCorrespondence
+                     | '*' ;
+CorrespondenceBlock  = 'relation' , [ RelationRef ] , [ Confidence ] , 
+                       '{' , Correspondence , { ',' , Correspondence } , '}' ;
+SingleCorrespondence = SymbolRef , [ RelationRef ] ,
+                       [ Confidence ] , TermOrSymbolRef , [ CorrespondenceId ] ;
+CorrespondenceId     = '%(' , IRI , ')%' ;
+SymbolRef            = IRI ;
+TermOrSymbolRef      = Term | SymbolRef (* Term is logic-specific *) ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)}>
+RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>'$\ni$' 
+                     | '$\in$' | '$\mapsto$' | IRI ;
+Confidence           = Double ? where Double <$\in [0,1]$> ? ;
+\end{lstlisting}
+
+\sclause{Queries}
+\red{new!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}
+\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
+QueryDefn            = 'query', QueryName, '=', 'select', Vars, 
+                                'where', Sentence, 'in', OMS, 
+                                ['along', Translation]  ;
+SubstDefn            = 'substitution', SubstName, ':', OMS, 'to', 'OMS', 
+                                       '=' SymbolMap  ;
+ResultDefn           = 'result', ResultName, SubstName, { ',', SubstName },
+                                 'for', QueryName, [ '%complete' ] ;
+QueryName            = IRI ;
+SubstName            = IRI ;
+ResultName           = IRI ;
+Vars                 = Symbol { ',', Symbol } ;
+\end{lstlisting}
+
+
+\sclause{Identifiers}
+
+\begin{lstlisting}[language=ebnf,escapechar=@]
+IRI     = '<' , FullIRI , '>' | CURIE ;
+FullIRI = ? an IRI as defined in \nisref{IETF/RFC 3987:2005} ? ;
+CURIE   = ? see \cref{c:curies} ? ;
+\end{lstlisting}
+
+In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
+
+\sclause{Lexical Symbols}
+
+The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of OMS, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
+
+\ssclause{Key Words and Signs}\label{c:keywords}
+
+The lexical symbols of the DOL text serialization include various key words and signs that occur as terminal symbols in the context-free grammar in \aref{a:dol-text:concrete}.  Key words and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
+
+\sssclause{Key Words}
+
+Key words are always written lowercase. The following key words are reserved, and are not available for use as complete identifiers\todonote[author=Christoph Lange,type=todo]{figure out what that actually means.  If we use OWL Manchester's style of abbreviating IRIs, it probably means that in the worst case some IRIs can't be abbreviated but must be given as complete global IRIs}, although they can be used as parts of tokens:
+
+{\ttfamily %
+and
+distributed
+end
+hide
+interpretation
+library
+logic
+minimize\\
+model
+onto
+ontology
+spec
+specification
+reveal
+then
+to
+vars
+view
+with
+}
+
+\sssclause{Key Signs}
+
+Table~\ref{tab:key-signs} following key signs are reserved, and are not available for use as complete identifiers.  Key signs that are outside of the Basic Latin subset of Unicode may alternatively be encoded as a sequence of Basic Latin characters.
+
+\newcolumntype{T}{>{\ttfamily}{l}}
+\ctable[
+  caption={Key Signs},
+  label={tab:key-signs},
+]{TTT}{
+}{\FL
+  \rmfamily Sign & \rmfamily Unicode Code Point & \rmfamily Basic Latin substitute \ML
+  \{   & U+007B LEFT CURLY BRACKET & \NN
+  \}   & U+007D RIGHT CURLY BRACKET & \NN
+  :    & U+003A COLON & \NN
+  =    & U+003D EQUALS SIGN & \NN
+  ,    & U+002C COMMA & \NN
+  \rmfamily ↦ & U+21A6 RIGHTWARDS ARROW FROM BAR & |-> \NN
+  \rmfamily → & U+2192 RIGHTWARDS ARROW & -> \NN
+}
+
 \clause{DOL semantics}\label{c:semantics}
 
 We pursue a threefold approach of assigning a semantics to the DOL
@@ -3538,277 +3810,6 @@ special cases to be described
 
 \appendix
 
-\normannex{DOL text serialization}\label{a:text-syntax}
-
-\sclause{Document type}
-
-\begin{description}
-\item[MIME type] \mimetype{application/dol+text}\todonote[author=Christoph Lange,type=fyi]{just a placeholder so far, needs discussion}
-\item[Filename extension] .dol\todonote[author=Christoph Lange]{the most intuitive one, but gives the text serialization a privileged role over the others}
-\end{description}
-
-\sclause{Concrete Syntax}\label{a:dol-text:concrete}
-
-\ssclause{Distributed OMS}
-
-\begin{lstlisting}[language=ebnf,escapechar=@,morecomment={[l]{\%\%\ }}]
-DistOMS                 = [ PrefixMap ] , DistOMSDefn
-                         | OMSInConformingLanguage ;
-DistOMSDefn             = 'distributed OMS' , DistOMSName , { DistOMSItem } ;
-OMSInConformingLanguage = ? language-specific ? ;
-DistOMSItem             = OMSDefn | MappingDefn | Qualification ;
-Qualification            = LanguageQual | LogicQual | SyntaxQual ;
-LanguageQual             = 'language' , LanguageRef ;
-LogicQual                = 'logic' , LogicRef ;
-SyntaxQual               = 'serialization' , SyntaxRef ;
-DistOMSName             = IRI ;
-
-PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
-PrefixBinding            = BoundPrefix , IRIBoundToPrefix ;
-BoundPrefix              = ':' | Prefix (* @\rm see definition in \cref{c:curies} @ *)@\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}@ ;
-IRIBoundToPrefix         = '<' , FullIRI , '>' ;
-\end{lstlisting}
-
-Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
-
-\ssclause{Heterogeneous OMS}\label{a:dol-text:OMS}
-
-\ednote{TODO: merge ALIGN-TYPE with INTPR-TYPE}
-
-\begin{lstlisting}[language=ebnf,escapeinside={<>}]
-BasicOMS            = OMSInConformingLanguage ;
-MinimizableOMS      = BasicOMS
-                     | OMSRef , [ ImportName ] ; 
-ExtendingOMS        = MinimizableOMS
-                     | MinimizeKeyword , '{' , MinimizableOMS , '}' 
-                     | OMS , Extraction ;
-MinimizeKeyword      = 'minimize' | 'closed-world' ;
-OMS                 = ExtendingOMS
-                     | OMS , MinimizeKeyword , CircMin , [ CircVars ]
-                     | OMS , Translation
-                     | OMS , Reduction
-                     | OMS , Approximation
-                     | OMS , 'and' , [ ConsStrength ] , OMS 
-                     | OMS , 'then' , ExtensionOMS
-                     | { Qualification } , ':' , GroupOMS
-                     | OMS, 'bridge', { Translation } , OMS
-                     | 'combine' , GraphElements , [ ExcludeExtensions ] ;
-                       <\CLnote{combine O1 O2 takes all views coming into O1 and O2 into consideration}>
-
-CircMin = Symbol , {  Symbol } ;
-CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
-
-GroupOMS            = '{' , OMS , '}'
-                     | OMSRef ;
-
-Translation          = 'with' , { LogicTranslation } , [ SymbolMapItems ] ;
-LogicTranslation     = 'translation' , OMSLangTrans ;
-                      
-Reduction            = 'hide' , { LogicReduction } , [ SymbolItems ]
-                     | 'reveal' , [ SymbolMapItems ] ;
-LogicReduction       = 'along' , OMSLangTrans ;
-
-SymbolItems          = Symbol { ',' , Symbol } ;
-SymbolMapItems       = SymbolOrMap { ',' , SymbolOrMap } ;
-
-Extraction           = 'extract' , ModuleProperties , InterfaceSignature;
-ModuleProperties =  Conservative | '%min' | '%depliting' | '%safe'  
-
-Approximation        = 'approximate' , ApproxMethod ;
-
-ExtensionOMS        = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
-
-ConsStrength         = Conservative
-                     | '%mono'
-                     | '%wdef'
-                     | '%def'
-                     | '%implied' ;
-Conservative         = '%ccons'
-                     | '%mcons'<\CLnote[type=q-aut]{Do we want the CASL-style ``cons'' as a synonym for ``mcons'' in the standard?  Or just in Hets, as a ``hidden feature''? TM: I would say: the latter. CL: OK, I wanted to file this as a Hets ticket, but Trac was down.  Let's do it some other time and then remove this comment.}> ;
-
-InterfaceSignature   = SymbolItems ;
-
-ImportName           = '%(' , IRI , ')%' ;
-ExtensionName        = '%(' , IRI , ')%' ;
-
-OMSOrMappingorGraphRef        = IRI ;
-
-GraphElements        = CombinedElement \{ ',' , CombinedElement \} ;
-CombinedElement      = [ Id , ':' ] , OMSOrMappingorGraphRef ;
-ExcludeExtensions    = 'excluding' , ExtensionRef , \{ ',' , ExtensionRef \} ;
-
-OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model'
-
-OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , [ 'end' ]<\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> ;
-
-Symbol               = IRI ;
-SymbolMap            = Symbol , '|->' , Symbol ;
-SymbolOrMap          = Symbol
-                     | SymbolMap ;
-
-OMSName             = IRI ;
-IntprName            = IRI ;
-
-OMSRef              = IRI ;
-IntprRef             = IRI ;
-ExtensionRef         = IRI ;
-
-LanguageRef          = IRI ;
-LogicRef             = IRI ;
-SyntaxRef            = IRI ;
-
-LoLaRef              = LanguageRef
-                     | LogicRef ;
-
-OMSLangTrans        = OMSLangTransRef
-                     | OMSLangTransRef , ':' , LoLaRef , '<$\to$>' , LoLaRef
-                     | LoLaRef , '<$\to$>' , LoLaRef
-                     | '<$\to$>' , LoLaRef ;
-
-OMSLangTransRef     = IRI ;
-
-ApproxMethod         = 'with' , ApproxMethodRef
-                     | 'in' , LoLaRef , 'with' , ApproxMethodRef
-                     | 'in' , LoLaRef ;
-
-ApproxMethodRef      = IRI ;
-
-ExtractionMethod     = IRI ;
-
-\end{lstlisting}
-
-\ssclause{OMS Mappings}
-
-\newcommand*{\lessthan}{<}
-\newcommand*{\greaterthan}{>}
-\begin{lstlisting}[language=ebnf,escapeinside={<>}]
-MappingDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
-
-IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , [ 'end' ]
-                     | IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , '=' ,
-                       { LogicTranslation } , [ SymbolMapItems ] , [ 'end' ] ;
-
-IntprKeyword         = 'interpretation' | 'view' ;
-IntprName            = IRI ;
-IntprType            = GroupOMS , 'to' , GroupOMS ;
-
-EquivDefn            = EquivKeyword , EquivName , ':' , EquivType , '=' , OMS , [ 'end' ] ;
-EquivKeyword         = 'equivalence' ;
-EquivName            = IRI ;
-EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS ;
-
-ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
-                       'for' , InterfaceSignature ;
-ModuleName           = IRI ;
-ModuleType           = OMS , 'of' , OMS ;
-
-AlignDefn            = 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , [ 'end' ]
-                     | 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , '=' ,
-                       Correspondence , { ',' , Correspondence } , [ 'end' ] ;
-
-AlignName            = IRI ;
-AlignCards           = AlignCardForward , AlignCardBackward ;
-AlignCardForward     = AlignCard ;
-AlignCardBackward    = AlignCard ;
-AlignCard            = '1' | '?' | '+' | '*' ;
-AlignType            = GroupOMS , 'to' , GroupOMS<\CLnote[type=q-aut]{would it make sense to merge this with IntprType?}> ;
-
-Correspondence       = CorrespondenceBlock
-                     | SingleCorrespondence
-                     | '*' ;
-CorrespondenceBlock  = 'relation' , [ RelationRef ] , [ Confidence ] , 
-                       '{' , Correspondence , { ',' , Correspondence } , '}' ;
-SingleCorrespondence = SymbolRef , [ RelationRef ] ,
-                       [ Confidence ] , TermOrSymbolRef , [ CorrespondenceId ] ;
-CorrespondenceId     = '%(' , IRI , ')%' ;
-SymbolRef            = IRI ;
-TermOrSymbolRef      = Term | SymbolRef (* Term is logic-specific *) ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)}>
-RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>'$\ni$' 
-                     | '$\in$' | '$\mapsto$' | IRI ;
-Confidence           = Double ? where Double <$\in [0,1]$> ? ;
-\end{lstlisting}
-
-\sclause{Queries}
-\red{new!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
-QueryDefn            = 'query', QueryName, '=', 'select', Vars, 
-                                'where', Sentence, 'in', OMS, 
-                                ['along', Translation]  ;
-SubstDefn            = 'substitution', SubstName, ':', OMS, 'to', 'OMS', 
-                                       '=' SymbolMap  ;
-ResultDefn           = 'result', ResultName, SubstName, { ',', SubstName },
-                                 'for', QueryName, [ '%complete' ] ;
-QueryName            = IRI ;
-SubstName            = IRI ;
-ResultName           = IRI ;
-Vars                 = Symbol { ',', Symbol } ;
-\end{lstlisting}
-
-
-\sclause{Identifiers}
-
-\begin{lstlisting}[language=ebnf,escapechar=@]
-IRI     = '<' , FullIRI , '>' | CURIE ;
-FullIRI = ? an IRI as defined in \nisref{IETF/RFC 3987:2005} ? ;
-CURIE   = ? see \cref{c:curies} ? ;
-\end{lstlisting}
-
-In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
-
-\sclause{Lexical Symbols}
-
-The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of OMS, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
-
-\ssclause{Key Words and Signs}\label{c:keywords}
-
-The lexical symbols of the DOL text serialization include various key words and signs that occur as terminal symbols in the context-free grammar in \aref{a:dol-text:concrete}.  Key words and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
-
-\sssclause{Key Words}
-
-Key words are always written lowercase. The following key words are reserved, and are not available for use as complete identifiers\todonote[author=Christoph Lange,type=todo]{figure out what that actually means.  If we use OWL Manchester's style of abbreviating IRIs, it probably means that in the worst case some IRIs can't be abbreviated but must be given as complete global IRIs}, although they can be used as parts of tokens:
-
-{\ttfamily %
-and
-distributed
-end
-hide
-interpretation
-library
-logic
-minimize\\
-model
-onto
-ontology
-spec
-specification
-reveal
-then
-to
-vars
-view
-with
-}
-
-\sssclause{Key Signs}
-
-Table~\ref{tab:key-signs} following key signs are reserved, and are not available for use as complete identifiers.  Key signs that are outside of the Basic Latin subset of Unicode may alternatively be encoded as a sequence of Basic Latin characters.
-
-\newcolumntype{T}{>{\ttfamily}{l}}
-\ctable[
-  caption={Key Signs},
-  label={tab:key-signs},
-]{TTT}{
-}{\FL
-  \rmfamily Sign & \rmfamily Unicode Code Point & \rmfamily Basic Latin substitute \ML
-  \{   & U+007B LEFT CURLY BRACKET & \NN
-  \}   & U+007D RIGHT CURLY BRACKET & \NN
-  :    & U+003A COLON & \NN
-  =    & U+003D EQUALS SIGN & \NN
-  ,    & U+002C COMMA & \NN
-  \rmfamily ↦ & U+21A6 RIGHTWARDS ARROW FROM BAR & |-> \NN
-  \rmfamily → & U+2192 RIGHTWARDS ARROW & -> \NN
-}
 
 \normannex{DOL RDF vocabulary}\label{a:rdf-syntax}
 
