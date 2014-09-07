@@ -1,11 +1,6 @@
- \newcommand{\version}{0.6}
+\newcommand{\version}{0.7}
 
 %todo
-% focused OMS = synonym for structured OMS
-% homogeneous OMS
-% logic graph
-% OMS language graph
-% heterogeneous environment: logic graph + OMS language graph + supports relation; one global heterogeneous environment with subenvironments for specific purposes
 % language, subclasses: OMS language, query language
 % language/logic/mapping registration process - maybe in a different document
 
@@ -13,7 +8,9 @@
 %[08:38] TillMossakowski1: section 7: section titles should probably taken from RFP, since we improved them there
 %[08:42] FabianNeuhaus: Include a section on usage scenarios and goals as section 7. The design decisions would then answer to scenarios. Reuse material from RFP
 %[08:49] TillMossakowski1: in section 4, the terms should have the same font size as their explanations
-
+% syntax of queries
+% filtering
+% syntax of modules (see IFIP slides)
 
 % This file was initially converted to LaTeX by Writer2LaTeX ver. 1.1.8
 % (see http://writer2latex.sourceforge.net for more info)
@@ -335,7 +332,7 @@ author=,date=,id=,replyto=,type=}{}%
 
 \newcommand*{\meta}{\ensuremath{\operatorname{meta}}\xspace}
 
-\newcommand{\BASICONTO}{\ensuremath{\langle\Sigma,\Delta\rangle}\xspace}
+\newcommand{\BASICOMS}{\ensuremath{\langle\Sigma,\Delta\rangle}\xspace}
 
 \newcommand{\semdom}[1]{
 \begin{center}
@@ -466,7 +463,7 @@ author=,date=,id=,replyto=,type=}{}%
 %color highlight, for editing
 \usepackage{color}
 
-\newcommand{\red}[1]{\color{red}{#1}}
+\newcommand{\red}[1]{{\color{red}{#1}}}
 
 
 
@@ -1178,6 +1175,11 @@ For the purposes of this document, the following terms and definitions apply.
 
   \termdefinition{satisfaction relation}{relation between models and sentences indicating which sentences hold true in the model}
 
+\red{
+  \termdefinition{logical theory}{\termref{signature} equipped with a 
+set of \termref{sentences} over the signature}
+}
+
   \termdefinition{query}{\termref{sentence} containing \termref{query variables}
    that can be instantiated by a \termref{substitution}}
 
@@ -1290,8 +1292,17 @@ For the purposes of this document, the following terms and definitions apply.
   \end{note}
 
 
-\termdefinition{structured OMS}
+\termdefinition{structured OMS\synonym focused OMS}
 {\termref{OMS} that results from other \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
+\red{
+  \begin{note}
+    The term ``focused OMS'' emphasizes the fact that the OMS, while possibly
+    involving many OMS as parts, has a single resulting \termref{logical theory}.
+    This is in contrast to \termref{distributed OMS}, which do not have
+    such a unique result, but rather comprise a network of OMS and
+    \termref{mappings}. See \cite{MossakowskiTarlecki09}.
+  \end{note}
+}
 
   \termdefinition{subOMS}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are subsets of those present in a given larger \termref{OMS}}
 
@@ -1522,11 +1533,42 @@ along the alignment, there is only one concept, representing both
   language.
 \end{note}
 
+\red{
+\termdefinition{OMS language graph}{graph of \termref{OMS languages} and
+\termref{OMS language translations}, typically used in a \termref{heterogeneous environment}}
+\begin{note}
+  In an OMS language graph, some of the OMS language translations can be
+  marked to be \termref{default translations}.
+\end{note}
+
+\termdefinition{default translation}{specially marked \termref{OMS language
+    translation} or \termref{logic translation} that will be used
+  whenever a translation is needed and no explicit translation is
+  given} 
+}
+
+\red{
+\termdefinition{heterogeneous environment}{environment for the
+  expression of homogeneous and \termref{heterogeneous OMS}, comprising
+a \termref{logic graph}, an \termref{OMS language graph} and a
+\termref{supports relation}}
+\begin{note}
+  Although in principle, there can be many heterogeneous environments,
+  for ensuring \termref{interoperability}, there will be a global
+  heterogeneous environments (maintained in some registry), with
+  subenvironments for specific purposes.
+\end{note}
+\ednote{In the semantics, there also is a binary supports relation between 
+OMS languages and serializations.}
+}
+
+
+
   \termdefinition{sublanguage}{syntactically specified subset of a given language, consisting of a subset of its terminal and nonterminal symbols and grammar rules}
 
  \termdefinition{language aspect}{set of language constructs of a given language, not necessarily forming a sublanguage}
 
-  \termdefinition{logical language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that enables the expression of \termref{non-logical symbols} and \termref{sentences} in a logical language}
+  \termdefinition{logical language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that enables the expression of \termref{non-logical symbols} and \termref{sentences} in a logic}
 
   \termdefinition{structuring language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that covers \termref{structured OMS} as well as the relations of \termref{basic OMS} and \termref{structured OMS} to each other, including, but not limited to \termref{imports}, \termref{OMS mappings}, \termref{conservative extensions}, and the handling of prefixes for CURIEs}
 
@@ -1587,6 +1629,13 @@ that targets specific applications or reasoning methods}
    relation between OMS languages and their logics and serializations.
   \end{note}
 
+\red{ 
+  \termdefinition{supports relation}{relation between \termref{OMS
+      languages} and \termref{logics} expressing the \termref{logical
+      language aspect} of the former, namely that the constructs of
+    the former lead to a \termref{logical theory} in the latter} 
+}
+
  \termdefinition{institution}{metaframework mathematically formalising
 the notion of a \termref{logic}}
 \begin{note}
@@ -1604,6 +1653,31 @@ the notion of a \termref{logic}}
     that simply forgets those parts of the logical structure not
     fitting the target \termref{logic}}
 
+\termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semnatics}
+
+\red{
+\termdefinition{logic graph}{graph of \termref{logics}, \termref{logic translations} and \termref{logic reductions}, typically used in a \termref{heterogeneous environment}}
+\begin{note}
+  In a logic graph, some of the logic translations and reductions can be
+  marked to be \termref{default translations}.
+  \ednote{Hopefully it is OK to subsume the notion of logic reduction
+  under the term ``translation'' here.}
+\end{note}
+
+}
+
+\red{
+  \termdefinition{homogeneous OMS}{\termref{OMS} whose parts are all formulated in one and the same \termref{logic}}
+
+  \termdefinition{heterogeneous OMS}{\termref{OMS} whose parts are formulated in different \termref{logics}}
+\begin{note}
+Opposite of \termref{homogeneous OMS}.
+\end{note}
+\begin{example}
+\ednote{See section~\ref{dist-het-onto}.}
+\end{example}
+}
+
 \termdefinition{logic approximation}{mapping of a source \termref{logic}
   onto a (usually less expressive) target \termref{logic} that tries
   to approximate the OMS expressed in the source \termref{logic} with
@@ -1611,13 +1685,10 @@ the notion of a \termref{logic}}
 \begin{note}
   A unique maximal approximation need not exist.
 \end{note}
+\begin{note}
+ The target logic typically is a \termref{sublogic} of the source logic.
+\end{note}
 
-\termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semnatics}
-
-  \termdefinition{heterogeneous OMS}{\termref{OMS} whose parts are supported by different \termref{logics}}
-\begin{example}
-\ednote{todo. Maybe take it from section 7?}
-\end{example}
 
 \end{definitions}
   
@@ -3541,7 +3612,7 @@ OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model'
 OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , [ 'end' ]<\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> ;
 
 Symbol               = IRI ;
-SymbolMap            = Symbol , '↦' , Symbol ;
+SymbolMap            = Symbol , '|->' , Symbol ;
 SymbolOrMap          = Symbol
                      | SymbolMap ;
 
@@ -4345,6 +4416,7 @@ combine GraphElements excluding IRIs  &  \\\hline
 \end{tabular}
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
+\label{dist-het-onto}
 \CLnote[type=q-aut]{In the TKE paper we made the name of the propositional logic ontology syntax explicit.  The propositional logic listing now leaves us with a problem: neither is propositional logic specified as DOL-conformant, nor is Hets' CASL-like syntax, nor is anything of this intended to ever be normative. TM: hence either leave it out, or make propositional logic normative. What about the examples in OWL+CL develop during the Ontology Summit Hackathon?}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
