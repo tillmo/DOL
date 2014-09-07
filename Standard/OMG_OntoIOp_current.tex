@@ -3,8 +3,8 @@
 %todo
 % language/logic/mapping registration process - maybe in a different document
 
-% filtering
 % syntax of modules (see IFIP slides)
+% more useful EBNF (see CASL RefMan)
 
 % This file was initially converted to LaTeX by Writer2LaTeX ver. 1.1.8
 % (see http://writer2latex.sourceforge.net for more info)
@@ -2351,10 +2351,11 @@ language,
 \item a reduction of an OMS to a smaller signature and/or less
 expressive logic (that is,
 some non-logical symbols are hidden, but the semantic effect of sentences involving these is kept),
-\item an approximation of an OMS, normally in a sublogic, using a given approximation method (with the effect that sentences not expressible in the sublogic are weakened or removed),
-\item a union of OMS,
-\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMSs?},
 \item a module extracted from an OMS, using a restriction signature,
+\item an approximation of an OMS, normally in a sublogic, using a given approximation method (with the effect that sentences not expressible in the sublogic are replaced with a suitable approximation),
+\item \red{a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,}
+\item a union of several OMS,
+\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMSs?},
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
 \item a combination of OMS (technically, this is a colimit, see \cite{ZimmermanEtAl06}),
@@ -2376,6 +2377,7 @@ OMS                  = ExtendingOMS
                      | 'reduction' , OMS , Reduction
                      | 'module-extract' , OMS , Extraction 
                      | 'approximation' , OMS , Approximation
+                     | 'filtering', OMS, Filtering
                      | 'union' , OMS , [ ConsStrength ] , OMS 
                      | 'extension' , OMS , ExtensionOMS
                      | 'qual-oms' , { Qualification } , OMS
@@ -2401,6 +2403,8 @@ Extraction           = 'extraction', ModuleProperties, [ InterfaceSignature ] ;
 ModuleProperties     = Conservative | 'minimal' | 'safe' | 'depleting'; 
 
 Approximation        = 'approximation' , InterfaceSignature , [ LogicRef ] ;
+
+Filtering            = 'filter', BasicOMS ;
 
 ExtensionOMS         = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
 
@@ -2800,6 +2804,7 @@ OMS                 = ExtendingOMS
                      | OMS , Translation
                      | OMS , Reduction
                      | OMS , Approximation
+                     | OMS , Filtering
                      | OMS , 'and' , [ ConsStrength ] , OMS 
                      | OMS , 'then' , ExtensionOMS
                      | { Qualification } , ':' , GroupOMS
@@ -2824,11 +2829,13 @@ SymbolItems          = Symbol { ',' , Symbol } ;
 SymbolMapItems       = SymbolOrMap { ',' , SymbolOrMap } ;
 
 Extraction           = 'extract' , ModuleProperties , InterfaceSignature;
-ModuleProperties =  Conservative | '%min' | '%depliting' | '%safe'  
+ModuleProperties     =  Conservative | '%min' | '%depliting' | '%safe' ; 
 
 Approximation        = 'approximate' , ApproxMethod ;
 
-ExtensionOMS        = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
+Filtering            = 'filter', BasicOMS ;
+
+ExtensionOMS         = [ ConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
 
 ConsStrength         = Conservative
                      | '%mono'
@@ -2845,8 +2852,8 @@ ExtensionName        = '%(' , IRI , ')%' ;
 
 OMSOrMappingorGraphRef        = IRI ;
 
-GraphElements        = CombinedElement \{ ',' , CombinedElement \} ;
-CombinedElement      = [ Id , ':' ] , OMSOrMappingorGraphRef ;
+GraphElements        = GraphElement \{ ',' , GraphElement \} ;
+GraphElement         = [ Id , ':' ] , OMSOrMappingorGraphRef ;
 ExcludeExtensions    = 'excluding' , ExtensionRef , \{ ',' , ExtensionRef \} ;
 
 OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model'
