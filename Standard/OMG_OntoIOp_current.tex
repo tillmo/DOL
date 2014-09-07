@@ -1,14 +1,8 @@
 \newcommand{\version}{0.7}
 
 %todo
-% language, subclasses: OMS language, query language
 % language/logic/mapping registration process - maybe in a different document
 
-%[08:15] TillMossakowski1: p.1: is just about ontologies. Some words about models and specifications should be added. Probably the RFP is a source here.
-%[08:38] TillMossakowski1: section 7: section titles should probably taken from RFP, since we improved them there
-%[08:42] FabianNeuhaus: Include a section on usage scenarios and goals as section 7. The design decisions would then answer to scenarios. Reuse material from RFP
-%[08:49] TillMossakowski1: in section 4, the terms should have the same font size as their explanations
-% syntax of queries
 % filtering
 % syntax of modules (see IFIP slides)
 
@@ -255,7 +249,7 @@ author=,date=,id=,replyto=,type=}{}%
 % subject field restriction of a term
 \newcommand*{\subjectfield}[1]{ {\textlangle}#1{\textrangle}}
 % synonym of a term
-\newcommand*{\synonym}{,\\}
+\newcommand*{\synonym}{; }
 % MIME type
 \newcommand*{\mimetype}[1]{\textit{#1}}
 % Font style for syntactic features only supported with institutions
@@ -438,7 +432,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\sclause}[1]{\section{#1}}
 \newcommand{\ssclause}[1]{\subsection{#1}}
 \newcommand{\sssclause}[1]{\subsubsection{#1}}
-\newcommand{\termdefinition}[2]{\subsubsection*{\normalsize #1}#2}
+\newcommand{\termdefinition}[2]{\paragraph{#1} #2}
 \newcommand{\nisref}[1]{#1}
 
 
@@ -709,7 +703,7 @@ The reader is encouraged to report any technical or editing issues/problems
 This \IS specifies the Distributed Ontology, Modeling and Specification
  Language (DOL) designed to achieve integration and interoperability of
 ontologies, specifications and models (OMS for short). DOL is a language for
-distributed knowledge representation across multiple OMS, particularly OMS
+distributed knowledge representation, system specification and model-driven development across multiple OMS, particularly OMS
  that have been formalized in different OMS languages. This \IS responds to the
 OntoIOp Request for Proposals \cite{RFP}.
 
@@ -1178,6 +1172,16 @@ For the purposes of this document, the following terms and definitions apply.
 \red{
   \termdefinition{logical theory}{\termref{signature} equipped with a 
 set of \termref{sentences} over the signature}
+}
+
+\red{
+  \termdefinition{query language}{\termref{OMS language} specifically dedicated to \termref{queries}}
+\begin{example}
+SPARQL, Prolog
+\end{example}
+\begin{note}
+There are also general purpose OMS languages, which can express both \termref{OMS} and quries.
+\end{note}
 }
 
   \termdefinition{query}{\termref{sentence} containing \termref{query variables}
@@ -2321,7 +2325,7 @@ DistOMS                  = [ PrefixMap ] , DistOMSDefn
                          | OMSInConformingLanguage ;
 DistOMSDefn              = 'dist-oms-defn' , DistOMSName , { DistOMSItem } ;
 OMSInConformingLanguage  = ($<$)language and serialization specific($>$) ;
-DistOMSItem              = OMSDefn | MappingDefn | Qualification ;
+DistOMSItem              = OMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
@@ -2377,6 +2381,7 @@ OMS                  = ExtendingOMS
                      | 'qual-oms' , { Qualification } , OMS
                      | 'bridge' , OMS, { Translation } , OMS
                      | 'combination' , Graph ;
+                     | 'application', SubstName, Sentence
 
 CircMin              = Symbol , { Symbol } ;
 CircVars             = { Symbol } ;
@@ -2434,6 +2439,7 @@ Symbol           = IRI ;
 SymbolMap        = 'symbol-map' , Symbol , Symbol ;
 SymbolOrMap      = Symbol | SymbolMap ;
 Term             = (\mbox{$<$})an expression specific to a basic OMS language(\mbox{$>$}) ;
+Sentence         = (\mbox{$<$})an expression specific to a basic OMS language(\mbox{$>$}) ;
                  
 OMSName          = IRI ;
                  
@@ -2500,7 +2506,7 @@ GraphDefn            = 'graph-defn', GraphName, Graph ;
 GraphName            = IRI ;
 Graph                = 'graph', GraphElements , ExcludeExtensions
 GraphElements        = 'graph-elements', { OMSOrMappingorGraphRef } ;
-ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorGraphRef } ; \todonote[author=Mihai Codescu]{We can exclude nodes, links or subgraphs. I have changed from ExtensionRef}
+ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorGraphRef } ; 
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
@@ -2567,6 +2573,30 @@ The local name of a non-logical symbol is determined as follows\footnote{In prac
 \end{algorithmic}
 
 %Alignments 
+
+\sclause{Queries}
+\red{
+Queries are a means to extract information from an OMS.  DOL'
+\syntax{QueryDefn}s cover ``select''-type queries that deliver an
+answer substitution for the query variables. (Answer) substitutions
+can be stored separately, using a \syntax{SubstDefn}. A
+\syntax{ResultDefn} expresses that certain answer substitutions are
+the result of a query. Optioally, a result can be expressed to be
+complete, meaning that it comprises all answer substitutions to the query.
+}
+\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn
+QueryDefn            = 'select-query-defn', QueryName, Vars, Sentence, 
+                                            OMS, [Translation] ;
+SubstDefn            = 'subst-defn', SubstName, OMS 'OMS', SymbolMap ;
+ResultDefn           = 'result-def', ResultName, SubstName, { SubstName }, 
+                                     QueryName, [ Complete ] ;
+QueryName            = IRI ;
+SubstName            = IRI ;
+ResultName           = IRI ;
+Vars                 = { Symbol } ;
+Complete             = 'complete' ;
+\end{lstlisting}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -3693,9 +3723,28 @@ SingleCorrespondence = SymbolRef , [ RelationRef ] ,
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
 TermOrSymbolRef      = Term | SymbolRef (* Term is logic-specific *) ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)}>
-RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>'$\ni$' | '$\in$' | '$\mapsto$' | IRI ;
+RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>'$\ni$' 
+                     | '$\in$' | '$\mapsto$' | IRI ;
 Confidence           = Double ? where Double <$\in [0,1]$> ? ;
 \end{lstlisting}
+
+\sclause{Queries}
+\red{new!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}
+\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
+QueryDefn            = 'query', QueryName, '=', 'select', Vars, 
+                                'where', Sentence, 'in', OMS, 
+                                ['along', Translation]  ;
+SubstDefn            = 'substitution', SubstName, ':', OMS, 'to', 'OMS', 
+                                       '=' SymbolMap  ;
+ResultDefn           = 'result', ResultName, SubstName, { ',', SubstName },
+                                 'for', QueryName, [ '%complete' ] ;
+QueryName            = IRI ;
+SubstName            = IRI ;
+ResultName           = IRI ;
+Vars                 = Symbol { ',', Symbol } ;
+\end{lstlisting}
+
 
 \sclause{Identifiers}
 
