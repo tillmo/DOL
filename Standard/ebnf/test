@@ -1,0 +1,26 @@
+\sclause{Distributed OMS}\label{c:dist-oms}
+
+A distributed OMS consists of a collection of (named) focused OMS and mappings between these.  More specifically, a
+distributed OMS consists of a name, followed by a list of
+\syntax{DistOMSItem}s.  A \syntax{DistOMSItem} is either an
+OMS definition (\syntax{OMSDefn}), a mapping between OMS
+(\syntax{MappingDefn}), a definition related to queries 
+(\syntax{QueryRelatedDefn})
+or a \syntax{Qualification} selecting a specific
+OMS language, logic and/or syntax that is used to interpret the
+subsequent \syntax{DistOMSItem}s.  Alternatively, a distributed
+OMS can also be the verbatim inclusion of an OMS written in
+an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
+
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+DistOMS                  = [ PrefixMap ] , DistOMSDefn
+                         | OMSInConformingLanguage ;
+DistOMSDefn              = 'dist-oms-defn' , DistOMSName , { DistOMSItem } ;
+OMSInConformingLanguage  = ($<$)language and serialization specific($>$) ;
+DistOMSItem              = OMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+Qualification            = LanguageQual | LogicQual | SyntaxQual ;
+LanguageQual             = 'lang-select' , LanguageRef ;
+LogicQual                = 'logic-select' , LogicRef ;
+SyntaxQual               = 'syntax-select' , SyntaxRef ;
+DistOMSName              = IRI ;
+\end{lstlisting}
