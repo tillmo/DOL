@@ -2454,7 +2454,7 @@ optionally marked as consistent, monomorphic or having a unique model using \syn
 list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
 denotes a logic reduction to a
 less expressive OMS language. A \syntax{SymbolMapItems}, used in
-OMS \syntax{Translation}s,  maps symbols to symbols\CLnote[type=fyi]{On 2012-07-18 we decided not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics in an OMS language independent way would require additional institution infrastructure – and the same effect can be achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?)}, or a logic
+OMS \syntax{Translation}s,  maps symbols to symbols\CLnote[type=fyi]{On 2012-07-18 we decided not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics in an OMS language independent way would require additional institution infrastructure – and the same effect can be achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?) TM: Alternatively, we could use a recent notion of institutional monad. This builds an extended signature with all terms. Then one can use ordinary signature morphisms into such extended signatures.}, or a logic
 translation. An OMS language translation \syntax{OMSLangTrans} 
 can be either specified by its name, or be inferred as the default
 translation between to a given target (the source will be inferred as the 
@@ -2497,15 +2497,21 @@ A OMS mapping definition is the definition of either a named interpretation
 The \syntax{SymbolMapItems} in an interpretation always
 must lead to a signature morphism; a proof obligation expressing
 that the (translated) source OMS logically follows from
-the target OMS is generated. In contrast to this,
-\ednote{MC: 
-an alignment expresses semantic relations between the entities of two OMS}
-an alignment just provides a connection between two OMS without logical semantics, 
+the target OMS is generated. 
+
+In contrast to this functional style,
+an alignment provides a relational connection between two OMS, 
 using a set of \syntax{Correspondence}s.
 Each correspondence may map some OMS non-logical symbol to another one
 (possibly given by a term) and an optional confidence value.
 Moreover, the relation between the two non-logical symbols can be explicitly
 specified (like being equal, or only being subsumed). 
+\red{A default correspondence can be used; it is applied to all pairs of non-logical symbols with the same local names.
+Using an \syntax{AlignCard}, left and right injectivity and totality of the
+alignment can be specified (the default is left-injective, right-injective, left-total  and right-total).
+With \syntax{AlignSem}, different styles of networks of aligned ontologies (to be interpreted in a logic-specific way) of alignments can be specified (whether a single domain is assumend, all domains are embedded into a global domain,
+or whether several local domains are linked (``contextualized'') by relations).}
+
 A \syntax{ModuleRelDefn} declares that a certain OMS
 actually is a module of some other OMS with respect
 to the \syntax{InterfaceSignature}.
@@ -2536,7 +2542,7 @@ ModuleType           = 'module-type' , OMS , OMS ;
 AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType, 
                                     AlignSem,   { Correspondence } ; <\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}>
 AlignName            = IRI ;
-AlignCards           = AlignCardForward , AlignCardBackward ; <\CLnote[type=todo]{mention that the default is twice ``injective and total''}>
+AlignCards           = AlignCardForward , AlignCardBackward ; 
 AlignCardForward     = 'align-card-forward' , AlignCard ;
 AlignCardBackward    = 'align-card-backward' , AlignCard ;
 AlignCard            = 'injective-and-total'
@@ -2546,13 +2552,14 @@ AlignCard            = 'injective-and-total'
 AlignType            = 'align-type' , OMS , OMS ;
 AlignSem            = 'single-domain' 
                     | 'global-domain' 
-                    | 'contextualized-domain' ; <\todonote[author=Mihai Codescu,type=todo]{This should be explained somewhere before.}>
+                    | 'contextualized-domain' ; 
 
 Correspondence       = CorrespondenceBlock
                      | SingleCorrespondence
-                     | 'default-correspondence' ; <\CLnote[type=todo]{add concrete syntax, plus explanation: applies current default correspondence to all non-logical symbols with the same local names, using the ``same local name'' algorithm presented elsewhere}>
+                     | 'default-correspondence' ; 
+
 CorrespondenceBlock  = 'correspondence-block' , [ RelationRef ] , [ Confidence ],
-                                                { Correspondence } ; <\CLnote[type=todo]{How do we say that at least one of these should be given?}>
+                                                Correspondence, { Correspondence } ; 
 SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationRef ] , [ Confidence ] ,
                                           TermOrSymbolRef , [ CorrespondenceID ] ; <\CLnote[type=todo]{concrete syntax, e.g., a = x, b my:similarTo y \%(correspond-b-to-y)\%, c my:similarTo 0.75 z}> 
 CorrespondenceID     = IRI ;
@@ -2809,7 +2816,7 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 
 \ssclause{Focused OMS}\label{a:dol-text:OMS}
 
-\ednote{TODO: merge ALIGN-TYPE with INTPR-TYPE}
+\ednote{TODO: merge ALIGN-TYPE with INTPR-TYPE. TM: why?}
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
 BasicOMS            = OMSInConformingLanguage ;
@@ -3088,31 +3095,28 @@ properties like finite model or tree model properties.
 
 
 We now specify the theoretical foundations of the semantics
-of DOL.\CLnote[type=todo]{later on we also need to say
-  something about the semantics of the syntax. TM: what is this?} Since DOL involves
+of DOL. Since DOL involves
 heterogeneous OMS, the semantics is parameterised over an
-arbitrary but fixed \emph{heterogeneous logic environment}.  This
+arbitrary but fixed \emph{heterogeneous environment}.  This
 notion is defined below, it corresponds to a graph of OMS
-languages and OMS language translations. Below, also notions of
-\emph{institute} and \emph{institute comorphism} are defined, which
-provide formalisations of the terms ``logic'',
-resp.\ ``logic translation''. 
+languages and OMS language translations and reductions. Below, also notions of
+\emph{institution} and institution \emph{comorphism} and \emph{morphism} are defined, which
+provide formalisations of the terms \termref{logic},
+resp.\ \termref{logic translation}, resp.\  \termref{logic reduction}. 
 
-
-\ednote{use institutions here}
-The notion of institute deliberately avoids the use of category theory
-in order to keep the mathematical background simple.  Most of the
-abstract syntax can be interpreted using institutes, but not all of
-it. 
+%The notion of institute deliberately avoids the use of category theory
+%in order to keep the mathematical background simple.  Most of the
+%abstract syntax can be interpreted using institutes, but not all of
+%it. 
 %Some parts (namely symbol maps, \syntax{combination}s
 % and the construct \syntax{monomorphic};
 %these are marked in {\institutionsOnly bold italics}) of the abstract
 %syntax need a more sophisticated and more general category-theoretic
 %foundation in terms of institutions [\cite{Institutions}]. 
-More
-specifically, the notion of institute needs to be replaced by that of
-institutional logic [\cite{Meseguer89}], and analogously for
-comorphisms [\cite{Comorphisms}].
+%More
+%specifically, the notion of institute needs to be replaced by that of
+%institutional logic [\cite{Meseguer89}], and analogously for
+%comorphisms [\cite{Comorphisms}].
 % and the Grothendieck construction [\cite{GrothendieckInstitutions}].
 
 Details of the mapping of the abstract syntax into the semantic
