@@ -1,6 +1,7 @@
 \newcommand{\version}{0.7}
 
 %todo
+% in grammer, use NT+
 
 % language/logic/mapping registration process - maybe in a different document
 
@@ -709,7 +710,7 @@ OntoIOp Request for Proposals \cite{RFP}.
 
 
 \section{Background Information}
-Logical languages are used in several fields of computing for the development of formal, machine-processable texts that carry a formal semantics. Among those fields are 1) \textbf{O}ntologies formalizing domain knowledge, 2) (formal) \textbf{M}odels of systems, and 3) the formal \textbf{S}pecification of systems. Ontologies, models  and specifications will (for the purpose of this document) henceforth be abbreviated as \textbf{OMS}, if all three can be treated in the same way.
+Logical languages are used in several fields of computing for the development of formal, machine-processable texts that carry a formal semantics. Among those fields are 1) \textbf{O}ntologies formalizing domain knowledge, 2) (formal) \textbf{M}odels of systems, and 3) the formal \textbf{S}pecification of systems. Ontologies, models  and specifications will (for the purpose of this document) henceforth be abbreviated as \textbf{OMS}.
 
 An OMS provides formal descriptions the scope of which ranges from domain
 knowledge and activities (ontologies, models) to properties and
@@ -719,19 +720,20 @@ verification of domain models, system models and systems, using
 rigorous and effective reasoning tools.  Since these models and
 systems become increasingly complex, usually a monolithic description
 is not feasible. Instead, different viewpoints on one domain or
-systems are modeled.  Hence, interoperability becomes a crucial issue,
+system are modeled.  Hence, interoperability becomes a crucial issue,
 in particular, formal interoperability, i.e.\ interoperability that is
 based on the formal semantics of the different viewpoints.
-Interoperability is both about interfacibility, enabling the use of
+Interoperability is both about the ability to interface different
+domains and systems, to enable the use of
 several OMS in a common application scenario, as well as about
 coherence and consistency, ensuring at an early stage of the
 development that a coherent system can be reached.
 
 In complex applications, which involve multiple OMS with overlapping concept spaces, data mapping may also be  between different OMS, and is then called OMS alignment. 
-  While OMS alignment is most commonly studied for OMS formalized\CLnote{spell-check everything for American English.} in the same OMS language, the different OMS used by complex applications may also be written in different OMS languages even of different expressiveness. 
+  While OMS alignment is most commonly studied for OMS formalized\CLnote{spell-check everything for American English.} in the same OMS language, the different OMS used by complex applications may also be written in different OMS languages, even if they have different levels of expressiveness. 
  This \IS faces this diversity not by proposing yet another OMS language that would subsume all the others.  
   Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) to compare and integrate OMS that are written in different formalisms.
-  It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for expressing not only OMS but also mappings between OMS formalized in different OMS languages.
+  It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for expressing not only OMS but also mappings between OMS formalized in different OMS languages.\ednote{Is the plural of OMS just ``OMS'' or ``OMS'''?}
 
 Thus, DOL gives interoperability a formal grounding and makes heterogeneous OMS and services based on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences, and compliance).
 
@@ -1058,9 +1060,10 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
 \red{
-  \termdefinition{distributed OMS\synonym hyperontology}{collection of named \termref{focused OMS,} possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings} and named \termref{OMS graphs}}
+  \termdefinition{distributed OMS\synonym hyperontology}{collection of named \termref{focused OMS}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings} and named \termref{OMS graphs}}
 \ednote{Is ``hyperontology'' a synonym for ``distributed OMS'', or rather for
 ``heterogeneous OMS''?}
+\ednote{replace "distributed OMS" by "OMS network"? Rationale: an OMS network is not really an OMS, but more a statement of certain relations between OMS.}
 \begin{note}
  The opposite of a distributed OMS is a \termref{focused OMS}, which
  focuses on the specification of a single \termref{logical theory}.
@@ -1331,6 +1334,15 @@ More precisely, an OMS is flattenable if and only if it is either a basic OMS or
   \termdefinition{subOMS}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are subsets of those present in a given larger \termref{OMS}}
 
   \termdefinition{extension}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are supersets of those present in a given smaller \termref{OMS}}
+
+   \termdefinition{extension mapping}: \termref{mapping} between two
+   OMSs where the sets of \termref{non-logical symbols} and
+   \termref{sentences} of the second OMS are supersets of those
+   present in the first OMS 
+\begin{note} 
+The second OMS is said to extend the first, and is an extension of the
+first OMS.
+\end{note} 
 
   \termdefinition{consequence-theoretic conservative extension}{\termref{extension} that does
    not add new \termref{theorems} (in terms of the unextended \termref{signature})}
@@ -2329,7 +2341,9 @@ Additionally, the categories of the abstract syntaxes of any conforming OMS lang
 
 The following subclauses, one per abstract syntax category, specify the abstract syntax of DOL in EBNF. Note that we deviate from the EBNF specification in
  \nisref{ISO/IEC 14977:1996} in favour of a more modern and concise
-EBNF syntax.  
+EBNF syntax.\footnote{More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand sind, which we omit 
+for the sake of better readibility. Also, we use the notation \syntax{N+}
+of one or more repetitions of \syntax{N}.}  
 %Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 
 \sclause{Distributed OMS}\label{c:dist-oms}
@@ -2364,6 +2378,7 @@ DistOMSName              = IRI ;
   • item-name-map (to be replaced by namespaces??)\textLF
   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
+\todo{entailment e = O1 entails phi}
 
 At the beginning of a distributed OMS, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
 
@@ -2424,15 +2439,13 @@ Translation          = 'renaming' , { LogicTranslation } , [ SymbolMapItems ] ;
 LogicTranslation     = 'logic-translation' , OMSLangTrans ;
 
 Reduction            = 'hidden' , { LogicReduction } , [ SymbolItems ]
-                     | 'revealed' , [ SymbolMapItems ] ;
+                     | 'revealed' , SymbolMapItems  ;
 LogicReduction       = 'logic-reduction' , OMSLangTrans ;
 
 SymbolItems          = 'symbol-items' , ( Symbol , { Symbol } ) ;
 SymbolMapItems       = 'symbol-map-items' , ( SymbolOrMap , { SymbolOrMap } ) ;
 
-Extraction           = 'extraction', ModuleProperties, [ InterfaceSignature ] ;
-
-ModuleProperties     = Conservative | 'minimal' | 'safe' | 'depleting'; 
+Extraction           = 'extraction', [ InterfaceSignature ] ;
 
 Approximation        = 'approximation' , InterfaceSignature , [ LogicRef ] ;
 
@@ -2862,15 +2875,15 @@ Translation          = 'with' , { LogicTranslation } , [ SymbolMapItems ] ;
 LogicTranslation     = 'translation' , OMSLangTrans ;
                       
 Reduction            = 'hide' , { LogicReduction } , [ SymbolItems ]
-                     | 'reveal' , [ SymbolMapItems ] ;
+                     | 'hide' , LogicReduction , { LogicReduction } 
+                     | 'reveal' ,  SymbolMapItems ;
 LogicReduction       = 'along' , OMSLangTrans ;
 
 SymbolItems          = Symbol , { ',' , Symbol } ;
 SymbolMapItems       = SymbolOrMap , { ',' , SymbolOrMap } ;
 
-Extraction           = 'extract' , ModuleProperties , InterfaceSignature
-                     | 'remove' , ModuleProperties , InterfaceSignature ;
-ModuleProperties     =  Conservative | '%min' | '%depliting' | '%safe' ; 
+Extraction           = 'extract' , [InterfaceSignature]
+                     | 'remove' , [InterfaceSignature] ;
 
 Approximation        = 'forget' , InterfaceSignature , [ 'with', LogicRef ] 
                      | 'keep' , InterfaceSignature , [ 'with', LogicRef ] ;
@@ -2925,9 +2938,11 @@ OMSLangTrans        = OMSLangTransRef
                      | '<$\to$>' , LoLaRef ;
 
 OMSLangTransRef     = IRI ;
-
-
 \end{lstlisting}
+
+\ednote{\%safe is more a statement about an import of a module, 
+and hence should be a statement in an OMS network. Recall:
+ModuleProperties     =  '\%safe' ; }
 
 \ssclause{OMS Mappings}
 
