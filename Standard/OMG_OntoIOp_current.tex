@@ -1,6 +1,7 @@
 \newcommand{\version}{0.7}
 
 %todo
+
 % language/logic/mapping registration process - maybe in a different document
 
 % more useful EBNF (see CASL RefMan)
@@ -1314,7 +1315,18 @@ There are also general purpose OMS languages, which can express both \termref{OM
     such a unique result, but rather comprise a network of OMS and
     \termref{mappings}. See \cite{MossakowskiTarlecki09}.
   \end{note}
+
+\termdefinition{flattenable OMS}
+{OMS that can be seen, by purely syntactical means, to be logically 
+equivalent to a basic OMS}
+\begin{note}
+More precisely, an OMS is flattenable if and only if it is either a basic OMS or it is an \termref{extension}, \termref{union}, translation, \termref{module extraction}, \termref{approximation}, \termref{filtering}, or reference of named OMS involving only flattenable OMS. 
+\end{note}
+
+\termdefinition{elusive OMS}
+{OMS that is not \termref{flattenable}}
 }
+
 
   \termdefinition{subOMS}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are subsets of those present in a given larger \termref{OMS}}
 
@@ -2860,8 +2872,8 @@ Extraction           = 'extract' , ModuleProperties , InterfaceSignature
                      | 'remove' , ModuleProperties , InterfaceSignature ;
 ModuleProperties     =  Conservative | '%min' | '%depliting' | '%safe' ; 
 
-Approximation        = 'forget' , InterfaceSignature , [ 'with', LogicRef ] ;
-Approximation        = 'keep' , InterfaceSignature , [ 'with', LogicRef ] ;
+Approximation        = 'forget' , InterfaceSignature , [ 'with', LogicRef ] 
+                     | 'keep' , InterfaceSignature , [ 'with', LogicRef ] ;
 
 Filtering            = 'filter', BasicOMS ;
 
