@@ -1,7 +1,10 @@
 \newcommand{\version}{0.7}
 
 %todo
+% basic+structured OMS are disjoint
 % in grammer, use NT+
+% NTs for flattenable and elusive OMS
+% consistency and %implies for graphs (maybe also refinement?)
 
 % language/logic/mapping registration process - maybe in a different document
 
@@ -1084,7 +1087,8 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
 
-  \termdefinition{OMS (ontology, specification or model)}{set of expressions (like \termref{non-logical symbols}, \termref{sentences} and \termref{structuring} elements) in a given \termref{OMS language} (or several such languages)}%
+\termdefinition{OMS (ontology, specification or model)}
+{collection of expressions (like \termref{non-logical symbols}, \termref{sentences} and \termref{structuring} elements) in a given \termref{OMS language} (or several such languages).}
 \begin{note}
 	An \termref{OMS} can be written in different \termref{OMS language} \termref{serializations}.
 \end{note}	
@@ -1307,10 +1311,15 @@ There are also general purpose OMS languages, which can express both \termref{OM
     The sentences must use only those non-logical symbols that are present in the signature.
   \end{note}
 
-
 \red{
-\termdefinition{structured OMS\synonym focused OMS}
-{\termref{OMS} that results from other \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
+\termdefinition{structured OMS}
+{\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
+
+\termdefinition{focused OMS}
+{\termref{OMS} that has a single resulting \termref{logical theory}.}
+\begin{note}
+A focused OMS is either a basic or structured OMS.
+\end{note}
   \begin{note}
     The term ``focused OMS'' emphasizes the fact that the OMS, while possibly
     involving many OMS as parts, has a single resulting \termref{logical theory}.
@@ -1318,6 +1327,7 @@ There are also general purpose OMS languages, which can express both \termref{OM
     such a unique result, but rather comprise a network of OMS and
     \termref{mappings}. See \cite{MossakowskiTarlecki09}.
   \end{note}
+
 
 \termdefinition{flattenable OMS}
 {OMS that can be seen, by purely syntactical means, to be logically 
@@ -2305,7 +2315,7 @@ into its explicit counterpart.
 
 The following list covers the possible cases where DOL provides a choice between representing information implicitly or  explicitly:
 \begin{description}
-\item[default OMS language translations] A heterogeneous OMS can import several (structured) OMS expressed in different conforming logics, for which suitable translations have been defined in the logic graph provided in \aref{a:graph} or in an extension to it that has been provided when establishing the conformance of some other logic with DOL.  Determining the semantics of the heterogeneous OMS requires a translation into a common target language to be applied (\cf \cref{c:semantics}).  This translation is determined via a lookup in the transitive closure of the logic graph.  Depending on the reasoners available in the given application setting, it can, however, be necessary to employ a different translation.  Authors can express which one to employ.  In a multi-step translation, it is possible to implicitly apply as many default translations as possible, and to concentrate on making explicit only those translations that deviate from the default.\CLnote[type=q-aut]{Will this situation be the same for default approximations, or to we need to add an extra item to the list?}
+\item[default OMS language translations] A heterogeneous OMS can import several (focused) OMS expressed in different conforming logics, for which suitable translations have been defined in the logic graph provided in \aref{a:graph} or in an extension to it that has been provided when establishing the conformance of some other logic with DOL.  Determining the semantics of the heterogeneous OMS requires a translation into a common target language to be applied (\cf \cref{c:semantics}).  This translation is determined via a lookup in the transitive closure of the logic graph.  Depending on the reasoners available in the given application setting, it can, however, be necessary to employ a different translation.  Authors can express which one to employ.  In a multi-step translation, it is possible to implicitly apply as many default translations as possible, and to concentrate on making explicit only those translations that deviate from the default.\CLnote[type=q-aut]{Will this situation be the same for default approximations, or to we need to add an extra item to the list?}
 \item[different matching algorithms] OMS alignments, which DOL is able to express, may have been obtained by running different OMS matching algorithms.  If, in a given OMS engineering workflow, the information on which algorithm has been applied is clear from the context, it is possible to omit it in the alignment expressed in DOL.  Otherwise, \eg if the next person working on the OMS requires that information, it is possible to make it explicit.\todonote{TM: the alignment itself should be there explicitly. right? But then the information about the matching algorithm that has produced it is a mere annotation without semantics, isn't it?\\ CL: I agree with you. OK, so we will replace this with approximation algorithms.}
 \end{description}
 
@@ -3450,7 +3460,8 @@ an OMS language, a logic (institute) and a serialization as follows:
 with the non-logical symbols declared in \syntax{BasicOMS}.  $\Delta'$ is a set
 of sentences over $\Sigma'$.
 
-We further assume a language-specific semantics of complete (possibly
+We further assume a language-specific semantics of complete (basic,
+but possibly also
 structured) OMS
 $sem(L,\syntax{OMSInSpecificLanguage})=(\Sigma,\cM)$, where
 $\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
