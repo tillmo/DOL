@@ -1,11 +1,12 @@
 \newcommand{\version}{0.7}
 
 %todo
-% basic+structured OMS are disjoint
-% in grammer, use NT+
-% NTs for flattenable and elusive OMS
+% OMS network = graph???
+% symbol maps generalized to graphs
+% refinement language
+% in grammar, use NT+
 % consistency and %implies for graphs (maybe also refinement?)
-
+% logical consequence = generalization, converse = specialization
 % language/logic/mapping registration process - maybe in a different document
 
 % more useful EBNF (see CASL RefMan)
@@ -1063,7 +1064,7 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
 \red{
-  \termdefinition{distributed OMS\synonym hyperontology}{collection of named \termref{focused OMS}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings} and named \termref{OMS graphs}}
+  \termdefinition{distributed OMS\synonym OMS network\synonym hyperontology}{collection of named \termref{focused OMS}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings} and named \termref{OMS graphs}}
 \ednote{Is ``hyperontology'' a synonym for ``distributed OMS'', or rather for
 ``heterogeneous OMS''?}
 \ednote{replace "distributed OMS" by "OMS network"? Rationale: an OMS network is not really an OMS, but more a statement of certain relations between OMS.}
@@ -2273,7 +2274,7 @@ Logical OMS mappings supported by DOL include:
 \item imports (particularly including imports that lead to conservative extensions), see the
 abstract syntax categories \syntax{OMSRef} and \syntax{ExtensionOMS} in
 clause~\ref{c:abstract-syntax}.
-\item interpretations, see the
+\item interpretations (both between OMS and graphs), see the
 abstract syntax category \syntax{IntprDefn} in
 clause~\ref{c:abstract-syntax}.
 \item mappings between OMS and their modules, see the
@@ -2351,9 +2352,11 @@ Additionally, the categories of the abstract syntaxes of any conforming OMS lang
 
 The following subclauses, one per abstract syntax category, specify the abstract syntax of DOL in EBNF. Note that we deviate from the EBNF specification in
  \nisref{ISO/IEC 14977:1996} in favour of a more modern and concise
-EBNF syntax.\footnote{More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand sind, which we omit 
-for the sake of better readibility. Also, we use the notation \syntax{N+}
-of one or more repetitions of \syntax{N}.}  
+EBNF syntax.\footnote{\red{More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand sind, which we omit 
+for the sake of better readibility. Also, we replace the separator \syntax{=}
+between left and right hand-side of a rule with \syntax{::=}, and 
+use the notation \syntax{N+}
+of one or more repetitions of \syntax{N}.}}  
 %Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 
 \sclause{Distributed OMS}\label{c:dist-oms}
@@ -2361,7 +2364,11 @@ of one or more repetitions of \syntax{N}.}
 A distributed OMS (\syntax{DistOMS}) consists of a collection of (named) focused OMS and mappings between these.  More specifically, a
 distributed OMS consists of a name, followed by a list of
 \syntax{DistOMSItem}s.  A \syntax{DistOMSItem} is either an
-OMS definition (\syntax{OMSDefn}), a mapping between OMS
+OMS definition (\syntax{OMSDefn}), 
+\red{a graph definition (\syntax{GraphDefn}),\ednote{Or
+  better name \syntax{DistOMS} ``OMS libraries'', and \syntax{Graph}s
+  ``distributed OMS'' or ``OMS networks''?}}
+a mapping between OMS
 (\syntax{MappingDefn}), a definition related to queries 
 (\syntax{QueryRelatedDefn})
 or a \syntax{Qualification} selecting a specific
@@ -2375,7 +2382,7 @@ DistOMS                  = [ PrefixMap ] , DistOMSDefn
                          | OMSInConformingLanguage ;
 DistOMSDefn              = 'dist-oms-defn' , DistOMSName , { DistOMSItem } ;
 OMSInConformingLanguage  = ($<$)language specific($>$) ;
-DistOMSItem              = OMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+DistOMSItem              = OMSDefn | GraphDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
@@ -2388,9 +2395,24 @@ DistOMSName              = IRI ;
   • item-name-map (to be replaced by namespaces??)\textLF
   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
-\todo{entailment e = O1 entails phi}
 
 At the beginning of a distributed OMS, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
+
+\red{
+Inside a distributed OMS, one can defined graphs (\syntax{GraphDefn}).
+Graphs can be seen as OMS networks.  A \syntax{GraphDefn} names a
+graph of OMS and OMS mappings. Graphs may build on previously-defined
+graphs, and they can be used in \syntax{combination}s.  
+}
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+GraphDefn            = 'graph-defn', GraphName, Graph ;
+GraphName            = IRI ;
+Graph                = 'graph', GraphElements , ExcludeExtensions ;
+GraphElements        = 'graph-elements', { OMSOrMappingorGraphRef } ;
+ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorGraphRef } ; 
+OMSOrMappingorGraphRef  = IRI ;
+\end{lstlisting}
+
 
 \sclause{Focused OMS}
 
@@ -2507,7 +2529,6 @@ Sentence         = ($<$)an expression specific to a basic OMS language($>$) ;
 OMSName          = IRI ;
                  
 OMSRef           = IRI ;
-OMSOrMappingorGraphRef  = IRI ;
 ExtensionRef     = IRI ;
                  
 LoLaRef          = LanguageRef | LogicRef ;
@@ -2528,13 +2549,27 @@ OMSLangTransRef  = IRI ;
 
 A OMS mapping provides a connection between two OMS.
 A OMS mapping definition is the definition of either a named interpretation
-(\syntax{IntprDefn}), a named declaration of the relation between a module of an OMS and the whole OMS (\syntax{ModuleRelDefn}), or a named alignment (\syntax{AlignDefn}).
+(\syntax{IntprDefn}, \red{\syntax{Entailment}} or \syntax{EquivDefn}), a named declaration of the relation between a module of an OMS and the whole OMS (\syntax{ModuleRelDefn}), or a named alignment (\syntax{AlignDefn}).
+
 The \syntax{SymbolMapItems} in an interpretation always
 must lead to a signature morphism; a proof obligation expressing
 that the (translated) source OMS logically follows from
-the target OMS is generated. 
+the target OMS is generated.  \red{An entailment is a variant where
+all symbols are mapped identically, while an equivalence states
+that the model classes of two OMS are in bijective correspondence.}
 
-In contrast to this functional style,
+\red{
+Interpretations, entailments
+and equivalences
+between graphs are also possible. An interpretation between graphs
+has to specify both a mapping between the nodes of the graphs,
+as well as, for each node, a symbol map from the OMS of that
+node to the target OMS to which it is mapped.\ednote{In equivalences
+between graphs, should we allow for node mappings as well? In 
+\cite{MossakowskiTarlecki09}, this is allowed.}
+}
+
+In contrast to this functional style of mapping symbols,
 an alignment provides a relational connection between two OMS, 
 using a set of \syntax{Correspondence}s.
 Each correspondence may map some OMS non-logical symbol to another one
@@ -2551,23 +2586,34 @@ A \syntax{ModuleRelDefn} declares that a certain OMS
 actually is a module of some other OMS with respect
 to the \syntax{InterfaceSignature}.
 
+
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
-MappingDefn          = IntprDefn | EquivDefn | GraphDefn | ModuleRelDefn | AlignDefn;
+MappingDefn          = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn;
 
 IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , IntprType ,
-                                      { LogicTranslation } , [ SymbolMapItems ] ;
+                                      { LogicTranslation } , [ SymbolMapItems ]                     | 'refinement' , IntprName , Refinement ;
 IntprName            = IRI ;
 IntprType            = 'intpr-type' , OMS , OMS ;
 
+Refinement           = 'ref-oms' , OMS 
+                     | 'ref-graph' , Graph
+                     | 'ref-composition' , Refinement , Refinment
+                     | 'simple-ref' , OMS , RefMap , Refinement ;
+RefMap               = 'refmap-oms' ,  { LogicTranslation } , [ SymbolMapItems ] 
+                     | 'refmap-graph' , { NodeMap } ;
+NodeMap              = 'node-map', OMSName , OMSName , { LogicTranslation } , [ SymbolMapItems ] ;
+
+
+Entailment           = 'entailment' , EntailmentName , EntailmentType ;
+EntailmentType       = 'oms-entailment', OMS , OMS 
+                     | 'graph-oms-entailment', Graph , OMS 
+                     | 'graph-entailment', Graph, Graph ;
+EntailmentName       = IRI ;
+
 EquivDefn            = 'equiv-defn' , EquivName , EquivType , OMS ;
 EquivName            = IRI ;
-EquivType            = 'equiv-type' , OMS , OMS ;
-
-GraphDefn            = 'graph-defn', GraphName, Graph ;
-GraphName            = IRI ;
-Graph                = 'graph', GraphElements , ExcludeExtensions ;
-GraphElements        = 'graph-elements', { OMSOrMappingorGraphRef } ;
-ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorGraphRef } ; 
+EquivType            = 'oms-equiv' , OMS , OMS 
+                     | 'graph-equiv' , Graph , Graph ;
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
@@ -2834,7 +2880,7 @@ DistOMS                 = [ PrefixMap ] , DistOMSDefn
                          | OMSInConformingLanguage ;
 DistOMSDefn             = 'distributed OMS' , DistOMSName , { DistOMSItem } ;
 OMSInConformingLanguage = ($<$) language and serialization specific ($>$) ;
-DistOMSItem             = OMSDefn | MappingDefn | Qualification ;
+DistOMSItem             = OMSDefn | GraphDefn | MappingDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
 LogicQual                = 'logic' , LogicRef ;
@@ -2845,6 +2891,14 @@ PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
 PrefixBinding            = BoundPrefix , IRIBoundToPrefix ;
 BoundPrefix              = ':' | Prefix ; ($<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}) 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
+
+GraphDefn            = 'graph', GraphName, '=', Graph ;
+GraphName            = IRI ;
+Graph                = GraphElements , ExcludeExtensions ;
+GraphElements        = GraphElement , { ',' , GraphElement } ;
+GraphElement         = [ Id , ':' ] , OMSOrMappingorGraphRef ;
+ExcludeExtensions    = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
+OMSOrMappingorGraphRef        = IRI ;
 \end{lstlisting}
 
 Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
@@ -2871,7 +2925,8 @@ OMS                 = ExtendingOMS
                      | { Qualification } , ':' , GroupOMS
                      | OMS, 'bridge', { Translation } , OMS 
                      | 'combine' , GraphElements , [ ExcludeExtensions ]  
-                     | 'apply' , SubstName , Sentence ;
+                     | 'apply' , SubstName , Sentence 
+                     | GroupOMS ;
 
 Minimization         = MinimizeKeyword, CircMin , [ CircVars ] ;
 MinimizeKeyword      = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
@@ -2915,18 +2970,12 @@ InterfaceSignature   = SymbolItems ;
 ImportName           = '%(' , IRI , ')%' ;
 ExtensionName        = '%(' , IRI , ')%' ;
 
-OMSOrMappingorGraphRef        = IRI ;
-
-GraphElements        = GraphElement , { ',' , GraphElement } ;
-GraphElement         = [ Id , ':' ] , OMSOrMappingorGraphRef ;
-ExcludeExtensions    = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
-
 OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model' ;
 
 OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , [ 'end' ] ; <\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> 
 
 Symbol               = IRI ;
-SymbolMap            = Symbol , '$\mapsto$' , Symbol ;
+SymbolMap            = Symbol , '|->' , Symbol ;
 SymbolOrMap          = Symbol
                      | SymbolMap ;
 
@@ -2959,20 +3008,35 @@ ModuleProperties     =  '\%safe' ; }
 \newcommand*{\lessthan}{<}
 \newcommand*{\greaterthan}{>}
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-MappingDefn             = IntprDefn | EquivDefn | ModuleRelDefn | AlignDefn ;
+MappingDefn             = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn ;
 
 IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , [ 'end' ]
                      | IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , '=' ,
-                       { LogicTranslation } , [ SymbolMapItems ] , [ 'end' ] ;
+                       { LogicTranslation } , [ SymbolMapItems ] , [ 'end' ] 
+                     | IntprKeyword , IntprName , '=' , Refinement , [ 'end' ] ;
 
-IntprKeyword         = 'interpretation' | 'view' ;
+IntprKeyword         = 'interpretation' | 'view' | 'refinement' ;
 IntprName            = IRI ;
 IntprType            = GroupOMS , 'to' , GroupOMS ;
 
-EquivDefn            = EquivKeyword , EquivName , ':' , EquivType , '=' , OMS , [ 'end' ] ;
-EquivKeyword         = 'equivalence' ;
+Refinement           = OMS 
+                     | Graph
+                     | Refinement , 'then' , Refinment
+                     | OMS , 'refined' , [RefMap] , 'to' , Refinement ;
+RefMap               = 'via' ,  { LogicTranslation } , [ SymbolMapItems ] 
+                     | 'via' , NodeMap , { ',' , NodeMap } ;
+NodeMap              = OMSName , '|->' , OMSName , [ 'using', { LogicTranslation } , [ SymbolMapItems ] ] ;
+
+Entailment           = 'entailment' , EntailmentName , '=', EntailmentType ;
+EntailmentName       = IRI ;
+EntailmentType       = GroupOMS , 'entails', OMS
+                     | Graph , 'entails', OMS
+                     | Graph , 'entails', Graph ;
+
+EquivDefn            = 'equivalence' , EquivName , ':' , EquivType , '=' , OMS , [ 'end' ] ;
 EquivName            = IRI ;
-EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS ;
+EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS 
+                     | Graph , '<\lessthan>-<\greaterthan>' , Graph ;
 
 ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
                        'for' , InterfaceSignature ;
@@ -3001,7 +3065,7 @@ CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
 TermOrSymbolRef      = Term | SymbolRef ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)}>
 RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | '$\ni$' 
-                     | '$\in$' | '$\mapsto$' | IRI ; <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>
+                     | '$\in$' | '|->' | IRI ; <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>
 Confidence           = Double ; 
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
