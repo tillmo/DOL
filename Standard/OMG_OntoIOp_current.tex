@@ -1,12 +1,7 @@
-\newcommand{\version}{0.7}
+\newcommand{\version}{0.72}
 
 %todo
-% include statement for libraries
-% We suggest to let the no-prefix default to a context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a structured OMS where named OMS a referenced) resp. the current OMS IRI (in the context of a basic OMS). we need a library-OMS separator (defaulting to //) and an OMS-symbol separator (defaulting to //)
-% OMS network = graph???
 % in grammar, use NT+
-% consistency and %implies for graphs (maybe also refinement?)
-% logical consequence = generalization, converse = specialization
 % language/logic/mapping registration process - maybe in a different document
 
 % more useful EBNF (see CASL RefMan)
@@ -2386,7 +2381,8 @@ Library                  = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn              = 'library' , LibraryName , { LibraryItem } ;
 OMSInConformingLanguage  = ($<$)language specific($>$) ;
-LibraryItem              = OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibraryItem              = LibImport | OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibImport                = 'lib-import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
@@ -2409,7 +2405,7 @@ distributed OMS consisting of focused OMS and OMS mappings. Distributed OMS may 
 distributed OMS, and they can be used in \syntax{combination}s.  
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-DistOMSDefn            = 'dist-oms-defn', DistOMSName, DistOMS ;
+DistOMSDefn            = 'dist-oms-defn', DistOMSName , [ ConsStrength ] , DistOMS ;
 DistOMSName            = IRI ;
 DistOMS                = 'dist-oms', DistOMSElements , ExcludeExtensions ;
 DistOMSElements        = 'dist-oms-elements', { OMSOrMappingorDistOMSRef } ;
@@ -2758,7 +2754,9 @@ The CURIE abbreviation mechanism works by binding prefixes to IRIs.  A CURIE con
 DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core-20120607, Section 6} with the following changes:
 \begin{itemize}
 \item DOL does not support the declaration of a ``default prefix'' mapping \CLnote[type=q-aut]{Are such explanatory notes OK here?}(covering CURIEs such as \syntax{:name}).
-\item DOL does support the declaration  of a ``no prefix'' mapping (covering CURIEs such as \syntax{name}).
+\item DOL does support the declaration  of a ``no prefix'' mapping (covering CURIEs such as \syntax{name}). \red{If there is no explicit declaration for the ``no prefix'', it defaults to a context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a structured OMS where named OMS a referenced) resp.\ the current OMS IRI (in the context of a basic OMS) to a symbol name. Both the separator between the library and the OMS name and that between the OMS name and the symbol name can be declared, and both default to ``//''.}\ednote{TODO: specify the declaration mechanism
+for separators.}
+
 \item DOL does not make use of the \syntax{safe\_curie} production.
 \item DOL does not allow binding a relative IRI to a prefix.
 \item Concrete syntaxes of DOL are encouraged but \notrequired to support CURIEs.\footnote{This is a concession to having an RDF-based concrete syntax among the normative concrete syntaxes.  RDFa is the only standardized RDF serialization to support CURIEs so far.  Other serializations, such as RDF/XML or Turtle, support a subset of the CURIE syntax, whereas some machine-oriented serializations, including N-Triples, only support full IRIs.}
@@ -2884,7 +2882,8 @@ Library                 = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn             = 'library' , LibraryName , { LibraryItem } ;
 OMSInConformingLanguage = ($<$) language and serialization specific ($>$) ;
-LibraryItem             = OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibraryItem             = LibImport | OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibImport                = 'import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
 LogicQual                = 'logic' , LogicRef ;
@@ -2896,7 +2895,7 @@ PrefixBinding            = BoundPrefix , IRIBoundToPrefix ;
 BoundPrefix              = ':' | Prefix ; ($<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}) 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
 
-DistOMSDefn            = DistOMSKeyword, DistOMSName, '=', DistOMS ;
+DistOMSDefn            = DistOMSKeyword , DistOMSName , '=' , [ ConsStrength ] , DistOMS ;
 DistOMSKeyword         = 'distributed oms' | 'distributed ontology' | 'distributed specificaiton' | 'distributed model'
 DistOMSName            = IRI ;
 DistOMS                = DistOMSElements , ExcludeExtensions ;
