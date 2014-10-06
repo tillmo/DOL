@@ -1,6 +1,8 @@
 \newcommand{\version}{0.7}
 
 %todo
+% include statement for libraries
+% We suggest to let the no-prefix default to a context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a structured OMS where named OMS a referenced) resp. the current OMS IRI (in the context of a basic OMS). we need a library-OMS separator (defaulting to //) and an OMS-symbol separator (defaulting to //)
 % OMS network = graph???
 % in grammar, use NT+
 % consistency and %implies for graphs (maybe also refinement?)
@@ -1062,18 +1064,11 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
 \red{
-  \termdefinition{distributed OMS\synonym OMS network\synonym hyperontology}{collection of named \termref{focused OMS}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings} and named \termref{OMS graphs}}
-\ednote{Is ``hyperontology'' a synonym for ``distributed OMS'', or rather for
-``heterogeneous OMS''?}
-\ednote{replace "distributed OMS" by "OMS network"? Rationale: an OMS network is not really an OMS, but more a statement of certain relations between OMS.}
-\begin{note}
- The opposite of a distributed OMS is a \termref{focused OMS}, which
- focuses on the specification of a single \termref{logical theory}.
-\end{note}
+  \termdefinition{library}{collection of named \termref{focused and distributed OMS}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings}}
 }
 
   \termdefinition{distributed ontology, modeling and specification language\synonym
-  DOL}{language for formalizing \termref{distributed OMS}, whose syntax and semantics are specified in this \IS}
+  DOL}{language for formalizing \termred{libraries} of \termref{focused and distributed OMS}, whose syntax and semantics are specified in this \IS}
 
 \begin{note}
  When viewed as an \termref{OMS language}, DOL has \termref{OMS} as its
@@ -1353,7 +1348,7 @@ More precisely, an OMS is flattenable if and only if it is either a basic OMS or
   \termdefinition{extension}{\termref{OMS} whose sets of \termref{non-logical symbols} and \termref{sentences} are supersets of those present in a given smaller \termref{OMS}}
 
    \termdefinition{extension mapping}{inclusion \termref{mapping} between two
-   OMSs where the sets of \termref{non-logical symbols} and
+   OMS where the sets of \termref{non-logical symbols} and
    \termref{sentences} of the second OMS are supersets of those
    present in the first OMS} 
 \begin{note} 
@@ -1545,17 +1540,23 @@ original and the renamed OMS.
   \termdefinition{union}{aggregation of several \termref{OMS}
     to a new \termref{OMS}, without any renaming}
  
-\termdefinition{OMS graph} graph with \termref{OMS} as nodes and \termref{OMS mappings} as edges, showing how the OMS are interlinked
+\termdefinition{distributed OMS\synonym OMS network\synonym hyperontology} graph with \termref{OMS} as nodes and \termref{OMS mappings} as edges, showing how the OMS are interlinked
+\ednote{Is ``hyperontology'' a synonym for ``distributed OMS'', or rather for
+``heterogeneous OMS''?}
+\ednote{replace "distributed OMS" by "OMS network"? Rationale: an OMS network is not really an OMS, but more a statement of certain relations between OMS.}
   \ednote{add note with examples of what can be these links}
+\begin{note}
+ The opposite of a distributed OMS is a \termref{focused OMS}, which
+ focuses on the specification of a single \termref{logical theory}.
+\end{note}
   \begin{note}
-    An OMS graph is a diagram of OMS in the sense of category theory, but different from a diagram
+    A distributed OMS is a diagram of OMS in the sense of category theory, but different from a diagram
     in the sense of model-driven architecture.
   \end{note}
-  \ednote{clarify the difference to distributed OMS}
 
 
 
-  \termdefinition{combination}{aggregation of all the OMS in a \termref{OMS graph}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS graph}
+  \termdefinition{combination}{aggregation of all the OMS in a \termref{distributed OMS}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the distributed OMS}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
 and another one involving \texttt{Human being}, and an \termref{alignment}
@@ -1565,12 +1566,12 @@ along the alignment, there is only one concept, representing both
 \end{example}
 
  
-  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{OMS graph}}
+  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{distributed OMS}}
  \begin{note}
-  Sharing is always relative to a given OMS graph that
+  Sharing is always relative to a given distributed OMS that
   relates different OMS. That is, two given OMS symbols
-  can share w.r.t.\ one OMS graph, and not share w.r.t.\ some
-  other OMS graph.
+  can share w.r.t.\ one distributed OMS, and not share w.r.t.\ some
+  other distributed OMS.
  \end{note}
 
 \end{definitions}
@@ -2280,7 +2281,7 @@ Logical OMS mappings supported by DOL include:
 \item imports (particularly including imports that lead to conservative extensions), see the
 abstract syntax categories \syntax{OMSRef} and \syntax{ExtensionOMS} in
 clause~\ref{c:abstract-syntax}.
-\item interpretations (both between OMS and graphs), see the
+\item interpretations (both between focused and distributed OMS), see the
 abstract syntax category \syntax{IntprDefn} in
 clause~\ref{c:abstract-syntax}.
 \item mappings between OMS and their modules, see the
@@ -2330,7 +2331,7 @@ The following list covers the possible cases where DOL provides a choice between
 
 \section{DOL provides a mechanism for rich annotation and documentation of OMS.}\label{c:req:annotation}
 
-\todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL provides the mechanism for  identifying anything of relevance in a distributed OMS, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.} DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
+\todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL provides the mechanism for  identifying anything of relevance in a library, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.} DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
 
 The DOL serializations also supports the annotation of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language; for XML serializations of OMS languages, RDFa extensions are specified, so that DOL RDF can be embedded.
 
@@ -2343,7 +2344,7 @@ A list of RDF vocabularies for annotating OMS is recommended as an annex to this
 
 DOL provides abstract syntax categories for
 \begin{itemize}
-\item distributed OMS (items in distributed OMS are: OMS definitions, OMS mapping definitions, queries, and qualifications choosing the logic,
+\item libraries (items in libraries are: OMS definitions, OMS mapping definitions, queries, and qualifications choosing the logic,
 OMS language and/or serialization)
 \item \red{focused OMS} (which can be basic OMS in some
 OMS language, or unions, translations, minimizations, combinations,
@@ -2365,35 +2366,32 @@ use the notation \syntax{N+}
 of one or more repetitions of \syntax{N}.}}  
 %Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 
-\sclause{Distributed OMS}\label{c:dist-oms}
+\sclause{Libraries}\label{c:libraries}
 
-A distributed OMS (\syntax{DistOMS}) consists of a collection of (named) focused OMS and mappings between these.  More specifically, a
-distributed OMS consists of a name, followed by a list of
-\syntax{DistOMSItem}s.  A \syntax{DistOMSItem} is either an
-OMS definition (\syntax{OMSDefn}), 
-\red{a graph definition (\syntax{GraphDefn}),\ednote{Or
-  better name \syntax{DistOMS} ``OMS libraries'', and \syntax{Graph}s
-  ``distributed OMS'' or ``OMS networks''?}}
+A library (\syntax{Library}) consists of a collection of (named) focused OMS and mappings between these.  More specifically, a
+library consists of a name, followed by a list of
+\syntax{LibraryItem}s.  A \syntax{LibraryItem} is either a
+definition of a focused OMS  (\syntax{OMSDefn}), 
+\red{a definition of a library  (\syntax{LibraryDefn}),}
 a mapping between OMS
 (\syntax{MappingDefn}), a definition related to queries 
 (\syntax{QueryRelatedDefn})
 or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
-subsequent \syntax{DistOMSItem}s.  Alternatively, a distributed
-OMS can also be the verbatim inclusion of an OMS written in
+subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verbatim inclusion of an OMS written in
 an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-DistOMS                  = [ PrefixMap ] , DistOMSDefn
+Library                  = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
-DistOMSDefn              = 'dist-oms-defn' , DistOMSName , { DistOMSItem } ;
+LibraryDefn              = 'library' , LibraryName , { LibraryItem } ;
 OMSInConformingLanguage  = ($<$)language specific($>$) ;
-DistOMSItem              = OMSDefn | GraphDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibraryItem              = OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
 SyntaxQual               = 'syntax-select' , SyntaxRef ;
-DistOMSName              = IRI ;
+LibraryName              = IRI ;
 \end{lstlisting}
 ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
   • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
@@ -2402,21 +2400,21 @@ DistOMSName              = IRI ;
   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
 
-At the beginning of a distributed OMS, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
+At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
 
 \red{
-Inside a distributed OMS, one can defined graphs (\syntax{GraphDefn}).
-Graphs can be seen as OMS networks.  A \syntax{GraphDefn} names a
-graph of OMS and OMS mappings. Graphs may build on previously-defined
-graphs, and they can be used in \syntax{combination}s.  
+Inside a library, one can defined distributed OMS (\syntax{DistOMSDefn}).
+Distributed OMS can be seen as OMS networks.  A \syntax{DistOMSDefn} names a
+distributed OMS consisting of focused OMS and OMS mappings. Distributed OMS may build on previously-defined
+distributed OMS, and they can be used in \syntax{combination}s.  
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-GraphDefn            = 'graph-defn', GraphName, Graph ;
-GraphName            = IRI ;
-Graph                = 'graph', GraphElements , ExcludeExtensions ;
-GraphElements        = 'graph-elements', { OMSOrMappingorGraphRef } ;
-ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorGraphRef } ; 
-OMSOrMappingorGraphRef  = IRI ;
+DistOMSDefn            = 'dist-oms-defn', DistOMSName, DistOMS ;
+DistOMSName            = IRI ;
+DistOMS                = 'dist-oms', DistOMSElements , ExcludeExtensions ;
+DistOMSElements        = 'dist-oms-elements', { OMSOrMappingorDistOMSRef } ;
+ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorDistOMSRef } ; 
+OMSOrMappingorDistOMSRef  = IRI ;
 \end{lstlisting}
 
 
@@ -2434,7 +2432,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item an approximation of an OMS, in a subsignature od sublogic, with the effect that sentences not expressible in the subsignature resp.\ sublogic are replaced with a suitable approximation,
 \item \red{a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,}
 \item a union of several OMS,
-\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMSs?},
+\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMS?},
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
 \item a combination of OMS (technically, this is a colimit, see \cite{ZimmermanEtAl06}),\footnote{A combination of OMS also takes all mappings into these OMS into consideration---unless these are explicitly excluded.}
@@ -2465,7 +2463,7 @@ OMS                  = ExtendingOMS
                      | 'extension' , OMS , ExtensionOMS
                      | 'qual-oms' , { Qualification } , OMS
                      | 'bridge' , OMS, { Translation } , OMS
-                     | 'combination' , Graph
+                     | 'combination' , DistOMS
                      | 'application', SubstName, Sentence ;
 
 Minimization         = MinType, CircMin , CircVars ;
@@ -2567,11 +2565,11 @@ that the model classes of two OMS are in bijective correspondence.}
 \red{
 Interpretations, entailments
 and equivalences
-between graphs are also possible. An interpretation between graphs
-has to specify both a mapping between the nodes of the graphs,
+between distributed OMS are also possible. An interpretation between distributed OMS
+has to specify both a mapping between the nodes of the distributed OMS,
 as well as, for each node, a symbol map from the OMS of that
 node to the target OMS to which it is mapped.\ednote{In equivalences
-between graphs, should we allow for node mappings as well? In 
+between distributed OMS, should we allow for node mappings as well? In 
 \cite{MossakowskiTarlecki09}, this is allowed.}
 }
 
@@ -2602,24 +2600,24 @@ IntprName            = IRI ;
 IntprType            = 'intpr-type' , OMS , OMS ;
 
 Refinement           = 'ref-oms' , OMS 
-                     | 'ref-graph' , Graph
+                     | 'ref-dist-oms' , DistOMS
                      | 'ref-composition' , Refinement , Refinment
                      | 'simple-ref' , OMS , RefMap , Refinement ;
 RefMap               = 'refmap-oms' ,  { LogicTranslation } , [ SymbolMapItems ] 
-                     | 'refmap-graph' , { NodeMap } ;
+                     | 'refmap-dist-oms' , { NodeMap } ;
 NodeMap              = 'node-map', OMSName , OMSName , { LogicTranslation } , [ SymbolMapItems ] ;
 
 
 Entailment           = 'entailment' , EntailmentName , EntailmentType ;
-EntailmentType       = 'oms-entailment', OMS , OMS 
-                     | 'graph-oms-entailment', Graph , OMS 
-                     | 'graph-entailment', Graph, Graph ;
+EntailmentType       = 'focused-focused-entailment', OMS , OMS 
+                     | 'dist-focused-entailment', DistOMS , OMS 
+                     | 'dist-dist-entailment', DistOMS, DistOMS ;
 EntailmentName       = IRI ;
 
 EquivDefn            = 'equiv-defn' , EquivName , EquivType , OMS ;
 EquivName            = IRI ;
 EquivType            = 'oms-equiv' , OMS , OMS 
-                     | 'graph-equiv' , Graph , Graph ;
+                     | 'dist-oms-equiv' , DistOMS , DistOMS ;
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
@@ -2726,7 +2724,7 @@ This section specifies the abstract syntax of identifiers of DOL OMS and their e
 
 In accordance with best practices for publishing OMS on the Web, identifiers of OMS and their elements \should not just serve as \emph{names}, but also as \emph{locators}, which, when dereferenced, give access to a concrete representation of an OMS or one of its elements.  (For the specific case of RDFS and OWL OMS, these best practices are documented in \cite{W3C:NOTE-swbp-vocab-pub-20080828}.  The latter is a specialization of the linked data principles, which apply to any machine-processable data published on the Web \cite{BernersLee:LinkedData2006}.)  It is recommended that publicly accessible DOL OMS be published as linked data.
 
-\todonote[type=q-aut,author=Christoph Lange]{Does this motivation/justification sound reasonable to you?}Therefore, in order to impose fewer conformance requirements on applications, DOL commits to using IRIs for identification \nisref{IETF/RFC 3987:2005}.  It is \recommended that distributed OMS use IRIs that translate to URLs when applying the algorithm for mapping IRIs to URIs specified in \nisref{IETF/RFC 3987:2005, Section 3.1}.  DOL descriptions of any element of a distributed OMS that is identified by a certain IRI \should be \emph{located} at the corresponding URL, so that agents can locate them.  As IRIs are specified with a concrete syntax in \nisref{IETF/RFC 3987:2005}, DOL adopts the latter into its abstract syntax as well as all of its concrete syntaxes (serializations)\CLnote[type=q-all]{I meant to say: for IRIs, the abstract syntax is the same as the concrete syntax.}.
+\todonote[type=q-aut,author=Christoph Lange]{Does this motivation/justification sound reasonable to you?}Therefore, in order to impose fewer conformance requirements on applications, DOL commits to using IRIs for identification \nisref{IETF/RFC 3987:2005}.  It is \recommended that libraries use IRIs that translate to URLs when applying the algorithm for mapping IRIs to URIs specified in \nisref{IETF/RFC 3987:2005, Section 3.1}.  DOL descriptions of any element of a library that is identified by a certain IRI \should be \emph{located} at the corresponding URL, so that agents can locate them.  As IRIs are specified with a concrete syntax in \nisref{IETF/RFC 3987:2005}, DOL adopts the latter into its abstract syntax as well as all of its concrete syntaxes (serializations)\CLnote[type=q-all]{I meant to say: for IRIs, the abstract syntax is the same as the concrete syntax.}.
 
 %% We don't do "semantic namespaces" for now.  (Agreed in 2012-02-23 meeting)
 % For identification, DOL preferably employs IRIs that have the following three components:\footnote{This IRI syntax has originally been designed by Florian Rabe and Michael Kohlhase \cite{Rabe:MMT2011}, independently from this \IS.\todonote[type=todo,author=Christoph Lange]{if we leave this reference in place, we might additionally refer to the paper that describes the semantics of MMT and provides more design rationale background}}
@@ -2779,7 +2777,7 @@ Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \ednote{is this abstract or concrete syntax???}
 
 
-Prefix mappings can be defined at the beginning of a distributed OMS (specified in \cref{c:dist-oms}; these apply to all parts of the distributed OMS, including basic OMS as clarified in \cref{c:map-ids}).  Their syntax is:
+Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  Their syntax is:
 \begin{lstlisting}[language=ebnf,escapechar=]  % abstract syntax
 PrefixMap        = 'prefix-map' , { PrefixBinding } ;
 PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ;
@@ -2803,7 +2801,7 @@ CURIEs that have a prefix may not be acceptable identifiers in every serializati
 
 The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by the following function:
 \begin{algorithmic}
-  \REQUIRE $D$ is a distributed OMS
+  \REQUIRE $D$ is a library
   \REQUIRE $O$ is a basic OMS in serialization $S$
   \REQUIRE $\mathit{id}$ is the identifier in question, identifying a symbol in $O$ according to the specification of $S$
   \ENSURE $i$ is an IRI
@@ -2851,9 +2849,9 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
   \RETURN $i$
 \end{algorithmic}
 
-This mechanism applies to basic OMS given inline in a distributed OMS document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{OMSInConformingLanguage}); the latter \shall be self-contained.
+This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{OMSInConformingLanguage}); the latter \shall be self-contained.
 
-While CURIEs used for identifying parts of a distributed OMS (\cf \cref{c:curies}) are merely syntactic sugar, the prefix map for a basic OMS is essential to determining the semantics of the basic OMS within the distributed OMS.  Therefore, any DOL serialization \shall provide constructs for expressing such prefix maps, even if the serialization does not support prefix maps otherwise.
+While CURIEs used for identifying parts of a library (\cf \cref{c:curies}) are merely syntactic sugar, the prefix map for a basic OMS is essential to determining the semantics of the basic OMS within the library.  Therefore, any DOL serialization \shall provide constructs for expressing such prefix maps, even if the serialization does not support prefix maps otherwise.
 
 ~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
 
@@ -2866,7 +2864,7 @@ order to become valid OMS in some DOL serialization.\todonote[id=wrapping,author
 \sclause{Annotations}
 
 \todonote{this subclause will be moved to annex M}
-~\todonote[author=Christoph Lange,date=D:201108061340+02'00',type=todo]{Properly integrate this text from our LaRC 2011 paper} Annotations always have a subject, which is identified by an IRI. Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a distributed OMS may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
+~\todonote[author=Christoph Lange,date=D:201108061340+02'00',type=todo]{Properly integrate this text from our LaRC 2011 paper} Annotations always have a subject, which is identified by an IRI. Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
 
 \clause{DOL text serialization}\label{a:text-syntax}
 
@@ -2879,32 +2877,33 @@ order to become valid OMS in some DOL serialization.\todonote[id=wrapping,author
 
 \sclause{Concrete Syntax}\label{a:dol-text:concrete}
 
-\ssclause{Distributed OMS}
+\ssclause{Libraries}
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
-DistOMS                 = [ PrefixMap ] , DistOMSDefn
+Library                 = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
-DistOMSDefn             = 'distributed OMS' , DistOMSName , { DistOMSItem } ;
+LibraryDefn             = 'library' , LibraryName , { LibraryItem } ;
 OMSInConformingLanguage = ($<$) language and serialization specific ($>$) ;
-DistOMSItem             = OMSDefn | GraphDefn | MappingDefn | Qualification ;
+LibraryItem             = OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
 LogicQual                = 'logic' , LogicRef ;
 SyntaxQual               = 'serialization' , SyntaxRef ;
-DistOMSName             = IRI ;
+LibraryName             = IRI ;
 
 PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
 PrefixBinding            = BoundPrefix , IRIBoundToPrefix ;
 BoundPrefix              = ':' | Prefix ; ($<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}) 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
 
-GraphDefn            = 'graph', GraphName, '=', Graph ;
-GraphName            = IRI ;
-Graph                = GraphElements , ExcludeExtensions ;
-GraphElements        = GraphElement , { ',' , GraphElement } ;
-GraphElement         = [ Id , ':' ] , OMSOrMappingorGraphRef ;
+DistOMSDefn            = DistOMSKeyword, DistOMSName, '=', DistOMS ;
+DistOMSKeyword         = 'distributed oms' | 'distributed ontology' | 'distributed specificaiton' | 'distributed model'
+DistOMSName            = IRI ;
+DistOMS                = DistOMSElements , ExcludeExtensions ;
+DistOMSElements        = DistOMSElement , { ',' , DistOMSElement } ;
+DistOMSElement         = [ Id , ':' ] , OMSOrMappingorDistOMSRef ;
 ExcludeExtensions    = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
-OMSOrMappingorGraphRef        = IRI ;
+OMSOrMappingorDistOMSRef        = IRI ;
 \end{lstlisting}
 
 Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
@@ -2930,7 +2929,7 @@ OMS                 = ExtendingOMS
                      | OMS , 'then' , ExtensionOMS
                      | { Qualification } , ':' , GroupOMS
                      | OMS, 'bridge', { Translation } , OMS 
-                     | 'combine' , GraphElements , [ ExcludeExtensions ]  
+                     | 'combine' , DistOMSElements , [ ExcludeExtensions ]  
                      | 'apply' , SubstName , Sentence 
                      | GroupOMS ;
 
@@ -2976,7 +2975,7 @@ InterfaceSignature   = SymbolItems ;
 ImportName           = '%(' , IRI , ')%' ;
 ExtensionName        = '%(' , IRI , ')%' ;
 
-OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model' ;
+OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model' | 'OMS' ;
 
 OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , [ 'end' ] ; <\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> 
 
@@ -3026,7 +3025,7 @@ IntprName            = IRI ;
 IntprType            = GroupOMS , 'to' , GroupOMS ;
 
 Refinement           = OMS 
-                     | Graph
+                     | DistOMS
                      | Refinement , 'then' , Refinment
                      | OMS , 'refined' , [RefMap] , 'to' , Refinement ;
 RefMap               = 'via' ,  { LogicTranslation } , [ SymbolMapItems ] 
@@ -3036,13 +3035,13 @@ NodeMap              = OMSName , '|->' , OMSName , [ 'using', { LogicTranslation
 Entailment           = 'entailment' , EntailmentName , '=', EntailmentType ;
 EntailmentName       = IRI ;
 EntailmentType       = GroupOMS , 'entails', OMS
-                     | Graph , 'entails', OMS
-                     | Graph , 'entails', Graph ;
+                     | DistOMS , 'entails', OMS
+                     | DistOMS , 'entails', DistOMS ;
 
 EquivDefn            = 'equivalence' , EquivName , ':' , EquivType , '=' , OMS , [ 'end' ] ;
 EquivName            = IRI ;
 EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS 
-                     | Graph , '<\lessthan>-<\greaterthan>' , Graph ;
+                     | DistOMS , '<\lessthan>-<\greaterthan>' , DistOMS ;
 
 ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
                        'for' , InterfaceSignature ;
@@ -3176,7 +3175,7 @@ abstract syntax:
   OMS languages.  In detail, the translational semantics first
   translates the DOL abstract syntax of into the abstract syntax of
   $DOL(\CL)$, where $DOL(\CL)$ is the homogeneous restriction of DOL
-  to distributed OMS with all parts written in Common Logic
+  to libraries with all parts written in Common Logic
   only.  The latter is interpreted as in the case of the direct
   semantics, with basic OMS interpreted in terms of the
   existing Common Logic semantics.
@@ -3548,18 +3547,18 @@ $\Gamma$ mapping \syntax{IRI}s to semantics of OMS (given
 below), and a current triple $L$ consisting of the current
 language, logic and serialization.\footnote{The initial $L$ is obtained
 from the file name extension of the file containing a 
-particular distributed OMS, while $\Gamma$ is obtained
+particular library, while $\Gamma$ is obtained
 by looking up IRIs in the internet and applying the semantics
 to thus obtained OMS.}
 
-\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}\semdom{sem(\Gamma,L,\syntax{DistOMSDefn})=\Gamma'}
-$sem(\Gamma,L,\syntax{'dist-oms-defn' , DistOMSName }DI_1,\ldots DI_n)=\Gamma'$\\
+\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}\semdom{sem(\Gamma,L,\syntax{LibraryDefn})=\Gamma'}
+$sem(\Gamma,L,\syntax{'dist-oms-defn' , LibraryName }DI_1,\ldots DI_n)=\Gamma'$\\
 where $sem(\ldots
 sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
-\todonote{\syntax{DistOMSName} is not used. How could we use it?
+\todonote{\syntax{LibraryName} is not used. How could we use it?
   It seems that the individual OMS are directly named with
-  IRIs, and the \syntax{DistOMSName} is not relevant for that?
-  Answer from telco: The \syntax{DistOMSName} is an IRI that should (as a
+  IRIs, and the \syntax{LibraryName} is not relevant for that?
+  Answer from telco: The \syntax{LibraryName} is an IRI that should (as a
   good practice, but not enforced) agree with the IRI of the document.
   Indeed, this applies to any usage of IRI in the standard. This
   should be stated in the standard (Christoph). (This is known as
@@ -3592,7 +3591,7 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 
 $sem(L,Q_1\ldots Q_n)=sem(\ldots sem(sem(L,Q_1),Q_2),\ldots,Q_n)$
 
-\semdom{sem(\Gamma,L,\syntax{DistOMSItem})=(\Gamma',L')}
+\semdom{sem(\Gamma,L,\syntax{LibraryItem})=(\Gamma',L')}
 $sem(\Gamma,L,\syntax{Qualification})=(\Gamma,L')$ 
 where $L'=sem(L,\syntax{Qualification})$.
 
@@ -3848,7 +3847,7 @@ $
 \sclause{Translational semantics of DOL language constructs}
 
 The translational semantics uses Common Logic as a foundational framework
-for the distributed OMS, modeling and specification language DOL, similar to what set theory
+for the library, modeling and specification language DOL, similar to what set theory
 provides for general mathematical theories. This semantics assumes
 that each involved OMS language is mapped to \Clogic by a weakly
 exact translation.  The semantics is defined by first translating a
@@ -3889,7 +3888,7 @@ CL_\rho(\syntax{logic LogicRef }O)=CL_{\mathit{default}(\syntax{LogicRef},\CL)}(
 The collapsed semantics requires the representation of the meta level
 within \CL. For this purpose, the model-level semantics introduced in
 the previous section should be complemented by a theory-level
-semantics: a distributed OMS then denotes a basic theory in some
+semantics: a library then denotes a basic theory in some
 logic (which amounts to flattening out all structure), plus some
 conditions for conservativity and relative interpretations. For each
 logic, one needs to axiomatise a specific partial order of signatures
@@ -4538,7 +4537,7 @@ define the ``default translations'' that we assume.
 
 \CLnote[type=q-aut]{Should we have another column here that refers to the \emph{abstract} syntax?}%
 \begin{tabular}{|l|l|}\hline
-\multicolumn{2}{|c|}{\textbf{Top-level declarations in distributed OMS}}\\\hline
+\multicolumn{2}{|c|}{\textbf{Top-level declarations in libraries}}\\\hline
 \textbf{Top-level declaration} & \textbf{Examples} \\\hline
 language IRI  & Alignments, Publications \\\hline
 logic IRI  & Alignments, Mereology \\\hline
@@ -4596,8 +4595,8 @@ logic IRI : OMS  &  \\\hline
 language IRI : OMS  &  \\\hline
 serialization IRI : OMS  &  \\\hline
 OMS bridge Translation OMS  & Publications \\\hline
-combine GraphElements  & Alignments, Publications \\\hline
-combine GraphElements excluding IRIs  &  \\\hline
+combine DistOMSElements  & Alignments, Publications \\\hline
+combine DistOMSElements excluding IRIs  &  \\\hline
 \end{tabular}
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
@@ -4609,7 +4608,7 @@ combine GraphElements excluding IRIs  &  \\\hline
          log:   <http://purl.net/dol/@logic@/>    %% descriptions of logics ...
          trans: <http://purl.net/dol/translations/> )%  %% ... and translations
 
-distributed OMS Mereology
+library Mereology
 
 logic log:Propositional syntax ser:Prop/Hets       %% non-standard serialization built into Hets 
 ontology Taxonomy = %mcons      %% basic taxonomic information about mereology reused from DOLCE
@@ -4662,7 +4661,7 @@ then
 \sclause{Blocks World: Minimization}
 \CLnote[type=q-aut]{Here we need the prefixes for registry entries (e.g.\ logics) once more; they should be reused across examples.  Or we need to specify a mechanism that gets rid of \emph{these} prefixes altogether.  @TM, could you please comment on my specification enhancement request \texttt{http://trac.informatik.uni-bremen.de:8080/hets/ticket/1020\#comment:33}?}
   \begin{lstlisting}[language=dolText,morekeywords={forall,if,not,Class,Individual,Types,EquivalentTo,SubClassOf,and}]
-distributed OMS BlocksWithCircumscription
+library BlocksWithCircumscription
 logic log:OWL
 
 ontology Blocks = 
@@ -4717,7 +4716,7 @@ end
          log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
          trans <http://purl.net/dol/translations/> )% %% ... and translations
 
-distributed OMS Alignments
+library Alignments
 
 language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
 
@@ -4769,7 +4768,7 @@ end
          log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
          trans <http://purl.net/dol/translations/> )% %% ... and translations
 
-distributed OMS Publications
+library Publications
 
 language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
 
@@ -4820,7 +4819,7 @@ end
 %% modelling, translation to ECO with default relation, renaming and extension
 %% in ECO style.
 
-distributed OMS Market
+library Market
 
 
 language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
@@ -4847,7 +4846,7 @@ end
          log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
          trans <http://purl.net/dol/translations/> )% %% ... and translations
 
-distributed OMS Algebra
+library Algebra
 
 logic log:CommonLogic syntax ser:CommonLogic/CLIF
 
@@ -4914,7 +4913,7 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
 &\veebar \mathrm{part\_of}(a_1, a_2) \veebar \mathrm{part\_of}(a_2, a_1).\end{array}$$
   \end{description}
   
-  DOL would be capable of expressing all that within one distributed OMS of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including logical OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
+  DOL would be capable of expressing all that within one library of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including logical OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
 \end{usecase}
 
 \begin{usecase}{Interpreting the OWL formalization of the DOLCE foundational ontology in First-order logic}{potential use case}{Logical OMS mappings}
@@ -4975,7 +4974,7 @@ to the term \termref{structured OMS} in this \IS}
   \item[direct relations] maps (signature morphisms), definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
   \end{description}
 
-  DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV (\cf \aref{a:meta-vocab}), and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent distributed OMS.
+  DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV (\cf \aref{a:meta-vocab}), and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent library.
 \end{usecase}
 
 \begin{usecase}{Extending OWL with datatypes defined in CASL}{potential use case}{...}
