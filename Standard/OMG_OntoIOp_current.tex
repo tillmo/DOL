@@ -762,7 +762,7 @@ Thus, DOL gives interoperability a formal grounding and makes heterogeneous OMS 
 
 
 
-\ednote{State somewhere: A DOL theory is at level M1 in MDA speak, the same level as an UML diagram. Also a DOL distributed OMS, containing interpretations, alignments between OMS etc. is at level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in MOF.}
+\ednote{State somewhere: A DOL theory is at level M1 in MDA speak, the same level as an UML diagram. Also a DOL OMS network, containing interpretations, alignments between OMS etc. is at level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in MOF.}
 
 \section{Features within Scope}
 % Can't use \begin{inscope}, as that creates an itemize environment
@@ -771,7 +771,7 @@ The following are within the scope of this \IS:
 \item\label{it:scope-heterogeneous} homogeneous OMS as well as heterogeneous OMS (the combining parts written in different languages)
 \item mappings between OMS (mapping
 OMS symbols to OMS symbols)
-\item structured and focused OMS as well as distributed OMS (the latter involve several focused OMS and mappings between them)
+\item structured and focused OMS as well as OMS network (the latter involve several focused OMS and mappings between them)
 \item \label{it:scope-translation} translations between different OMS languages conformant with DOL (translating whole OMS to another language)
 \item\label{it:scope-annotation} annotation and documentation of OMS, mappings between OMS, symbols,
 and sentences
@@ -1087,20 +1087,21 @@ refer to this section if definitions of terms are needed.}
 
 For the purposes of this document, the following terms and definitions apply.
 
-\sclause{Distributed OMS and the Distributed Ontology, Modeling and Specification Language}
+\sclause{Distributed Ontology, Modeling and Specification Language}
 
 \begin{definitions}
-\red{
-  \termdefinition{library}{collection of named \termref{focused and distributed OMS}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings}}
-}
-
   \termdefinition{distributed ontology, modeling and specification language\synonym
-  DOL}{language for formalizing \termref{libraries} of \termref{focused and distributed OMS}, whose syntax and semantics are specified in this \IS}
+  DOL}{language for formalizing \termref{libraries} of \termref{focused OMS} and \termref{OMS networks}, whose syntax and semantics are specified in this \IS}
 
 \begin{note}
  When viewed as an \termref{OMS language}, DOL has \termref{OMS} as its
 \termref{non-logical symbols}, and \termref{OMS mappings} as its \termref{sentences}.
 \end{note}
+
+\red{
+  \termdefinition{library}{collection of named \termref{focused OMS} and \termref{OMS networks}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings}}
+}
+
 \end{definitions}
 
 
@@ -1342,7 +1343,7 @@ A focused OMS is either a basic or structured OMS.
   \begin{note}
     The term ``focused OMS'' emphasizes the fact that the OMS, while possibly
     involving many OMS as parts, has a single resulting \termref{logical theory}.
-    This is in contrast to \termref{distributed OMS}, which do not have
+    This is in contrast to \termref{OMS network}, which do not have
     such a unique result, but rather comprise a network of OMS and
     \termref{mappings}. See \cite{MossakowskiTarlecki09}.
   \end{note}
@@ -1563,23 +1564,22 @@ has a formal semantics.
   \termdefinition{union}{aggregation of several \termref{OMS}
     to a new \termref{OMS}, without any renaming}
  
-\termdefinition{distributed OMS\synonym OMS network\synonym hyperontology} graph with \termref{OMS} as nodes and \termref{OMS mappings} as edges, showing how the OMS are interlinked
-\ednote{Is ``hyperontology'' a synonym for ``distributed OMS'', or rather for
+\termdefinition{OMS network\synonym distributed OMS\synonym hyperontology} graph with \termref{OMS} as nodes and \termref{OMS mappings} as edges, showing how the OMS are interlinked
+\ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
 ``heterogeneous OMS''?}
-\ednote{replace "distributed OMS" by "OMS network"? Rationale: an OMS network is not really an OMS, but more a statement of certain relations between OMS.}
   \ednote{add note with examples of what can be these links}
 \begin{note}
- The opposite of a distributed OMS is a \termref{focused OMS}, which
+ The opposite of an OMS network is a \termref{focused OMS}, which
  focuses on the specification of a single \termref{logical theory}.
 \end{note}
   \begin{note}
-    A distributed OMS is a diagram of OMS in the sense of category theory, but different from a diagram
+    An OMS network is a diagram of OMS in the sense of category theory, but different from a diagram
     in the sense of model-driven architecture.
   \end{note}
 
 
 
-  \termdefinition{combination}{aggregation of all the OMS in a \termref{distributed OMS}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the distributed OMS}
+  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
 and another one involving \texttt{Human being}, and an \termref{alignment}
@@ -1589,12 +1589,12 @@ along the alignment, there is only one concept, representing both
 \end{example}
 
  
-  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of a \termref{distributed OMS}}
+  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of an \termref{OMS network}}
  \begin{note}
-  Sharing is always relative to a given distributed OMS that
+  Sharing is always relative to a given OMS network that
   relates different OMS. That is, two given OMS symbols
-  can share w.r.t.\ one distributed OMS, and not share w.r.t.\ some
-  other distributed OMS.
+  can share w.r.t.\ one OMS network, and not share w.r.t.\ some
+  other OMS network.
  \end{note}
 
 \end{definitions}
@@ -2034,7 +2034,7 @@ The Dublin Core to PROV ontology translation%
   is expressed partly by a symbol mapping and partly by FOL rules. These FOL rules are implemented by CONSTRUCT patterns in the SPARQL RDF query language.%
 \footnote{E.g., \url{http://www.w3.org/TR/2013/NOTE-prov-dc-20130430/\#dct-creator}} 
 SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which is different from the model-theoretic semantics of the OWL and RDFS languages; nevertheless SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules between ontologies in RDF-based languages in a subset of FOL.
-DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL ontologies as modules of a distributed ontology, but it is also able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.
+DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL ontologies as modules of a distributed ontology (= OMS network), but it is also able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.
 
 \section{Use case Spec-1: Specification Refinements}
 Especially in safety-critical areas such as medical systems, the automotive industry, avionics and the aerospace industry, but also for microprocessor design, often 
@@ -2109,7 +2109,7 @@ parameterized and reused in different contexts.
 
 In the next sections, we discuss  the metalanguage DOL, its features that enable the support of a variety of formalisms, with syntax, well-defined semantics and model theory. DOL 
 distills best practices of modularity and metarelations (such as refinement and alignment) across the three areas of ontology design, formal 
-specification, and model-driven development. It provides the ability to specify the basis for formal interoperability even among heterogeneous and distributed OMS. DOL enables the solutions of the problems described in the use cases above. It also enables the development of OMS libraries, tools and workflows that 
+specification, and model-driven development. It provides the ability to specify the basis for formal interoperability even among heterogeneous OMS and OMS networks. DOL enables the solutions of the problems described in the use cases above. It also enables the development of OMS libraries, tools and workflows that 
 allow  a better exchange and reuse of OMS. Eventually, this will also lead to better, easier developed and maintained systems based on these OMS.
 
 
@@ -2229,7 +2229,7 @@ We give an overview of the most important and innovative language
 constructs of DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
 
-DOL gives interoperability a formal grounding and makes heterogeneous and distributed OMS and services based on them amenable to checking of coherence (e.g. consistency, conservativity, intended consequences, and compliance). OMS languages are declarative languages for making ontological distinctions formally precise.\ednote{generalize to OMS} They are distinguished by the following features:
+DOL gives interoperability a formal grounding and makes heterogeneous OMS and OMS networks and services based on them amenable to checking of coherence (e.g. consistency, conservativity, intended consequences, and compliance). OMS languages are declarative languages for making ontological distinctions formally precise.\ednote{generalize to OMS} They are distinguished by the following features:
 
 \begin{description}
 \item[Logic] Most commonly, OMS languages are based on a description logic or some other subset of first-order logic, but in some cases, also higher-order, modal, paraconsistent and other logics are used.
@@ -2267,7 +2267,7 @@ DOL does not provide a new elementary OMS language, but provides a
 layer to be used on top of existing elementary OMS languages which
 enables OMS engineers to formally express mappings between OMS written
 in different languages and stored at different Web locations. The
-purpose of such distributed OMS is enabling a greater extent of
+purpose of such OMS networks is enabling a greater extent of
 interoperability between data and services in complex application
 settings.
 
@@ -2312,7 +2312,7 @@ Logical OMS mappings supported by DOL include:
 \item imports (particularly including imports that lead to conservative extensions), see the
 abstract syntax categories \syntax{OMSRef} and \syntax{ExtensionOMS} in
 clause~\ref{c:abstract-syntax}.
-\item interpretations (both between focused and distributed OMS), see the
+\item interpretations (both between focused OMS and OMS networks), see the
 abstract syntax category \syntax{IntprDefn} in
 clause~\ref{c:abstract-syntax}.
 \item mappings between OMS and their modules, see the
@@ -2417,7 +2417,7 @@ Library                  = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn              = 'library' , LibraryName , { LibraryItem } ;
 OMSInConformingLanguage  = ($<$)language specific($>$) ;
-LibraryItem              = LibImport | OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibraryItem              = LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 LibImport                = 'lib-import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
@@ -2435,18 +2435,18 @@ LibraryName              = IRI ;
 At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
 
 \red{
-Inside a library, one can defined distributed OMS (\syntax{DistOMSDefn}).
-Distributed OMS can be seen as OMS networks.  A \syntax{DistOMSDefn} names a
-distributed OMS consisting of focused OMS and OMS mappings. Distributed OMS may build on previously-defined
-distributed OMS, and they can be used in \syntax{combination}s.  
+Inside a library, one can defined OMS networks (\syntax{NetworkDefn}).
+A \syntax{NetworkDefn} names an
+OMS network consisting of focused OMS and OMS mappings. OMS networks may build on previously-defined
+OMS networks, and they can be used in \syntax{combination}s.  
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-DistOMSDefn            = 'dist-oms-defn', DistOMSName , [ ConsStrength ] , DistOMS ;
-DistOMSName            = IRI ;
-DistOMS                = 'dist-oms', DistOMSElements , ExcludeExtensions ;
-DistOMSElements        = 'dist-oms-elements', { OMSOrMappingorDistOMSRef } ;
-ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorDistOMSRef } ; 
-OMSOrMappingorDistOMSRef  = IRI ;
+NetworkDefn            = 'dist-oms-defn', NetworkName , [ ConsStrength ] , Network ;
+NetworkName            = IRI ;
+Network                = 'dist-oms', NetworkElements , ExcludeExtensions ;
+NetworkElements        = 'dist-oms-elements', { OMSOrMappingorNetworkRef } ;
+ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorNetworkRef } ; 
+OMSOrMappingorNetworkRef  = IRI ;
 \end{lstlisting}
 
 
@@ -2495,7 +2495,7 @@ OMS                  = ExtendingOMS
                      | 'extension' , OMS , ExtensionOMS
                      | 'qual-oms' , { Qualification } , OMS
                      | 'bridge' , OMS, { Translation } , OMS
-                     | 'combination' , DistOMS
+                     | 'combination' , Network
                      | 'application', SubstName, Sentence ;
 
 Minimization         = MinType, CircMin , CircVars ;
@@ -2598,11 +2598,11 @@ that the model classes of two OMS are in bijective correspondence.}
 \red{
 Interpretations, entailments
 and equivalences
-between distributed OMS are also possible. An interpretation between distributed OMS
-has to specify both a mapping between the nodes of the distributed OMS,
+between OMS networks are also possible. An interpretation between OMS networks
+has to specify both a mapping between the nodes of the OMS network,
 as well as, for each node, a symbol map from the OMS of that
 node to the target OMS to which it is mapped.\ednote{In equivalences
-between distributed OMS, should we allow for node mappings as well? In 
+between OMS networks, should we allow for node mappings as well? In 
 \cite{MossakowskiTarlecki09}, this is allowed.}
 }
 
@@ -2633,7 +2633,7 @@ IntprName            = IRI ;
 IntprType            = 'intpr-type' , OMS , OMS ;
 
 Refinement           = 'ref-oms' , OMS 
-                     | 'ref-dist-oms' , DistOMS
+                     | 'ref-dist-oms' , Network
                      | 'ref-composition' , Refinement , Refinment
                      | 'simple-ref' , OMS , RefMap , Refinement ;
 RefMap               = 'refmap-oms' ,  { LogicTranslation } , [ SymbolMapItems ] 
@@ -2643,14 +2643,14 @@ NodeMap              = 'node-map', OMSName , OMSName , { LogicTranslation } , [ 
 
 Entailment           = 'entailment' , EntailmentName , EntailmentType ;
 EntailmentType       = 'focused-focused-entailment', OMS , OMS 
-                     | 'dist-focused-entailment', DistOMS , OMS 
-                     | 'dist-dist-entailment', DistOMS, DistOMS ;
+                     | 'dist-focused-entailment', Network , OMS 
+                     | 'dist-dist-entailment', Network, Network ;
 EntailmentName       = IRI ;
 
 EquivDefn            = 'equiv-defn' , EquivName , EquivType , OMS ;
 EquivName            = IRI ;
 EquivType            = 'oms-equiv' , OMS , OMS 
-                     | 'dist-oms-equiv' , DistOMS , DistOMS ;
+                     | 'dist-oms-equiv' , Network , Network ;
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
@@ -2919,7 +2919,7 @@ Library                 = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn             = 'library' , LibraryName , { LibraryItem } ;
 OMSInConformingLanguage = ($<$) language and serialization specific ($>$) ;
-LibraryItem             = LibImport | OMSDefn | DistOMSDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibraryItem             = LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 LibImport                = 'import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
@@ -2932,14 +2932,14 @@ PrefixBinding            = BoundPrefix , IRIBoundToPrefix ;
 BoundPrefix              = ':' | Prefix ; ($<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}) 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
 
-DistOMSDefn            = DistOMSKeyword , DistOMSName , '=' , [ ConsStrength ] , DistOMS ;
-DistOMSKeyword         = 'distributed oms' | 'distributed ontology' | 'distributed specificaiton' | 'distributed model' ;
-DistOMSName            = IRI ;
-DistOMS                = DistOMSElements , ExcludeExtensions ;
-DistOMSElements        = DistOMSElement , { ',' , DistOMSElement } ;
-DistOMSElement         = [ Id , ':' ] , OMSOrMappingorDistOMSRef ;
+NetworkDefn            = NetworkKeyword , NetworkName , '=' , [ ConsStrength ] , Network ;
+NetworkKeyword         = 'network' ;
+NetworkName            = IRI ;
+Network                = NetworkElements , ExcludeExtensions ;
+NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
+NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
 ExcludeExtensions    = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
-OMSOrMappingorDistOMSRef        = IRI ;
+OMSOrMappingorNetworkRef        = IRI ;
 \end{lstlisting}
 
 Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
@@ -2965,7 +2965,7 @@ OMS                 = ExtendingOMS
                      | OMS , 'then' , ExtensionOMS
                      | { Qualification } , ':' , GroupOMS
                      | OMS, 'bridge', { Translation } , OMS 
-                     | 'combine' , DistOMSElements , [ ExcludeExtensions ]  
+                     | 'combine' , NetworkElements , [ ExcludeExtensions ]  
                      | 'apply' , SubstName , Sentence 
                      | GroupOMS ;
 
@@ -3062,7 +3062,7 @@ IntprName            = IRI ;
 IntprType            = GroupOMS , 'to' , GroupOMS ;
 
 Refinement           = OMS 
-                     | DistOMS
+                     | Network
                      | Refinement , 'then' , Refinment
                      | OMS , 'refined' , [RefMap] , 'to' , Refinement ;
 RefMap               = 'via' ,  { LogicTranslation } , [ SymbolMapItems ] 
@@ -3072,13 +3072,13 @@ NodeMap              = OMSName , '|->' , OMSName , [ 'using', { LogicTranslation
 Entailment           = 'entailment' , EntailmentName , '=', EntailmentType ;
 EntailmentName       = IRI ;
 EntailmentType       = GroupOMS , 'entails', OMS
-                     | DistOMS , 'entails', OMS
-                     | DistOMS , 'entails', DistOMS ;
+                     | Network , 'entails', OMS
+                     | Network , 'entails', Network ;
 
 EquivDefn            = 'equivalence' , EquivName , ':' , EquivType , '=' , OMS , [ 'end' ] ;
 EquivName            = IRI ;
 EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS 
-                     | DistOMS , '<\lessthan>-<\greaterthan>' , DistOMS ;
+                     | Network , '<\lessthan>-<\greaterthan>' , Network ;
 
 ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
                        'for' , InterfaceSignature ;
@@ -3155,13 +3155,13 @@ Key words are always written lowercase. The following key words are reserved, an
 
 {\ttfamily %
 and
-distributed
 end
 hide
 interpretation
 library
 logic
-minimize\\
+minimize
+network\\
 model
 onto
 ontology
@@ -4615,8 +4615,8 @@ logic IRI : OMS  &  \\\hline
 language IRI : OMS  &  \\\hline
 serialization IRI : OMS  &  \\\hline
 OMS bridge Translation OMS  & Publications \\\hline
-combine DistOMSElements  & Alignments, Publications \\\hline
-combine DistOMSElements excluding IRIs  &  \\\hline
+combine NetworkElements  & Alignments, Publications \\\hline
+combine NetworkElements excluding IRIs  &  \\\hline
 \end{tabular}
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
@@ -4911,7 +4911,7 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
 \begin{usecase}{Generating multilingual labels for menus in a user interface}{exists (but not yet DOL-based)}{Aligning (multiple OWL ontologies), Annotation}
   DO-ROAM (\textbf{D}ata and \textbf{O}ntology driven \textbf{R}oute-finding \textbf{O}f \textbf{A}ctivity-oriented \textbf{M}obility\footnote{\url{http://www.do-roam.org}}) is a web service with an interactive frontend that extends OpenStreetMap by an ontology-based search for located activities and opening hours \cite{do-roam}.  The service is driven by a set of different OWL ontologies that have been aligned to each other using the Falcon matching tool \cite{HuQu-08}.  The user interface of the DO-ROAM web frontend offers multilingual labels, which are maintained in close connection to the underlying ontologies.
 
-  Porting DO-ROAM to DOL would enable the coherent representation of the aligned ontologies as one distributed OMS, and it would enable  the maintenance of the user interface labels as annotations inside the ontology.
+  Porting DO-ROAM to DOL would enable the coherent representation of the aligned ontologies as one OMS network, and it would enable  the maintenance of the user interface labels as annotations inside the ontology.
 \end{usecase}
 
 \begin{usecase}{Connecting devices of differing complexity in an Ambient Assisted Living setting}{core ontology (not DOL-based) and service environment exists – the DOL-based extensions not yet}{Logical OMS mappings across different logics, connection to linked open datasets}
