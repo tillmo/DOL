@@ -3330,51 +3330,68 @@ logics, e.g.\ the notion of a conservative extension, involve the
 in sentences.  Signatures can be extended with new non-logical symbols;
 abstractly, this leads to an ordering relation on signatures.
 
-\begin{definition}\label{def:sigroom}
-An \defsty{institute} $\cI=(Sig,\leq,Sen,\cM,\models)$ is a signature-indexed room, i.e.\ consists of
-\begin{itemize}
-\item a preorder $(Sig,\leq)$ of signatures;
-\item a room $(Sen,\cM,\models)$;
-\item a function $sig: Sen\to Sig$, giving the (minimal) signature
-of a sentence;
-\item a function $sig: Mod\to Sig$, giving the signature
-of a model, 
-\item for any $\Sigma_2$-model $M$, a $\Sigma_1$-model
-  $M\forget{\Sigma_1}$ (called the \defsty{reduct}), provided that
-  $\Sigma_1\leq\Sigma_2$,
-\end{itemize}
-such that the following properties hold:
-\begin{itemize}
-\item given $\Sigma_1\leq\Sigma_2$, for any $\Sigma_2$-model $M$
-and any $\Sigma_1$-sentence $\varphi$
-$$M\models\varphi\mbox{ iff }M\forget{\Sigma_1}\models\varphi$$
-(satisfaction is \defsty{invariant under reduct}),
-\item for any $\Sigma$-model, $M\forget{\Sigma}=M$, 
-and given $\Sigma_1\leq\Sigma_2\leq\Sigma$, 
-$$(M\forget{\Sigma_2})\forget{\Sigma_1}=M\forget{\Sigma_1}$$ 
-(\defsty{reducts are compositional}), and
-\item for any model $M$ and sentence $\varphi$,
-$$M\models\varphi\mbox{ implies }sig(M)\geq sig(\varphi)$$
-(\defsty{signature coherence}).
-\end{itemize}
-\end{definition}
-Here, the class of models over a signature $\Sigma$ (short:
-$\Sigma$-models) is defined as 
-$$Mod(\Sigma):=\{M\in\cM | sig(M)=\Sigma\}$$ 
-Note that we here require equality of signature, unlike we
-did for sentences.  The reason is that a model always needs to
-interpret all of the non-logical symbols of a signature (and not more), while a
-sentence might use only part of the non-logical symbols of the signature.
 
-\begin{example}\label{Prop} 
-  \defsty{Propositional Logic} is an institute as follows: Signatures in $\Prop$ are just sets
-  $\Sigma$ (of propositional non-logical symbols) as signatures, and signature
-  inclusion is just set inclusion. A $\Sigma$-model $M$ is a mapping
-  from $\Sigma$ to $\{\mathit{true},\mathit{false}\}$.
-  $\Sigma$-sentences are built from $\Sigma$ with the usual
-  propositional connectives.  Finally, satisfaction of a sentence in a
-  model is defined by the standard truth-table semantics.
-\end{example}
+\begin{definition}\label{def:inst} An
+\defsty{institution} \cite{Institutions} is a quadruple $I=(\Sign,\sen,\IMod,{\models})$
+consisting of the following:
+%
+\begin{itemize}
+\item a category $\Sign$ of \emph{signatures} and \emph{signature morphisms},
+\item a functor $\sen\map{\Sign}{\Set}$\footnote{$\Set$ is the
+category having all small \textsc{}sets as objects and functions as
+arrows.}  giving, for each signature $\Sigma$, the set of
+\emph{sentences} $\sen(\Sigma)$, and for each signature morphism
+$\sigma:{\Sigma}\to{\Sigma'}$, the \emph{sentence translation map}
+$\sen(\sigma):{\sen(\Sigma)}\to{\sen(\Sigma')}$, where often
+$\sen(\sigma)(\varphi)$ is written as $\sigma(\varphi)$, \item a
+functor $\IMod:{\Sign^{op}}\to{\Cat}$\footnote {$\Cat$ is the category
+of categories and functors. Strictly speaking, $\Cat$ is not a
+category but only a so-called quasicategory, which is a category that
+lives in a higher set-theoretic universe.} giving, for each signature
+$\Sigma$, the category of \emph{models} $\IMod(\Sigma)$, and for each
+signature morphism $\sigma\map{\Sigma}{\Sigma'}$, the \emph{reduct
+functor\/} $\IMod(\sigma):{\IMod(\Sigma')}\to {\IMod(\Sigma)}$, where
+often $\IMod(\sigma)(M')$ is written as $M'\restrict_{\sigma}$, and
+$M'\restrict_{\sigma}$ is called the \emph{$\sigma$-reduct} of $M'$,
+while $M'$ is called a \emph{$\sigma$-expansion} of
+$M'\restrict_{\sigma}$,
+\item a satisfaction relation
+${\models_{\Sigma}}\subseteq|{\IMod(\Sigma)|\times\sen(\Sigma)}$ for
+each $\Sigma\in |\Sign|$,
+\end{itemize}
+%
+such that for each $\sigma\map{\Sigma}{\Sigma'}$ in $\Sign$ the
+following \defsty{satisfaction condition} holds:
+$$
+(\star) \qquad M'\models_{\Sigma'}\sigma(\varphi) \mbox{ iff }
+M'\restrict_{\sigma} \models_{\Sigma} \varphi
+$$
+for each $M'\in |\IMod(\Sigma')|$ and $\varphi\in \sen(\Sigma)$,
+expressing that truth is invariant under change of notation and
+context.  \qed
+\end{definition}
+
+\begin{definition}[Propositional Logic]\label{Prop}
+The institution $\Prop$ is like the institute $\Prop$.
+Signature morphisms are functions
+$\sigma:{\Sigma_1}\to{\Sigma_2}$. The reduct of a $\Sigma_2$-model
+$M_2$ along $\sigma:{\Sigma_1}\to{\Sigma_2}$ is the $\Sigma_1$-model
+given by the composition $M_2\circ\sigma$. 
+\end{definition}
+
+\begin{definition}[Common Logic - \Clogic]\label{CommonLogic}
+The institution of Common Logic (\Clogic) is like the institute.
+A \Clogic signature morphism consists of two maps
+between the sets of names and of sequence markers, such that the property of being a discourse name
+is preserved and reflected.\footnote{That is, a name is a discourse
+name if and only if its image under the signature morphism is.}  
+ Model reducts leave $\UR$, $\UD$, $\rel$ and $\fun$
+untouched, while $\intCL$ and $\seq$ are composed with the appropriate
+signature morphism component.
+\end{definition}
+%
+
+
 
 Further examples of institutes are: $\mathcal{SROIQ}(D)$, Common
 Logic, unsorted first-order logic, many-sorted first-order logic, and
@@ -3399,132 +3416,44 @@ $\Delta\models\varphi$, if all models satisfying all sentences in
 $\Delta$ also satisfy $\varphi$.
 
 
-\begin{lemma}[Coincidence Lemma]
-  Let $\Delta$ be a theory with $sig(\Delta)=\Sigma$, and $\varphi$ a
-  sentence. For determining whether the semantic entailment
-  $\Delta\models\varphi$ holds, it suffices to consider
-  $\Sigma$-models only.
-\end{lemma}
-% \begin{proof}
-%   Assume that all $\Sigma$-models satisfying $\Delta$ also satisfy
-%   $\varphi$.  Let $M$ be any model satisfying $\Delta$. By signature
-%   coherence, $sig(M)\geq \Sigma$.  By invariance of satisfaction
-%   under reduct, $M\forget\Sigma\models\Delta$.  Hence by assumption,
-%   $M\forget\Sigma\models\varphi$. Again by invariance,
-%   $M\models\varphi$.
-% \end{proof}
 
-Corridors are the mappings between rooms. A corridor maps both sentences
-and models (syntax and semantics). Models are mapped in reverse
-direction. The rationale behind this is as follows: usually, the
-target room is either logically more expressive or well-suited for
-logical coding. Sentences of the source room are represented, or coded
-in the target room. Models of the target room are usually richer, so
-that from a model in the target room, a model in the source room can
-be extracted.
-\begin{definition}\label{def:corridor}
-A \defsty{corridor}
-$
-(\alpha,\beta)\map{(Sen_1,\cM_1,\models_1)}{(Sen_2,\cM_2,\models_2)}
-$
- consists of
-\begin{itemize}
-\item a sentence translation function $\alpha\map{Sen_1}{Sen_2}$, and
-\item a model reduction function
-%\footnote{If model morphisms are taken into account, then a functor.} 
-$\beta\map{\cM_2}{\cM_1}$, 
-such that
-\end{itemize}
-$$M_2\models_2 \alpha(\varphi_1) \mbox{ if and only if } 
-\beta(M_2)\models_1 \varphi_1$$
-holds for each $M_2\in \cM_2$ and each $\varphi_1\in Sen_1$
-(\defsty{satisfaction condition}).
+Institution comorphisms capture the intuition of translating a
+logic into another one. 
 
-A \defsty{partial corridor} is one where $\beta$ is partial,
-and the satisfaction condition is only required for those $M_2$
-such that $\beta(M_2)$ is defined.
-\end{definition}
-A corridor is called \defsty{model-expansive}, if $\beta$ is a surjection.
-
-\begin{definition}[Relative Interpretation]
-  Given $\Delta_i$ a theory in $\cR_i\;(i=1,2)$, a corridor $(\alpha,\beta):\cR_1\to \cR_2$ is a \textbf{relative interpretation}, if
-\[
-\beta(\Mod(\Delta_2))\subseteq \Mod(\Delta_1)
-\]
+\begin{definition}[Institution Comorphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
+\Sen^J, \models^J)$, an \defsty{institution comorphism} from $I$ to
+$J$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
+natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
+and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
+$$ M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi) \Leftrightarrow
+\beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
+$$
+holds, called the \defsty{satisfaction condition}.
 \end{definition}
 
-Institute comorphisms capture the intuition of translating a
-logic into another one. They extend corridors by mapping also signatures.
-\begin{definition}\label{def:sigroom-co}
-Given institutes 
-$\cI_1=(Sig_1,\leq_1,Sen_1,\cM_1,\models_1)$ and
-$\cI_2=(Sig_2,\leq_2,Sen_2,\cM_2,$ ${\models_2)}$,
-an \defsty{institute comorphism}  $\rho=(\Phi,\alpha,\beta):\cI_1\longrightarrow 
-\cI_2$
- consists of
-\begin{itemize}
-  \item a monotone map $\Phi:(Sig^1,\leq^1)\to(Sig^2,\leq^2)$, and
-  \item a partial corridor
-  $(\alpha,\beta):{(Sen_1,\cM_1,\models_1)}\to {(Sen_2,\cM_2,\models_2)}$
-\end{itemize}
-such that
-\begin{itemize}
-  \item  $sig^2(\alpha(\varphi_1))\leq \Phi(sig^1(\varphi_1))$
-  for any sentence $\varphi_1\in Sen^1$;
-  \item for each $\cI_1$-signature $\Sigma$, $\beta$ restricts to
-a total function $\beta_\Sigma:Mod_2(\Phi(\Sigma))\to Mod_1(\Sigma)$;
- \item model translation commutes with reduct, that is,
-given $\Sigma_1\leq\Sigma_2$ in $\cI_1$ and a $\Phi(\Sigma_2)$-model
- $M$ in $\cI_2$,
-$$\beta_{\Sigma_2}(M)\forget{\Sigma_1}=\beta_{\Sigma_1}(M\forget{\Phi(\Sigma_1)}).$$
-\end{itemize}
-\end{definition}
-An institute comorphism is called \defsty{model-expansive}, if
-all $\beta_\Sigma$ are surjective.
+\noindent
+Here, $\Phi(\Sigma)$ is the translation of signature $\Sigma$ from
+institution $I$ to institution $J$, $\alpha_{\Sigma}(\varphi)$ is the
+translation of the $\Sigma$-sentence $\varphi$ to a
+$\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
+(or perhaps better: reduction) of the $\Phi(\Sigma)$-model $M'$ to a
+$\Sigma$-model.
 
-A \defsty{subinstitute comorphism} is a institute comorphism
-$(\Phi,\alpha,\beta)\map{\cI_1}{\cI_2}$ with $\Phi$ injective and
-preorder-reflecting, $\alpha$ injective and $\beta_\Sigma$ bijective
-for each $\Sigma$. In this case, $\cI_1$ is said to be a
-\defsty{subinstitute} of $\cI_2$.
 
-A \defsty{simple theoroidal comorphism} is like a comorphism, except
-that the signature translation functor $\Phi$ maps signatures to
-\emph{theories} over the target institute.
-
-Institute morphisms capture the intuition of reducing a logic into
+Institution morphisms capture the intuition of reducing a logic into
 another one, and are used for logic reductions.
 
-\begin{definition}\label{def:sigroom-co}
-Given institutes 
-$\cI_1=(Sig_1, \leq_1,Sen_1,\cM_1,\models_1)$ and
-$\cI_2=(Sig_2,\leq_2,Sen_2,\cM_2,$ ${\models_2)}$,
-an \defsty{institute morphism}  $\mu=(\Phi,\alpha,\beta):\cI_1\longrightarrow 
-\cI_2$
- consists of
-\begin{itemize}
-  \item a monotone map $\Phi:(Sig^1,\leq^1)\to(Sig^2,\leq^2)$, and
-  \item a partial corridor
-  $(\alpha,\beta):{(Sen_2,\cM_2,\models_2)}\to {(Sen_1,\cM_1,\models_1)}$
-\end{itemize}
-such that
-\begin{itemize}
-  \item  $\Phi(sig^1(\alpha(\varphi_2)))\leq sig^2(\varphi_2)$
-  for any sentence $\varphi_2\in Sen^2$;
-  \item for each $\cI_1$-signature $\Sigma$, $\beta$ restricts to
-a total function $\beta_\Sigma:Mod_1(\Phi(\Sigma))\to Mod_2(\Sigma)$;
- \item model translation commutes with reduct, that is,
-given $\Sigma_1\leq\Sigma_2$ in $\cI_1$ and a $\Sigma_2$-model
- $M$,
-$$\beta_{\Sigma_2}(M)\forget{\Phi(\Sigma_1)}=\beta_{\Sigma_1}(M\forget{\Sigma_1}).$$
-\end{itemize}
+
+\begin{definition}[Institution Morphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
+\Sen^J, \models^J)$, an \defsty{institution morphism} from $I$ to
+$J$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
+natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi$
+and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that 
+$$ M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi) \Leftrightarrow
+\beta_{\Phi(\Sigma)}(M)\models^J_{\Phi(\Sigma)}\varphi.
+$$
+holds, called the \defsty{satisfaction condition}.
 \end{definition}
-
-%\begin{definition}\label{def:CR-comorphism-properties}
-%A 
-%\end{definition}
-
-
 
 \todonote{Introduce exactness}
 
@@ -4434,122 +4363,6 @@ The actual translations are specified in \cite{OntoGraph}.
 ~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper). TM: what do you mean by this?}
 
 
-
-
-\infannex{Institutional semantics} \label{an:institution}
-
-Note that the institute-based semantics for DOL does not cover
-\syntax{SYMBOL-MAP}s, \syntax{combination}s and the construct \syntax{monomorphic}.  The institutional semantics will provide a mechanism for giving a semantics to the full distributed ontology, modeling and specification language (DOL).
-
-
-Institutions generalise institute to arbitary signature mappings
-(called signature morphisms) between signatures.
-\begin{definition}\label{def:inst} An
-\defsty{institution} \cite{Institutions} is a quadruple $I=(\Sign,\sen,\IMod,{\models})$
-consisting of the following:
-%
-\begin{itemize}
-\item a category $\Sign$ of \emph{signatures} and \emph{signature morphisms},
-\item a functor $\sen\map{\Sign}{\Set}$\footnote{$\Set$ is the
-category having all small \textsc{}sets as objects and functions as
-arrows.}  giving, for each signature $\Sigma$, the set of
-\emph{sentences} $\sen(\Sigma)$, and for each signature morphism
-$\sigma:{\Sigma}\to{\Sigma'}$, the \emph{sentence translation map}
-$\sen(\sigma):{\sen(\Sigma)}\to{\sen(\Sigma')}$, where often
-$\sen(\sigma)(\varphi)$ is written as $\sigma(\varphi)$, \item a
-functor $\IMod:{\Sign^{op}}\to{\Cat}$\footnote {$\Cat$ is the category
-of categories and functors. Strictly speaking, $\Cat$ is not a
-category but only a so-called quasicategory, which is a category that
-lives in a higher set-theoretic universe.} giving, for each signature
-$\Sigma$, the category of \emph{models} $\IMod(\Sigma)$, and for each
-signature morphism $\sigma\map{\Sigma}{\Sigma'}$, the \emph{reduct
-functor\/} $\IMod(\sigma):{\IMod(\Sigma')}\to {\IMod(\Sigma)}$, where
-often $\IMod(\sigma)(M')$ is written as $M'\restrict_{\sigma}$, and
-$M'\restrict_{\sigma}$ is called the \emph{$\sigma$-reduct} of $M'$,
-while $M'$ is called a \emph{$\sigma$-expansion} of
-$M'\restrict_{\sigma}$,
-\item a satisfaction relation
-${\models_{\Sigma}}\subseteq|{\IMod(\Sigma)|\times\sen(\Sigma)}$ for
-each $\Sigma\in |\Sign|$,
-\end{itemize}
-%
-such that for each $\sigma\map{\Sigma}{\Sigma'}$ in $\Sign$ the
-following \defsty{satisfaction condition} holds:
-$$
-(\star) \qquad M'\models_{\Sigma'}\sigma(\varphi) \mbox{ iff }
-M'\restrict_{\sigma} \models_{\Sigma} \varphi
-$$
-for each $M'\in |\IMod(\Sigma')|$ and $\varphi\in \sen(\Sigma)$,
-expressing that truth is invariant under change of notation and
-context.  \qed
-\end{definition}
-
-\begin{definition}[Propositional Logic]\label{Prop}
-The institution $\Prop$ is like the institute $\Prop$.
-Signature morphisms are functions
-$\sigma:{\Sigma_1}\to{\Sigma_2}$. The reduct of a $\Sigma_2$-model
-$M_2$ along $\sigma:{\Sigma_1}\to{\Sigma_2}$ is the $\Sigma_1$-model
-given by the composition $M_2\circ\sigma$. 
-\end{definition}
-
-\begin{definition}[Common Logic - \Clogic]\label{CommonLogic}
-The institution of Common Logic (\Clogic) is like the institute.
-A \Clogic signature morphism consists of two maps
-between the sets of names and of sequence markers, such that the property of being a discourse name
-is preserved and reflected.\footnote{That is, a name is a discourse
-name if and only if its image under the signature morphism is.}  
- Model reducts leave $\UR$, $\UD$, $\rel$ and $\fun$
-untouched, while $\intCL$ and $\seq$ are composed with the appropriate
-signature morphism component.
-\end{definition}
-%
-
-Institute comorphisms can be generalised to institution comorphisms,
-see \cite{inst-mor}.  
-
-\begin{definition}[Institution Comorphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
-\Sen^J, \models^J)$, an \defsty{institution comorphism} from $I$ to
-$J$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
-natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
-and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
-$$ M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi) \Leftrightarrow
-\beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
-$$
-holds, called the \defsty{satisfaction condition}.
-\end{definition}
-
-\noindent
-Here, $\Phi(\Sigma)$ is the translation of signature $\Sigma$ from
-institution $I$ to institution $J$, $\alpha_{\Sigma}(\varphi)$ is the
-translation of the $\Sigma$-sentence $\varphi$ to a
-$\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
-(or perhaps better: reduction) of the $\Phi(\Sigma)$-model $M'$ to a
-$\Sigma$-model.
-
-Institute morphisms can be generalised to institution morphisms.
-
-\begin{definition}[Institution Morphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
-\Sen^J, \models^J)$, an \defsty{institution morphism} from $I$ to
-$J$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
-natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi$
-and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that 
-$$ M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi) \Leftrightarrow
-\beta_{\Phi(\Sigma)}(M)\models^J_{\Phi(\Sigma)}\varphi.
-$$
-holds, called the \defsty{satisfaction condition}.
-\end{definition}
-
-An \defsty{institution-based heterogeneous logical environment} is like an
-institute-based one, execpt that institutions (institution morphisms,
-institution comorphisms) are used in place of institutes (institute
-morphisms, institute comorphisms).
-
-The full DOL language can be interpreted over an arbitrary
-institution-based heterogeneous logical environment. [Details to be
-given.]
-
-We will give (as normative annexes) one such environment.  These will
-define the ``default translations'' that we assume.
 
 \infannex{Example Uses of all DOL Constructs}
 
