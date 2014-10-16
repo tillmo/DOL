@@ -846,7 +846,7 @@ We also define different conformance levels w.r.t.\ the usage of IRIs as identif
 
 An OMS language is conformant with DOL if it satisfies the following conditions:
 \begin{enumerate}
-\item its abstract syntax specified as an SMOF compliant meta model
+\item its abstract syntax is specified as an SMOF compliant meta model
 or as an EBNF grammar;
 \item its logical language aspect (for expressing basic OMS) is conformant,
  and in particular has a semantics (see below),
@@ -855,7 +855,7 @@ or as an EBNF grammar;
 %to the abstract syntax and vice versa;
 \item either there exists a translation of it into a conformant
   language\footnote {For example, consider the translation of OBO1.4
-    to OWL, giving a formal semantics to OBO1.4).}, or:
+    to OWL, giving a formal semantics to OBO1.4.}, or:
 \begin{enumerate}
 \item the logical language aspect (for expressing basic OMS) is conformant, and in particular has a semantics (see below),
 \item  the
@@ -1154,7 +1154,8 @@ For the purposes of this document, the following terms and definitions apply.
 
 
 \termdefinition{vocabulary\synonym signature}{set (or otherwise
-  structured entity) of \termref{non-logical symbols} of an
+  structured entity) \ednote{\color{red}{What about `collection`? Structure is not important here.}} 
+of \termref{non-logical symbols} of an
   \termref{OMS}}
    \begin{note}
      The signature of a term is the set of all non-logical symbols occuring
@@ -1326,7 +1327,7 @@ There are also general purpose OMS languages, which can express both \termref{OM
 
 \sclause{Structured OMS}
 \begin{definitions}
-\termdefinition{basic OMS}{\termref{signature} equipped with a set of \termref{sentences} and \termref{annotations}, which may be used as a building block for a larger \termref{OMS}}
+\termdefinition{basic OMS, \red{flat OMS}}{\termref{signature} equipped with a set of \termref{sentences} and \termref{annotations}, which may be used as a building block for a larger \termref{OMS}}
   \begin{note}
     The sentences must use only those non-logical symbols that are present in the signature.
   \end{note}
@@ -1351,7 +1352,7 @@ A focused OMS is either a basic or structured OMS.
 
 \termdefinition{flattenable OMS}
 {OMS that can be seen, by purely syntactical means, to be logically 
-equivalent to a basic OMS}
+equivalent to a flat OMS}
 \begin{note}
 More precisely, an OMS is flattenable if and only if it is either a basic OMS or it is an \termref{extension}, \termref{union}, translation, \termref{module extraction}, \termref{approximation}, \termref{filtering}, or reference of named OMS involving only flattenable OMS. 
 \end{note}
@@ -1481,31 +1482,32 @@ best possible (in the sense of a maximum set of logical consequences)
 
 \sclause{Mappings Between OMS}
 
-  \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from \termref{non-logical symbols} from $O_2$
-  \begin{note}
-  A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context (``equivalence'' for alignments, and ``equality'' for logical OMS mappings)\CLnote[type=q-aut]{For interpretations that is the only viable way, but for alignments?  Is there any reasonable ``implied default'', or should we let R default to something like owl:sameAs?}; when $c$ is omitted, it defaults to $1$.}
-  \end{note}
-
-  \begin{note}
-     A confidence value of $1$ does not imply logical equivalence (\cf \cite{KutzEtAl:ChineseWhispers2010} for a worked-out example).
-  \end{note}
-
-  \termdefinition{OMS mapping \synonym link\subjectfield{OMS}\todonote[author=Christoph Lange,date=D:201108252257+02'00',type=q-all]{Is this the correct way of stating that I mean ``the term link, when used in the context of ontologies''?}}{relationship between two \termref{OMS}, typically given as a set of \termref{correspondences}}
+   \termdefinition{OMS mapping \synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}}
   
   \termdefinition{logical OMS mapping}{\termref{OMS mapping} that has a formal, logic-based semantics}
   \begin{note}
-    Logical OMS mappings are given as sets of correspondences, which are required to be \emph{signature morphisms}.
+    Logical OMS mappings are given as sets of \termref{symbol map items}, which generate \emph{signature morphisms}.
   \end{note}
   \begin{note}
 Some specific kinds of logical OMS mappings will be introduced below.  
   \end{note}
 
-  \termdefinition{interpretation\synonym view\synonym refinement}{\termref{logical OMS mapping} that postulates a relation between two \termref{OMS}}
+ \termdefinition{symbol map item}{pair of symbols of two OMS, indicating how a symbol from the first OMS is mapped by a 
+signature morphism to a symbol of the second OMS}
+ \begin{note}
+   A symbol map item is given as $s_1 \mapsto s_2$, where $s_1$ is a symbol from the \emph{source} OMS 
+   and $s_2$ is a symbol from the \emph{target} source of the OMS mapping.
+ \end{note}
+
+  \termdefinition{interpretation\synonym view\synonym refinement}{\termref{logical OMS mapping} that postulates a
+specialization relation
+ between two \termref{OMS}} along a morphism between their signatures
   \begin{note}
-    An interpretation typically leads to proof obligations, \ie one has to prove that axioms of the source OMS of the mapping are theorems in the target OMS.
+    An interpretation typically leads to proof obligations, \ie one has to prove that 
+  translations of axioms of the source OMS along the morphism accompanying the interpretatation are theorems in the target OMS.
   \end{note}
   \begin{note}
-    When an interpretation is given as a set of correspondences, these are given as tuples, where the type of relationship is given by the specific kind of interpretation. 
+    When an interpretation is given as a set of correspondences, these are given as tuples, where the type of relationship is given by the specific kind of interpretation. \ednote{\red{I don't understand this sentence.}}
   \end{note}
 
   \termdefinition{equivalence}
@@ -1547,14 +1549,22 @@ original and the renamed OMS.
 \end{note}
   \termdefinition{reduction}{\termref{logical OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
 
-  \termdefinition{alignment}{flexible, relational \termref{OMS mapping} that does not always have a formal, logic-based semantics}
+  \termdefinition{alignment}{flexible \termref{OMS mapping} expressing a collection of semantic
+relations between entities of the two OMS}
 \begin{note}
 Alignments consist of \termref{correspondences}, each of which may
 have a confidence value. If all confidence values are 1, the alignment
-has a formal semantics.
+can be given a formal, logic-based semantics.
 \end{note}
 
-  \termdefinition{correspondence}{pair of \termref{symbols} that belong to an \termref{alignment}}
+ \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from \termref{non-logical symbols} from $O_2$
+  \begin{note}
+  A correspondence is given as a quadruple $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$, where $R$ denotes the type of relationship that is asserted to hold between the two non-logical symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is omitted, it is implied from the context as being the equivalence relation, unless another default
+relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.}
+  \end{note}
+  \begin{note}
+     A confidence value of $1$ does not imply logical equivalence (\cf \cite{KutzEtAl:ChineseWhispers2010} for a worked-out example).
+  \end{note}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}}
   \begin{note}
@@ -1563,11 +1573,11 @@ has a formal semantics.
 
   \termdefinition{union}{aggregation of several \termref{OMS}
     to a new \termref{OMS}, without any renaming}
+\ednote{\red{why is this here?}}
  
 \termdefinition{OMS network\synonym distributed OMS\synonym hyperontology} graph with \termref{OMS} as nodes and \termref{OMS mappings} as edges, showing how the OMS are interlinked
 \ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
 ``heterogeneous OMS''?}
-  \ednote{add note with examples of what can be these links}
 \begin{note}
  The opposite of an OMS network is a \termref{focused OMS}, which
  focuses on the specification of a single \termref{logical theory}.
@@ -1576,6 +1586,15 @@ has a formal semantics.
     An OMS network is a diagram of OMS in the sense of category theory, but different from a diagram
     in the sense of model-driven architecture.
   \end{note}
+ \begin{note}
+   The links between the nodes of a distributed OMS can be given using interpretations or alignments. Imports between the nodes
+   of a  distributed OMS are automatically included in the distributed OMS. By including an interpretation or an alignment in a distributed 
+   OMS, the involved nodes are automatically included.
+ \end{note}
+ \begin{example}
+ Consider two ontologies and an \termref{interpretation} between them.  In the distributed OMS of the interpretation there are 
+  two nodes, one for each ontology, and one edge from the source ontology to the target ontology of the interpretation. 
+ \end{example}
 
 
 
@@ -1817,7 +1836,8 @@ As listed below, these symbols and abbreviations are generally for the main clau
 \symboldef{CURIE}{Compact URI expression}
 \symboldef{CWM}{Common Warehouse Metamodel}
 \symboldef{DDL}{Distributed description logic}
-\symboldef{DOL}{Distributed Ontology, Modeling and Specification Language }
+\symboldef{DOL}{Distributed Ontology, Modeling and Specification Language}
+\symboldef{DTV}{Date-Time Vocabulary}
 \symboldef{EBNF}{Extended Backus-Naur Form}
 \symboldef{E-connections}{a modular ontology language (closely related to DDL)}
 \symboldef{F-logic}{frame logic, an object-oriented ontology language}
@@ -1826,6 +1846,7 @@ As listed below, these symbols and abbreviations are generally for the main clau
 \symboldef{IRI}{Internationalized Resource Identifier}
 \symboldef{MDA}{Model Driven Architecture}
 \symboldef{MOF}{Meta-Object Facility}
+\symboldef{OCL}{Object Constraint Language}
 \symboldef{OWL 2}{Web Ontology Language (W3C), version 2: family of knowledge representation languages for authoring ontologies}
 \symboldef{OWL 2 DL}{description logic profile of OWL 2}
 \symboldef{OWL 2 EL}{a sub-Boolean profile of OWL 2 (used often \eg in medical ontologies)}
@@ -1841,6 +1862,7 @@ As listed below, these symbols and abbreviations are generally for the main clau
 \symboldef{RDFa}{a set of XML attributes for embedding RDF graphs into XML documents}
 \symboldef{RDF/XML}{an XML serialization of the RDF data model}
 \symboldef{RIF}{Rule Interchange Format}
+\symboldef{SBVR}{Semantics of Business Vocabulary and Business Rules}
 \symboldef{SMOF}{MOF Support for Semantic Structures}
 \symboldef{UML}{Unified Modeling Language}
 \symboldef{URI}{Uniform Resource Identifier}
@@ -1863,18 +1885,79 @@ This specification does not require or request any change to any other OMG speci
 \subsection{Submitting and supporting organizations}
 The following  OMG  submitted and/or supported parts of this specification:
 	\begin{itemize}
-		\item 
+		\item Fraunhofer FOKUS
+		\item Methodeutic, LLC. 
+		\item MITRE		
+		\item Otto von Guericke University of Magdeburg
+		\item Thematix Partners LLC
 	\end{itemize}
 
 \subsection{Participants}
 The following people contributed directly to the development of this specification. 
-
 	\begin{itemize}
-		\item 
+	\item Tara Athan
+	\item Conrad Bock 
+	\item Mihai Codescu
+	\item Maria Keet
+	\item Christoph Lange 
+	\item Terry Longstreth 	
+	\item Fabian Neuhaus 
+	\item Till Mossakowski 	
+	\item Elisa Kendall 
+	\item Michael Gruninger 
+	\item Oliver Kutz 
 	\end{itemize}
-	
-
-%\section{Proof of Concept}
+%	
+%For advice and support we thank 	
+%	\begin{itemize}
+%		\item Guadalupe Aguado 
+%		\item Gerhard Budin 
+%		\item Carmen Chui
+%		\item Frank Farance
+%		\item Carla Freericks 
+%		\item Christian Galinski
+%		\item Dan Gillman 
+%		\item Andreas Hoffmann 
+%		\item Dosam Hwang		
+%		\item Adrian Paschke 
+%		\item Doug Lawrence		
+%		\item Bodil Nistrup Madsen 
+%		\item Alan Melby 
+%		\item Antonio Pareja
+%		\item Catherine Protic 
+%
+%		\item Gerald Radack
+%		\item Christophe Roche
+%		\item Sebastian Rudolph
+%		\item Davide Sottara 
+%		\item Changqing Zhou
+%		
+%
+%		\item Hanne Erdman Thomsen
+%		\item  Harold Solbrig 
+%		\item Gottfried Herzog
+%		\item Jerome Euzenat
+%		\item John Bateman 
+%		\item John Sowa
+%		\item Kiyong Lee 
+%		\item Laurette Pretorius
+%		\item Leo Obrst
+%		\item Maria Pozzi
+%		\item Mari Carmen Suarez Figueroa
+%		\item Melanie Maradan
+%		\item Michael Wagner
+%		\item Sue Ellen Wright
+%		\item Monte George 
+%		\item Pat Hayes
+%		\item Pierre Yves Schobbens 
+%		\item Edmund Skoviak 
+%		\item Peter Yim 				
+%		\item Stefano Borgo 
+%		\item Sylvie Arbouy 
+%		\item Tommie Meyer 
+%		\item Yonghong Cheng
+%	\end{itemize}
+%		
 
 
 
@@ -1978,8 +2061,56 @@ DOL  provides the framework for integrating different domain ontologies, alignin
 combining the aligned ontologies into a coherent integrated ontology -- even across different ontology languages. Thus, DOL  enables 
 ontology developers to utilize the complete, and most expressive, foundational ontologies for ontology integration and validation purposes. 
 
+The foundational ontology (FO) repository Repository of Ontologies for MULtiple USes (ROMULUS)\footnote{See \url{http://www.thezfiles.co.za/ROMULUS/home.html}}
+contains alignments between a number of foundational ontologies, expressing semantic relations between the aligned
+entities. We select three such ontologies, containing spatial and temporal concepts: DOLCE\footnote{See \url{http://www.loa.istc.cnr.it/DOLCE.html}}, GFO\footnote{See \url{http://www.onto-med.de/ontologies/gfo/}} and BFO\footnote{See \url{http://www.ifomis.org/bfo/}}, and present alignments between them 
+using \DOL syntax:
 
- 
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]
+%prefix(
+           gfo: <http://www.onto-med.de/ontologies/>
+           dolce: <http://www.loa-cnr.it/ontologies/>
+           bfo: <http://www.ifomis.org/bfo/>
+           
+        )%
+logic OWL
+
+alignment DolceLite2BFO :
+  dolce:DOLCE-Lite.owl
+  to
+  bfo:1.1 =
+ endurant = IndependentContinuant,
+ physical-endurant = MaterialEntity,
+ physical-object = Object,   perdurant = Occurrent,
+ process = Process,          quality = Quality,
+ spatio-temporal-region = SpatiotemporalRegion,
+ temporal-region = TemporalRegion,  space-region = SpatialRegion
+
+alignment DolceLite2GFO :
+  dolce:DOLCE-Lite.owl to gfo:gfo.owl =
+ 	particular = Individual, endurant = Presential,
+ 	physical-object = Material_object, amount-of-matter = Amount_of_substrate,
+ 	perdurant = Occurrent, 	quality = Property,
+ 	time-interval = Chronoid, generic-dependent < necessary_for,
+ 	part < abstract_has_part, part-of < abstract_part_of,
+ 	proper-part  <	 has_proper_part,  	proper-part-of  < proper_part_of,
+ 	generic-location < occupies, 	generic-location-of < occupied_by
+
+alignment BFO2GFO :
+  bfo:1.1 to gfo:gfo.owl =
+	Entity = Entity, Object = Material_object,
+	ObjectBoundary  = Material_boundary, Role < Role ,
+ 	Occurrent = Occurrent, 	Process = Process, Quality = Property
+ 	SpatialRegion 	= Spatial_region, TemporalRegion = Temporal_region 	
+\end{lstlisting}
+
+We can then combine the ontologies while taking into account the semantic dependencies given by the alignments using
+\DOL combinations:
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]
+ontology Space =
+ combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
+\end{lstlisting} 
 
 \section{Use Case Onto-3: Module extraction from large ontologies}
 Especially in the biomedical domain, ontologies tend to become very large (e.g., SNOMED CT, FMA) with over 100000 concepts and relationships. Yet, none of 
@@ -2413,6 +2544,7 @@ subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verb
 an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 Library                  = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn              = 'library' , LibraryName , { LibraryItem } ;
@@ -2479,6 +2611,7 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % and HetCASL (see HetCASL summary)
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
+
 BasicOMS             = OMSInConformingLanguage ;
 MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
@@ -2555,6 +2688,7 @@ translation between to a given target (the source will be inferred as the
 OMS language of the current OMS).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
                  
 Symbol           = IRI ;
@@ -2612,8 +2746,10 @@ using a set of \syntax{Correspondence}s.
 Each correspondence may map some OMS non-logical symbol to another one
 (possibly given by a term) and an optional confidence value.
 Moreover, the relation between the two non-logical symbols can be explicitly
-specified (like being equal, or only being subsumed). 
+specified (like being equal, or only being subsumed) in a similar way to the Alignment API \cite{AlignmentAPI}. 
 \red{A default correspondence can be used; it is applied to all pairs of non-logical symbols with the same local names.
+The default relation in a correspondence is equivalence, unless  a different relation is specified in a surrounding 
+'CorrespondenceBlock'.
 Using an \syntax{AlignCard}, left and right injectivity and totality of the
 alignment can be specified (the default is left-injective, right-injective, left-total  and right-total).
 With \syntax{AlignSem}, different styles of networks of aligned ontologies (to be interpreted in a logic-specific way) of alignments can be specified (whether a single domain is assumend, all domains are embedded into a global domain,
@@ -2625,10 +2761,12 @@ to the \syntax{InterfaceSignature}.
 
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+
 MappingDefn          = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn;
 
-IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , IntprType ,
-                                      { LogicTranslation } , [ SymbolMapItems ]                     | 'refinement' , IntprName , Refinement ;
+IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , 
+                        IntprType , { LogicTranslation } , [ SymbolMapItems ]                     
+                     | 'refinement' , IntprName , Refinement ;
 IntprName            = IRI ;
 IntprType            = 'intpr-type' , OMS , OMS ;
 
@@ -2684,14 +2822,14 @@ CorrespondenceID     = IRI ;
 SymbolRef            = IRI ;
 TermOrSymbolRef      = Term | SymbolRef ;
 RelationRef          = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' 
-                     | 'has-instance' | 'instance-of' | 'default-relation' | IRI ; <\CLnote[type=todo]{say that, unless a different default is specified in a surrounding \syntax{CorrespondenceBlock}, the default is \syntax{'equivalent'}}> 
-Confidence           = Double ; <\CLnote[type=todo]{check if Double really makes sense for \emph{implementations}, maybe we'd like to compare confidence values for equality}> 
+                     | 'has-instance' | 'instance-of' | 'default-relation' | IRI ; 
+Confidence           = Double ;
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
 Double               = ($<$ a number $\in [0,1]$ $>$) ;
 \end{lstlisting}
 
-\CLnote[type=todo]{cite Alignment API for \syntax{RelationRef}; recommend linked data for \syntax{RelationRef = IRI}, or recommend registry?}
+\CLnote[type=todo]{recommend linked data for \syntax{RelationRef = IRI}, or recommend registry?}
 
 A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a non-logical symbol twice is an error. Mapping two source non-logical symbols to the same target non-logical symbol is legal, this then is a non-injective OMS mapping.}.  Applications \shall implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely defined – in detail:
 
@@ -2732,6 +2870,7 @@ the result of a query. Optioally, a result can be expressed to be
 complete, meaning that it comprises all answer substitutions to the query.
 }
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+
 QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
 QueryDefn            = 'select-query-defn', QueryName, Vars, Sentence, 
                                             OMS, [Translation] ;
@@ -3050,6 +3189,7 @@ ModuleProperties     =  '\%safe' ; }
 \newcommand*{\lessthan}{<}
 \newcommand*{\greaterthan}{>}
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+
 MappingDefn             = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn ;
 
 IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , [ 'end' ]
@@ -3095,6 +3235,7 @@ AlignCardForward     = AlignCard ;
 AlignCardBackward    = AlignCard ;
 AlignCard            = '1' | '?' | '+' | '*' ;
 AlignType            = GroupOMS , 'to' , GroupOMS ; <\CLnote[type=q-aut]{would it make sense to merge this with IntprType?}> 
+AlignSem            = 'SingleDomain' | 'GlobalDomain'  | 'ContextualizedDomain' 
 
 Correspondence       = CorrespondenceBlock
                      | SingleCorrespondence
@@ -3105,9 +3246,11 @@ SingleCorrespondence = SymbolRef , [ RelationRef ] ,
                        [ Confidence ] , TermOrSymbolRef , [ CorrespondenceId ] ;
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
-TermOrSymbolRef      = Term | SymbolRef ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)}>
+TermOrSymbolRef      = Term | SymbolRef ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)
+MC: I would keep them.}>
 RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | '$\ni$' 
-                     | '$\in$' | '|->' | IRI ; <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII.}>
+                     | '$\in$' | '|->' | IRI ; <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII. MC: either use 'in' and 'ni' or 
+'\$$\backslash$in\$' like HETS does.}>
 Confidence           = Double ; 
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
