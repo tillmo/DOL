@@ -3103,8 +3103,7 @@ DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core
 context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a 
 structured OMS where named OMS a referenced) resp.\ the current OMS IRI (in the context of a basic 
 OMS) to a symbol name. Both the separator between the library and the OMS name and that between the 
-OMS name and the symbol name can be declared, and both default to ``//''.}\ednote{TODO: specify the 
-declaration mechanism for separators.}
+OMS name and the symbol name can be declared (using the keyword \syntax{separators}), and both default to ``//''.}
 
 \item DOL does not make use of the \syntax{safe\_curie} production.
 \item DOL does not allow binding a relative IRI to a prefix.
@@ -3126,7 +3125,7 @@ Path      = ipath-absolute | ipath-rootless | ipath-empty ;
 Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
 Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
 \end{lstlisting}
-\ednote{is this abstract or concrete syntax???}
+\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}?}
 
 
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
@@ -3134,9 +3133,11 @@ these apply to all parts of the library, including basic OMS as clarified in \cr
 Their syntax is:
 \begin{lstlisting}[language=ebnf,escapechar=]  % abstract syntax
 PrefixMap        = 'prefix-map' , { PrefixBinding } ;
-PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ;
+PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
+                   [ Separators ] ;
 BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
 IRIBoundToPrefix = 'full-iri' , FullIRI ;
+Separators       = 'separators', String, String 
 \end{lstlisting}
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
@@ -3224,7 +3225,7 @@ order to become valid OMS in some DOL serialization.\todonote[id=wrapping,author
 \todonote{this subclause will be moved to annex M}
 ~\todonote[author=Christoph Lange,date=D:201108061340+02'00',type=todo]{Properly integrate this text from our LaRC 2011 paper} Annotations always have a subject, which is identified by an IRI. Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
 
-\clause{DOL text serialization}\label{a:text-syntax}
+\clause{DOL text serialization}\label{a:text-syntax}+
 
 \sclause{Document type}
 
@@ -3243,12 +3244,13 @@ disambiguate heterogeneous texts.
  
 \ssclause{Libraries}
 
-\begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
+\begin{lstlisting}[language=ebnf,escapechar=+,morecomment={[l]{\%\%\ }}]
 Library                 = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn             = 'library' , LibraryName , { LibraryItem } ;
-OMSInConformingLanguage = ($<$) language and serialization specific ($>$) ;
-LibraryItem             = LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+OMSInConformingLanguage = +$<$+ language and serialization specific +$>$+ ;
+LibraryItem             = LibImport | OMSDefn | NetworkDefn | MappingDefn 
+                          | QueryRelatedDefn | Qualification ;
 LibImport                = 'import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
@@ -3257,11 +3259,13 @@ SyntaxQual               = 'serialization' , SyntaxRef ;
 LibraryName             = IRI ;
 
 PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
-PrefixBinding            = BoundPrefix , IRIBoundToPrefix ;
-BoundPrefix              = ':' | Prefix ; ($<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}) 
+PrefixBinding            = BoundPrefix , IRIBoundToPrefix , [ Separators ] ;
+BoundPrefix              = ':' | Prefix ; +$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+ 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
+Separators               = 'separators' , String, String 
 
-NetworkDefn            = NetworkKeyword , NetworkName , '=' , [ ConsStrength ] , Network ;
+NetworkDefn            = NetworkKeyword , NetworkName , '=' , 
+                         [ ConsStrength ] , Network ;
 NetworkKeyword         = 'network' ;
 NetworkName            = IRI ;
 Network                = NetworkElements , ExcludeExtensions ;
