@@ -3235,6 +3235,12 @@ order to become valid OMS in some DOL serialization.\todonote[id=wrapping,author
 
 \sclause{Concrete Syntax}\label{a:dol-text:concrete}
 
+At several places, the concrete syntax uses the non-terminal
+\syntax{'end'} to mark the end of a definition or declaration. Tools
+may make this \syntax{'end'} optional. However, in this standard,
+we insist on the \syntax{'end'}, because it may be needed to effectively
+disambiguate heterogeneous texts.
+ 
 \ssclause{Libraries}
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
@@ -3337,7 +3343,7 @@ ExtensionName        = '%(' , IRI , ')%' ;
 
 OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model' | 'OMS' ;
 
-OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , [ 'end' ] ; <\CLnote[type=todo]{Here and in other, similar contexts, we might need to say more, as ``end'' is not really always optional.  This is the ``underlined end'' from the CASL specification, but there is no such construct in ISO EBNF.}> 
+OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , 'end'  ; 
 
 Symbol               = IRI ;
 SymbolMap            = Symbol , '|->' , Symbol ;
@@ -3376,10 +3382,10 @@ ModuleProperties     =  '\%safe' ; }
 
 MappingDefn             = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn ;
 
-IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , [ 'end' ]
+IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType ,  'end'
                      | IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType , '=' ,
-                       { LogicTranslation } , [ SymbolMapItems ] , [ 'end' ] 
-                     | IntprKeyword , IntprName , '=' , Refinement , [ 'end' ] ;
+                       { LogicTranslation } , [ SymbolMapItems ] ,  'end' 
+                     | IntprKeyword , IntprName , '=' , Refinement ,  'end' ;
 
 IntprKeyword         = 'interpretation' | 'view' | 'refinement' ;
 IntprName            = IRI ;
@@ -3399,7 +3405,7 @@ EntailmentType       = GroupOMS , 'entails', OMS
                      | Network , 'entails', OMS
                      | Network , 'entails', Network ;
 
-EquivDefn            = 'equivalence' , EquivName , ':' , EquivType , '=' , OMS , [ 'end' ] ;
+EquivDefn            = 'equivalence' , EquivName , ':' , EquivType , '=' , OMS ,  'end' ;
 EquivName            = IRI ;
 EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS 
                      | Network , '<\lessthan>-<\greaterthan>' , Network ;
@@ -3409,9 +3415,9 @@ ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleTy
 ModuleName           = IRI ;
 ModuleType           = OMS , 'of' , OMS ;
 
-AlignDefn            = 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , [ 'end' ]
+AlignDefn            = 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType ,  'end'
                      | 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , '=' ,
-                       Correspondence , { ',' , Correspondence } , [ 'end' ] ;
+                       Correspondence , { ',' , Correspondence } ,  'end' ;
 
 AlignName            = IRI ;
 AlignCards           = AlignCardForward , AlignCardBackward ;
