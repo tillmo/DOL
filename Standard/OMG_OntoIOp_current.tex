@@ -2700,12 +2700,22 @@ OMS network consisting of focused OMS and OMS mappings. OMS networks may build o
 OMS networks, and they can be used in \syntax{combination}s.  
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+<<<<<<< Updated upstream
 NetworkDefn            = 'dist-oms-defn', NetworkName , [ ConsStrength ] , Network ;
 NetworkName            = IRI ;
 Network                = 'dist-oms', NetworkElements , ExcludeExtensions ;
 NetworkElements        = 'dist-oms-elements', { OMSOrMappingorNetworkRef } ;
 ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorNetworkRef } ; 
 OMSOrMappingorNetworkRef  = IRI ;
+=======
+
+DistOMSDefn            = 'dist-oms-defn', DistOMSName , [ ConsStrength ] , DistOMS ;
+DistOMSName            = IRI ;
+DistOMS                = 'dist-oms', DistOMSElements , ExcludeExtensions ;
+DistOMSElements        = 'dist-oms-elements', { OMSOrMappingorDistOMSRef } ;
+ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorDistOMSRef } ; 
+OMSOrMappingorDistOMSRef  = IRI ;
+>>>>>>> Stashed changes
 \end{lstlisting}
 
 
@@ -2827,7 +2837,6 @@ OMS language of the current OMS).
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
-                 
 Symbol           = IRI ;
 SymbolMap        = 'symbol-map' , Symbol , Symbol ;
 SymbolOrMap      = Symbol | SymbolMap ;
@@ -3287,9 +3296,11 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 BasicOMS            = OMSInConformingLanguage ;
 MinimizableOMS      = BasicOMS
                      | OMSRef , [ ImportName ] ; 
+                     
 ExtendingOMS        = MinimizableOMS
                      | MinimizeKeyword , '{' , MinimizableOMS , '}' 
                      | OMS , Extraction ;
+                     
 OMS                 = ExtendingOMS
                      | OMS , Minimization 
                      | OMS , Translation
@@ -3784,6 +3795,7 @@ holds, called the \defsty{satisfaction condition}.
 
 \sclause{Direct semantics of DOL language constructs}
 
+<<<<<<< Updated upstream
 The semantics of DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
 environment is assumed.  The semantic domains are based on this heterogeneous logical environment. 
 A specific heterogeneous logical environment is given in the annexes.
@@ -3794,35 +3806,60 @@ OMS languages and OMS language translations\footnote{The
   defined formally. For this semantics, it suffices to know that there
   is a language-specific semantics of basic OMS as defined
   below.}, a collection of institutes, institute morphisms and
+=======
+The semantics of DOL is based on a fixed (but in principle arbitrary)
+heterogeneous logical environment. 
+%The semantic domains are based on this heterogeneous logical environment. 
+%A specific heterogeneous logical environment is given in the annexes.
+A \emph{heterogeneous logical environment} is given by a collection of
+OMS languages and OMS language translations, a collection of institutes, institute morphisms and
+>>>>>>> Stashed changes
 institute comorphisms (serving as logics, logic reductions and logic
 translations), and a collection of serializations. Moreover, there is
 a binary supports relation between OMS languages and institutes,
 and a binary supports relation between OMS languages and
-serializations. Some of the comorphisms are marked as default
-translations.
+serializations. 
 
-For pairs of institutes $\cI_1$ and $\cI_2$, we assume a pair of
-default union institute comorphisms
-$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ into a common target
-institute. The default union may also be undefined.
+{\color{blue}
+We assume that for each institution, there exist (possibly partial) union and difference operations on signatures  
+Some of the comorphisms are marked as default translations.
+}
+%This reads rather non precise 
+%For pairs of institutes $\cI_1$ and $\cI_2$, we assume a pair of
+%default union institute comorphisms
+%$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ into a common target
+%institute. The default union may also be undefined.
+%
 
+The semantic of OMS can be described either on the \emph{theory level} or the \emph{model level}. For an OMS $O$, the \emph{theory-level} semantics $sem^T(O)$ is described by a triple $(\cI,\Sigma, \Delta)$, while the \emph{model-level}semantics is described by a triple $(I, \Sigma, M)$, where $I$ is an institution, $\Sigma$ a signature.  $\Delta$ a set of $\Sigma$-sentences and $M$a class of $\Sigma$-models.  
 
-We also assume a language-specific semantics of basic
-OMS, depending on a triple $L=(lang,logic,ser)$ comprising of
-an OMS language, a logic (institute) and a serialization as follows:
-\semdom{sem_L(\Sigma,\syntax{BasicOMS})=(\Sigma',\Delta')\mbox{
-    where } \Sigma'\geq\Sigma} This is given by semantics of
-\syntax{BasicOMS} in $L$. The signature $\Sigma$ is the \emph{local
-  environment} of non-logical symbols that have been declared previously to
-\syntax{BasicOMS}. $\Sigma'\geq\Sigma$ is an extension of $\Sigma$
-with the non-logical symbols declared in \syntax{BasicOMS}.  $\Delta'$ is a set
-of sentences over $\Sigma'$.
+Model-theory level semantics for an OMS can be defined in a natural way from its theory-level semantics. Let $O$ be a OMS such that $sem^T(O)=(\cI, \Sigma, \Delta)$, then $$sem^M(O)= \{\cI, \Sigma, \{ \cM \in mod(\Sigma) \mid \cM \models \Delta \}).$$
 
-We further assume a language-specific semantics of complete (basic,
-but possibly also
-structured) OMS
-$sem(L,\syntax{OMSInSpecificLanguage})=(\Sigma,\cM)$, where
-$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
+We  assume a \emph{language-specific semantics} of basic
+OMS, inherited from the OMS language.  
+%For a basic OMS in 
+%depending on a triple 
+For a basic OMS in $L$ based on institution $\I$ we have the following:
+%$L=(lang,logic,ser)$ comprising of
+%an OMS language, a logic (institute) and a serialization as follows:
+\semdom{sem_L(\syntax{BasicOMS})=(I, \Sigma,\Delta)}
+%\mbox{
+ %   where } \Sigma'\geq\Sigma} 
+%  
+% The signature $\Sigma$ is the \emph{local
+%  environment} of non-logical symbols that have been declared previously to
+%\syntax{BasicOMS}. $\Sigma'\geq\Sigma$ is an extension of $\Sigma$
+%with the non-logical symbols declared in \syntax{BasicOMS}.  $\Delta'$ is a set
+%of sentences over $\Sigma'$. 
+where  $\Sigma$ is a signature in $I$ and $\Delta$ is a set
+of sentences over $\Sigma$. 
+
+%
+%We further assume a language-specific semantics of complete (basic,
+%but possibly also
+%structured) OMS
+%$sem(L,\syntax{OMSInConformingLanguage})=(\Sigma,\cM)$, where
+%$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
 
 We assume that in each institute there is a trivial signature
 $\emptyset$ with model class $\cM_\emptyset$. Moreover, we assume that
@@ -3831,6 +3868,8 @@ such that $\Sigma\leq\Sigma'$ implies $ent(\Sigma)\subseteq
 ent(\Sigma')$.
 This concludes the definition of heterogeneous logical environment.
 
+%Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
+% $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
 The semantics of OMS generally depends on a global environment
 $\Gamma$ mapping \syntax{IRI}s to semantics of OMS (given
 below), and a current triple $L$ consisting of the current
@@ -3838,12 +3877,13 @@ language, logic and serialization.\footnote{The initial $L$ is obtained
 from the file name extension of the file containing a 
 particular library, while $\Gamma$ is obtained
 by looking up IRIs in the internet and applying the semantics
-to thus obtained OMS.}
-
-\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}\semdom{sem(\Gamma,L,\syntax{LibraryDefn})=\Gamma'}
-$sem(\Gamma,L,\syntax{'dist-oms-defn' , LibraryName }DI_1,\ldots DI_n)=\Gamma'$\\
-where $sem(\ldots
-sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
+to thus obtained OMS.}\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}
+%
+\subsubsection*{Semantics of Libraries}
+We define the semantics of DOL constructs regarding libraries. 
+\semdom{sem_\Gamma(\syntax{LibraryDefn})=\Gamma'}
+$sem(\Gamma,L,\syntax{'library' , LibraryName },DI_1,\ldots DI_n)= (\Sigma, M)$\\
+where $sem(\ldots sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
 \todonote{\syntax{LibraryName} is not used. How could we use it?
   It seems that the individual OMS are directly named with
   IRIs, and the \syntax{LibraryName} is not relevant for that?
@@ -3854,10 +3894,10 @@ sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
   "linked data compliance", a good practice to be encouraged but not
   to be enforced, as it would break a lot of old OMS)}
 
-$sem(\Gamma,L,\syntax{OMSInSpecificLanguage})=\Gamma'$\\
+\semdom{sem(\Gamma,L,\syntax{OMSInConformingLanguage})=\Gamma'}
 where $\Gamma'=\Gamma[\syntax{IRI}\mapsto (L,\Sigma,\cM)]$,\\
-$(\Sigma,\cM)=sem(L,\syntax{OMSInSpecificLanguage})$\\
-and \syntax{IRI} is the IRI of \syntax{OMSInSpecificLanguage}.
+$(\Sigma,\cM)=sem(L,\syntax{OMSInConformingLanguage})$\\
+and \syntax{IRI} is the IRI of \syntax{OMSInConformingLanguage}.
 
 \semdom{sem(L,\syntax{Qualification})=L'}
 $sem((lang,logic,ser),\syntax{'lang-select' , LanguageRef})=(\syntax{LanguageRef},logic',ser')$\\
@@ -3888,108 +3928,212 @@ Equations for \syntax{OMSDefn} and \syntax{MappingDefn} are given below.
 
 \semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
 
+<<<<<<< Updated upstream
 In the context of a global environment $\Gamma$,
 the current language, logic and serialization $L$,  and a local environment $(\Sigma,\cM)$ (of previously declared
 non-logical symbols), an OMS (\syntax{MinimizableOMS})
 $O$ is interpreted as an institute $\cI=logic(\Gamma,L,O)$, a signature $\Sigma=sig(\Gamma,L,O)$ in institute $\cI$ and a class
 of models $\cM=Mod(\Gamma,L,O)$ over signature $\Sigma$.
 We combine this into $sem(\Gamma,L,O)=(logic(\Gamma,L,O),sig(\Gamma,L,O),Mod(\Gamma,L,O))$.
+=======
+\subsubsection*{Semantics of Focused OMS}
 
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{BasicOMS})=(L,\Sigma',\{M'\in Mod(\Sigma')\, |\, M\models\Delta', M'\forget\Sigma\in\cM \})$,\\  where
-$sem_L(\Sigma,\syntax{BasicOMS})=(\Sigma',\Delta')$
+In the context of a global environment $\Gamma$.
+%, and 
+%the current language, logic and serialization $L$.
+%  and a local environment $(\Sigma,\cM)$ (of previously declared
+%non-logical symbols), an OMS (\syntax{MinimizableOMS})
+A focused OMS  is interpreted at the model level as a triple $(I, \Sigma, M)$, with 
+an institute $I$, a signature $\Sigma$ in $I$, and a class
+of $\Sigma$-models $M$. % over signature $\Sigma$.
+%We combine this into $sem(\Gamma,L,O)=(logic(\Gamma,L,O),sig(\Gamma,L,O),Mod(\Gamma,L,O))$.
+%$sem(\Gamma,L,(\Sigma,\cM),\syntax{BasicOMS})=(L,\Sigma',\{M'\in Mod(\Sigma')\, |\, M\models\Delta', M'\forget\Sigma\in\cM \})$,\\  where
+%$sem_L(\Sigma,\syntax{BasicOMS})=(\Sigma',\Delta')$
+%
+%$sem(\Gamma,L,(\Sigma,\cM),\syntax{'oms-ref' , OMSRef})= \Gamma(\syntax{OMSRef})$
+%Let $sem_L(\Sigma,\syntax{BasicOMS})=(\Sigma,\Delta)$.
+>>>>>>> Stashed changes
 
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{'oms-ref' , OMSRef})= \Gamma(\syntax{OMSRef})$
+For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$, the theory-level semantics are defined as follows:  
+\semdom{sem^T(\syntax{BasicOMS})= sem_L(\syntax{BasicOMS})}  
+
+The model-level semantics of \syntax{BasicOMS} are then obtained: 
+\semdom{sem^M(\syntax{BasicOMS})= (I,\Sigma, M)}
+where $M = \{M \in Mod(\Sigma) \mid M \models \Delta\}$. 
+ 
+ 
+\semdom{sem^M(\syntax{'oms-ref' , OMSRef})= \Gamma(\syntax{OMSRef})}
+
+\semdom{sem^M(\syntax{'oms-ref' , OMSRef, ImportName}) = \Gamma(\syntax{OMSRef})}
 
 Note that $\Gamma(\syntax{OMSRef})$ may be undefined. That is, if a
 reference (IRI) to an OMS is not defined, the semantics of the
 enclosing DOL construct is undefined.
 
-\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
+\semdom{sem^M(\syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
 
-Semantics for \syntax{MinimizableOMS} is inherited.
+%Semantics for \syntax{MinimizableOMS} is inherited.
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{'minimize' , MinimizableOMS}) = (\cI,\Sigma',\cM'')$, \\
+\semdom{sem(\syntax{'minimize' , MinimizableOMS}) = (I,\Sigma',\cM'')}
 where
-$(\Sigma',\cM')=sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})$\\
-and $\cM''=\{M\in \cM'\, |\, M\textrm{ is minimal in }\{M'\in \cM'\, |\,M'\forget\Sigma=M\forget\Sigma\}\}$
+$(\Sigma', \cM')=sem^M(\syntax{MinimizableOMS})$
+and $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 
 
-\semdom{sem(\Gamma,L,\syntax{OMS})=(\cI,\Sigma,\cM)}
+\semdom{sem^M(\Gamma,L,\syntax{OMS})=(\cI,\Sigma,\cM)}
 
 \syntax{OMS} is interpreted in a context similar to that for
 \syntax{MinimizableOMS}; the difference being that there is
 no local environment.
 
-\CLnote[type=todo]{specify semantics of module extraction}
-\CLnote[type=todo]{specify semantics of approximation}
-\CLnote[type=todo]{specify semantics of implicit translations using
-default translations}
+\semdom{sem(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')}
+where 
+\begin{align*}
+(I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma, \\
+\Sigma_{\mathit{var}} & = sem(\syntax{CircVars},\Sigma),
+& \Sigma_{\mathit{fixed}} &=\Sigma \setminus (\Sigma_{\mathit{min}} \cup \Sigma_{\mathit{var}})
+\end{align*}
+and
+%\begin{align*}
+$$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+$$
 
-\begin{tabular}{|p{5.5cm}|p{9.3cm}|}\hline
-\multicolumn{1}{|c|}{$O$} & \multicolumn{1}{|c|}{$sem(\Gamma,L,O)=\ldots$}\\\hline
-\syntax{ExtendingOMS} & 
-$sem(\Gamma,L,(\emptyset,\cM_\emptyset),\syntax{ExtendingOMS})$\\\hline
-\syntax{'minimize-symbol' , OMS , CircMin , CircVars} &
-$(I,\Sigma,\cM')$ 
-where $sem(\Gamma,L,\syntax{OMS})=(I,\Sigma,\cM)$,\newline
-$\Sigma_{\mathit{min}}=sem(\syntax{CircMin},\Sigma)$,
-$\Sigma_{\mathit{var}}=sem(\syntax{CircVars},\Sigma)$,\newline
-$\Sigma_{\mathit{fixed}}=\Sigma\setminus(\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{var}})$ and\newline
-\begin{tabular}{ll}
-$\cM' = \{$&$M\in \cM\, |\, M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\textrm{ is minimal in }$\\
-&$\{M'\in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\, |\,M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\}~~\}$
-\end{tabular}
-\\\hline
-\syntax{'translation' , OMS , Translation} & 
-$(J,\Phi(\Sigma),\{M \,|\, \beta(M)\in \cM\})$,\newline where
- $(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
-$sem(L,\Sigma,\syntax{Translation})=(\Phi,\alpha,\beta):I\to J$\\\hline
-\syntax{'reduction' , OMS , Reduction} &  
-$(J,\Sigma',\{\beta(M)\forget{\Sigma'} \,|\, M\in \cM\})$, \newline where
+%Translation
+\semdom{sem^M(\syntax{'translation' , OMS , Translation}) = (J,\Phi(\Sigma),\{M \,|\, \beta(M)\in \cM\})}
+where  $(I,\Sigma,\cM) = \syntax{OMS})$  and $sem(\syntax{Translation})=(\Phi,\alpha,\beta):I\to J$. 
+
+%Reduction
+\semdom{sem^M(\syntax{'reduction' , OMS , Reduction}) = (J,\Sigma',\{\beta(M)\forget{\Sigma'} \,|\, M\in \cM\})}
+where
 $(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
-$sem(L,\Sigma,\syntax{Reduction})=((\Phi,\alpha,\beta):I\to J,\Sigma')$\\\hline
-\syntax{'approximation', OMS , Approximation} & TODO \\\hline
-\syntax{'union' , OMS , [ ConsStrength ] , OMS} & $(\cI,\Sigma,\cM)$ where\newline
-$\Sigma_i=sig(\Gamma,L,O_i)$, $\cI_i=logic(\Gamma,L,O_i)$ ($i=1,2$)\newline
-$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ are the default union comorphisms
-for $\cI_1$ and $\cI_2$ (if existing)\newline
-$\Sigma=\Phi_1(\Sigma_1)\vee \Phi_2(\Sigma_2)$ (if the supremum is defined)\newline
-$\cM=\{M\in Mod(\Sigma) \,|\, \beta_i(M)\forget{\Sigma_i}\in Mod(\Gamma,L,O_i)\}$
-\\\hline
-\syntax{'extension' , OMS , ExtensionOMS} & $sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})$ \\\hline
-\syntax{'module-extract' , OMSRef , Conservative, ExtractionMethod }$\Sigma$  & TODO \\\hline
-\syntax{'qual-oms' , \{ Qualification \} , OMS} & $sem(\Gamma,sem(L,\syntax{\{ Qualification \}}),\syntax{OMS})$  \\\hline
-\end{tabular}
+$sem(\syntax{Reduction})=((\Phi,\alpha,\beta):I\to J,\Sigma')$
+
+%Module Extract
+\semdom{sem^T(\syntax{'module extract', OMS, Extraction}) = TODO}
+\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = TODO}
+
+%Approximation
+\semdom{sem^M(\syntax{'approximation', OMS , Approximation} =   TODO }
+\CLnote[type=todo]{specify semantics of approximation}
+
+%Filtering
+\semdom{sem^T(\syntax{'filtering' , OMS  Filtering})= TODO}
+\semdom{sem^M(\syntax{'filtering' , OMS  Filtering})= TODO}
+
+%Union
+\semdom{sem^T(\syntax{'union' , $O_1$ , [ ConsStrength ] , $O_2$)} = (I,\Sigma_1 \cup \Sigma_2, \Delta_1 \cup \Delta_2)} 
+where $sem^T(O_i) = (I, \Sigma_i, \Delta_i)$, for $i = 1,2$.
+%$\Sigma = \Sigma_1 \cup \Sigma_2$, and $\Delta= \Delta_1 \cup \Delta_2$.
+
+\semdom{sem^M(\syntax{'union' , OMS , [ ConsStrength ] , OMS}) = (I,\Sigma_1\cup \Sigma_2, \cM_1 \cup \cM_2)}
+ where 
+ $sem^M(O_i) = (I_i, \Sigma_im \cM_i)$, for $i = 1,2$. 
+ \ednote{\syntax{ConstStrength} is not used in de definition, there are missing cases}
+\ednote{something has to be said about $I$}
+
+%Extension
+\semdom{sem^T(\syntax{'extension' , OMS , ExtensionOMS)}= (I, \Sigma_1 \cup, \Sigma_2, \Delta_1 \cup \Delta_2)}
+where $sem^T(OMS)= (I, \Sigma_1, \Delta_1)$, $sem^T(\syntax{ExtensionOMS})= (I, \Sigma_2, \Delta_2)$
+\ednote{needs to be revised}
+
+\semdom{sem^M(\syntax{'extension' , OMS , ExtensionOMS)}= (I, \Sigma_1 \cup, \Sigma_2, \cM')}
+where 
+\begin{align*}
+&sem^M(\syntax{OMS}) = (I, \Sigma_1, \cM_1), \\
+&sem^T(\syntax{ExtensionOMS})= (I, \Sigma_2, \Delta_2), \quad  \text{and}\\
+&	\cM' = \{M \in \mathit{Mod}(\Sigma_1 \cup \Sigma_2) \mid M \models \Delta_2, M\forget\Sigma \in \cM_1 \}
+\end{align*}
+\ednote{According to the intended semantics, extensions are defined for OMS $O_1$, $O_2$, such that $O_2$ is basic, this is however not the case in the current abstract syntax: see productions for \syntax{ExtensionOMS}}
+
+%Qualification
+\semdom{sem^T(\syntax{'qual-oms', \{ Qualification \}, OMS })= TODO}
+\semdom{sem^M(\syntax{'qual-oms', \{ Qualification \}, OMS })= TODO}
+
+%Bridge
+\semdom{sem^T(\syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= TODO}
+%STOPPED HERE
+
+\semdom{sem^M(\syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= TODO}
+
+%Combination
+\semdom{sem^T(\syntax{'combination', Network})= TODO}
+\semdom{sem^M(\syntax{'combination', Network})= TODO}
+
+%Application
+\semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
+\semdom{sem^M(\syntax{'application', Substname, Sentence})= TODO}
+
+
+%\CLnote[type=todo]{specify semantics of module extraction}
+% YI 13.10.14
+%\begin{tabular}{|p{5.5cm}|p{9.3cm}|}\hline
+%\multicolumn{1}{|c|}{$O$} & \multicolumn{1}{|c|}{$sem(\Gamma,L,O)=\ldots$}\\\hline
+%\syntax{ExtendingOMS} & 
+%$sem(\Gamma,L,(\emptyset,\cM_\emptyset),\syntax{ExtendingOMS})$\\\hline
+%\syntax{'minimize-symbol' , OMS , CircMin , CircVars} &
+%$(I,\Sigma,\cM')$ 
+%where $sem(\Gamma,L,\syntax{OMS})=(I,\Sigma,\cM)$,\newline
+%$\Sigma_{\mathit{min}}=sem(\syntax{CircMin},\Sigma)$,
+%$\Sigma_{\mathit{var}}=sem(\syntax{CircVars},\Sigma)$,\newline
+%$\Sigma_{\mathit{fixed}}=\Sigma\setminus(\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{var}})$ and\newline
+%\begin{tabular}{ll}
+%$\cM' = \{$&$M\in \cM\, |\, M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\textrm{ is minimal in }$\\
+%&$\{M'\in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\, |\,M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\}~~\}$
+%\end{tabular}
+%\\\hline
+%\syntax{'translation' , OMS , Translation} & 
+%$(J,\Phi(\Sigma),\{M \,|\, \beta(M)\in \cM\})$,\newline where
+% $(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
+%$sem(L,\Sigma,\syntax{Translation})=(\Phi,\alpha,\beta):I\to J$\\\hline
+%\syntax{'reduction' , OMS , Reduction} &  
+%$(J,\Sigma',\{\beta(M)\forget{\Sigma'} \,|\, M\in \cM\})$, \newline where
+%$(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
+%$sem(L,\Sigma,\syntax{Reduction})=((\Phi,\alpha,\beta):I\to J,\Sigma')$\\\hline
+%\syntax{'approximation', OMS , Approximation} & TODO \\\hline
+%\syntax{'union' , OMS , [ ConsStrength ] , OMS} & $(\cI,\Sigma,\cM)$ where\newline
+%$\Sigma_i=sig(\Gamma,L,O_i)$, $\cI_i=logic(\Gamma,L,O_i)$ ($i=1,2$)\newline
+%$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ are the default union comorphisms
+%for $\cI_1$ and $\cI_2$ (if existing)\newline
+%$\Sigma=\Phi_1(\Sigma_1)\vee \Phi_2(\Sigma_2)$ (if the supremum is defined)\newline
+%$\cM=\{M\in Mod(\Sigma) \,|\, \beta_i(M)\forget{\Sigma_i}\in Mod(\Gamma,L,O_i)\}$
+%\\\hline
+
+%\syntax{'extension' , OMS , ExtensionOMS} & $sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})$ \\\hline
+%\syntax{'module-extract' , OMSRef , Conservative, ExtractionMethod }$\Sigma$  & TODO \\\hline
+%\syntax{'qual-oms' , \{ Qualification \} , OMS} & $sem(\Gamma,sem(L,\syntax{\{ Qualification \}}),\syntax{OMS})$  \\\hline
+%\end{tabular}
+%%%%%
+% 13.10.14 YI
 
 %Here, for a $\Sigma$-model $M$ and s supersignature $\Sigma\leq\Sigma'$,
 %$M|^{\Sigma'}$ is the class of all $\Sigma'$-models whose $\Sigma$-reduct is $M$.
 %This naturally extends to classes of models.
 
-\semdom{sem(L,\Sigma,\syntax{Reduction})=(\mu=(\Phi,\alpha,\beta),\Sigma') \mbox{ where } \Sigma'\leq\Phi(\Sigma)}
-
-
-
-$sem(L,\Sigma,\syntax{'hidden' } LR_1 \ldots LR_n\ (\syntax{'symbol-items' } EI_1\ldots EI_n))=(\mu,\Sigma')$\\
-where $\mu=(\Phi,\alpha,\beta)=sem(LR_n)\circ\cdots\circ sem(LR_1)$\\
-and $\Sigma'$ is the maximal subsignature of $\Phi(\Sigma)$
-with $ent(\Sigma')$ disjoint from $EI_1\ldots EI_n$. (The semantics
-is undefined, if such a subsignature does not exist.)
-
-$sem(L,\Sigma,\syntax{'revealed' } (\syntax{'symbol-items' } EI_1\ldots EI_n))=(id,\Sigma')$\\
-where $id$ is the identity institute morphism, and
-and $\Sigma'$ is the minimal subsignature of $\Sigma$
-with $ent(\Sigma')$ containing $EI_1\ldots EI_n$.
-(The semantics
-is undefined, if such a subsignature does not exist.)
-
-\semdom{sem(L,\Sigma,\syntax{SymbolItems})=\Sigma'\mbox{ where } \Sigma'\leq\Sigma}
-$sem(L,\Sigma,\syntax{'symbol-items' }EI_1\ldots EI_n)=
-\bigvee\{\Sigma'\leq\Sigma\mbox{ in }L\,|\, $ the non-logical symbols in $EI_1\ldots EI_n$
- do not occur in $ent(\Sigma')\}$
+%\semdom{sem(L,\Sigma,\syntax{Reduction})=(\mu=(\Phi,\alpha,\beta),\Sigma') \mbox{ where } \Sigma'\leq\Phi(\Sigma)}
+%
+%
+%
+%$sem(L,\Sigma,\syntax{'hidden' } LR_1 \ldots LR_n\ (\syntax{'symbol-items' } EI_1\ldots EI_n))=(\mu,\Sigma')$\\
+%where $\mu=(\Phi,\alpha,\beta)=sem(LR_n)\circ\cdots\circ sem(LR_1)$\\
+%and $\Sigma'$ is the maximal subsignature of $\Phi(\Sigma)$
+%with $ent(\Sigma')$ disjoint from $EI_1\ldots EI_n$. (The semantics
+%is undefined, if such a subsignature does not exist.)
+%
+%$sem(L,\Sigma,\syntax{'revealed' } (\syntax{'symbol-items' } EI_1\ldots EI_n))=(id,\Sigma')$\\
+%where $id$ is the identity institute morphism, and
+%and $\Sigma'$ is the minimal subsignature of $\Sigma$
+%with $ent(\Sigma')$ containing $EI_1\ldots EI_n$.
+%(The semantics
+%is undefined, if such a subsignature does not exist.)
+%
+%\semdom{sem(L,\Sigma,\syntax{SymbolItems})=\Sigma'\mbox{ where } \Sigma'\leq\Sigma}
+%$sem(L,\Sigma,\syntax{'symbol-items' }EI_1\ldots EI_n)=
+%\bigvee\{\Sigma'\leq\Sigma\mbox{ in }L\,|\, $ the non-logical symbols in $EI_1\ldots EI_n$
+% do not occur in $ent(\Sigma')\}$
 
 %$sem(L,\Sigma,\syntax{'logic-reduction' , OMSLangTrans})=$
 %TODO
