@@ -2671,7 +2671,6 @@ subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verb
 an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
 Library                  = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn              = 'library' , LibraryName , { LibraryItem } ;
@@ -2741,7 +2740,6 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % and HetCASL (see HetCASL summary)
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
-
 BasicOMS             = OMSInConformingLanguage ;
 MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
@@ -2825,7 +2823,6 @@ translation between to a given target (the source will be inferred as the
 OMS language of the current OMS).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
 OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
                  
 Symbol           = IRI ;
@@ -2894,7 +2891,6 @@ to the \syntax{InterfaceSignature}.
 
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
-
 MappingDefn          = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn;
 
 IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , 
@@ -3013,7 +3009,6 @@ the result of a query. Optioally, a result can be expressed to be
 complete, meaning that it comprises all answer substitutions to the query.
 }
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
-
 QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
 QueryDefn            = 'select-query-defn', QueryName, Vars, Sentence, 
                                             OMS, [Translation] ;
@@ -3139,7 +3134,7 @@ PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
                    [ Separators ] ;
 BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
 IRIBoundToPrefix = 'full-iri' , FullIRI ;
-Separators       = 'separators', String, String 
+Separators       = 'separators', String, String ;
 \end{lstlisting}
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
@@ -3246,11 +3241,11 @@ disambiguate heterogeneous texts.
  
 \ssclause{Libraries}
 
-\begin{lstlisting}[language=ebnf,escapechar=+,morecomment={[l]{\%\%\ }}]
+\begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 Library                 = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn             = 'library' , LibraryName , { LibraryItem } ;
-OMSInConformingLanguage = +$<$+ language and serialization specific +$>$+ ;
+OMSInConformingLanguage = ($<$) language and serialization specific ($>$) ;
 LibraryItem             = LibImport | OMSDefn | NetworkDefn | MappingDefn 
                           | QueryRelatedDefn | Qualification ;
 LibImport                = 'import' , LibraryName ;
@@ -3259,12 +3254,14 @@ LanguageQual             = 'language' , LanguageRef ;
 LogicQual                = 'logic' , LogicRef ;
 SyntaxQual               = 'serialization' , SyntaxRef ;
 LibraryName             = IRI ;
+\end{lstlisting}
 
+\begin{lstlisting}[language=ebnf,escapechar=+,morecomment={[l]{\%\%\ }}]
 PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
 PrefixBinding            = BoundPrefix , IRIBoundToPrefix , [ Separators ] ;
 BoundPrefix              = ':' | Prefix ; +$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+ 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
-Separators               = 'separators' , String, String 
+Separators               = 'separators' , String, String ;
 
 NetworkDefn            = NetworkKeyword , NetworkName , '=' , 
                          [ ConsStrength ] , Network ;
@@ -3273,7 +3270,7 @@ NetworkName            = IRI ;
 Network                = NetworkElements , ExcludeExtensions ;
 NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
 NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions    = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
+ExcludeExtensions      = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
 OMSOrMappingorNetworkRef        = IRI ;
 \end{lstlisting}
 
@@ -3385,7 +3382,6 @@ ModuleProperties     =  '\%safe' ; }
 \newcommand*{\lessthan}{<}
 \newcommand*{\greaterthan}{>}
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-
 MappingDefn             = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn ;
 
 IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType ,  'end'
@@ -3431,7 +3427,7 @@ AlignCardForward     = AlignCard ;
 AlignCardBackward    = AlignCard ;
 AlignCard            = '1' | '?' | '+' | '*' ;
 AlignType            = GroupOMS , 'to' , GroupOMS ; <\CLnote[type=q-aut]{would it make sense to merge this with IntprType?}> 
-AlignSem            = 'SingleDomain' | 'GlobalDomain'  | 'ContextualizedDomain' 
+AlignSem            = 'SingleDomain' | 'GlobalDomain'  | 'ContextualizedDomain' ;
 
 Correspondence       = CorrespondenceBlock
                      | SingleCorrespondence

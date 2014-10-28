@@ -129,7 +129,7 @@ parseIso input =
             c <- comment; spaces
             return $ EBNF nt (fst rhs) c
   alt :: CharParser () Alt
-  alt = do string "($" 
+  alt = do string "($"
            s <- parseString ";"
            return $ Informal ("($"++s)
         <|>
@@ -170,6 +170,11 @@ parseIso input =
                c <- parseString ")"
                string ")"
                return ("("++c++")")
+            <|>
+            do try $ string "+"
+               c <- parseString "+"
+               string "+"
+               return ("+"++c++"+")
             <|>
             return ""
 
