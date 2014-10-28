@@ -2980,9 +2980,9 @@ LogicReduction       = 'logic-reduction' , OMSLangTrans ;
 SymbolItems          = 'symbol-items' , ( Symbol , { Symbol } ) ;
 SymbolMapItems       = 'symbol-map-items' , ( SymbolOrMap , { SymbolOrMap } ) ;
 
-Extraction           = 'extraction', [ InterfaceSignature ] ;
+Extraction           = 'extraction', [ QualInterfaceSignature ] ;
 
-Approximation        = 'approximation' , InterfaceSignature , [ LogicRef ] ;
+Approximation        = 'approximation' , QualInterfaceSignature , [ LogicRef ] ;
 
 Filtering            = 'select' , BasicOMS 
                      | 'reject' , BasicOMS ;
@@ -2996,9 +2996,10 @@ ExtConsStrength      = ConsStrength | 'implied' ;
 
 Conservative         = 'consequence-conservative' | 'model-conservative' ;
 
-InterfaceSignature   = 'keep-signature' , SymbolItems 
-                     | 'remove-signature' , SymbolItems ;
+QualInterfaceSignature   = 'keep-signature' , InterfaceSignature 
+                         | 'remove-signature' , InterfaceSignature ;
 
+InterfaceSignature   = SymbolItems ;
 ImportName           = IRI ;
 ExtensionName        = IRI ;
 \end{lstlisting}
