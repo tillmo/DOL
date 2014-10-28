@@ -716,6 +716,7 @@ The reader is encouraged to report any technical or editing issues/problems
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{-1}
 \chapter{Submission-Specific Material}
 \section{Submission Preface}
 Fraunhofer FOKUS, MITRE, and Thematix Partners LLC are pleased  to submit this joint proposal in response to the Ontology, Model and Specification Integration and Interoperability (OntoIOp) RFP  (OMG document ad/2013-12-02). The submitter contacts for this submission are:
@@ -2724,10 +2725,11 @@ OMS networks, and they can be used in \syntax{combination}s.
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-NetworkDefn            = 'dist-oms-defn', NetworkName , [ ConsStrength ] , Network ;
+NetworkDefn            = 'network-defn', NetworkName , [ ConsStrength ] , Network ;
 NetworkName            = IRI ;
-Network                = 'dist-oms', NetworkElements , ExcludeExtensions ;
-NetworkElements        = 'dist-oms-elements', { OMSOrMappingorNetworkRef } ;
+Network                = 'network', NetworkElements , ExcludeExtensions ;
+NetworkElements        = 'network-elements' , { NetworkElement } ;
+NetworkElement         = 'network-element' , [ Id ] , OMSOrMappingorNetworkRef ;
 ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorNetworkRef } ; 
 OMSOrMappingorNetworkRef  = IRI ;
 \end{lstlisting}
@@ -2927,11 +2929,11 @@ IntprName            = IRI ;
 IntprType            = 'intpr-type' , OMS , OMS ;
 
 Refinement           = 'ref-oms' , OMS 
-                     | 'ref-dist-oms' , Network
-                     | 'ref-composition' , Refinement , Refinment
+                     | 'ref-network' , Network
+                     | 'ref-composition' , Refinement , Refinement
                      | 'simple-ref' , OMS , RefMap , Refinement ;
 RefMap               = 'refmap-oms' ,  { LogicTranslation } , [ SymbolMapItems ] 
-                     | 'refmap-dist-oms' , { NodeMap } ;
+                     | 'refmap-network' , { NodeMap } ;
 NodeMap              = 'node-map', OMSName , OMSName , { LogicTranslation } , [ SymbolMapItems ] ;
 
 
@@ -2944,7 +2946,7 @@ EntailmentName       = IRI ;
 EquivDefn            = 'equiv-defn' , EquivName , EquivType , OMS ;
 EquivName            = IRI ;
 EquivType            = 'oms-equiv' , OMS , OMS 
-                     | 'dist-oms-equiv' , Network , Network ;
+                     | 'network-equiv' , Network , Network ;
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
@@ -3153,13 +3155,14 @@ Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
 Their syntax is:
-\begin{lstlisting}[language=ebnf,escapechar=]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 PrefixMap        = 'prefix-map' , { PrefixBinding } ;
 PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
                    [ Separators ] ;
 BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
 IRIBoundToPrefix = 'full-iri' , FullIRI ;
-Separators       = 'separators', String, String ;
+Separators       = 'separators' , String , String ;
+String           = ($<$ \rm any list of unicode characters $>$)
 \end{lstlisting}
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
@@ -3297,6 +3300,7 @@ NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
 NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
 ExcludeExtensions      = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
 OMSOrMappingorNetworkRef        = IRI ;
+Id                     = Letter , { LetterOrDigit }
 \end{lstlisting}
 
 Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core-20120607, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
@@ -3379,10 +3383,8 @@ SymbolOrMap          = Symbol
                      | SymbolMap ;
 
 OMSName             = IRI ;
-IntprName            = IRI ;
 
 OMSRef              = IRI ;
-IntprRef             = IRI ;
 ExtensionRef         = IRI ;
 
 LanguageRef          = IRI ;
@@ -3391,9 +3393,11 @@ SyntaxRef            = IRI ;
 
 LoLaRef              = LanguageRef
                      | LogicRef ;
+\end{lstlisting}
 
+\begin{lstlisting}[language=ebnf,mathescape]
 OMSLangTrans        = OMSLangTransRef
-                     | '<$\to$>' , LoLaRef ;
+                     | '->' , LoLaRef ;
 
 OMSLangTransRef     = IRI ;
 \end{lstlisting}
@@ -3406,7 +3410,7 @@ ModuleProperties     =  '\%safe' ; }
 
 \newcommand*{\lessthan}{<}
 \newcommand*{\greaterthan}{>}
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+\begin{lstlisting}[language=ebnf,mathescape]
 MappingDefn             = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn ;
 
 IntprDefn            = IntprKeyword , IntprName , [ Conservative ] , ':' , IntprType ,  'end'
@@ -3420,7 +3424,7 @@ IntprType            = GroupOMS , 'to' , GroupOMS ;
 
 Refinement           = OMS 
                      | Network
-                     | Refinement , 'then' , Refinment
+                     | Refinement , 'then' , Refinement
                      | OMS , 'refined' , [RefMap] , 'to' , Refinement ;
 RefMap               = 'via' ,  { LogicTranslation } , [ SymbolMapItems ] 
                      | 'via' , NodeMap , { ',' , NodeMap } ;
@@ -3434,8 +3438,8 @@ EntailmentType       = GroupOMS , 'entails', OMS
 
 EquivDefn            = 'equivalence' , EquivName , ':' , EquivType , '=' , OMS ,  'end' ;
 EquivName            = IRI ;
-EquivType            = GroupOMS , '<\lessthan>-<\greaterthan>' , GroupOMS 
-                     | Network , '<\lessthan>-<\greaterthan>' , Network ;
+EquivType            = GroupOMS , '<->' , GroupOMS 
+                     | Network , '<->' , Network ;
 
 ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
                        'for' , InterfaceSignature ;
@@ -3465,7 +3469,7 @@ SingleCorrespondence = SymbolRef , [ RelationRef ] ,
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
 TermOrSymbolRef      = Term | SymbolRef ;
-RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | 'ni' | 'in' | | IRI ;
+RelationRef          = '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI ;
 Confidence           = Double ; 
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
@@ -3927,7 +3931,7 @@ language, logic and serialization.\footnote{The initial $L$ is obtained
 from the file name extension of the file containing a 
 particular library, while $\Gamma$ is obtained
 by looking up IRIs in the internet and applying the semantics
-to thus obtained OMS.}\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}
+to thus obtained OMS.}\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'network-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}
 \todonote{@MC: explain what the purpose of a global env is}
 
 %
