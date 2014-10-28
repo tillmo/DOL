@@ -2751,7 +2751,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item an approximation of an OMS, in a subsignature or sublogic, with the effect that sentences not expressible in the subsignature resp.\ sublogic are replaced with a suitable approximation,
 \item \red{a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,}
 \item a union of several OMS,
-\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMS?},
+\item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional or implied,
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
 \item a combination of OMS (technically, this is a colimit, see \cite{ZimmermanEtAl06}),\footnote{A combination of OMS also takes all mappings into these OMS into consideration---unless these are explicitly excluded.}
@@ -2898,11 +2898,14 @@ as well? In  \cite{MossakowskiTarlecki09}, this is allowed.}
 }
 
 In contrast to this functional style of mapping symbols, an alignment provides a relational 
-connection between two OMS,  using a set of \syntax{Correspondence}s. Each correspondence may map 
-some OMS non-logical symbol to another one (possibly given by a term) and an optional confidence 
+connection between two OMS,  using a set of \syntax{Correspondence}s. Each correspondence may relate 
+some OMS non-logical symbol to another one (possibly given by a term) with an optional confidence 
 value. Moreover, the relation between the two non-logical symbols can be explicitly
 specified (like being equal, or only being subsumed) in a similar way to the Alignment API \cite{AlignmentAPI}. 
-\red{A default correspondence can be used; it is applied to all pairs of non-logical symbols with 
+\red{The relations that can be used in a correspondence are equivalence, disjointness, subsumption, membership (the last two with a
+variant for each direction) or a user-defined relation that is stored in a registry and must be prefixed with
+\url{purl.net/DOL}.
+A default correspondence can be used; it is applied to all pairs of non-logical symbols with 
 the same local names. The default relation in a correspondence is equivalence, unless  a different 
 relation is specified in a surrounding 
 'CorrespondenceBlock'.
@@ -2974,7 +2977,7 @@ Correspondence       = CorrespondenceBlock
 CorrespondenceBlock  = 'correspondence-block' , [ RelationRef ] , [ Confidence ],
                                                 Correspondence, { Correspondence } ; 
 SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationRef ] , [ Confidence ] ,
-                                          TermOrSymbolRef , [ CorrespondenceID ] ; <\CLnote[type=todo]{concrete syntax, e.g., a = x, b my:similarTo y \%(correspond-b-to-y)\%, c my:similarTo 0.75 z}> 
+                                          TermOrSymbolRef , [ CorrespondenceID ] ;
 CorrespondenceID     = IRI ;
 SymbolRef            = IRI ;
 TermOrSymbolRef      = Term | SymbolRef ;
@@ -2985,8 +2988,6 @@ Confidence           = Double ;
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
 Double               = ($<$ a number $\in [0,1]$ $>$) ;
 \end{lstlisting}
-
-\CLnote[type=todo]{recommend linked data for \syntax{RelationRef = IRI}, or recommend registry?}
 
 A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; 
 the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a 
@@ -3305,8 +3306,6 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 
 \ssclause{Focused OMS}\label{a:dol-text:OMS}
 
-\ednote{TODO: merge ALIGN-TYPE with INTPR-TYPE. TM: why?}
-
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
 BasicOMS            = OMSInConformingLanguage ;
 MinimizableOMS      = BasicOMS
@@ -3449,14 +3448,15 @@ ModuleType           = OMS , 'of' , OMS ;
 
 AlignDefn            = 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType ,  'end'
                      | 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , '=' ,
-                       Correspondence , { ',' , Correspondence } ,  'end' ;
+                       Correspondence , { ',' , Correspondence } ,  
+                       'assuming', AlignSem, 'end' ;
 
 AlignName            = IRI ;
 AlignCards           = AlignCardForward , AlignCardBackward ;
 AlignCardForward     = AlignCard ;
 AlignCardBackward    = AlignCard ;
 AlignCard            = '1' | '?' | '+' | '*' ;
-AlignType            = GroupOMS , 'to' , GroupOMS ; <\CLnote[type=q-aut]{would it make sense to merge this with IntprType?}> 
+AlignType            = GroupOMS , 'to' , GroupOMS ;
 AlignSem            = 'SingleDomain' | 'GlobalDomain'  | 'ContextualizedDomain' 
 
 Correspondence       = CorrespondenceBlock
@@ -3468,11 +3468,8 @@ SingleCorrespondence = SymbolRef , [ RelationRef ] ,
                        [ Confidence ] , TermOrSymbolRef , [ CorrespondenceId ] ;
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
-TermOrSymbolRef      = Term | SymbolRef ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)
-MC: I would keep them.}>
-RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | '$\ni$' 
-                     | '$\in$' | '|->' | IRI ; <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII. MC: either use 'in' and 'ni' or 
-'\$$\backslash$in\$' like HETS does.}>
+TermOrSymbolRef      = Term | SymbolRef ;
+RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | 'ni' | 'in' | | IRI ;
 Confidence           = Double ; 
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
