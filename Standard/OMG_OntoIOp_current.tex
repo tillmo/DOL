@@ -3233,7 +3233,7 @@ Complete             = 'complete' ;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-~\CLnote{some text that was left over here, but I don't recall what we meant by it: recommendations for dealing with OMS language dialects}
+%~\CLnote{some text that was left over here, but I don't recall what we meant by it: recommendations for dealing with OMS language dialects}
 
 \sclause{Identifiers}\label{c:identifiers}
 
@@ -3250,16 +3250,18 @@ principles, which apply to any machine-processable data published on the Web
 \cite{BernersLee:LinkedData2006}.)  It is recommended that publicly accessible DOL OMS be published 
 as linked data.
 
-\todonote[type=q-aut,author=Christoph Lange]{Does this motivation/justification sound reasonable to 
-you?}Therefore, in order to impose fewer conformance requirements on applications, DOL commits to 
+%\todonote[type=q-aut,author=Christoph Lange]{Does this motivation/justification sound reasonable to 
+%you? --- Yes.}
+Therefore, in order to impose fewer conformance requirements on applications, DOL commits to 
 using IRIs for identification \nisref{IETF/RFC 3987:2005}.  It is \recommended that libraries use 
 IRIs that translate to URLs when applying the algorithm for mapping IRIs to URIs specified in 
 \nisref{IETF/RFC 3987:2005, Section 3.1}.  DOL descriptions of any element of a library that is 
 identified by a certain IRI \should be \emph{located} at the corresponding URL, so that agents can 
-locate them.  As IRIs are specified with a concrete syntax in \nisref{IETF/RFC 3987:2005}, DOL 
+locate them.  As IRIs are specified with a concrete syntax only in \nisref{IETF/RFC 3987:2005}, DOL 
 adopts the latter into its abstract syntax as well as all of its concrete syntaxes 
-(serializations)\CLnote[type=q-all]{I meant to say: for IRIs, the abstract syntax is the same as 
-the concrete syntax.}.
+(serializations)
+%\CLnote[type=q-all]{I meant to say: for IRIs, the abstract syntax is the same as 
+%the concrete syntax.}.
 
 %% We don't do "semantic namespaces" for now.  (Agreed in 2012-02-23 meeting)
 % For identification, DOL preferably employs IRIs that have the following three components:\footnote{This IRI syntax has originally been designed by Florian Rabe and Michael Kohlhase \cite{Rabe:MMT2011}, independently from this \IS.\todonote[type=todo,author=Christoph Lange]{if we leave this reference in place, we might additionally refer to the paper that describes the semantics of MMT and provides more design rationale background}}
@@ -3303,7 +3305,8 @@ bound to the prefix and the reference.
 
 DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core-20120607, Section 6} with the following changes:
 \begin{itemize}
-\item DOL does not support the declaration of a ``default prefix'' mapping \CLnote[type=q-aut]{Are such explanatory notes OK here?}(covering CURIEs such as \syntax{:name}).
+\item DOL does not support the declaration of a ``default prefix'' mapping %\CLnote[type=q-aut]{Are such explanatory notes OK here? --- Yes}
+(covering CURIEs such as \syntax{:name}).
 \item DOL does support the declaration  of a ``no prefix'' mapping (covering CURIEs such as 
 \syntax{name}). \red{If there is no explicit declaration for the ``no prefix'', it defaults to a 
 context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a 
@@ -3331,7 +3334,8 @@ Path      = ipath-absolute | ipath-rootless | ipath-empty ;
 Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
 Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
 \end{lstlisting}
-\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}?}
+%\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
+%duplication.}
 
 
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
@@ -3357,10 +3361,14 @@ While DOL uses IRIs as identifiers throughout, basic OMS languages do not necess
 \item Common Logic \nisref{ISO/IEC 24707:2007} supports them but does not enforce their use.
 \item F-logic \cite{flogic} does not use them at all.
 \end{itemize}
-However, DOL OMS mappings as well as \CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of SymbolRef}certain operations on OMS require making unambiguous references to non-logical symbols of basic OMS (\syntax{SymbolRef}).  Therefore, DOL provides a function that maps global identifiers used within basic OMS to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
+However, DOL OMS mappings as well as 
+%\CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of SymbolRef}
+certain operations on OMS require making unambiguous references to non-logical symbols of basic OMS (\syntax{SymbolRef}).  Therefore, DOL provides a function that maps global identifiers used within basic OMS to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
 
 CURIEs that have a prefix may not be acceptable identifiers in every serialization of a basic OMS language,
-as the standard CURIE separator character, the colon (\syntax{:}), may not be allowed in identifiers.  \CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we agreed on this – but does it really make sense?  Are there any relevant OMS language serializations that do not allow : in identifiers (or that do allow it theoretically but discourage it in practice) but allow some other non-letter character?}Therefore, the declaration of DOL-conformance of the respective serialization (cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative CURIE separator character}, or it \may forbid the use of prefixed CURIEs altogether.
+as the standard CURIE separator character, the colon (\syntax{:}), may not be allowed in identifiers.  
+%\CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we agreed on this – but does it really make sense?  Are there any relevant OMS language serializations that do not allow : in identifiers (or that do allow it theoretically but discourage it in practice) but allow some other non-letter character?}
+Therefore, the declaration of DOL-conformance of the respective serialization (cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative CURIE separator character}, or it \may forbid the use of prefixed CURIEs altogether.
 
 The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by the following function:
 \begin{algorithmic}
@@ -3421,10 +3429,6 @@ prefix maps, even if the serialization does not support prefix maps otherwise.
 
 ~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
 
-\sclause{DOL Serializations}
-Say how existing OMS in existing serializations have to be adapted/wrapped (or ideally: not adapted at all!) in
-order to become valid OMS in some DOL serialization.\todonote[id=wrapping,author=Christoph Lange,date=D:201108052348+02'00',type=todo]{Essential points are:-- need to be able to say: ``the file at URL U is in OWL 2 Manchester syntax''-- maybe use packaging/wrapping format-- compare MIME types, HTTP content negotiation (but don't go too deep into communication protocols)}%
-\reply[replyto=wrapping,author=Till Mossakowski,date=D:201108191719+02'00']{Maybe we can implement something like the Linux command ``file''?}
 
 
 \sclause{Annotations}
@@ -3681,7 +3685,13 @@ Vars                 = Symbol , { ',', Symbol } ;
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
 FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
-CURIE   = ($<$ see \cref{c:curies} $>$) ;
+CURIE     = [ Prefix ] , Reference ;
+Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$) 
+Reference = Path , [ Query ] , [ Fragment ] ;
+Path      = ipath-absolute | ipath-rootless | ipath-empty ;
+            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
+Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
+Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
 \end{lstlisting}
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
@@ -3739,6 +3749,11 @@ Table~\ref{tab:key-signs} following key signs are reserved, and are not availabl
   \rmfamily ↦ & U+21A6 RIGHTWARDS ARROW FROM BAR & |-> \NN
   \rmfamily → & U+2192 RIGHTWARDS ARROW & -> \NN
 }
+
+\sclause{Integration of Serializations of Conforming Languages}
+Any document providing an OMS in a serializations of a DOL conformant
+language can be used as-is in DOL, by reference to its IRI.
+
 
 \clause{DOL semantics}\label{c:semantics}
 
