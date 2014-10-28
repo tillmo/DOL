@@ -498,7 +498,7 @@ Version \version
 \vskip 12pt 
 \nointerlineskip
 
-OMG Document Number: \\
+OMG Document Number: ad/2014-10-01 \\
 Normative reference: \\
 Machine readable files(s): \\
 Normative: \\
@@ -516,11 +516,14 @@ Non-normative: \\
 \clearpage
 
 \pagenumbering{roman} 
-
+		
 
 \noindent Copyright \copyright 2014, Object Management Group, Inc.\\
-Copyright \copyright 2008, company name \\
-Copyright \copyright 2008, company name \\
+Copyright \copyright 2014, Fraunhofer FOKUS\\
+Copyright \copyright 2014, MITRE\\
+Copyright \copyright 2014, Otto-von-Guericke-Universit{\"a}t Magdeburg  \\
+Copyright \copyright 2014, Thematix Partners LLC \\
+
 
 
 
@@ -710,6 +713,29 @@ The reader is encouraged to report any technical or editing issues/problems
  with this specification to \url{http://www.omg.org/report_issue.htm}.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Submission-Specific Material}
+\section{Submission Preface}
+Fraunhofer FOKUS, MITRE, and Thematix Partners LLC are pleased  to submit this joint proposal in response to the Ontology, Model and Specification Integration and Interoperability (OntoIOp) RFP  (OMG document ad/2013-12-02). The submitter contacts for this submission are:
+\begin{itemize}
+	\item Fraunhofer FOKUS, Andreas Hoffmann, andreas.hoffmann@fokus.fraunhofer.de
+	\item MITRE, Leo Obrst, lobrst@mitre.org
+	\item Thematix Partners LLC, Elisa Kendall, ekendall@thematix.com	
+\end{itemize}
+
+
+Clause 0 of this document contains information specific to the OMG submission process and is not part of the proposed specification. The proposed specification starts with Clause 1 “Scope”.
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Scope}
 \pagenumbering{arabic} 
 This \IS specifies the Distributed Ontology, Modeling and Specification
@@ -741,6 +767,7 @@ interface different domains and systems, to enable the use of several OMS in a c
 scenario, as well as about coherence and consistency, ensuring at an early stage of the development
 that a coherent system can be reached.
 
+\ednote{@Till: the beginning of this paragraph needs revision}
 In complex applications, which involve multiple OMS with overlapping concept spaces,
 data mapping may also be  between different OMS, and is then called OMS alignment. 
 While OMS alignment is most commonly studied for OMS formalized in the same OMS 
@@ -912,12 +939,6 @@ The \emph{annotation language aspect} of an OMS language is conformant with DOL 
 have no impact on the semantics. The annotation language aspect \shall be non-empty; it \shall
 provide the facility to express comments.
 
-\CLnote{say something about ``infrastructure theories'', i.e. axiomatizations of one logic in
-another logic.  Providers of OMS language translations MAY also provide these (given that the
-translation is theoroidal).  Note the possible trade-off between readability and theorem proving
-complexity (as the infrastructure axioms may be complex) -- so maybe we should encourage multiple
-alternative translations to co-exist.}
-
 We define the following levels of conformance of the abstract syntax of a basic
  OMS language with DOL, listed from highest to lowest:
 
@@ -958,6 +979,10 @@ symbol) in the source \should be attached to its translation in the
 target (if there are more than one sentences (resp.\ symbols)
 expressing the translation, to at least one of them).
 
+A logic translation \may use infrastructure theories to axiomatize a fragment of the syntax of
+the source logic into the target logic \footnote{Such a translation is formally represented as a
+theoroidal institution comorphism.}. For example, the built-in types of an OWL signature are
+axiomatized as datatypes in first-order logic.
 
 \sclause{Conformance of a serialization of an OMS language with DOL}\label{c:conform:serialization}
 
@@ -1921,7 +1946,6 @@ TODO Michael: explain the relationship to other notions of interoperability (fro
 
 
 \chapter{Symbols}
-\ednote{add OMG stuff MC: done}
 
 As listed below, these symbols and abbreviations are generally for the main clauses of the \IS. Some annexes may introduce their own symbols and abbreviations which will be grouped together within that annex.
 
@@ -2699,6 +2723,7 @@ OMS network consisting of focused OMS and OMS mappings. OMS networks may build o
 OMS networks, and they can be used in \syntax{combination}s.  
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 NetworkDefn            = 'dist-oms-defn', NetworkName , [ ConsStrength ] , Network ;
 NetworkName            = IRI ;
 Network                = 'dist-oms', NetworkElements , ExcludeExtensions ;
@@ -2725,7 +2750,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item an approximation of an OMS, in a subsignature or sublogic, with the effect that sentences not expressible in the subsignature resp.\ sublogic are replaced with a suitable approximation,
 \item \red{a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,}
 \item a union of several OMS,
-\item an extension of an OMS by other ones, it can be optionally named and/or marked as conservative, monomorphic, definitional or implied \todonote[author=Mihai Codescu]{Do we want to allow extensions only with basic OMS?},
+\item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional or implied,
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
 \item a combination of OMS (technically, this is a colimit, see \cite{ZimmermanEtAl06}),\footnote{A combination of OMS also takes all mappings into these OMS into consideration---unless these are explicitly excluded.}
@@ -2824,7 +2849,6 @@ OMS language of the current OMS).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
-                 
 Symbol           = IRI ;
 SymbolMap        = 'symbol-map' , Symbol , Symbol ;
 SymbolOrMap      = Symbol | SymbolMap ;
@@ -2871,11 +2895,14 @@ as well? In  \cite{MossakowskiTarlecki09}, this is allowed.}
 }
 
 In contrast to this functional style of mapping symbols, an alignment provides a relational 
-connection between two OMS,  using a set of \syntax{Correspondence}s. Each correspondence may map 
-some OMS non-logical symbol to another one (possibly given by a term) and an optional confidence 
+connection between two OMS,  using a set of \syntax{Correspondence}s. Each correspondence may relate 
+some OMS non-logical symbol to another one (possibly given by a term) with an optional confidence 
 value. Moreover, the relation between the two non-logical symbols can be explicitly
 specified (like being equal, or only being subsumed) in a similar way to the Alignment API \cite{AlignmentAPI}. 
-\red{A default correspondence can be used; it is applied to all pairs of non-logical symbols with 
+\red{The relations that can be used in a correspondence are equivalence, disjointness, subsumption, membership (the last two with a
+variant for each direction) or a user-defined relation that is stored in a registry and must be prefixed with
+\url{purl.net/DOL}.
+A default correspondence can be used; it is applied to all pairs of non-logical symbols with 
 the same local names. The default relation in a correspondence is equivalence, unless  a different 
 relation is specified in a surrounding 
 'CorrespondenceBlock'.
@@ -2946,7 +2973,7 @@ Correspondence       = CorrespondenceBlock
 CorrespondenceBlock  = 'correspondence-block' , [ RelationRef ] , [ Confidence ],
                                                 Correspondence, { Correspondence } ; 
 SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationRef ] , [ Confidence ] ,
-                                          TermOrSymbolRef , [ CorrespondenceID ] ; <\CLnote[type=todo]{concrete syntax, e.g., a = x, b my:similarTo y \%(correspond-b-to-y)\%, c my:similarTo 0.75 z}> 
+                                          TermOrSymbolRef , [ CorrespondenceID ] ;
 CorrespondenceID     = IRI ;
 SymbolRef            = IRI ;
 TermOrSymbolRef      = Term | SymbolRef ;
@@ -2957,8 +2984,6 @@ Confidence           = Double ;
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
 Double               = ($<$ a number $\in [0,1]$ $>$) ;
 \end{lstlisting}
-
-\CLnote[type=todo]{recommend linked data for \syntax{RelationRef = IRI}, or recommend registry?}
 
 A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; 
 the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a 
@@ -3278,15 +3303,15 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 
 \ssclause{Focused OMS}\label{a:dol-text:OMS}
 
-\ednote{TODO: merge ALIGN-TYPE with INTPR-TYPE. TM: why?}
-
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
 BasicOMS            = OMSInConformingLanguage ;
 MinimizableOMS      = BasicOMS
                      | OMSRef , [ ImportName ] ; 
+                     
 ExtendingOMS        = MinimizableOMS
                      | MinimizeKeyword , '{' , MinimizableOMS , '}' 
                      | OMS , Extraction ;
+                     
 OMS                 = ExtendingOMS
                      | OMS , Minimization 
                      | OMS , Translation
@@ -3419,14 +3444,15 @@ ModuleType           = OMS , 'of' , OMS ;
 
 AlignDefn            = 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType ,  'end'
                      | 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , '=' ,
-                       Correspondence , { ',' , Correspondence } ,  'end' ;
+                       Correspondence , { ',' , Correspondence } ,  
+                       'assuming', AlignSem, 'end' ;
 
 AlignName            = IRI ;
 AlignCards           = AlignCardForward , AlignCardBackward ;
 AlignCardForward     = AlignCard ;
 AlignCardBackward    = AlignCard ;
 AlignCard            = '1' | '?' | '+' | '*' ;
-AlignType            = GroupOMS , 'to' , GroupOMS ; <\CLnote[type=q-aut]{would it make sense to merge this with IntprType?}> 
+AlignType            = GroupOMS , 'to' , GroupOMS ;
 AlignSem            = 'SingleDomain' | 'GlobalDomain'  | 'ContextualizedDomain' ;
 
 Correspondence       = CorrespondenceBlock
@@ -3438,11 +3464,8 @@ SingleCorrespondence = SymbolRef , [ RelationRef ] ,
                        [ Confidence ] , TermOrSymbolRef , [ CorrespondenceId ] ;
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
-TermOrSymbolRef      = Term | SymbolRef ;<\CLnote[type=q-aut]{In interpretations we did away with symbol-to-term mappings, as parsing for them will be hard to implement, and as Michael convinced us with the COLORE example where auxiliary theories using equality take care of the mapping.  Do we want to keep them for alignments?  (In writing this I have not yet looked into the Alignment API.)
-MC: I would keep them.}>
-RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | '$\ni$' 
-                     | '$\in$' | '|->' | IRI ; <\CLnote[type=q-aut]{For \syntax{'has-instance'} and \syntax{'instance-of'}, the Alignment API does not quite have a symbolic notation, but simply ``HasInstance'' and ``InstanceOf'', which, in our syntax, conflicts with abbreviated IRIs.  I'd suggest either referring to these relations using normal DOL IRIs (abbreviated or not), or to come up with some symbolic notation.  The one I gave here works for Unicode, but I don't really know how to write it in ASCII. MC: either use 'in' and 'ni' or 
-'\$$\backslash$in\$' like HETS does.}>
+TermOrSymbolRef      = Term | SymbolRef ;
+RelationRef          = '<\greaterthan>' | '<\lessthan>' | '=' | '%' | 'ni' | 'in' | | IRI ;
 Confidence           = Double ; 
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
@@ -3545,7 +3568,7 @@ abstract syntax:
   employed for all basic OMS languages, taking advantage of the
   fact that Common Logic is a common translation target for many
   OMS languages.  In detail, the translational semantics first
-  translates the DOL abstract syntax of into the abstract syntax of
+  translates the DOL abstract syntax into the abstract syntax of
   $DOL(\CL)$, where $DOL(\CL)$ is the homogeneous restriction of DOL
   to libraries with all parts written in Common Logic
   only.  The latter is interpreted as in the case of the direct
@@ -3574,7 +3597,7 @@ properties like finite model or tree model properties.
 
 We now specify the theoretical foundations of the semantics of DOL. Since DOL involves 
 heterogeneous OMS, the semantics is parameterized over an arbitrary but fixed \emph{heterogeneous 
-environment}.  This notion is defined below, it corresponds to a graph of OMS languages and OMS 
+environment}.  This notion is defined below and it corresponds to a graph of OMS languages and OMS 
 language translations and reductions. Below, also notions of \emph{institution} and institution 
 \emph{comorphism} and \emph{morphism} are defined, which provide formalizations of the terms 
 \termref{logic}, resp.\ \termref{logic translation}, resp.\  \termref{logic reduction}. 
@@ -3629,6 +3652,7 @@ logic environment will be provided later.
 We recall the notion of satisfaction system \cite{carnielli2008analysis}, called `rooms' in the 
 terminology of \cite{CharPar}. They capture the Tarskian notion of satisfaction of a
 sentence in a model. For the semantics of minimization, we assume a pre-order on models.
+\todonote{Till, do you have a reason to want to have rooms in this document? I would keep technical concepts to a minimum.}
 
 \begin{definition}\label{def:room}
 A triple $\cR=(Sen,{\cM,\models)}$  is called a  \defsty{satisfaction system}, or \defsty{room}, if $\cR$  consists of
@@ -3701,44 +3725,80 @@ context.  \qed
 \end{definition}
 
 \begin{definition}[Propositional Logic]\label{Prop}
-The institution $\Prop$ is like the institute $\Prop$. Signature morphisms are functions
-$\sigma:{\Sigma_1}\to{\Sigma_2}$. The reduct of a $\Sigma_2$-model $M_2$ along 
-$\sigma:{\Sigma_1}\to{\Sigma_2}$ is the $\Sigma_1$-model given by the composition $M_2\circ\sigma$. 
+The signatures of propositional logic are sets $\Sigma$ of propositional symbols, and signature morphisms are just
+functions $\sigma:{\Sigma_1}\to{\Sigma_2}$ between these sets. 
+A $\Sigma$-model is a function $M : {\Sigma}\to{\{True, False\}}$, and the reduct of a 
+$\Sigma_2$-model $M_2$along a signature morphism $\sigma:{\Sigma_1}\to{\Sigma_2}$ is 
+the $\Sigma_1$-model given by the composition of $\sigma$ with $M_2$. $\Sigma$-sentences are built from the
+propositional symbols with the usual connectives, and sentence translation is replacing the propositional
+symbols along the morphism. Finally, the satisfaction relation is defined by the standard truth-tables
+semantics. It is straightforward to see that the satisfaction condition holds.
 \end{definition}
 
 \begin{definition}[Common Logic - \Clogic]\label{CommonLogic}
-The institution of Common Logic (\Clogic) is like the institute. A \Clogic signature morphism 
+A common logic signature
+$\Sigma$ (called vocabulary in Common Logic terminology) consists of a
+set of names, with a subset called the set of discourse names, and a
+set of sequence markers. 
+A $\Sigma$-model consists of a set $\UR$,
+the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
+the universe of discourse, and four mappings:
+  \begin{itemize}
+   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{<x_1,\ldots,x_n> |
+x_1,\ldots,x_n \in \UD\}$ (i.e., the set of finite sequences of
+elements of $\UD$);
+   \item $\fun$ from $\UR$ to total functions from $\UD^*$ into $\UD$;
+   \item $\intCL$ from names in $\Sigma$ to $\UR$, such that
+$\intCL(v)$ is in $\UD$ if and only if $v$ is a discourse name;
+   \item $\seq$ from sequence markers in $\Sigma$ to $\UD^*$.
+  \end{itemize}  A $\Sigma$-sentence is a first-order
+sentence, where predications and function applications are written
+in a higher-order like syntax: $t(s)$.
+Here, $t$ is an arbitrary term, and $s$ is a sequence term, which can
+be a sequence of terms $t_1\ldots t_n$, or a sequence marker.
+A predication $t(s)$ is interpreted by evaluating the term $t$,
+mapping it to a relation using $\rel$, and then asking whether the sequence
+given by the interpretation $s$ is in this relation.  
+Similarly, a function application $t(s)$ is interpreted using $\fun$.
+Otherwise, interpretation of terms and formulae is as in
+first-order logic. 
+A further
+difference is the presence of sequence terms (namely sequence markers and
+juxtapositions of terms), which denote sequences in $\UD^*$, with term
+juxtaposition interpreted by sequence concatenation.
+Note that sequences are essentially a non-first-order feature that
+can be expressed in second-order logic.
+For details, see \cite{CommonLogic:oldfashioned}.
+
+A \Clogic signature morphism 
 consists of two maps between the sets of names and of sequence markers, such that the property of 
 being a discourse name is preserved and reflected.\footnote{That is, a name is a discourse
-name if and only if its image under the signature morphism is.}  Model reducts leave $\UR$, $\UD$, 
+name if and only if its image under the signature morphism is.}
+  Model reducts leave $\UR$, $\UD$, 
 $\rel$ and $\fun$ untouched, while $\intCL$ and $\seq$ are composed with the appropriate
 signature morphism component.
 \end{definition}
 %
 
-
-
-Further examples of institutes are: $\mathcal{SROIQ}(D)$, Common Logic, unsorted first-order logic, 
+Further examples of institutions are: $\mathcal{SROIQ}(D)$, Common Logic, unsorted first-order logic, 
 many-sorted first-order logic, and many others.  Note that reduct is generally given by forgetting 
-parts of the model, and the pre-order on models is given as follows: $M_1\leq M_2$ if $M_1$ and 
-$M_2$ only differ in the interpretation of propositional non-logical symbols and predicates, and 
-moreover each propositional (and predicate) symbol true in $M_1$ is also true in $M_2$ (for a
-given tuple of arguments).
+parts of the model.
+%, and the pre-order on models is given as follows: $M_1\leq M_2$ if $M_1$ and 
+%$M_2$ only differ in the interpretation of propositional non-logical symbols and predicates, and 
+%moreover each propositional (and predicate) symbol true in $M_1$ is also true in $M_2$ (for a
+%given tuple of arguments).
 
-Assume an arbitrary institute.
+Assume an arbitrary institution.
 
-A \defsty{theory} is a set $\Delta\subseteq Sen$ of sentences It is \defsty{consistent\/} iff it 
-has at least one model. A theory $\Delta\subseteq Sen$ is \defsty{satisfiable}, if it has a model
-$M$ (i.e., a model $M \in \cM$ such that $M\models\varphi$ for $\varphi\in\Delta$).
-%Also,
-\defsty{Semantic entailment} is defined as usual: for  a theory $\Delta\subseteq Sen$ and 
+A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
+ A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
+$M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: for  a theory $\Delta\subseteq Sen$ and 
 $\varphi\in Sen$, we write $\Delta\models\varphi$, if all models satisfying all sentences in
 $\Delta$ also satisfy $\varphi$.
 
+\medskip
 
-
-Institution comorphisms capture the intuition of translating a
-logic into another one. 
+Institution comorphisms capture the intuition of encoding or embedding a logic into a more expressive one.
 
 \begin{definition}[Institution Comorphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
 \Sen^J, \models^J)$, an \defsty{institution comorphism} from $I$ to
@@ -3752,17 +3812,16 @@ holds, called the \defsty{satisfaction condition}.
 \end{definition}
 
 \noindent
-Here, $\Phi(\Sigma)$ is the translation of signature $\Sigma$ from
+Here, $\Phi(\Sigma)$ is the translation of the signature $\Sigma$ from
 institution $I$ to institution $J$, $\alpha_{\Sigma}(\varphi)$ is the
 translation of the $\Sigma$-sentence $\varphi$ to a
 $\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
 (or perhaps better: reduction) of the $\Phi(\Sigma)$-model $M'$ to a
 $\Sigma$-model.
 
+\medskip
 
-Institution morphisms capture the intuition of reducing a logic into another one, and are used for 
-logic reductions.
-
+Institution morphisms capture the intuition of projecting from a more expressive logic to a less expressive one.
 
 \begin{definition}[Institution Morphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
 \Sen^J, \models^J)$, an \defsty{institution morphism} from $I$ to
@@ -3781,7 +3840,7 @@ holds, called the \defsty{satisfaction condition}.
 \sclause{Direct semantics of DOL language constructs}
 
 The semantics of DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
-environment is assumed.  The semantic domains are based on this heterogeneous logical environment. 
+environment.  The semantic domains are based on this heterogeneous logical environment. 
 A specific heterogeneous logical environment is given in the annexes.
 
 A heterogeneous logical environment is given by a collection of
@@ -3789,44 +3848,78 @@ OMS languages and OMS language translations\footnote{The
   terms \emph{OMS language} and \emph{serialization} are not
   defined formally. For this semantics, it suffices to know that there
   is a language-specific semantics of basic OMS as defined
-  below.}, a collection of institutes, institute morphisms and
-institute comorphisms (serving as logics, logic reductions and logic
+  below.}, a collection of institutions, institution morphisms and
+institution comorphisms (serving as logics, logic reductions and logic
 translations), and a collection of serializations. Moreover, there is
-a binary supports relation between OMS languages and institutes,
+a binary supports relation between OMS languages and institutions,
 and a binary supports relation between OMS languages and
-serializations. Some of the comorphisms are marked as default
-translations.
+serializations. 
 
-For pairs of institutes $\cI_1$ and $\cI_2$, we assume a pair of
-default union institute comorphisms
-$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ into a common target
-institute. The default union may also be undefined.
-
-
-We also assume a language-specific semantics of basic
-OMS, depending on a triple $L=(lang,logic,ser)$ comprising of
-an OMS language, a logic (institute) and a serialization as follows:
-\semdom{sem_L(\Sigma,\syntax{BasicOMS})=(\Sigma',\Delta')\mbox{
-    where } \Sigma'\geq\Sigma} This is given by semantics of
-\syntax{BasicOMS} in $L$. The signature $\Sigma$ is the \emph{local
-  environment} of non-logical symbols that have been declared previously to
-\syntax{BasicOMS}. $\Sigma'\geq\Sigma$ is an extension of $\Sigma$
-with the non-logical symbols declared in \syntax{BasicOMS}.  $\Delta'$ is a set
-of sentences over $\Sigma'$.
-
-We further assume a language-specific semantics of complete (basic,
-but possibly also
-structured) OMS
-$sem(L,\syntax{OMSInSpecificLanguage})=(\Sigma,\cM)$, where
-$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
-
-We assume that in each institute there is a trivial signature
-$\emptyset$ with model class $\cM_\emptyset$. Moreover, we assume that
+We assume that for each institution in the heterogeneous logical environment there is a trivial signature
+$\emptyset$ with model class $\cM_\emptyset$. \todonote{require initiality?}
+Moreover, we assume that
 for each signature $\Sigma$, there is a set of non-logical symbols $ent(\Sigma)$,
 such that $\Sigma\leq\Sigma'$ implies $ent(\Sigma)\subseteq
-ent(\Sigma')$.
-This concludes the definition of heterogeneous logical environment.
+ent(\Sigma')$. \todonote{this must be updated, we have institutions now.}
 
+{\color{blue}
+We assume that for each institution, there exist (possibly partial) union and difference operations on signatures  
+Some of the comorphisms are marked as default translations.
+}
+
+This concludes the definition of heterogeneous logical environment and the assumptions made about it.
+
+\medskip
+
+DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of models 
+over some signature of an institution. This is called \emph{model-level}  semantics. In some cases, but not in all, we can also define
+a \emph{theory-level} semantics of an OMS as a set of sentences over some signature of an institution. The two semantics are 
+related by the fact that, when both the model-level and the theory-level semantics of an OMS are defined, they are compatible in the 
+sense that the class of models given by the model-level semantics is exactly the model class of the theory given by the
+theory-level semantics. 
+
+We will use the notations $sem^T(O)$ and $sem^M(O)$ for the theory-level and model-level semantics of 
+an OMS $O$, respectively. Thus, $sem^T(O)$ will be a triple $(I, \Sigma, \Delta)$ and 
+$sem^M(O)$, a triple $(I, \Sigma, \cM)$, where $I$ is an institution, $\Sigma$ is a signature of $I$, $\Delta$ is a set of 
+$\Sigma$-sentences and $\cM$ a class of $\Sigma$-models. The compatibility mentioned above can be then formally expressed as
+follows. Let $O$ be a OMS such that $sem^T(O)=(\cI, \Sigma, \Delta)$. Then $$sem^M(O)= \{\cI, \Sigma, \{ M \in \Mod^I(\Sigma) \mid M \models^\cI \Delta \}).$$
+
+We assume a \emph{language-specific semantics} of basic 
+OMS, inherited from the OMS language. For a basic OMS $O$ in a
+language $L$ based on an institution $\I$ we denote 
+by $sem^T_L(O)$ the theory-level language-specific semantics of $O$
+and by 
+$sem^M_L(O)$, the model-level language-specific semantics of $O$
+
+%We  assume a \emph{language-specific semantics} of basic
+%OMS, inherited from the OMS language.  
+%%For a basic OMS in 
+%%depending on a triple 
+%For a basic OMS $O$ in a language $L$ based on an institution $\I$ we define:
+%%$L=(lang,logic,ser)$ comprising of
+%%an OMS language, a logic (institute) and a serialization as follows:
+%$$sem_L(O) = ()$$
+%\semdom{sem_L(\syntax{BasicOMS})=(I, \Sigma,\Delta)}
+%%\mbox{
+% %   where } \Sigma'\geq\Sigma} 
+%%  
+%% The signature $\Sigma$ is the \emph{local
+%%  environment} of non-logical symbols that have been declared previously to
+%%\syntax{BasicOMS}. $\Sigma'\geq\Sigma$ is an extension of $\Sigma$
+%%with the non-logical symbols declared in \syntax{BasicOMS}.  $\Delta'$ is a set
+%%of sentences over $\Sigma'$. 
+%where  $\Sigma$ is a signature in $I$ and $\Delta$ is a set
+%of sentences over $\Sigma$. 
+
+%
+%We further assume a language-specific semantics of complete (basic,
+%but possibly also
+%structured) OMS
+%$sem(L,\syntax{OMSInConformingLanguage})=(\Sigma,\cM)$, where
+%$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
+
+%Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
+% $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
 The semantics of OMS generally depends on a global environment
 $\Gamma$ mapping \syntax{IRI}s to semantics of OMS (given
 below), and a current triple $L$ consisting of the current
@@ -3834,12 +3927,15 @@ language, logic and serialization.\footnote{The initial $L$ is obtained
 from the file name extension of the file containing a 
 particular library, while $\Gamma$ is obtained
 by looking up IRIs in the internet and applying the semantics
-to thus obtained OMS.}
+to thus obtained OMS.}\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}
+\todonote{@MC: explain what the purpose of a global env is}
 
-\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}\semdom{sem(\Gamma,L,\syntax{LibraryDefn})=\Gamma'}
-$sem(\Gamma,L,\syntax{'dist-oms-defn' , LibraryName }DI_1,\ldots DI_n)=\Gamma'$\\
-where $sem(\ldots
-sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
+%
+\ssclause{Semantics of Libraries}
+We define the semantics of DOL constructs regarding libraries. 
+\semdom{sem_\Gamma(\syntax{LibraryDefn})=\Gamma'}
+$sem(\Gamma,L,\syntax{'library' , LibraryName },DI_1,\ldots DI_n)= (\Sigma, M)$\\
+where $sem(\ldots sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
 \todonote{\syntax{LibraryName} is not used. How could we use it?
   It seems that the individual OMS are directly named with
   IRIs, and the \syntax{LibraryName} is not relevant for that?
@@ -3850,10 +3946,10 @@ sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
   "linked data compliance", a good practice to be encouraged but not
   to be enforced, as it would break a lot of old OMS)}
 
-$sem(\Gamma,L,\syntax{OMSInSpecificLanguage})=\Gamma'$\\
+\semdom{sem(\Gamma,L,\syntax{OMSInConformingLanguage})=\Gamma'}
 where $\Gamma'=\Gamma[\syntax{IRI}\mapsto (L,\Sigma,\cM)]$,\\
-$(\Sigma,\cM)=sem(L,\syntax{OMSInSpecificLanguage})$\\
-and \syntax{IRI} is the IRI of \syntax{OMSInSpecificLanguage}.
+$(\Sigma,\cM)=sem(L,\syntax{OMSInConformingLanguage})$\\
+and \syntax{IRI} is the IRI of \syntax{OMSInConformingLanguage}.
 
 \semdom{sem(L,\syntax{Qualification})=L'}
 $sem((lang,logic,ser),\syntax{'lang-select' , LanguageRef})=(\syntax{LanguageRef},logic',ser')$\\
@@ -3882,6 +3978,8 @@ where $L'=sem(L,\syntax{Qualification})$.
 
 Equations for \syntax{OMSDefn} and \syntax{MappingDefn} are given below.
 
+\ssclause{Semantics of focused OMS}
+
 \semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
 
 In the context of a global environment $\Gamma$,
@@ -3891,101 +3989,188 @@ $O$ is interpreted as an institute $\cI=logic(\Gamma,L,O)$, a signature $\Sigma=
 of models $\cM=Mod(\Gamma,L,O)$ over signature $\Sigma$.
 We combine this into $sem(\Gamma,L,O)=(logic(\Gamma,L,O),sig(\Gamma,L,O),Mod(\Gamma,L,O))$.
 
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{BasicOMS})=(L,\Sigma',\{M'\in Mod(\Sigma')\, |\, M\models\Delta', M'\forget\Sigma\in\cM \})$,\\  where
-$sem_L(\Sigma,\syntax{BasicOMS})=(\Sigma',\Delta')$
+For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$, the theory-level semantics are defined as follows:  
+\semdom{sem^T(\syntax{BasicOMS})= sem_L(\syntax{BasicOMS})}  
 
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{'oms-ref' , OMSRef})= \Gamma(\syntax{OMSRef})$
+The model-level semantics of \syntax{BasicOMS} are then obtained: 
+\semdom{sem^M(\syntax{BasicOMS})= (I,\Sigma, M)}
+where $M = \{M \in Mod(\Sigma) \mid M \models \Delta\}$. 
+ 
+ 
+\semdom{sem^M(\syntax{'oms-ref' , OMSRef})= \Gamma(\syntax{OMSRef})}
+
+\semdom{sem^M(\syntax{'oms-ref' , OMSRef, ImportName}) = \Gamma(\syntax{OMSRef})}
 
 Note that $\Gamma(\syntax{OMSRef})$ may be undefined. That is, if a
 reference (IRI) to an OMS is not defined, the semantics of the
 enclosing DOL construct is undefined.
 
-\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
+\semdom{sem^M(\syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
 
-Semantics for \syntax{MinimizableOMS} is inherited.
+%Semantics for \syntax{MinimizableOMS} is inherited.
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{'minimize' , MinimizableOMS}) = (\cI,\Sigma',\cM'')$, \\
+\semdom{sem(\syntax{'minimize' , MinimizableOMS}) = (I,\Sigma',\cM'')}
 where
-$(\Sigma',\cM')=sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})$\\
-and $\cM''=\{M\in \cM'\, |\, M\textrm{ is minimal in }\{M'\in \cM'\, |\,M'\forget\Sigma=M\forget\Sigma\}\}$
+$(\Sigma', \cM')=sem^M(\syntax{MinimizableOMS})$
+and $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 
 
-\semdom{sem(\Gamma,L,\syntax{OMS})=(\cI,\Sigma,\cM)}
+\semdom{sem^M(\Gamma,L,\syntax{OMS})=(\cI,\Sigma,\cM)}
 
 \syntax{OMS} is interpreted in a context similar to that for
 \syntax{MinimizableOMS}; the difference being that there is
 no local environment.
 
-\CLnote[type=todo]{specify semantics of module extraction}
-\CLnote[type=todo]{specify semantics of approximation}
-\CLnote[type=todo]{specify semantics of implicit translations using
-default translations}
+\semdom{sem(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')}
+where 
+\begin{align*}
+(I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma, \\
+\Sigma_{\mathit{var}} & = sem(\syntax{CircVars},\Sigma),
+& \Sigma_{\mathit{fixed}} &=\Sigma \setminus (\Sigma_{\mathit{min}} \cup \Sigma_{\mathit{var}})
+\end{align*}
+and
+%\begin{align*}
+$$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+$$
 
-\begin{tabular}{|p{5.5cm}|p{9.3cm}|}\hline
-\multicolumn{1}{|c|}{$O$} & \multicolumn{1}{|c|}{$sem(\Gamma,L,O)=\ldots$}\\\hline
-\syntax{ExtendingOMS} & 
-$sem(\Gamma,L,(\emptyset,\cM_\emptyset),\syntax{ExtendingOMS})$\\\hline
-\syntax{'minimize-symbol' , OMS , CircMin , CircVars} &
-$(I,\Sigma,\cM')$ 
-where $sem(\Gamma,L,\syntax{OMS})=(I,\Sigma,\cM)$,\newline
-$\Sigma_{\mathit{min}}=sem(\syntax{CircMin},\Sigma)$,
-$\Sigma_{\mathit{var}}=sem(\syntax{CircVars},\Sigma)$,\newline
-$\Sigma_{\mathit{fixed}}=\Sigma\setminus(\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{var}})$ and\newline
-\begin{tabular}{ll}
-$\cM' = \{$&$M\in \cM\, |\, M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\textrm{ is minimal in }$\\
-&$\{M'\in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\, |\,M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\}~~\}$
-\end{tabular}
-\\\hline
-\syntax{'translation' , OMS , Translation} & 
-$(J,\Phi(\Sigma),\{M \,|\, \beta(M)\in \cM\})$,\newline where
- $(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
-$sem(L,\Sigma,\syntax{Translation})=(\Phi,\alpha,\beta):I\to J$\\\hline
-\syntax{'reduction' , OMS , Reduction} &  
-$(J,\Sigma',\{\beta(M)\forget{\Sigma'} \,|\, M\in \cM\})$, \newline where
+%Translation
+\semdom{sem^M(\syntax{'translation' , OMS , Translation}) = (J,\Phi(\Sigma),\{M \,|\, \beta(M)\in \cM\})}
+where  $(I,\Sigma,\cM) = \syntax{OMS})$  and $sem(\syntax{Translation})=(\Phi,\alpha,\beta):I\to J$. 
+
+%Reduction
+\semdom{sem^M(\syntax{'reduction' , OMS , Reduction}) = (J,\Sigma',\{\beta(M)\forget{\Sigma'} \,|\, M\in \cM\})}
+where
 $(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
-$sem(L,\Sigma,\syntax{Reduction})=((\Phi,\alpha,\beta):I\to J,\Sigma')$\\\hline
-\syntax{'approximation', OMS , Approximation} & TODO \\\hline
-\syntax{'union' , OMS , [ ConsStrength ] , OMS} & $(\cI,\Sigma,\cM)$ where\newline
-$\Sigma_i=sig(\Gamma,L,O_i)$, $\cI_i=logic(\Gamma,L,O_i)$ ($i=1,2$)\newline
-$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ are the default union comorphisms
-for $\cI_1$ and $\cI_2$ (if existing)\newline
-$\Sigma=\Phi_1(\Sigma_1)\vee \Phi_2(\Sigma_2)$ (if the supremum is defined)\newline
-$\cM=\{M\in Mod(\Sigma) \,|\, \beta_i(M)\forget{\Sigma_i}\in Mod(\Gamma,L,O_i)\}$
-\\\hline
-\syntax{'extension' , OMS , ExtensionOMS} & $sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})$ \\\hline
-\syntax{'module-extract' , OMSRef , Conservative, ExtractionMethod }$\Sigma$  & TODO \\\hline
-\syntax{'qual-oms' , \{ Qualification \} , OMS} & $sem(\Gamma,sem(L,\syntax{\{ Qualification \}}),\syntax{OMS})$  \\\hline
-\end{tabular}
+$sem(\syntax{Reduction})=((\Phi,\alpha,\beta):I\to J,\Sigma')$
+
+%Module Extract
+\semdom{sem^T(\syntax{'module extract', OMS, Extraction}) = TODO}
+\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = TODO}
+
+%Approximation
+\semdom{sem^M(\syntax{'approximation', OMS , Approximation} =   TODO }
+\CLnote[type=todo]{specify semantics of approximation}
+
+%Filtering
+\semdom{sem^T(\syntax{'filtering' , OMS  Filtering})= TODO}
+\semdom{sem^M(\syntax{'filtering' , OMS  Filtering})= TODO}
+
+%Union
+\semdom{sem^T(\syntax{'union' , $O_1$ , [ ConsStrength ] , $O_2$)} = (I,\Sigma_1 \cup \Sigma_2, \Delta_1 \cup \Delta_2)} 
+where $sem^T(O_i) = (I, \Sigma_i, \Delta_i)$, for $i = 1,2$.
+%$\Sigma = \Sigma_1 \cup \Sigma_2$, and $\Delta= \Delta_1 \cup \Delta_2$.
+
+\semdom{sem^M(\syntax{'union' , OMS , [ ConsStrength ] , OMS}) = (I,\Sigma_1\cup \Sigma_2, \cM_1 \cup \cM_2)}
+ where 
+ $sem^M(O_i) = (I_i, \Sigma_im \cM_i)$, for $i = 1,2$. 
+ \ednote{\syntax{ConstStrength} is not used in de definition, there are missing cases}
+\ednote{something has to be said about $I$}
+
+%Extension
+\semdom{sem^T(\syntax{'extension' , OMS , ExtensionOMS)}= (I, \Sigma_1 \cup, \Sigma_2, \Delta_1 \cup \Delta_2)}
+where $sem^T(OMS)= (I, \Sigma_1, \Delta_1)$, $sem^T(\syntax{ExtensionOMS})= (I, \Sigma_2, \Delta_2)$
+\ednote{needs to be revised}
+
+\semdom{sem^M(\syntax{'extension' , OMS , ExtensionOMS)}= (I, \Sigma_1 \cup, \Sigma_2, \cM')}
+where 
+\begin{align*}
+&sem^M(\syntax{OMS}) = (I, \Sigma_1, \cM_1), \\
+&sem^T(\syntax{ExtensionOMS})= (I, \Sigma_2, \Delta_2), \quad  \text{and}\\
+&	\cM' = \{M \in \mathit{Mod}(\Sigma_1 \cup \Sigma_2) \mid M \models \Delta_2, M\forget\Sigma \in \cM_1 \}
+\end{align*}
+\ednote{According to the intended semantics, extensions are defined for OMS $O_1$, $O_2$, such that $O_2$ is basic, this is however not the case in the current abstract syntax: see productions for \syntax{ExtensionOMS}}
+
+%Qualification
+\semdom{sem^T(\syntax{'qual-oms', \{ Qualification \}, OMS })= TODO}
+\semdom{sem^M(\syntax{'qual-oms', \{ Qualification \}, OMS })= TODO}
+
+%Bridge
+\semdom{sem^T(\syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= TODO}
+%STOPPED HERE
+
+\semdom{sem^M(\syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= TODO}
+
+%Combination
+\semdom{sem^T(\syntax{'combination', Network})= TODO}
+\semdom{sem^M(\syntax{'combination', Network})= TODO}
+
+%Application
+\semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
+\semdom{sem^M(\syntax{'application', Substname, Sentence})= TODO}
+
+
+\ssclause{Semantics of OMS Mappings}
+
+%\CLnote[type=todo]{specify semantics of module extraction}
+% YI 13.10.14
+%\begin{tabular}{|p{5.5cm}|p{9.3cm}|}\hline
+%\multicolumn{1}{|c|}{$O$} & \multicolumn{1}{|c|}{$sem(\Gamma,L,O)=\ldots$}\\\hline
+%\syntax{ExtendingOMS} & 
+%$sem(\Gamma,L,(\emptyset,\cM_\emptyset),\syntax{ExtendingOMS})$\\\hline
+%\syntax{'minimize-symbol' , OMS , CircMin , CircVars} &
+%$(I,\Sigma,\cM')$ 
+%where $sem(\Gamma,L,\syntax{OMS})=(I,\Sigma,\cM)$,\newline
+%$\Sigma_{\mathit{min}}=sem(\syntax{CircMin},\Sigma)$,
+%$\Sigma_{\mathit{var}}=sem(\syntax{CircVars},\Sigma)$,\newline
+%$\Sigma_{\mathit{fixed}}=\Sigma\setminus(\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{var}})$ and\newline
+%\begin{tabular}{ll}
+%$\cM' = \{$&$M\in \cM\, |\, M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\textrm{ is minimal in }$\\
+%&$\{M'\in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}}\, |\,M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\}~~\}$
+%\end{tabular}
+%\\\hline
+%\syntax{'translation' , OMS , Translation} & 
+%$(J,\Phi(\Sigma),\{M \,|\, \beta(M)\in \cM\})$,\newline where
+% $(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
+%$sem(L,\Sigma,\syntax{Translation})=(\Phi,\alpha,\beta):I\to J$\\\hline
+%\syntax{'reduction' , OMS , Reduction} &  
+%$(J,\Sigma',\{\beta(M)\forget{\Sigma'} \,|\, M\in \cM\})$, \newline where
+%$(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
+%$sem(L,\Sigma,\syntax{Reduction})=((\Phi,\alpha,\beta):I\to J,\Sigma')$\\\hline
+%\syntax{'approximation', OMS , Approximation} & TODO \\\hline
+%\syntax{'union' , OMS , [ ConsStrength ] , OMS} & $(\cI,\Sigma,\cM)$ where\newline
+%$\Sigma_i=sig(\Gamma,L,O_i)$, $\cI_i=logic(\Gamma,L,O_i)$ ($i=1,2$)\newline
+%$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ are the default union comorphisms
+%for $\cI_1$ and $\cI_2$ (if existing)\newline
+%$\Sigma=\Phi_1(\Sigma_1)\vee \Phi_2(\Sigma_2)$ (if the supremum is defined)\newline
+%$\cM=\{M\in Mod(\Sigma) \,|\, \beta_i(M)\forget{\Sigma_i}\in Mod(\Gamma,L,O_i)\}$
+%\\\hline
+
+%\syntax{'extension' , OMS , ExtensionOMS} & $sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})$ \\\hline
+%\syntax{'module-extract' , OMSRef , Conservative, ExtractionMethod }$\Sigma$  & TODO \\\hline
+%\syntax{'qual-oms' , \{ Qualification \} , OMS} & $sem(\Gamma,sem(L,\syntax{\{ Qualification \}}),\syntax{OMS})$  \\\hline
+%\end{tabular}
+%%%%%
+% 13.10.14 YI
 
 %Here, for a $\Sigma$-model $M$ and s supersignature $\Sigma\leq\Sigma'$,
 %$M|^{\Sigma'}$ is the class of all $\Sigma'$-models whose $\Sigma$-reduct is $M$.
 %This naturally extends to classes of models.
 
-\semdom{sem(L,\Sigma,\syntax{Reduction})=(\mu=(\Phi,\alpha,\beta),\Sigma') \mbox{ where } \Sigma'\leq\Phi(\Sigma)}
-
-
-
-$sem(L,\Sigma,\syntax{'hidden' } LR_1 \ldots LR_n\ (\syntax{'symbol-items' } EI_1\ldots EI_n))=(\mu,\Sigma')$\\
-where $\mu=(\Phi,\alpha,\beta)=sem(LR_n)\circ\cdots\circ sem(LR_1)$\\
-and $\Sigma'$ is the maximal subsignature of $\Phi(\Sigma)$
-with $ent(\Sigma')$ disjoint from $EI_1\ldots EI_n$. (The semantics
-is undefined, if such a subsignature does not exist.)
-
-$sem(L,\Sigma,\syntax{'revealed' } (\syntax{'symbol-items' } EI_1\ldots EI_n))=(id,\Sigma')$\\
-where $id$ is the identity institute morphism, and
-and $\Sigma'$ is the minimal subsignature of $\Sigma$
-with $ent(\Sigma')$ containing $EI_1\ldots EI_n$.
-(The semantics
-is undefined, if such a subsignature does not exist.)
-
-\semdom{sem(L,\Sigma,\syntax{SymbolItems})=\Sigma'\mbox{ where } \Sigma'\leq\Sigma}
-$sem(L,\Sigma,\syntax{'symbol-items' }EI_1\ldots EI_n)=
-\bigvee\{\Sigma'\leq\Sigma\mbox{ in }L\,|\, $ the non-logical symbols in $EI_1\ldots EI_n$
- do not occur in $ent(\Sigma')\}$
+%\semdom{sem(L,\Sigma,\syntax{Reduction})=(\mu=(\Phi,\alpha,\beta),\Sigma') \mbox{ where } \Sigma'\leq\Phi(\Sigma)}
+%
+%
+%
+%$sem(L,\Sigma,\syntax{'hidden' } LR_1 \ldots LR_n\ (\syntax{'symbol-items' } EI_1\ldots EI_n))=(\mu,\Sigma')$\\
+%where $\mu=(\Phi,\alpha,\beta)=sem(LR_n)\circ\cdots\circ sem(LR_1)$\\
+%and $\Sigma'$ is the maximal subsignature of $\Phi(\Sigma)$
+%with $ent(\Sigma')$ disjoint from $EI_1\ldots EI_n$. (The semantics
+%is undefined, if such a subsignature does not exist.)
+%
+%$sem(L,\Sigma,\syntax{'revealed' } (\syntax{'symbol-items' } EI_1\ldots EI_n))=(id,\Sigma')$\\
+%where $id$ is the identity institute morphism, and
+%and $\Sigma'$ is the minimal subsignature of $\Sigma$
+%with $ent(\Sigma')$ containing $EI_1\ldots EI_n$.
+%(The semantics
+%is undefined, if such a subsignature does not exist.)
+%
+%\semdom{sem(L,\Sigma,\syntax{SymbolItems})=\Sigma'\mbox{ where } \Sigma'\leq\Sigma}
+%$sem(L,\Sigma,\syntax{'symbol-items' }EI_1\ldots EI_n)=
+%\bigvee\{\Sigma'\leq\Sigma\mbox{ in }L\,|\, $ the non-logical symbols in $EI_1\ldots EI_n$
+% do not occur in $ent(\Sigma')\}$
 
 %$sem(L,\Sigma,\syntax{'logic-reduction' , OMSLangTrans})=$
 %TODO
@@ -4128,6 +4313,7 @@ Alignments are interpreted only syntactically:
 (\Gamma[\syntax{AlignName}\mapsto \syntax{\{ Correspondence \}}],L)
 $
 
+\ssclause{Semantics of queries}
 
 \sclause{Translational semantics of DOL language constructs}
 
