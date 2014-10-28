@@ -3821,7 +3821,7 @@ holds, called the \defsty{satisfaction condition}.
 \sclause{Direct semantics of DOL language constructs}
 
 The semantics of DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
-environment is assumed.  The semantic domains are based on this heterogeneous logical environment. 
+environment.  The semantic domains are based on this heterogeneous logical environment. 
 A specific heterogeneous logical environment is given in the annexes.
 
 A heterogeneous logical environment is given by a collection of
@@ -3829,47 +3829,68 @@ OMS languages and OMS language translations\footnote{The
   terms \emph{OMS language} and \emph{serialization} are not
   defined formally. For this semantics, it suffices to know that there
   is a language-specific semantics of basic OMS as defined
-  below.}, a collection of institutes, institute morphisms and
-institute comorphisms (serving as logics, logic reductions and logic
+  below.}, a collection of institutions, institution morphisms and
+institution comorphisms (serving as logics, logic reductions and logic
 translations), and a collection of serializations. Moreover, there is
-a binary supports relation between OMS languages and institutes,
+a binary supports relation between OMS languages and institutions,
 and a binary supports relation between OMS languages and
 serializations. 
+
+We assume that for each institution in the heterogeneous logical environment there is a trivial signature
+$\emptyset$ with model class $\cM_\emptyset$. \todonote{require initiality?}
+Moreover, we assume that
+for each signature $\Sigma$, there is a set of non-logical symbols $ent(\Sigma)$,
+such that $\Sigma\leq\Sigma'$ implies $ent(\Sigma)\subseteq
+ent(\Sigma')$. \todonote{this must be updated, we have institutions now.}
 
 {\color{blue}
 We assume that for each institution, there exist (possibly partial) union and difference operations on signatures  
 Some of the comorphisms are marked as default translations.
 }
-%This reads rather non precise 
-%For pairs of institutes $\cI_1$ and $\cI_2$, we assume a pair of
-%default union institute comorphisms
-%$(\Phi_i,\alpha_i,\beta_i)\map{\cI_i}{\cI}$ into a common target
-%institute. The default union may also be undefined.
-%
 
-The semantic of OMS can be described either on the \emph{theory level} or the \emph{model level}. For an OMS $O$, the \emph{theory-level} semantics $sem^T(O)$ is described by a triple $(\cI,\Sigma, \Delta)$, while the \emph{model-level} 
-semantics is described by a triple $(I, \Sigma, M)$, where $I$ is an institution, $\Sigma$ a signature.  $\Delta$ a set of $\Sigma$-sentences and $M$a class of $\Sigma$-models.  
+This concludes the definition of heterogeneous logical environment and the assumptions made about it.
 
-Model-theory level semantics for an OMS can be defined in a natural way from its theory-level semantics. Let $O$ be a OMS such that $sem^T(O)=(\cI, \Sigma, \Delta)$, then $$sem^M(O)= \{\cI, \Sigma, \{ \cM \in mod(\Sigma) \mid \cM \models \Delta \}).$$
+\medskip
 
-We  assume a \emph{language-specific semantics} of basic
-OMS, inherited from the OMS language.  
-%For a basic OMS in 
-%depending on a triple 
-For a basic OMS in $L$ based on institution $\I$ we have the following:
-%$L=(lang,logic,ser)$ comprising of
-%an OMS language, a logic (institute) and a serialization as follows:
-\semdom{sem_L(\syntax{BasicOMS})=(I, \Sigma,\Delta)}
-%\mbox{
- %   where } \Sigma'\geq\Sigma} 
-%  
-% The signature $\Sigma$ is the \emph{local
-%  environment} of non-logical symbols that have been declared previously to
-%\syntax{BasicOMS}. $\Sigma'\geq\Sigma$ is an extension of $\Sigma$
-%with the non-logical symbols declared in \syntax{BasicOMS}.  $\Delta'$ is a set
-%of sentences over $\Sigma'$. 
-where  $\Sigma$ is a signature in $I$ and $\Delta$ is a set
-of sentences over $\Sigma$. 
+DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of models 
+over some signature of an institution. This is called \emph{model-level}  semantics. In some cases, but not in all, we can also define
+a \emph{theory-level} semantics of an OMS as a set of sentences over some signature of an institution. The two semantics are 
+related by the fact that, when both the model-level and the theory-level semantics of an OMS are defined, they are compatible in the 
+sense that the class of models given by the model-level semantics is exactly the model class of the theory given by the
+theory-level semantics. 
+
+We will use the notations $sem^T(O)$ and $sem^M(O)$ for the theory-level and model-level semantics of 
+an OMS $O$, respectively. Thus, $sem^T(O)$ will be a triple $(I, \Sigma, \Delta)$ and 
+$sem^M(O)$, a triple $(I, \Sigma, \cM)$, where $I$ is an institution, $\Sigma$ is a signature of $I$, $\Delta$ is a set of 
+$\Sigma$-sentences and $\cM$ a class of $\Sigma$-models. The compatibility mentioned above can be then formally expressed as
+follows. Let $O$ be a OMS such that $sem^T(O)=(\cI, \Sigma, \Delta)$. Then $$sem^M(O)= \{\cI, \Sigma, \{ M \in \Mod^I(\Sigma) \mid M \models^\cI \Delta \}).$$
+
+We assume a \emph{language-specific semantics} of basic 
+OMS, inherited from the OMS language. For a basic OMS $O$ in a
+language $L$ based on an institution $\I$ we denote 
+by $sem^T_L(O)$ the theory-level language-specific semantics of $O$
+and by 
+$sem^M_L(O)$, the model-level language-specific semantics of $O$
+
+%We  assume a \emph{language-specific semantics} of basic
+%OMS, inherited from the OMS language.  
+%%For a basic OMS in 
+%%depending on a triple 
+%For a basic OMS $O$ in a language $L$ based on an institution $\I$ we define:
+%%$L=(lang,logic,ser)$ comprising of
+%%an OMS language, a logic (institute) and a serialization as follows:
+%$$sem_L(O) = ()$$
+%\semdom{sem_L(\syntax{BasicOMS})=(I, \Sigma,\Delta)}
+%%\mbox{
+% %   where } \Sigma'\geq\Sigma} 
+%%  
+%% The signature $\Sigma$ is the \emph{local
+%%  environment} of non-logical symbols that have been declared previously to
+%%\syntax{BasicOMS}. $\Sigma'\geq\Sigma$ is an extension of $\Sigma$
+%%with the non-logical symbols declared in \syntax{BasicOMS}.  $\Delta'$ is a set
+%%of sentences over $\Sigma'$. 
+%where  $\Sigma$ is a signature in $I$ and $\Delta$ is a set
+%of sentences over $\Sigma$. 
 
 %
 %We further assume a language-specific semantics of complete (basic,
@@ -3877,13 +3898,6 @@ of sentences over $\Sigma$.
 %structured) OMS
 %$sem(L,\syntax{OMSInConformingLanguage})=(\Sigma,\cM)$, where
 %$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
-
-We assume that in each institute there is a trivial signature
-$\emptyset$ with model class $\cM_\emptyset$. Moreover, we assume that
-for each signature $\Sigma$, there is a set of non-logical symbols $ent(\Sigma)$,
-such that $\Sigma\leq\Sigma'$ implies $ent(\Sigma)\subseteq
-ent(\Sigma')$.
-This concludes the definition of heterogeneous logical environment.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
@@ -3895,8 +3909,10 @@ from the file name extension of the file containing a
 particular library, while $\Gamma$ is obtained
 by looking up IRIs in the internet and applying the semantics
 to thus obtained OMS.}\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'dist-oms-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}
+\todonote{@MC: explain what the purpose of a global env is}
+
 %
-\subsubsection*{Semantics of Libraries}
+\ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
 \semdom{sem_\Gamma(\syntax{LibraryDefn})=\Gamma'}
 $sem(\Gamma,L,\syntax{'library' , LibraryName },DI_1,\ldots DI_n)= (\Sigma, M)$\\
@@ -3942,6 +3958,8 @@ $sem(\Gamma,L,\syntax{Qualification})=(\Gamma,L')$
 where $L'=sem(L,\syntax{Qualification})$.
 
 Equations for \syntax{OMSDefn} and \syntax{MappingDefn} are given below.
+
+\ssclause{Semantics of focused OMS}
 
 \semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
 
@@ -4065,6 +4083,8 @@ where
 \semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
 \semdom{sem^M(\syntax{'application', Substname, Sentence})= TODO}
 
+
+\ssclause{Semantics of OMS Mappings}
 
 %\CLnote[type=todo]{specify semantics of module extraction}
 % YI 13.10.14
@@ -4274,6 +4294,7 @@ Alignments are interpreted only syntactically:
 (\Gamma[\syntax{AlignName}\mapsto \syntax{\{ Correspondence \}}],L)
 $
 
+\ssclause{Semantics of queries}
 
 \sclause{Translational semantics of DOL language constructs}
 
