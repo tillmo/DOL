@@ -3072,8 +3072,10 @@ equivalence states that the model classes of two OMS are in bijective correspond
 Interpretations, entailments and equivalences between OMS networks are also possible. An 
 interpretation between OMS networks has to specify both a mapping between the nodes of the OMS 
 network, as well as, for each node, a symbol map from the OMS of that node to the target OMS to 
-which it is mapped.\ednote{In equivalences between OMS networks, should we allow for node mappings 
-as well? In  \cite{MossakowskiTarlecki09}, this is allowed.}
+which it is mapped.
+%\ednote{In equivalences between OMS networks, should we allow for node mappings 
+%as well? In  \cite{MossakowskiTarlecki09}, this is allowed.
+%--- No, since we do not allow for signature morphisms either.}
 }
 
 In contrast to this functional style of mapping symbols, an alignment provides a relational 
@@ -3123,10 +3125,10 @@ EntailmentType       = 'oms-oms-entailment', OMS , OMS
                      | 'network-network-entailment', Network, Network ;
 EntailmentName       = IRI ;
 
-EquivDefn            = 'equiv-defn' , EquivName , EquivType , OMS ;
+EquivDefn            = 'equiv-defn' , EquivName , EquivType ;
 EquivName            = IRI ;
-EquivType            = 'oms-equiv' , OMS , OMS 
-                     | 'network-equiv' , Network , Network ;
+EquivType            = 'oms-equiv' , OMS , OMS , OMS
+                     | 'network-equiv' , Network , Network , Network ;
 
 ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
                                        InterfaceSignature ;
@@ -3617,10 +3619,10 @@ EntailmentType       = GroupOMS , 'entails', OMS
                      | Network , 'entails', OMS
                      | Network , 'entails', Network ;
 
-EquivDefn            = 'equivalence' , EquivName , ':' , EquivType , '=' , OMS ,  'end' ;
+EquivDefn            = 'equivalence' , EquivName , ':' , EquivType ,  'end' ;
 EquivName            = IRI ;
-EquivType            = GroupOMS , '<->' , GroupOMS 
-                     | Network , '<->' , Network ;
+EquivType            = GroupOMS , '<->' , GroupOMS  , '=' , OMS 
+                     | Network , '<->' , Network , '=' , Network ;
 
 ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
                        'for' , InterfaceSignature ;
