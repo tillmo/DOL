@@ -975,43 +975,66 @@ This is left for future work.
 %
 6.7.(a)	& 
 Do existing language standards need to be extended or adapted in order to make them OntoIOp conformant.	&
+The goal of DOL is to support existing languages without any
+adpations, see also 6.5.4(a). However, in order to meet
+requirement 6.5.6, DOL-conformant languages should support the
+use of IRIs. If they do not, there is a mechanism of assining IRIs
+to (fragments of) language documents even if the language itself does not support
+this, see \ref{c:conform:serialization}.
+\ednote{say something about CLIF}
+Moreover, there is a mechanism for injecting annotations
+and comments in existing language serializations, see \ref{sec:existing-serialization} and \ref{c:req:annotation}.
    \\ \hline
 %
 6.7.(b)	& 
 Proposals should discuss whether the semantics of the metalanguage shall be included into the standard.	&
+We have included the semantics into the standard, since it
+helps to address some of the mandatory requirements.\ednote{move this to the standard proper}
    \\ \hline
 %	
 6.7.(c)	& 
 Proposals should discuss the chosen list of logics and translations.	&
+The list of chosen logics includes the mandatory ones (which
+are ontology and modeling languagegs),
+plus CASL as a specification language.
+The list of translations comprises those which are obivous and
+useful.\ednote{move this to the standard proper}
    \\ \hline
 %	
 6.7.(d)	& 
 Proposals should discuss a meta-ontology of logical languages and theories.	&
+We have developed the LoLa ontology, see \url{https://github.com/ontohub/OOR_Ontohub_API/blob/master/lola/ontology/dol-rdf.omn}.\ednote{move this to the standard proper}
    \\ \hline
 %	
 6.7.(e)	& 
 Proposals should discuss the use of QVT for expressing logic translations.	&
+This has been left for future work.
    \\ \hline
 %	
 6.7.(f)	& 
 Proposals should discuss a meta-ontology of logical languages and theories.	&
+duplicate!
    \\ \hline
 %	
 6.7.(g)	& 
 
 Proposals should discuss the use of QVT for expressing logic translations.	&
+duplicate!
    \\ \hline
 %	
 6.7.(h)	& 
 Proposals should discuss the role of APIs.	&
+TODO: Ontohub, API4KB
    \\ \hline
 %	
 6.7.(i)	& 
 Proposals should discuss availability and use of tools.	&
+TODO: Ontohub, Hets
    \\ \hline
 %	
 6.7.(j)	& 
 Proposals should discuss a registry of logical languages.	&
+TODO: Ontohub
    \\ \hline
 %	
 \end{longtable}
@@ -2978,7 +3001,7 @@ The following list covers the possible cases where DOL provides a choice between
 
 \todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL provides the mechanism for  identifying anything of relevance in a library, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.} DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
 
-The DOL serializations also supports the annotation of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language; for XML serializations of OMS languages, RDFa extensions are specified, so that DOL RDF can be embedded.
+The DOL serializations also supports the annotation of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language; for XML serializations of OMS languages, RDFa extensions are specified, so that DOL RDF can be embedded.\ednote{where is this specified in detail?}
 
 A list of RDF vocabularies for annotating OMS is recommended as an annex to this \IS.
 
@@ -3582,7 +3605,7 @@ prefix maps, even if the serialization does not support prefix maps otherwise.
 
 
 
-\sclause{Annotations}
+\sclause{Annotations}\label{s:annotations}
 
 \todonote{this subclause will be moved to annex M}
 ~\todonote[author=Christoph Lange,date=D:201108061340+02'00',type=todo]{Properly integrate this text from our LaRC 2011 paper} Annotations always have a subject, which is identified by an IRI. Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
@@ -3906,7 +3929,7 @@ Table~\ref{tab:key-signs} following key signs are reserved, and are not availabl
 \label{sec:existing-serialization}
 Any document providing an OMS in a serialization of a DOL conformant
 language can be used as-is in DOL, by reference to its IRI.
-\ednote{TODO: injection of comments, \%implies etc.}
+\ednote{TODO: injection of comments, \%implies etc. See \ref{c:req:annotation} and \ref{s:annotations}.}
 
 \clause{DOL semantics}\label{c:semantics}
 
