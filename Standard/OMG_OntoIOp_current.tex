@@ -759,51 +759,66 @@ Proposals shall provide a specification of a metalanguage for relationships betw
 of logically heterogeneous OSMs, particularly, given a language translation from a language L1 to
 another language L2, the application of the language translation to an OSM that is written in the
 language L1. &
+DOL provides the required translation contruct using syntax \syntax{O with translation t}, see \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
+Moreover, DOL provides heterogeneous interpretations between OMS, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}. 
    \\ \hline
 %
 6.5.1(b) & 
 Proposals shall provide a specification of a metalanguage for the union of OSMs written in
 different languages, which implicitly involves the application of suitable default translations in
 order to reach a common target language. &
+The syntax for unions is \syntax{O1 and O2}, see \ref{c:focused-OMS} and \ref{a:dol-text:OMS}. Default translations are discussed in
+\ref{c:explicit}, and DOL's notion of heterogeneous logical
+environment explicitly specifies default translations, see \ref{c:direct-sematics}.
 	\\ \hline
 %
 6.5.1(c) & 
 Proposals shall provide a specification of a metalanguage for importation in modular OSMs.	&
+DOL allows the import of OMS by their IRI, see \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
 	\\  \hline
 %
 6.5.1(d) & 
 Proposals shall provide a specification of a metalanguage for relationships between OSMs and their
 extracted modules e.g. the whole theory is a conservative extension of the module. 	&
+DOL provides such a construct with syntax \syntax{module m : o1 of o2 for sig}, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
 	\\ \hline
 %
 6.5.1(e) & 
 Proposals shall provide a specification of a metalanguage for relationships between OSMs and their
 approximation in less expressive languages such that the approximation is logically implied by the
 original theory, where the approximation generally has to be maximal in some suitable sense. 	&
-	\\ \hline
+DOL provides such a construct with syntax \syntax{o keep logic},  see \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.	\\ \hline
 %
 6.5.1(f) & 
 Proposals shall provide a specification of a metalanguage for links such as imports,
 interpretations, refinements, and alignments between OSMs/modules.
 	&
+DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
 	\\ \hline
 %
 6.5.1(g) & 
 Proposals shall provide a specification of a metalanguage for combination of OSMs along links. 	&
+DOL provides such a construct with syntax \syntax{combine n}, where \syntax{n} is a network of OMS and mappings (links),  see \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
 	\\ \hline
 %
 6.5.2(a)& 
 The constructs of the metalanguage shall be applicable to different logics.	&
+The semantics of DOL is based on a heterogeneous logical
+environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
    \\ \hline
 %
 6.5.2(b)& 
 The metalanguage shall neither be restricted to OSMs in a specific domain, nor to OSMs represented
 in a specific logical language.	&
+The semantics of DOL is based on a heterogeneous logical
+environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
    \\ \hline
 %
 6.5.2(c)& 
 The metalanguage shall not replace the object language constructs of the conforming logical
 languages.	&
+A \syntax{BasicOMS} is explicitly defined to be a \syntax{OMSInConformingLanguage}, and the syntax of the latter is left unspecified in this standard. Rather, here this standard relies on other standards and language definitions.
+See \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
    \\ \hline
 %
 6.5.2(d)& 
@@ -811,63 +826,85 @@ The metalanguage shall provide syntactic constructs for (i) structuring OSMs reg
 logic in which their sentences are formalized and (ii) basic and structured OSMs and facilities to
 identify them in a globally unique way.
 	&
+For basic OMS, see 6.5.2(c) above.
+The structuring constructs for focused OMS in \ref{c:focused-OMS} and \ref{a:dol-text:OMS} can be used for any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for referincing OMS, see
+\ref{c:iris}.
    \\ \hline
 %
 6.5.3(a)& 
 An abstract syntax specified as an SMOF compliant meta model.	&
+Currently, the abstract syntax is specified using EBFN, see clause \ref{c:abstract-syntax}. An SMOF meta model is in preparation.
    \\ \hline
 %
 6.5.3(b)& 
 A human-readable lexical concrete syntax in EBNF and serialization in XML, for the latter XMI shall
 be used.	&
+The concrete syntax (in EBNF) is specified in clause \ref{a:text-syntax}. The XMI representation will be automatically derived from the SMOF meta model.
    \\ \hline
 %
 6.5.3(c)& 
 Complete round-trip mappings from the human-readable concrete syntax to the abstract syntax and
 vice versa.	&
+Boith abstract syntax (clause \ref{c:abstract-syntax}) and concrete syntax (clause \ref{a:text-syntax}) use the same non-terminal symbols
+in their EBNF grammar; this makes a round-trip mapping between both straight-forward. Moreover, the round-trip mapping has been implemented in form of a parser and a printer as part of the heterogeneous tool set (see \url{http:hets.eu}).
    \\ \hline
 %
 6.5.3(d)& 
 A formal semantics for the abstract syntax.	&
+The formal semantics is given in clause \ref{c:semantics}.
    \\ \hline
 %
 %
 6.5.4(a)& 
 Existing OSMs in existing serializations shall validate as OSMs in the metalanguage with a minimum
 amount of syntactic adaptation.	& 
+Any document providing an OMS in a serialization of a DOL conformant
+language can be used as-is in DOL, by reference to its IRI.
+See \ref{sec:existing-serialization}.
    \\ \hline
 %
 6.5.4(b)& 
 It shall be possible to refer to existing files/documents from an OSM implemented in the
 metalanguage without the need for modifying these files/documents.	&
+Documents can be referenced by IRIs, see \ref{c:iris}.
    \\ \hline
 %
 6.5.4(c)& 
 Translations between logical languages shall preserve (possibly to different degrees) the semantics
 of the logical languages. Between a given pair of logical languages, several translations are
 possible.	&
+The semantics of DOL is based on a heterogeneous logical
+environment, which contains institution comorphisms as translations, see \ref{c:direct-sematics}. Institution comorphisms preserve semantics
+in a weak form through their satisfaction condition. The LoLa ontology specifies properties of translations (comorphisms) preserving more and more of the semantics, see \url{https://github.com/ontohub/OOR_Ontohub_API/blob/master/lola/ontology/dol-rdf.omn}.\ednote{Should LoLa be mentioned more prominently in this standard?}
    \\ \hline
 %
 6.5.5(a)& 
 Informative annexes shall establish the conformance of a number of relevant logical languages. An
 initial set of language translations may be part of an informative annex.	&
+For conformance of logical languages, see 6.5.5(b) below.
+Conformance of some translations is established in annex \ref{a:graph}.
    \\ \hline
 %
 6.5.5(b)& 
 Conformance of the following subset of logical languages  shall be established: OWL2 (with profiles
 EL, RL, QL), CLIF, RDF, UML class diagrams.
 	&
+We establish conformance of OWL 2 (annex \ref{a:owl}), CLIF (annex \ref{a:cl}), RDF and RDFS (annex \ref{a:rdfs}) and UML class diagrams (annex \ref{a:uml-class}) 
+with DOL.
    \\ \hline
 %
 6.5.5(c)& 
 Conformance of a suitable set of translations among the languages mentioned in the previous bullet
 point shall be established.	&
+Conformance of some translations is established in annex \ref{a:graph}.
    \\ \hline
 %
 6.5.6 & 
 Existing standards and best practices for allocating globally unique identifiers hall be reused.
 The same standards and best practices shall also be applied to associate different representations
 of the same content to one unique identifier.	&
+DOL uses IRIs to reference documents (both DOL documents, as well
+as documents written in some conforming language). See \ref{c:iris}.
    \\ \hline
 %
 
@@ -996,6 +1033,8 @@ Proposals should discuss a registry of logical languages.	&
 %
 6.8(a)	& 
 Proposals covering a broader range of features and of use cases will be favored. As a minimum, proposals shall define conformance criteria for logical languages and translations, and their proposed metalanguage shall cover some metalogical relationships and shall be applicable to multiple logics.	&
+Conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
+DOL is be applicable to multiple logics (see also 6.8(c) below).
    \\ \hline
 %
 6.8(b)		&
@@ -1006,7 +1045,7 @@ language can be used as-is in DOL, by reference to its IRI. See \ref{sec:existin
 %
 6.8(c)		&
 Proposals establishing actually (or making this at least possible in theory) OntoIOp conformance of more logical languages and translations will be favored. 	&
-We establish conformance of OWL 2 (annex \ref{a:owl}), Common Logic (annex \ref{a:cl}), RDF and RDFS (annex \ref{a:rdfs})
+We establish conformance of OWL 2 (annex \ref{a:owl}), Common Logic (annex \ref{a:cl}), RDF and RDFS (annex \ref{a:rdfs}), UML class diagrams (annex \ref{a:uml-class}) and CASL (annex \ref{a:casl})
 with DOL.
 	\\ \hline
 
@@ -1239,7 +1278,7 @@ We define the following levels of conformance of the abstract syntax of a basic
 Any conforming language and logic shall have a machine-processable description
  as detailed in \cref{c:conform:description}.
 
-\ssclause{Conformance of language/logic translations with DOL}
+\ssclause{Conformance of language/logic translations with DOL}\label{c:conform:translation}
 
 Rationale: a translation between logics must satisfy certain criteria in order to conform with DOL.
 Also, a translation between OMS languages based on such logics must be consistent with the
@@ -3020,12 +3059,12 @@ OMSOrMappingorNetworkRef  = IRI ;
 \end{lstlisting}
 
 
-\sclause{Focused OMS}
+\sclause{Focused OMS}\label{c:focused-OMS}
 
 A focused OMS (\syntax{OMS}) can be one of the following:
 \begin{itemize}
 \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
-language\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
+language (which is defined outside this standard)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
 However, DOL's module sublanguage should be given preference over the module sublanguage of 
 the respective conforming OMS language; \eg DOL's extension construct should be preferred over OWL's import construct.},
 \item a translation of an OMS into a different signature or OMS
@@ -3088,7 +3127,7 @@ SymbolMapItems       = 'symbol-map-items' , ( SymbolOrMap , { SymbolOrMap } ) ;
 
 Extraction           = 'extraction', [ QualInterfaceSignature ] ;
 
-Approximation        = 'approximation' , QualInterfaceSignature , [ LogicRef ] ;
+Approximation        = 'approximation' , [ QualInterfaceSignature ] , [ LogicRef ] ;
 
 Filtering            = 'select' , BasicOMS 
                      | 'reject' , BasicOMS ;
@@ -3162,7 +3201,7 @@ OMSLangTransRef  = IRI ;
 \end{lstlisting}
 
 
-\sclause{OMS Mappings}
+\sclause{OMS Mappings}\label{c:oms-mappings}
 
 A OMS mapping provides a connection between two OMS. A OMS mapping definition is the definition of 
 either a named interpretation (\syntax{IntprDefn}, \red{\syntax{Entailment}} or 
@@ -3542,7 +3581,7 @@ prefix maps, even if the serialization does not support prefix maps otherwise.
 \todonote{this subclause will be moved to annex M}
 ~\todonote[author=Christoph Lange,date=D:201108061340+02'00',type=todo]{Properly integrate this text from our LaRC 2011 paper} Annotations always have a subject, which is identified by an IRI. Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
 
-\clause{DOL text serialization}\label{a:text-syntax}+
+\clause{DOL text serialization}\label{a:text-syntax}
 
 \sclause{Document type}
 
@@ -3646,7 +3685,8 @@ Extraction           = 'extract' , [InterfaceSignature]
                      | 'remove' , [InterfaceSignature] ;
 
 Approximation        = 'forget' , InterfaceSignature , [ 'with', LogicRef ] 
-                     | 'keep' , InterfaceSignature , [ 'with', LogicRef ] ;
+                     | 'keep' , InterfaceSignature , [ 'with', LogicRef ] 
+                     | 'keep' , LogicRef ;
 
 Filtering            = 'select' , BasicOMS 
                      | 'reject' , BasicOMS ;
@@ -3699,7 +3739,7 @@ OMSLangTransRef     = IRI ;
 and hence should be a statement in an OMS network. Recall:
 ModuleProperties     =  '\%safe' ; }
 
-\ssclause{OMS Mappings}
+\ssclause{OMS Mappings}\label{a:dol-text:mappings}
 
 \newcommand*{\lessthan}{<}
 \newcommand*{\greaterthan}{>}
@@ -3860,7 +3900,7 @@ Table~\ref{tab:key-signs} following key signs are reserved, and are not availabl
 \label{sec:existing-serialization}
 Any document providing an OMS in a serialization of a DOL conformant
 language can be used as-is in DOL, by reference to its IRI.
-
+\ednote{TODO: injection of comments, \%implies etc.}
 
 \clause{DOL semantics}\label{c:semantics}
 
@@ -4146,7 +4186,7 @@ holds, called the \defsty{satisfaction condition}.
 \todonote{Introduce exactness}
 
 
-\sclause{Direct semantics of DOL language constructs}
+\sclause{Direct semantics of DOL language constructs}\label{c:direct-sematics}
 
 The semantics of DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
 environment.  The semantic domains are based on this heterogeneous logical environment. 
@@ -4159,7 +4199,7 @@ OMS languages and OMS language translations\footnote{The
   is a language-specific semantics of basic OMS as defined
   below.}, a collection of institutions, institution morphisms and
 institution comorphisms (serving as logics, logic reductions and logic
-translations), and a collection of serializations. Moreover, there is
+translations), and a collection of serializations. Moreover, some of the institution comorphisms are marked as default translations (but only at most one between a given source and target institution), and there is
 a binary supports relation between OMS languages and institutions,
 and a binary supports relation between OMS languages and
 serializations. 
@@ -4979,6 +5019,10 @@ like owl:Thing and owl:oneOf, tailored towards the representation of
 
 \end{definition}
 
+
+\normannex{Conformance of UML class diagrams DOL}\label{a:uml-class}
+
+\normannex{Conformance of CASL with DOL}\label{a:casl}
 
 \normannex{A Core Logic Graph}\label{a:graph}
 
