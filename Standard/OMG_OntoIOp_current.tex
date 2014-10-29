@@ -981,7 +981,6 @@ requirement 6.5.6, DOL-conformant languages should support the
 use of IRIs. If they do not, there is a mechanism of assining IRIs
 to (fragments of) language documents even if the language itself does not support
 this, see \ref{c:conform:serialization}.
-\ednote{say something about CLIF}
 Moreover, there is a mechanism for injecting annotations
 and comments in existing language serializations, see \ref{sec:existing-serialization} and \ref{c:req:annotation}.
    \\ \hline
@@ -1012,27 +1011,16 @@ This has been left for future work.
    \\ \hline
 %	
 6.7.(f)	& 
-Proposals should discuss a meta-ontology of logical languages and theories.	&
-duplicate!
-   \\ \hline
-%	
-6.7.(g)	& 
-
-Proposals should discuss the use of QVT for expressing logic translations.	&
-duplicate!
-   \\ \hline
-%	
-6.7.(h)	& 
 Proposals should discuss the role of APIs.	&
 TODO: Ontohub, API4KB
    \\ \hline
 %	
-6.7.(i)	& 
+6.7.(g)	& 
 Proposals should discuss availability and use of tools.	&
 TODO: Ontohub, Hets
    \\ \hline
 %	
-6.7.(j)	& 
+6.7.(h)	& 
 Proposals should discuss a registry of logical languages.	&
 TODO: Ontohub
    \\ \hline
@@ -1083,6 +1071,7 @@ with DOL.
 \ednote{in 6.8(c), also mention at least UML class diagrams}
 
 \section{Proof of Concept}
+TODO: Hets, Ontoub. Mention that they are open source.
 
 \section{Changes to Adopted OMG Specifications}
 This specification proposes no changes to adopted OMG specifications.
@@ -3050,6 +3039,7 @@ subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verb
 an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 Library                  = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn              = 'library' , LibraryName , { LibraryItem } ;
@@ -3078,6 +3068,7 @@ OMS network consisting of focused OMS and OMS mappings. OMS networks may build o
 OMS networks, and they can be used in \syntax{combination}s.  
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 NetworkDefn            = 'network-defn', NetworkName , [ ConsStrength ] , Network ;
 NetworkName            = IRI ;
 Network                = 'network', NetworkElements , ExcludeExtensions ;
@@ -3120,6 +3111,7 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % and HetCASL (see HetCASL summary)
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
+
 BasicOMS             = OMSInConformingLanguage ;
 MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
@@ -3204,6 +3196,7 @@ translation between to a given target (the source will be inferred as the
 OMS language of the current OMS).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
 Symbol           = IRI ;
 SymbolMap        = 'symbol-map' , Symbol , Symbol ;
@@ -3276,6 +3269,7 @@ to the \syntax{InterfaceSignature}.
 
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+
 MappingDefn          = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn;
 
 IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , 
@@ -3340,6 +3334,7 @@ RelationRef          = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible
 Confidence           = Double ;
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
+
 Double               = ($<$ a number $\in [0,1]$ $>$) ;
 \end{lstlisting}
 
@@ -3392,6 +3387,7 @@ the result of a query. Optioally, a result can be expressed to be
 complete, meaning that it comprises all answer substitutions to the query.
 }
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+
 QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
 QueryDefn            = 'select-query-defn', QueryName, Vars, Sentence, 
                                             OMS, [Translation] ;
@@ -3460,6 +3456,7 @@ usually ending with \syntax{\#} or \syntax{/}
 \end{description}
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{specified below in \cref{c:curies}}) 
 FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
 \end{lstlisting}
@@ -3516,6 +3513,7 @@ Prefix mappings can be defined at the beginning of a library (specified in \cref
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
 Their syntax is:
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
 PrefixMap        = 'prefix-map' , { PrefixBinding } ;
 PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
                    [ Separators ] ;
