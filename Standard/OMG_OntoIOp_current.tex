@@ -1078,6 +1078,8 @@ This specification proposes no changes to adopted OMG specifications.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \chapter{Scope}
 \pagenumbering{arabic} 
 This \IS specifies the Distributed Ontology, Modeling and Specification
@@ -1320,11 +1322,6 @@ comments and annotations.  All comments attached to a sentence (or
 symbol) in the source \should be attached to its translation in the
 target (if there are more than one sentences (resp.\ symbols)
 expressing the translation, to at least one of them).
-
-A logic translation \may use infrastructure theories to axiomatize a fragment of the syntax of
-the source logic into the target logic \footnote{Such a translation is formally represented as a
-theoroidal institution comorphism.}. For example, the built-in types of an OWL signature are
-axiomatized as datatypes in first-order logic.
 
 \sclause{Conformance of a serialization of an OMS language with DOL}\label{c:conform:serialization}
 
@@ -1668,8 +1665,6 @@ There are also general purpose OMS languages, which can express both \termref{OM
   \end{note}
   \begin{note}
    Usually, query variables are the free variables of a sentence; there
-<<<<<<< Local Changes
-   can be other (bou=======
    can be other (bound) variables.
   \end{note}
   \begin{note}
@@ -2981,7 +2976,8 @@ into its explicit counterpart.\todo{Terry: (Is this true? if so, rewrite). Perha
 The following list covers the possible cases where DOL provides a choice between representing information implicitly or  explicitly:
 \begin{description}
 \item[default OMS language translations] A heterogeneous OMS can import several (focused) OMS expressed in different conforming logics, for which suitable translations have been defined in the logic graph provided in \aref{a:graph} or in an extension to it that has been provided when establishing the conformance of some other logic with DOL.  Determining the semantics of the heterogeneous OMS requires a translation into a common target language to be applied (\cf \cref{c:semantics}).  This translation is determined via a lookup in the transitive closure of the logic graph.  Depending on the reasoners available in the given application setting, it can, however, be necessary to employ a different translation.  Authors can express which one to employ.  In a multi-step translation, it is possible to implicitly apply as many default translations as possible, and to concentrate on making explicit only those translations that deviate from the default.\CLnote[type=q-aut]{Will this situation be the same for default approximations, or to we need to add an extra item to the list?}
-\item[different matching algorithms] OMS alignments, which DOL is able to express, may have been obtained by running different OMS matching algorithms.  If, in a given OMS engineering workflow, the information on which algorithm has been applied is clear from the context, it is possible to omit it in the alignment expressed in DOL.  Otherwise, \eg if the next person working on the OMS requires that information, it is possible to make it explicit.\todonote{TM: the alignment itself should be there explicitly. right? But then the information about the matching algorithm that has produced it is a mere annotation without semantics, isn't it?\\ CL: I agree with you. OK, so we will replace this with approximation algorithms.}
+%\item[different matching algorithms] OMS alignments, which DOL is able to express, may have been obtained by running different OMS matching algorithms.  If, in a given OMS engineering workflow, the information on which algorithm has been applied is clear from the context, it is possible to omit it in the alignment expressed in DOL.  Otherwise, \eg if the next person working on the OMS requires that information, it is possible to make it explicit.\todonote{TM: the alignment itself should be there explicitly. right? But then the information about the matching algorithm that has produced it is a mere annotation without semantics, isn't it?\\ CL: I agree with you. OK, so we will replace this with approximation algorithms. 
+%MC: using approximation algorithms is not different than using alignments, as both annotations have no effect on the semantics}
 \end{description}
 
 ~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{ask Michael Gr{\"u}ninger for his mereology example in CL}
@@ -3099,7 +3095,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional or implied,
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
-\item a combination of OMS (technically, this is a colimit, see \cite{ZimmermanEtAl06}),\footnote{A combination of OMS also takes all mappings into these OMS into consideration---unless these are explicitly excluded.}
+\item a combination of OMS network (technically, this is a colimit, see \cite{ZimmermanEtAl06}),\footnote{A combination of OMS also takes all mappings into these OMS into consideration---unless these are explicitly excluded.}
 \item a minimization of an OMS, forcing the subsequently declared
   non-logical symbols to be interpreted in a minimal way, while the non-logical symbols declared so far are fixed (alternatively, the non-logical symbols to be minimized and to be varied can be explicitly declared). \red{Variants are
 maximization, freeness (minimizing also data sets and equalities on these), and cofreeness
@@ -3931,45 +3927,45 @@ language can be used as-is in DOL, by reference to its IRI.
 
 \clause{DOL semantics}\label{c:semantics}
 
-We pursue a threefold approach of assigning a semantics to the DOL
-abstract syntax:
+%We pursue a threefold approach of assigning a semantics to the DOL
+%abstract syntax:
+%
+%\begin{description}
+%\item[Direct Model-Theoretic Semantics] On the level of basic
+%  OMS, this semantics reuses the existing semantics of the
+%  involved logics, as well as translations between these logics.  The
+%  semantics of structured DOL OMS and OMS mappings is specified on
+%  top of this.
+%\item[Translational Semantics] The semantics of Common Logic is
+%  employed for all basic OMS languages, taking advantage of the
+%  fact that Common Logic is a common translation target for many
+%  OMS languages.  In detail, the translational semantics first
+%  translates the DOL abstract syntax into the abstract syntax of
+%  $DOL(\CL)$, where $DOL(\CL)$ is the homogeneous restriction of DOL
+%  to libraries with all parts written in Common Logic
+%  only.  The latter is interpreted as in the case of the direct
+%  semantics, with basic OMS interpreted in terms of the
+%  existing Common Logic semantics.
+%\item[Collapsed Semantics] The collapsed semantics extends the
+%  translational semantics to a semantics that is fully given specified
+%  in Common Logic.  It further translates the abstract syntax
+%  $DOL(\CL)$ to Common Logic, and then reuses the semantics of Common
+%  Logic, without employing a separate semantics for the DOL language.
+%  Here, the meta and object levels are collapsed into Common Logic,
+%  but may still be distinguished by a closer look into the Common
+%  Logic theory.
+%
+%\end{description}
 
-\begin{description}
-\item[Direct Model-Theoretic Semantics] On the level of basic
-  OMS, this semantics reuses the existing semantics of the
-  involved logics, as well as translations between these logics.  The
-  semantics of structured DOL OMS and OMS mappings is specified on
-  top of this.
-\item[Translational Semantics] The semantics of Common Logic is
-  employed for all basic OMS languages, taking advantage of the
-  fact that Common Logic is a common translation target for many
-  OMS languages.  In detail, the translational semantics first
-  translates the DOL abstract syntax into the abstract syntax of
-  $DOL(\CL)$, where $DOL(\CL)$ is the homogeneous restriction of DOL
-  to libraries with all parts written in Common Logic
-  only.  The latter is interpreted as in the case of the direct
-  semantics, with basic OMS interpreted in terms of the
-  existing Common Logic semantics.
-\item[Collapsed Semantics] The collapsed semantics extends the
-  translational semantics to a semantics that is fully given specified
-  in Common Logic.  It further translates the abstract syntax
-  $DOL(\CL)$ to Common Logic, and then reuses the semantics of Common
-  Logic, without employing a separate semantics for the DOL language.
-  Here, the meta and object levels are collapsed into Common Logic,
-  but may still be distinguished by a closer look into the Common
-  Logic theory.
-
-\end{description}
-
-The model-theoretic nature of the semantics ensures a better representation
-of the model theory than a theory-level semantics would do. In particular,
-Theorem~13 of \cite{ThreeSemantics} ensures that models classes of logical 
-theories represented in Common Logic can be recovered through a model
-translation. This is of particular importance when studying model-theoretic
-properties like finite model or tree model properties.
+%The model-theoretic nature of the semantics ensures a better representation
+%of the model theory than a theory-level semantics would do. In particular,
+%Theorem~13 of \cite{ThreeSemantics} ensures that models classes of logical 
+%theories represented in Common Logic can be recovered through a model
+%translation. This is of particular importance when studying model-theoretic
+%properties like finite model or tree model properties.
 
 
-
+\todonote{intro to semantics, informal overview}
 
 We now specify the theoretical foundations of the semantics of DOL. Since DOL involves 
 heterogeneous OMS, the semantics is parameterized over an arbitrary but fixed \emph{heterogeneous 
@@ -4027,8 +4023,7 @@ logic environment will be provided later.
 
 We recall the notion of satisfaction system \cite{carnielli2008analysis}, called `rooms' in the 
 terminology of \cite{CharPar}. They capture the Tarskian notion of satisfaction of a
-sentence in a model. For the semantics of minimization, we assume a pre-order on models.
-\todonote{Till, do you have a reason to want to have rooms in this document? I would keep technical concepts to a minimum.}
+sentence in a model. %For the semantics of minimization, we assume a pre-order on models.
 
 \begin{definition}\label{def:room}
 A triple $\cR=(Sen,{\cM,\models)}$  is called a  \defsty{satisfaction system}, or \defsty{room}, if $\cR$  consists of
@@ -4056,8 +4051,8 @@ $\Delta'\models_\Sigma\varphi$ for some finite subset $\Delta'$ of $\Delta$.
 While this signature-free treatment enjoys simplicity and is wide-spread in the literature, many 
 concepts and definitions found in logics, e.g.\ the notion of a conservative extension, involve the
 \emph{vocabulary} or \emph{signature} $\Sigma$ \label{vocabulary} used in sentences.  Signatures 
-can be extended with new non-logical symbols; abstractly, this leads to an ordering relation on 
-signatures.
+can be extended with new non-logical symbols, or some of these symbols can be renamed; abstractly, 
+this is captured using signature morphisms.
 
 
 \begin{definition}\label{def:inst} An
@@ -4156,7 +4151,7 @@ signature morphism component.
 \end{definition}
 %
 
-Further examples of institutions are: $\mathcal{SROIQ}(D)$, Common Logic, unsorted first-order logic, 
+Further examples of institutions are: $\mathcal{SROIQ}(D)$, unsorted first-order logic, 
 many-sorted first-order logic, and many others.  Note that reduct is generally given by forgetting 
 parts of the model.
 %, and the pre-order on models is given as follows: $M_1\leq M_2$ if $M_1$ and 
@@ -4164,20 +4159,21 @@ parts of the model.
 %moreover each propositional (and predicate) symbol true in $M_1$ is also true in $M_2$ (for a
 %given tuple of arguments).
 
-Assume an arbitrary institution.
-
+For the rest of the section, we work in an arbitraty institution. 
 A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
  A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
-$M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: for  a theory $\Delta\subseteq Sen$ and 
-$\varphi\in Sen$, we write $\Delta\models\varphi$, if all models satisfying all sentences in
-$\Delta$ also satisfy $\varphi$.
+$M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
+for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
+$\varphi\in \sen(\Sigma)$, we write $\Delta\models\varphi$, if all models satisfying all sentences in
+$\Delta$ also satisfy $\varphi$. A \defsty{theory morphism} $\phi: (\Sigma, \Delta) \rightarrow (\Sigma',  \Delta')$ is 
+   a signature morphism $\phi:\Sigma\rightarrow \Sigma'$ such that $\Delta'\models \phi(\Delta)$.
 
 \medskip
 
 Institution comorphisms capture the intuition of encoding or embedding a logic into a more expressive one.
 
-\begin{definition}[Institution Comorphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
-\Sen^J, \models^J)$, an \defsty{institution comorphism} from $I$ to
+\begin{definition}[Institution Comorphism] Let $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
+\Sen^J, \models^J)$ be two institutions. An \defsty{institution comorphism} from $I$ to
 $J$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
 natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
 and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
@@ -4194,6 +4190,26 @@ translation of the $\Sigma$-sentence $\varphi$ to a
 $\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
 (or perhaps better: reduction) of the $\Phi(\Sigma)$-model $M'$ to a
 $\Sigma$-model.
+
+\begin{definition}
+  Given an institution  $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$, we can define the
+   institution of its theories, denoted $I^{th}$, as follows. The category of signatures of $I^{th}$ is the category
+   of $I$-theories and $I$-theory morphisms, that  we denote $\Th^I$.
+   For each theory $(\Sigma, \Delta)$, its sentences are just $\Sigma$-sentences in $I$, and
+   its models are just $\Sigma$-models in $I$ that satisfy the sentences in $\Delta$, while the
+   $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in models of $I$.
+ \end{definition}
+
+Using this notion, we can now capture logic translations that include axiomatization of parts of the
+syntax of the source logic into the target logic.
+
+\begin{definition}
+
+ Let $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
+\Sen^J, \models^J)$ be two institutions. An \defsty{theoroidal institution comorphism} from $I$ to
+$J$ is a institution comorphism from $I$ to $J^{th}$.
+
+\end{definition}
 
 \medskip
 
@@ -4304,14 +4320,45 @@ from the file name extension of the file containing a
 particular library, while $\Gamma$ is obtained
 by looking up IRIs in the internet and applying the semantics
 to thus obtained OMS.}\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'network-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}
-\todonote{@MC: explain what the purpose of a global env is}
+\todonote{@MC: explain what the purpose of a global env is. Also add syntax for working with the global env.}
 
 %
 \ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
-\semdom{sem_\Gamma(\syntax{LibraryDefn})=\Gamma'}
-$sem(\Gamma,L,\syntax{'library' , LibraryName },DI_1,\ldots DI_n)= (\Sigma, M)$\\
-where $sem(\ldots sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
+
+\semdom{ sem(\syntax{Library}) = (\Gamma', L)}
+
+A library is either a list of definitions of OMS, OMS mappings and OMS networks, possibly starting with a prefix map, or
+an OMS in one of the languages supported by the heterogeneous logical environment.
+
+$$sem(\syntax{PrefixMap, LibraryDefn}) = (\Gamma', L')$$
+ 
+\noindent where 
+ $sem(\syntax{PrefixMap}) = PMap$ and
+$sem(\Gamma_0, L_0, PMap, \syntax{LibraryDefn}) = (\Gamma', L')$. 
+
+$$sem^T(\syntax{OMSInConformingLanguage}) = (\{ \syntax{IRI} \mapsto (I, \Sigma, \Delta) \}, L)$$
+\noindent where $sem(\Gamma_0, L, \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \Delta)$,
+ \syntax{IRI} is the IRI of the library and $L$ is determined from the extension of the library.
+
+$$sem^M(\syntax{OMSInConformingLanguage}) = (\{ \syntax{IRI} \mapsto (I, \Sigma, \cM) \}, L)$$
+\noindent where $sem(\Gamma_0, L, \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM)$,
+\syntax{IRI} is the IRI of the library and $L$ is determined from the extension of the library.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\semdom{sem(\Gamma, L, PMap, \syntax{LibraryDefn})= (\Gamma', L')}
+
+$sem(\Gamma, L, PMap, \syntax{'library' , LibraryName}, LibraryItem_1,\ldots LibraryItem_n)= (\Gamma', L')$\\
+\noindent where  
+
+  $sem(\Gamma, L, PMap, LibraryItem_1) = (\Gamma_1, L_1)$,
+
+  $sem(\Gamma_1, L_1, PMap, LibraryItem_2) = (\Gamma_2, L_2)$,
+
+  $\ldots$ 
+
+   $sem(\Gamma_{n-1}, L_{n-1}, PMap, LibraryItem_n) = (\Gamma', L')$.
 \todonote{\syntax{LibraryName} is not used. How could we use it?
   It seems that the individual OMS are directly named with
   IRIs, and the \syntax{LibraryName} is not relevant for that?
@@ -4322,18 +4369,60 @@ where $sem(\ldots sem(sem(\Gamma,L,DI_1),DI_2),\ldots,DI_n)=(\Gamma',L')$
   "linked data compliance", a good practice to be encouraged but not
   to be enforced, as it would break a lot of old OMS)}
 
-\semdom{sem(\Gamma,L,\syntax{OMSInConformingLanguage})=\Gamma'}
-where $\Gamma'=\Gamma[\syntax{IRI}\mapsto (L,\Sigma,\cM)]$,\\
-$(\Sigma,\cM)=sem(L,\syntax{OMSInConformingLanguage})$\\
-and \syntax{IRI} is the IRI of \syntax{OMSInConformingLanguage}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem^T(\Gamma, L, \syntax{OMSInConformingLanguage})= (I, \Sigma, \Delta)}
+
+$$sem^T(\Gamma, L, \syntax{OMSInConformingLanguage}) = (I, \Sigma, \Delta) $$
+\noindent where $sem^T_I(\syntax{OMSInConformingLanguage}) = (I,  \Sigma, \Delta)$
+ and \syntax{OMSInConformingLanguage} is conform with $L$. 
+
+\todonote{...otherwise this gives an error. How to indicate this?}
+
+\semdom{sem^M(\Gamma, L, \syntax{OMSInConformingLanguage})=(I, \Sigma, \cM)}
+
+$$sem^M(\Gamma, L, \syntax{OMSInConformingLanguage}) =  (I, \Sigma, \cM)$$
+\noindent where $\vdash sem^M_I(\syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM)$
+ and \syntax{OMSInConformingLanguage} is conform with $L$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(\Gamma, L, PMap, \syntax{LibraryItem})= (\Gamma', L')}
+
+$$sem(\Gamma, L, PMap, \syntax{LibImport}) = (\Gamma', L)$$
+\noindent where $sem(\Gamma, PMap, \syntax{LibImport}) = \Gamma'$
+
+$$sem(\Gamma, L, PMap, \syntax{Qualification}) = (\Gamma, L')$$
+\noindent where $sem(L, \syntax{Qualification}) = L'$.
+
+
+Equations for \syntax{OMSDefn}, \syntax{NetworkDefn}, \syntax{MappingDefn} and \syntax{QueryRelatedDefn} 
+are given in the next sections.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \semdom{sem(\Gamma, PMap, \syntax{LibImport}) = \Gamma'}
+
+$$sem(\Gamma, PMap, \syntax{'lib-import', LibName}) = \Gamma'$$
+
+\todonote{this is more complex: there should be a library at the IRI indicated by the LibName+PMap,
+it should be retrieved and analyzed, the generated context should be disjoint with $\Gamma$,
+the result is the union.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(L,\syntax{Qualification})=L'}
-$sem((lang,logic,ser),\syntax{'lang-select' , LanguageRef})=(\syntax{LanguageRef},logic',ser')$\\
-where $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\\
+
+\todonote{I have not checked this...}
+
+$$sem((lang,logic,ser),\syntax{'lang-select' , LanguageRef})=(\syntax{LanguageRef},logic',ser')$$
+
+\noindent where $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\\
  $ser'=\twocase{ser}{\syntax{LanguageRef} \textrm{ supports } ser}{\textrm{default serialization for }\syntax{LanguageRef}}$
 
- $sem((lang,logic,ser),\syntax{'logic-select' , LogicRef})=(lang',\syntax{LogicRef},ser)$\\
- where $lang'=\twocase{lang}{lang \textrm{ supports }
+ $$sem((lang,logic,ser),\syntax{'logic-select' , LogicRef})=(lang',\syntax{LogicRef},ser)$$
+
+ \noindent where $lang'=\twocase{lang}{lang \textrm{ supports }
    \syntax{LogicRef}} {\textrm{the unique language supporting
    }\syntax{LogicRef}}
  $\\
@@ -4341,29 +4430,35 @@ where $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\t
  be undefined; in this case, the semantics of the whole
  \syntax{'logic-select' , LogicRef} construct is undefined.
 
-$sem((lang,logic,ser),\syntax{'logic-select' , SyntaxRef})=(lang,logic,\syntax{SyntaxRef})$\\
-The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
+$$sem((lang,logic,ser),\syntax{'logic-select' , SyntaxRef})=(lang,logic,\syntax{SyntaxRef})$$
 
-\semdom{sem(L,\syntax{Qualification*})=L'}
+\noindent The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 
-$sem(L,Q_1\ldots Q_n)=sem(\ldots sem(sem(L,Q_1),Q_2),\ldots,Q_n)$
+%\semdom{sem(L,\syntax{Qualification*})=L'}
+%
+%$sem(L,Q_1\ldots Q_n)=sem(\ldots sem(sem(L,Q_1),Q_2),\ldots,Q_n)$
 
-\semdom{sem(\Gamma,L,\syntax{LibraryItem})=(\Gamma',L')}
-$sem(\Gamma,L,\syntax{Qualification})=(\Gamma,L')$ 
-where $L'=sem(L,\syntax{Qualification})$.
+%\semdom{sem(\Gamma,L,\syntax{LibraryItem})=(\Gamma',L')}
+%$sem(\Gamma,L,\syntax{Qualification})=(\Gamma,L')$ 
+%where $L'=sem(L,\syntax{Qualification})$.
+%
+%Equations for \syntax{OMSDefn} and \syntax{MappingDefn} are given below.
 
-Equations for \syntax{OMSDefn} and \syntax{MappingDefn} are given below.
+\ssclause{Semantics of networks of ontologies}
+
+\todonote{I need a notation for graphs here, with operations on them...}
+
+\semdom{sem(\Gamma, L, PMap, \syntax{NetworkDefn}) = (\Gamma', L)}
+
+\semdom{sem(\Gamma, L, PMap, \syntax{Network})}
+
+\semdom{sem(\Gamma, L, PMap, \syntax{NetworkElements})}
+
+\semdom{sem(\Gamma, L, PMap, \syntax{NetworkElement})}
+
+\semdom{sem(\Gamma, L, PMap, \syntax{ExcludeExtensions})}
 
 \ssclause{Semantics of focused OMS}
-
-\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
-
-In the context of a global environment $\Gamma$,
-the current language, logic and serialization $L$,  and a local environment $(\Sigma,\cM)$ (of previously declared
-non-logical symbols), an OMS (\syntax{MinimizableOMS})
-$O$ is interpreted as an institute $\cI=logic(\Gamma,L,O)$, a signature $\Sigma=sig(\Gamma,L,O)$ in institute $\cI$ and a class
-of models $\cM=Mod(\Gamma,L,O)$ over signature $\Sigma$.
-We combine this into $sem(\Gamma,L,O)=(logic(\Gamma,L,O),sig(\Gamma,L,O),Mod(\Gamma,L,O))$.
 
 For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$, the theory-level semantics are defined as follows:  
 \semdom{sem^T(\syntax{BasicOMS})= sem_L(\syntax{BasicOMS})}  
@@ -4371,16 +4466,20 @@ For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$,
 The model-level semantics of \syntax{BasicOMS} are then obtained: 
 \semdom{sem^M(\syntax{BasicOMS})= (I,\Sigma, M)}
 where $M = \{M \in Mod(\Sigma) \mid M \models \Delta\}$. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
  
+In the context of a global environment $\Gamma$,
+the current language, logic and serialization $L$,  and a local environment $(\Sigma,\cM)$ (of previously declared
+non-logical symbols), an OMS (\syntax{MinimizableOMS})
+$O$ is interpreted as an institute $\cI=logic(\Gamma,L,O)$, a signature $\Sigma=sig(\Gamma,L,O)$ in institute $\cI$ and a class
+of models $\cM=Mod(\Gamma,L,O)$ over signature $\Sigma$.
+We combine this into $sem(\Gamma,L,O)=(logic(\Gamma,L,O),sig(\Gamma,L,O),Mod(\Gamma,L,O))$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\semdom{sem^M(\syntax{'oms-ref' , OMSRef})= \Gamma(\syntax{OMSRef})}
-
-\semdom{sem^M(\syntax{'oms-ref' , OMSRef, ImportName}) = \Gamma(\syntax{OMSRef})}
-
-Note that $\Gamma(\syntax{OMSRef})$ may be undefined. That is, if a
-reference (IRI) to an OMS is not defined, the semantics of the
-enclosing DOL construct is undefined.
-
 \semdom{sem^M(\syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
 
 %Semantics for \syntax{MinimizableOMS} is inherited.
@@ -4389,11 +4488,12 @@ The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-\semdom{sem(\syntax{'minimize' , MinimizableOMS}) = (I,\Sigma',\cM'')}
+$$sem(\syntax{'minimize' , MinimizableOMS}) = (I,\Sigma',\cM'')$$
 where
 $(\Sigma', \cM')=sem^M(\syntax{MinimizableOMS})$
 and $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem^M(\Gamma,L,\syntax{OMS})=(\cI,\Sigma,\cM)}
 
@@ -4478,6 +4578,149 @@ where
 \semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
 \semdom{sem^M(\syntax{'application', Substname, Sentence})= TODO}
 
+\todonote{turn all boxes up to the one with OMS into centered definitions - they are not categories, but subcases.}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(L,\Sigma,\syntax{Translation})=\rho}
+$sem(L,\Sigma,\syntax{'renaming' }LT_1 \ldots LT_n (\syntax{'symbol-map-items' }
+ E_1\ldots E_m))=\rho=(\Phi,\alpha,\beta)$\\
+where $rho=sem(LT_n)\circ\cdots\circ sem(LT_1)$
+
+The semantics is defined only if $E_1\ldots E_m$ occur in $\Phi(\Sigma)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(LogicTranslation)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(Reduction)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(LogicReduction)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(SymbolItems)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(L,\Sigma,\syntax{SymbolMapItems})=\Sigma'\mbox{ where } \Sigma'\geq\Sigma}
+
+True renamings are not possible without institutional logics,  only the presence of non-logical 
+symbols in a signature can be checked.\\
+$sem(L,\Sigma,\syntax{'symbol-map-items' } E_1 \ldots E_n)=
+\left\{\begin{array}{ll}
+\Sigma & \mbox{ if } E_1,\ldots, E_n \mbox{ are contained in }\Sigma\\
+\mbox{undefined} & \mbox{otherwise}
+\end{array}\right.$
+
+%The application of a logic translation leads to a signature
+%$\Phi(\Sigma)$. 
+
+%Note that $\Phi(\Sigma)\geq\Sigma$ by the construction
+%of the Grothendieck institute.\\
+%$sem(L,\Sigma,\syntax{'logic-translation' , OMSLangTrans} )=\Phi(\Sigma)$,
+%where $sem(L,\syntax{OMSLangTrans})$ is $(\Phi,\alpha,\beta)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(Extraction)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(Approximation)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(Filtering)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})=(\Sigma',\cM')}
+$sem(\Gamma,L,(\Sigma,\cM),\syntax{[ ConsStrength ] , [ ExtensionName ] , ExtendingOMS})=
+(\Sigma',\cM')$\\
+where $(\Sigma',\cM')=sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtendingOMS})$
+
+If \syntax{ConsStrength} is \syntax{'model-conservative'} or
+\syntax{'implied'}, the semantics is only defined if each model in
+$\cM$ is the $\Sigma$-reduct of some model in $\cM'$. 
+In case that \syntax{ConsStrength} is \syntax{'implied'},
+it is furthermore required that $\Sigma=\Sigma'$. If \syntax{ConsStrength} is \syntax{'consequence-conservative'}, the semantics is only defined if for each
+$\Sigma$-sentence $\varphi$, $\cM'\models\varphi$ implies $\cM\models\varphi$.
+% If
+%\syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
+%defined if each model in $\cM$ is the $\Sigma$-reduct of a model
+%in $\cM'$ that is unique up to isomorphism.  
+If
+\syntax{ConsStrength} is \syntax{'definitional'}, the semantics is only
+defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
+model in $\cM'$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(QualInterfaceSignature)}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\todonote{see what else is missing from the syntax after the OMSDefn}
+
+\semdom{sem(\Gamma,L,\syntax{OMSDefn})=(\Gamma',L)}
+
+An OMS definition extends the global environment:\\
+$\begin{array}{l}
+sem(\Gamma,L,\syntax{'oms-defn' , OMSName , [ ConsStrength ] , OMS})\\
+=(\Gamma[\syntax{OMSName}\mapsto sem(\Gamma,L,\syntax{OMS})],L)
+\end{array}$\todonote{Should we allow for overriding existing OMS
+definitions? Or should \syntax{OMSName} be new?}
+
+If \syntax{ConsStrength} is \syntax{'conservative'}, the semantics is only
+defined if $sem(\Gamma,L,\syntax{OMS})\not=\emptyset$.
+%If \syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
+%defined if $sem(\Gamma,L,\syntax{OMS})$ consist of exactly one isomorphism
+%class.\todonote{Here, we need model morphisms!}
+If \syntax{ConsStrength} is \syntax{'conservative'}, the semantics is only
+defined if $sem(\Gamma,L,\syntax{OMS})$ is a singleton.
+
+\semdom{sem^M(\syntax{'oms-ref' , OMSRef})= \Gamma(\syntax{OMSRef})}
+
+\semdom{sem^M(\syntax{'oms-ref' , OMSRef, ImportName}) = \Gamma(\syntax{OMSRef})}
+
+Note that $\Gamma(\syntax{OMSRef})$ may be undefined. That is, if a
+reference (IRI) to an OMS is not defined, the semantics of the
+enclosing DOL construct is undefined.
+
+
+\semdom{sem(\syntax{LogicRef})=L}
+$L$ is the institute from the heterogeneous logical environment named by
+\syntax{LogicRef}.
+
+\semdom{sem(L,\syntax{OMSLangTrans})=\rho}
+$sem(L,\syntax{'named-trans' , OMSLangTransRef})=\rho$ where $\rho$ is
+the institute comorphism from the heterogeneous logical environment
+named by \syntax{OMSLangTransRef}.  This is defined only if the
+domain of $\rho$ is $L$.
+
+$sem(L,\syntax{'qual-trans' , OMSLangTransRef } LR_1\ LR_2)=\rho$
+where $\rho$ is the institute comorphism from the heterogeneous logical
+environment named by \syntax{OMSLangTransRef}. This is defined
+only if $\rho:sem(LR_1)\to sem(LR_2)$ and $L=sem(LR_1)$.
+
+\CLnote{We need some ``algorithm'' for handling \syntax{LolaRef}s that are actually \syntax{LanguageRef}s, not \syntax{LogicRef}s.  Suppose a translation lang1$\to$lang2 is referenced, let e(lang) be the logic that exactly captures the expressivity of lang.  For lang1$\to$lang2 there might be a ``language-side'' default translation, which does not have a corresponding ``logic-side'' mapping at all, or whose exactly corresponding ``logic-side'' mapping is not the default for e(lang1)$\to$e(lang2).}
+
+$sem(L,\syntax{'anonymous-trans' } LR_1\ LR_2)=\rho$
+where $\rho$ is the unique institute comorphism from the heterogeneous
+logical environment running from $sem(LR_1)$ to $sem(LR_2)$.  This is
+defined only if $L=sem(LR_1)$.
+
+$sem(L,\syntax{'default-trans' , LolaRef})=\rho$
+where $\rho$ is the unique institute comorphism from the heterogeneous
+logical environment running from $L$ to $sem(\syntax{LolaRef})$.
+
+
+
 
 \ssclause{Semantics of OMS Mappings}
 
@@ -4556,100 +4799,10 @@ where
 %require $\Phi(\Sigma)\leq\Sigma$ in the Grothendieck institute!}
 
 
-\semdom{sem(L,\Sigma,\syntax{Translation})=\rho}
-$sem(L,\Sigma,\syntax{'renaming' }LT_1 \ldots LT_n (\syntax{'symbol-map-items' }
- E_1\ldots E_m))=\rho=(\Phi,\alpha,\beta)$\\
-where $rho=sem(LT_n)\circ\cdots\circ sem(LT_1)$
 
-The semantics is defined only if $E_1\ldots E_m$ occur in $\Phi(\Sigma)$.
-
-
-\semdom{sem(L,\Sigma,\syntax{SymbolMapItems})=\Sigma'\mbox{ where } \Sigma'\geq\Sigma}
-
-True renamings are not possible without institutional logics,  only the presence of non-logical 
-symbols in a signature can be checked.\\
-$sem(L,\Sigma,\syntax{'symbol-map-items' } E_1 \ldots E_n)=
-\left\{\begin{array}{ll}
-\Sigma & \mbox{ if } E_1,\ldots, E_n \mbox{ are contained in }\Sigma\\
-\mbox{undefined} & \mbox{otherwise}
-\end{array}\right.$
-
-%The application of a logic translation leads to a signature
-%$\Phi(\Sigma)$. 
-
-%Note that $\Phi(\Sigma)\geq\Sigma$ by the construction
-%of the Grothendieck institute.\\
-%$sem(L,\Sigma,\syntax{'logic-translation' , OMSLangTrans} )=\Phi(\Sigma)$,
-%where $sem(L,\syntax{OMSLangTrans})$ is $(\Phi,\alpha,\beta)$.
-
-
-
-\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})=(\Sigma',\cM')}
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{[ ConsStrength ] , [ ExtensionName ] , ExtendingOMS})=
-(\Sigma',\cM')$\\
-where $(\Sigma',\cM')=sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtendingOMS})$
-
-If \syntax{ConsStrength} is \syntax{'model-conservative'} or
-\syntax{'implied'}, the semantics is only defined if each model in
-$\cM$ is the $\Sigma$-reduct of some model in $\cM'$. 
-In case that \syntax{ConsStrength} is \syntax{'implied'},
-it is furthermore required that $\Sigma=\Sigma'$. If \syntax{ConsStrength} is \syntax{'consequence-conservative'}, the semantics is only defined if for each
-$\Sigma$-sentence $\varphi$, $\cM'\models\varphi$ implies $\cM\models\varphi$.
-% If
-%\syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
-%defined if each model in $\cM$ is the $\Sigma$-reduct of a model
-%in $\cM'$ that is unique up to isomorphism.  
-If
-\syntax{ConsStrength} is \syntax{'definitional'}, the semantics is only
-defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
-model in $\cM'$.
-
-
-\semdom{sem(\Gamma,L,\syntax{OMSDefn})=(\Gamma',L)}
-
-An OMS definition extends the global environment:\\
-$\begin{array}{l}
-sem(\Gamma,L,\syntax{'oms-defn' , OMSName , [ ConsStrength ] , OMS})\\
-=(\Gamma[\syntax{OMSName}\mapsto sem(\Gamma,L,\syntax{OMS})],L)
-\end{array}$\todonote{Should we allow for overriding existing OMS
-definitions? Or should \syntax{OMSName} be new?}
-
-If \syntax{ConsStrength} is \syntax{'conservative'}, the semantics is only
-defined if $sem(\Gamma,L,\syntax{OMS})\not=\emptyset$.
-%If \syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
-%defined if $sem(\Gamma,L,\syntax{OMS})$ consist of exactly one isomorphism
-%class.\todonote{Here, we need model morphisms!}
-If \syntax{ConsStrength} is \syntax{'conservative'}, the semantics is only
-defined if $sem(\Gamma,L,\syntax{OMS})$ is a singleton.
-
-\semdom{sem(\syntax{LogicRef})=L}
-$L$ is the institute from the heterogeneous logical environment named by
-\syntax{LogicRef}.
-
-\semdom{sem(L,\syntax{OMSLangTrans})=\rho}
-$sem(L,\syntax{'named-trans' , OMSLangTransRef})=\rho$ where $\rho$ is
-the institute comorphism from the heterogeneous logical environment
-named by \syntax{OMSLangTransRef}.  This is defined only if the
-domain of $\rho$ is $L$.
-
-$sem(L,\syntax{'qual-trans' , OMSLangTransRef } LR_1\ LR_2)=\rho$
-where $\rho$ is the institute comorphism from the heterogeneous logical
-environment named by \syntax{OMSLangTransRef}. This is defined
-only if $\rho:sem(LR_1)\to sem(LR_2)$ and $L=sem(LR_1)$.
-
-\CLnote{We need some ``algorithm'' for handling \syntax{LolaRef}s that are actually \syntax{LanguageRef}s, not \syntax{LogicRef}s.  Suppose a translation lang1$\to$lang2 is referenced, let e(lang) be the logic that exactly captures the expressivity of lang.  For lang1$\to$lang2 there might be a ``language-side'' default translation, which does not have a corresponding ``logic-side'' mapping at all, or whose exactly corresponding ``logic-side'' mapping is not the default for e(lang1)$\to$e(lang2).}
-
-$sem(L,\syntax{'anonymous-trans' } LR_1\ LR_2)=\rho$
-where $\rho$ is the unique institute comorphism from the heterogeneous
-logical environment running from $sem(LR_1)$ to $sem(LR_2)$.  This is
-defined only if $L=sem(LR_1)$.
-
-$sem(L,\syntax{'default-trans' , LolaRef})=\rho$
-where $\rho$ is the unique institute comorphism from the heterogeneous
-logical environment running from $L$ to $sem(\syntax{LolaRef})$.
 
 \semdom{sem(\Gamma,L,\syntax{MappingDefn})=(\Gamma',L)}
-See equations for \syntax{IntprDefn}, \syntax{EquivDefn} and \syntax{AlignDefn}.
+See equations for \syntax{IntprDefn},  \syntax{Entailment}, \syntax{EquivDefn}, \syntax{ModuleRelDefn} and \syntax{AlignDefn}.
 
 \semdom{sem(\Gamma,L,\syntax{IntprDefn})=(\Gamma',L)}
 \CLnote[type=q-aut]{Optional \syntax{[ Conservative ]} argument is missing.}$sem(\Gamma,L,\syntax{'intpr-defn' , IntprName , ( 'intpr-type' }O_1\ O_2\syntax{ )})=\\
@@ -4664,6 +4817,17 @@ $(\Sigma_2,\cM_2)=sem(\Gamma,L,O_2)$;
 \item
 the semantics is defined only if $\cM_2\forget{\Sigma_1}\subseteq\cM_1$.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(Refinement)}
+
+%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(Entailment)}
+
+%%%%%%%%%%%%%%%%%%%%
+
 
 \semdom{sem(\Gamma,L,\syntax{EquivDefn})=(\Gamma',L)}
 $sem(\Gamma,L,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\\
@@ -4682,79 +4846,90 @@ $(\Sigma_3,\cM_3)=sem(\Gamma,L,O_3)$;
  expanded to a model in $\cM_3$.
 \end{itemize}
 
-\semdom{sem(\Gamma,L,\syntax{AlignDefn})=(\Gamma',L)}
-Alignments are interpreted only syntactically:
+%%%%%%%%%%%%%%%%%%%%%%%%
+\semdom{sem(ModuleRelDefn)}
 
-\CLnote[type=q-aut]{Semantics does not yet cover optional \syntax{[ AlignCard ]}.}$sem(\Gamma,L,\syntax{'align-defn' , AlignName , [ AlignCard ] , AlignType , \{ Correspondence \}})=\\
-(\Gamma[\syntax{AlignName}\mapsto \syntax{\{ Correspondence \}}],L)
-$
+%%%%%%%%%%%%%%%%%%%%
+
+
+\semdom{sem(\Gamma,L,\syntax{AlignDefn})=(\Gamma',L)}
 
 \ssclause{Semantics of queries}
 
-\sclause{Translational semantics of DOL language constructs}
+ \semdom{sem(QueryRelatedDefn)}
 
-The translational semantics uses Common Logic as a foundational framework for the library, modeling 
-and specification language DOL, similar to what set theory provides for general mathematical 
-theories. This semantics assumes that each involved OMS language is mapped to \Clogic by a weakly
-exact translation.  The semantics is defined by first translating a heterogeneous OMS to \Clogic, 
-and then using the direct semantics for the result.
+%%%%%%%%%%%%%%%%%%%%%
+ \semdom{sem(QueryDefn)}
+%%%%%%%%%%%%%%%%%%%%
+ \semdom{sem(SubstDefn)}
+%%%%%%%%%%%%%%%%%%%%%
+ \semdom{sem(ResultDefn)}
+%%%%%%%%%%%%%%%%%%%%%%%
 
-Note that since the result of translating a DOL OMS entirely to
-\Clogic is homogeneous, the clause for logic translation of the direct
-semantics will not be used. Using default logic translations and
-compositions of these, many logics can be mapped to Common Logic,
-while the DOL constructs like interpretations stay the
-same.\footnote{The translational semantics is not applicable
-for logics without a default translation of Common Logic.}%\ednote{OK: what about $\meta(\CL)$, what about interpretations/views?}
-
-We define the syntactic translation $CL_\rho$ of DOL OMS,
-depending on a logic translation $\rho:L\to\CL$, to Common Logic below. (The
-translations of the other syntactic categories are straightforward.)
-
-\todonote{Extend this to all DOL constructs}
-\smallskip
-$\begin{array}{l}
-CL_\rho(\BASICOMS)=\langle\Phi(\Sigma),\alpha(\Delta)\rangle,
-\mbox{ where }
- \rho=(\Phi,\alpha,\beta)\\
-CL_\rho(O\syntax{ with logic }\rho')=CL_{\rho\circ\rho'}(O)\\
-CL_\rho(O\syntax{ then }CS\ \BASICOMS)=CL_\rho(O)\syntax{ then }CS\ \ CL_\rho(\syntax{\BASICOMS})\\
-CL_\rho(\syntax{OMSRef})=\syntax{OMSRef}\\
-CL_\rho(\syntax{logic LogicRef }O)=CL_{\mathit{default}(\syntax{LogicRef},\CL)}(O)\\
-\end{array}$
-
-%\noindent
-%Given a logic $L$, we define $CL_L(O)$ as 
-%$CL_{\mathit{default}(L,\CL)}(O)$.
-
-\sclause{Collapsed Semantics of DOL language constructs}
-\label{sec:collapsed-semantics}
-
-The collapsed semantics requires the representation of the meta level
-within \CL. For this purpose, the model-level semantics introduced in
-the previous section should be complemented by a theory-level
-semantics: a library then denotes a basic theory in some
-logic (which amounts to flattening out all structure), plus some
-conditions for conservativity and relative interpretations. For each
-logic, one needs to axiomatize a specific partial order of signatures
-in \CL, plus a set of sentences equipped with a logical consequence
-relation. In order to avoid the formalization of models and the
-satisfaction relation (which would require the inclusion of a set theory
-like ZFC), a sound and complete calculus is axiomatized for each logic.
-%\ednote{TM: perhaps state a theorem about the compatibility
-%  between model-level and theory-level semantics?} 
-For each logic
-translation, the signature and sentence translations need to be
-axiomatized. We require that this axiomatization is done in such a way that
-the resulting semantics is compatible with the translational semantics.
-Although this formalization is doable in principle, we refrain form
-providing the (massive) details.  
-
-%\ednote{OK: non-classical reasoning tasks (lcs) in collapsed semantics}
-
-\todonote[type=q-all]{The collapsed semantics is still very vague, and
-  is more a research plan than a definite proposal. Any ideas how to
-  make this more precise?}
+%\sclause{Translational semantics of DOL language constructs}
+%
+%The translational semantics uses Common Logic as a foundational framework for the library, modeling 
+%and specification language DOL, similar to what set theory provides for general mathematical 
+%theories. This semantics assumes that each involved OMS language is mapped to \Clogic by a weakly
+%exact translation.  The semantics is defined by first translating a heterogeneous OMS to \Clogic, 
+%and then using the direct semantics for the result.
+%
+%Note that since the result of translating a DOL OMS entirely to
+%\Clogic is homogeneous, the clause for logic translation of the direct
+%semantics will not be used. Using default logic translations and
+%compositions of these, many logics can be mapped to Common Logic,
+%while the DOL constructs like interpretations stay the
+%same.\footnote{The translational semantics is not applicable
+%for logics without a default translation of Common Logic.}%\ednote{OK: what about $\meta(\CL)$, what about interpretations/views?}
+%
+%We define the syntactic translation $CL_\rho$ of DOL OMS,
+%depending on a logic translation $\rho:L\to\CL$, to Common Logic below. (The
+%translations of the other syntactic categories are straightforward.)
+%
+%\todonote{Extend this to all DOL constructs}
+%\smallskip
+%$\begin{array}{l}
+%CL_\rho(\BASICOMS)=\langle\Phi(\Sigma),\alpha(\Delta)\rangle,
+%\mbox{ where }
+% \rho=(\Phi,\alpha,\beta)\\
+%CL_\rho(O\syntax{ with logic }\rho')=CL_{\rho\circ\rho'}(O)\\
+%CL_\rho(O\syntax{ then }CS\ \BASICOMS)=CL_\rho(O)\syntax{ then }CS\ \ CL_\rho(\syntax{\BASICOMS})\\
+%CL_\rho(\syntax{OMSRef})=\syntax{OMSRef}\\
+%CL_\rho(\syntax{logic LogicRef }O)=CL_{\mathit{default}(\syntax{LogicRef},\CL)}(O)\\
+%\end{array}$
+%
+%%\noindent
+%%Given a logic $L$, we define $CL_L(O)$ as 
+%%$CL_{\mathit{default}(L,\CL)}(O)$.
+%
+%\sclause{Collapsed Semantics of DOL language constructs}
+%\label{sec:collapsed-semantics}
+%
+%The collapsed semantics requires the representation of the meta level
+%within \CL. For this purpose, the model-level semantics introduced in
+%the previous section should be complemented by a theory-level
+%semantics: a library then denotes a basic theory in some
+%logic (which amounts to flattening out all structure), plus some
+%conditions for conservativity and relative interpretations. For each
+%logic, one needs to axiomatize a specific partial order of signatures
+%in \CL, plus a set of sentences equipped with a logical consequence
+%relation. In order to avoid the formalization of models and the
+%satisfaction relation (which would require the inclusion of a set theory
+%like ZFC), a sound and complete calculus is axiomatized for each logic.
+%%\ednote{TM: perhaps state a theorem about the compatibility
+%%  between model-level and theory-level semantics?} 
+%For each logic
+%translation, the signature and sentence translations need to be
+%axiomatized. We require that this axiomatization is done in such a way that
+%the resulting semantics is compatible with the translational semantics.
+%Although this formalization is doable in principle, we refrain form
+%providing the (massive) details.  
+%
+%%\ednote{OK: non-classical reasoning tasks (lcs) in collapsed semantics}
+%
+%\todonote[type=q-all]{The collapsed semantics is still very vague, and
+%  is more a research plan than a definite proposal. Any ideas how to
+%  make this more precise?}
 
 
 
@@ -5949,4 +6124,3 @@ Translations from SROIQ(D) to \Flogic are discussed in \cite{Bruijn:2008}.
 
 
 \end{document}
->>>>>>> External Changes
