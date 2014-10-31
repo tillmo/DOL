@@ -4784,8 +4784,9 @@ $\syntax{Symbol}_1, \ldots, \syntax{Symbol}_n$.\todonote{to be made precise...}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(L,\Sigma,\syntax{SymbolMapItems})=\Sigma'\mbox{ where } \Sigma'\geq\Sigma}
-\todonote{check whether what you need here is a morphism or a signature}
+\semdom{sem(L,\Sigma,\Sigma', \syntax{SymbolMapItems})= \sigma:\Sigma\to\Sigma'}
+
+\todonote{this should be updated}
 
 True renamings are not possible without institutional logics,  only the presence of non-logical 
 symbols in a signature can be checked.\\
@@ -5019,26 +5020,81 @@ logical environment running from $L$ to $sem(\syntax{LolaRef})$.
 See equations for \syntax{IntprDefn},  \syntax{Entailment}, \syntax{EquivDefn}, \syntax{ModuleRelDefn} and \syntax{AlignDefn}.
 
 \semdom{sem(\Gamma,L,\syntax{IntprDefn})=(\Gamma',L)}
-\CLnote[type=q-aut]{Optional \syntax{[ Conservative ]} argument is missing.}$sem(\Gamma,L,\syntax{'intpr-defn' , IntprName , ( 'intpr-type' }O_1\ O_2\syntax{ )})=\\
-(\Gamma[\syntax{IntprName}\mapsto (\Sigma_1,\Sigma_2)],L)
-$
-where 
-\begin{itemize}
-\item
-$(\Sigma_1,\cM_1)=sem(\Gamma,L,O_1)$;
-\item
-$(\Sigma_2,\cM_2)=sem(\Gamma,L,O_2)$;
-\item
-the semantics is defined only if $\cM_2\forget{\Sigma_1}\subseteq\cM_1$.
-\end{itemize}
+\CLnote[type=q-aut]{Optional \syntax{[ Conservative ]} argument is missing.}
+
+$$sem(\Gamma, L, \syntax{intrp-defn, IntprName, IntrpType,[LogicTranslation], [SymbolMapItems]}) = (\Gamma', L)$$
+where\\
+$sem(\Gamma, L,\syntax{IntrpType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2, \cM_2))$,\\
+$sem(\syntax{LogicTranslation}) = (\Phi,\alpha,\beta):\cI_1\rightarrow \cI_2$,\\
+$sem(L, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$,\\
+$\Gamma'=\Gamma[IntrpName \mapsto ((\Phi,\alpha,\beta),\sigma) ]$ \todonote{see what else you need here}
+
+The semantics is only defined if $\beta_{\Sigma_1}(M_2\forget\sigma) \in \cM_1$ for each $M_2\in\cM_2$.
+
+If an extra argument $\syntax{Conservative}$ is present ...
+
+$$sem(\Gamma, L, \syntax{refinement, IntprName, Refinement}) = (\Gamma', L)$$
+
+where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto sem(\Gamma, L, \syntax{Refinement})]$
 
 %%%%%%%%%%%%%%%%%%
 
-\semdom{sem(Refinement)}
+\semdom{sem(\Gamma, L, \syntax{Refinement}) = ((I_1,I_2), (\Sigma_1, \Sigma_2), \cR)}
+
+$$sem(\Gamma,L, \syntax{ref-oms, OMS}) = ((\cI,\cI),(\Sigma,\Sigma),\cR)$$
+
+where $sem(\Gamma, L, \syntax{OMS}) = (\cI, \Sigma, \cM)$ and $\cR=\{ (M,M) \mid M\in \cM \}$.
+
+$$sem(\Gamma, L, \syntax{ref-network, Network}) = $$
+\todonote{a bit later}
+
+$$sem(\Gamma, L, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (
+ (\cI_1,\cI'_2),
+ (\Sigma_1,\Sigma'_2),
+ \cR
+)$$
+
+where\\ 
+$sem(\Gamma, L, \syntax{Refinement}_1) = ((\cI_1,\cI_2),(\Sigma_1,\Sigma_2),\cR_1)$,\\
+$sem(\Gamma, L, \syntax{Refinement}_2) = ((\cI'_1,\cI'_2),(\Sigma'_1,\Sigma'_2),\cR_2)$\\
+such that 
+$\cI_2 = \cI'_1$, $\Sigma_2 = \Sigma'_1$,\\
+and
+$\cM' = \{ (M_1, M'_2) \mid \exists M_2 \text{ such that } (M_1, M_2)\in\cR_1 \text{ and } (M_2, M'_2) \in \cR_2\}$.
+
+$$sem(\Gamma, L, \syntax{simple-ref, OMS, RefMap, Refinement}) = ((\cI,\cI_2),(\Sigma,\Sigma_2),\cR')$$
+where\\
+ $sem^M(\Gamma, L, \syntax{OMS}) = (\cI,\Sigma, \cM)$,\\
+ $sem(\Gamma, L, \syntax{Refinement}) = ((\cI_1,\cI_2),(\Sigma_1,\Sigma_2),\cR)$,\\ 
+ $sem(\Gamma, L, (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = ((\Phi, \alpha,\beta):\cI\to\cI_1, \sigma:\Phi(\Sigma)\to\Sigma_1)$,\\
+ $\cR' = \{ (\beta_{\Sigma}(M\forget\sigma), N) \mid (M,N) \in \cR \}$.
+ 
+
+
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(Entailment)}
+\semdom{sem(\Gamma, L, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{RefMap}) = (\rho, \sigma)}
+
+$$sem(\Gamma, L, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{refmap-oms, LogicTranslation, SymbolMapItems}) = ((\Phi,\alpha,\beta), \sigma) $$
+
+where\\
+ $sem(\Gamma, L, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'2$ 
+such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
+and $sem(L, \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$ \todonote{the logic is no longer L, but it's the target of the logic translation. check everywhere}
+
+%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(\syntax{NodeMap}) = }
+
+%%%%%%%%%%%%%%%%%%%%
+
+
+\semdom{sem(\syntax{Entailment})}
+
+%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(\syntax{EntailmentType})}
 
 %%%%%%%%%%%%%%%%%%%%
 
