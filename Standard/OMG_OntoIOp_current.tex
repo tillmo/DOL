@@ -5037,6 +5037,14 @@ $$sem(\Gamma, L, \syntax{refinement, IntprName, Refinement}) = (\Gamma', L)$$
 
 where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto sem(\Gamma, L, \syntax{Refinement})]$
 
+\semdom{sem(\Gamma, L, \syntax{IntprType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))}
+
+$$sem(\Gamma, L, \syntax{intpr-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))$$
+
+where 
+$sem^M(\Gamma, L,  \syntax{OMS}_1) = (\cI_1,\Sigma_1,\cM_1)$ and
+$sem^M(\Gamma, L,  \syntax{OMS}_2) = (\cI_2,\Sigma_2,\cM_2)$.
+
 %%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, L, \syntax{Refinement}) = ((I_1,I_2), (\Sigma_1, \Sigma_2), \cR)}
@@ -5090,16 +5098,32 @@ and $sem(L, \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\S
 %%%%%%%%%%%%%%%%%%%%
 
 
-\semdom{sem(\syntax{Entailment})}
+\semdom{sem(\Gamma, L, \syntax{Entailment}) = (\Gamma', L)}
+
+$$sem(\Gamma, L, \syntax{entailment, EntailmentName, EntailmentType}) = (\Gamma',L)$$
+
+where $\Gamma' = \Gamma[EntailmentName \mapsto sem(\Gamma, L, \syntax{EntailmentType})]$.
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\syntax{EntailmentType})}
+\semdom{sem(\Gamma, L, \syntax{EntailmentType}) = (\cI,\Sigma, \cM_1,\cM_2)}
+
+$$sem(\Gamma, L, \syntax{oms-oms-entailment, OMS$_1$, OMS$_2$}) = (\cI,\Sigma, \cM_1,\cM_2)$$
+
+where 
+$sem(\Gamma, L, \syntax{OMS}_1) = (\cI, \Sigma, \cM_1)$,
+$sem(\Gamma, L, \syntax{OMS}_2) = (\cI, \Sigma, \cM_2)$,
+and $\cM_2 \subseteq \cM_1$.
+
+\todonote{networks left}
 
 %%%%%%%%%%%%%%%%%%%%
 
 
 \semdom{sem(\Gamma,L,\syntax{EquivDefn})=(\Gamma',L)}
+
+\todonote{why three OMS?}
+
 $sem(\Gamma,L,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\\
 (\Gamma[\syntax{EquivName}\mapsto (\Sigma_1,\Sigma_2,\Sigma_3)],L)
 $
@@ -5117,12 +5141,64 @@ $(\Sigma_3,\cM_3)=sem(\Gamma,L,O_3)$;
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\semdom{sem(ModuleRelDefn)}
+\semdom{sem(\Gamma, L, \syntax{ModuleRelDefn}) = (\Gamma', L')}
+
+$$sem(\Gamma,L, \syntax{module-defn, ModuleName, ModuleType, InterfaceSignature}) = $$
+
+\todonote{why two OMS?}
 
 %%%%%%%%%%%%%%%%%%%%
 
-
 \semdom{sem(\Gamma,L,\syntax{AlignDefn})=(\Gamma',L)}
+
+$sem(\Gamma, L, \syntax{align-defn, AlignName, AlignCard, AlignType, AlignSem}, \\
+Corresps) = (\Gamma', L') $
+
+where
+$sem(\Gamma,L, \syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$
+and\\
+$\Gamma'=\Gamma[\syntax{AlignType} \mapsto 
+                      sem(\Gamma, L,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, Corresps})]$
+
+\semdom{sem(\Gamma,L, \syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))}
+
+$$sem(\Gamma,L, \syntax{align-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$$
+
+where $sem^T(\Gamma,L,\syntax{OMS}_1) = (\cI_1,\Sigma_1, \Delta_1)$
+and $sem^T(\Gamma,L,\syntax{OMS}_2) = (\cI_2,\Sigma_2, \Delta_2)$.
+
+\semdom{sem(\Gamma, L,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, \{Corresp\}})=
+WDiag}
+
+$$sem(\Gamma, L,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem}, C_1,\ldots,C_n)=
+WDiag$$
+
+where\\
+$(\cI'_1,\Sigma'_1,\Delta'_1) = sem(\Gamma, L, (\cI_1,\Sigma_1,\Delta_1),\syntax{AlignSem})$,\\
+$(\cI'_2,\Sigma'_2,\Delta'_2) = sem(\Gamma, L, (\cI_2,\Sigma_2,\Delta_2),\syntax{AlignSem})$,\\
+$WDiag = sem(\Gamma, L, (\cI'_1,\Sigma'_1,\Delta'_1), (\cI'_2,\Sigma'_2,\Delta'_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(\Gamma, L, (\cI,\Sigma,\Delta),\syntax{AlignSem})=(\cI',\Sigma',\Delta')}
+
+$$sem(\Gamma, L, (\cI,\Sigma,\Delta),\syntax{AlignSem})=\begin{cases}
+                                   (\cI,\Sigma,\Delta) & \mbox{if } \syntax{AlignSem} = \syntax{global-domain}\\
+                                   relativize_\cI((\Sigma,\Delta))& \mbox{otherwise}
+                                                                                                                   \end{cases}$$
+
+\semdom{sem(\Gamma, L, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=WDiag}
+
+$sem(\Gamma, L, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=WDiag$
+
+where\\
+ 
+\todonote{all algorithm goes here...}
+
+$WDiag = buildWDiagram((\cI'_1, \Sigma''_1, \emptyset),
+  (\cI'_2, \Sigma''_2, \emptyset),
+  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$.
+
 
 \ssclause{Semantics of queries}
 
