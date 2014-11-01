@@ -5149,15 +5149,27 @@ $\cI_2 = \cI'_1$, $\Sigma_2 = \Sigma'_1$,\\
 and
 $\cM' = \{ (M_1, M'_2) \mid \exists M_2 \text{ such that } (M_1, M_2)\in\cR_1 \text{ and } (M_2, M'_2) \in \cR_2\}$.
 
+\todonote{composition of refinements of networks}
+
 $$sem(\Gamma, L, \syntax{simple-ref, OMS, RefMap, Refinement}) = ((\cI,\cI_2),(\Sigma,\Sigma_2),\cR')$$
 where\\
  $sem^M(\Gamma, L, \syntax{OMS}) = (\cI,\Sigma, \cM)$,\\
  $sem(\Gamma, L, \syntax{Refinement}) = ((\cI_1,\cI_2),(\Sigma_1,\Sigma_2),\cR)$,\\ 
  $sem(\Gamma, L, (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = ((\Phi, \alpha,\beta):\cI\to\cI_1, \sigma:\Phi(\Sigma)\to\Sigma_1)$,\\
  $\cR' = \{ (\beta_{\Sigma}(M\forget\sigma), N) \mid (M,N) \in \cR \}$.
- 
 
-
+\todonote{this is missing from the syntax...} 
+$$sem(\Gamma, L, \syntax{simple-ref, Network, RefMap, Refinement}) = ((\cI,\cI_2),(G''_1,G_2))$$
+where\\
+ $sem^M(\Gamma, L, \syntax{Network}) = G_1$,\\
+ $sem(\Gamma, L, \syntax{Refinement}) = (G'_1, G_2)$,\\ 
+ $sem(\Gamma, L, (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = \sigma:G_1\to G'_1$,\\
+ for each $(N_1, N_2)\in dom(\sigma)$, 
+if $(\cI_1, \Sigma_1, \cM_1)$ is the label of $N_1$ in $G_1$,\\
+$(\cI_2, \Sigma_2, \cM_2)$ is the label of $N_2$ in $G_2$ \\
+and $((\Phi,\alpha,\beta):\cI_1\to\cI_2,\phi:\Phi(\Sigma_1)\to\Sigma_2)$ is $\sigma((N_1,N_2))$,\\
+then $\cM_1$ must include $\{ \beta_{\Sigma_1}(M_2\forget\phi)  \mid M_2 \in \cM_2\}$,
+and this class of models becomes the new label of $N_1$ in $G''_1$. \todonote{require injectivity!}
 
 %%%%%%%%%%%%%%%%%%%%
 
