@@ -4341,10 +4341,6 @@ serializations.
 
 We assume that for each institution in the heterogeneous logical environment there is a trivial signature
 $\emptyset$ with model class $\cM_\emptyset$. \todonote{require initiality?}
-Moreover, we assume that
-for each signature $\Sigma$, there is a set of non-logical symbols $ent(\Sigma)$,
-such that $\Sigma\leq\Sigma'$ implies $ent(\Sigma)\subseteq
-ent(\Sigma')$. \todonote{this must be updated, we have institutions now.}
 
 {\color{blue}
 We assume that for each institution, there exist (possibly partial) union and difference operations on signatures  
@@ -4405,15 +4401,24 @@ $sem^M_L(O)$, the model-level language-specific semantics of $O$
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
 The semantics of OMS generally depends on a global environment
-$\Gamma$ mapping \syntax{IRI}s to semantics of OMS (given
+$\Gamma$ mapping \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries (given
 below), and a current triple $L$ consisting of the current
 language, logic and serialization.\footnote{The initial $L$ is obtained
 from the file name extension of the file containing a 
 particular library, while $\Gamma$ is obtained
 by looking up IRIs in the internet and applying the semantics
-to thus obtained OMS.}\CLnote[type=q-aut]{@TM: Please decide if you like the stuff from 'network-defn'.  I have now used literal ISO-conforming EBNF syntax here, which means that keywords are enclosed in single quotes, and all tokens separated by commas.}
-\todonote{@MC: explain what the purpose of a global env is. Also add syntax for working with the global env.}
-
+to thus obtained OMS.} The global environment provides access to previously defined OMS.
+If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
+is the environment whose domain extends the one of $\Gamma$ with \syntax{IRI} and
+the newly added value in \syntax{IRI} is the semantic entity $\cS$. $\Gamma_\emptyset$
+is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set.
+A global environment defined only for one \syntax{IRI} will be sometimes written $\{ \syntax{IRI} \mapsto \cS\}$,
+where $\cS$ is some semantic entity. The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
+denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$ are disjoint, and then
+$\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
+\Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
+\Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
+\end{cases}$
 %
 \ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
@@ -4427,14 +4432,14 @@ $$sem(\syntax{PrefixMap, LibraryDefn}) = (\Gamma', L')$$
  
 \noindent where 
  $sem(\syntax{PrefixMap}) = PMap$ and
-$sem(\Gamma_0, L_0, PMap, \syntax{LibraryDefn}) = (\Gamma', L')$. 
+$sem(\Gamma_\emptyset, L_0, PMap, \syntax{LibraryDefn}) = (\Gamma', L')$. 
 
 $$sem^T(\syntax{OMSInConformingLanguage}) = (\{ \syntax{IRI} \mapsto (I, \Sigma, \Delta) \}, L)$$
-\noindent where $sem(\Gamma_0, L, \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \Delta)$,
+\noindent where $sem(\Gamma_\emptyset, L, \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \Delta)$,
  \syntax{IRI} is the IRI of the library and $L$ is determined from the extension of the library.
 
 $$sem^M(\syntax{OMSInConformingLanguage}) = (\{ \syntax{IRI} \mapsto (I, \Sigma, \cM) \}, L)$$
-\noindent where $sem(\Gamma_0, L, \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM)$,
+\noindent where $sem(\Gamma_\emptyset, L, \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM)$,
 \syntax{IRI} is the IRI of the library and $L$ is determined from the extension of the library.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -4467,15 +4472,16 @@ $sem(\Gamma, L, PMap, \syntax{library, LibraryName}, LibraryItem_1,\ldots Librar
 
 $$sem^T(\Gamma, L, \syntax{OMSInConformingLanguage}) = (I, \Sigma, \Delta) $$
 \noindent where $sem^T_I(\syntax{OMSInConformingLanguage}) = (I,  \Sigma, \Delta)$
- and \syntax{OMSInConformingLanguage} is conform with $L$. 
+ and $\cI = logic(L)$. 
 
-\todonote{...otherwise this gives an error. How to indicate this?}
+Note that if the OMS in the library does not conform with the logic determined by
+the extension of the library, $sem^T_I(\syntax{OMSInConformingLanguage})$ will be undefined.
 
 \semdom{sem^M(\Gamma, L, \syntax{OMSInConformingLanguage})=(I, \Sigma, \cM)}
 
 $$sem^M(\Gamma, L, \syntax{OMSInConformingLanguage}) =  (I, \Sigma, \cM)$$
 \noindent where $\vdash sem^M_I(\syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM)$
- and \syntax{OMSInConformingLanguage} is conform with $L$.
+ and $\cI = logic(L)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4495,17 +4501,13 @@ are given in the next sections.
 
  \semdom{sem(\Gamma, PMap, \syntax{LibImport}) = \Gamma'}
 
-$$sem(\Gamma, PMap, \syntax{lib-import, LibName}) = \Gamma'$$
+$$sem(\Gamma, PMap, \syntax{lib-import, LibName}) = \Gamma\cup\Gamma'$$
 
-\todonote{this is more complex: there should be a library at the IRI indicated by the LibName+PMap,
-it should be retrieved and analyzed, the generated context should be disjoint with $\Gamma$,
-the result is the union.}
+where $sem(LibName) = (\Gamma', L)$. \todonote{PMap should be taken into account. How?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(L,\syntax{Qualification})=L'}
-
-\todonote{I have not checked this...}
 
 $$sem((lang,logic,ser),\syntax{lang-select , LanguageRef})=(\syntax{LanguageRef},logic',ser')$$
 
@@ -4551,19 +4553,23 @@ morphism $\sigma: \Sigma_m \rightarrow \Sigma_n$, we have that $M_n\forget \sigm
 We are going to make use of the following notations. If $G$ is a graph, 
 the operation $insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$ is defined as follows:
  \begin{itemize}
-    \item if $\Gamma(\syntax{IRI})$ is an OMS, then
+    \item if \syntax{IRI} is an OMS in $\Gamma$, then
                  a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
-   \item if $\Gamma(\syntax{IRI})$ is an OMS mapping, then
-                 \todonote{complete this after the analysis of mappings is finished}
-   \item if $\Gamma(\syntax{IRI})$ is a network, then the result is the union of $G$ with the graph of $\Gamma(\syntax{IRI})$
+   \item if \syntax{IRI} is an OMS mapping in $\Gamma$, then $\Gamma(\syntax{IRI})$ can be a theory morphism, or a W-shaped
+               graph if \syntax{IRI} is an alignment (see the semantics of alignments below).  In the first case, we can construct a graph
+               with two nodes and one edge between them, and label the nodes with the source and target \syntax{OMS} of the morphism
+                and the edge with the morphism, respectively. This allows us to uniformly treat $\Gamma(\syntax{IRI})$ as a graph $G'$.
+                 $G$ is then extended with the nodes and edges of $G'$ that are not already present in $G$.               
+   \item if \syntax{IRI} is a network in $\Gamma$, then the result is the union of $G$ with the graph of $\Gamma(\syntax{IRI})$.
  \end{itemize}
 Similarly, the operation $remove(\Gamma, G, \syntax{Id})$ is defined as follows:
  \begin{itemize}
-    \item if $\Gamma(\syntax{IRI})$ is an OMS, then the node labeled with \syntax{IRI} and all its incoming and outgoing
+    \item if \syntax{IRI} is an OMS in $\Gamma$, then the node labeled with \syntax{IRI} and all its incoming and outgoing
                 edges are removed from $G$,
-   \item  if $\Gamma(\syntax{IRI})$ is an OMS mapping, then \todonote{later}
-   \item if $\Gamma(\syntax{IRI})$ is a network, then all its nodes and all their incoming and outgoing edges are removed 
+   \item  if \syntax{IRI} is an OMS mapping in $\Gamma$, then with the same convention as above $\Gamma(\syntax{IRI})$ is a graph $G'$.
+                Then all nodes of $G'$ and all their incoming and outgoing edges in $G$ (which include those in $G'$) are removed from $G$.
+   \item if \syntax{IRI} is a network in $\Gamma$, then all the nodes of its graph and all their incoming and outgoing edges are removed 
                from $G$.
  \end{itemize}
 
@@ -4614,12 +4620,12 @@ where\\
 \semdom{sem^T(L, \syntax{BasicOMS}) = (I, \Sigma, \Delta)}
 
 For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$, the theory-level semantics is defined as follows:  
-$$sem^T(L, \syntax{BasicOMS})= sem^T_L(\syntax{BasicOMS})$$
+$$sem^T(L, \syntax{BasicOMS})= sem^T_{logic(L)}(\syntax{BasicOMS})$$
 
 \semdom{sem^M(L, \syntax{BasicOMS}) = (I, \Sigma, \cM)}
 
 For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$, the model-level semantics is defined as follows:  
-$$sem^M(L, \syntax{BasicOMS})= sem^M_L(\syntax{BasicOMS})$$
+$$sem^M(L, \syntax{BasicOMS})= sem^M_{logic(L)}(\syntax{BasicOMS})$$
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4669,7 +4675,7 @@ local environment (= fixed non-logical symbols, in the terminology of circumscri
 
 $$sem^M(\Gamma, L, (\Sigma, \cM), \syntax{minimize MinimizableOMS}) = (\cI,  \Sigma', \cM'')$$
 where $sem^M(\Gamma, L, (\Sigma, \cM), \syntax{MinimizableOMS}) = (\cI, \Sigma', \cM')$
-and $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+and\\ $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 
 Theory-level semantics for  \syntax{minimize MinimizableOMS} cannot be defined.
 
@@ -5125,8 +5131,9 @@ $$sem(\Gamma,L, \syntax{ref-oms, OMS}) = ((\cI,\cI),(\Sigma,\Sigma),\cR)$$
 
 where $sem(\Gamma, L, \syntax{OMS}) = (\cI, \Sigma, \cM)$ and $\cR=\{ (M,M) \mid M\in \cM \}$.
 
-$$sem(\Gamma, L, \syntax{ref-network, Network}) = $$
-\todonote{a bit later}
+$$sem(\Gamma, L, \syntax{ref-network, Network}) = (G,G)$$
+
+where $sem(\Gamma, L, \syntax{Network}) = G$.
 
 $$sem(\Gamma, L, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (
  (\cI_1,\cI'_2),
@@ -5159,13 +5166,34 @@ where\\
 $$sem(\Gamma, L, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{refmap-oms, LogicTranslation, SymbolMapItems}) = ((\Phi,\alpha,\beta), \sigma) $$
 
 where\\
- $sem(\Gamma, L, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'2$ 
+ $sem(\Gamma, L, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
 such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
 and $sem(L, \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$ \todonote{the logic is no longer L, but it's the target of the logic translation. check everywhere}
 
+\semdom{sem(\Gamma, L, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G_2}
+
+$$sem(\Gamma, L, G_1, G_2, \syntax{refmap-network}, \syntax{NodeMap}_1,\ldots, \syntax{NodeMap}_n)
+= \sigma$$
+where \\
+$sem(\Gamma, L, G_1, G_2,\syntax{NodeMap}_1)= (\syntax{OMSName}^1_1, \syntax{OMSName}^1_2,\rho_1,\sigma_1)$, $\ldots$\\
+$sem(\Gamma, L, G_1, G_2,\syntax{NodeMap}_n) = (\syntax{OMSName}^n_1, \syntax{OMSName}^n_2,\rho_n,\sigma_n)$ and\\
+$\sigma = \{(\syntax{OMSName}^i_1, \syntax{OMSName}^i_2) \mapsto (\rho_i,\sigma_i)\}_{i=1,\ldots,n}$.
+
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\syntax{NodeMap}) = }
+\semdom{sem(\Gamma,L, G_1, G_2,
+\syntax{NodeMap}) = 
+(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma)}
+
+$sem(\Gamma,L, G_1, G_2,
+\syntax{node-map, OMSName$_1$, OMSName$_2$ , LogicTranslation ,  SymbolMapItems}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
+
+where
+$(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
+$(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
+$sem(\Gamma, L, \syntax{LogicTranslation}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
+$sem(L, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+
 
 %%%%%%%%%%%%%%%%%%%%
 
