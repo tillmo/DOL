@@ -109,7 +109,7 @@ parseIso input =
   line :: CharParser () TextLine
   line = do s1 <- try $ string "\\begin{lstlisting}[language=ebnf"
             s2 <- parseString "\n"
-            string "\n"
+            many1 (string "\n")
             e <- many1 ebnf
             s3 <- string "\\end{lstlisting}"
             let c = "abstract syntax" `isInfixOf` s2
