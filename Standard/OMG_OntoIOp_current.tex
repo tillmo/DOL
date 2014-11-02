@@ -827,7 +827,7 @@ logic in which their sentences are formalized and (ii) basic and structured OSMs
 identify them in a globally unique way.
 	&
 For basic OMS, see 6.5.2(c) above.
-The structuring constructs for focused OMS in \ref{c:focused-OMS} and \ref{a:dol-text:OMS} can be used for any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for referincing OMS, see
+The structuring constructs for OMS in \ref{c:focused-OMS} and \ref{a:dol-text:OMS} can be used for any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for referencing OMS, see
 \ref{c:iris}.
    \\ \hline
 %
@@ -1162,9 +1162,8 @@ MOF.}
 The following are within the scope of this \IS:
 \begin{enumerate}
 \item\label{it:scope-heterogeneous} homogeneous OMS as well as heterogeneous OMS (the combining parts written in different languages)
-\item mappings between OMS (mapping
-OMS symbols to OMS symbols)
-\item structured and focused OMS as well as OMS networks (the latter involve several focused OMS and mappings between them)
+\item mappings between OMS (mapping OMS symbols to OMS symbols)
+\item OMS as well as OMS networks (the latter involve several OMS and mappings between them)
 \item \label{it:scope-translation} translations between different OMS languages conformant with DOL (translating whole OMS to another language)
 \item\label{it:scope-annotation} annotation and documentation of OMS, mappings between OMS, symbols,
 and sentences
@@ -1519,7 +1518,7 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
   \termdefinition{distributed ontology, modeling and specification language\synonym
-  DOL}{language for formalizing \termref{libraries} of \termref{focused OMS} and \termref{OMS networks}, whose syntax and semantics are specified in this \IS}
+  DOL}{language for formalizing \termref{libraries} of \termref{OMS} and \termref{OMS networks}, whose syntax and semantics are specified in this \IS}
 
 \begin{note}
  When viewed as an \termref{OMS language}, DOL has \termref{OMS} as its
@@ -1527,7 +1526,7 @@ For the purposes of this document, the following terms and definitions apply.
 \end{note}
 
 \red{
-  \termdefinition{library}{collection of named \termref{focused OMS} and \termref{OMS networks}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings}}
+  \termdefinition{library}{collection of named \termref{OMS} and \termref{OMS networks}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings}}
 }
 
 \end{definitions}
@@ -2029,7 +2028,7 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
 \ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
 ``heterogeneous OMS''?}
 \begin{note}
- The opposite of an OMS network is a \termref{focused OMS}, which
+ The opposite of an OMS network is an \termref{OMS}, which
  focuses on the specification of a single \termref{logical theory}.
 \end{note}
   \begin{note}
@@ -3063,7 +3062,7 @@ Logical OMS mappings supported by DOL include:
 \item imports (particularly including imports that lead to conservative extensions), see the
 abstract syntax categories \syntax{OMSRef} and \syntax{ExtensionOMS} in
 clause~\ref{c:abstract-syntax}.
-\item interpretations (both between focused OMS and OMS networks), see the
+\item interpretations (both between OMS and OMS networks), see the
 abstract syntax category \syntax{IntprDefn} in
 clause~\ref{c:abstract-syntax}.
 \item mappings between OMS and their modules, see the
@@ -3107,7 +3106,7 @@ into its explicit counterpart.\todo{Terry: (Is this true? if so, rewrite). Perha
 
 The following list covers the possible cases where DOL provides a choice between representing information implicitly or  explicitly:
 \begin{description}
-\item[default OMS language translations] A heterogeneous OMS can import several (focused) OMS expressed in different conforming logics, for which suitable translations have been defined in the logic graph provided in \aref{a:graph} or in an extension to it that has been provided when establishing the conformance of some other logic with DOL.  Determining the semantics of the heterogeneous OMS requires a translation into a common target language to be applied (\cf \cref{c:semantics}).  This translation is determined via a lookup in the transitive closure of the logic graph.  Depending on the reasoners available in the given application setting, it can, however, be necessary to employ a different translation.  Authors can express which one to employ.  In a multi-step translation, it is possible to implicitly apply as many default translations as possible, and to concentrate on making explicit only those translations that deviate from the default.\CLnote[type=q-aut]{Will this situation be the same for default approximations, or to we need to add an extra item to the list?}
+\item[default OMS language translations] A heterogeneous OMS can import several OMS expressed in different conforming logics, for which suitable translations have been defined in the logic graph provided in \aref{a:graph} or in an extension to it that has been provided when establishing the conformance of some other logic with DOL.  Determining the semantics of the heterogeneous OMS requires a translation into a common target language to be applied (\cf \cref{c:semantics}).  This translation is determined via a lookup in the transitive closure of the logic graph.  Depending on the reasoners available in the given application setting, it can, however, be necessary to employ a different translation.  Authors can express which one to employ.  In a multi-step translation, it is possible to implicitly apply as many default translations as possible, and to concentrate on making explicit only those translations that deviate from the default.\CLnote[type=q-aut]{Will this situation be the same for default approximations, or to we need to add an extra item to the list?}
 %\item[different matching algorithms] OMS alignments, which DOL is able to express, may have been obtained by running different OMS matching algorithms.  If, in a given OMS engineering workflow, the information on which algorithm has been applied is clear from the context, it is possible to omit it in the alignment expressed in DOL.  Otherwise, \eg if the next person working on the OMS requires that information, it is possible to make it explicit.\todonote{TM: the alignment itself should be there explicitly. right? But then the information about the matching algorithm that has produced it is a mere annotation without semantics, isn't it?\\ CL: I agree with you. OK, so we will replace this with approximation algorithms. 
 %MC: using approximation algorithms is not different than using alignments, as both annotations have no effect on the semantics}
 \end{description}
@@ -3131,9 +3130,7 @@ DOL provides abstract syntax categories for
 \begin{itemize}
 \item libraries (items in libraries are: OMS definitions, OMS mapping definitions, queries, and qualifications choosing the logic,
 OMS language and/or serialization)
-\item \red{focused OMS} (which can be basic OMS in some
-OMS language, or unions, translations, minimizations, combinations,
-approximations of OMS, among others)
+\item \red{OMS} (which can be basic OMS in some OMS language, or unions, translations, minimizations, combinations, approximations of OMS, among others)
 \item OMS mappings 
 \item \red{queries}
 \item identifiers
@@ -3153,10 +3150,10 @@ of one or more repetitions of \syntax{N}.}}
 
 \sclause{Libraries}\label{c:libraries}
 
-A library (\syntax{Library}) consists of a collection of (named) focused OMS and mappings between these.  More specifically, a
+A library (\syntax{Library}) consists of a collection of (named)  OMS and mappings between these.  More specifically, a
 library consists of a name, followed by a list of
 \syntax{LibraryItem}s.  A \syntax{LibraryItem} is either a
-definition of a focused OMS  (\syntax{OMSDefn}), 
+definition of an OMS  (\syntax{OMSDefn}), 
 \red{a definition of a library  (\syntax{LibraryDefn}),}
 a mapping between OMS
 (\syntax{MappingDefn}), a definition related to queries 
@@ -3192,7 +3189,7 @@ At the beginning of a library, one can declare a \syntax{PrefixMap} for abbrevia
 \red{
 Inside a library, one can defined OMS networks (\syntax{NetworkDefn}).
 A \syntax{NetworkDefn} names an
-OMS network consisting of focused OMS and OMS mappings. OMS networks may build on previously-defined
+OMS network consisting of  OMS and OMS mappings. OMS networks may build on previously-defined
 OMS networks, and they can be used in \syntax{combination}s.  
 }
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
@@ -3209,7 +3206,7 @@ OMSOrMappingorNetworkRef  = IRI ;
 
 \sclause{Focused OMS}\label{c:focused-OMS}
 
-A focused OMS (\syntax{OMS}) can be one of the following:
+An OMS (\syntax{OMS}) can be one of the following:
 \begin{itemize}
 \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
 language (which is defined outside this standard)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
@@ -3303,7 +3300,7 @@ ExtensionName        = IRI ;
 %% and \syntax{Approximation}. This would be a bit more verbose, but a bit
 %% more coherent with position of non-terminals in the concrete syntax.}
 
-An OMS definition \syntax{OMSDefn} names a focused OMS.  
+An OMS definition \syntax{OMSDefn} names an  OMS.  
 
 It can be
 optionally marked as consistent, monomorphic or having a unique model using 
@@ -4679,7 +4676,7 @@ where\\
   $\ldots$ \\
  $G' = remove(\Gamma, G_{n-1}, \syntax{IRI}_n)$
 
-\ssclause{Semantics of focused OMS}
+\ssclause{Semantics of OMS}
 
 \semdom{sem^T(L, \syntax{BasicOMS}) = (I, \Sigma, \Delta)}
 
@@ -6481,7 +6478,7 @@ available at the following URL \url{https://github.com/spechub/hets}.
 
 \sclause{Ontohub, Modelhub, Spechub}\label{a:ontohub}
 
-Ontohub/Modelhub/Spechub is a repository engine for managing focused
+Ontohub/Modelhub/Spechub is a repository engine for managing 
 OMS, OMS networks and OMS mappings written in DOL and DOL-conformant
 languages.  It supports the same range of OMS languages and language
 translations as Hets (indeed, Hets is used for analysing DOL files).
