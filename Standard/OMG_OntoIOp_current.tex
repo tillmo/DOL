@@ -2601,6 +2601,16 @@ language. The relation between the OWL ontology and the FOL axioms is that of a 
 import. In the result, both the OWL and the FOL axioms are amenable to, e.g., automated consistency 
 checks and theorem proving. Hence, all available information can be used in the reasoning process.
 
+\begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+ObjectProperty: isProperPartOf  
+  Characteristics: Asymmetric  
+  SubPropertyOf: isPartOf 
+with translation trans:SROIQtoCL
+then
+  (if (and (isProperPartOf x y) (isProperPartOf y z)) (isProperPartOf x z))
+\end{lstlisting}
+Note that \OWL can express transitivity, but not together with asymmetry.
+
 \section{Use Case Onto-2: Ontology integration by means of a foundational ontology}
 One major use case for ontologies in industry is to achieve interoperability and data integration. 
 However, if ontologies are developed independently and used  within the same domain, the 
@@ -2756,7 +2766,46 @@ In the context of use case Spec-1, often specifications become so large that it 
 maintainability, and for more efficient tool support. The lack of a standard for such modular structuring hinders interoperability among different development efforts 
 and the reuse of specifications.
 DOL  provides a notion of structured modular specification that is equally applicable to all DOL-conforming logical languages.
-	
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={spec,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]	
+spec Monoid =
+     sort Elem
+     ops  e:       Elem;
+          __ * __: Elem * Elem -> Elem, assoc, unit e
+end
+
+spec CommutativeMonoid =
+     Monoid
+then
+     op __ * __: Elem * Elem -> Elem, comm
+end
+
+spec Group =
+     Monoid
+then
+     forall x: Elem
+     . exists x': Elem . x' * x = e   %(inv_Group)%
+end
+
+spec AbelianGroup =
+     Group
+and
+     CommutativeMonoid
+end
+
+spec Ring =
+     AbelianGroup with sort Elem,
+                       ops __ * __ |-> __ + __,
+                           e       |-> 0
+and
+     Monoid with ops e, __*__
+then
+     forall x,y,z:Elem
+     . (x + y) * z = (x * z) + (y * z)          %(distr1_Ring)%
+     . z * ( x + y ) = (z * x) + (z * y)        %(distr2_Ring)%
+end
+\end{lstlisting}
+
 \section{Use case Model-1: Coherent semantics for multi-language models}
 \ednote{Isn't this one about ontologies,too?}
 	
@@ -4777,7 +4826,6 @@ where
 where
   $sem^T(\Gamma, L, \syntax{OMS}) = (I, \Sigma, \cM)$
   $sem^T(\Gamma, L, (\Sigma, \cM), \syntax{ExtensionOMS}) = (I,  \Sigma',\cM')$.
-
 \ednote{According to the intended semantics, extensions are defined for OMS $O_1$, $O_2$, such that $O_2$ is basic, this is however not the case in the current abstract syntax: see productions for \syntax{ExtensionOMS}}
 
 %Qualification
@@ -4787,10 +4835,25 @@ $$sem(\Gamma, L, \syntax{qual-oms, Qualification, OMS}) = sem(\Gamma, L', \synta
 where $sem(L, \syntax{Qualification}) = L'$ \todonote{This means that $L$ is not changed after the analysis of this OMS.}
 
 %Bridge
-\semdom{sem^T(\syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= TODO}
-%STOPPED HERE
+\semdom{sem^T(\Gamma, L, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI,\Sigma,\Delta)}
 
-\semdom{sem^M(\syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= TODO}
+$sem^T(\Gamma, L, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\Delta)$
+
+where \\
+$sem^T(\Gamma, L, \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\Delta_1)$,\\
+$sem^T(\Gamma, L, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
+$sem^T(\Gamma, L, (\cI_2, \Phi(\Sigma_1), \alpha_{\Sigma_1}(\Delta_1)), \syntax{OMS}_2) = (\cI, \Sigma,\Delta)$. 
+
+
+\semdom{sem^M(\Gamma, L, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\cM)}
+
+$sem^M(\Gamma, L, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\cM)$
+
+where \\
+$sem^M(\Gamma, L, \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\cM_1)$,\\
+$sem^M(\Gamma, L, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
+$sem^M(\Gamma, L, (\cI_1, \Sigma_1, \cM_1), \syntax{OMS}_2) = (\cI,\Sigma,\cM)$ \todonote{the argument should be in $\cI_2$} 
+
 
 %Combination
 $$sem^T(\Gamma, L, \syntax{combination, Network})= (\cI,\Sigma,\Delta)$$
@@ -4939,8 +5002,6 @@ model in $\cM'$.
 \semdom{sem(\syntax{QualInterfaceSignature})}
 
 %%%%%%%%%%%%%%%%%%%%%%%
-
-\todonote{see what else is missing from the syntax after the OMSDefn}
 
 \semdom{sem(\Gamma,L,\syntax{OMSDefn})=(\Gamma',L)}
 
@@ -5240,7 +5301,7 @@ and $\cM_2 \subseteq \cM_1$.
 
 \semdom{sem(\Gamma,L,\syntax{EquivDefn})=(\Gamma',L)}
 
-\todonote{why three OMS?}
+\todonote{in the WOMO paper the OMS can be heterogeneous}
 
 $sem(\Gamma,L,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\\
 (\Gamma[\syntax{EquivName}\mapsto (\Sigma_1,\Sigma_2,\Sigma_3)],L)
@@ -5248,11 +5309,11 @@ $
 where 
 \begin{itemize}
 \item
-$(\Sigma_1,\cM_1)=sem(\Gamma,L,O_1)$;
+$(\Sigma_1,\cM_1)=sem^M(\Gamma,L,O_1)$;
 \item
-$(\Sigma_2,\cM_2)=sem(\Gamma,L,O_2)$;
+$(\Sigma_2,\cM_2)=sem^M(\Gamma,L,O_2)$;
 \item
-$(\Sigma_3,\cM_3)=sem(\Gamma,L,O_3)$;
+$(\Sigma_3,\cM_3)=sem^M(\Gamma,L,O_3)$;
 \item the semantics is defined only if for $i=1,2$,
   $\Sigma_i\leq\Sigma_3$ and each model in $\cM_i$ can be uniquely
  expanded to a model in $\cM_3$.
@@ -5261,9 +5322,13 @@ $(\Sigma_3,\cM_3)=sem(\Gamma,L,O_3)$;
 %%%%%%%%%%%%%%%%%%%%%%%%
 \semdom{sem(\Gamma, L, \syntax{ModuleRelDefn}) = (\Gamma', L')}
 
-$$sem(\Gamma,L, \syntax{module-defn, ModuleName, ModuleType, InterfaceSignature}) = $$
+$$sem(\Gamma,L, \syntax{module-defn, ModuleName, Conservative, ModuleType, InterfaceSignature}) = (\Gamma', L)$$
 
-\todonote{why two OMS?}
+where\\
+$sem(\Gamma,L, \syntax{ModuleType}) = ((\cI_1,\Sigma_1,\Delta_1),(\cI_2,\Sigma_2,\Delta_2))$\\
+$sem(\Gamma,L, \Sigma_2,\syntax{InterfaceSignature}) = \Sigma $ such that $\Sigma = \Sigma_1$ \\
+$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (\cI, \Sigma_1,\Delta_1,\Sigma_2,\Delta_2)]$.
+\todonote{should the conservativity be mandatory?}
 
 %%%%%%%%%%%%%%%%%%%%
 
