@@ -2982,7 +2982,7 @@ the overall guiding principles and constraints of DOL's syntax and semantics.
 We give an overview of the most important and innovative language
 constructs of DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
-\section{\DOL in a nutshell}
+\section{DOL in a nutshell}
 
 As the usage scenarios in clause \ref{c:goal} illustrate, the use of multiple OMS may lead to lack 
  of interoperability. The goal of \DOL is to enable users to overcome these interoperability issues 
@@ -3088,6 +3088,47 @@ Whereas the first feature determines the expressivity of the language and the po
 
 Acknowledging the wide tool support that conforming established languages such as OWL, Common Logic, MOF, or CASL\ednote{review language list when annexes are finished} enjoy, existing OMS in these languages remain as they are within the DOL framework. DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. 
 DOL's modularity and annotation constructs can either be embedded into existing OMS as non-disruptive annotations, or they can be provided as standoff markup, pointing to the OMS they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported OMS languages.\ednote{Till, is this standoff markup remark up to date?}
+
+
+\section{Semantic foundations of DOL}
+
+
+A large variety of OMS languages in use can be captured at an abstract level using the concept of 
+\emph{institutions} \cite{Ins}.
+This allows us to develop results independently of the particularities of a logical system and to use the notions of institution and  logical language interchangeably. 
+%We first introduce the concept of \emph{logic syntax}.
+The main idea is to collect the non-logical
+symbols of the language in signatures and to assign to each signature the set of sentences that can be formed with its symbols. 
+For each signature, we provide means for extracting the symbols it consists of, together with their kind.
+
+% Signature morphisms are mappings between signatures. We do not assume
+% any details except that signature morphisms can be composed and
+% that there are identity morphisms; this amounts to a category of signatures.
+% Readers unfamiliar with category theory may replace this with
+% a partial order (signature morphisms are then just inclusions).
+% See \cite{MossakowskiEtAl13a} for details of this simplified foundation.
+
+Institutions also provide a model theory, which introduces semantics for
+the language and gives a satisfaction relation between the models and
+the sentences of a signature.   
+% The only restriction imposed is the
+% satisfaction condition, which captures the idea that truth is
+% invariant under change of notation (and enlargement of context) along
+% signature morphisms. This relies on two further components of
+% institutions: the translation of sentences along signature morphisms,
+% and the reduction of models against signature morphisms (generalizing
+% the notion of model reduct known from logic).
+
+It is also possible to complement an institution with a proof theory,
+introducing a derivability relation between sentences, formalized as 
+an \emph{entailment system} \cite{Meseguer:gl89}. In particular, this
+can be done for all logics that have so far been in use in \DOL.
+
+
+Since institutions allow to abstract from the differences between the different OMS languages, 
+the semantics of basic OMS is presented in a uniform way.  The semantics of structured OMS, 
+OMS mappings, OMS networks, and other DOL expressions is defined as model-theoretic constructions
+on top of institutions. 
 
 
 \section{DOL enables expression of logically heterogeneous OMS and literal reuse of existing OMS.}
