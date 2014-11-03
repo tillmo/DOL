@@ -5322,166 +5322,190 @@ logical environment running from $L$ to $sem(\syntax{LolaRef})$.
 %\todonote{Here, we need to introduce institute morphisms and
 %require $\Phi(\Sigma)\leq\Sigma$ in the Grothendieck institute!}
 
-
-
-
-\semdom{sem(\Gamma,L,\syntax{MappingDefn})=(\Gamma',L)}
+\semdom{sem(\Gamma,\syntax{MappingDefn})= \Gamma'}
 See equations for \syntax{IntprDefn},  \syntax{Entailment}, \syntax{EquivDefn}, \syntax{ModuleRelDefn} and \syntax{AlignDefn}.
 
-\semdom{sem(\Gamma,L,\syntax{IntprDefn})=(\Gamma',L)}
-\CLnote[type=q-aut]{Optional \syntax{[ Conservative ]} argument is missing.}
+\semdom{sem(\Gamma,\syntax{IntprDefn}) = \Gamma'}
 
-$$sem(\Gamma, L, \syntax{intrp-defn, IntprName, IntrpType,[LogicTranslation], [SymbolMapItems]}) = (\Gamma', L)$$
+$$sem(\Gamma, \syntax{intrp-defn, IntprName, IntrpType,LogicTranslation, SymbolMapItems}) = \Gamma'$$
 where\\
-$sem(\Gamma, L,\syntax{IntrpType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2, \cM_2))$,\\
+$sem(\Gamma, \syntax{IntrpType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2, \cM_2))$,\\
 $sem(\syntax{LogicTranslation}) = (\Phi,\alpha,\beta):\cI_1\rightarrow \cI_2$,\\
-$sem(L, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$,\\
-$\Gamma'=\Gamma[IntrpName \mapsto ((\Phi,\alpha,\beta),\sigma) ]$. \todonote{we need a reference for source and target 
-to be able to generate the right network}
+$sem(\Gamma, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$,\\
+$\Gamma'=\Gamma[IntrpName \mapsto ((\Phi,\alpha,\beta),\sigma) ]$.
+If \syntax{LogicTranslation} is missing, the default translations between the logics is selected. 
 
 The semantics is only defined if $\beta_{\Sigma_1}(M_2\forget\sigma) \in \cM_1$ for each $M_2\in\cM_2$.
+If the optional argument $\syntax{Conservative}$ is \syntax{model-conservative}, for
+each model  $M_1\in\cM_1$ there must exist a model $M_2\in\cM_2$ such that
+$\beta_{\Sigma_1}(M_2\forget\sigma) = M_1$. If the optional argument $\syntax{Conservative}$ is \syntax{consequence-conservative}, 
+for each $\Sigma_1$-sentence $\varphi$, if $\cM_2\models \alpha_{\Sigma_1}(\varphi)$ then
+$\cM_1\models \varphi$.
 
-If an extra argument $\syntax{Conservative}$ is present ...
+$$sem(\Gamma, \syntax{refinement, IntprName, Refinement}) = \Gamma'$$
 
-$$sem(\Gamma, L, \syntax{refinement, IntprName, Refinement}) = (\Gamma', L)$$
+where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto sem(\Gamma, \syntax{Refinement})]$
 
-where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto sem(\Gamma, L, \syntax{Refinement})]$
+\semdom{sem(\Gamma, \syntax{IntprType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))}
 
-\semdom{sem(\Gamma, L, \syntax{IntprType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))}
-
-$$sem(\Gamma, L, \syntax{intpr-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))$$
+$$sem(\Gamma,  \syntax{intpr-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))$$
 
 where 
-$sem^M(\Gamma, L,  \syntax{OMS}_1) = (\cI_1,\Sigma_1,\cM_1)$ and
-$sem^M(\Gamma, L,  \syntax{OMS}_2) = (\cI_2,\Sigma_2,\cM_2)$.
+$sem^M(\Gamma,  \syntax{OMS}_1) = (\cI_1,\Sigma_1,\cM_1)$ and
+$sem^M(\Gamma,  \syntax{OMS}_2) = (\cI_2,\Sigma_2,\cM_2)$.
 
 %%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L, \syntax{Refinement}) = ((\cI_1, \Sigma_1), (\cI_2, \Sigma_2), \cR)}
+\semdom{sem(\Gamma, \syntax{Refinement}) = ((\cI_1, \Sigma_1), (\cI_2, \Sigma_2), \cR)}
 
-The signature of a refinement stores the signature of the specification being refined and the signature of the 
-specification after refinement. Since the logic might change along a refinement step, we also store the logics. 
+The signature of a refinement between OMS stores the signature of the OMS being refined and the signature of the 
+OMS after refinement. Since the logic might change along a refinement step, we also store the logics. 
 Given a refinement signature $((\cI_1,\Sigma_1),(\cI_2,\Sigma_2))$, a refinement model is 
 a class $\cR = \{ (M_1, M_2) \mid M_1 \in \Mod^{\cI_1}(\Sigma_1), M_2\in \Mod^{\cI_2}(\Sigma_2)  \}$ such that
 $\cR^{-1}$ is a partial function mapping $\Mod^{\cI_2}(\Sigma_2)$-models to $\Mod^{\cI_1}(\Sigma_1)$-models.
 
-$$sem(\Gamma,L, \syntax{ref-oms, OMS}) = ((\cI,\Sigma),(\cI,\Sigma),\cR)$$
+Similarly, for a refinement between networks we store the graph of the network before and after refinement.
+A refinement model in such case is a class of pairs of families of models compatible with the two networks. By
+a slight abuse of notation, we will denote such models also by $\cR$.
 
-where $sem(\Gamma, L, \syntax{OMS}) = (\cI, \Sigma, \cM)$ and $\cR=\{ (M,M) \mid M\in \cM \}$.
+$$sem(\Gamma, \syntax{ref-oms, OMS}) = ((\cI,\Sigma),(\cI,\Sigma),\cR)$$
 
-$$sem(\Gamma, L, \syntax{ref-network, Network}) = (G,G)$$
+where $sem(\Gamma, \syntax{OMS}) = (\cI, \Sigma, \cM)$ and $\cR=\{ (M,M) \mid M\in \cM \}$.
 
-where $sem(\Gamma, L, \syntax{Network}) = G$.
+$$sem(\Gamma, \syntax{ref-network, Network}) = (G,G, \cR)$$
 
-$$sem(\Gamma, L, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (
+where $sem(\Gamma, \syntax{Network}) = G$ and
+$\cR = \{(F,F) \mid F $ is a family of models compatible with $G\}$.
+
+$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (
  (\cI_1,\Sigma_1),
  (\cI'_2,\Sigma'_2),
  \cR
 )$$
 
 where\\ 
-$sem(\Gamma, L, \syntax{Refinement}_1) = ((\cI_1,\Sigma_1),(\cI_2,\Sigma_2),\cR_1)$,\\
-$sem(\Gamma, L, \syntax{Refinement}_2) = ((\cI'_1,\Sigma'_1),(\cI'_2,\Sigma'_2),\cR_2)$\\
+$sem(\Gamma, \syntax{Refinement}_1) = ((\cI_1,\Sigma_1),(\cI_2,\Sigma_2),\cR_1)$,\\
+$sem(\Gamma, \syntax{Refinement}_2) = ((\cI'_1,\Sigma'_1),(\cI'_2,\Sigma'_2),\cR_2)$\\
 such that 
 $\cI_2 = \cI'_1$, $\Sigma_2 = \Sigma'_1$,\\
 and
 $\cM' = \{ (M_1, M'_2) \mid \exists M_2 \text{ such that } (M_1, M_2)\in\cR_1 \text{ and } (M_2, M'_2) \in \cR_2\}$.
 
-\todonote{composition of refinements of networks}
+$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = ((G_1, G'_2),\cR')$$
 
-$$sem(\Gamma, L, \syntax{simple-ref, OMS, RefMap, Refinement}) = ((\cI,\Sigma),(\cI_2,\Sigma_2),\cR')$$
+where\\ 
+$sem(\Gamma, \syntax{Refinement}_1) = ((G_1, G_2), \cR_1)$,\\
+$sem(\Gamma, \syntax{Refinement}_2) = ((G'_1,G'_2),\cR_2)$\\
+such that 
+$G_2 = G'_1$ and
+$\cR' = \{(F_1,F'_2) \mid \exists F_2 \text{ such that } (F_1,F_2) \in \cR_1 \text{ and } (F_2,F'_2) \in \cR_2\}$.
+
+$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = ((\cI,\Sigma),(\cI_2,\Sigma_2),\cR')$$
 where\\
- $sem^M(\Gamma, L, \syntax{OMS}) = (\cI,\Sigma, \cM)$,\\
- $sem(\Gamma, L, \syntax{Refinement}) = ((\cI_1,\Sigma_1),(\cI_2,\Sigma_2),\cR)$,\\ 
- $sem(\Gamma, L, (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = ((\Phi, \alpha,\beta):\cI\to\cI_1, \sigma:\Phi(\Sigma)\to\Sigma_1)$,\\
+ $sem^M(\Gamma,  \syntax{OMS}) = (\cI,\Sigma, \cM)$,\\
+ $sem(\Gamma,  \syntax{Refinement}) = ((\cI_1,\Sigma_1),(\cI_2,\Sigma_2),\cR)$,\\ 
+ $sem(\Gamma,  (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = ((\Phi, \alpha,\beta):\cI\to\cI_1, \sigma:\Phi(\Sigma)\to\Sigma_1)$,\\
  $\cR' = \{ (\beta_{\Sigma}(M\forget\sigma), N) \mid (M,N) \in \cR \}$.
 
-\todonote{this is missing from the syntax...} 
-$$sem(\Gamma, L, \syntax{simple-ref, Network, RefMap, Refinement}) = (G''_1,G_2)$$
+$$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = ((G''_1,G_2),\cR)$$
 where\\
- $sem^M(\Gamma, L, \syntax{Network}) = G_1$,\\
- $sem(\Gamma, L, \syntax{Refinement}) = (G'_1, G_2)$,\\ 
- $sem(\Gamma, L, (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = \sigma:G_1\to G'_1$,\\
+ $sem^M(\Gamma,  \syntax{Network}) = G_1$, $\cR_1$ is the class of families of models compatible with $G$,\\
+ $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\cR_2)$,\\ 
+ $sem(\Gamma, (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = \sigma:G_1\to G'_1$,\\
  for each $(N_1, N_2)\in dom(\sigma)$, 
 if $(\cI_1, \Sigma_1, \cM_1)$ is the label of $N_1$ in $G_1$,\\
 $(\cI_2, \Sigma_2, \cM_2)$ is the label of $N_2$ in $G_2$ \\
 and $((\Phi,\alpha,\beta):\cI_1\to\cI_2,\phi:\Phi(\Sigma_1)\to\Sigma_2)$ is $\sigma((N_1,N_2))$,\\
 then $\cM_1$ must include $\{ \beta_{\Sigma_1}(M_2\forget\phi)  \mid M_2 \in \cM_2\}$,
-and this class of models becomes the new label of $N_1$ in $G''_1$. \todonote{require injectivity!}
+and this class of models becomes the new label of $N_1$ in $G''_1$ and\\
+$\cR$ pairs each family of models $F$ compatible with $G_2$ with
+the family of models \todonote{needs total map?}  
+
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{RefMap}) = (\rho, \sigma)}
+\semdom{sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{RefMap}) = (\rho, \sigma)}
 
-$$sem(\Gamma, L, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{refmap-oms, LogicTranslation, SymbolMapItems}) = ((\Phi,\alpha,\beta), \sigma) $$
+$$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{refmap-oms, LogicTranslation, SymbolMapItems}) = ((\Phi,\alpha,\beta), \sigma) $$
 
 where\\
- $sem(\Gamma, L, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
+ $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
 such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
-and $sem(L, \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$ \todonote{the logic is no longer L, but it's the target of the logic translation. check everywhere}
+and $sem(\Gamma, \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$ \todonote{the logic is no longer L, but it's the target of the logic translation. check everywhere}
 
-\semdom{sem(\Gamma, L, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G_2}
+\semdom{sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G_2}
 
-Given two networks $G_1$ and $G_2$, a \emph{partial map between networks} 
+Given two networks $G_1$ and $G_2$, a \emph{map between networks} 
 $\sigma : G_1\to G_2$ is a set of tuples 
 $(N_1, N_2, \rho,\sigma)$ such that
 $(\cI_1,\Sigma_1, \Delta_1)$ is the label of $N_1$ in $G_1$,
 $(\cI_2,\Sigma_2, \Delta_2)$ is the label of $N_2$ in $G_2$,
 $\rho = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorphism between the logics of the two nodes and
-$\sigma : \Phi(\Sigma_1) \to \Sigma_2$ is a signature morphism. \todonote{function or relation?}
+$\sigma : \Phi(\Sigma_1) \to \Sigma_2$ is a signature morphism.
 
 
-$$sem(\Gamma, L, G_1, G_2, \syntax{refmap-network}, \syntax{NodeMap}_1,\ldots, \syntax{NodeMap}_n)
+$$sem(\Gamma, G_1, G_2, \syntax{refmap-network}, \syntax{NodeMap}_1,\ldots, \syntax{NodeMap}_n)
 = \sigma$$
 where \\
-$sem(\Gamma, L, G_1, G_2,\syntax{NodeMap}_1)= (\syntax{OMSName}^1_1, \syntax{OMSName}^1_2,\rho_1,\sigma_1)$, $\ldots$\\
-$sem(\Gamma, L, G_1, G_2,\syntax{NodeMap}_n) = (\syntax{OMSName}^n_1, \syntax{OMSName}^n_2,\rho_n,\sigma_n)$ and\\
+$sem(\Gamma, G_1, G_2,\syntax{NodeMap}_1)= (\syntax{OMSName}^1_1, \syntax{OMSName}^1_2,\rho_1,\sigma_1)$, $\ldots$\\
+$sem(\Gamma, G_1, G_2,\syntax{NodeMap}_n) = (\syntax{OMSName}^n_1, \syntax{OMSName}^n_2,\rho_n,\sigma_n)$ and\\
 $\sigma = \{(\syntax{OMSName}^i_1, \syntax{OMSName}^i_2) \mapsto (\rho_i,\sigma_i)\}_{i=1,\ldots,n}$.
+The map is required to be total on the nodes of $G_1$.
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,L, G_1, G_2,
+\semdom{sem(\Gamma, G_1, G_2,
 \syntax{NodeMap}) = 
 (\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma)}
 
-$sem(\Gamma,L, G_1, G_2,
+$sem(\Gamma, G_1, G_2,
 \syntax{node-map, OMSName$_1$, OMSName$_2$ , LogicTranslation ,  SymbolMapItems}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
 
 where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
-$sem(\Gamma, L, \syntax{LogicTranslation}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
-$sem(L, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+$sem(\Gamma, \syntax{LogicTranslation}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
+$sem(\Gamma, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
 
 
 %%%%%%%%%%%%%%%%%%%%
 
 
-\semdom{sem(\Gamma, L, \syntax{Entailment}) = (\Gamma', L)}
+\semdom{sem(\Gamma,  \syntax{Entailment}) = \Gamma'}
 
-$$sem(\Gamma, L, \syntax{entailment, EntailmentName, EntailmentType}) = (\Gamma',L)$$
+$$sem(\Gamma, \syntax{entailment, EntailmentName, EntailmentType}) = \Gamma'$$
 
-where $\Gamma' = \Gamma[EntailmentName \mapsto sem(\Gamma, L, \syntax{EntailmentType})]$.
+where $\Gamma' = \Gamma[EntailmentName \mapsto sem(\Gamma, \syntax{EntailmentType})]$.
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L, \syntax{EntailmentType}) = (\cI,\Sigma, \cM_1,\cM_2)}
+\semdom{sem(\Gamma, \syntax{EntailmentType}) = (\cI,\Sigma, \cM_1,\cM_2)}
 
-$$sem(\Gamma, L, \syntax{oms-oms-entailment, OMS$_1$, OMS$_2$}) = (\cI,\Sigma, \cM_1,\cM_2)$$
+$$sem(\Gamma, \syntax{oms-oms-entailment, OMS$_1$, OMS$_2$}) = (\cI,\Sigma, \cM_1,\cM_2)$$
 
 where 
-$sem(\Gamma, L, \syntax{OMS}_1) = (\cI, \Sigma, \cM_1)$,
-$sem(\Gamma, L, \syntax{OMS}_2) = (\cI, \Sigma, \cM_2)$,
+$sem(\Gamma, \syntax{OMS}_1) = (\cI, \Sigma, \cM_1)$,
+$sem(\Gamma, \syntax{OMS}_2) = (\cI, \Sigma, \cM_2)$,
 and $\cM_2 \subseteq \cM_1$.
 
-\todonote{networks left}
+$sem(\Gamma,\syntax{network-oms-entailment, Network , OMSName, OMS}) = (\cI,\Sigma, \cM_1,\cM_2)$
+
+where $sem(\Gamma, \syntax{Network}) = G$ such that $G$ consists of just one node labeled with \syntax{OMSName},
+$(\cI,\Sigma, \cM_1)$ is the label of \syntax{OMSName} in $G$,
+$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2)$ and $\cM_2 \subseteq \cM_1$.
+
+$$sem(\Gamma,\syntax{network-network-entailment, Network$_1$ ,Network$_2$}) = (G_1, \cM_1,\cM_2)$$
+
+where $sem(\Gamma, \syntax{Network}_1) = G_1$,
+$sem(\Gamma, \syntax{Network}_2) = G_2$, such that $G_1$ and $G_2$ have the same shape and the same signatures for 
+corresponding nodes, and moreover the class $\cM_1$ of families of models compatible with $G_1$ includes
+the class $\cM_2$ of families of models compatible with $G_2$.
 
 %%%%%%%%%%%%%%%%%%%%
-
 
 \semdom{sem(\Gamma,\syntax{EquivDefn})=\Gamma'}
 
-$$sem(\Gamma,L,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\Gamma'$$
+$$sem(\Gamma,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\Gamma'$$
 
 where \\
 $sem(\Gamma, O_1) = (I_1,\Sigma_1,\cM_1)$,\\
@@ -5492,68 +5516,93 @@ such that for each $M_i\in\cM_i$, there exists a unique model $M\in \cM$ such th
 $\Gamma' = \Gamma[\syntax{EquivName} \mapsto((I_1,\Sigma_1,\cM_1),(I_2,\Sigma_2,\cM_2),(I,\Sigma,\cM))]$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\semdom{sem(\Gamma, L, \syntax{ModuleRelDefn}) = (\Gamma', L')}
+\semdom{sem(\Gamma,  \syntax{ModuleRelDefn}) = \Gamma'}
 
-$$sem(\Gamma,L, \syntax{module-defn, ModuleName, Conservative, ModuleType, InterfaceSignature}) = (\Gamma', L)$$
+$$sem(\Gamma, \syntax{module-defn, ModuleName, Conservative, ModuleType, InterfaceSignature}) = \Gamma'$$
 
 where\\
-$sem(\Gamma,L, \syntax{ModuleType}) = ((\cI_1,\Sigma_1,\Delta_1),(\cI_2,\Sigma_2,\Delta_2))$\\
-$sem(\Gamma,L, \Sigma_2,\syntax{InterfaceSignature}) = \Sigma $ such that $\Sigma = \Sigma_1$ \\
-$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (\cI, \Sigma_1,\Delta_1,\Sigma_2,\Delta_2)]$.
-\todonote{should the conservativity be mandatory?}
+$sem(\Gamma, \syntax{ModuleType}) = ((\cI,\Sigma_1,\cM_1),(\cI,\Sigma_2,\cM_2))$\\
+$sem(\Gamma, \Sigma_2,\syntax{InterfaceSignature}) = \Sigma $ such that $\Sigma \subseteq \Sigma_1$ 
+and $\Sigma_1 \subseteq \Sigma_2$
+\todonote{is this condition right?}\\
+such that if \syntax{Conservative} is omitted or equal to \syntax{model-conservative}, then
+for each model $M_1$ in $\cM_1$ there is a model $M_2$  in $\cM_2$ such that $M_2\forget{\Sigma_1} = M_1$, and if
+\syntax{Conservative} is equal to \syntax{consequence-conservative}, then
+for each $\Sigma_1$-sentence $\varphi$ if $\cM_2\models \varphi$ then $\cM_1\models \varphi$, and
+$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (\cI, \Sigma_1,\cM_1,\Sigma_2,\cM_2)]$.
+
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,L,\syntax{AlignDefn})=(\Gamma',L)}
+\semdom{sem(\Gamma,\syntax{AlignDefn})=\Gamma'}
 
-$sem(\Gamma, L, \syntax{align-defn, AlignName, AlignCard, AlignType, AlignSem}, \\
-Corresps) = (\Gamma', L') $
+$sem(\Gamma, \syntax{align-defn, AlignName, AlignCard, AlignType, AlignSem, Corresps}) = \Gamma' $
 
 where
-$sem(\Gamma,L, \syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$
+$sem(\Gamma,\syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$
 and\\
 $\Gamma'=\Gamma[\syntax{AlignType} \mapsto 
-                      sem(\Gamma, L,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, Corresps})]$
+                      sem(\Gamma,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, Corresps})]$
 
-\semdom{sem(\Gamma,L, \syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))}
+\semdom{sem(\Gamma, \syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))}
 
-$$sem(\Gamma,L, \syntax{align-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$$
+$$sem(\Gamma, \syntax{align-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$$
 
-where $sem^T(\Gamma,L,\syntax{OMS}_1) = (\cI_1,\Sigma_1, \Delta_1)$
-and $sem^T(\Gamma,L,\syntax{OMS}_2) = (\cI_2,\Sigma_2, \Delta_2)$.
+where $sem^T(\Gamma,\syntax{OMS}_1) = (\cI_1,\Sigma_1, \Delta_1)$
+and $sem^T(\Gamma,\syntax{OMS}_2) = (\cI_2,\Sigma_2, \Delta_2)$.
 
-\semdom{sem(\Gamma, L,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, \{Corresp\}})=
-WDiag}
+\semdom{sem(\Gamma,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, Corresps})=
+G}
 
-$$sem(\Gamma, L,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem}, C_1,\ldots,C_n)=
-WDiag$$
+$$sem(\Gamma,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem}, C_1,\ldots,C_n)=
+G$$
 
 where\\
-$(\cI'_1,\Sigma'_1,\Delta'_1) = sem(\Gamma, L, (\cI_1,\Sigma_1,\Delta_1),\syntax{AlignSem})$,\\
-$(\cI'_2,\Sigma'_2,\Delta'_2) = sem(\Gamma, L, (\cI_2,\Sigma_2,\Delta_2),\syntax{AlignSem})$,\\
-$WDiag = sem(\Gamma, L, (\cI'_1,\Sigma'_1,\Delta'_1), (\cI'_2,\Sigma'_2,\Delta'_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)$.
+$(\cI'_1,\Sigma'_1,\Delta'_1) = sem(\Gamma,  (\cI_1,\Sigma_1,\Delta_1),\syntax{AlignSem})$,\\
+$(\cI'_2,\Sigma'_2,\Delta'_2) = sem(\Gamma,  (\cI_2,\Sigma_2,\Delta_2),\syntax{AlignSem})$,\\
+$WDiag = sem(\Gamma, (\cI'_1,\Sigma'_1,\Delta'_1), (\cI'_2,\Sigma'_2,\Delta'_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L, (\cI,\Sigma,\Delta),\syntax{AlignSem})=(\cI',\Sigma',\Delta')}
+\semdom{sem(\Gamma, (\cI,\Sigma,\Delta),\syntax{AlignSem})=(\cI',\Sigma',\Delta')}
 
-$$sem(\Gamma, L, (\cI,\Sigma,\Delta),\syntax{AlignSem})=\begin{cases}
+$$sem(\Gamma,  (\cI,\Sigma,\Delta),\syntax{AlignSem})=\begin{cases}
                                    (\cI,\Sigma,\Delta) & \mbox{if } \syntax{AlignSem} = \syntax{global-domain}\\
-                                   relativize_\cI((\Sigma,\Delta))& \mbox{otherwise}
+                                   relativize_{logic(\Gamma.current)}((\Sigma,\Delta))& \mbox{otherwise}
                                                                                                                    \end{cases}$$
 
-\semdom{sem(\Gamma, L, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=WDiag}
+\semdom{sem(\Gamma, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G}
 
-$sem(\Gamma, L, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=WDiag$
+$sem(\Gamma, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G$
 
 where\\
- 
-\todonote{all algorithm goes here...}
-
-$WDiag = buildWDiagram((\cI'_1, \Sigma''_1, \emptyset),
+if at least one of the correspondences $C_1, \ldots,C_n$ has a confidence value different than $1$, then the semantics of the 
+alignment is not defined, and the alignment is ill-formed if the alignment mapping does not have the arities given by
+$\syntax{AlignCard}$,\\
+$sem(\Gamma,(\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), C_1,\ldots,C_n ) = ((\cI'_1, \Sigma''_1, \emptyset),
   (\cI'_2, \Sigma''_2, \emptyset),
-  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$.
+  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$,\\
+and $G = buildWDiagram((\cI'_1, \Sigma''_1, \emptyset),
+  (\cI'_2, \Sigma''_2, \emptyset),
+  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$\\
+where $buildWDiagram$ returns the W-shaped network: 
+$$
+\xymatrix{
+(\cI_1,\Sigma_1,\Delta_1) & &  (\cI_B,\Sigma_B,\Delta_B) &&(\cI_2,\Sigma_2,\Delta_2) \\
+ & (\cI'_1, \Sigma''_1, \emptyset) \ar[ul]^{\iota_1}\ar[ur]_{\sigma_1} &&(\cI'_2, \Sigma''_2, \emptyset) \ar[ur]^{\iota_2}\ar[ul]_{\sigma_2}& 
+}
+$$
 
+
+$$sem(\Gamma,(\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), C_1,\ldots,C_n ) = ((\cI_1, \Sigma''_1, \emptyset),
+  (\cI_2, \Sigma''_2, \emptyset),
+  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$$
+where for each correspondence $C_i$ we have that $sem(\Gamma, (\cI_1,\Sigma''_1,\Delta_1), (\cI_2,\Sigma''_2,\Delta_2), C_i) = 
+(N^i_1,N^i_2, R^i)$,  $\Sigma''_i$ is  the least sub-signature of $\Sigma_i$  such that
+all symbols $N^i_1$ appear in $\Sigma''_i$, for $i=1,2$, $\iota_i:\Sigma''_i\to\Sigma_i$ is the inclusion,
+and $(\cI_B,\Sigma_B,\Delta_B),\sigma_1:\Sigma''_1\to\Sigma_B,\sigma_2:\Sigma''_2\to\Sigma_B$ are defined in a logic-specific way
+from the correspondences and taking into account \syntax{AlignSem}. 
+\cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
 \ssclause{Semantics of queries}
 
