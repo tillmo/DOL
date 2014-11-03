@@ -3344,7 +3344,7 @@ OMS                  = ExtendingOMS
                      | 'union' , OMS , [ ConsStrength ] , OMS 
                      | 'extension' , OMS , ExtensionOMS
                      | 'qual-oms' , { Qualification } , OMS
-                     | 'bridge' , OMS, { Translation } , OMS
+                     | 'bridge' , OMS, { Translation } , ExtendingOMS
                      | 'combination' , Network
                      | 'application', SubstName, Sentence ;
 
@@ -3357,7 +3357,7 @@ Translation          = 'renaming' , { LogicTranslation } , [ SymbolMapItems ] ;
 LogicTranslation     = 'logic-translation' , OMSLangTrans ;
 
 Reduction            = 'hidden' , { LogicReduction } , [ SymbolItems ]
-                     | 'revealed' , SymbolMapItems  ;
+                     | 'revealed' , SymbolItems  ;
 LogicReduction       = 'logic-reduction' , OMSLangTrans ;
 
 SymbolItems          = 'symbol-items' , ( Symbol , { Symbol } ) ;
@@ -3498,8 +3498,9 @@ IntprType            = 'intpr-type' , OMS , OMS ;
 Refinement           = 'ref-oms' , OMS 
                      | 'ref-network' , Network
                      | 'ref-composition' , Refinement , Refinement
-                     | 'simple-ref' , OMS , RefMap , Refinement ;
-RefMap               = 'refmap-oms' ,  { LogicTranslation } , [ SymbolMapItems ] 
+                     | 'simple-oms-ref' , OMS , RefMap , Refinement 
+                     | 'simple-network-ref' , Network , RefMap , Refinement ;
+RefMap               = 'refmap-oms' , [ LogicTranslation ] , [ SymbolMapItems ] 
                      | 'refmap-network' , { NodeMap } ;
 NodeMap              = 'node-map', OMSName , OMSName , { LogicTranslation } , [ SymbolMapItems ] ;
 
@@ -3902,7 +3903,7 @@ OMS                 = ExtendingOMS
                      | OMS , 'and' , [ ConsStrength ] , OMS 
                      | OMS , 'then' , ExtensionOMS
                      | { Qualification } , ':' , GroupOMS
-                     | OMS, 'bridge', { Translation } , OMS 
+                     | OMS, 'bridge', { Translation } , ExtendingOMS 
                      | 'combine' , NetworkElements , [ ExcludeExtensions ]  
                      | 'apply' , SubstName , Sentence 
                      | GroupOMS ;
@@ -3921,7 +3922,7 @@ LogicTranslation     = 'translation' , OMSLangTrans ;
                       
 Reduction            = 'hide' , { LogicReduction } , SymbolItems 
                      | 'hide' , LogicReduction , { LogicReduction } 
-                     | 'reveal' ,  SymbolMapItems ;
+                     | 'reveal' ,  SymbolItems ;
 LogicReduction       = 'along' , OMSLangTrans ;
 
 SymbolItems          = Symbol , { ',' , Symbol } ;
@@ -4004,8 +4005,10 @@ IntprType            = GroupOMS , 'to' , GroupOMS ;
 Refinement           = OMS 
                      | Network
                      | Refinement , 'then' , Refinement
-                     | OMS , 'refined' , [RefMap] , 'to' , Refinement ;
-RefMap               = 'via' ,  { LogicTranslation } , [ SymbolMapItems ] 
+                     | OMS , 'refined' , [RefMap] , 'to' , Refinement 
+                     | Network , 'refined' , [RefMap] , 'to' , Refinement ;
+RefMap               = 'via' , LogicTranslation , [ SymbolMapItems ]
+                     | 'via' , [ LogicTranslation ] , SymbolMapItems
                      | 'via' , NodeMap , { ',' , NodeMap } ;
 NodeMap              = OMSName , '|->' , OMSName , [ 'using', { LogicTranslation } , [ SymbolMapItems ] ] ;
 
