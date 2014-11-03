@@ -4570,6 +4570,9 @@ language $L$ based on an institution $\I$ we denote
 by $sem^T_L(O)$ the theory-level language-specific semantics of $O$
 and by 
 $sem^M_L(O)$, the model-level language-specific semantics of $O$.
+We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
+the context of previous declarations, denoted $sem^{(\Sigma,\Delta)}_L(O)$ and
+$sem^{(\Sigma,\cM)}_L(O)$ respectively.
 
 %We  assume a \emph{language-specific semantics} of basic
 %OMS, inherited from the OMS language.  
@@ -4822,39 +4825,45 @@ where\\
 
 \ssclause{Semantics of OMS}
 
-\semdom{sem^T(L, \syntax{BasicOMS}) = (I, \Sigma, \Delta)}
+\semdom{sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \Delta)}
 
-For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$, the theory-level semantics is defined as follows:  
-$$sem^T(L, \syntax{BasicOMS})= sem^T_{logic(L)}(\syntax{BasicOMS})$$
+For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the theory-level semantics is defined as follows:  
+$$sem^T(\Gamma, \syntax{BasicOMS})= sem^T_{logic(\Gamma.current)}(\syntax{BasicOMS})$$
 
-\semdom{sem^M(L, \syntax{BasicOMS}) = (I, \Sigma, \cM)}
+\semdom{sem^M(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM)}
 
-For an OMS \syntax{BasicOMS} with current language, logic and serialization $L$, the model-level semantics is defined as follows:  
-$$sem^M(L, \syntax{BasicOMS})= sem^M_{logic(L)}(\syntax{BasicOMS})$$
+For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the model-level semantics is defined as follows:  
+$$sem^M(\Gamma, \syntax{BasicOMS})= sem^M_{logic(\Gamma.current)}(\syntax{BasicOMS})$$
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \Delta')}
+\semdom{sem^T(\Gamma, (\Sigma, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \Delta')}
 
-$$sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{BasicOMS}) = (I, \Sigma', \Delta')$$
-where $(\Sigma, \Delta)$ give the local environment of previously declared symbols,
-$I= logic(L)$, 
-and $sem^{\Sigma, \Delta}_I(\syntax{BasicOMS}) = (I, \Sigma', \Delta')$. \todonote{how to write this here?}
+$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{BasicOMS}) = (I, \Sigma', \Delta')$$
+where $(\Sigma, \Delta)$ give the local environment of previously declared symbols\\
+and $sem^{\Sigma, \Delta}_{logic(\Gamma.current)}(\syntax{BasicOMS}) = (I, \Sigma', \Delta')$.
+Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\Delta\subseteq\Delta'$.
 
-$$sem^M(\Gamma, L, (\Sigma, \cM), \syntax{BasicOMS}) = (I, \Sigma', \cM')$$
-where $(\Sigma, \cM)$ give the local environment,
-$I=logic(L)$,
-and $sem^{\Sigma, \cM}_I(\syntax{BasicOMS}) = (I, \Sigma', \cM')$.  \todonote{how to write this here?}
 
-$$sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{OMSRef}) = (I, \Sigma', \Delta')$$ 
+
+$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{oms-ref, OMSRef}) = (I, \Sigma', \Delta')$$ 
 where 
 $(\Sigma, \Delta)$ give the local environment of previously declared symbols,
 $sem^T(\Gamma, L, \syntax{OMSRef}) = (I, \Sigma'', \Delta'')$,
 $\Sigma' = \Sigma \cup \Sigma''$ and 
 $\Delta' = \Delta \cup \Delta''$.
 
-$$sem^M(\Gamma, L, (\Sigma, \cM), \syntax{OMSRef}) = (I, \Sigma', \cM')$$ 
+\todonote{why allow to change the name of an OMS here?}
+
+\semdom{sem^M(\Gamma, (\Sigma, \cM), \syntax{MinimizableOMS}) = (I, \Sigma', \cM')}
+
+$$sem^M(\Gamma, (\Sigma, \cM), \syntax{BasicOMS}) = (I, \Sigma', \cM')$$
+where $(\Sigma, \cM)$ give the local environment
+and $sem^{\Sigma, \cM}_{logic(\Gamma.current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM')$.
+Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\{ M'\forget\Sigma \mid M' \in \cM'  \} \subseteq \cM$.
+
+$$sem^M(\Gamma, (\Sigma, \cM), \syntax{OMSRef}) = (I, \Sigma', \cM')$$ 
 where 
 $(\Sigma, \cM)$ give the local environment,
 $sem^M(\Gamma, L, \syntax{OMSRef}) = (I, \Sigma'', \cM'')$,
@@ -4872,22 +4881,24 @@ $\cM' = \{ M \in Mod(\Sigma') \mid M\forget\Sigma \in \cM \text{ and } M \forget
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\semdom{sem^M(\Gamma, L, (\Sigma, \cM), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
+\semdom{sem^M(\Gamma, (\Sigma, \cM), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-$$sem^M(\Gamma, L, (\Sigma, \cM), \syntax{minimize MinimizableOMS}) = (\cI,  \Sigma', \cM'')$$
-where $sem^M(\Gamma, L, (\Sigma, \cM), \syntax{MinimizableOMS}) = (\cI, \Sigma', \cM')$
+$$sem^M(\Gamma, (\Sigma, \cM), \syntax{minimize MinimizableOMS}) = (\cI,  \Sigma', \cM'')$$
+where $sem^M(\Gamma, (\Sigma, \cM), \syntax{MinimizableOMS}) = (\cI, \Sigma', \cM')$
 and\\ $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 
 Theory-level semantics for  \syntax{minimize MinimizableOMS} cannot be defined.
 
+\todonote{closed-world, free, cofree, maximize are missing}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^M(\Gamma,L,\syntax{OMS})=(\cI,\Sigma,\cM)}
-\semdom{sem^T(\Gamma, L, \syntax{OMS}) = (\cI, \Sigma, \Delta)}
+\semdom{sem^M(\Gamma,\syntax{OMS})=(\cI,\Sigma,\cM)}
+\semdom{sem^T(\Gamma,\syntax{OMS}) = (\cI, \Sigma, \Delta)}
 
 \syntax{OMS} is interpreted in a context similar to that for
 \syntax{MinimizableOMS}; the difference being that there is
@@ -4906,24 +4917,24 @@ $$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fi
 $$
 
 %Translation
-$$sem^M(\Gamma, L, \syntax{translation, OMS , Translation}) = (J,\Sigma', \cM')$$
-where  $(I,\Sigma,\cM) = sem^M(\Gamma, L, \syntax{OMS})$,
- $sem(\Gamma, L,\Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
+$$sem^M(\Gamma, \syntax{translation, OMS , Translation}) = (J,\Sigma', \cM')$$
+where  $(I,\Sigma,\cM) = sem^M(\Gamma,\syntax{OMS})$,
+ $sem(\Gamma,\Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
 and
 $\cM' = \{M \,|\, \beta_\Sigma(M\forget\sigma)\in \cM\}$
 
-$$sem^T(\Gamma, L, \syntax{translation, OMS , Translation}) = (J,\Sigma', \Delta')$$
-where $(I, \Sigma, \Delta) = sem^T(\Gamma, L, \syntax{OMS})$,
-$sem(\Gamma, L,\Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
+$$sem^T(\Gamma, \syntax{translation, OMS , Translation}) = (J,\Sigma', \Delta')$$
+where $(I, \Sigma, \Delta) = sem^T(\Gamma, \syntax{OMS})$,
+$sem(\Gamma, \Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
 and
 $\Delta' = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Delta \}$.
 It is only defined if $\syntax{OMS}$ is flattenable.
 
 %Reduction
-$$sem^M(\Gamma, L, \syntax{reduction, OMS , Reduction}) = (J,\Sigma', \cM')$$
+$$sem^M(\Gamma, \syntax{reduction, OMS , Reduction}) = (J,\Sigma', \cM')$$
 where
-$(I,\Sigma,\cM)=sem^M(\Gamma,L,\syntax{OMS})$,
-$sem(\Gamma, L, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta):I\to J, \sigma: \Sigma'\to\Phi(\Sigma))$
+$(I,\Sigma,\cM)=sem^M(\Gamma,\syntax{OMS})$,
+$sem(\Gamma,  \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta):I\to J, \sigma: \Sigma'\to\Phi(\Sigma))$
 and $\cM' = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \cM\}$. 
 
 The theory-level semantics of reductions is not defined.
@@ -4941,85 +4952,89 @@ $sem(\Sigma, \Delta, \syntax{Extraction}) = \Sigma', \Delta$
 
 %Filtering
 
-$$sem^T(\Gamma, L, \syntax{'filtering' , OMS,  Filtering}) = (I,\Sigma', \Delta') $$
+$$sem^T(\Gamma, \syntax{'filtering' , OMS,  Filtering}) = (I,\Sigma', \Delta') $$
 where \syntax{OMS} must be a flattenable OMS,
-$sem^T(\Gamma, L, \syntax{OMS}) = (I, \Sigma, \Delta)$
-and
-$sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{Filtering}) = (I,\Sigma', \Delta')$.
-
-\ednote{model-level semantics?}
+$sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \Delta)$
+and\\
+$sem^T(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (I,\Sigma', \Delta')$.
+Model-level semantics is given by the class of models of $(I,\Sigma',\Delta')$.
 
 %Union
-$$sem^T(\Gamma, L,\syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \Delta)$$
+$$sem^T(\Gamma, \syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \Delta)$$
 where 
- $sem^T(\Gamma, L, \syntax{OMS}_1) = (\cI, \Sigma_1, \Delta_1)$,
- $sem^T(\Gamma, L, \syntax{OMS}_2) = (\cI, \Sigma_2, \Delta_2)$,
-$\Sigma = \Sigma_1 \cup \Sigma_2$, 
-$\Delta = \Delta_1\cup\Delta_2$.
-\todonote{what if $\cI$ doesn't match?} This is only defined if both \syntax{OMS}$_1$ and \syntax{OMS}$_2$
-are flattenable.
-\todonote{what about ConsStrength?}
+ $sem^T(\Gamma, \syntax{OMS}_1) = (\cI_1, \Sigma_1, \Delta_1)$,
+ $sem^T(\Gamma, \syntax{OMS}_2) = (\cI_2, \Sigma_2, \Delta_2)$,\\
+ $(\cI, \rho_1=(\Phi^1,\alpha^1,\beta^1), \rho_2=(\Phi^2,\alpha^2,\beta^2)) = \cI_1 \bigcup \cI_2$,\\
+$\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
+$\Delta = \alpha^1(\Delta_1)\cup\alpha^2(\Delta_2)$.
+ This is only defined if both \syntax{OMS}$_1$ and \syntax{OMS}$_2$
+are flattenable. If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\Delta)$ must be a conservative extension
+of the appropriate strength of \syntax{OMS}$_1$.
 
-$$sem^M(\Gamma, L,\syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \cM)$$
+$$sem^M(\Gamma, \syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \cM)$$
 where 
- $sem^M(\Gamma, L, \syntax{OMS}_1) = (\cI, \Sigma_1, \cM_1)$,
- $sem^M(\Gamma, L, \syntax{OMS}_2) = (\cI, \Sigma_2, \cM_2)$,
-$\Sigma = \Sigma_1 \cup \Sigma_2$, 
-$\cM = \{ M \in \Mod^I(\Sigma) \mid M\forget{\Sigma_i} \in \cM_i, i=1,2  \}$.
+ $sem^M(\Gamma, \syntax{OMS}_1) = (\cI_1, \Sigma_1, \cM_1)$,
+ $sem^M(\Gamma, \syntax{OMS}_2) = (\cI_2, \Sigma_2, \cM_2)$,\\
+$(\cI, \rho_1=(\Phi^1,\alpha^1,\beta^1), \rho_2=(\Phi^2,\alpha^2,\beta^2)) = \cI_1 \bigcup \cI_2$,\\
+$\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
+$\cM = \{ M \in \Mod^I(\Sigma) \mid \beta^i(M\forget{\Phi^i(\Sigma_i)}) \in \cM_i, i=1,2  \}$.
+If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\cM)$ must be a conservative extension
+of the appropriate strength of \syntax{OMS}$_1$.
+
 
 %Extension
 
- $$sem^T(\Gamma, L, \syntax{extension , OMS , ExtensionOMS)}) = (I, \Sigma', \Delta')$$
+ $$sem^T(\Gamma, \syntax{extension , OMS , ExtensionOMS}) = (I, \Sigma', \Delta')$$
 
 where
-  $sem^T(\Gamma, L, \syntax{OMS}) = (I, \Sigma, \Delta)$
-  $sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{ExtensionOMS}) = (I,  \Sigma',\Delta')$.
+  $sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \Delta)$,
+  $sem^T(\Gamma, (\Sigma, \Delta), \syntax{ExtensionOMS}) = (I,  \Sigma',\Delta')$.
 
- $$sem^M(\Gamma, L, \syntax{extension , OMS , ExtensionOMS)}) = (I, \Sigma', \cM')$$
+ $$sem^M(\Gamma, \syntax{extension , OMS , ExtensionOMS)}) = (I, \Sigma', \cM')$$
 
 where
-  $sem^T(\Gamma, L, \syntax{OMS}) = (I, \Sigma, \cM)$
-  $sem^T(\Gamma, L, (\Sigma, \cM), \syntax{ExtensionOMS}) = (I,  \Sigma',\cM')$.
+  $sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \cM)$,
+  $sem^T(\Gamma, (\Sigma, \cM), \syntax{ExtensionOMS}) = (I,  \Sigma',\cM')$.
 \ednote{According to the intended semantics, extensions are defined for OMS $O_1$, $O_2$, such that $O_2$ is basic, this is however not the case in the current abstract syntax: see productions for \syntax{ExtensionOMS}}
 
 %Qualification
  
-$$sem(\Gamma, L, \syntax{qual-oms, Qualification, OMS}) = sem(\Gamma, L', \syntax{OMS})$$
+$$sem(\Gamma, \syntax{qual-oms, Qualification, OMS}) = sem(\Gamma', \syntax{OMS})$$
 
-where $sem(L, \syntax{Qualification}) = L'$. \todonote{This means that $L$ is not changed after the analysis of this OMS.}
+where $sem(\Gamma, \syntax{Qualification}) = \Gamma'$. \todonote{This means that $L$ is not changed after the analysis of this OMS. Is this obvious?}
 
 %Bridge
 
-$$sem^T(\Gamma, L, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\Delta)$$
+$$sem^T(\Gamma, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\Delta)$$
 
 where \\
-$sem^T(\Gamma, L, \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\Delta_1)$,\\
-$sem^T(\Gamma, L, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
-$sem^T(\Gamma, L, (\cI_2, \Phi(\Sigma_1), \alpha_{\Sigma_1}(\Delta_1)), \syntax{OMS}_2) = (\cI, \Sigma,\Delta)$. 
+$sem^T(\Gamma,  \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\Delta_1)$,\\
+$sem^T(\Gamma,  \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
+$sem^T(\Gamma,  (\cI_2, \Phi(\Sigma_1), \alpha_{\Sigma_1}(\Delta_1)), \syntax{OMS}_2) = (\cI, \Sigma,\Delta)$. 
 
 
-$$sem^M(\Gamma, L, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\cM)$$
+$$sem^M(\Gamma, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\cM)$$
 
 where \\
-$sem^M(\Gamma, L, \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\cM_1)$,\\
-$sem^M(\Gamma, L, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
+$sem^M(\Gamma,  \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\cM_1)$,\\
+$sem^M(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
 $\cM'_1 = \{ M \in \Mod^{I_2}(\Phi(\Sigma_1)) \mid \beta_{\Sigma_1}(M) \in \cM_1 \}$ and \\
-$sem^M(\Gamma, L, (\cI_2, \Phi(\Sigma_1), \cM'_1), \syntax{OMS}_2) = (\cI,\Sigma,\cM)$.
+$sem^M(\Gamma, (\cI_2, \Phi(\Sigma_1), \cM'_1), \syntax{OMS}_2) = (\cI,\Sigma,\cM)$.
 
 
 %Combination
-$$sem^T(\Gamma, L, \syntax{combination, Network})= (\cI,\Sigma,\Delta)$$
+$$sem^T(\Gamma, \syntax{combination, Network})= (\cI,\Sigma,\Delta)$$
 
 where 
-$sem^T(\Gamma, L, PMap, \syntax{Network}) = G$ and
+$sem^T(\Gamma,\syntax{Network}) = G$ and
 $(\Sigma, \Delta) = colimit(G)$.
 This is defined only if all ontologies in \syntax{Network} are flattenable. 
 
-$$sem^M(\Gamma, L, \syntax{combination, Network})= (\cI,\Sigma,\cM)$$
+$$sem^M(\Gamma, \syntax{combination, Network})= (\cI,\Sigma,\cM)$$
 
 where 
-$sem^M(\Gamma, L, PMap, \syntax{Network}) = G$,
-$\Sigma$ is the colimit of $G$
+$sem^M(\Gamma, \syntax{Network}) = G$,
+$\Sigma$ is the colimit of $G$ with labels restricted to signatures 
 and \\
 $\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{ is a family of models compatible with } G \}$. 
 
@@ -5032,36 +5047,37 @@ $\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma}
+\semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
 
-$$sem(\Gamma, L, \Sigma, \syntax{renaming, LogicTranslation, SymbolMapItems}) = ((\Phi, \alpha,\beta), \sigma)$$
+$$sem(\Gamma, \Sigma, \syntax{renaming, LogicTranslation, SymbolMapItems}) = ((\Phi, \alpha,\beta), \sigma)$$
 
-where \\
-$sem(\Gamma, L, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)$,\\
-$sem(\Gamma, L, \Phi(\Sigma), \syntax{SymbolMapItems}) = \sigma$.
+where $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)$ and
+$sem(\Gamma, \Phi(\Sigma), \syntax{SymbolMapItems}) = \sigma$.
+If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)}
+\semdom{sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)}
 
 $(\Phi,\alpha,\beta)$ is the institution comorphism
 named by \syntax{LogicTranslation} in the heterogenous logical environment.
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta), \sigma)}
+\semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta), \sigma)}
 
-$$sem(\Gamma, L, \Sigma, \syntax{hidden, LogicReduction, SymbolItems}) = ((\Phi,\alpha,\beta),\sigma)$$
+$$sem(\Gamma, \Sigma, \syntax{hidden, LogicReduction, SymbolItems}) = ((\Phi,\alpha,\beta),\sigma)$$
 
-were 
-$sem(\Gamma, L, \syntax{LogicReduction}) = (\Phi, \alpha,\beta)$,
-$sem(\Gamma, L, \Phi(\Sigma), SymbolItems) = \Sigma'$,
-$\sigma:\Sigma'\to\Phi(\Sigma)$ is the inclusion morphism.
+where 
+$sem(\Gamma,  \syntax{LogicReduction}) = (\Phi, \alpha,\beta)$,
+$sem(\Gamma, \Phi(\Sigma), \syntax{SymbolItems}) = \Sigma'$ and
+$\sigma:\Sigma'\to\Phi(\Sigma)$ is the inclusion morphism. If \syntax{LogicReduction} is missing, 
+it defaults to the identity morphism of the current logic of $\Gamma$.
 
 $$sem(\Gamma, L, \Sigma, \syntax{revealed, SymbolItems}) = (id_L,\sigma)$$
 where 
 $sem(\Gamma, L, \Sigma, \syntax{SymbolItems}) = \Sigma'$,
-$id_L$ is the identity comorphism on the logic of $L$,
+$id_L$ is the identity morphism on the current logic of $\Gamma$,
 and $\sigma:\Sigma'\to\Sigma$ is the inclusion.
 
 
@@ -5075,33 +5091,25 @@ named by \syntax{LogicReduction} in the heterogenous logical environment.
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, L, \Sigma, \syntax{SymbolItems}) = \Sigma'}
+\semdom{sem(\Gamma, \Sigma, \syntax{SymbolItems}) = \Sigma'}
 
-$$sem(\Gamma, L, \Sigma, \syntax{symbol-items, Symbol$_1$, $\ldots,$ Symbol$_n$}) = \Sigma'$$
+$$sem(\Gamma, \Sigma, \syntax{symbol-items, Symbol$_1$, $\ldots,$ Symbol$_n$}) = \Sigma'$$
 where $\Sigma'$ is the smallest sub-signature of $\Sigma$ containing
-$\syntax{Symbol}_1, \ldots, \syntax{Symbol}_n$.\todonote{to be made precise...}
+$sem(\Gamma, \Sigma,\syntax{Symbol}_1), \ldots, 
+sem(\Gamma,\Sigma,\syntax{Symbol}_n)$, if such a sub-signature exists and is otherwise undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(L,\Sigma,\Sigma', \syntax{SymbolMapItems})= \sigma:\Sigma\to\Sigma'}
+\semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMapItems})= \sigma:\Sigma\to\Sigma'}
 
-\todonote{this should be updated}
+ $$sem(\Gamma,\Sigma,\Sigma',\syntax{symbol-map-items, SymbolOrMap}_1, \ldots, \syntax{SymbolOrMap}_n) = \sigma$$
 
-True renamings are not possible without institutional logics,  only the presence of non-logical 
-symbols in a signature can be checked.\\
-$sem(L,\Sigma,\syntax{'symbol-map-items' } E_1 \ldots E_n)=
-\left\{\begin{array}{ll}
-\Sigma & \mbox{ if } E_1,\ldots, E_n \mbox{ are contained in }\Sigma\\
-\mbox{undefined} & \mbox{otherwise}
-\end{array}\right.$
+where 
+$\sigma = makeMorphism_{logic(\Gamma.current)}(
+  sem(\Gamma, \syntax{SymbolOrMap}_1),\ldots, sem(\Gamma, \syntax{SymbolOrMap}_n))$.
 
-%The application of a logic translation leads to a signature
-%$\Phi(\Sigma)$. 
-
-%Note that $\Phi(\Sigma)\geq\Sigma$ by the construction
-%of the Grothendieck institute.\\
-%$sem(L,\Sigma,\syntax{'logic-translation' , OMSLangTrans} )=\Phi(\Sigma)$,
-%where $sem(L,\syntax{OMSLangTrans})$ is $(\Phi,\alpha,\beta)$.
+\todonote{We need a logic-specific function that turns a symbol map into a signature morphism. Add it in the list of assumptions about 
+the heterogeneous logic env?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5115,39 +5123,39 @@ $\Delta' \subseteq \Delta$ is the minimum subset of sentences  such that $\Delta
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{Filtering}) = (I,\Sigma', \Delta')}
+\semdom{sem^T(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (I,\Sigma', \Delta')}
 
-$$sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{select, BasicOMS}) = (I,\Sigma', \Delta')$$
+$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{select, BasicOMS}) = (I,\Sigma', \Delta')$$
 
-where $sem^T(\Gamma, L, \syntax{BasicOMS}) = (I, \Sigma'', \Delta'')$
+where $sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma'', \Delta'')$
 and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
-includes $(\Sigma'',\Delta'')$. \todonote{check, make formal}
+includes $(\Sigma'',\Delta'')$. 
 
-$$sem^T(\Gamma, L, (\Sigma, \Delta), \syntax{reject, BasicOMS}) = (I,\Sigma', \Delta')$$
-where $sem^T(\Gamma, L, \syntax{BasicOMS}) = (I, \Sigma', \Delta'')$,
+$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{reject, BasicOMS}) = (I,\Sigma', \Delta')$$
+where $sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma', \Delta'')$,
 $\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
-
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})=(\Sigma',\cM')}
-$sem(\Gamma,L,(\Sigma,\cM),\syntax{[ ConsStrength ] , [ ExtensionName ] , ExtendingOMS})=
+\semdom{sem^M(\Gamma,(\Sigma,\cM),\syntax{ExtensionOMS})=(\Sigma',\cM')}
+$sem^M(\Gamma,(\Sigma,\cM),\syntax{ ConsStrength,  , ExtendingOMS})=
 (\Sigma',\cM')$\\
-where $(\Sigma',\cM')=sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtendingOMS})$
+where $(\Sigma',\cM')=sem(\Gamma,(\Sigma,\cM),\syntax{ExtendingOMS})$
 
-If \syntax{ConsStrength} is \syntax{'model-conservative'} or
-\syntax{'implied'}, the semantics is only defined if each model in
+If \syntax{ConsStrength} is \syntax{model-conservative} or
+\syntax{implied}, the semantics is only defined if each model in
 $\cM$ is the $\Sigma$-reduct of some model in $\cM'$. 
-In case that \syntax{ConsStrength} is \syntax{'implied'},
-it is furthermore required that $\Sigma=\Sigma'$. If \syntax{ConsStrength} is \syntax{'consequence-conservative'}, the semantics is only defined if for each
+In case that \syntax{ConsStrength} is \syntax{implied},
+it is furthermore required that $\Sigma=\Sigma'$. 
+If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is only defined if for each
 $\Sigma$-sentence $\varphi$, $\cM'\models\varphi$ implies $\cM\models\varphi$.
 % If
 %\syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
 %defined if each model in $\cM$ is the $\Sigma$-reduct of a model
 %in $\cM'$ that is unique up to isomorphism.  
 If
-\syntax{ConsStrength} is \syntax{'definitional'}, the semantics is only
+\syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
 model in $\cM'$.
 
@@ -5165,22 +5173,21 @@ $$\Sigma'= \begin{cases}  \Sigma \cap sem(\syntax{InterfaceSignature}) &\text{ i
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,L,\syntax{OMSDefn})=(\Gamma',L)}
+\semdom{sem(\Gamma,\syntax{OMSDefn})=\Gamma'}
 
 An OMS definition extends the global environment:\\
 $\begin{array}{l}
-sem(\Gamma,L,\syntax{oms-defn , OMSName , [ ConsStrength ] , OMS})\\
-=(\Gamma[\syntax{OMSName}\mapsto sem(\Gamma,L,\syntax{OMS})],L)
-\end{array}$\todonote{Should we allow for overriding existing OMS
-definitions? Or should \syntax{OMSName} be new?}
+sem(\Gamma,\syntax{oms-defn , OMSName , ConsStrength , OMS})\\
+=(\Gamma[\syntax{OMSName}\mapsto sem(\Gamma,\syntax{OMS})],L)
+\end{array}$
 
-If \syntax{ConsStrength} is \syntax{'conservative'}, the semantics is only
-defined if $sem(\Gamma,L,\syntax{OMS})\not=\emptyset$.
+If \syntax{ConsStrength} is \syntax{conservative}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})\not=\emptyset$.
 %If \syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
-%defined if $sem(\Gamma,L,\syntax{OMS})$ consist of exactly one isomorphism
+%defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
 %class.\todonote{Here, we need model morphisms!}
-If \syntax{ConsStrength} is \syntax{'conservative'}, the semantics is only
-defined if $sem(\Gamma,L,\syntax{OMS})$ is a singleton.
+If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.\todonote{here you mean definitional? changed!}
 
 \semdom{sem^M(\syntax{oms-ref , OMSRef})= \Gamma(\syntax{OMSRef})}
 
@@ -5214,11 +5221,11 @@ enclosing DOL construct is undefined.
 $L$ is the institute from the heterogeneous logical environment named by
 \syntax{LogicRef}.
 
-\semdom{sem(L,\syntax{OMSLangTrans})=\rho}
-$sem(L,\syntax{named-trans , OMSLangTransRef})=\rho$ where $\rho$ is
+\semdom{sem(\Gamma,\syntax{OMSLangTrans})=\rho}
+$sem(\Gamma,\syntax{named-trans , OMSLangTransRef})=\rho$ where $\rho$ is
 the institute comorphism from the heterogeneous logical environment
 named by \syntax{OMSLangTransRef}.  This is defined only if the
-domain of $\rho$ is $L$.
+domain of $\rho$ is the current logic of $\Gamma$.
 
 %$sem(L,\syntax{'qual-trans' , OMSLangTransRef } LR_1\ LR_2)=\rho$
 %where $\rho$ is the institute comorphism from the heterogeneous logical
@@ -5472,25 +5479,17 @@ and $\cM_2 \subseteq \cM_1$.
 %%%%%%%%%%%%%%%%%%%%
 
 
-\semdom{sem(\Gamma,L,\syntax{EquivDefn})=(\Gamma',L)}
+\semdom{sem(\Gamma,\syntax{EquivDefn})=\Gamma'}
 
-\todonote{in the WOMO paper the OMS can be heterogeneous}
+$$sem(\Gamma,L,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\Gamma'$$
 
-$sem(\Gamma,L,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\\
-(\Gamma[\syntax{EquivName}\mapsto (\Sigma_1,\Sigma_2,\Sigma_3)],L)
-$
-where 
-\begin{itemize}
-\item
-$(\Sigma_1,\cM_1)=sem^M(\Gamma,L,O_1)$;
-\item
-$(\Sigma_2,\cM_2)=sem^M(\Gamma,L,O_2)$;
-\item
-$(\Sigma_3,\cM_3)=sem^M(\Gamma,L,O_3)$;
-\item the semantics is defined only if for $i=1,2$,
-  $\Sigma_i\leq\Sigma_3$ and each model in $\cM_i$ can be uniquely
- expanded to a model in $\cM_3$.
-\end{itemize}
+where \\
+$sem(\Gamma, O_1) = (I_1,\Sigma_1,\cM_1)$,\\
+$sem(\Gamma, O_2) = (I_2,\Sigma_2,\cM_2)$,\\
+$(I, \rho_1 = (\Phi^1,\alpha^1,\beta^1),\rho_2 = (\Phi^2,\alpha^2,\beta^2)) = I_1 \bigcup I_2$,\\
+$sem(\Gamma, (\Phi^1(\Sigma_1)\cup\Phi^2(\Sigma_2), \emptyset), O_3) = (I,\Sigma,\cM)$,\\
+such that for each $M_i\in\cM_i$, there exists a unique model $M\in \cM$ such that $\beta^i_{\Sigma_i}(M\forget{\Phi^i(\Sigma_i)}) = M_i$, for $i=1,2$ and\\
+$\Gamma' = \Gamma[\syntax{EquivName} \mapsto((I_1,\Sigma_1,\cM_1),(I_2,\Sigma_2,\cM_2),(I,\Sigma,\cM))]$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \semdom{sem(\Gamma, L, \syntax{ModuleRelDefn}) = (\Gamma', L')}
