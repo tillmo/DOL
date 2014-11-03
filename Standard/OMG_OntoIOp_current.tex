@@ -4198,61 +4198,10 @@ semantics in the standard document proper, even though the semantics
 is quite technical and therefore has a more limited readership than
 the other the chapters of this standard.
 
-\todonote{intro to semantics, informal overview}
-
-We now specify the theoretical foundations of the semantics of DOL. Since DOL involves 
-heterogeneous OMS, the semantics is parameterized over an arbitrary but fixed \emph{heterogeneous 
-environment}.  This notion is defined below and it corresponds to a graph of OMS languages and OMS 
-language translations and reductions. Below, also notions of \emph{institution} and institution 
-\emph{comorphism} and \emph{morphism} are defined, which provide formalizations of the terms 
+We now specify the theoretical foundations of the semantics of DOL.
+The notions of \emph{institution} and institution 
+\emph{comorphism} and \emph{morphism} are introduced, which provide formalizations of the terms 
 \termref{logic}, resp.\ \termref{logic translation}, resp.\  \termref{logic reduction}. 
-
-%The notion of institute deliberately avoids the use of category theory
-%in order to keep the mathematical background simple.  Most of the
-%abstract syntax can be interpreted using institutes, but not all of
-%it. 
-%Some parts (namely symbol maps, \syntax{combination}s
-% and the construct \syntax{monomorphic};
-%these are marked in {\institutionsOnly bold italics}) of the abstract
-%syntax need a more sophisticated and more general category-theoretic
-%foundation in terms of institutions [\cite{Institutions}]. 
-%More
-%specifically, the notion of institute needs to be replaced by that of
-%institutional logic [\cite{Meseguer89}], and analogously for
-%comorphisms [\cite{Comorphisms}].
-% and the Grothendieck construction [\cite{GrothendieckInstitutions}].
-
-Details of the mapping of the abstract syntax into the semantic domains given by the heterogeneous 
-logic environment will be provided later.
-
-%An extension of this semantic background to non-monotonic logics,
-%using the theory of [\cite{ArieliAvron2000}], needs still to be worked out.
-
-% \begin{tikzpicture}[%
-% hookarrow/.style={right hook->},
-% on grid,
-% node distance=7ex and 10em
-% ]
-%   \node (ml) {institute};
-%   \node[align=center] (l) [below=of ml] {``non-monotonic\\ loqique''};
-%   \node (i) [right=of ml] {institution};
-%   \node[align=center] (nmi) [right=of l] {``non-monotonic\\ institution''};
-
-%   \draw[hookarrow] (ml) to (i);
-%   \draw[hookarrow] (ml) to (l);
-%   \draw[hookarrow] (i) to (nmi);
-%   \draw[hookarrow] (l) to (nmi);
-% \end{tikzpicture}
-
-% \[
-% \begin{diagram}
-% \text{monotone institute} & \rInto & \text{institution}                  \\
-% \dInto                    &               & \dInto                             \\
-% \text{institute}          & \rInto        & \text{``non-monotonic institution''} \\
-% \end{diagram}
-% \]
-
-
 
 We recall the notion of satisfaction system \cite{carnielli2008analysis}, called `rooms' in the 
 terminology of \cite{CharPar}. They capture the Tarskian notion of satisfaction of a
@@ -4470,10 +4419,63 @@ $$
 holds, called the \defsty{satisfaction condition}.
 \end{definition}
 
-\todonote{Introduce exactness}
+Colimits are a categorical concept providing means of
+combining interconnected objects consistently to this interconnection.
+They can be employed for constructing larger theories from already available 
+smaller ones, see \cite{GoguenBurstall92}. 
 
+A \emph{network}\footnote{A network is called a diagram in category theory texts. We prefer this terminology to disambiguate 
+from UML diagrams.} in a category $C$ is 
+a functor $D:G\to C$, where $G$ is a small category\footnote{That is, it has a set of objects and sets of morphisms between them
+instead of classes}, and can be thought of as the shape of the graph of
+interconnections between the objects of $C$ selected by the functor $D$. A \emph{cocone} of
+a network $D:G\to C$ consists of an object $c$ of $C$ and a family of
+morphisms $\alpha_i\map{D(i)}{c}$, for each object $i$ of $G$, such that for
+each edge of the network, $e\map{i}{i'}$ we have that 
+$D(e);\alpha_{i'} = \alpha_{i}$. 
+A \emph{colimiting cocone} (or colimit) $(c, \{\alpha_i\}_{i\in|G|})$ can be
+intuitively understood as a minimal cocone, i.e. has the property that for any 
+cocone $(d, \{\beta_i\}_{i\in |G|})$ there exists a unique morphism 
+$\gamma\map{c}{d}$ such that $\alpha_i;\gamma = \beta_i$. By dropping the 
+uniqueness condition and requiring only that a morphism $\gamma$ should exist,
+we obtain a \emph{weak} colimit. 
 
-\sclause{Direct semantics of DOL language constructs}\label{c:direct-sematics}
+When $G$ is the category $\xymatrix{\bullet & \bullet \ar[l] \ar[r]
+& \bullet }$ with 3 objects and 2 non-identity arrows, the $G$-colimits are
+called  \emph{pushouts}.  
+
+A major property of colimits of specifications is \emph{amalgamation} (called `exactness' in \cite{Diaconescu1993}). It can be intuitively explained as 
+stating that models of given
+specifications can be combined to yield a uniquely determined model of
+a colimit specification, provided that the original models coincide on
+common components. Amalgamation is a common technical assumption in the 
+study of specification semantics
+\cite{STbook}.
+
+In the sequel, fix an arbitrary institution
+$I=(\Sign,\Sen,\Mod,\models)$.  
+
+\begin{definition}
+Given a network $D\map{J}{\Sign^I}$, 
+a family of models $\mathcal{M} = \{M_p\}_{j\in |J|}$ is
+\emph{consistent with} $D$ (or sometimes compatible with $D$) 
+if for each node $p$ of $D$, $M_p \in Mod(D(p))$ and
+for each edge $e:p\rightarrow q$, $M_p = M_q\forget{D(e)}$.
+  A cocone
+$(\Sigma,(\mu_j)_{j\in|J|})$ over the network $D\map{J}{\Sign^I}$ is
+called \emph{weakly amalgamable} if it is mapped to a weak limit by $\Mod$.
+For models, this means that for each $D$-compatible family of
+models $(M_j)_{j\in|J|}$, there is a $\Sigma$-model $M$ with
+$M\forget{\mu_j}=M_j$ ($j\in|J|$), and similarly for model morphisms.
+ If this model is unique, the cocone
+is called \emph{amalgamable}. 
+$I$ (or $\Mod$) admits \emph{(finite) (weak)
+amalgamation} if (finite) colimit cocones are (weakly) amalgamable.
+Finally, $I$ is called \emph{(weakly) semi-exact} if 
+it has pushouts and admits (weak) amalgamation for these.
+\end{definition}
+
+\sclause{Semantics of DOL language constructs}\label{c:direct-sematics}
 
 The semantics of DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
 environment.  The semantic domains are based on this heterogeneous logical environment. 
@@ -4521,7 +4523,7 @@ OMS, inherited from the OMS language. For a basic OMS $O$ in a
 language $L$ based on an institution $\I$ we denote 
 by $sem^T_L(O)$ the theory-level language-specific semantics of $O$
 and by 
-$sem^M_L(O)$, the model-level language-specific semantics of $O$
+$sem^M_L(O)$, the model-level language-specific semantics of $O$.
 
 %We  assume a \emph{language-specific semantics} of basic
 %OMS, inherited from the OMS language.  
