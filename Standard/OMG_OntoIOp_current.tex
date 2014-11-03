@@ -4929,8 +4929,12 @@ and $\cM' = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \cM\}$.
 The theory-level semantics of reductions is not defined.
 
 %Module Extract
-\semdom{sem^T(\syntax{'module extract', OMS, Extraction}) = TODO}
-\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = TODO}
+\semdom{sem^T(\Gamma, L, \syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta')}
+
+Let $(I, \Sigma, \Delta) = sem^T(\Gamma, L, \syntax{OMS})$.   
+$sem(\Sigma, \Delta, \syntax{Extraction}) = \Sigma', \Delta$
+
+\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta)}
 
 %Approximation
 \semdom{sem^M(\syntax{'approximation', OMS , Approximation} =   TODO }
@@ -5101,11 +5105,13 @@ $sem(L,\Sigma,\syntax{'symbol-map-items' } E_1 \ldots E_n)=
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(Extraction)}
+\semdom{sem^T(\Sigma, \Delta, \syntax{`extraction' , QualInterfaceSignature})= (\Sigma', \Delta')}
+$\Sigma' = sem(\Sigma, \syntax{QualInterfaceSignature})$
+$\Delta' \subseteq \Delta$ is the minimum subset of sentences  such that $\Delta \setminus \Delta' \equiv_{\Sigma'} (\Sigma' , \emptyset)$
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(Approximation)}
+\semdom{sem(\syntax{Approximation})}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5147,7 +5153,15 @@ model in $\cM'$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\syntax{QualInterfaceSignature})}
+\semdom{sem( \Sigma, \syntax{QualInterfaceSignature}) = \Sigma'}
+
+$sem(\Sigma, \syntax{ Qual, InterfaceSignature}) = \Sigma'$, 
+where 
+%
+$$\Sigma'= \begin{cases}  \Sigma \cap sem(\syntax{InterfaceSignature}) &\text{ if } \quad \syntax{Qual = `keep-signature'}\\
+\Sigma \setminus   sem(\syntax{InterfaceSignature})  & \text{ if } \quad \syntax{Qual = `remove-signature'}
+\end{cases}$$
+%$sem(\Sigma, \syntax{`remove-signature', InterfaceSignature})$
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
