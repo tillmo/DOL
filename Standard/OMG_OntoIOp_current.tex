@@ -4744,25 +4744,29 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 \ssclause{Semantics of networks}
 
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
-and edges as specified as \syntax{NetworkElement}s, which can be OMS, OMS mappings,
-or OMS networks. The nodes and edges given by \syntax{ExcludeExtensions} are removed from
+and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings,
+or OMS networks. The nodes and edges given by \syntax{ExcludeExtensions} are then removed from
 the graph of the network. The theory-level semantics of a network is the labeling of the 
 underlying graph of the network with theories in the nodes and with theory morphisms in the edges.
 The model-level semantics of a network is a family of models \emph{compatible} with the
 graph of the network, i.e. for each node $n$ labeled with $(I_n, \Sigma_n, \cM_n)$ we have a model
 $M_n$ in $\cM_n$ such that for each edge $e:m \rightarrow n$ labeled with a 
 morphism $\sigma: \Sigma_m \rightarrow \Sigma_n$, we have that $M_n\forget \sigma = M_m$.
+Nodes and morphisms are also labeled with \syntax{IRI}s, such that they can be uniquely identified.
  
 We are going to make use of the following notations. If $G$ is a graph, 
 the operation $insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$ is defined as follows:
  \begin{itemize}
     \item if \syntax{IRI} is an OMS in $\Gamma$, then
-                 a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
+                 a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
    \item if \syntax{IRI} is an OMS mapping in $\Gamma$, then $\Gamma(\syntax{IRI})$ can be a theory morphism, or a W-shaped
                graph if \syntax{IRI} is an alignment (see the semantics of alignments below).  In the first case, we can construct a graph
                with two nodes and one edge between them, and label the nodes with the source and target \syntax{OMS} of the morphism
-                and the edge with the morphism, respectively. This allows us to uniformly treat $\Gamma(\syntax{IRI})$ as a graph $G'$.
+                and the edge with the morphism, respectively.
+               \footnote{We make the simplifying assumption that the source and target OMS of a mapping can be identified by some IRIs. The
+                 way this identification is done can be specific to each DOL-compliant tool.} 
+                 This allows us to uniformly treat $\Gamma(\syntax{IRI})$ as a graph $G'$.
                  $G$ is then extended with the nodes and edges of $G'$ that are not already present in $G$.               
    \item if \syntax{IRI} is a network in $\Gamma$, then the result is the union of $G$ with the graph of $\Gamma(\syntax{IRI})$.
  \end{itemize}
@@ -4777,40 +4781,38 @@ Similarly, the operation $remove(\Gamma, G, \syntax{Id})$ is defined as follows:
  \end{itemize}
 
 
-\semdom{sem(\Gamma, L, PMap, \syntax{NetworkDefn}) = (\Gamma', L)}
+\semdom{sem(\Gamma, \syntax{NetworkDefn}) = \Gamma'}
 
-$$sem(\Gamma, L, PMap, \syntax{network-defn, NetworkName , [ ConsStrength ] , Network}) = (\Gamma', L)$$
+$$sem(\Gamma, \syntax{network-defn, NetworkName , [ ConsStrength ] , Network}) = \Gamma'$$
 
-where $\Gamma' = \Gamma[\syntax{NetworkName} \mapsto sem(\Gamma, L, PMap, \syntax{Network})]$.
+where $\Gamma' = \Gamma[\syntax{NetworkName} \mapsto sem(\Gamma, \syntax{Network})]$.
 \todonote{what does conservativity mean in this context?}
 
-\semdom{sem(\Gamma, L, PMap, \syntax{Network}) = G}
+\semdom{sem(\Gamma, \syntax{Network}) = G}
 
-$$sem(\Gamma, L, PMap, \syntax{network, NetworkElements , ExcludeExtensions})= G'$$
+$$sem(\Gamma, \syntax{network, NetworkElements , ExcludeExtensions})= G'$$
 
-where\\
-$ sem(\Gamma, L, PMap, \syntax{NetworkElements}) = G''$ and\\
-$sem(\Gamma, L, PMap, G'', \syntax{EXcludeExtensions}) = G'$.
+where $sem(\Gamma, \syntax{NetworkElements}) = G$ and $sem(\Gamma, G, \syntax{ExcludeExtensions}) = G'$.
 
-\semdom{sem(\Gamma, L, PMap, \syntax{NetworkElements}) = G'}
+\semdom{sem(\Gamma, \syntax{NetworkElements}) = G'}
 
-$$sem(\Gamma, L, PMap, \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
+$$sem(\Gamma, \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
 
 where \\
- $G_1 = sem(\Gamma, L, PMap, G_\emptyset, \syntax{NetworkElement}_1)$\\
- $G_2 = sem(\Gamma, L, PMap, G_1, \syntax{NetworkElement}_2)$\\
+ $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
+ $G_2 = sem(\Gamma, G_1, \syntax{NetworkElement}_2)$\\
  $\ldots$\\
- $G' = sem(\Gamma, L, PMap, G_{n-1}, \syntax{NetworkElement}_n)$
+ $G' = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$
 
-\semdom{sem(\Gamma, L, PMap, G, \syntax{NetworkElement}) = G'}
+\semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
-$$sem(\Gamma, L, PMap, G, \syntax{network-element , Id , IRI}) = G'$$
+$$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = G'$$
 
 where $G' = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$.
 
-\semdom{sem(\Gamma, L, PMap, G, \syntax{ExcludeExtensions})= G'}
+\semdom{sem(\Gamma, G, \syntax{ExcludeExtensions})= G'}
 
-$$sem(\Gamma, L, PMap, G, \syntax{exclude-imports, IRI$_1, \ldots,$ IRI$_n$}) = G'$$
+$$sem(\Gamma, G, \syntax{exclude-imports, IRI$_1, \ldots,$ IRI$_n$}) = G'$$
 
 where\\
  $G_1 = remove(\Gamma, G, \syntax{IRI}_1)$\\
