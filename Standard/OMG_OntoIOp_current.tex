@@ -4237,9 +4237,23 @@ The notions of \emph{institution} and institution
 \emph{comorphism} and \emph{morphism} are introduced, which provide formalizations of the terms 
 \termref{logic}, resp.\ \termref{logic translation}, resp.\  \termref{logic reduction}. 
 
-We recall the notion of satisfaction system \cite{carnielli2008analysis}, called `rooms' in the 
-terminology of \cite{CharPar}. They capture the Tarskian notion of satisfaction of a
-sentence in a model. %For the semantics of minimization, we assume a pre-order on models.
+Since DOL covers OMS written in one or several logical systems, the
+DOL semantics needs to clarify the notion of logical
+system. Traditionally, logicians have studied abstract logical systems
+as sets of sentences equipped with an entailment relation
+$\vdash$. Such an entailment relation can be generated in two ways:
+either via a proof system, or as the logical consequence relation for
+some model theory.  We here follow the model-theoretic approach, since
+this is needed for many of the DOL constructs, and moreover, ontology,
+modeling and specification languages like OWL, Common Logic, or \CASL
+come with a model-theoretic semantics, or (like UML class diagrams)
+can be equipped with one.
+
+Hence, we recall the notion of satisfaction system
+\cite{carnielli2008analysis}, called `rooms' in the terminology of
+\cite{CharPar}. They capture the Tarskian notion of satisfaction of a
+sentence in a model in an abstract way. 
+%For the semantics of minimization, we assume a pre-order on models.
 
 \begin{definition}\label{def:room}
 A triple $\cR=(Sen,{\cM,\models)}$  is called a  \defsty{satisfaction system}, or \defsty{room}, if $\cR$  consists of
@@ -4269,6 +4283,9 @@ concepts and definitions found in logics, e.g.\ the notion of a conservative ext
 \emph{vocabulary} or \emph{signature} $\Sigma$ \label{vocabulary} used in sentences.  Signatures 
 can be extended with new non-logical symbols, or some of these symbols can be renamed; abstractly, 
 this is captured using signature morphisms. \todonote{Motivate morphisms between models.}
+This leads to the notion of \emph{institution}. An institution
+is nothing more than a family of satisfaction systems, indexed by
+signatures, and linked coherently by signature morphisms.
 
 
 \begin{definition}\label{def:inst} An
@@ -4547,10 +4564,9 @@ from $\emptyset$ to any signature of the institution. Moreover we assume the exi
 error logic in the graph, and a partial union operation on logics, denoted $\bigcup$: 
 $L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined.
 
-{\color{blue}
 We assume that for each institution, there exist (possibly partial) union and difference operations on signatures  
 Some of the comorphisms are marked as default translations.
-}\ednote{Till: provide axioms for difference operation}
+\ednote{Till: provide axioms for difference operation}
 
 This concludes the definition of heterogeneous logical environment and the assumptions made about it.
 
