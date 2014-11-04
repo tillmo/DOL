@@ -1,0 +1,96 @@
+<CSMOF:Metamodel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:CSMOF="urn:CSMOF.ecore" xsi:schemaLocation="urn:CSMOF.ecore ../metamodel/CSMOF.ecore" name="EBNF"> 
+<element xsi:type="CSMOF:Class" name="%prefix("/>
+<element xsi:type="CSMOF:Class" name=")%"/>
+<element xsi:type="CSMOF:Class" name=":" super="BoundPrefix"/>
+<element xsi:type="CSMOF:Class" name="Prefix" super="BoundPrefix"/>
+<element xsi:type="CSMOF:Class" name="&lt;"/>
+<element xsi:type="CSMOF:Class" name="FullIRI"/>
+<element xsi:type="CSMOF:Class" name=">"/>
+<element xsi:type="CSMOF:Class" name="separators"/>
+<element xsi:type="CSMOF:Class" name="String"/>
+<element xsi:type="CSMOF:Class" name="String"/>
+<element xsi:type="CSMOF:Class" name="="/>
+<element xsi:type="CSMOF:Class" name="ConsStrength"/>
+<element xsi:type="CSMOF:Class" name="network" super="NetworkKeyword"/>
+<element xsi:type="CSMOF:Class" name="IRI" super="NetworkName OMSOrMappingorNetworkRef"/>
+<element xsi:type="CSMOF:Class" name=","/>
+<element xsi:type="CSMOF:Class" name="NetworkElement"/>
+<element xsi:type="CSMOF:Class" name=":" super="BoundPrefix"/>
+<element xsi:type="CSMOF:Class" name="excluding"/>
+<element xsi:type="CSMOF:Class" name="ExtensionRef"/>
+<element xsi:type="CSMOF:Class" name=","/>
+<element xsi:type="CSMOF:Class" name="ExtensionRef"/>
+<element xsi:type="CSMOF:Class" name="IRI" super="NetworkName OMSOrMappingorNetworkRef"/>
+<element xsi:type="CSMOF:Class" name="Letter"/>
+<element xsi:type="CSMOF:Class" name="LetterOrDigit"/>
+<element xsi:type="CSMOF:Class" name="PrefixMap" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="%prefix(StarPrefixBinding)%"  super="PrefixMap">
+	<ownedAttribute name="%prefix(StarPrefixBinding)%.property" type="%prefix("/>
+	<ownedAttribute lower="0" upper="-1" name="%prefix(StarPrefixBinding)%.property" type="PrefixBinding"/>
+	<ownedAttribute name="%prefix(StarPrefixBinding)%.property" type=")%"/>
+</element>
+<element xsi:type="CSMOF:Class" name="PrefixBinding" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="BoundPrefixIRIBoundToPrefixOptionSeparators"  super="PrefixBinding">
+	<ownedAttribute name="BoundPrefixIRIBoundToPrefixOptionSeparators.property" type="BoundPrefix"/>
+	<ownedAttribute name="BoundPrefixIRIBoundToPrefixOptionSeparators.property" type="IRIBoundToPrefix"/>
+	<ownedAttribute lower="0" upper="1" name="BoundPrefixIRIBoundToPrefixOptionSeparators.property" type="Separators"/>
+</element>
+<element xsi:type="CSMOF:Class" name="BoundPrefix" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="IRIBoundToPrefix" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="&lt;FullIRI>"  super="IRIBoundToPrefix">
+	<ownedAttribute name="&lt;FullIRI>.property" type="<"/>
+	<ownedAttribute name="&lt;FullIRI>.property" type="FullIRI"/>
+	<ownedAttribute name="&lt;FullIRI>.property" type=">"/>
+</element>
+<element xsi:type="CSMOF:Class" name="<"/>
+<element xsi:type="CSMOF:Class" name="Separators" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="separatorsStringString"  super="Separators">
+	<ownedAttribute name="separatorsStringString.property" type="separators"/>
+	<ownedAttribute name="separatorsStringString.property" type="String"/>
+	<ownedAttribute name="separatorsStringString.property" type="String"/>
+</element>
+<element xsi:type="CSMOF:Class" name="NetworkDefn" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="NetworkKeywordNetworkName=OptionConsStrengthNetwork"  super="NetworkDefn">
+	<ownedAttribute name="NetworkKeywordNetworkName=OptionConsStrengthNetwork.property" type="NetworkKeyword"/>
+	<ownedAttribute name="NetworkKeywordNetworkName=OptionConsStrengthNetwork.property" type="NetworkName"/>
+	<ownedAttribute name="NetworkKeywordNetworkName=OptionConsStrengthNetwork.property" type="="/>
+	<ownedAttribute lower="0" upper="1" name="NetworkKeywordNetworkName=OptionConsStrengthNetwork.property" type="ConsStrength"/>
+	<ownedAttribute name="NetworkKeywordNetworkName=OptionConsStrengthNetwork.property" type="Network"/>
+</element>
+<element xsi:type="CSMOF:Class" name="NetworkKeyword" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="NetworkName" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="Network" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="NetworkElementsExcludeExtensions"  super="Network">
+	<ownedAttribute name="NetworkElementsExcludeExtensions.property" type="NetworkElements"/>
+	<ownedAttribute name="NetworkElementsExcludeExtensions.property" type="ExcludeExtensions"/>
+</element>
+<element xsi:type="CSMOF:Class" name="NetworkElements" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="NetworkElementStar,NetworkElement"  super="NetworkElements">
+	<ownedAttribute name="NetworkElementStar,NetworkElement.property" type="NetworkElement"/>
+	<ownedAttribute lower="0" upper="-1" name="NetworkElementStar,NetworkElement.property" type="ForgeStar"/>
+</element>
+<element xsi:type="CSMOF:Class" name="ForgeStar" >
+	<ownedAttribute name="ForgeStar.property" type=","/>
+	<ownedAttribute name="ForgeStar.property" type="NetworkElement"/>
+</element>
+<element xsi:type="CSMOF:Class" name="OptionId:OMSOrMappingorNetworkRef"  super="NetworkElement">
+	<ownedAttribute lower="0" upper="1" name="OptionId:OMSOrMappingorNetworkRef.property" type="ForgeOpt"/>
+	<ownedAttribute name="OptionId:OMSOrMappingorNetworkRef.property" type="OMSOrMappingorNetworkRef"/>
+</element>
+<element xsi:type="CSMOF:Class" name="ForgeOpt" >
+	<ownedAttribute name="ForgeOpt.property" type="Id"/>
+	<ownedAttribute name="ForgeOpt.property" type=":"/>
+</element>
+<element xsi:type="CSMOF:Class" name="ExcludeExtensions" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="excludingExtensionRefStar,ExtensionRef"  super="ExcludeExtensions">
+	<ownedAttribute name="excludingExtensionRefStar,ExtensionRef.property" type="excluding"/>
+	<ownedAttribute name="excludingExtensionRefStar,ExtensionRef.property" type="ExtensionRef"/>
+	<ownedAttribute lower="0" upper="-1" name="excludingExtensionRefStar,ExtensionRef.property" type="ForgeStar"/>
+</element>
+<element xsi:type="CSMOF:Class" name="OMSOrMappingorNetworkRef" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="Id" isAbstract="true"/>
+<element xsi:type="CSMOF:Class" name="LetterStarLetterOrDigit"  super="Id">
+	<ownedAttribute name="LetterStarLetterOrDigit.property" type="Letter"/>
+	<ownedAttribute lower="0" upper="-1" name="LetterStarLetterOrDigit.property" type="LetterOrDigit"/>
+</element>
+</CSMOF:Metamodel>
