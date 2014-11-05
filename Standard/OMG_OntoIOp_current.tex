@@ -4962,12 +4962,13 @@ and $\cM' = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \cM\}$.
 The theory-level semantics of reductions is not defined.
 
 %Module Extract
-\semdom{sem^T(\Gamma, L, \syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta')}
-
-Let $(I, \Sigma, \Delta) = sem^T(\Gamma, L, \syntax{OMS})$.   
-$sem(\Sigma, \Delta, \syntax{Extraction}) = \Sigma', \Delta$
-
-\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta)}
+$$sem^T(\Gamma, \Sigma , \syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta')$$
+where \syntax{OMS} must be a flattenable OMS, 
+$$sem^T(\Gamma,  \syntax{OMS}) = (I, \Sigma, \Delta) \quad \text{ and } \quad 
+sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})=(I, \Sigma', \Delta).$$  
+Model level semantics are given by the class of models of $(I, \Sigma', \Delta')$.
+%
+%\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta)}
 
 %Approximation
 \semdom{sem^M(\syntax{'approximation', OMS , Approximation} =   TODO }
@@ -5135,10 +5136,14 @@ the heterogeneous logic env?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Sigma, \Delta, \syntax{`extraction' , QualInterfaceSignature})= (\Sigma', \Delta')}
-$\Sigma' = sem(\Sigma, \syntax{QualInterfaceSignature})$
-$\Delta' \subseteq \Delta$ is the minimum subset of sentences  such that $\Delta \setminus \Delta' \equiv_{\Sigma'} (\Sigma' , \emptyset)$
+\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})= (I, \Sigma', \Delta')}
 
+$$sem(\Gamma, \Sigma, \Delta, \syntax{'extraction' , Qual, InterfaceSignature})= (\Sigma', \Delta')$$ 
+%
+where $\Sigma'' = sem(\Sigma, \syntax{Qual}, \syntax{InterfaceSignature})$ and 
+ $(\Sigma', \Delta')$  is the smallest  sub-theory of $(\Sigma, \Delta)$ such that % $\Sigma'' \subseteq \Sigma'$ and 
+  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
+The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\syntax{Approximation})}
@@ -5183,13 +5188,13 @@ model in $\cM'$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem( \Sigma, \syntax{QualInterfaceSignature}) = \Sigma'}
+\semdom{sem( \Gamma, \Sigma, \syntax{QualInterfaceSignature}) = \Sigma'}
 
-$sem(\Sigma, \syntax{ Qual, InterfaceSignature}) = \Sigma'$, 
+$sem(\Gamma, \Sigma, \syntax{ Qual, SymbolItems}) = \Sigma'$, 
 where 
 %
-$$\Sigma'= \begin{cases}  \Sigma \cap sem(\syntax{InterfaceSignature}) &\text{ if } \quad \syntax{Qual = `keep-signature'}\\
-\Sigma \setminus   sem(\syntax{InterfaceSignature})  & \text{ if } \quad \syntax{Qual = `remove-signature'}
+$$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, \syntax{SymbolItems}) &\text{ if } \quad \syntax{Qual = 'keep-signature'}\\
+\Sigma \setminus   sem(\Gamma, \Sigma, \syntax{SymbolItems})  & \text{ if } \quad \syntax{Qual = 'remove-signature'}
 \end{cases}$$
 %$sem(\Sigma, \syntax{`remove-signature', InterfaceSignature})$
 
