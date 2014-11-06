@@ -5477,7 +5477,21 @@ $\cR^{-1}$ is a partial function mapping $\Mod^{\cI_2}(\Sigma_2)$-models to $\Mo
 
 Similarly, for a refinement between networks we store the graph of the network before and after refinement.
 A refinement model in such case is a class of pairs of families of models compatible with the two networks. By
-a slight abuse of notation, we will denote such models also by $\cR$.
+a slight abuse of notation, we will denote such models also by $\cR$. 
+Given two networks $G_1$ and $G_2$, a \emph{network morphisms} 
+$\sigma : G_1\to G_2$ is a 
+functor $\sigma^G: Shape(G_1)\to Shape(G_2)$ 
+together with a natural transformation $\sigma^M$ such that
+for each node $N_1$ in $G_1$ labeled with $(\cI_1, \Sigma_1, \cM_1)$
+such that $\sigma^G(N_1)$ is a node $N_2$ labeled with $(\cI_2,\Sigma_2,\cM_2)$ in $G_2$,
+we have a signature morphism $(\rho,\sigma^M_{N_1}) : (\cI_1, \Sigma_1) \to (\cI_2, \Sigma_2)$,
+where $\rho = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorphism between the logics of the two nodes and
+$\sigma^M_{N_1} : \Phi(\Sigma_1) \to \Sigma_2$ is a signature morphism,
+such that $\beta_{\Sigma_1}(M_2\forget{\sigma^M_{N_1}}) \in \cM_1$ for each $M_2 \in  \cM_2$.
+
+Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$, 
+we define $F\forget\sigma$ as the family of models $\{M_i\}_{i\in Nodes(G_1)}$ such that
+$M_i = F_{G(i)}\forget{\sigma^M_{N_i}}$, for each $i\in Nodes(G_1)$.
 
 $$sem(\Gamma, \syntax{ref-oms, OMS}) = ((\cI,\Sigma),(\cI,\Sigma),\cR)$$
 
@@ -5522,15 +5536,15 @@ $$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = ((G''_1,G_2),\
 where\\
  $sem^M(\Gamma,  \syntax{Network}) = G_1$, $\cR_1$ is the class of families of models compatible with $G$,\\
  $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\cR_2)$,\\ 
- $sem(\Gamma, (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = \sigma:G_1\to G'_1$,\\
- for each $(N_1, N_2)\in dom(\sigma)$, 
+ $sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G'_1$,\\
+ for each node $N_1\in Nodes(G_1)$, 
 if $(\cI_1, \Sigma_1, \cM_1)$ is the label of $N_1$ in $G_1$,\\
-$(\cI_2, \Sigma_2, \cM_2)$ is the label of $N_2$ in $G_2$ \\
-and $((\Phi,\alpha,\beta):\cI_1\to\cI_2,\phi:\Phi(\Sigma_1)\to\Sigma_2)$ is $\sigma((N_1,N_2))$,\\
+$(\cI_2, \Sigma_2, \cM_2)$ is the label of $N_2 = \sigma^G(N_1)$ in $G_2$ \\
+and $((\Phi,\alpha,\beta):\cI_1\to\cI_2,\phi:\Phi(\Sigma_1)\to\Sigma_2)$ is $\sigma^M_{N_1}$,\\
 then $\cM_1$ must include $\{ \beta_{\Sigma_1}(M_2\forget\phi)  \mid M_2 \in \cM_2\}$,
 and this class of models becomes the new label of $N_1$ in $G''_1$ and\\
 $\cR$ pairs each family of models $F$ compatible with $G_2$ with
-the family of models \todonote{...}  
+the $F\forget\sigma$.
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -5550,21 +5564,13 @@ where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(
 
 \semdom{sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G_2}
 
-Given two networks $G_1$ and $G_2$, a \emph{map between networks} 
-$\sigma : G_1\to G_2$ is a set of tuples 
-$(N_1, N_2, \rho,\sigma)$ such that
-$(\cI_1,\Sigma_1, \Delta_1)$ is the label of $N_1$ in $G_1$,
-$(\cI_2,\Sigma_2, \Delta_2)$ is the label of $N_2$ in $G_2$,
-$\rho = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorphism between the logics of the two nodes and
-$\sigma : \Phi(\Sigma_1) \to \Sigma_2$ is a signature morphism.
-
-
 $$sem(\Gamma, G_1, G_2, \syntax{refmap-network}, \syntax{NodeMap}_1,\ldots, \syntax{NodeMap}_n)
 = \sigma$$
 where \\
 $sem(\Gamma, G_1, G_2,\syntax{NodeMap}_1)= (\syntax{OMSName}^1_1, \syntax{OMSName}^1_2,\rho_1,\sigma_1)$, $\ldots$\\
 $sem(\Gamma, G_1, G_2,\syntax{NodeMap}_n) = (\syntax{OMSName}^n_1, \syntax{OMSName}^n_2,\rho_n,\sigma_n)$ and\\
-$\sigma = \{(\syntax{OMSName}^i_1, \syntax{OMSName}^i_2) \mapsto (\rho_i,\sigma_i)\}_{i=1,\ldots,n}$.
+$\sigma^G (\syntax{OMSName}^i_1) = \syntax{OMSName}^i_2$ and
+$\sigma^M_{\syntax{OMSName}^i_1} = (\rho_i, \sigma_i)$ for each $i= 1,\ldots, n$.
 The map is required to be total on the nodes of $G_1$.
 
 %%%%%%%%%%%%%%%%%%%%
