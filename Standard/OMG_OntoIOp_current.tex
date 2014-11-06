@@ -430,8 +430,10 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\sectionWN}[1]{ \section*{#1}   \addcontentsline{toc}{section}{#1}  } 
 
 
-
-
+%semantics
+\newcommand{\prefix}{\mathit{prefix}}
+\newcommand{\current}{\mathit{current}}
+\newcommand{\PMap}{\mathit{PMap}}
 
 % Temporary Hacks (to be removed later or cleaned up) 
 \newcommand{\clause}[1]{\chapter{#1}}
@@ -2104,7 +2106,7 @@ a \termref{logic graph}, an \termref{OMS language graph} and a
 \begin{note}
   Although in principle, there can be many heterogeneous environments,
   for ensuring \termref{interoperability}, there will be a global
-  heterogeneous environments (maintained in some registry), with
+  heterogeneous environment (maintained in some registry), with
   subenvironments for specific purposes.
 \end{note}
 \ednote{In the semantics, there also is a binary supports relation between 
@@ -2610,19 +2612,23 @@ ontologies, OWL reasoners are not able to consider the  FOL axioms. Hence, the i
 contained in these axioms is lost.
 
 DOL allows the user to replace such informal annotations by formal axioms in a suitable ontology 
-language. The relation between the OWL ontology and the FOL axioms is that of a heterogeneous 
-import. In the result, both the OWL and the FOL axioms are amenable to, e.g., automated consistency 
+language. The relation between the \OWL ontology and the FOL axioms is that of a heterogeneous 
+import. In the result, both the \OWL and the FOL axioms are amenable to, e.g., automated consistency 
 checks and theorem proving. Hence, all available information can be used in the reasoning process.
-
-\begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+For example, the ontology below extends the \OWL definition of \texttt{isProperPartOf} as an asymmetric relation
+with a first-order axiom (in Common Logic) asserting that the relation is also transivitive.
+\begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,morekeywords={logic,ontology,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+logic CommonLogic
+ontology Parthood =
 ObjectProperty: isProperPartOf  
   Characteristics: Asymmetric  
   SubPropertyOf: isPartOf 
 with translation trans:SROIQtoCL
 then
-  (if (and (isProperPartOf x y) (isProperPartOf y z)) (isProperPartOf x z))
+  (if (and (isProperPartOf x y) (isProperPartOf y z)) 
+        (isProperPartOf x z))
 \end{lstlisting}
-Note that \OWL can express transitivity, but not together with asymmetry.
+\OWL can express transitivity, but not together with asymmetry.
 
 \section{Use Case Onto-2: Ontology integration by means of a foundational ontology}
 One major use case for ontologies in industry is to achieve interoperability and data integration. 
@@ -2773,6 +2779,68 @@ have been defined and implemented. However, the lack of a standardized, logicall
 among different development efforts and the reuse of refinements.
 DOL  provides the capability to represent refinement that is equally applicable to all DOL-conforming logical languages, and that  
 covers at least the most relevant of the industrial use cases of specification refinement.
+
+The specification below illustrates DOL refinements by expressing that natural numbers with addition form a monoid, and that 
+natural numbers can be efficiently represented for implementation as lists of binary digits, together with several equivalent
+ways of composing these refinements.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]	
+
+spec Monoid =
+ sort Elem
+ ops 0 : Elem;
+         __+__ : Elem * Elem -> Elem, assoc, unit 0
+end
+
+spec NatWithSuc =
+ free type Nat ::= 0 | suc(Nat)
+ op __+__ : Nat * Nat -> Nat, unit 0 
+ forall x , y : Nat . x + suc(y) = suc(x + y)
+ op 1:Nat = suc(0)
+end
+
+spec Nat =
+  NatWithSuc hide suc
+end
+
+refinement R1 =
+Monoid refined via Elem |-> Nat to Nat
+end
+
+spec NatBin =
+generated type Bin ::= 0 | 1 | __0(Bin) | __1(Bin)
+
+ops __+__ , __++__ : Bin * Bin -> Bin 
+forall x, y : Bin 
+ .  0 0 = 0  .  0 1 = 1
+ .  not  (0 = 1)  .  x 0 = y 0 => x = y .  not  (x 0 = y 1)  .  x 1 = y 1 => x = y
+ .  0 + 0 = 0  .  0 ++ 0 = 1 
+ .  x 0 + y 0 = (x + y) 0  .  x 0 ++ y 0 = (x + y) 1
+ .  x 0 + y 1 = (x + y) 1  .  x 0 ++ y 1 = (x ++ y) 0 
+ .  x 1 + y 0 = (x + y) 1  .  x 1 ++ y 0 = (x ++ y) 0
+ .  x 1 + y 1 = (x ++ y) 0  .  x 1 ++ y 1 = (x ++ y) 1 
+end
+
+refinement R2 =
+ Nat refined via Nat |-> Bin to NatBin
+end
+
+refinement R3 =
+ Monoid refined via Elem |-> Nat to
+ Nat refined via Nat |-> Bin to NatBin
+end
+
+refinement R3' =
+ Monoid refined via Elem |-> Nat to R2
+end
+
+refinement R3'' = 
+ Monoid refined via Elem |-> Nat to Nat then R2
+end
+
+refinement R3''' = R1 then R2
+
+\end{lstlisting}
 
 \section{Use case Spec-2: Modularity of Specifications}
 In the context of use case Spec-1, often specifications become so large that it is necessary to structure them in a modular way, both for human readability, 
@@ -2998,7 +3066,7 @@ constructs of DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
 As the usage scenarios in clause \ref{c:goal} illustrate, the use of multiple OMS may lead to lack 
  of interoperability. The goal of \DOL is to enable users to overcome these interoperability issues 
-by providing a language, which allows to represent structured OMS and the relations between OMS as 
+by providing a language which allows to represent structured OMS and the relations between OMS as 
 part of OMS networks in a semantically well-defined way. One particular challenge that needs to be
 addressed is that OMS are written in a wide variety of OMS languages, which differ in style, 
 expressivity and logical properties. 
@@ -3015,7 +3083,7 @@ The major functions of \DOL are the following:
 		\item \DOL allows to define new, more complex  OMS based on existing OMS. These OMS are
 		called \emph{structured OMS}. \DOL provides a number of operations for this purpose; e.g.,
 		it is possible to define a structured OMS $C$ as the union of an OWL
-		ontologies $A$ and a Common Logic ontology $B$.
+		ontology $A$ and a Common Logic ontology $B$.
 		\item \DOL allows to define connections between two OMS by using 
 		\emph{OMS mappings}. \DOL provides a variety of mappings; e.g.,  one can align terminology 
 		between different OMS or specify that some OMS is an extension of another. A set of OMS
@@ -3025,9 +3093,9 @@ The major functions of \DOL are the following:
 		 defined in \cref{c:semantics}.  
 \end{itemize}
  
-The syntax of \DOL roughly follows these three functions; basic OMS, structured OMS, OMS
+The syntax of \DOL roughly follows these functions; basic OMS, structured OMS, OMS
 mappings, and OMS networks are the most important syntactic categories of \DOL. 
-They (together with together with queries and importation) form the items in a \emph{DOL library}.
+They (together with queries and importation) form the items in a \emph{DOL library}.
  
 
 
@@ -3040,7 +3108,7 @@ They (together with together with queries and importation) form the items in a \
 \DOL is
 \begin{description}
 \item[free] DOL is freely available for unrestricted use.
-\item[generally applicable] DOL is neither be restricted to OMS in a specific domain, nor to foundational OMS, nor to OMS represented in a specific OMS language, nor to OMS stored in any specific repositories.
+\item[generally applicable] DOL is neither restricted to OMS in a specific domain, nor to foundational OMS, nor to OMS represented in a specific OMS language, nor to OMS stored in any specific repositories.
 \item[open] DOL supports mapping, integrating, and annotating OMS across arbitrary internet locations.  It makes use of existing open standards wherever suitable.  The criteria for extending DOL (see next item) are transparent and explicit.
 \item[extensible] DOL provides a framework into which any existing, and, desirably, any future OMS language can be plugged.
 \end{description}
@@ -3112,14 +3180,6 @@ This allows us to develop results independently of the particularities of a logi
 The main idea is to collect the non-logical
 symbols of the language in signatures and to assign to each signature the set of sentences that can be formed with its symbols. 
 For each signature, we provide means for extracting the symbols it consists of, together with their kind.
-
-% Signature morphisms are mappings between signatures. We do not assume
-% any details except that signature morphisms can be composed and
-% that there are identity morphisms; this amounts to a category of signatures.
-% Readers unfamiliar with category theory may replace this with
-% a partial order (signature morphisms are then just inclusions).
-% See \cite{MossakowskiEtAl13a} for details of this simplified foundation.
-
 Institutions also provide a model theory, which introduces semantics for
 the language and gives a satisfaction relation between the models and
 the sentences of a signature.   
@@ -3139,7 +3199,7 @@ can be done for all logics that have so far been in use in \DOL.
 
 Since institutions allow to abstract from the differences between the different OMS languages, 
 the semantics of basic OMS is presented in a uniform way.  The semantics of structured OMS, 
-OMS mappings, OMS networks, and other DOL expressions is defined as model-theoretic constructions
+OMS mappings, OMS networks, and other DOL expressions is defined using model-theoretic constructions
 on top of institutions. 
 
 
@@ -3290,7 +3350,7 @@ LibraryName              = IRI ;
 At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
 
 \red{
-Inside a library, one can defined OMS networks (\syntax{NetworkDefn}).
+Inside a library, one can define OMS networks (\syntax{NetworkDefn}).
 A \syntax{NetworkDefn} names an
 OMS network consisting of  OMS and OMS mappings. OMS networks may build on previously-defined
 OMS networks, and they can be used in \syntax{combination}s.  
@@ -3897,8 +3957,6 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 
 \ssclause{OMS}\label{a:dol-text:OMS}
 
-\ednote{Till: is it correct to have \syntax{SymbolMapItems} in \syntax{reveal} and not \syntax{SymbolItems}?}
-
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
 BasicOMS            = OMSInConformingLanguage ;
 MinimizableOMS      = BasicOMS
@@ -4215,7 +4273,7 @@ and has led to some corrections on the abstract syntax.  These
 reasons, plus the requirement in the OntoIOp RFP to provide a
 semantics, have lead us to include the semantics in the standard
 document proper, even though the semantics is quite technical and
-therefore has a more limited readership than the other the chapters of
+therefore has a more limited readership than the other chapters of
 this standard.
 
 The semantics starts with the theoretical foundations. Since DOL is a
@@ -4406,10 +4464,8 @@ $\Delta$ also satisfy $\varphi$. A \defsty{theory morphism} $\phi: (\Sigma, \Del
 
 Institution comorphisms capture the intuition of encoding or embedding a logic into a more expressive one.
 
-\begin{definition}[Institution Comorphism] Let $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
-\Sen^J, \models^J)$ be two institutions. An \defsty{institution comorphism} from $I$ to
-$J$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
-natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
+\begin{definition}[Institution Comorphism] An \defsty{institution comorphism} from an institution $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ to an institution $J=(\Sign^J, \Mod^J,\Sen^J, \models^J)$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
+two natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
 and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
 $$ M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi) \Leftrightarrow
 \beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
@@ -4460,9 +4516,10 @@ $J$ is a institution comorphism from $I$ to $J^{th}$.
 
 Institution morphisms capture the intuition of projecting from a more expressive logic to a less expressive one.
 
-\begin{definition}[Institution Morphism] Given two institutions $I$ and $J$ with $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
-\Sen^J, \models^J)$, an \defsty{institution morphism} from $I$ to
-$J$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
+\begin{definition}[Institution Morphism] 
+An \defsty{institution morphism} from an institution $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ to
+an institution $J = (\Sign^J, \Mod^J,
+\Sen^J, \models^J)$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and two
 natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi$
 and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that 
 $$ M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi) \Leftrightarrow
@@ -4529,9 +4586,9 @@ Finally, $I$ is called \emph{(weakly) semi-exact} if
 it has pushouts and admits (weak) amalgamation for these.
 \end{definition}
 
-\cite{CM2008} studies conditions for existence of weakly amalgamable cocones
+\cite{weakcol} studies conditions for existence of weakly amalgamable cocones
 in a heterogeneous setting, where the network consists of signatures (or theories)
-in different logics. Since a network admits more than one weakly amalgamable cocone,
+in different logics. Since a network may admit more than one weakly amalgamable cocone,
 we assume selection operations both for the weakly amalgamable cocone of a network 
 and for the (potentially non-unique) amalgamation of a family of models compatible with the
 network. This allows us to define a function
@@ -4630,8 +4687,8 @@ $\Gamma$ containing:
  \begin{itemize}
     \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
                we also denote by $\Gamma$, providing access to previous definitions,
-    \item a prefix map, denoted $\Gamma.prefix$, that stores the declared prefixes,
-    \item a triple $\Gamma.current$ that stores the current language, logic and serialization. 
+    \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
+    \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
  \end{itemize}
 
 If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
@@ -4641,14 +4698,14 @@ the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
 the prefix map is empty and the current triple contains the error logic together with its language and serialization.
 The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
 denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$,
-and of $\Gamma_1.prefix$ and $\Gamma_2.prefix$ are disjoint, and then
+and of $\Gamma_1.\prefix$ and $\Gamma_2.\prefix$ are disjoint, and then
 $\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
 \Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
 \Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
-\end{cases}$, $\Gamma_1\cup\Gamma_2.current = \Gamma_1.current$
-and $\Gamma_1\cup\Gamma_2.prefix = \Gamma_1.prefix \cup \Gamma_2.prefix$.
-We will write $\Gamma.\{prefix = PMap\}$ for the global environment that set the prefix map of 
-$\Gamma$ to $PMap$ and $\Gamma.\{current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
+\end{cases}$, $\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
+and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
+We will write $\Gamma.\{\prefix = \PMap\}$ for the global environment that set the prefix map of 
+$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
 $(lang, logic, ser)$.
 %
 \ssclause{Semantics of Libraries}
@@ -4662,13 +4719,13 @@ an OMS in one of the languages supported by the heterogeneous logical environmen
 $$sem(\syntax{PrefixMap, LibraryDefn}) = \Gamma''$$
  
 \noindent where 
- $sem(\syntax{PrefixMap}) = PMap$, $\Gamma'' = \Gamma_\emptyset.\{prefix = PMap\}$ and \\
+ $sem(\syntax{PrefixMap}) = \PMap$, $\Gamma'' = \Gamma_\emptyset.\{\prefix = \PMap\}$ and 
 $sem(\Gamma'', \syntax{LibraryDefn}) = \Gamma'$. 
 
 $$sem^T(\syntax{OMSInConformingLanguage}) = \Gamma''$$
 
 \noindent where 
-$\Gamma' =\Gamma_\emptyset.\{logic = L\} $, with $L$ is determined from the extension of the file containing the library,
+$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
 $sem^T(\Gamma', \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \Delta)$,
 \syntax{IRI} is the IRI of the library and 
 $\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \Delta)]$.
@@ -4676,7 +4733,7 @@ $\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \Delta)]$.
 $$sem^M(\syntax{OMSInConformingLanguage}) = \Gamma''$$
 
 \noindent where 
-$\Gamma' =\Gamma_\emptyset.\{logic = L\} $, with $L$ is determined from the extension of the file containing the library,
+$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
 $sem^M(\Gamma', \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM)$,
 \syntax{IRI} is the IRI of the library and 
 $\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM)]$.
@@ -4704,7 +4761,7 @@ $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots 
 
 $$sem^T(\Gamma, \syntax{OMSInConformingLanguage}) = (\cI, \Sigma, \Delta) $$
 \noindent where 
-$\cI = logic(\Gamma.current)$ and
+$\cI = logic(\Gamma.\current)$ and
 $sem^T_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \Delta)$. 
 
 Note that if the OMS in the library does not conform with the logic determined by
@@ -4713,7 +4770,7 @@ the extension of the library, $sem^T_I(\syntax{OMSInConformingLanguage})$ will b
 \semdom{sem^M(\Gamma,\syntax{OMSInConformingLanguage})=(I, \Sigma, \cM)}
 
 $$sem^M(\Gamma, \syntax{OMSInConformingLanguage}) =  (\cI, \Sigma, \cM)$$
-\noindent where $\cI = logic(\Gamma.current)$ and $sem^M_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM)$.
+\noindent where $\cI = logic(\Gamma.\current)$ and $sem^M_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4722,7 +4779,7 @@ $$sem^M(\Gamma, \syntax{OMSInConformingLanguage}) =  (\cI, \Sigma, \cM)$$
 $$sem(\Gamma, \syntax{lib-import, LibName}) = \Gamma\cup\Gamma'$$
 \noindent where $sem(\Gamma, \syntax{LibName}) = \syntax{IRI}$ and $sem(\syntax{IRI}) = \Gamma'$.
 
-Equations for \syntax{Qualification}, \syntax{OMSDefn}, \syntax{NetworkDefn}, \syntax{MappingDefn} and \syntax{QueryRelatedDefn} 
+Equations for \syntax{OMSDefn}, \syntax{NetworkDefn}, \syntax{MappingDefn} and \syntax{QueryRelatedDefn} 
 are given in the next sections.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4731,17 +4788,17 @@ are given in the next sections.
 
 $$sem(\Gamma,\syntax{lang-select, LanguageRef})=\Gamma'$$
 
-\noindent where $\Gamma' = \Gamma.\{current = (\syntax{LanguageRef},logic',ser')\}$ and \\
-$logic = logic(\Gamma.current)$,\\
+\noindent where $\Gamma' = \Gamma.\{\current = (\syntax{LanguageRef},logic',ser')\}$ and \\
+$logic = logic(\Gamma.\current)$,\\
  $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\\
-$ser = ser(\Gamma.current)$\\
- $ser'=\twocase{ser(\Gamma.current)}{\syntax{LanguageRef} \textrm{ supports } ser}{\textrm{default serialization for }\syntax{LanguageRef}}$
+$ser = ser(\Gamma.\current)$\\
+ $ser'=\twocase{ser(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } ser}{\textrm{default serialization for }\syntax{LanguageRef}}$
 
  $$sem(\Gamma,\syntax{logic-select, LogicRef})=\Gamma'$$
 
  \noindent where 
- $\Gamma' = \Gamma.\{current = (lang',\syntax{LogicRef},ser)\}$\\
-$lang = lang(\Gamma.current)$, $ser=ser(\Gamma.current)$\\
+ $\Gamma' = \Gamma.\{\current = (lang',\syntax{LogicRef},ser)\}$\\
+$lang = lang(\Gamma.\current)$, $ser=ser(\Gamma.\current)$\\
 $lang'=\twocase{lang}{lang \textrm{ supports }
    \syntax{LogicRef}} {\textrm{the unique language supporting
    }\syntax{LogicRef}}
@@ -4752,8 +4809,8 @@ $lang'=\twocase{lang}{lang \textrm{ supports }
 
 $$sem(\Gamma,\syntax{syntax-select, SyntaxRef})=\Gamma'$$
 
-\noindent where $lang = lang(\Gamma.current), logic = logic(\Gamma.current)$ and\\
-$\Gamma'  = \Gamma.\{current = (lang, logic, \syntax{SyntaxRef})\}$. 
+\noindent where $lang = lang(\Gamma.\current), logic = logic(\Gamma.\current)$ and\\
+$\Gamma'  = \Gamma.\{\current = (lang, logic, \syntax{SyntaxRef})\}$. 
 The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 
 %\semdom{sem(L,\syntax{Qualification*})=L'}
@@ -4770,7 +4827,7 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
 and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings,
-or OMS networks. The nodes and edges given by \syntax{ExcludeExtensions} are then removed from
+or OMS networks. The nodes and edges given in the \syntax{ExcludeExtensions} list are then removed from
 the graph of the network. The theory-level semantics of a network is the labeling of the 
 underlying graph of the network with theories in the nodes and with theory morphisms in the edges.
 The model-level semantics of a network is a family of models \emph{compatible} with the
@@ -4778,12 +4835,13 @@ graph of the network, i.e. for each node $n$ labeled with $(I_n, \Sigma_n, \cM_n
 $M_n$ in $\cM_n$ such that for each edge $e:m \rightarrow n$ labeled with a 
 morphism $\sigma: \Sigma_m \rightarrow \Sigma_n$, we have that $M_n\forget \sigma = M_m$.
 Nodes and morphisms are also labeled with \syntax{IRI}s, such that they can be uniquely identified.
- 
-We are going to make use of the following notations. If $G$ is a graph, 
-the operation $insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$ is defined as follows:
+An additional \syntax{Id} can be specified for each node, with the purpose of letting the user specify a 
+prefix in the colimit of a network for the symbols with the origin in that node that must be disambiguated.
+
+We are going to make use of the following notations. If $G$ is a graph, let $insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$ be defined as follows:
  \begin{itemize}
     \item if \syntax{IRI} is an OMS in $\Gamma$, then
-                 a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ is added to $G$,
+                 a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
    \item if \syntax{IRI} is an OMS mapping in $\Gamma$, then $\Gamma(\syntax{IRI})$ can be a theory morphism, or a W-shaped
                graph if \syntax{IRI} is an alignment (see the semantics of alignments below).  In the first case, we can construct a graph
@@ -4808,22 +4866,37 @@ Similarly, the operation $remove(\Gamma, G, \syntax{Id})$ is defined as follows:
 
 \semdom{sem(\Gamma, \syntax{NetworkDefn}) = \Gamma'}
 
-$$sem(\Gamma, \syntax{network-defn, NetworkName , [ ConsStrength ] , Network}) = \Gamma'$$
+$$sem(\Gamma, \syntax{network-defn, NetworkName , ConsStrength , Network}) = \Gamma'$$
 
-where $\Gamma' = \Gamma[\syntax{NetworkName} \mapsto sem(\Gamma, \syntax{Network})]$.
-\todonote{what does conservativity mean in this context?}
+\noindent where $\Gamma' = \Gamma[\syntax{NetworkName} \mapsto sem(\Gamma, \syntax{Network})]$.
+
+If \syntax{ConsStrength} is \syntax{model-conservative}, the semantics is only
+defined if $sem(\Gamma,\syntax{Network})\not=\emptyset$.
+
+If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is not defined.\todonote{Is this the best way?}
+
+If \syntax{ConsStrength} is \syntax{monomorphic}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
+class of families of models.
+
+If \syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
+
+If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
+
 
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 
 $$sem(\Gamma, \syntax{network, NetworkElements , ExcludeExtensions})= G'$$
 
-where $sem(\Gamma, \syntax{NetworkElements}) = G$ and $sem(\Gamma, G, \syntax{ExcludeExtensions}) = G'$.
+\noindent where $sem(\Gamma, \syntax{NetworkElements}) = G$ and $sem(\Gamma, G, \syntax{ExcludeExtensions}) = G'$.
 
 \semdom{sem(\Gamma, \syntax{NetworkElements}) = G'}
 
 $$sem(\Gamma, \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
 
-where \\
+\noindent where \\
  $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
  $G_2 = sem(\Gamma, G_1, \syntax{NetworkElement}_2)$\\
  $\ldots$\\
@@ -4831,15 +4904,13 @@ where \\
 
 \semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
-$$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = G'$$
-
-where $G' = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$.
+$$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$$.
 
 \semdom{sem(\Gamma, G, \syntax{ExcludeExtensions})= G'}
 
 $$sem(\Gamma, G, \syntax{exclude-imports, IRI$_1, \ldots,$ IRI$_n$}) = G'$$
 
-where\\
+\noindent where\\
  $G_1 = remove(\Gamma, G, \syntax{IRI}_1)$\\
  $G_2 = remove(\Gamma, G_1, \syntax{IRI}_2)$\\
   $\ldots$ \\
@@ -4847,16 +4918,16 @@ where\\
 
 \ssclause{Semantics of OMS}
 
+\semdom{sem^M(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM)}
+For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the model-level semantics is defined as follows:  
+
+$$sem^M(\Gamma, \syntax{BasicOMS})= sem^M_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
+
+
 \semdom{sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \Delta)}
 
 For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the theory-level semantics is defined as follows:  
-$$sem^T(\Gamma, \syntax{BasicOMS})= sem^T_{logic(\Gamma.current)}(\syntax{BasicOMS})$$
-
-\semdom{sem^M(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM)}
-
-For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the model-level semantics is defined as follows:  
-$$sem^M(\Gamma, \syntax{BasicOMS})= sem^M_{logic(\Gamma.current)}(\syntax{BasicOMS})$$
-
+$$sem^T(\Gamma, \syntax{BasicOMS})= sem^T_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4864,7 +4935,7 @@ $$sem^M(\Gamma, \syntax{BasicOMS})= sem^M_{logic(\Gamma.current)}(\syntax{BasicO
 
 $$sem^T(\Gamma, (\Sigma, \Delta), \syntax{BasicOMS}) = (I, \Sigma', \Delta')$$
 where $(\Sigma, \Delta)$ give the local environment of previously declared symbols\\
-and $sem^{\Sigma, \Delta}_{logic(\Gamma.current)}(\syntax{BasicOMS}) = (I, \Sigma', \Delta')$.
+and $sem^{\Sigma, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \Delta')$.
 Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\Delta\subseteq\Delta'$.
 
 
@@ -4882,7 +4953,7 @@ $\Delta' = \Delta \cup \Delta''$.
 
 $$sem^M(\Gamma, (\Sigma, \cM), \syntax{BasicOMS}) = (I, \Sigma', \cM')$$
 where $(\Sigma, \cM)$ give the local environment
-and $sem^{\Sigma, \cM}_{logic(\Gamma.current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM')$.
+and $sem^{\Sigma, \cM}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM')$.
 Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\{ M'\forget\Sigma \mid M' \in \cM'  \} \subseteq \cM$.
 
 $$sem^M(\Gamma, (\Sigma, \cM), \syntax{OMSRef}) = (I, \Sigma', \cM')$$ 
@@ -4915,7 +4986,7 @@ and\\ $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'
 
 Theory-level semantics for  \syntax{minimize MinimizableOMS} cannot be defined.
 
-\todonote{closed-world, free, cofree, maximize are missing}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4927,7 +4998,7 @@ Theory-level semantics for  \syntax{minimize MinimizableOMS} cannot be defined.
 no local environment.
 
 $$sem^M(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')$$
-where \todonote{didn't look at this}
+where \todonote{didn't look at this} \todonote{closed-world, free, cofree, maximize are missing}
 \begin{align*}
 (I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma, \\
 \Sigma_{\mathit{var}} & = sem(\syntax{CircVars},\Sigma),
@@ -4964,9 +5035,9 @@ The theory-level semantics of reductions is not defined.
 %Module Extract
 $$sem^T(\Gamma, \Sigma , \syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta')$$
 where \syntax{OMS} must be a flattenable OMS, 
-$$sem^T(\Gamma,  \syntax{OMS}) = (I, \Sigma, \Delta) \quad \text{ and } \quad 
-sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})=(I, \Sigma', \Delta).$$  
-Model level semantics are given by the class of models of $(I, \Sigma', \Delta')$.
+$sem^T(\Gamma,  \syntax{OMS}) = (I, \Sigma, \Delta)$ and \\
+$sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})=(I, \Sigma', \Delta').$  
+Model level semantics is given by the class of models of $(I, \Sigma', \Delta')$.
 %
 %\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta)}
 
@@ -4992,7 +5063,7 @@ $\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
 $\Delta = \alpha^1(\Delta_1)\cup\alpha^2(\Delta_2)$.
  This is only defined if both \syntax{OMS}$_1$ and \syntax{OMS}$_2$
 are flattenable. If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\Delta)$ must be a conservative extension
-of the appropriate strength of \syntax{OMS}$_1$.
+of the appropriate strength of $(\cI_1, \Sigma_1, \Delta_1)$.
 
 $$sem^M(\Gamma, \syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \cM)$$
 where 
@@ -5002,7 +5073,7 @@ $(\cI, \rho_1=(\Phi^1,\alpha^1,\beta^1), \rho_2=(\Phi^2,\alpha^2,\beta^2)) = \cI
 $\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
 $\cM = \{ M \in \Mod^I(\Sigma) \mid \beta^i(M\forget{\Phi^i(\Sigma_i)}) \in \cM_i, i=1,2  \}$.
 If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\cM)$ must be a conservative extension
-of the appropriate strength of \syntax{OMS}$_1$.
+of the appropriate strength of $(\cI_1, \Sigma_1, \cM_1)$.
 
 
 %Extension
@@ -5018,13 +5089,13 @@ where
 where
   $sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \cM)$,
   $sem^T(\Gamma, (\Sigma, \cM), \syntax{ExtensionOMS}) = (I,  \Sigma',\cM')$.
-\ednote{According to the intended semantics, extensions are defined for OMS $O_1$, $O_2$, such that $O_2$ is basic, this is however not the case in the current abstract syntax: see productions for \syntax{ExtensionOMS}}
 
 %Qualification
  
 $$sem(\Gamma, \syntax{qual-oms, Qualification, OMS}) = sem(\Gamma', \syntax{OMS})$$
 
-where $sem(\Gamma, \syntax{Qualification}) = \Gamma'$. \todonote{This means that $L$ is not changed after the analysis of this OMS. Is this obvious?}
+where $sem(\Gamma, \syntax{Qualification}) = \Gamma'$. 
+\todonote{This means that $L$ is not changed after the analysis of this OMS. Is this obvious?}
 
 %Bridge
 
@@ -5074,8 +5145,9 @@ $\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{
 
 $$sem(\Gamma, \Sigma, \syntax{renaming, LogicTranslation, SymbolMapItems}) = ((\Phi, \alpha,\beta), \sigma)$$
 
-where $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)$ and
-$sem(\Gamma, \Phi(\Sigma), \syntax{SymbolMapItems}) = \sigma$.
+where $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)$ and\\
+$sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolMapItems}) = \sigma$,
+where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.
 If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5122,6 +5194,8 @@ $sem(\Gamma, \Sigma,\syntax{Symbol}_1), \ldots,
 sem(\Gamma,\Sigma,\syntax{Symbol}_n)$, if such a sub-signature exists and is otherwise undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%
+
+\todonote{I need equations for one signature and for two signatures...}
 
 \semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMapItems})= \sigma:\Sigma\to\Sigma'}
 
@@ -5208,13 +5282,18 @@ sem(\Gamma,\syntax{oms-defn , OMSName , ConsStrength , OMS})\\
 =(\Gamma[\syntax{OMSName}\mapsto sem(\Gamma,\syntax{OMS})],L)
 \end{array}$
 
-If \syntax{ConsStrength} is \syntax{conservative}, the semantics is only
+If \syntax{ConsStrength} is \syntax{model-conservative}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})\not=\emptyset$.
-%If \syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
-%defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
-%class.\todonote{Here, we need model morphisms!}
+If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})$ is formally consistent, i.e.~it does not formally 
+imply falsity.
+If \syntax{ConsStrength} is \syntax{monomorphic}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
+class of models.
+If \syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
+defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.\todonote{here you mean definitional? changed!}
+defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 
 \semdom{sem^M(\syntax{oms-ref , OMSRef})= \Gamma(\syntax{OMSRef})}
 
@@ -5358,7 +5437,9 @@ $$sem(\Gamma, \syntax{intrp-defn, IntprName, IntrpType,LogicTranslation, SymbolM
 where\\
 $sem(\Gamma, \syntax{IntrpType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2, \cM_2))$,\\
 $sem(\syntax{LogicTranslation}) = (\Phi,\alpha,\beta):\cI_1\rightarrow \cI_2$,\\
-$sem(\Gamma, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$,\\
+$sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$,
+where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.
+\\
 $\Gamma'=\Gamma[IntrpName \mapsto ((\Phi,\alpha,\beta),\sigma) ]$.
 If \syntax{LogicTranslation} is missing, the default translations between the logics is selected. 
 
@@ -5446,7 +5527,7 @@ and $((\Phi,\alpha,\beta):\cI_1\to\cI_2,\phi:\Phi(\Sigma_1)\to\Sigma_2)$ is $\si
 then $\cM_1$ must include $\{ \beta_{\Sigma_1}(M_2\forget\phi)  \mid M_2 \in \cM_2\}$,
 and this class of models becomes the new label of $N_1$ in $G''_1$ and\\
 $\cR$ pairs each family of models $F$ compatible with $G_2$ with
-the family of models \todonote{needs total map?}  
+the family of models \todonote{...}  
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -5458,7 +5539,11 @@ $$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{refmap-oms, LogicTranslati
 where\\
  $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
 such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
-and $sem(\Gamma, \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$ \todonote{the logic is no longer L, but it's the target of the logic translation. check everywhere}
+and 
+$sem(\Gamma.\current=(lang, logic',ser), \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
+where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.
+
+
 
 \semdom{sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G_2}
 
@@ -5492,7 +5577,8 @@ where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
 $sem(\Gamma, \syntax{LogicTranslation}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
-$sem(\Gamma, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+$sem(\Gamma.\current=(lang, logic',ser), \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.
 
 
 %%%%%%%%%%%%%%%%%%%%
