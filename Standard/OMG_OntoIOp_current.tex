@@ -1,3 +1,7 @@
+% arara: pdflatex: { synctex: on } 
+% arara: makeindex 
+% arara: pdflatex: { synctex: on } 
+
 \newcommand{\version}{0.8}
 
 
@@ -56,7 +60,12 @@ draft%
 \DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
 
 
+% Keyword Index 
+\usepackage{makeidx}
+\makeindex
+% used in definition of \termref, \termdefinition  
 
+\newcommand{\dolindex}{Distributed Ontology Modeling and Specification Language (DOL)}
 
 %% Math
 % \usepackage{mathtools}
@@ -252,7 +261,7 @@ author=,date=,id=,replyto=,type=}{}%
 % cross-reference to a normative reference
 \newcommand*{\nitem}[1]{[#1]}
 % reference from the definition of one term to another defined term
-\newcommand*{\termref}[1]{\textit{#1}}
+\newcommand*{\termref}[1]{\index{#1}#1\xspace}
 % subject field restriction of a term
 \newcommand*{\subjectfield}[1]{ {\textlangle}#1{\textrangle}}
 % synonym of a term
@@ -440,7 +449,8 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\sclause}[1]{\section{#1}}
 \newcommand{\ssclause}[1]{\subsection{#1}}
 \newcommand{\sssclause}[1]{\subsubsection{#1}}
-\newcommand{\termdefinition}[2]{\paragraph{#1} #2}
+\newcommand{\termdefinition}[2]{\index{#1}\paragraph{#1} #2}
+\newcommand{\termdefinitionLight}[2]{\paragraph{#1} #2}
 \newcommand{\nisref}[1]{#1}
 
 
@@ -820,7 +830,9 @@ environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
 6.5.2(c)& 
 The metalanguage shall not replace the object language constructs of the conforming logical
 languages.	&
-A \syntax{BasicOMS} is explicitly defined to be a \syntax{OMSInConformingLanguage}, and the syntax of the latter is left unspecified in this standard. Rather, here this standard relies on other standards and language definitions.
+A \syntax{BasicOMS} is explicitly defined to be a \syntax{OMSInConformingLanguage}, and the syntax
+of the latter is left unspecified in this standard. Rather, here this standard relies on other
+standards and language definitions.
 See \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
    \\ \hline
 %
@@ -830,26 +842,32 @@ logic in which their sentences are formalized and (ii) basic and structured OMS 
 identify them in a globally unique way.
 	&
 For basic OMS, see 6.5.2(c) above.
-The structuring constructs for OMS in \ref{c:focused-OMS} and \ref{a:dol-text:OMS} can be used for any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for referencing OMS, see
+The structuring constructs for OMS in \ref{c:focused-OMS} and \ref{a:dol-text:OMS} can be used for 
+any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for referencing OMS, see
 \ref{c:iris}.
    \\ \hline
 %
 6.5.3(a)& 
 An abstract syntax specified as an SMOF compliant meta model.	&
-Currently, the abstract syntax is specified using EBNF, see clause \ref{c:abstract-syntax}. An initial SMOF meta model is given in annex \ref{a:MOF}.
+Currently, the abstract syntax is specified using EBNF, see clause \ref{c:abstract-syntax}. An 
+initial SMOF meta model is given in annex \ref{a:MOF}.
    \\ \hline
 %
 6.5.3(b)& 
 A human-readable lexical concrete syntax in EBNF and serialization in XML, for the latter XMI shall
 be used.	&
-The concrete syntax (in EBNF) is specified in clause \ref{a:text-syntax}. The XMI representation will be automatically derived from the SMOF meta model.
+The concrete syntax (in EBNF) is specified in clause \ref{a:text-syntax}. The XMI representation 
+will be automatically derived from the SMOF meta model.
    \\ \hline
 %
 6.5.3(c)& 
 Complete round-trip mappings from the human-readable concrete syntax to the abstract syntax and
 vice versa.	&
-Both abstract syntax (clause \ref{c:abstract-syntax}) and concrete syntax (clause \ref{a:text-syntax}) use the same non-terminal symbols
-in their EBNF grammar; this makes a round-trip mapping between both straight-forward. Moreover, the round-trip mapping has been implemented in form of a parser and a printer as part of the heterogeneous tool set (see \url{http:hets.eu}).
+Both abstract syntax (clause \ref{c:abstract-syntax}) and concrete syntax (clause 
+\ref{a:text-syntax}) use the same non-terminal symbols
+in their EBNF grammar; this makes a round-trip mapping between both straight-forward. Moreover, the 
+round-trip mapping has been implemented in form of a parser and a printer as part of the 
+heterogeneous tool set (see \url{http:hets.eu}).
    \\ \hline
 %
 6.5.3(d)& 
@@ -877,8 +895,11 @@ Translations between logical languages shall preserve (possibly to different deg
 of the logical languages. Between a given pair of logical languages, several translations are
 possible.	&
 The semantics of DOL is based on a heterogeneous logical
-environment, which contains institution comorphisms as translations, see \ref{c:direct-sematics}. Institution comorphisms preserve semantics
-in a weak form through their satisfaction condition. The LoLa ontology specifies properties of translations (comorphisms) preserving more and more of the semantics, see annex \ref{a:rdf-logic-vocab}.
+environment, which contains institution comorphisms as translations, see \ref{c:direct-sematics}. 
+Institution comorphisms preserve semantics
+in a weak form through their satisfaction condition. The LoLa ontology specifies properties of 
+translations (comorphisms) preserving more and more of the semantics, see annex 
+\ref{a:rdf-logic-vocab}.
    \\ \hline
 %
 6.5.5(a)& 
@@ -979,7 +1000,8 @@ This is left for future work.
 \endlastfoot
 %
 6.7.(a)	& 
-Do existing language standards need to be extended or adapted in order to make them OntoIOp conforming.	&
+Do existing language standards need to be extended or adapted in order to make them OntoIOp 
+conforming.	&
 The goal of DOL is to support existing languages without any
 adaptations, see also 6.5.4(a). However, in order to meet
 requirement 6.5.6, DOL-conforming languages should support the
@@ -991,8 +1013,8 @@ and comments in existing language serializations, see \ref{sec:existing-serializ
    \\ \hline
 %
 6.7.(b)	& 
-Proposals should discuss whether the semantics of the metalanguage shall be included into the standard.	&
-We have included DOL metalanguage semantics in this specification. The reasons are discussed
+Proposals should discuss whether the semantics of the metalanguage shall be included into the
+We have included the DOL metalanguage semantics in this specification. The reasons are discussed
 in the introduction of clause \ref{c:semantics}.
    \\ \hline
 %	
@@ -1055,7 +1077,7 @@ A registry is discussed in clause \ref{c:conformance}.
 6.8(a)	& 
 Proposals covering a broader range of features and of use cases will be favored. As a minimum, proposals shall define conformance criteria for logical languages and translations, and their proposed metalanguage shall cover some metalogical relationships and shall be applicable to multiple logics.	&
 Conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
-DOL is be applicable to multiple logics (see also 6.8(c) below).
+DOL is applicable to multiple logics (see also 6.8(c) below).\ednote{Terry: Do you want to mention institutions here, presaging 6.5.4 ? and add 8.4 to the see list?}
    \\ \hline
 %
 6.8(b)		&
@@ -1089,7 +1111,8 @@ This specification proposes no changes to adopted OMG specifications.
 \chapter{Scope}
 \pagenumbering{arabic} 
 This \IS specifies the Distributed Ontology, Modeling and Specification
- Language (DOL). DOL is designed to achieve integration and interoperability of
+ Language (DOL)\index{\dolindex ! definition}.  DOL is designed to achieve integration  
+and interoperability of
 ontologies, specifications and models (OMS for short). DOL is a language for
 distributed knowledge representation, system specification and 
 model-driven development across multiple OMS, particularly OMS
@@ -1098,16 +1121,21 @@ OntoIOp Request for Proposals \cite{RFP}.
 
 
 \section{Background Information}
-Logical languages are used in several fields of computing for the development of formal,
- machine-processable texts that carry a formal semantics. Among those fields are 1) \textbf{O}ntologies 
- formalizing domain knowledge, 2) (formal) \textbf{M}odels of systems, and 3) the formal \textbf{S}pecification
-  of systems. Ontologies, models  and specifications will (for the purpose of this document)
-   henceforth be abbreviated as \textbf{OMS}.
+Logical languages are used in several fields of computing for the development of formal, 
+machine-processable texts that carry a formal semantics. Among those fields are 1) 
+\textbf{O}ntologies 
+ formalizing domain knowledge, 2) (formal) \textbf{M}odels of systems, and 3) the formal 
+\textbf{S}pecification
+of systems. Ontologies, models  and specifications will (for the purpose of this document) 
+henceforth be abbreviated as \textbf{OMS}\index{OMS ! definition}.
 
 An OMS provides formal descriptions which range in scope from domain knowledge and activities
 (ontologies, models) to properties and behaviors of hardware and software systems (models,
 specifications). These formal descriptions can be used for the analysis and verification of domain
-models, system models and systems themselves, using rigorous and effective reasoning tools.   As  systems increase in complexity, it becomes concomitantly less practical to provide a monolithic logical cover for all.  Instead various models are developed to represent different viewpoints or perspectives on a domain or system. 
+models, system models and systems themselves, using rigorous and effective reasoning tools.   As 
+systems increase in complexity, it becomes concomitantly less practical to provide a monolithic 
+logical cover for all.  Instead various models are developed to represent different viewpoints or 
+perspectives on a domain or system. 
  Hence, interoperability becomes
 a crucial issue, in particular, formal interoperability, i.e.\ interoperability that is based on
 the formal semantics of the different viewpoints. Interoperability is both about the ability to 
@@ -1162,7 +1190,7 @@ diagram. Also a DOL OMS network, containing interpretations, alignments between 
 level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in
 MOF.}
 
-\section{Features within Scope}
+\section{Features within Scope}\index{\dolindex ! scope}
 % Can't use \begin{inscope}, as that creates an itemize environment
 The following are within the scope of this \IS:
 \begin{enumerate}
@@ -1198,7 +1226,7 @@ semantics for DOL.
 
 
 \chapter{Conformance}\label{c:conformance}
-
+\index{conformance|(}
 This clause defines conformance criteria for languages and logics that can be used with the
 distributed ontology, modeling and specification language DOL, as well as conformance criteria for
 serializations, translations and applications. This \IS describes the conformance with DOL of a
@@ -1206,7 +1234,7 @@ number of OMS languages, namely OWL 2, Common Logic, RDF and RDFS, as well as tr
 these, in its informative annexes.
 
 It is expected that DOL will be used for more languages than this normative set of DOL-conforming
-languages. There will be a \textbf{registry for DOL-conforming languages and translations} hosted
+languages. There will be a \textbf{\termref{registry} for DOL-conforming languages and translations} hosted
 at \url{http://ontohub.org}.  This will ensure that this \IS remains interoperable with past,
 present and even future OMS languages.  The registry shall also include descriptions of
 DOL-conforming languages and translations (as well as other information needed by implementors
@@ -1477,7 +1505,7 @@ explicit references to the logics used.
 
 ~\CLnote{applications need to be able to expand CURIEs into IRIs when requested}
 
-
+\index{conformance|)}
 
 \chapter{Normative References}
 \begin{enumerate}
@@ -1519,16 +1547,16 @@ For the purposes of this document, the following terms and definitions apply.
 \sclause{Distributed Ontology, Modeling and Specification Language}
 
 \begin{definitions}
-  \termdefinition{distributed ontology, modeling and specification language\synonym
-  DOL}{language for formalizing \termref{libraries} of \termref{OMS} and \termref{OMS networks}, whose syntax and semantics are specified in this \IS}
+  \termdefinitionLight{Distributed Ontology, Modeling and Specification Language\synonym
+  DOL}\index{\dolindex ! definition}{language for formalizing {libraries}\index{library} of \termref{OMS} and \termref{OMS networks}, whose syntax and semantics are specified in this \IS}
 
 \begin{note}
  When viewed as an \termref{OMS language}, DOL has \termref{OMS} as its
-\termref{non-logical symbols}, and \termref{OMS mappings} as its \termref{sentences}.
+non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mapping} as its \termref{sentences}.
 \end{note}
 
 \red{
-  \termdefinition{library}{collection of named \termref{OMS} and \termref{OMS networks}, possibly written in different \termref{OMS languages}, linked by named \termref{OMS mappings}}
+  \termdefinition{library}{collection of named \termref{OMS} and \termref{OMS networks}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}}
 }
 
 \end{definitions}
@@ -1539,12 +1567,12 @@ For the purposes of this document, the following terms and definitions apply.
 \begin{definitions}
 
 \termdefinition{OMS (ontology, specification or model)}
-{collection of expressions (like \termref{non-logical symbols}, \termref{sentences} and \termref{structuring} elements) in a given \termref{OMS language} (or several such languages).}
+{collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and \termref{structuring} elements) in a given \termref{OMS language} (or several such languages).}
 \begin{note}
 	An \termref{OMS} can be written in different \termref{OMS language} \termref{serializations}.
 \end{note}	
 
-  \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics, plus non-logical \termref{annotations}}
+  \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics, plus non-logical annotations\index{annotation}}
   \begin{note}
   An OMS language is used for the formal specification of \termref{OMS}.
   \end{note}
@@ -1597,7 +1625,7 @@ of \termref{non-logical symbols} of an
   \termdefinition{model}{semantic interpretation of all \termref{non-logical symbols} of a \termref{signature}}
   \begin{note}
     A model of an OMS is a model of the signature of the OMS
-    that moreover \termref{satisfies} all the \termref{axioms} of the OMS.
+    that moreover \termref{satisfies} all the {axioms} of the OMS.
   \end{note}
   \begin{note}
   This term is not to be confused with model in the sense of modeling (i.e.,
@@ -1763,7 +1791,7 @@ not considered sentences of that OMS.
 %    The particular strength of literate programming is that one can generate both a reference manual and compilable/executable code (here: a formal OMS) from the same source, which facilitates maintenance.
 %  \end{note}
 
-  \termdefinition{OMS documentation}{set of all \termref{annotations} to an \termref{OMS}, plus any other documents and explanatory comments generated during the entire OMS building process}
+  \termdefinition{OMS documentation}{set of all annotations\index{annotation} to an \termref{OMS}, plus any other documents and explanatory comments generated during the entire OMS building process}
   \begin{note}
     Adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}
   \end{note}
@@ -1771,7 +1799,7 @@ not considered sentences of that OMS.
 
 \sclause{Structured OMS}
 \begin{definitions}
-\termdefinition{basic OMS, \red{flat OMS}}{\termref{signature} equipped with a set of \termref{sentences} and \termref{annotations}, which may be used as a building block for a larger \termref{OMS}}
+\termdefinitionLight{basic OMS\index{basic OMS}, \red{flat OMS}}{\termref{signature} equipped with a set of \termref{sentences} and annotations\index{annotation}, which may be used as a building block for a larger \termref{OMS}}
   \begin{note}
     The sentences must use only those non-logical symbols that are present in the signature.
   \end{note}
@@ -1790,7 +1818,7 @@ A focused OMS is either a basic or structured OMS.
     involving many OMS as parts, has a single resulting \termref{logical theory}.
     This is in contrast to \termref{OMS network}, which do not have
     such a unique result, but rather comprise a network of OMS and
-    \termref{mappings}. See \cite{MossakowskiTarlecki09}.
+    {mappings}\index{mapping}. See \cite{MossakowskiTarlecki09}.
   \end{note}
 
 
@@ -1804,7 +1832,7 @@ More precisely, an OMS is flattenable if and only if it is either a basic OMS or
 \end{note}
 
 \termdefinition{elusive OMS}
-{OMS that is not \termref{flattenable}}
+{OMS that is not flattenable\index{flattenable OMS}}
 }
 
 
@@ -1893,7 +1921,7 @@ The conservative extension can be either model-theoretic or consequence-theoreti
   \end{note}
 \ednote{this is about coverage only. Should we also care about safety?}
 
-  \termdefinition{module extraction}{activity of obtaining from an \termref{OMS} concrete \termref{modules} to be used for a particular purpose (\eg to contain a particular sub-\termref{signature} of the original \termref{OMS})}
+  \termdefinition{module extraction}{activity of obtaining from an \termref{OMS} concrete modules\index{module} to be used for a particular purpose (\eg to contain a particular sub-\termref{signature} of the original \termref{OMS})}
   \begin{note}
     Cited and slightly adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}
   \end{note}
@@ -2000,7 +2028,7 @@ original and the renamed OMS.
 \termdefinition{alignment}{flexible \termref{OMS mapping} expressing a collection of semantic
 relations between entities of the two OMS}
 \begin{note}
-Alignments consist of \termref{correspondences}, each of which may have a confidence value. If all
+Alignments consist of correspondences\index{correspondence}, each of which may have a confidence value. If all
 confidence values are 1, the alignment can be given a formal, logic-based semantics.
 \end{note}
 
@@ -2082,10 +2110,10 @@ along the alignment, there is only one concept, representing both
 
 \red{
 \termdefinition{OMS language graph}{graph of \termref{OMS languages} and
-\termref{OMS language translations}, typically used in a \termref{heterogeneous environment}}
+OMS language translations\index{language translation}, typically used in a \termref{heterogeneous environment}}
 \begin{note}
   In an OMS language graph, some of the OMS language translations can be
-  marked to be \termref{default translations}.
+  marked to be default translations\index{default translation}.
 \end{note}
 
 \termdefinition{default translation}{specially marked \termref{OMS language
@@ -2119,7 +2147,7 @@ OMS languages and serializations.}
 
 \termdefinition{structuring language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} 
 that covers \termref{structured OMS} as well as the relations of \termref{basic OMS} and \termref{structured OMS} 
-to each other, including, but not limited to \termref{imports}, \termref{OMS mappings}, \termref{conservative extensions}, 
+to each other, including, but not limited to {imports}\index{import}, \termref{OMS mappings}, conservative extensions\index{conservative extension}, 
 and the handling of prefixes for CURIEs}
 
   \termdefinition{annotation language aspect}{the (unique) \termref{language aspect} of an \termref{OMS language} that enables the  expression of comments and annotations}
@@ -2160,7 +2188,7 @@ Common Logic uses the term ``dialect''; the following are standard Common Logic 
    \termdefinition{document}{result of serializing an OMS using a given serialization}
 
 
-  \termdefinition{standoff markup}{way of providing \termref{annotations} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS})}
+  \termdefinition{standoff markup}{way of providing {annotations}\index{annotation} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS})}
 \end{definitions}
 
 \sclause{Logic}
@@ -2214,11 +2242,11 @@ of the target logic.
 \termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semantics}
 
 \red{
-\termdefinition{logic graph}{graph of \termref{logics}, \termref{logic 
-translations} and \termref{logic reductions}, typically used in a \termref{heterogeneous environment}}
+\termdefinition{logic graph}{graph of logics\index{logic}, logic 
+translations\index{logic translation} and logic reductions\index{logic reduction}, typically used in a \termref{heterogeneous environment}}
 \begin{note}
   In a logic graph, some of the logic translations and reductions can be
-  marked to be \termref{default translations}.
+  marked to be {default translations}\index{default translation}.
   \ednote{Hopefully it is OK to subsume the notion of logic reduction
   under the term ``translation'' here.}
 \end{note}
@@ -2284,7 +2312,7 @@ metadata interoperability\textLF
 interoperability concerning the creation, meaning, computation, use, transfer, and exchange of descriptive data}
 
 \begin{definitions}
-  \termdefinition{logically interoperable}{property of \termref{structured OMS}, which may be written in different \termref{OMS languages} \markupcomment[author=Christoph Lange,type=todo]{based on different \termref{logics}}{phrase this more precisely, based on the previously introduced terms}, of being usable jointly in a coherent way (via suitable \termref{OMS language translations}), such that the notions of their overall consistency and logical entailment have a precise logical semantics}
+  \termdefinition{logically interoperable}{property of \termref{structured OMS}, which may be written in different \termref{OMS languages} \markupcomment[author=Christoph Lange,type=todo]{based on different \termref{logics}}{phrase this more precisely, based on the previously introduced terms}, of being usable jointly in a coherent way (via suitable {OMS language translations}\termref{OMS language translation}), such that the notions of their overall consistency and logical entailment have a precise logical semantics}
 \end{definitions}
 \begin{note}
 TODO Michael: explain the relationship to other notions of interoperability (from existing standards)
@@ -3308,7 +3336,7 @@ for one or more repetitions of \syntax{N}.}}
 
 \sclause{Libraries}\label{c:libraries}
 
-A library (\syntax{Library}) consists of a collection of (named)  OMS and mappings between these.  More specifically, a
+A \termref{library} (\syntax{Library}) consists of a collection of (named)  OMS and mappings between these.  More specifically, a
 library consists of a name, followed by a list of
 \syntax{LibraryItem}s.  A \syntax{LibraryItem} is either a
 definition of an OMS  (\syntax{OMSDefn}), 
@@ -5814,18 +5842,6 @@ Provide some examples
 special cases to be described
 
 
-
-
-
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-\clause{Keyword index}
-/to be supplemented in the final version/
-
-
-
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
@@ -6955,6 +6971,14 @@ can exchange information about available repositories and their OMS.
 In the future, these APIs shall be aligned with OMG's standardization
 effort API4KB.
 
+
+%\clause{Keyword index}
+%/to be supplemented in the final version/
+\addcontentsline{toc}{chapter}{Keyword index}
+%\backmatter 
+
+\printindex
+
 %\infannex{Bibliography}
 \clearpage
 \addcontentsline{toc}{chapter}{References}
@@ -6962,6 +6986,12 @@ effort API4KB.
 \renewcommand{\bibname}{References}
 \label{a:bibliography}
 \bibliography{dol}
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+
+
 
 \end{document}
 
@@ -7174,6 +7204,7 @@ Translations from SROIQ(D) to \Flogic are discussed in \cite{Bruijn:2008}.
 %%% mode: latex
 %%% ispell-local-dictionary: "british"
 %%% End: 
+
 
 
 
