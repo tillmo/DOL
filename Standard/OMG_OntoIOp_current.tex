@@ -1019,8 +1019,7 @@ requirement 6.5.6, DOL-conforming languages should support the
 use of IRIs. If they do not, there is a mechanism for assigning IRIs
 to (fragments of) language documents even if the language itself does not support
 this, see \ref{c:conform:serialization}.
-Moreover, there is a mechanism for injecting annotations
-and comments in existing language serializations, see \ref{sec:existing-serialization} and \ref{c:req:annotation}.
+Moreover, there is a mechanism for injecting IRIs in existing language serializations, see \ref{sec:existing-serialization} and \ref{c:req:annotation}.
    \\ \hline
 %
 6.7.(b)	& 
@@ -1378,7 +1377,7 @@ Well-behaved XML and RDF schemas support identifier injection in a `nice' way (r
 text-level comments).   In the worst case we cannot 
 inject anything into an OMS language fragment, because the OMS language serialization simply
 wouldn't allow us to write suitable comments, but we'd have to point into it from the enclosing context by
-by using standoff markup\termref{standoff markup}.
+by using \termref{standoff markup}.
 
 
 Further conformance criteria in this section are introduced to facilitate the convenient reuse of
@@ -1403,11 +1402,9 @@ Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous
 OMS we can recognize that a sentence is, \eg, stated in OWL, without
 explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
 of  a serialization that is merely text conforming).}
-\item The schema shall not forbid attributes from foreign namespaces (here: the
- DOL namespace) on any elements\ednote{Christoph (2014-03-26): the rationale is that in an XML serialization we wouldn't want to inject identifiers into completely unstructured XML comments (<!-- 
-… -->) but rather into well-structured attributes from some DOL namespace to-be-defined (think of <axiom dol:id="foo-ax">)}\todonote[author=Christoph
-  Lange,date=D:201110051433+02'00']{Maybe we also need child elements from
-   different namespaces?}
+\item The serialization shall use XML elements to represent all structural elements of an OMS.
+\item The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
+ DOL namespace \url{http://purl.net/dol/1.0/xml}) on any elements.\footnote{This is because either an attribute or a child element will be used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
 \end{itemize}
 
 \item[RDF conformance]
@@ -1536,6 +1533,7 @@ explicit references to the logics used.
   \item{IETF/RFC 3986}{Uniform Resource Identifier (URI): Generic Syntax. January 2005.\\ \url{http://tools.ietf.org/html/rfc3986}}
   \item{IETF/RFC 3987}{Internationalized Resource Identifiers (IRIs). January 2005.\\ \url{http://tools.ietf.org/html/rfc3987}}
   \item{IETF/RFC 5147}{URI Fragment Identifiers for the text/plain Media Type.  April 2008.\\ \url{http://tools.ietf.org/html/rfc5147}}
+  \item{W3C/TR REC-xptr-framework:2003}{XPointer Framework.  W3C Recommendation, 25 March 2003. \\ \url{http://www.w3.org/TR/2003/REC-xptr-framework-20030325/}}
   \item{W3C/TR REC-rdf-concepts:2004}{Resource Description Framework (RDF): Concepts and Abstract Syntax.  W3C Recommendation, 02 February 2004. \\ \url{http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/}}
   \item{W3C/TR REC-xml-names:2009}{Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009.\\
    \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
@@ -3205,7 +3203,7 @@ Since \DOL is a meta-language,  it \textit{inherits} the logical language aspect
 \begin{description}
 \item[Logic] Most commonly, OMS languages are based on a description logic or some other subset of first-order logic, but in some cases, higher-order, modal, paraconsistent and other logics are used.
 \item[Modularity] A means of structuring an OMS into reusable parts, reusing parts of other OMS, mapping imported symbols to those in the importing OMS, and asserting additional properties about imported symbols.
-\item[Annotation] A means of attaching human-readable descriptions to OMS symbols, addressing knowledge engineers and service developers, but also end users of OMS-based services.\ednote{TODO Christoph: reformulate. DOL enables the use of annotations}
+\item[Annotation] A means of attaching human-readable descriptions to OMS symbols, addressing knowledge engineers and service developers, but also end users of OMS-based services.
 \end{description}
 Whereas the first feature determines the expressivity of the language and the possibilities for automated reasoning (decidability, tractability, etc.), the latter two facilitate OMS engineering as well as the engineering of OMS-based software.
 
@@ -3922,8 +3920,8 @@ prefix maps, even if the serialization does not support prefix maps otherwise.
 \sclause{Document type}
 
 \begin{description}
-\item[MIME type] \mimetype{application/dol+text}\todonote[author=Christoph Lange,type=fyi]{just a placeholder so far, needs discussion}
-\item[Filename extension] .dol\todonote[author=Christoph Lange]{the most intuitive one, but gives the text serialization a privileged role over the others}
+\item[MIME type] \mimetype{application/dol+text}
+\item[Filename extension] .dol
 \end{description}
 
 \sclause{Concrete Syntax}\label{a:dol-text:concrete}
@@ -4184,7 +4182,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 
 \sclause{Lexical Symbols}
 
-The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of OMS, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
+The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nisref{IETF/RFC 3987:2005}.}  For enhanced readability of OMS, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
 \ssclause{Key Words and Signs}\label{c:keywords}
 
@@ -4192,7 +4190,7 @@ The lexical symbols of the DOL text serialization include various key words and 
 
 \sssclause{Key Words}
 
-Key words are always written lowercase. The following key words are reserved, and are not available for use as complete identifiers\todonote[author=Christoph Lange,type=todo]{figure out what that actually means.  If we use OWL Manchester's style of abbreviating IRIs, it probably means that in the worst case some IRIs can't be abbreviated but must be given as complete global IRIs}, although they can be used as parts of tokens:
+Key words are always written lowercase. The following key words are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  None of these rewritings changes the semantics.}, although they can be used as parts of tokens. 
 
 {\ttfamily %
 and
@@ -4240,7 +4238,17 @@ Table~\ref{tab:key-signs} following key signs are reserved, and are not availabl
 \label{sec:existing-serialization}
 Any document providing an OMS in a serialization of a DOL conforming
 language can be used as-is in DOL, by reference to its IRI.
-\ednote{TODO: injection of comments, \%implies etc. See \ref{c:req:annotation} and \ref{s:annotations}.}
+
+The following cases apply for injecting identifiers into fragments of OMS languages, depending on the conformance level of the respective serialization of the OMS language used in terms of section~\ref{c:conform:serialization}:
+\begin{description}
+\item[XML conformance] Identifiers are added to XML elements by using the IRI-valued \textit{dol:id} XML attribute from the \url{http://purl.net/dol/1.0/xml} namespace, or, if the serialization does not support this attribute, by adding a \textit{dol:id} XML element as the first child, containing exactly one text node with the IRI.
+\item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
+\item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
+\item[Standoff markup conformance] Standard mechanisms such as XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) or \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of XML or text in the given OMS serialization.
+\end{description}
+\ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
+
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use 
 
 \clause{DOL semantics}\label{c:semantics}
 
@@ -6162,14 +6170,14 @@ the subclass relation is fixed).
 
 In the case of \RDFS, the standard vocabulary contains more elements,
 like
-rdf:domain,
-rdf:range, rdf:Resource, rdf:Literal, rdf:Datatype, rdf:Class,
-rdf:subClassOf, rdf:subPropertyOf, rdf:member, rdf:Container,
-rdf:ContainerMembershipProperty.
+\texttt{rdfs:domain},
+\texttt{rdfs:range}, \texttt{rdfs:Resource}, \texttt{rdfs:Literal}, \texttt{rdfs:Datatype}, \texttt{rdfs:Class},
+\texttt{rdfs:subClassOf}, \texttt{rdfs:subPropertyOf}, \texttt{rdfs:member}, \texttt{rdfs:Container},
+\texttt{rdfs:ContainerMembershipProperty}.
 
-There is also \OWL full, an extension of \RDFS with resources
-like owl:Thing and owl:oneOf, tailored towards the representation of
-\OWL.
+There is also \OWL Full, an extension of \RDFS with resources
+such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the representation of
+\OWL~\cite{W3C:REC-owl2-rdf-based-semantics-20091027}.
 
 \end{definition}
 
@@ -7403,7 +7411,7 @@ Translations from SROIQ(D) to \Flogic are discussed in \cite{Bruijn:2008}.
 
 %%% Local Variables: 
 %%% mode: latex
-%%% ispell-local-dictionary: "british"
+%%% ispell-local-dictionary: "american"
 %%% End: 
 
 
