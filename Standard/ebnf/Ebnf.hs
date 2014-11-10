@@ -66,7 +66,7 @@ instance Pretty Alt where
      multi_liner acc1 acc2 (s:rest) = 
        if length acc2' < width-length si-w+4
         then multi_liner acc1 acc2' rest
-        else multi_liner (acc1++acc2++sep) "" rest
+        else multi_liner (acc1++acc2++sep) "" (s:rest)
        where acc2' = acc2++" "++s
    pretty c w (Informal s) = s
 instance Pretty EBNF where
