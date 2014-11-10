@@ -3663,39 +3663,7 @@ Double               = ($<$ a number $\in [0,1]$ $>$) ;
 A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; 
 the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a 
 non-logical symbol twice is an error. Mapping two source non-logical symbols to the same target 
-non-logical symbol is legal, this then is a non-injective OMS mapping.}.  Applications \shall 
-implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
-given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely 
-defined – in detail:
-
-\begin{algorithmic}
-  \REQUIRE $O_s, O_t$ are OMS
-  \REQUIRE $M\subseteq\Sigma(O_s)\times\Sigma(O_t)$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
-  \FORALL{$e_s\in\Sigma(O_s)$ not covered by $M$}
-    \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
-    \STATE $N_t\leftarrow\{\operatorname{localname}(e)|e\in\Sigma(O_t)\}$
-    \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
-      \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
-    \ENDIF
-  \ENDFOR
-  \ENSURE $M$ completely covers $\Sigma(O_s)$
-\end{algorithmic}
-
-The local name of a non-logical symbol is determined as follows\footnote{In practice, this can 
-often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
-respective OMS (\cf \cref{c:identifiers}).  In general, however, functions that turn abbreviations 
-into IRIs are not invertible.  For this reason, the implicit mapping of non-logical symbols is 
-specified independently from IRI abbreviation mechanisms possibly employed in the 
-OMS.}:\hspace{-2cm}
-\begin{algorithmic}
-  \REQUIRE $e$ is a non-logical symbol (identified by an IRI; \cf \cref{c:identifiers})
-  \IF[production \syntax{ifragment} in \nisref{IETF/RFC 3987:2005}]{$e$ has a fragment $f$}
-    \RETURN $f$
-  \ELSE
-    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nisref{W3C/TR REC-xml:2008}
-    \RETURN $n$
-  \ENDIF
-\end{algorithmic}
+non-logical symbol is legal, this then is a non-injective OMS mapping.}. 
 
 %Alignments 
 
@@ -5236,8 +5204,44 @@ sem(\Gamma,\Sigma,\syntax{Symbol}_n)$, if such a sub-signature exists and is oth
  $$sem(\Gamma,\Sigma,\Sigma',\syntax{symbol-map-items, SymbolOrMap}_1, \ldots, \syntax{SymbolOrMap}_n) = \sigma$$
 
 where 
-$\sigma = makeMorphism_{logic(\Gamma.current)}(
-  sem(\Gamma, \syntax{SymbolOrMap}_1),\ldots, sem(\Gamma, \syntax{SymbolOrMap}_n))$.
+$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n)))$\\
+and $(s_i,t_i) = sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolOrMap}_i)$ for $i=1,\ldots,n$.
+
+Applications \shall 
+implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
+given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely 
+defined – in detail:
+
+\begin{algorithmic}
+  \REQUIRE $O_s, O_t$ are OMS
+  \REQUIRE $M\subseteq\Sigma(O_s)\times\Sigma(O_t)$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
+  \FORALL{$e_s\in\Sigma(O_s)$ not covered by $M$}
+    \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
+    \STATE $N_t\leftarrow\{\operatorname{localname}(e)|e\in\Sigma(O_t)\}$
+    \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
+      \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
+    \ENDIF
+  \ENDFOR
+  \ENSURE $M$ completely covers $\Sigma(O_s)$
+\end{algorithmic}
+
+The local name of a non-logical symbol is determined as follows\footnote{In practice, this can 
+often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
+respective OMS (\cf \cref{c:identifiers}).  In general, however, functions that turn abbreviations 
+into IRIs are not invertible.  For this reason, the implicit mapping of non-logical symbols is 
+specified independently from IRI abbreviation mechanisms possibly employed in the 
+OMS.}:\hspace{-2cm}
+\begin{algorithmic}
+  \REQUIRE $e$ is a non-logical symbol (identified by an IRI; \cf \cref{c:identifiers})
+  \IF[production \syntax{ifragment} in \nisref{IETF/RFC 3987:2005}]{$e$ has a fragment $f$}
+    \RETURN $f$
+  \ELSE
+    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nisref{W3C/TR REC-xml:2008}
+    \RETURN $n$
+  \ENDIF
+\end{algorithmic}
+
+
 
 \todonote{We need a logic-specific function that turns a symbol map into a signature morphism. Add it in the list of assumptions about 
 the heterogeneous logic env?}
@@ -5336,11 +5340,26 @@ $$sem(\Gamma, \syntax{OMSRef})= \Gamma(\syntax{OMSRef})$$
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\syntax{Symbol})}
+\semdom{sem(\Gamma, \Sigma,\syntax{Symbol}) = s}
 
-\semdom{sem(\syntax{SymbolMap})}
+$$sem(\Gamma,\Sigma, \syntax{Symbol}) = s$$
+where $s$ is a logic-specific symbol with the name $\syntax{Symbol}$ from $\Sigma$. If such symbol does not exist, 
+the semantics is undefined.
 
-\semdom{sem(\syntax{SymbolOrMap})}
+\semdom{sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMap})}
+
+$$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$$
+\noindent where $sem(\Gamma,\Sigma_1,\syntax{Symbol}_1) = s_1$
+and $sem(\Gamma,\Sigma_2,\syntax{Symbol}_2) = s_2$.
+
+\semdom{sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{SymbolOrMap}) = (s,t)}
+
+$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$
+
+and
+
+$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{Symbol}) = (s,s)$ 
+where $sem(\Gamma,\Sigma_1, \syntax{Symbol}) = s$.
 
 \semdom{sem(\Gamma,\Sigma,\syntax{Term}) = t}
 
