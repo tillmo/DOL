@@ -3466,15 +3466,15 @@ OMS                ::= ExtendingOMS
                      | application SubstName Sentence
 Minimization       ::= MinType CircMin CircVars
 MinType            ::= minimize | maximize | free | cofree
-CircMin            ::= Symbol Symbol*
+CircMin            ::= Symbol+
 CircVars           ::= Symbol*
 Translation        ::= renaming LogicTranslation* [SymbolMapItems]
 LogicTranslation   ::= logic-translation OMSLangTrans
 Reduction          ::= hidden LogicReduction* [SymbolItems]
                      | revealed SymbolItems
 LogicReduction     ::= logic-reduction OMSLangTrans
-SymbolItems        ::= symbol-items Symbol Symbol*
-SymbolMapItems     ::= symbol-map-items SymbolOrMap SymbolOrMap*
+SymbolItems        ::= symbol-items Symbol+
+SymbolMapItems     ::= symbol-map-items SymbolOrMap+
 Extraction         ::= extraction [QualInterfaceSignature]
 Approximation      ::= approximation [QualInterfaceSignature] [LogicRef]
 Filtering          ::= select BasicOMS | reject BasicOMS
@@ -3997,14 +3997,14 @@ MinimizeKeyword  ::= 'minimize'
                    | 'maximize'
                    | 'free'
                    | 'cofree'
-CircMin          ::= Symbol Symbol*
-CircVars         ::= 'vars' (Symbol Symbol*)
+CircMin          ::= Symbol+
+CircVars         ::= 'vars' (Symbol+)
 GroupOMS         ::= '{' OMS '}' | OMSRef
 Translation      ::= 'with' LogicTranslation* SymbolMapItems
-                   | 'with' LogicTranslation LogicTranslation*
+                   | 'with' LogicTranslation+
 LogicTranslation ::= 'translation' OMSLangTrans
 Reduction        ::= 'hide' LogicReduction* SymbolItems
-                   | 'hide' LogicReduction LogicReduction*
+                   | 'hide' LogicReduction+
                    | 'reveal' SymbolItems
 LogicReduction   ::= 'along' OMSLangTrans
 SymbolItems      ::= Symbol ( ',' Symbol )*
