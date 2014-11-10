@@ -476,8 +476,13 @@ author=,date=,id=,replyto=,type=}{}%
 %\usepackage{cleveref}
 %\renewcommand*{\todonote}[2][]{}
 
-
-
+%the afterpage is used to introduce a blank page
+\usepackage{afterpage}
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
 
 
 
@@ -3632,7 +3637,8 @@ ModuleName           = IRI ;
 ModuleType           = 'module-type' , OMS , OMS ;
 
 AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType, 
-                                    AlignSem,   { Correspondence } ; <\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}>
+                                    AlignSem,   { Correspondence } ; <\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for
+	 the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}>
 AlignName            = IRI ;
 AlignCards           = AlignCardForward , AlignCardBackward ; 
 AlignCardForward     = 'align-card-forward' , AlignCard ;
@@ -4459,7 +4465,7 @@ parts of the model.
 %moreover each propositional (and predicate) symbol true in $M_1$ is also true in $M_2$ (for a
 %given tuple of arguments).
 
-For the rest of the section, we work in an arbitraty institution. 
+For the rest of the section, we work in an arbitrary institution. 
 A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
  A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
 $M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
@@ -7130,26 +7136,31 @@ In the future, these APIs shall be aligned with OMG's standardization
 effort API4KB.
 
 
-%\clause{Keyword index}
-%/to be supplemented in the final version/
-\addcontentsline{toc}{chapter}{Keyword index}
-%\backmatter 
-
-\printindex
-
 %\infannex{Bibliography}
+\newpage
+
 \clearpage
-\addcontentsline{toc}{chapter}{References}
+
 \bibliographystyle{plain} 
 \renewcommand{\bibname}{References}
 \label{a:bibliography}
 \bibliography{dol}
+\addcontentsline{toc}{chapter}{References}
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 
 
+\newpage
+\clearpage
+%\clause{Keyword index}
+%/to be supplemented in the final version/
+
+%\backmatter 
+\printindex
+\addcontentsline{toc}{chapter}{Keyword index}
+\blankpage
 
 \end{document}
 
