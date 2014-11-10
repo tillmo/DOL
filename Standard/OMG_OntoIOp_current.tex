@@ -6512,53 +6512,76 @@ combine NetworkElements excluding IRIs  &  \\\hline
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
-         log:   <http://www.omg.org/spec/DOL/logics/>    %% descriptions of logics ...
-         trans: <http://www.omg.org/spec/DOL/translations/> )%  %% ... and translations
+         log:   <http://www.omg.org/spec/DOL/logics/>    
+		 		%% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )%  
+		 		%% ... and translations
 
 library Mereology
 
-logic log:Propositional syntax ser:Prop/Hets       %% non-standard serialization built into Hets 
-ontology Taxonomy = %mcons      %% basic taxonomic information about mereology reused from DOLCE
+%% non-standard serialization built into Hets: 
+logic log:Propositional syntax ser:Prop/Hets       
+
+%% basic taxonomic information about mereology reused from DOLCE:
+ontology Taxonomy = %mcons      
   props PT, T, S, AR, PD
   . S $\vee$ T $\vee$ AR $\vee$ PD $\longrightarrow$ PT                                                    %% PT is the top concept
-  . S $\wedge$  T  $\longrightarrow$ $\bot$                                               %% PD, S, T, AR are pairwise disjoint
+  . S $\wedge$  T  $\longrightarrow$ $\bot$                  %% PD, S, T, AR are pairwise disjoint
   . T $\wedge$ AR $\longrightarrow$ $\bot$                                                                         %% and so on
 end
 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester           %% OWL Manchester syntax
-ontology BasicParthood =                             %% Parthood in SROIQ, as far as easily expressible
-  Class: ParticularCategory SubClassOf: Particular
-                                            %% omitted similar declarations of the other classes
-    DisjointUnionOf: SpaceRegion, TimeInterval, AbstractRegion, Perdurant
-                                 %% pairwise disjointness more compact thanks to an OWL built-in
-  ObjectProperty: isPartOf        Characteristics: Transitive
-  ObjectProperty: isProperPartOf  Characteristics: Asymmetric  SubPropertyOf: isPartOf 
-  Class: Atom EquivalentTo: inverse isProperPartOf only owl:Nothing
-end                                          %% an atom has no proper parts
+%% OWL Manchester syntax declaration: 
+language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester           
 
+%% Parthood in SROIQ, as far as easily expressible:
+ontology BasicParthood =                             
+  Class: ParticularCategory 
+  	SubClassOf: Particular
+                %% omitted similar declarations of the other classes
+    DisjointUnionOf: SpaceRegion, TimeInterval, AbstractRegion, Perdurant
+                %% pairwise disjointness more compact 
+				%% thanks to an OWL built-in
+  ObjectProperty: isPartOf        
+  	Characteristics: Transitive
+  ObjectProperty: isProperPartOf  
+  	Characteristics: Asymmetric  SubPropertyOf: isPartOf 
+  Class: Atom 
+  	EquivalentTo: inverse isProperPartOf only owl:Nothing
+end             %% an atom has no proper parts
+
+%% translate the logic, then rename the entities
 interpretation TaxonomyToParthood : Taxonomy to BasicParthood =
-  translation trans:PropositionalToSROIQ,    %% translate the logic, then rename the entities
-  PT $\mapsto$ Particular, S $\mapsto$ SpaceRegion, T $\mapsto$ TimeInterval, A $\mapsto$ AbstractRegion, %[ and so on ]%
+  translation trans:PropositionalToSROIQ,
+  PT $\mapsto$ Particular,	S $\mapsto$ SpaceRegion, 
+  T $\mapsto$ TimeInterval,	A $\mapsto$ AbstractRegion, %[ and so on ]%
 
 logic log:CommonLogic syntax ser:CommonLogic/CLIF
-                      %% syntax: the Lisp-like CLIF dialect of Common Logic
+                %% syntax: the Lisp-like CLIF dialect of Common Logic
+
+%% ClassicalExtensionalParthood imports the OWL ontology from above, 
+%% translate it to Common Logic, then extend it there:
 ontology ClassicalExtensionalParthood =
   BasicParthood with translation trans:SROIQtoCL
-      %% import the OWL ontology from above, translate it to Common Logic, then extend it there:
 then
   . (forall (X) (if (or (= X S) (= X T) (= X AR) (= X PD))
                     (forall (x y z) (if (and (X x) (X y) (X z))
-                                        (and                          %% now list all the axioms
-      (if (and (isPartOf x y) (isPartOf y x)) (= x y))                           %% antisymmetry
+                                        (and                          
+%% now list all the axioms: 
+	%% antisymmetry:
+      (if (and (isPartOf x y) (isPartOf y x)) (= x y)) 
+	%% transitivity; not combinable with asymmetry in OWL DL:
       (if (and (isProperPartOf x y) (isProperPartOf y z)) (isProperPartOf x z))
-                              %% transitivity; can't be expressed in OWL together with asymmetry
       (iff (overlaps x y) (exists (pt) (and (isPartOf pt x) (isPartOf pt y))))
       (iff (isAtomicPartOf x y) (and (isPartOf x y) (Atom x)))
       (iff (sum z x y)
-           (forall (w) (iff (overlaps w z) (and (overlaps w x) (overlaps w y)))))
-      (exists (s) (sum s x y))                                           %% existence of the sum
+           (forall (w) (iff 
+		   	  (overlaps w z) 
+			  (and (overlaps w x) (overlaps w y)))))
+ %% existence of the sum:
+      (exists (s) (sum s x y))                                          
       )))))
-  . (forall (Set a) (iff (fusion Set a)                                  %% definition of fusion
+%% definition of fusion	  
+  . (forall (Set a) (iff (fusion Set a)                                  
             (forall (b) (iff (overlaps b a)
                              (exists (c) (and (Set c) (overlaps c a)))))))
   }
@@ -6587,7 +6610,9 @@ then
 then
   %% VARYING PART
   Class: Ontable 
-  Class: BlockNotAbnormal EquivalentTo: Block and not Abnormal SubClassOf: Ontable 
+  Class: BlockNotAbnormal 
+  	EquivalentTo: Block and not Abnormal 
+	SubClassOf: Ontable 
         %% Normally, a block is on the table
 then %implied
   Individual: B2 Types: Ontable
@@ -6606,7 +6631,9 @@ ontology Blocks_Alternative =
               %% B1 and B2 are different blocks
               %% B1 is abnormal
   Class: Ontable 
-  Class: BlockNotAbnormal EquivalentTo: Block and not Abnormal SubClassOf: Ontable 
+  Class: BlockNotAbnormal 
+  	EquivalentTo: Block and not Abnormal 
+	SubClassOf: Ontable 
         %% Normally, a block is on the table
   minimize Abnormal var Ontable, BlockNotAbnormal
 then %implied
@@ -6703,7 +6730,8 @@ combine
   %% implicitly: Article $\mapsto$ 1:Article @\ldots@
   %%             Article $\mapsto$ 2:Article @\ldots@  
 bridge with translation MS-OWL2DDL
-  %% implicitly added my translation MS-OWL2DDL: binary relation providing the bridge
+  %% implicitly added my translation MS-OWL2DDL: 
+  %% binary relation providing the bridge
   1:Publication $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:Publication
   1:PhdThesis $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:Thesis
   1:InBook $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:BookArticle
@@ -6720,11 +6748,6 @@ bridge with translation DDL2-ECO
   %% add E-connection style bridge rules on top
 end
 
-%% Note: unfinished...
-%% add second spec following example from AI journal paper on E-connections,
-%% page 22: three different bridge relations between two ontologies; first DDL
-%% modelling, translation to ECO with default relation, renaming and extension
-%% in ECO style.
 
 library Market
 
@@ -6738,7 +6761,8 @@ combine
        ObjectProperty: BoughtBy }
 bridge with translation OWL2DDLwithRoles
   1:PurchaseOrder -into-> 2:BoughtBy
-%% means in FOL: forall x 1PurchaseOrder(x) -> forall yz CR12(x,y,z) -> 2BoughtBy(y,z)
+%% means in FOL: 
+%% forall x 1PurchaseOrder(x) -> forall yz CR12(x,y,z) -> 2BoughtBy(y,z)
 end
 
 
@@ -6870,13 +6894,16 @@ the protocol state machine in Fig.~\ref{fig:psm} as follows in DOL:
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,refinement},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/uml#>
          uml:   <http://www.uml.org/spec/UML/>
-         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
+%% descriptions of logics ...		 
+         log:   <http://www.omg.org/spec/DOL/logics/>
 
 logic log:uml
 
 refinement abstract_to_concrete_atm =
-  psm refined to { atm with Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, 
-                   Verified |-> Idle, Verifying |-> Verifying hide card, PIN                   }
+  psm refined to {  atm with Idle |-> Idle, CardEntered |-> Idle, 
+                             PINEntered |-> Idle, Verified |-> Idle, 
+                             Verifying |-> Verifying 
+                    hide card, PIN   }
 end
 \end{lstlisting}
 
