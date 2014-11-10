@@ -5913,26 +5913,29 @@ For a full treatment of the background and design considerations of LoLa please 
 
 The tables in this annex list the classes and properties of LoLa.  All classes and properties are assumed to be in the LoLa namespace unless stated otherwise.
 
-\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following RDF triples (given in Turtle serialization~\cite{W3C:REC-turtle-20140225}):\CLnote[type=todo]{also cover rdfs:subClassOf (once we have such cases)}
+\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following RDF triples (given in Turtle serialization~\cite{W3C:REC-turtle-20140225}):
 
 \begin{lstlisting}[language=N3]
-_:class rdf:type     rdfs:Class ;
-        rdfs:comment "documentation" .
+_:class rdf:type        rdfs:Class ;
+        rdfs:subClassOf _:superclass ;
+        rdfs:comment    "documentation" .
 \end{lstlisting}
 
 \newcommand*{\ClassDocumentation}[1]{\textit{#1}}
 \ctable[
-caption={Classes of the RDF vocabulary for describing OMS languages},
+caption={LoLa Classes},
 mincapwidth=\textwidth,
 label={tab:logic-vocab-classes},
 pos=h,
-]{ll}{% table footnotes
+]{lll}{% table footnotes
 }{\FL
-  Class & \ClassDocumentation{documentation}\ML
-  Language & \ClassDocumentation{an OMS language}\NN
-  Logic & \ClassDocumentation{a logic that defines the semantics of an OMS language}\NN
-  Serialization & \ClassDocumentation{a serialization of an OMS language}\NN
-  Mapping & \ClassDocumentation{a mapping of an OMS language}\LL
+  Class & \ClassDocumentation{documentation} & Superclass \ML
+  Language & \ClassDocumentation{an OMS language} & \NN
+  Logic & \ClassDocumentation{a logic that defines the semantics of an OMS language} & \NN
+  Serialization & \ClassDocumentation{a serialization of an OMS language} & \NN
+  Mapping & \ClassDocumentation{a mapping of an OMS language} & \NN
+  Translation & \ClassDocumentation{a mapping of an OMS language} & \NN
+\LL
 }
 
 \tref{tab:logic-vocab-prop} lists the properties of the RDF vocabulary for describing OMS languages.  Each row of the table translates into the following RDF triples (given in Turtle serialization):
@@ -5947,7 +5950,7 @@ _:property rdf:type     rdf:Property ;
 \todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''}
 \newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
 \ctable[
-caption={Properties of the RDF vocabulary for describing OMS languages},
+caption={LoLa Properties},
 width=\linewidth,
 mincapwidth=\textwidth,
 label={tab:logic-vocab-prop},
