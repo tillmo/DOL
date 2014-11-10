@@ -1703,7 +1703,7 @@ There are also general purpose OMS languages, which can express both \termref{OM
   variables.
   \end{note}
 
-  \termdefinition{substitution}{\termref{logical OMS mapping} that maps query variables\index{query variable} of one \termref{OMS} to complex terms\index{term} of another OMS}
+  \termdefinition{substitution}{\termref{OMS mapping} that maps query variables\index{query variable} of one \termref{OMS} to complex terms\index{term} of another OMS}
 
   \termdefinition{answer substitution}{\termref{substitution} that, when applied to
    a given \termref{query}, turns the latter into a logical consequence of a
@@ -1965,13 +1965,13 @@ best possible (in the sense of a maximum set of logical consequences)
 
    \termdefinitionLight{\termref{OMS mapping}\synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}}
   
-  \termdefinition{logical OMS mapping}{\termref{OMS mapping} that has a formal, logic-based semantics}
-  \begin{note}
-    Logical OMS mappings are given as sets of symbol map items\index{symbol map item}, which generate \emph{signature morphisms}.
-  \end{note}
-  \begin{note}
-Some specific kinds of logical OMS mappings will be introduced below.  
-  \end{note}
+%%   \termdefinition{logical OMS mapping}{\termref{OMS mapping} that has a formal, logic-based semantics}
+%%   \begin{note}
+%%     Logical OMS mappings are given as sets of symbol map items\index{symbol map item}, which generate \emph{signature morphisms}.
+%%   \end{note}
+%%   \begin{note}
+%% Some specific kinds of logical OMS mappings will be introduced below.  
+%%   \end{note}
 
  \termdefinition{symbol map item}{pair of symbols of two OMS, indicating how a symbol from the first OMS is mapped by a signature morphism to a symbol of the second OMS}
  \begin{note}
@@ -1979,7 +1979,7 @@ Some specific kinds of logical OMS mappings will be introduced below.
    and $s_2$ is a symbol from the \emph{target} source of the OMS mapping.
  \end{note}
 
-  \termdefinitionLight{interpretation\index{interpretation}\synonym view\synonym refinement}{\termref{logical OMS mapping} that postulates a
+  \termdefinitionLight{interpretation\index{interpretation}\synonym view\synonym refinement}{\termref{OMS mapping} that postulates a
 specialization relation
  between two \termref{OMS}} along a morphism between their signatures
   \begin{note}
@@ -1991,7 +1991,7 @@ specialization relation
   \end{note}
 
   \termdefinition{equivalence}
-{\termref{logical OMS mapping} ensuring that two \termref{OMS} share the
+{\termref{OMS mapping} ensuring that two \termref{OMS} share the
   same definable concepts}
   \begin{note}
     Two OMS are equivalent if they have a common definitional extension.
@@ -2003,9 +2003,9 @@ specialization relation
     Adapted from \cite{CuencaGrauEtAl:ExtractingModulesOntologies2007}
   \end{note}
 
-  \termdefinition{module relation}{\termref{logical OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
+  \termdefinition{module relation}{\termref{OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
 
-  \termdefinition{import}{\termref{logical OMS mapping} between two
+  \termdefinition{import}{\termref{OMS mapping} between two
     \termref{OMS} such that one OMS behaves as if it were
     included into the other}
   \begin{note}
@@ -2024,10 +2024,10 @@ Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclus
   \termdefinition{renaming}{assignment of new names
    to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}}
 \begin{note}
-A renaming results in a \termref{logical OMS mapping} between the
+A renaming results in an \termref{OMS mapping} between the
 original and the renamed OMS.
 \end{note}
-  \termdefinition{reduction}{\termref{logical OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
+  \termdefinition{reduction}{\termref{OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
 
 \termdefinition{alignment}{flexible \termref{OMS mapping} expressing a collection of semantic
 relations between entities of the two OMS}
@@ -3202,7 +3202,7 @@ DOL's modularity and annotation constructs can either be embedded into existing 
 
 A large variety of OMS languages in use can be captured at an abstract level using the concept of 
 \emph{institutions}\index{institution} \cite{GoguenBurstall92}.
-This allows us to develop results independently of the particularities of a logical system and to use the notions of institution and  logical language interchangeably. 
+This allows the development of results independently of the particularities of a logical system and to use the notions of institution and  logical language interchangeably. 
 %We first introduce the concept of \emph{logic syntax}.
 The main idea is to collect the non-logical
 symbols of the language in signatures and to assign to each signature the set of sentences that can be formed with its symbols. 
@@ -3243,11 +3243,24 @@ Lange,date=D:201109201457+02'00',type=todo]{Figure out what this
 abstract syntax category \syntax{OMS} in
 clause~\ref{c:abstract-syntax}.
 
+A heterogeneous OMS can import several OMS expressed in different
+conforming logics, for which suitable translations have been defined
+in the logic graph provided in \aref{a:graph} or in an extension to it
+that has been provided when establishing the conformance of some other
+logic with DOL.  Determining the semantics of the heterogeneous OMS
+requires a translation into a common target language to be applied
+(\cf \cref{c:semantics}).  This translation is determined via a lookup
+in the transitive closure of the logic graph.  Depending on the
+reasoners available in the given application setting, it can, however,
+be necessary to employ a different translation.  Authors can express
+which one to employ.  In a multi-step translation, it is possible to
+implicitly apply as many default translations as possible, and to
+concentrate on making explicit only those translations that deviate
+from the default.
+
 \section{DOL includes provisions for expressing mappings between OMS.}\label{c:req:links}
 
-DOL provides a syntax for expressing mappings between OMS -- logical OMS Mappings as well as alignments\index{alignment}.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}. This \IS defines a set of logical OMS mapping types and a set of non-logical OMS mapping types.
-
-Logical OMS mappings supported by DOL include:
+DOL provides a syntax for expressing mappings between OMS.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}.  OMS mappings supported by DOL include:
 \begin{itemize}
 \item imports (particularly including imports that lead to conservative extensions), see the
 abstract syntax categories \syntax{OMSRef} and \syntax{ExtensionOMS} in
@@ -3255,11 +3268,14 @@ clause~\ref{c:abstract-syntax}.
 \item interpretations (both between OMS and OMS networks), see the
 abstract syntax category \syntax{IntprDefn} in
 clause~\ref{c:abstract-syntax}.
+\item alignments between OMS, see the
+abstract syntax category \syntax{AlignDefn} in
+clause~\ref{c:abstract-syntax}.
 \item mappings between OMS and their modules, see the
 abstract syntax category \syntax{ModuleRelDefn} in
 clause~\ref{c:abstract-syntax}.
 \end{itemize}
-DOL allows such links to express signature translations in such OMS mappings; see the
+DOL uses symbol maps to express signature translations in such OMS mappings; see the
 abstract syntax category \syntax{SymbolMapItems} in
 clause~\ref{c:abstract-syntax}.
 
@@ -3279,28 +3295,6 @@ the rule for \syntax{combination} for the abstract syntax category
 \label{f:DOL-mapping}
 \end{figure}
 
-\section{DOL enables the representation of OMS and OMS mappings at different levels of detail}\label{c:explicit}
-
-OMS and OMS mappings expressed in DOL can be based on a
-number of implicit assumptions about which OMS language
-translation or which ontology matcher has been employed.  Depending on
-the OMS engineering workflow or application setting, it can be
-useful to keep these assumptions implicit or to make them explicit.
-DOL allows such assumptions to remain implicit, if desired.
-However, it also enables the user to 
-capture these assumptions explicitly as annotations\index{annotation}
-to the OMS.  This \IS specifies a
-translation that expands any DOL OMS with implicit assumptions
-into its explicit counterpart.\todo{Terry: (Is this true? if so, rewrite). Perhaps:  This OMS Specification provides a means to specify a translation to expand any DOL OMS with implicit assumptions into an  explicit counterpart. 
-(is such a translation counterpart necessarily unique, either syntactically or semantically?  If a semantically preserving syntax change occurs to the original, will the counterpart change?)}
-
-There is one case where DOL provides a choice between representing information implicitly or  explicitly:
-%\begin{description}
-%\item[default OMS language translations] 
-A heterogeneous OMS can import several OMS expressed in different conforming logics, for which suitable translations have been defined in the logic graph provided in \aref{a:graph} or in an extension to it that has been provided when establishing the conformance of some other logic with DOL.  Determining the semantics of the heterogeneous OMS requires a translation into a common target language to be applied (\cf \cref{c:semantics}).  This translation is determined via a lookup in the transitive closure of the logic graph.  Depending on the reasoners available in the given application setting, it can, however, be necessary to employ a different translation.  Authors can express which one to employ.  In a multi-step translation, it is possible to implicitly apply as many default translations as possible, and to concentrate on making explicit only those translations that deviate from the default.\CLnote[type=q-aut]{Will this situation be the same for default approximations, or to we need to add an extra item to the list?}
-%\item[different matching algorithms] OMS alignments, which DOL is able to express, may have been obtained by running different OMS matching algorithms.  If, in a given OMS engineering workflow, the information on which algorithm has been applied is clear from the context, it is possible to omit it in the alignment expressed in DOL.  Otherwise, \eg if the next person working on the OMS requires that information, it is possible to make it explicit.\todonote{TM: the alignment itself should be there explicitly. right? But then the information about the matching algorithm that has produced it is a mere annotation without semantics, isn't it?\\ CL: I agree with you. OK, so we will replace this with approximation algorithms. 
-%MC: using approximation algorithms is not different than using alignments, as both annotations have no effect on the semantics}
-%\end{description}
 
 ~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{ask Michael Gr{\"u}ninger for his mereology example in CL}
 
@@ -3308,9 +3302,9 @@ A heterogeneous OMS can import several OMS expressed in different conforming log
 
 \todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL provides the mechanism for  identifying anything of relevance in a library, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.} DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
 
-The DOL serializations also supports the \termref{annotation} of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language; for XML serializations of OMS languages, RDFa extensions are specified, so that DOL RDF can be embedded.\ednote{where is this specified in detail?}
+The DOL serializations also supports the \termref{annotation} of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language.
 
-A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:rdf-logic-vocab}.
+%A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:rdf-logic-vocab}.
 
 \clause{DOL abstract syntax}\label{c:abstract-syntax}
 
@@ -3318,11 +3312,12 @@ A list of recommended RDF vocabularies for annotating OMS is presented in annex 
 
 DOL provides abstract syntax categories for
 \begin{itemize}
-\item libraries (items in libraries are: OMS definitions, OMS mapping definitions, queries, and qualifications choosing the logic,
-OMS language and/or serialization)
 \item \red{OMS} (which can be basic OMS in some OMS language, or unions, translations, minimizations, combinations, approximations of OMS, among others)
 \item OMS mappings 
+\item OMS networks
 \item \red{queries}
+\item libraries (items in libraries are: definitions of OMS, OMS mappings, OMS networks and queries, as well as qualifications choosing the logic,
+OMS language and/or serialization)
 \item identifiers
 \item annotations
 \end{itemize}
@@ -3344,9 +3339,10 @@ A \termref{library} (\syntax{Library}) consists of a collection of (named)  OMS 
 library consists of a name, followed by a list of
 \syntax{LibraryItem}s.  A \syntax{LibraryItem} is either a
 definition of an OMS  (\syntax{OMSDefn}), 
-\red{a definition of a library  (\syntax{LibraryDefn}),}
 a mapping between OMS
-(\syntax{MappingDefn}), a definition related to queries 
+(\syntax{MappingDefn}), 
+\red{a definition of an OMS network  (\syntax{NetworkDefn}),}
+a definition related to queries 
 (\syntax{QueryRelatedDefn})
 or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
@@ -3376,6 +3372,7 @@ LibraryName              = IRI ;
 
 At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
 
+\sclause{OMS networks}\label{c:networks}
 \red{
 Inside a library, one can define OMS networks (\syntax{NetworkDefn}).
 A \syntax{NetworkDefn} names an
@@ -3393,6 +3390,9 @@ ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorNetworkRef } ;
 OMSOrMappingorNetworkRef  = IRI ;
 \end{lstlisting}
 
+An OMS network by default also includes all inclusions (generated by
+\syntax{ExtensionOMS}) between the involved OMS---unless these are
+explicitly excluded.
 
 \sclause{Focused OMS}\label{c:focused-OMS}
 
@@ -3414,7 +3414,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional or implied,
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
-\item a combination of OMS network (technically, this is a colimit, see \cite{ZimmermanEtAl06}),\footnote{A combination of OMS also takes all mappings into these OMS into consideration---unless these are explicitly excluded.}
+\item a combination of OMS network (technically, this is a colimit, see \cite{ZimmermanEtAl06}),
 \item a minimization of an OMS, forcing the subsequently declared
   non-logical symbols to be interpreted in a minimal way, while the non-logical symbols declared so far are fixed (alternatively, the non-logical symbols to be minimized and to be varied can be explicitly declared). \red{Variants are
 maximization, freeness (minimizing also data sets and equalities on these), and cofreeness
@@ -3506,10 +3506,10 @@ OMS (e.g.\ returned by model finders) that are used to describe single models.}.
 list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
 denotes a logic reduction to a
 less expressive OMS language. A \syntax{SymbolMapItems}, used in
-OMS \syntax{Translation}s,  maps symbols to symbols\CLnote[type=fyi]{On 2012-07-18 we decided 
+OMS \syntax{Translation}s,  maps symbols to symbols,\CLnote[type=fyi]{On 2012-07-18 we decided 
 not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics 
 in an OMS language independent way would require additional institution infrastructure – and the same effect can be 
-achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?) TM: Alternatively, we could use a recent notion of institutional monad. This builds an extended signature with all terms. Then one can use ordinary signature morphisms into such extended signatures.}, or a logic
+achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?) TM: Alternatively, we could use a recent notion of institutional monad. This builds an extended signature with all terms. Then one can use ordinary signature morphisms into such extended signatures.} or a logic
 translation. An OMS language translation \syntax{OMSLangTrans} 
 can be either specified by its name, or be inferred as the default
 translation between to a given target (the source will be inferred as the 
@@ -3545,7 +3545,7 @@ OMSLangTransRef  = IRI ;
 
 \sclause{OMS Mappings}\label{c:oms-mappings}
 
-A OMS mapping provides a connection between two OMS. A OMS mapping definition is the definition of 
+An OMS mapping provides a connection between two OMS. An OMS mapping definition is the definition of 
 either a named interpretation (\syntax{IntprDefn}, \red{\syntax{Entailment}} or 
 \syntax{EquivDefn}), a named declaration of the  relation between a module of an OMS and the whole 
 OMS (\syntax{ModuleRelDefn}), or a named \termref{alignment} (\syntax{AlignDefn}).
@@ -3581,8 +3581,8 @@ relation is specified in a surrounding
 Using an \syntax{AlignCard}, left and right injectivity and totality of the
 \termref{alignment} can be specified (the default is left-injective, right-injective, left-total  and right-total).
 With \syntax{AlignSem}, different styles of networks of aligned ontologies (to be interpreted in 
-a logic-specific way) of alignments can be specified (whether a single domain is assumed, all domains are embedded into a global domain,
-or whether several local domains are linked (``contextualized'') by relations).}
+a logic-specific way) of alignments can be specified: whether a single domain is assumed, all domains are embedded into a global domain,
+or whether several local domains are linked (``contextualized'') by relations.}
 
 A \syntax{ModuleRelDefn} declares that a certain OMS
 actually is a module of some other OMS with respect
@@ -3701,7 +3701,7 @@ OMS.}:\hspace{-2cm}
 
 \sclause{Queries}
 \red{
-Queries are a means to extract information from an OMS.  DOL' \syntax{QueryDefn}s cover 
+Queries are a means to extract information from an OMS.  DOL's \syntax{QueryDefn}s cover 
 ``select''-type queries that deliver an answer substitution for the query variables. (Answer) 
 substitutions can be stored separately, using a \syntax{SubstDefn}. A
 \syntax{ResultDefn} expresses that certain answer substitutions are
@@ -5843,7 +5843,7 @@ from the correspondences and taking into account \syntax{AlignSem}.
 The concept of OMS language translation has been
 formalized as institution comorphism.
 
-Provide some examples
+TODO: Provide some examples
 
 special cases to be described
 
@@ -6777,7 +6777,7 @@ This annex sketches scenarios that outline how DOL is intended to be applied.  F
 &\veebar \mathrm{part\_of}(a_1, a_2) \veebar \mathrm{part\_of}(a_2, a_1).\end{array}$$
   \end{description}
   
-  DOL would be capable of expressing all that within one library of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including logical OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
+  DOL would be capable of expressing all that within one library of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
 \end{usecase}
 
 \begin{usecase}{Interpreting the OWL formalization of the DOLCE foundational ontology in First-order logic}{potential use case}{Logical OMS mappings}
