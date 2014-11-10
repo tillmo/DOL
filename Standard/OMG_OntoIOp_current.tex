@@ -4406,53 +4406,8 @@ symbols along the morphism. Finally, the satisfaction relation is defined by the
 semantics. It is straightforward to see that the satisfaction condition holds.
 \end{definition}
 
-\begin{definition}[Common Logic - \Clogic]\label{CommonLogic}
-A common logic signature
-$\Sigma$ (called vocabulary in Common Logic terminology) consists of a
-set of names, with a subset called the set of discourse names, and a
-set of sequence markers. 
-A $\Sigma$-model consists of a set $\UR$,
-the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
-the universe of discourse, and four mappings:
-  \begin{itemize}
-   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{<x_1,\ldots,x_n> |
-x_1,\ldots,x_n \in \UD\}$ (i.e., the set of finite sequences of
-elements of $\UD$);
-   \item $\fun$ from $\UR$ to total functions from $\UD^*$ into $\UD$;
-   \item $\intCL$ from names in $\Sigma$ to $\UR$, such that
-$\intCL(v)$ is in $\UD$ if and only if $v$ is a discourse name;
-   \item $\seq$ from sequence markers in $\Sigma$ to $\UD^*$.
-  \end{itemize}  A $\Sigma$-sentence is a first-order
-sentence, where predications and function applications are written
-in a higher-order like syntax: $t(s)$.
-Here, $t$ is an arbitrary term, and $s$ is a sequence term, which can
-be a sequence of terms $t_1\ldots t_n$, or a sequence marker.
-A predication $t(s)$ is interpreted by evaluating the term $t$,
-mapping it to a relation using $\rel$, and then asking whether the sequence
-given by the interpretation $s$ is in this relation.  
-Similarly, a function application $t(s)$ is interpreted using $\fun$.
-Otherwise, interpretation of terms and formulae is as in
-first-order logic. 
-A further
-difference is the presence of sequence terms (namely sequence markers and
-juxtapositions of terms), which denote sequences in $\UD^*$, with term
-juxtaposition interpreted by sequence concatenation.
-Note that sequences are essentially a non-first-order feature that
-can be expressed in second-order logic.
-For details, see \cite{CommonLogic:oldfashioned}.
-
-A \Clogic signature morphism 
-consists of two maps between the sets of names and of sequence markers, such that the property of 
-being a discourse name is preserved and reflected.\footnote{That is, a name is a discourse
-name if and only if its image under the signature morphism is.}
-  Model reducts leave $\UR$, $\UD$, 
-$\rel$ and $\fun$ untouched, while $\intCL$ and $\seq$ are composed with the appropriate
-signature morphism component.
-\end{definition}
-%
-
-Further examples of institutions are: $\mathcal{SROIQ}(D)$, unsorted first-order logic, 
-many-sorted first-order logic, and many others.  Note that reduct is generally given by forgetting 
+Further examples of institutions are: $\mathcal{SROIQ}(D)$ (see Annex~\ref{a:owl}), unsorted first-order logic, 
+many-sorted first-order logic, Common Logic (see Annex~\ref{a:cl}), and many others.   Note that reduct is generally given by forgetting 
 parts of the model.
 %, and the pre-order on models is given as follows: $M_1\leq M_2$ if $M_1$ and 
 %$M_2$ only differ in the interpretation of propositional non-logical symbols and predicates, and 
@@ -4841,7 +4796,7 @@ underlying graph of the network with theories in the nodes and with theory morph
 The model-level semantics of a network is a family of models \emph{compatible} with the
 graph of the network, i.e. for each node $n$ labeled with $(I_n, \Sigma_n, \cM_n)$ we have a model
 $M_n$ in $\cM_n$ such that for each edge $e:m \rightarrow n$ labeled with a 
-morphism $\sigma: \Sigma_m \rightarrow \Sigma_n$, we have that $M_n\forget \sigma = M_m$.
+morphism $\sigma: \Sigma_m \rightarrow \Sigma_n$, we have that $M_n\forget \sigma = M_fm$.
 Nodes and morphisms are also labeled with \syntax{IRI}s, such that they can be uniquely identified.
 An additional \syntax{Id} can be specified for each node, with the purpose of letting the user specify a 
 prefix in the colimit of a network for the symbols with the origin in that node that must be disambiguated.
@@ -4888,7 +4843,7 @@ defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
 class of families of models.
 
 If \syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
+defined if $sem(\Gamma,\syntax{OMS})$ has at most one element.
 
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
@@ -5145,8 +5100,6 @@ $\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{
 \semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
 \semdom{sem^M(\syntax{'application', Substname, Sentence})= TODO}
 
-\todonote{turn all boxes up to the one with OMS into centered definitions - they are not categories, but subcases.}
-
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
@@ -5202,8 +5155,6 @@ $sem(\Gamma, \Sigma,\syntax{Symbol}_1), \ldots,
 sem(\Gamma,\Sigma,\syntax{Symbol}_n)$, if such a sub-signature exists and is otherwise undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%
-
-\todonote{I need equations for one signature and for two signatures...}
 
 \semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMapItems})= \sigma:\Sigma\to\Sigma'}
 
@@ -5295,10 +5246,14 @@ In case that \syntax{ConsStrength} is \syntax{implied},
 it is furthermore required that $\Sigma=\Sigma'$. 
 If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is only defined if for each
 $\Sigma$-sentence $\varphi$, $\cM'\models\varphi$ implies $\cM\models\varphi$.
-% If
-%\syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
-%defined if each model in $\cM$ is the $\Sigma$-reduct of a model
-%in $\cM'$ that is unique up to isomorphism.  
+ If
+\syntax{ConsStrength} is \syntax{monomorphic}, the semantics is only
+defined if each model in $\cM$ is the $\Sigma$-reduct of a model
+in $\cM'$ that is unique up to isomorphism.  
+If
+\syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
+defined if each model in $\cM$ is the $\Sigma$-reduct of at most one
+model in $\cM'$.
 If
 \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
@@ -5335,7 +5290,7 @@ If \syntax{ConsStrength} is \syntax{monomorphic}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
 class of models.
 If \syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
+defined if $sem(\Gamma,\syntax{OMS})$ has at most one element.
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 
