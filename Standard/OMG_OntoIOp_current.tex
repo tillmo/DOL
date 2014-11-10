@@ -910,7 +910,7 @@ environment, which contains institution comorphisms as translations, see \ref{c:
 Institution comorphisms preserve semantics
 in a weak form through their satisfaction condition. The LoLa ontology specifies properties of 
 translations (comorphisms) preserving more and more of the semantics, see annex 
-\ref{a:rdf-logic-vocab}.
+\ref{a:lola}.
    \\ \hline
 %
 6.5.5(a)& 
@@ -1036,7 +1036,7 @@ introduction of annex \ref{a:graph}.
 %	
 6.7.(d)	& 
 Proposals should discuss a meta-ontology of logical languages and theories.	&
-The LoLa ontology is discussed in annex \ref{a:rdf-logic-vocab}.
+The LoLa ontology is discussed in annex \ref{a:lola}.
    \\ \hline
 %	
 6.7.(e)	& 
@@ -1404,7 +1404,7 @@ explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
 of  a serialization that is merely text conforming).}
 \item The serialization shall use XML elements to represent all structural elements of an OMS.
 \item The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
- DOL namespace \url{http://purl.net/dol/1.0/xml}) on any elements.\footnote{This is because either an attribute or a child element will be used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
+ DOL namespace \url{http://www.omg.org/spec/DOL/0.8/xml}) on any elements.\footnote{This is because either an attribute or a child element will be used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
 \end{itemize}
 
 \item[RDF conformance]
@@ -1472,7 +1472,7 @@ Any conforming serialization of an OMS language shall have a machine-processable
 
 Rationale: When a parser processes a DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further DOL-supporting software needs to know, e.g., what other DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with DOL describe themselves in a machine-comprehensible way.
 
-For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:rdf-logic-vocab}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
+For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:lola}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
 
 
 \sclause{Conformance of a document with DOL}\label{c:conform:document}
@@ -2221,7 +2221,7 @@ models \index{model}, and a \termref{satisfaction relation} between models\index
     $\mathcal{SROIQ}(D)$ is the logic underlying OWL 2 DL.
   \end{example}
   \begin{note}
-   See annex~\ref{a:rdf-logic-vocab} for the organization of the
+   See annex~\ref{a:lola} for the organization of the
    relation between OMS languages and their logics and serializations.
   \end{note}
 
@@ -2410,7 +2410,7 @@ Chapter \ref{a:text-syntax} provides a human friendly text serialization of the 
 Chapter \ref{c:semantics} defines the model-theoretic semantics of \DOL (\emph{normative}). 
 
 \medskip \noindent 
-Annex \ref{a:rdf-logic-vocab} specifies an RDF vocabulary for describing OMS languages that 
+Annex \ref{a:lola} specifies an RDF vocabulary for describing OMS languages that 
 conform with \DOL  (\emph{normative}). 
 
 \medskip \noindent 
@@ -3318,7 +3318,7 @@ DOL provides a mechanism for identifying anything of relevance in OMS by assigni
 
 The DOL serializations also supports the \termref{annotation} of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language.
 
-%A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:rdf-logic-vocab}.
+%A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:lola}.
 
 \clause{DOL abstract syntax}\label{c:abstract-syntax}
 
@@ -3586,8 +3586,7 @@ value. Moreover, the relation between the two non-logical symbols can be explici
 specified (like being equal, or only being subsumed) in a similar way to the Alignment API \cite{AlignmentAPI}. 
 \red{The relations that can be used in a correspondence are equivalence, disjointness, subsumption, membership (the last two with a
 variant for each direction) or a user-defined relation that is stored in a registry and must be prefixed with
-\url{purl.net/DOL}.\ednote{This is the first mentioning of purl.net. Needs
-futher discussion!}
+\url{http://www.omg.org/spec/DOL/correspondences/}.
 A default correspondence can be used; it is applied to all pairs of non-logical symbols with 
 the same local names. The default relation in a correspondence is equivalence, unless  a different 
 relation is specified in a surrounding 
@@ -4241,7 +4240,7 @@ language can be used as-is in DOL, by reference to its IRI.
 
 The following cases apply for injecting identifiers into fragments of OMS languages, depending on the conformance level of the respective serialization of the OMS language used in terms of section~\ref{c:conform:serialization}:
 \begin{description}
-\item[XML conformance] Identifiers are added to XML elements by using the IRI-valued \textit{dol:id} XML attribute from the \url{http://purl.net/dol/1.0/xml} namespace, or, if the serialization does not support this attribute, by adding a \textit{dol:id} XML element as the first child, containing exactly one text node with the IRI.
+\item[XML conformance] Identifiers are added to XML elements by using the IRI-valued \textit{dol:id} XML attribute from the \url{http://www.omg.org/spec/DOL/0.8/xml} namespace, or, if the serialization does not support this attribute, by adding a \textit{dol:id} XML element as the first child, containing exactly one text node with the IRI.
 \item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
 \item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
 \item[Standoff markup conformance] Standard mechanisms such as XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) or \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of XML or text in the given OMS serialization.
@@ -5902,7 +5901,7 @@ special cases to be described
 
 \appendix
 
-\normannex{RDF vocabulary for describing OMS languages conforming with DOL}\label{a:rdf-logic-vocab}
+\normannex{LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL}\label{a:lola}
 
 \begin{figure}
   \centering
@@ -5911,7 +5910,7 @@ special cases to be described
 \label{f:DOL-threelayers}
 \end{figure}
 
-This annex specifies an RDF vocabulary, formalized in RDFS \nisref{W3C/TR REC-rdf-schema:2004}, for describing OMS languages that conform with DOL, and their features, including logics and serializations.  This vocabulary shares its namespace (\url{http://purl.net/dol/1.0/rdf#}) with the DOL RDF vocabulary for serializing DOL OMS (\cf \aref{a:rdf-syntax}).\CLnote[type=fyi]{given its light weight I think that makes sense.  It doesn't rule out extensions to OWL (or even DOL) anyway.}  
+This annex specifies an RDF vocabulary, formalized in RDFS (\nisref{W3C/TR REC-rdf-schema:2004}), for describing OMS languages that conform with DOL, and their features, including logics and serializations.  This vocabulary shares its namespace (\url{http://www.omg.org/spec/DOL/0.8/rdf#}) with the DOL RDF vocabulary for serializing DOL OMS (\cf \aref{a:rdf-syntax}).\CLnote[type=fyi]{given its light weight I think that makes sense.  It doesn't rule out extensions to OWL (or even DOL) anyway.}  
 
 The tables in this annex list the classes and properties of the RDF vocabulary for describing OMS languages.  All class and properties are assumed to be in the DOL RDF namespace unless stated otherwise.
 
@@ -6513,8 +6512,8 @@ combine NetworkElements excluding IRIs  &  \\\hline
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
-         log:   <http://purl.net/dol/@logic@/>    %% descriptions of logics ...
-         trans: <http://purl.net/dol/translations/> )%  %% ... and translations
+         log:   <http://www.omg.org/spec/DOL/logics/>    %% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )%  %% ... and translations
 
 library Mereology
 
@@ -6620,9 +6619,9 @@ end
 \index{alignment}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
-         owl   <http://www.w3.org/2002/07/owl#>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
-         trans <http://purl.net/dol/translations/> )% %% ... and translations
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )% %% ... and translations
 
 library Alignments
 
@@ -6672,9 +6671,9 @@ end
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/mereology#>
-         owl   <http://www.w3.org/2002/07/owl#>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
-         trans <http://purl.net/dol/translations/> )% %% ... and translations
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )% %% ... and translations
 
 library Publications
 
@@ -6750,9 +6749,9 @@ end
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
-         owl   <http://www.w3.org/2002/07/owl#>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
-         trans <http://purl.net/dol/translations/> )% %% ... and translations
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )% %% ... and translations
 
 library Algebra
 
@@ -6870,8 +6869,8 @@ the protocol state machine in Fig.~\ref{fig:psm} as follows in DOL:
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,refinement},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/uml#>
-         uml   <http://www.uml.org/>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
+         uml:   <http://www.uml.org/spec/UML/>
+         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
 
 logic log:uml
 
