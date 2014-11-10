@@ -66,7 +66,7 @@ instance Pretty Alt where
      multi_liner acc1 acc2 (s:rest) = 
        if length acc2' < width-length si-w+4
         then multi_liner acc1 acc2' rest
-        else multi_liner (acc1++acc2++sep) "" rest
+        else multi_liner (acc1++acc2++sep) "" (s:rest)
        where acc2' = acc2++" "++s
    pretty c w (Informal s) = s
 instance Pretty EBNF where
@@ -109,7 +109,7 @@ parseIso input =
   line :: CharParser () TextLine
   line = do s1 <- try $ string "\\begin{lstlisting}[language=ebnf"
             s2 <- parseString "\n"
-            string "\n"
+            many1 (string "\n")
             e <- many1 ebnf
             s3 <- string "\\end{lstlisting}"
             let c = "abstract syntax" `isInfixOf` s2
@@ -129,7 +129,7 @@ parseIso input =
             c <- comment; spaces
             return $ EBNF nt (fst rhs) c
   alt :: CharParser () Alt
-  alt = do string "($" 
+  alt = do string "($"
            s <- parseString ";"
            return $ Informal ("($"++s)
         <|>
@@ -170,6 +170,11 @@ parseIso input =
                c <- parseString ")"
                string ")"
                return ("("++c++")")
+            <|>
+            do try $ string "+"
+               c <- parseString "+"
+               string "+"
+               return ("+"++c++"+")
             <|>
             return ""
 
