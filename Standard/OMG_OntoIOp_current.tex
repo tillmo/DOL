@@ -1424,7 +1424,7 @@ The given serialization has to be specified as an RDF vocabulary, which
  \url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/\#Mapping_from_RDF_Graphs_to_the_Structural_Specification}). 
  They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty.}  
  \todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{Update on 2014-10-09: Is it OK to have this footnote here?  Or if not, where should it go?  I believe it answers the following question:\\ And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
-\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL\ednote{Christoph (2014-03-26): I think we are no longer explicitly recommending annotation vocabularies such as OMV, but nevertheless an RDF serialization of an OMS language must allow annotations to things, using RDF properties that do not belong to the RDF vocabulary of the OMS language.  It should treat them like OWL treats annotation properties, i.e.\ as not changing the formal semantics.}) to be stated about arbitrary subjects.\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
+\item There shall be no additional rules (stated in writing in the specification of the serialization, or formalized in its implementation in, e.g., OWL) that forbid properties from foreign vocabulary namespaces to be stated about arbitrary subjects for the purpose of annotation.
 \end{itemize}
 
 \item[Text conformance]
@@ -2055,11 +2055,14 @@ A correspondence is given as a quadruple
 $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$,
 where $R$ denotes the type of relationship that is asserted to hold between the two non-logical 
 symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is 
-omitted, it is implied from the context as being the equivalence relation, unless another default
+omitted, it defaults to the equivalence relation, unless another default
 relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.}
   \end{note}
   \begin{note}
      A confidence value of $1$ does not imply logical equivalence (\cf \cite{KutzEtAl:ChineseWhispers2010} for a worked-out example).
+  \end{note}
+  \begin{note}
+     Not all OMS languages implement logical equivalence.  For example, OWL does not implement logical equivalence in general, but separately implements equivalence relations restricted to individuals (\textit{owl:sameAs}), classes (\textit{owl:equivalentClass}) and properties (\textit{owl:equivalentProperty}).
   \end{note}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}}
@@ -2496,7 +2499,7 @@ The following people contributed directly to the development of this specificati
 	\item Maria Keet, University of Cape Town 
 	\item Elisa Kendall,  Thematix Partners LLC	
 	\item Oliver Kutz, Otto-von-Guericke University Magdeburg  
-	\item Christoph Lange, University of Bonn 
+	\item Christoph Lange, University of Bonn and Fraunhofer IAIS
 	\item Terry Longstreth, Independent Consultant 	
 	\item Till Mossakowski, Otto-von-Guericke University Magdeburg  	
 	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg  
@@ -3313,7 +3316,7 @@ the rule for \syntax{combination} for the abstract syntax category
 
 \section{DOL provides a mechanism for rich annotation and documentation of OMS.}\label{c:req:annotation}
 
-\todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL provides the mechanism for  identifying anything of relevance in a library, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.} DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
+DOL provides a mechanism for identifying anything of relevance in OMS by assigning an IRI to it.  With RDF there is a standard mechanism for annotating things identified by IRIs.  Thus, DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
 
 The DOL serializations also supports the \termref{annotation} of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language.
 
