@@ -625,7 +625,7 @@ Software developed under the terms of this license may claim compliance or confo
 All OMG specifications are subject to continuous review and improvement. As part of this process 
 we encourage readers to report any ambiguities, inconsistencies, or inaccuracies
 they may find by completing the Issue Reporting Form listed on the main web page
-http://www.omg.org, under Documents, Report a Bug/Issue (http://www.omg.org/technology/agreement.htm).
+http://www.omg.org, under Documents, Report a Bug/Issue\\ (http://www.omg.org/technology/agreement.htm).
 
 \renewcommand{\contentsname}{Table of Contents}
 
@@ -794,7 +794,7 @@ Proposals shall provide a specification of a metalanguage for the union of OMS w
 different languages, which implicitly involves the application of suitable default translations in
 order to reach a common target language. &
 The syntax for unions is \syntax{O1 and O2}, see \ref{c:focused-OMS} and \ref{a:dol-text:OMS}. Default translations are discussed in
-\ref{c:explicit}, and DOL's notion of heterogeneous logical
+\ref{c:focused-OMS}, and DOL's notion of heterogeneous logical
 environment explicitly specifies default translations, see \ref{c:direct-sematics}.
 	\\ \hline
 %
@@ -912,7 +912,7 @@ environment, which contains institution comorphisms as translations, see \ref{c:
 Institution comorphisms preserve semantics
 in a weak form through their satisfaction condition. The LoLa ontology specifies properties of 
 translations (comorphisms) preserving more and more of the semantics, see annex 
-\ref{a:rdf-logic-vocab}.
+\ref{a:lola}.
    \\ \hline
 %
 6.5.5(a)& 
@@ -1021,8 +1021,7 @@ requirement 6.5.6, DOL-conforming languages should support the
 use of IRIs. If they do not, there is a mechanism for assigning IRIs
 to (fragments of) language documents even if the language itself does not support
 this, see \ref{c:conform:serialization}.
-Moreover, there is a mechanism for injecting annotations
-and comments in existing language serializations, see \ref{sec:existing-serialization} and \ref{c:req:annotation}.
+Moreover, there is a mechanism for injecting IRIs in existing language serializations, see \ref{sec:existing-serialization} and \ref{c:req:annotation}.
    \\ \hline
 %
 6.7.(b)	& 
@@ -1039,7 +1038,7 @@ introduction of annex \ref{a:graph}.
 %	
 6.7.(d)	& 
 Proposals should discuss a meta-ontology of logical languages and theories.	&
-The LoLa ontology is discussed in annex \ref{a:rdf-logic-vocab}.
+The LoLa ontology is discussed in annex \ref{a:lola}.
    \\ \hline
 %	
 6.7.(e)	& 
@@ -1380,7 +1379,7 @@ Well-behaved XML and RDF schemas support identifier injection in a `nice' way (r
 text-level comments).   In the worst case we cannot 
 inject anything into an OMS language fragment, because the OMS language serialization simply
 wouldn't allow us to write suitable comments, but we'd have to point into it from the enclosing context by
-by using standoff markup\termref{standoff markup}.
+by using \termref{standoff markup}.
 
 
 Further conformance criteria in this section are introduced to facilitate the convenient reuse of
@@ -1405,11 +1404,9 @@ Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous
 OMS we can recognize that a sentence is, \eg, stated in OWL, without
 explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
 of  a serialization that is merely text conforming).}
-\item The schema shall not forbid attributes from foreign namespaces (here: the
- DOL namespace) on any elements\ednote{Christoph (2014-03-26): the rationale is that in an XML serialization we wouldn't want to inject identifiers into completely unstructured XML comments (<!-- 
-… -->) but rather into well-structured attributes from some DOL namespace to-be-defined (think of <axiom dol:id="foo-ax">)}\todonote[author=Christoph
-  Lange,date=D:201110051433+02'00']{Maybe we also need child elements from
-   different namespaces?}
+\item The serialization shall use XML elements to represent all structural elements of an OMS.
+\item The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
+ DOL namespace \url{http://www.omg.org/spec/DOL/0.8/xml}) on any elements.\footnote{This is because either an attribute or a child element will be used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
 \end{itemize}
 
 \item[RDF conformance]
@@ -1426,7 +1423,7 @@ The given serialization has to be specified as an RDF vocabulary, which
  \url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/\#Mapping_from_RDF_Graphs_to_the_Structural_Specification}). 
  They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty.}  
  \todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{Update on 2014-10-09: Is it OK to have this footnote here?  Or if not, where should it go?  I believe it answers the following question:\\ And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
-\item There shall be no additional rules that forbid properties from foreign namespaces (here in particular: the annotation vocabularies recommended by DOL\ednote{Christoph (2014-03-26): I think we are no longer explicitly recommending annotation vocabularies such as OMV, but nevertheless an RDF serialization of an OMS language must allow annotations to things, using RDF properties that do not belong to the RDF vocabulary of the OMS language.  It should treat them like OWL treats annotation properties, i.e.\ as not changing the formal semantics.}) to be stated about arbitrary subjects.\todonote[author=Christoph Lange,date=D:201109221416+02'00',type=fyi]{No well-behaved RDF vocabulary would do so, but we'd better be safe.}
+\item There shall be no additional rules (stated in writing in the specification of the serialization, or formalized in its implementation in, e.g., OWL) that forbid properties from foreign vocabulary namespaces to be stated about arbitrary subjects for the purpose of annotation.
 \end{itemize}
 
 \item[Text conformance]
@@ -1477,7 +1474,7 @@ Any conforming serialization of an OMS language shall have a machine-processable
 
 Rationale: When a parser processes a DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further DOL-supporting software needs to know, e.g., what other DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with DOL describe themselves in a machine-comprehensible way.
 
-For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:rdf-logic-vocab}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
+For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:lola}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
 
 
 \sclause{Conformance of a document with DOL}\label{c:conform:document}
@@ -1526,23 +1523,28 @@ explicit references to the logics used.
 % The following referenced documents are indispensable for the application of this document. For dated references, only
 % the edition cited applies. For undated references, the latest edition of the referenced document (including any
 % amendments) applies.
-  \item{W3C/TR REC-owl2-syntax:2009}{OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax. W3C Recommendation, 27 October 2009. \url{http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/}}
+  \item{W3C/TR REC-owl2-syntax:2009}{OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax. W3C Recommendation, 27 October 2009.\\ \url{http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/}}
   \item{ISO/IEC 14977:1996}{Information technology – Syntactic metalanguage – Extended BNF}
-  \item{W3C/TR REC-xml:2008}{Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
-  \item{W3C/TR REC-owl2-profiles:2009}{OWL 2 Web Ontology Language: Profiles. W3C Recommendation, 27 October 2009. \url{http://www.w3.org/TR/2009/REC-owl2-profiles-20091027/}}
+  \item{W3C/TR REC-xml:2008}{Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \\
+  \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
+  \item{W3C/TR REC-owl2-profiles:2009}{OWL 2 Web Ontology Language: Profiles. W3C Recommendation, 27 October 2009. \\
+  \url{http://www.w3.org/TR/2009/REC-owl2-profiles-20091027/}}
   \item{ISO/IEC 24707:2007}{Information technology – Common Logic (CL): a framework for a family of logic-based languages}
-  \item{OMG Document ptc/2010-11-14:}{OMG Unified Modeling Language (OMG UML), Superstructure, Version 2.4. \url{http://www.omg.org/spec/UML/2.4/Superstructure}. Section 7 (Classes)}
-  \item{IETF/RFC 3986}{Uniform Resource Identifier (URI): Generic Syntax. January 2005. \url{http://tools.ietf.org/html/rfc3986}}
-  \item{IETF/RFC 3987}{Internationalized Resource Identifiers (IRIs). January 2005. \url{http://tools.ietf.org/html/rfc3987}}
-  \item{IETF/RFC 5147}{URI Fragment Identifiers for the text/plain Media Type.  April 2008. \url{http://tools.ietf.org/html/rfc5147}}
-  \item{W3C/TR REC-rdf-concepts:2004}{Resource Description Framework (RDF): Concepts and Abstract Syntax.  W3C Recommendation, 02 February 2004.  \url{http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/}}
-  \item{W3C/TR REC-xml-names:2009}{Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009. \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
-  \item{W3C/TR REC-rdfa-core-20120607}{RDFa Core 1.1.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 07 June 2012. \url{http://www.w3.org/TR/2012/REC-rdfa-core-20120607/}}
+  \item{OMG Document ptc/2010-11-14:}{OMG Unified Modeling Language (OMG UML), Superstructure, Version 2.4. \\
+  \url{http://www.omg.org/spec/UML/2.4/Superstructure}. Section 7 (Classes)}
+  \item{IETF/RFC 3986}{Uniform Resource Identifier (URI): Generic Syntax. January 2005.\\ \url{http://tools.ietf.org/html/rfc3986}}
+  \item{IETF/RFC 3987}{Internationalized Resource Identifiers (IRIs). January 2005.\\ \url{http://tools.ietf.org/html/rfc3987}}
+  \item{IETF/RFC 5147}{URI Fragment Identifiers for the text/plain Media Type.  April 2008.\\ \url{http://tools.ietf.org/html/rfc5147}}
+  \item{W3C/TR REC-xptr-framework:2003}{XPointer Framework.  W3C Recommendation, 25 March 2003. \\ \url{http://www.w3.org/TR/2003/REC-xptr-framework-20030325/}}
+  \item{W3C/TR REC-rdf11-concepts:2014}{RDF 1.1 Concepts and Abstract Syntax.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/}}
+  \item{W3C/TR REC-xml-names:2009}{Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009.\\
+   \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
+  \item{W3C/TR REC-rdfa-core-20120607}{RDFa Core 1.1.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 07 June 2012.\\ \url{http://www.w3.org/TR/2012/REC-rdfa-core-20120607/}}
   % This standard has no unique year, as it consist of multiple parts (see http://tools.ietf.org/html/rfc3629#ref-ISO.10646)
   \item{ISO/IEC 10646}{Information technology – Universal Multiple-Octet coded Character Set (UCS)}
   %\item{W3C/TR REC-rdf-sparql-query:2008}{SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
-  \item{W3C/TR REC-rdf-schema:2004}{RDF Vocabulary Description Language 1.0: RDF Schema. W3C Recommendation, 10 February 2004.\\ \url{http://www.w3.org/TR/2004/REC-rdf-schema-20040210/}}
-  \item{W3C/TR REC-rdf-mt:2004}{RDF Semantics.  W3C Recommendation, 02 February 2004.  \url{http://www.w3.org/TR/2004/REC-rdf-mt-20040210/}}
+  \item{W3C/TR REC-rdf-schema:2014}{RDF Schema 1.1. W3C Recommendation, 25 February 2014.\\ \url{http://www.w3.org/TR/2014/REC-rdf-schema-20140225/}}
+  \item{W3C/TR REC-rdf11-mt:2014}{RDF 1.1 Semantics.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/}}
 \end{enumerate}
 \ednote{more, see RFP}
 \ednote{introduce a separate reference scheme for normative references}
@@ -1576,22 +1578,38 @@ non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mappin
 \end{definitions}
 
 
-\sclause{OMS}
+\sclause{Basic OMS}
 
 \begin{definitions}
 
 \termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
-{collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and \termref{structuring} elements) in a given \termref{OMS language} (or several such languages).}
+{collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) in a given \termref{OMS language} (or several such languages).}
 \begin{note}
 	An \termref{OMS} can be written in different \termref{OMS language} serializations\index{serialization}.
 \end{note}	
+\begin{note}
+	An OMS is either a basic or a structured OMS.
+\end{note}
+\begin{note}
+	An OMS has a single signature and model class over that signature as its model-theoretic semantics.
+\end{note}
 
-  \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics, plus non-logical annotations\index{annotation}}
+
+
+\begin{definitions}
+\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{\termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}, which may be used as a building block for a larger \termref{OMS}}
+  \begin{note}
+    The sentences must use only those non-logical symbols that are present in the signature.
+  \end{note}
+
+
+\termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
+plus non-logical annotations\index{annotation}}
   \begin{note}
   An OMS language is used for the formal specification of \termref{OMS}.
   \end{note}
   \begin{example}
-    OMS languages include OWL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
+    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
   \end{example}
 
 
@@ -1756,7 +1774,7 @@ values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
   \end{note}
 
   \begin{note}
-    RDF, serialized as RDF/XML \cite{W3C:REC-rdf-syntax-grammar-20040210}, is the most common format for publishing linked data.  However, its usage is not mandatory.
+    RDF, serialized as RDF/XML \cite{W3C:REC-rdf-syntax-grammar-20140225}, is the most common format for publishing linked data.  However, its usage is not mandatory.
   \end{note}
   \begin{note}
     Using HTTP content negotiation \cite{rfc2616} it is possible to serve representations in different formats from the same URL. 
@@ -1769,7 +1787,7 @@ values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
   \termdefinition{annotation}{additional information without a logical semantics that is attached to an element\index{element (of an OMS)} of an \termref{OMS}}
   \begin{note}\label{note:annotation-rdf}
 Formally, an annotation is given as a $(\text{subject}, \text{predicate}, \text{object})$ triple as 
-defined by \nisref{SOURCE: W3C/TR REC-rdf-concepts:2004, Section 6}.  The subject of an annotation 
+defined by \nisref{SOURCE: W3C/TR REC-rdf11-concepts:2014, Section 3.1}.  The subject of an annotation 
 is an element of an OMS.  The predicate is an RDF property defined in an external OMS and 
 describes in what way the annotation object is related to the annotation subject.
   \end{note}  
@@ -1814,28 +1832,10 @@ not considered sentences of that OMS.
 \end{definitions}
 
 \sclause{Structured OMS}
-\begin{definitions}
-\termdefinitionLight{basic OMS\index{basic OMS}, \red{flat OMS}}{\termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}, which may be used as a building block for a larger \termref{OMS}}
-  \begin{note}
-    The sentences must use only those non-logical symbols that are present in the signature.
-  \end{note}
 
 \red{
 \termdefinition{structured OMS}
 {\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
-
-\termdefinition{focused OMS}
-{\termref{OMS} that has a single \emph{signature} and model class (or \termref{logical theory}) over that signature as its semantics}
-\begin{note}
-A focused OMS is either a basic or structured OMS.
-\end{note}
-  \begin{note}
-    The term ``focused OMS'' emphasizes the fact that the OMS, while possibly
-    involving many OMS as parts, has a single resulting \termref{logical theory}.
-    This is in contrast to \termref{OMS network}, which do not have
-    such a unique result, but rather comprise a network of OMS and
-    OMS mappings\index{OMS mapping}. See \cite{MossakowskiTarlecki09}.
-  \end{note}
 
 
 \termdefinition{flattenable OMS}
@@ -2055,11 +2055,14 @@ A correspondence is given as a quadruple
 $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$,
 where $R$ denotes the type of relationship that is asserted to hold between the two non-logical 
 symbols/terms, and $0\le c\le 1$ is a confidence value.  $R$ and $c$ may be omitted: When $R$ is 
-omitted, it is implied from the context as being the equivalence relation, unless another default
+omitted, it defaults to the equivalence relation, unless another default
 relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.}
   \end{note}
   \begin{note}
      A confidence value of $1$ does not imply logical equivalence (\cf \cite{KutzEtAl:ChineseWhispers2010} for a worked-out example).
+  \end{note}
+  \begin{note}
+     Not all OMS languages implement logical equivalence.  For example, OWL does not implement logical equivalence in general, but separately implements equivalence relations restricted to individuals (\textit{owl:sameAs}), classes (\textit{owl:equivalentClass}) and properties (\textit{owl:equivalentProperty}).
   \end{note}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}}
@@ -2220,7 +2223,7 @@ models \index{model}, and a \termref{satisfaction relation} between models\index
     $\mathcal{SROIQ}(D)$ is the logic underlying OWL 2 DL.
   \end{example}
   \begin{note}
-   See annex~\ref{a:rdf-logic-vocab} for the organization of the
+   See annex~\ref{a:lola} for the organization of the
    relation between OMS languages and their logics and serializations.
   \end{note}
 
@@ -2409,7 +2412,7 @@ Chapter \ref{a:text-syntax} provides a human friendly text serialization of the 
 Chapter \ref{c:semantics} defines the model-theoretic semantics of \DOL (\emph{normative}). 
 
 \medskip \noindent 
-Annex \ref{a:rdf-logic-vocab} specifies an RDF vocabulary for describing OMS languages that 
+Annex \ref{a:lola} specifies an RDF vocabulary for describing OMS languages that 
 conform with \DOL  (\emph{normative}). 
 
 \medskip \noindent 
@@ -2449,10 +2452,6 @@ Annex \ref{a:use-cases} sketches scenarios that outline how \DOL is intended to 
 each scenario, we list its status of implementation, the \DOL features it makes use of, and 
 provide a brief description.
 (\emph{informative}).
-
-\medskip \noindent 
-Annex \ref{a:meta-vocab} 
-(\emph{informative}).\ednote{FN: reevaluate after discussion with Till}
 
 \medskip \noindent 
 Annex \ref{a:MOF} contains the abstract syntax specified as an SMOF compliant meta model.
@@ -2496,7 +2495,7 @@ The following people contributed directly to the development of this specificati
 	\item Maria Keet, University of Cape Town 
 	\item Elisa Kendall,  Thematix Partners LLC	
 	\item Oliver Kutz, Otto-von-Guericke University Magdeburg  
-	\item Christoph Lange, University of Bonn 
+	\item Christoph Lange, University of Bonn and Fraunhofer IAIS
 	\item Terry Longstreth, Independent Consultant 	
 	\item Till Mossakowski, Otto-von-Guericke University Magdeburg  	
 	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg  
@@ -3202,7 +3201,7 @@ Since \DOL is a meta-language,  it \textit{inherits} the logical language aspect
 \begin{description}
 \item[Logic] Most commonly, OMS languages are based on a description logic or some other subset of first-order logic, but in some cases, higher-order, modal, paraconsistent and other logics are used.
 \item[Modularity] A means of structuring an OMS into reusable parts, reusing parts of other OMS, mapping imported symbols to those in the importing OMS, and asserting additional properties about imported symbols.
-\item[Annotation] A means of attaching human-readable descriptions to OMS symbols, addressing knowledge engineers and service developers, but also end users of OMS-based services.\ednote{TODO Christoph: reformulate. DOL enables the use of annotations}
+\item[Annotation] A means of attaching human-readable descriptions to OMS symbols, addressing knowledge engineers and service developers, but also end users of OMS-based services.
 \end{description}
 Whereas the first feature determines the expressivity of the language and the possibilities for automated reasoning (decidability, tractability, etc.), the latter two facilitate OMS engineering as well as the engineering of OMS-based software.
 
@@ -3313,11 +3312,11 @@ the rule for \syntax{combination} for the abstract syntax category
 
 \section{DOL provides a mechanism for rich annotation and documentation of OMS.}\label{c:req:annotation}
 
-\todonote[author=Christoph Lange,date=D:201211141640+00'00',type=q-all]{I think that now that we have agreed on dumping the RDF and XML serializations of DOL, this requirement can no longer be satisfied.  Or maybe it can be satisfied in a trivial way (nonetheless requiring this section to be shortened): DOL provides the mechanism for  identifying anything of relevance in a library, it will do so by IRIs, and with RDF there is an established mechanism for annotating things identified by IRIs.  Still I believe this requirement is an important selling point.} DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
+DOL provides a mechanism for identifying anything of relevance in OMS by assigning an IRI to it.  With RDF there is a standard mechanism for annotating things identified by IRIs.  Thus, DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
 
 The DOL serializations also supports the \termref{annotation} of existing OMS via non-intrusive standoff markup, which points to the annotation subjects from external documentation files or from special embedded comments, extending the comment syntax of the respective OMS language.
 
-%A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:rdf-logic-vocab}.
+%A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:lola}.
 
 \clause{DOL abstract syntax}\label{c:abstract-syntax}
 
@@ -3414,7 +3413,7 @@ An OMS network by default also includes all inclusions (generated by
 \syntax{ExtensionOMS}) between the involved OMS---unless these are
 explicitly excluded.
 
-\sclause{Focused OMS}\label{c:focused-OMS}
+\sclause{OMS}\label{c:focused-OMS}
 
 An OMS (\syntax{OMS}) can be one of the following:
 \begin{itemize}
@@ -3512,8 +3511,8 @@ not to specify lambda-style symbol-to-term mappings for now.  Would be convenien
 in an OMS language independent way would require additional institution infrastructure – and the same effect can be 
 achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?) TM: Alternatively, we could use a recent notion of institutional monad. This builds an extended signature with all terms. Then one can use ordinary signature morphisms into such extended signatures.} or a logic
 translation. An OMS language translation \syntax{OMSLangTrans} 
-can be either specified by its name, or be inferred as the default
-translation between to a given target (the source will be inferred as the 
+can be either specified by its name, or be inferred as the \termref{default
+translation} to a given target (the source will be inferred as the 
 OMS language of the current OMS).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
@@ -3566,8 +3565,7 @@ value. Moreover, the relation between the two non-logical symbols can be explici
 specified (like being equal, or only being subsumed) in a similar way to the Alignment API \cite{AlignmentAPI}. 
 \red{The relations that can be used in a correspondence are equivalence, disjointness, subsumption, membership (the last two with a
 variant for each direction) or a user-defined relation that is stored in a registry and must be prefixed with
-\url{purl.net/DOL}.\ednote{This is the first mentioning of purl.net. Needs
-futher discussion!}
+\url{http://www.omg.org/spec/DOL/correspondences/}.
 A default correspondence can be used; it is applied to all pairs of non-logical symbols with 
 the same local names. The default relation in a correspondence is equivalence, unless  a different 
 relation is specified in a surrounding 
@@ -3910,8 +3908,8 @@ prefix maps, even if the serialization does not support prefix maps otherwise.
 \sclause{Document type}
 
 \begin{description}
-\item[MIME type] \mimetype{application/dol+text}\todonote[author=Christoph Lange,type=fyi]{just a placeholder so far, needs discussion}
-\item[Filename extension] .dol\todonote[author=Christoph Lange]{the most intuitive one, but gives the text serialization a privileged role over the others}
+\item[MIME type] \mimetype{application/dol+text}
+\item[Filename extension] .dol
 \end{description}
 
 \sclause{Concrete Syntax}\label{a:dol-text:concrete}
@@ -4165,7 +4163,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 
 \sclause{Lexical Symbols}
 
-The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as ASCII.\todonote[author=Christoph Lange,type=todo]{maybe we need to say something about encoding IRIs as URIs in the latter case}  For enhanced readability of OMS, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
+The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nisref{IETF/RFC 3987:2005}.}  For enhanced readability of OMS, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
 \ssclause{Key Words and Signs}\label{c:keywords}
 
@@ -4173,7 +4171,7 @@ The lexical symbols of the DOL text serialization include various key words and 
 
 \sssclause{Key Words}
 
-Key words are always written lowercase. The following key words are reserved, and are not available for use as complete identifiers\todonote[author=Christoph Lange,type=todo]{figure out what that actually means.  If we use OWL Manchester's style of abbreviating IRIs, it probably means that in the worst case some IRIs can't be abbreviated but must be given as complete global IRIs}, although they can be used as parts of tokens:
+Key words are always written lowercase. The following key words are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  None of these rewritings changes the semantics.}, although they can be used as parts of tokens. 
 
 {\ttfamily %
 and
@@ -4221,7 +4219,17 @@ Table~\ref{tab:key-signs} following key signs are reserved, and are not availabl
 \label{sec:existing-serialization}
 Any document providing an OMS in a serialization of a DOL conforming
 language can be used as-is in DOL, by reference to its IRI.
-\ednote{TODO: injection of comments, \%implies etc. See \ref{c:req:annotation} and \ref{s:annotations}.}
+
+The following cases apply for injecting identifiers into fragments of OMS languages, depending on the conformance level of the respective serialization of the OMS language used in terms of section~\ref{c:conform:serialization}:
+\begin{description}
+\item[XML conformance] Identifiers are added to XML elements by using the IRI-valued \textit{dol:id} XML attribute from the \url{http://www.omg.org/spec/DOL/0.8/xml} namespace, or, if the serialization does not support this attribute, by adding a \textit{dol:id} XML element as the first child, containing exactly one text node with the IRI.
+\item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
+\item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
+\item[Standoff markup conformance] Standard mechanisms such as XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) or \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of XML or text in the given OMS serialization.
+\end{description}
+\ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
+
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use 
 
 \clause{DOL semantics}\label{c:semantics}
 
@@ -5285,7 +5293,7 @@ If \syntax{ConsStrength} is \syntax{model-conservative} or
 $\cM$ is the $\Sigma$-reduct of some model in $\cM'$. 
 In case that \syntax{ConsStrength} is \syntax{implied},
 it is furthermore required that $\Sigma=\Sigma'$. 
-If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is only defined if for each
+If \syntax{ConsStrength} is \syntax{consequence\-conservative}, the semantics is only defined if for each
 $\Sigma$-sentence $\varphi$, $\cM'\models\varphi$ implies $\cM\models\varphi$.
 % If
 %\syntax{ConsStrength} is \syntax{'monomorphic'}, the semantics is only
@@ -5875,7 +5883,7 @@ special cases to be described
 
 \appendix
 
-\normannex{RDF vocabulary for describing OMS languages conforming with DOL}\label{a:rdf-logic-vocab}
+\chapter[LoLa RDF vocabulary]{Annex (normative): LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL}\label{a:lola}
 
 \begin{figure}
   \centering
@@ -5884,29 +5892,36 @@ special cases to be described
 \label{f:DOL-threelayers}
 \end{figure}
 
-This annex specifies an RDF vocabulary, formalized in RDFS \nisref{W3C/TR REC-rdf-schema:2004}, for describing OMS languages that conform with DOL, and their features, including logics and serializations.  This vocabulary shares its namespace (\url{http://purl.net/dol/1.0/rdf#}) with the DOL RDF vocabulary for serializing DOL OMS (\cf \aref{a:rdf-syntax}).\CLnote[type=fyi]{given its light weight I think that makes sense.  It doesn't rule out extensions to OWL (or even DOL) anyway.}  
+This annex specifies LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL, as well as serializations and translations, when they are entered into the \termref{registry} stipulated by chapter~\ref{c:conformance}.
+The normative subset of LoLa is given as an RDF Schema vocabulary (\nisref{W3C/TR REC-rdf-schema:2014}) having the namespace IRI \url{http://www.omg.org/spec/DOL/0.8/rdf\#}.\footnote{The full version of LoLa is currently maintained as an OWL ontology and, prospectively, as an OMS library implemented in DOL, at
+\url{https://github.com/ontohub/OOR_Ontohub_API/blob/master/lola/ontology/}; a subset serialized in RDF will be available from the namespace IRI (temporarily from \url{http://purl.net/dol/1.0/rdf\#}).}.
+For a full treatment of the background and design considerations of LoLa please see~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
 
-The tables in this annex list the classes and properties of the RDF vocabulary for describing OMS languages.  All class and properties are assumed to be in the DOL RDF namespace unless stated otherwise.
+The tables in this annex list the classes and properties of LoLa.  All classes and properties are assumed to be in the LoLa namespace unless stated otherwise.
 
-\tref{tab:logic-vocab-classes} lists the classes of the RDF vocabulary for describing OMS languages.  Each row of the table translates into the following RDF triples (given in Turtle serialization):\CLnote[type=todo]{also cover rdfs:subClassOf (once we have such cases)}
+\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following RDF triples (given in Turtle serialization~\cite{W3C:REC-turtle-20140225}):
 
 \begin{lstlisting}[language=N3]
-_:class rdf:type     rdfs:Class ;
-        rdfs:comment "documentation" .
+_:class rdf:type        rdfs:Class ;
+        rdfs:subClassOf _:superclass ;
+        rdfs:comment    "documentation" .
 \end{lstlisting}
 
 \newcommand*{\ClassDocumentation}[1]{\textit{#1}}
 \ctable[
-caption={Classes of the RDF vocabulary for describing OMS languages},
+caption={LoLa Classes},
 mincapwidth=\textwidth,
 label={tab:logic-vocab-classes},
 pos=h,
-]{ll}{% table footnotes
+]{lll}{% table footnotes
 }{\FL
-  Class & \ClassDocumentation{documentation}\ML
-  OMSLanguage & \ClassDocumentation{an OMS language}\NN
-  Logic & \ClassDocumentation{a logic that defines the semantics of an OMS language}\NN
-  Serialization & \ClassDocumentation{a serialization of an OMS language}\LL
+  Class & \ClassDocumentation{documentation} & Superclass \ML
+  Language & \ClassDocumentation{an OMS language} & \NN
+  Logic & \ClassDocumentation{a logic that defines the semantics of an OMS language} & \NN
+  Serialization & \ClassDocumentation{a serialization of an OMS language} & \NN
+  Mapping & \ClassDocumentation{a mapping of an OMS language} & \NN
+  Translation & \ClassDocumentation{a mapping of an OMS language} & \NN
+\LL
 }
 
 \tref{tab:logic-vocab-prop} lists the properties of the RDF vocabulary for describing OMS languages.  Each row of the table translates into the following RDF triples (given in Turtle serialization):
@@ -5921,7 +5936,7 @@ _:property rdf:type     rdf:Property ;
 \todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''}
 \newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
 \ctable[
-caption={Properties of the RDF vocabulary for describing OMS languages},
+caption={LoLa Properties},
 width=\linewidth,
 mincapwidth=\textwidth,
 label={tab:logic-vocab-prop},
@@ -5941,12 +5956,6 @@ pos=h,
   serializes & Serialization & OMSLanguage
   \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsSerialization.}\LL
 }
-
-The vocabulary described above has been integrated into the LoLa
-ontology, see
-\url{https://github.com/ontohub/OOR_Ontohub_API/blob/master/lola/ontology/dol-rdf.omn}.\ednote{cite
-  paper} LoLa also comprises properties of translations preserving
-more and more of the semantics.
 
 \normannex{Conformance of OWL 2 DL with DOL}\label{a:owl}
 
@@ -6095,9 +6104,9 @@ without sequence markers \CLminus.
 \end{definition}
 
 
-\normannex{Conformance of RDF and RDFS with DOL}\label{a:rdfs}
+\normannex{Conformance of RDF and RDF Schema with DOL}\label{a:rdfs}
 
-The semantic conformance of RDFS (as specified in \nisref{W3C/TR REC-rdf-schema:2004}) with DOL is established in \cite{OntoGraph}.
+The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR REC-rdf-schema:2014}) with DOL is established in \cite{OntoGraph}.
 
 The way of representing RDFS ontologies as RDF graphs satisfies the criteria for RDF conformance.
 
@@ -6105,7 +6114,7 @@ The way of representing RDFS ontologies as RDF graphs satisfies the criteria for
 \begin{definition}[\RDF and \RDFS]
 Following \cite{Lucanu}, 
 we define the institutions for the Resource Description
-Framework (\RDF) and \RDF-Schema (\RDFS), respectively. 
+Framework (\RDF) and \RDF Schema (also known as \RDFS), respectively. 
 These are based on a logic called \emph{bare} \RDF (\SimpleRDF), which consists
 of triples only (without any predefined resources).
 
@@ -6143,14 +6152,14 @@ the subclass relation is fixed).
 
 In the case of \RDFS, the standard vocabulary contains more elements,
 like
-rdf:domain,
-rdf:range, rdf:Resource, rdf:Literal, rdf:Datatype, rdf:Class,
-rdf:subClassOf, rdf:subPropertyOf, rdf:member, rdf:Container,
-rdf:ContainerMembershipProperty.
+\texttt{rdfs:domain},
+\texttt{rdfs:range}, \texttt{rdfs:Resource}, \texttt{rdfs:Literal}, \texttt{rdfs:Datatype}, \texttt{rdfs:Class},
+\texttt{rdfs:subClassOf}, \texttt{rdfs:subPropertyOf}, \texttt{rdfs:member}, \texttt{rdfs:Container},
+\texttt{rdfs:ContainerMembershipProperty}.
 
-There is also \OWL full, an extension of \RDFS with resources
-like owl:Thing and owl:oneOf, tailored towards the representation of
-\OWL.
+There is also \OWL Full, an extension of \RDFS with resources
+such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the representation of
+\OWL~\cite{W3C:REC-owl2-rdf-based-semantics-20091027}.
 
 \end{definition}
 
@@ -6219,8 +6228,8 @@ of the sorts in $S'$ are generated by function symbols in $F'$.
 \end{figure}
 This annex provides a core graph of logics and translations, covering those OMS languages whose conformance with DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, and RDFS in \aref{a:rdfs}).  The graph is shown in \fref{fig:ontograph-standards}.  Its nodes refer to the following OMS languages and profiles:
 \begin{itemize}
-\item RDF \nisref{W3C/TR REC-rdf-concepts:2004}
-\item RDFS \nisref{W3C/TR REC-rdf-schema:2004}
+\item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
+\item RDFS \nisref{W3C/TR REC-rdf11-schema:2014}
 \item EL, QL, RL (all being profiles of OWL) \nisref{W3C/TR REC-owl2-profiles:2009}
 \item OWL \nisref{W3C/TR REC-owl2-syntax:2009}
 \item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
@@ -6486,53 +6495,76 @@ combine NetworkElements excluding IRIs  &  \\\hline
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
-         log:   <http://purl.net/dol/@logic@/>    %% descriptions of logics ...
-         trans: <http://purl.net/dol/translations/> )%  %% ... and translations
+         log:   <http://www.omg.org/spec/DOL/logics/>    
+		 		%% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )%  
+		 		%% ... and translations
 
 library Mereology
 
-logic log:Propositional syntax ser:Prop/Hets       %% non-standard serialization built into Hets 
-ontology Taxonomy = %mcons      %% basic taxonomic information about mereology reused from DOLCE
+%% non-standard serialization built into Hets: 
+logic log:Propositional syntax ser:Prop/Hets       
+
+%% basic taxonomic information about mereology reused from DOLCE:
+ontology Taxonomy = %mcons      
   props PT, T, S, AR, PD
   . S $\vee$ T $\vee$ AR $\vee$ PD $\longrightarrow$ PT                                                    %% PT is the top concept
-  . S $\wedge$  T  $\longrightarrow$ $\bot$                                               %% PD, S, T, AR are pairwise disjoint
+  . S $\wedge$  T  $\longrightarrow$ $\bot$                  %% PD, S, T, AR are pairwise disjoint
   . T $\wedge$ AR $\longrightarrow$ $\bot$                                                                         %% and so on
 end
 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester           %% OWL Manchester syntax
-ontology BasicParthood =                             %% Parthood in SROIQ, as far as easily expressible
-  Class: ParticularCategory SubClassOf: Particular
-                                            %% omitted similar declarations of the other classes
-    DisjointUnionOf: SpaceRegion, TimeInterval, AbstractRegion, Perdurant
-                                 %% pairwise disjointness more compact thanks to an OWL built-in
-  ObjectProperty: isPartOf        Characteristics: Transitive
-  ObjectProperty: isProperPartOf  Characteristics: Asymmetric  SubPropertyOf: isPartOf 
-  Class: Atom EquivalentTo: inverse isProperPartOf only owl:Nothing
-end                                          %% an atom has no proper parts
+%% OWL Manchester syntax declaration: 
+language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester           
 
+%% Parthood in SROIQ, as far as easily expressible:
+ontology BasicParthood =                             
+  Class: ParticularCategory 
+  	SubClassOf: Particular
+                %% omitted similar declarations of the other classes
+    DisjointUnionOf: SpaceRegion, TimeInterval, AbstractRegion, Perdurant
+                %% pairwise disjointness more compact 
+				%% thanks to an OWL built-in
+  ObjectProperty: isPartOf        
+  	Characteristics: Transitive
+  ObjectProperty: isProperPartOf  
+  	Characteristics: Asymmetric  SubPropertyOf: isPartOf 
+  Class: Atom 
+  	EquivalentTo: inverse isProperPartOf only owl:Nothing
+end             %% an atom has no proper parts
+
+%% translate the logic, then rename the entities
 interpretation TaxonomyToParthood : Taxonomy to BasicParthood =
-  translation trans:PropositionalToSROIQ,    %% translate the logic, then rename the entities
-  PT $\mapsto$ Particular, S $\mapsto$ SpaceRegion, T $\mapsto$ TimeInterval, A $\mapsto$ AbstractRegion, %[ and so on ]%
+  translation trans:PropositionalToSROIQ,
+  PT $\mapsto$ Particular,	S $\mapsto$ SpaceRegion, 
+  T $\mapsto$ TimeInterval,	A $\mapsto$ AbstractRegion, %[ and so on ]%
 
 logic log:CommonLogic syntax ser:CommonLogic/CLIF
-                      %% syntax: the Lisp-like CLIF dialect of Common Logic
+                %% syntax: the Lisp-like CLIF dialect of Common Logic
+
+%% ClassicalExtensionalParthood imports the OWL ontology from above, 
+%% translate it to Common Logic, then extend it there:
 ontology ClassicalExtensionalParthood =
   BasicParthood with translation trans:SROIQtoCL
-      %% import the OWL ontology from above, translate it to Common Logic, then extend it there:
 then
   . (forall (X) (if (or (= X S) (= X T) (= X AR) (= X PD))
                     (forall (x y z) (if (and (X x) (X y) (X z))
-                                        (and                          %% now list all the axioms
-      (if (and (isPartOf x y) (isPartOf y x)) (= x y))                           %% antisymmetry
+                                        (and                          
+%% now list all the axioms: 
+	%% antisymmetry:
+      (if (and (isPartOf x y) (isPartOf y x)) (= x y)) 
+	%% transitivity; not combinable with asymmetry in OWL DL:
       (if (and (isProperPartOf x y) (isProperPartOf y z)) (isProperPartOf x z))
-                              %% transitivity; can't be expressed in OWL together with asymmetry
       (iff (overlaps x y) (exists (pt) (and (isPartOf pt x) (isPartOf pt y))))
       (iff (isAtomicPartOf x y) (and (isPartOf x y) (Atom x)))
       (iff (sum z x y)
-           (forall (w) (iff (overlaps w z) (and (overlaps w x) (overlaps w y)))))
-      (exists (s) (sum s x y))                                           %% existence of the sum
+           (forall (w) (iff 
+		   	  (overlaps w z) 
+			  (and (overlaps w x) (overlaps w y)))))
+ %% existence of the sum:
+      (exists (s) (sum s x y))                                          
       )))))
-  . (forall (Set a) (iff (fusion Set a)                                  %% definition of fusion
+%% definition of fusion	  
+  . (forall (Set a) (iff (fusion Set a)                                  
             (forall (b) (iff (overlaps b a)
                              (exists (c) (and (Set c) (overlaps c a)))))))
   }
@@ -6561,7 +6593,9 @@ then
 then
   %% VARYING PART
   Class: Ontable 
-  Class: BlockNotAbnormal EquivalentTo: Block and not Abnormal SubClassOf: Ontable 
+  Class: BlockNotAbnormal 
+  	EquivalentTo: Block and not Abnormal 
+	SubClassOf: Ontable 
         %% Normally, a block is on the table
 then %implied
   Individual: B2 Types: Ontable
@@ -6580,7 +6614,9 @@ ontology Blocks_Alternative =
               %% B1 and B2 are different blocks
               %% B1 is abnormal
   Class: Ontable 
-  Class: BlockNotAbnormal EquivalentTo: Block and not Abnormal SubClassOf: Ontable 
+  Class: BlockNotAbnormal 
+  	EquivalentTo: Block and not Abnormal 
+	SubClassOf: Ontable 
         %% Normally, a block is on the table
   minimize Abnormal var Ontable, BlockNotAbnormal
 then %implied
@@ -6593,9 +6629,9 @@ end
 \index{alignment}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
-         owl   <http://www.w3.org/2002/07/owl#>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
-         trans <http://purl.net/dol/translations/> )% %% ... and translations
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )% %% ... and translations
 
 library Alignments
 
@@ -6645,9 +6681,9 @@ end
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/mereology#>
-         owl   <http://www.w3.org/2002/07/owl#>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
-         trans <http://purl.net/dol/translations/> )% %% ... and translations
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )% %% ... and translations
 
 library Publications
 
@@ -6677,7 +6713,8 @@ combine
   %% implicitly: Article $\mapsto$ 1:Article @\ldots@
   %%             Article $\mapsto$ 2:Article @\ldots@  
 bridge with translation MS-OWL2DDL
-  %% implicitly added my translation MS-OWL2DDL: binary relation providing the bridge
+  %% implicitly added my translation MS-OWL2DDL: 
+  %% binary relation providing the bridge
   1:Publication $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:Publication
   1:PhdThesis $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:Thesis
   1:InBook $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:BookArticle
@@ -6694,11 +6731,6 @@ bridge with translation DDL2-ECO
   %% add E-connection style bridge rules on top
 end
 
-%% Note: unfinished...
-%% add second spec following example from AI journal paper on E-connections,
-%% page 22: three different bridge relations between two ontologies; first DDL
-%% modelling, translation to ECO with default relation, renaming and extension
-%% in ECO style.
 
 library Market
 
@@ -6712,7 +6744,8 @@ combine
        ObjectProperty: BoughtBy }
 bridge with translation OWL2DDLwithRoles
   1:PurchaseOrder -into-> 2:BoughtBy
-%% means in FOL: forall x 1PurchaseOrder(x) -> forall yz CR12(x,y,z) -> 2BoughtBy(y,z)
+%% means in FOL: 
+%% forall x 1PurchaseOrder(x) -> forall yz CR12(x,y,z) -> 2BoughtBy(y,z)
 end
 
 
@@ -6723,9 +6756,9 @@ end
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
-         owl   <http://www.w3.org/2002/07/owl#>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
-         trans <http://purl.net/dol/translations/> )% %% ... and translations
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )% %% ... and translations
 
 library Algebra
 
@@ -6843,14 +6876,17 @@ the protocol state machine in Fig.~\ref{fig:psm} as follows in DOL:
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,refinement},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/uml#>
-         uml   <http://www.uml.org/>
-         log   <http://purl.net/dol/@logic@/> %% descriptions of logics ...
+         uml:   <http://www.uml.org/spec/UML/>
+%% descriptions of logics ...		 
+         log:   <http://www.omg.org/spec/DOL/logics/>
 
 logic log:uml
 
 refinement abstract_to_concrete_atm =
-  psm refined to { atm with Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, 
-                   Verified |-> Idle, Verifying |-> Verifying hide card, PIN                   }
+  psm refined to {  atm with Idle |-> Idle, CardEntered |-> Idle, 
+                             PINEntered |-> Idle, Verified |-> Idle, 
+                             Verifying |-> Verifying 
+                    hide card, PIN   }
 end
 \end{lstlisting}
 
@@ -6955,7 +6991,7 @@ to the term \termref{structured OMS} in this \IS}
   \item[direct relations] maps (signature morphisms), definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
   \end{description}
 
-  DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV (\cf \aref{a:meta-vocab}), and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent library.
+  DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV, and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent library.
 \end{usecase}
 
 \begin{usecase}{Extending OWL with datatypes defined in CASL}{potential use case}{...}
@@ -6983,7 +7019,7 @@ to the term \termref{structured OMS} in this \IS}
 
 \includegraphics[scale=0.6]{mof/dia/dia1.png}
 
-\sclause{Focused OMS}
+\sclause{OMS}
 
 \toleft\includegraphics[scale=0.4]{mof/dia/dia2.png}
 
@@ -7357,7 +7393,7 @@ Translations from SROIQ(D) to \Flogic are discussed in \cite{Bruijn:2008}.
 
 %%% Local Variables: 
 %%% mode: latex
-%%% ispell-local-dictionary: "british"
+%%% ispell-local-dictionary: "american"
 %%% End: 
 
 
