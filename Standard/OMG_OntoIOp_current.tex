@@ -6,6 +6,7 @@
 
 
 %todo
+% precedences of operators. 'bridge' binds weakest
 % explain: extensions for small additions, unions for sums of large OMS
 % %safe as synonym for %cons
 % in grammar, use NT+
@@ -2334,7 +2335,7 @@ interoperability concerning the creation, meaning, computation, use, transfer, a
 \end{definitions}
 \begin{note}
 Within ISO 19763 and ISO 20943, metamodel interoperability is
-equivalent to the existence of mappings, which are statements that the
+equivalent to the existence of mapping, which are statements that the
 domains represented by two models intersect and there is a need to
 register details of the correspondence between the structures in the
 models that semantically represent this overlap. Within these
@@ -3697,7 +3698,7 @@ complete, meaning that it comprises all answer substitutions to the query.
 
 QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
 QueryDefn            = 'select-query-defn', QueryName, Vars, Sentence, 
-                                            OMS, [Translation] ;
+                                            OMS, [OMSLangTrans] ;
 SubstDefn            = 'subst-defn', SubstName, OMS, OMS, SymbolMap ;
 ResultDefn           = 'result-def', ResultName, SubstName, { SubstName }, 
                                      QueryName, [ Complete ] ;
@@ -3956,13 +3957,13 @@ PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
 PrefixBinding            = BoundPrefix , IRIBoundToPrefix , [ Separators ] ;
 BoundPrefix              = ':' | Prefix ; +$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+ 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
-Separators               = 'separators' , String, String ;
+Separators               = 'separators' , String , String ;
 
 NetworkDefn            = NetworkKeyword , NetworkName , '=' , 
                          [ ConsStrength ] , Network ;
 NetworkKeyword         = 'network' ;
 NetworkName            = IRI ;
-Network                = NetworkElements , ExcludeExtensions ;
+Network                = NetworkElements , [ ExcludeExtensions ] ;
 NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
 NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
 ExcludeExtensions      = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
@@ -3994,12 +3995,12 @@ OMS                 = ExtendingOMS
                      | OMS , 'and' , [ ConsStrength ] , OMS 
                      | OMS , 'then' , ExtensionOMS
                      | { Qualification } , ':' , GroupOMS
-                     | OMS, 'bridge', { Translation } , ExtendingOMS 
+                     | OMS , 'bridge' , { Translation } , ExtendingOMS 
                      | 'combine' , NetworkElements , [ ExcludeExtensions ]  
                      | 'apply' , SubstName , Sentence 
                      | GroupOMS ;
 
-Minimization         = MinimizeKeyword, CircMin , [ CircVars ] ;
+Minimization         = MinimizeKeyword , CircMin , [ CircVars ] ;
 MinimizeKeyword      = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
 CircMin = Symbol , {  Symbol } ;
 CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
@@ -4022,9 +4023,9 @@ SymbolMapItems       = SymbolOrMap , { ',' , SymbolOrMap } ;
 Extraction           = 'extract' , [InterfaceSignature]
                      | 'remove' , [InterfaceSignature] ;
 
-Approximation        = 'forget' , InterfaceSignature , [ 'with', LogicRef ] 
-                     | 'keep' , InterfaceSignature , [ 'with', LogicRef ] 
-                     | 'keep' , LogicRef ;
+Approximation        = 'forget' , InterfaceSignature , [ 'with' , LogicRef ] 
+                     | 'keep' , InterfaceSignature , [ 'with' , LogicRef ] 
+                     | 'keep' , 'with' , LogicRef ;
 
 Filtering            = 'select' , BasicOMS 
                      | 'reject' , BasicOMS ;
@@ -4093,21 +4094,21 @@ IntprKeyword         = 'interpretation' | 'view' | 'refinement' ;
 IntprName            = IRI ;
 IntprType            = GroupOMS , 'to' , GroupOMS ;
 
-Refinement           = OMS 
-                     | Network
+Refinement           = GroupOMS 
+                     | NetworkName
                      | Refinement , 'then' , Refinement
-                     | OMS , 'refined' , [RefMap] , 'to' , Refinement 
-                     | Network , 'refined' , [RefMap] , 'to' , Refinement ;
+                     | GroupOMS , 'refined' , [RefMap] , 'to' , Refinement 
+                     | NetworkName , 'refined' , [RefMap] , 'to' , Refinement ;
 RefMap               = 'via' , LogicTranslation , [ SymbolMapItems ]
                      | 'via' , [ LogicTranslation ] , SymbolMapItems
                      | 'via' , NodeMap , { ',' , NodeMap } ;
-NodeMap              = OMSName , '|->' , OMSName , [ 'using', { LogicTranslation } , [ SymbolMapItems ] ] ;
+NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LogicTranslation } , [ SymbolMapItems ] ] ;
 
-Entailment           = 'entailment' , EntailmentName , '=', EntailmentType ;
+Entailment           = 'entailment' , EntailmentName , '=' , EntailmentType , 'end' ;
 EntailmentName       = IRI ;
-EntailmentType       = GroupOMS , 'entails', OMS
-                     | OMSName , 'in' , Network , 'entails', OMS
-                     | Network , 'entails', Network ;
+EntailmentType       = GroupOMS , 'entails' , GroupOMS
+                     | OMSName , 'in' , Network , 'entails' , GroupOMS
+                     | Network , 'entails' , Network ;
 
 EquivDefn            = 'equivalence' , EquivName , ':' , EquivType ,  'end' ;
 EquivName            = IRI ;
@@ -4117,12 +4118,12 @@ EquivType            = GroupOMS , '<->' , GroupOMS  , '=' , OMS
 ModuleRelDefn        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
                        'for' , InterfaceSignature ;
 ModuleName           = IRI ;
-ModuleType           = OMS , 'of' , OMS ;
+ModuleType           = GroupOMS , 'of' , GroupOMS ;
 
 AlignDefn            = 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType ,  'end'
                      | 'alignment' , AlignName , [ AlignCards ] , ':' , AlignType , '=' ,
                        Correspondence , { ',' , Correspondence } ,  
-                       'assuming', AlignSem, 'end' ;
+                       'assuming' , AlignSem , 'end' ;
 
 AlignName            = IRI ;
 AlignCards           = AlignCardForward , AlignCardBackward ;
@@ -4153,17 +4154,17 @@ Double               = ($<$ a number $\in [0,1]$ $>$) ;
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
 QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
-QueryDefn            = 'query', QueryName, '=', 'select', Vars, 
-                                'where', Sentence, 'in', OMS, 
-                                ['along', Translation]  ;
-SubstDefn            = 'substitution', SubstName, ':', OMS, 'to', OMS, 
-                                       '=', SymbolMap  ;
-ResultDefn           = 'result', ResultName, SubstName, { ',', SubstName },
-                                 'for', QueryName, [ '%complete' ] ;
+QueryDefn            = 'query' , QueryName , '=' , 'select' , Vars , 
+                                'where' , Sentence , 'in' , GroupOMS , 
+                                ['along' , OMSLangTrans] , 'end' ;
+SubstDefn            = 'substitution' , SubstName , ':' , GroupOMS , 'to' , GroupOMS , 
+                                       '=' , SymbolMapItems , 'end' ;
+ResultDefn           = 'result' , ResultName , '=' , SubstName , { ',' , SubstName } ,
+                                 'for' , QueryName , [ '%complete' ] , 'end' ;
 QueryName            = IRI ;
 SubstName            = IRI ;
 ResultName           = IRI ;
-Vars                 = Symbol , { ',', Symbol } ;
+Vars                 = Symbol , { ',' , Symbol } ;
 \end{lstlisting}
 
 \sclause{Identifiers}
