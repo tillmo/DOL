@@ -6592,6 +6592,19 @@ then
   }
 \end{lstlisting}
 
+\sclause{Defined Concepts}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+library Persons
+logic OWL
+
+ontology Persons =
+  Class Person
+  Class Female
+then %def
+  Class: Woman  EquivalentTo: Person and Female
+end
+\end{lstlisting}
+
 
 \sclause{Blocks World: Minimization}
 \CLnote[type=q-aut]{Here we need the prefixes for registry entries (e.g.\ logics) once more; they should be reused across examples.  Or we need to specify a mechanism that gets rid of \emph{these} prefixes altogether.  @TM, could you please comment on my specification enhancement request \texttt{http://trac.informatik.uni-bremen.de:8080/hets/ticket/1020\#comment:33}?}
@@ -6685,8 +6698,12 @@ alignment VAlignment : Onto1 to Onto2 =
   Woman = Woman
 end
 
+network N =
+  1 : Onto1, 2 : Onto2, VAlignment
+end
+ 
 ontology VAlignedOntology =
-  combine 1 : Onto1, 2 : Onto2, VAlignment
+  combine N
   %% 1:Person is identified with 2:HumanBeing
   %% 1:Woman is identified with 2:Woman
   %% 1:Bank and 2:Bank are kept distinct
@@ -6773,10 +6790,24 @@ end
 
 \end{lstlisting}
 
+\sclause{Ontology modules}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,extract},escapechar=@,mathescape]
+library GalenModule
+logic OWL
+ontology myGalen = 
+  http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
+end
+
+module myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
+  for Drugs, Joints, Bodyparts
+end
+\end{lstlisting}
+
 \sclause{Algebra}
 \ednote{use ``spec'' here???}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,equivalence},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
          owl:   <http://www.w3.org/2002/07/owl#>
          log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
@@ -6811,7 +6842,34 @@ end
 
 equivalence groups_equiv : implicit_group <-> { explicit_group hide e, inv }
 end
+\end{lstlisting}
 
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,equivalence,spec},escapechar=@,mathescape]
+equivalence e : algebra:BooleanAlgebra
+                $\leftrightarrow$ algebra:BooleanRing =
+    x$\wedge$y = x$\cdot$y
+    x$\vee$y = x+y+x$\cdot$y
+    $\neg$x = 1+x
+    x$\cdot$y = x$\wedge$y
+    x+y = (x$\vee$y) $\wedge$ $\neg$(x$\wedge$y)
+end
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,forget,entails,entailment,spec},escapechar=@,mathescape]
+logic CASL
+
+spec InterpolatedGroup =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem; inv:Elem->Elem
+  forall x,y,z:elem . x+0=x
+                    . x+(y+z) = (x+y)+z
+                    . x+inv(x) = 0
+  forget inv
+end
+
+entailment ent = InterpolatedGroup 
+  entails { . forall x:Elem . exists y . Elem . x+y=0 }
+end
 \end{lstlisting}
 
 \sclause{Model-driven development}
@@ -6916,6 +6974,22 @@ The refinement uses an abstraction of the \uml{atm}, expressed by the
 translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in two state only. Moreover, some detail of the \uml{atm} is hidden using
 \syntax{hide}. Then, the protocol state machine can be refined to
 the thus abstracted \uml{atm}.
+
+\sclause{Queries}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,query,select,where,in,substitution,result,for,along,library,spec,sort,pred,op},escapechar=@,mathescape]
+library MyQuery
+logic CASL
+spec Person =
+  sort s
+  pred Person:s 
+  op max,peter:Person
+end
+query MyQuery = select x where Person(x) in Person
+end
+substitution MySubst : { Person then op x:Person } to Person = x |-> max
+end
+result MyResult = MySubst for MyQuery
+\end{lstlisting}
 
 \infannex{Use cases}\label{a:use-cases}
 
