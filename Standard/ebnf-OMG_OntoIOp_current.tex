@@ -3482,7 +3482,7 @@ Reduction          ::= hidden LogicReduction* [SymbolItems]
 LogicReduction     ::= logic-reduction OMSLangTrans
 SymbolItems        ::= symbol-items Symbol Symbol*
 SymbolMapItems     ::= symbol-map-items SymbolOrMap SymbolOrMap*
-Extraction         ::= extraction [QualInterfaceSignature]
+Extraction         ::= extraction QualInterfaceSignature
 Approximation      ::= approximation [QualInterfaceSignature] [LogicRef]
 Filtering          ::= select BasicOMS | reject BasicOMS
 ConsStrength       ::= Conservative | MonoDef
@@ -4015,11 +4015,11 @@ Reduction        ::= 'hide' LogicReduction* SymbolItems
 LogicReduction   ::= 'along' OMSLangTrans
 SymbolItems      ::= Symbol ( ',' Symbol )*
 SymbolMapItems   ::= SymbolOrMap ( ',' SymbolOrMap )*
-Extraction       ::= 'extract' [InterfaceSignature]
-                   | 'remove' [InterfaceSignature]
+Extraction       ::= 'extract' InterfaceSignature
+                   | 'remove' InterfaceSignature
 Approximation    ::= 'forget' InterfaceSignature ['with' LogicRef]
                    | 'keep' InterfaceSignature ['with' LogicRef]
-                   | 'keep' 'with' LogicRef
+                   | 'keep' LogicRef
 Filtering        ::= 'select' BasicOMS | 'reject' BasicOMS
 ExtensionOMS     ::= [ExtConsStrength] [ExtensionName] ExtendingOMS
 ConsStrength     ::= Conservative | '%mono' | '%wdef' | '%def'
@@ -6971,7 +6971,7 @@ end
 \end{lstlisting}
 
 The refinement uses an abstraction of the \uml{atm}, expressed by the
-translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in two state only. Moreover, some detail of the \uml{atm} is hidden using
+translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in a two-state machine. Moreover, some detail of the \uml{atm} is hidden using
 \syntax{hide}. Then, the protocol state machine can be refined to
 the thus abstracted \uml{atm}.
 
