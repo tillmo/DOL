@@ -83,6 +83,7 @@ draft%
 \usepackage{etoolbox}
 \usepackage{ifmtarg}
 \usepackage{stringstrings}
+\usepackage{stmaryrd}
 
 %% Graphics
 \usepackage{standalone}
@@ -489,6 +490,8 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\aggregation}{\raisebox{0.2pt}{\begin{sideways}\fontsize{6pt}{6pt}\selectfont$\lozenge$\end{sideways}}}
 \newcommand{\composition}{\raisebox{0.2pt}{\begin{sideways}\fontsize{6pt}{6pt}\selectfont$\blacklozenge$\end{sideways}}}
 \newcommand{\Tau}{\mathrm{T}}
+\def\ZZ{\mathbb{Z}}
+\def\sem#1{\mathopen\llbracket#1\mathclose\rrbracket}
 
 \begin{document}
 
@@ -6205,10 +6208,17 @@ such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the represen
 \end{definition}
 
 
-\infannex{Conformance of UML class diagrams DOL}\label{a:uml-class}
+\infannex{Conformance of UML class and object diagrams with DOL}\label{a:uml-class}
 
-We present a translation of UML class diagrams to Common Logic,
-following the fUML specification and \cite{Seidewitz08}.
+This informative annex demonstrates conformance of UML class and
+object diagrams with DOL by defining an institution for both. We
+concentrate on the static aspects of class diagrams; that is, change
+of state is ignored. This means that all operations are query
+operations.
+
+The institution of UML class and object diagrams is defined using a
+translation of UML class diagrams to Common Logic, following the fUML
+specification and \cite{Seidewitz08}.
 
 From the fUML specification, section 10.3.1, we inherit the axioms for
 primitive types: Booleans, numbers, sequences and strings.  These
@@ -6218,7 +6228,8 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 \texttt{form:Sequence}, \texttt{form:Character}, and
 \texttt{buml:String}.
 
-We additionally need to axiomatize a number of predicates in Common Logic:
+We additionally need to axiomatize a number of predicates in Common Logic
+(note that enumerations are not axiomatized in fUML):
 \begin{lstlisting}[language=clif]
 (distinct)        // the empty sequence is distinct
 (distinct x)    // singleton sequences are distinct
@@ -6233,12 +6244,41 @@ We additionally need to axiomatize a number of predicates in Common Logic:
 (iff (oneof x y ...) (or (= x y) (oneof x ...)))
 (iff (enumeration c ...) (and (exhaustive c ...) (distinct ...)))
    // c is an enumeration type with values ...
+
+(forall (p) (holds-all p))
+(forall (p x ...) (iff (holds-all p x ...)
+                       ((and (p x) (holds-all p ...)))))
+((same-length))
+(forall (x ...) (not ((same-length) x ...)))
+(forall (x ...) (not ((same-length x ...))))
+(forall (x y ...a ...b) (iff ((same-length x ...a) y ...b)
+                             ((same-length ...a) ...b)))
+
+(forall (r x y) (iff ((curry-pred r x) y) (r x y)))
+(forall (r ...) (iff ((min-card r ...) x)     // minimum cardinality
+    (exists (...a) (and ((same-length r ...) ...a) // add one to length
+                        (holds-all (curry-pred r x) ...a)
+                        ((distinct ...a))))))
+(forall (r c ...) (iff ((max-card r ...) x)   // maximum cardinality
+    (forall (...a) (if (and ((same-length r ...) ...a) // add one to length
+                            (holds-all (curry-pred r x) ...a))
+                       (not ((distinct ...a)))))))
+
+(forall ($x_1$ $\cdots$ $x_n$) (= ($sel_i$ $x_1$ $\cdots$ $x_n$) ($x_i$)))
+//min-card-tuple, max-card-tuple still need to be defined
 \end{lstlisting}
 
 
 
 Using this infrastructure, we obtain an institution for UML class
 diagrams as follows:
+
+\ednote{From the Jan-26 telcon: we could separate the basic
+  information of the class diagrams from the information whether the
+  types of properties and return parameters of operations are orderd
+  or not, unique or not etc.  Such a basic signature could be mapped
+  to a larger signature, where sets, bags etc. cannot be used as
+  classifiers}
 
 \smallskip\noindent \textit{Class nets --- Signatures.}  The
 signatures of the UML class diagram institution are given by
@@ -6255,7 +6295,8 @@ $\mathsf{List}[c] \in C$ or $\mathsf{Set}[c] \in C$, then $c \in C$;
 and if $\mathsf{Pair}[c_1, c_2] \in C$, then $c_1, c_2 \in C$);\ednote
 {This needs to be changed: there is no recursive closure under these
 type constructors} 
-$K$ fixes the \emph{instance specifications declarations} of the form
+$K$ fixes the \emph{instance specifications declarations} (stemming
+from an object diagram) of the form
 $k : c$ with $c \in C$; $P$ contains the \emph{property declarations}
 of the form $c.p(x_1 : c_1, \dots, x_n : c_n) : c'$ (where we drop the
 parentheses if the property has no arguments); $M$ gives the
@@ -6267,7 +6308,10 @@ forbidding $\mathsf{Boolean} \leq c$ for all $c \neq
 \mathsf{Boolean}$), overriding of declarations, and also that the
 composition declarations are cycle-free: if $c_1\composition r_1 :
 c_2, \dots, c_n\composition r_n : c_{n+1} \in M$, then $c_{n+1} \neq
-c_1$.
+c_1$.\ednote{From the Jan-26 telcon: cycle check for compositions 
+could be defind using mereology. Or does this static check for
+signatures already suffice?}
+
 
 \begin{example}\label{ex:dsl-sig}%\pushQED{\qed}%
 \begin{figure}[!tH]
@@ -6318,7 +6362,7 @@ $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
 $CL(\Sigma)$ consisting of:
 %
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
-\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that 
+\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that\ednote{class predicates should be restricted to be unary} 
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
 \item 
   $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$, 
@@ -6332,7 +6376,8 @@ $CL(\Sigma)$ consisting of:
   $\CL(\mathsf{Real}) = \texttt{buml:Real}$,
 \item 
   $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. Additionally, the Common Logic theory is augmented by
-\texttt{(enumeration $c$ $k_1 \cdots k_n$)},
+\texttt{(enumeration $c$ $k_1 \cdots k_n$)},\ednote{Ed Seidewitz:
+enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \item 
   $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$\ednote{UML has typed
   sequences, but fUML appaerantly not. How do we solve this problem?},
@@ -6342,7 +6387,7 @@ $CL(\Sigma)$ consisting of:
 \item 
   $\CL(\mathsf{Pair}[c_1,c_2]) = ???$\ednote{UML has pairs, but fUML appaerantly not. 
      Do we want to provide our own specification of pairs in Common Logic?},
-  \ednote{What about enumerations? fUML uses them a lot, but does not axiomatize them in CL.}
+ 
 \end{itemize}
 \item for each relation $c_1
   \leq_C c_2$, an axiom \texttt{(forall (x) (if (C1 x) (C2 x)))},
@@ -6350,19 +6395,21 @@ $CL(\Sigma)$ consisting of:
 
   \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
 \texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
-  \item for two instance specifications $k_1 : c$ and $k_2 : c$ with $k_1 \neq
-k_2$, an axiom \texttt{(not (= $k_1$ $k_2$))} (the unique name assumption);
+  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
   \item $\CL$ maps each property declaration $c.p(x_1 : c_1, \dots, x_n : c_n)
-: c' \in P$ to a predicate $\CL(c.p)$ and axioms
+: c' \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
+and functionality:
 \begin{itemize}
 \item
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$ x) (if (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x) ($c_i$ $x_i$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
 for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
 \item 
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$ x) (if (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x) ($c'$ $x$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c'$ $y$))) }
 \item 
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$ x y)}\\
-\qquad \texttt{(if (and (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x) (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x)) (= x y))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
+\qquad \texttt{(if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ z)) (= y z))) }
 \end{itemize}
   \item \CL maps each composition declaration ${c\composition r : c'} \in M$ to
 a predicate $\CL(r)$ and an axiom\\
@@ -6425,6 +6472,11 @@ are inherited as well, using the action of $\CL$ on signature morphisms.
 
 \smallskip\noindent
 \textit{Multiplicity formulae --- Sentences.}
+\ednote{Ed Seidewitz: Multiplicities are different for associations
+  and for properties, this is a bit tricky. Associations are
+  predicates of single values, whereas properties can be over sets
+  etc.  Aexander: we need to correct the representation for
+  compositions used in associations.}
 \ednote{missing: relations between properties, e.g. subsets, unions}
 \ednote{derived associations: one association is the composition of two others}
 For the sentences of the UML class diagram institution we use
@@ -6496,42 +6548,41 @@ associations, and role names.
 
 \smallskip\noindent
 \textit{Satisfaction relation.}
-TODO
-\eat{
-The $\Sigma$-\emph{satisfaction relation} ${{-} \models_{\Sigma} {-}}
-\subseteq |\mathrm{Inst}(\Sigma)| \times \mathit{Sen}(\Sigma)$ of the
-UML class diagram institution is defined for each $\Sigma$-instance
-net $\mathcal{I} = (\CL, \CL, \CL,
-M^{\mathcal{I}}, A^{\mathcal{I}})$ as
-\begin{gather*}
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c'
-\quad\iff\quad
-  \forall o \in \CL(c) \,.\, \sem{\ell} \leq M^{\mathcal{I}}(c\composition r : c')(o)
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c' \leq \ell
-\quad\iff\quad
-  \forall o \in \CL(c) \,.\, M^{\mathcal{I}}(c\composition r : c')(o) \leq \sem{\ell}
-\\
-  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} c'\mathsf{!}
-\quad\iff\quad
-  \forall o' \in \CL(c') \,.\, \exists o \in \CL(c) \,.\, M^{\mathcal{I}}(c\composition r : c')(o) = o'
-\\
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}}
-\quad\iff{}\\\quad
-  \forall o_{i_1} \in \CL(c_{i_1}), \dots, o_{i_m} \in \CL(c_{i_m})\,.\,{}
-\\\qquad
-  \sem{\ell} \leq |\{ t \in A^{\mathcal{I}}(a(r_1 : c_1, \dots, r_n : c_n)) \mid t_{i_1} = o_{i_1}, \dots, t_{i_m} = o_{i_m} \}|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}} \leq \ell
-\quad\iff{}\\\quad
-  \forall o_{i_1} \in \CL(c_{i_1}), \dots, o_{i_m} \in \CL(c_{i_m})\,.\,{}
-\\\qquad
-  |\{ t \in A^{\mathcal{I}}(a(r_1 : c_1, \dots, r_n : c_n)) \mid t_{i_1} = o_{i_1}, \dots, t_{i_m} = o_{i_m} \}| \leq \sem{\ell}
-\end{gather*}
+The satisfaction relation is inherited from Common Logic, using
+a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
+That is, given a UML class and object diagram $\Sigma$, a
+multiplicity formula $\varphi$ and a $\Sigma$-model $M$ (the
+latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic), we define
+$$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
+
+The translation of multiplicity formulas to Common Logic is as follows:
+\begin{itemize}
+  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$
+\texttt{(forall (x) (if (c x) ((min-card r $s_{x,\sem{\ell}}$) x)))}
+where  $s_n$ is a sequence of $x$'s of length $n$
+  \item $\CL(\mathsf{\#}c\composition r \mathrel{\mathsf{:}} c' \leq \ell)=$
+\texttt{(forall (x) (if (c x) ((max-card r $s_{x,\sem{\ell}}$) x)))}
+  \item $\CL(c\composition r \mathrel{\mathsf{:}} c'\mathsf{!})=$
+\texttt{(forall (y) (if (c' y) (exists (x) (and (c x) (r x y)))))}
+  \item 
+\begin{tabbing}
+$\CL(\ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}}=$\\
+\texttt{(forall ($x_{i_1}$ $\cdots$ $x_{i_m}$)}\\
+\qquad\texttt{(if }\=\texttt{(and ($c_{i_1}$ $x_{i_1}$) $\cdots$ ($c_{i_m}$ $x_{i_m}$))}\\
+\>\texttt{((min-card-tuple a $x_{i_1}$ $\cdots$ $x_{i_m}$) $sel_{i_1}$ $\cdots$ $sel_{i_n}$)))}
+\end{tabbing}
+  \item
+\begin{tabbing}
+ $\CL(\mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}} \leq \ell=$\\
+\texttt{(forall ($x_{i_1}$ $\cdots$ $x_{i_m}$)}\\
+\qquad\texttt{(if }\=\texttt{(and ($c_{i_1}$ $x_{i_1}$) $\cdots$ ($c_{i_m}$ $x_{i_m}$))}\\
+\>\texttt{((max-card-tuple a $x_{i_1}$ $\cdots$ $x_{i_m}$) $sel_{i_1}$ $\cdots$ $sel_{i_n}$)))}
+\end{tabbing}
+\end{itemize}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer.
-}
+
 
 \normannex{Conformance of CASL with DOL}\label{a:casl}
 
