@@ -6218,21 +6218,43 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 \texttt{form:Sequence}, \texttt{form:Character}, and
 \texttt{buml:String}.
 
+We additionally need to axiomatize a number of predicates in Common Logic:
+\begin{lstlisting}[language=clif]
+(distinct)        // the empty sequence is distinct
+(distinct x)    // singleton sequences are distinct
+(iff (distinct x y ...) // recursion for length > 1
+     (and (not (= x y))       // the first two elements must be different
+          (distinct x ...)    // and each of them distinct
+          (distinct y ...) )) // to the rest
+
+(iff (exhaustive c ...) (forall (x) (if (c x) (oneof x ...))))
+     // does ... exhaust the extension of c?
+(not (oneof x)) // is x among the remaining arguments?
+(iff (oneof x y ...) (or (= x y) (oneof x ...)))
+(iff (enumeration c ...) (and (exhaustive c ...) (distinct ...)))
+   // c is an enumeration type with values ...
+\end{lstlisting}
 
 
-Using this translation, we obtain an institution for UML class diagrams
-as follows:
+
+Using this infrastructure, we obtain an institution for UML class
+diagrams as follows:
 
 \smallskip\noindent \textit{Class nets --- Signatures.}  The
 signatures of the UML class diagram institution are given by
 \emph{class nets} $\Sigma = ((C, {\leq_C}), K, P, M, A)$ where $(C,
 {\leq_C})$ describes the \emph{class hierarchy} as a partial order
-which is closed w.r.t.\ to the built-in type $\mathsf{Boolean}$ (i.e.,
-$\mathsf{Boolean} \in C$), and ``downwards'' closed w.r.t.\ the unary
+which is closed w.r.t.\ to the built-in types $\mathsf{Boolean}$,
+$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$ and
+$\mathsf{String}$ (i.e.,
+$\{\mathsf{Boolean},\mathsf{UnlimitedNatural}, \mathsf{Integer}, \mathsf{Real},
+\mathsf{String}\} \subseteq C$), and ``downwards'' closed w.r.t.\ the unary
 built-in type formers $\mathsf{List}$ and $\mathsf{Set}$, and the
 binary built-in type former $\mathsf{Pair}$ (i.e., if
 $\mathsf{List}[c] \in C$ or $\mathsf{Set}[c] \in C$, then $c \in C$;
-and if $\mathsf{Pair}[c_1, c_2] \in C$, then $c_1, c_2 \in C$); 
+and if $\mathsf{Pair}[c_1, c_2] \in C$, then $c_1, c_2 \in C$);\ednote
+{This needs to be changed: there is no recursive closure under these
+type constructors} 
 $K$ fixes the \emph{instance specifications declarations} of the form
 $k : c$ with $c \in C$; $P$ contains the \emph{property declarations}
 of the form $c.p(x_1 : c_1, \dots, x_n : c_n) : c'$ (where we drop the
@@ -6275,9 +6297,10 @@ A class net morphism $\sigma = (\gamma, \kappa, \pi,\allowbreak \mu,
 \alpha) : \Sigma = ((C, {\leq}_C), K, P, M, A) \to \Tau = ((D,
 {\leq}_D), L, Q,\allowbreak N, B)$ from $\Sigma$ to $\Tau$ consists of
 a monotone map $\gamma$ from $(C, {\leq_C})$ to $(D, {\leq_D})$ which
-is homomorphic w.r.t.\ the type $\mathsf{Boolean}$, and the type
+is homomorphic w.r.t.\ the types $\mathsf{Boolean}$, $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$ and
+$\mathsf{String}$, and the type
 formers $\mathsf{List}$, $\mathsf{Set}$, and $\mathsf{Pair}$ (i.e.,
-$\gamma(\mathsf{Boolean}) = \mathsf{Boolean}$,
+$\gamma(\mathsf{Boolean}) = \mathsf{Boolean}$, etc.,
 $\gamma(\mathsf{List}[c]) = \mathsf{List}[\gamma(c)]$,
 $\gamma(\mathsf{Set}[c]) = \mathsf{Set}[\gamma(c)]$, and
 $\gamma(\mathsf{Pair}[c_1, c_2]) = \mathsf{Pair}[\gamma(c_1),
@@ -6295,7 +6318,7 @@ $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
 $CL(\Sigma)$ consisting of:
 %
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
-\item for $c \in C$, a predicate $\CL(c)$,  such that 
+\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that 
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
 \item 
   $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$, 
@@ -6308,6 +6331,9 @@ $CL(\Sigma)$ consisting of:
 \item 
   $\CL(\mathsf{Real}) = \texttt{buml:Real}$,
 \item 
+  $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. Additionally, the Common Logic theory is augmented by
+\texttt{(enumeration $c$ $k_1 \cdots k_n$)},
+\item 
   $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$\ednote{UML has typed
   sequences, but fUML appaerantly not. How do we solve this problem?},
 \item 
@@ -6316,11 +6342,11 @@ $CL(\Sigma)$ consisting of:
 \item 
   $\CL(\mathsf{Pair}[c_1,c_2]) = ???$\ednote{UML has pairs, but fUML appaerantly not. 
      Do we want to provide our own specification of pairs in Common Logic?},
-
+  \ednote{What about enumerations? fUML uses them a lot, but does not axiomatize them in CL.}
+\end{itemize}
 \item for each relation $c_1
   \leq_C c_2$, an axiom \texttt{(forall (x) (if (C1 x) (C2 x)))},
   where C1$=\CL(c_1)$, C2$=\CL(c_2)$, 
-\end{itemize}
 
   \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
 \texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
@@ -6399,6 +6425,8 @@ are inherited as well, using the action of $\CL$ on signature morphisms.
 
 \smallskip\noindent
 \textit{Multiplicity formulae --- Sentences.}
+\ednote{missing: relations between properties, e.g. subsets, unions}
+\ednote{derived associations: one association is the composition of two others}
 For the sentences of the UML class diagram institution we use
 \emph{multiplicity formulae} defined by the following grammar:
 %
