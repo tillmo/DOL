@@ -31,7 +31,7 @@
 %\pdfcommenttrue
 \pdfcommentfalse
 
-\documentclass[10pt,%
+\documentclass[10pt,fleqn,%
 \ifpretendfinal
 final%
 \else
@@ -40,8 +40,8 @@ draft%
 %final,
 ]{scrreprt}
 
+%\usepackage[show]{ed}
 \usepackage[show]{ed}
-%\usepackage[hide]{ed}
 
 %color highlight, for editing
 \usepackage{color}
@@ -85,11 +85,15 @@ draft%
 \usepackage{etoolbox}
 \usepackage{ifmtarg}
 \usepackage{stringstrings}
+\usepackage{stmaryrd}
+\usepackage{enumitem}
 
 %% Graphics
 \usepackage{standalone}
 \usepackage[final]{graphicx}
 \usepackage{tikz}
+\usetikzlibrary{matrix,shapes,arrows,calc}
+\usepackage{tikz-uml}
 \input{illustrations/DOL-tikz-preamble}
 
 %% Content
@@ -301,7 +305,9 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\conjclause}{\ensuremath{p_1 \wedge \dots \wedge p_n}}
 \newcommand{\id}{\ensuremath{\operatorname{id}}}
 \newcommand{\powerset}[1]{\mathcal{P}(#1)}
-
+\newcommand{\finorderedpowerset}{\mathcal{P}^{\mathrm{ord}}_{\mathrm{fin}}}
+\newcommand{\finpowerset}{\mathcal{P}_{\mathrm{fin}}}
+\newcommand{\reductop}{\mathnormal{|}}
 
 %% from HetCASL summary
 \newcommand{\Si}{\Sigma}
@@ -310,8 +316,11 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\ModFunctor}{\mathbf{Mod}}
 \newcommand{\SenFunctor}{\mathbf{Sen}}
 \newcommand{\Sig}{\mathbf{Sig}}
+\newcommand{\Mor}{\mathbf{Mor}}
 \newcommand{\PF}{\mathit{PF}}
 \newcommand{\TF}{\mathit{TF}}
+
+\newcommand{\Inst}{\ensuremath{\mathbf{Inst}}}
 
 %\newcommand{\map}[2]{\colon#1\!\longrightarrow\!#2}
 
@@ -491,9 +500,19 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\aggregation}{\raisebox{0.2pt}{\begin{sideways}\fontsize{6pt}{6pt}\selectfont$\lozenge$\end{sideways}}}
 \newcommand{\composition}{\raisebox{0.2pt}{\begin{sideways}\fontsize{6pt}{6pt}\selectfont$\blacklozenge$\end{sideways}}}
 \newcommand{\Tau}{\mathrm{T}}
+\newcommand{\NZ}{\mathbb{Z}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\sem}[1]{\mathopen\llbracket#1\mathclose\rrbracket}
+
+
+% colors
+\newcommand{\white}[1]{{\color{white}{#1}}}
+\newcommand{\qqquad}{\white{x}\qquad}
+
+\allowdisplaybreaks
+
 
 \begin{document}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  FRONTMATTER:
@@ -4563,7 +4582,7 @@ smaller ones, see \cite{GoguenBurstall92}.
 A \emph{network}\footnote{A network is called a diagram in category theory texts. We prefer this terminology to disambiguate 
 from UML diagrams.} in a category $C$ is 
 a functor $D:G\to C$, where $G$ is a small category\footnote{That is, it has a set of objects and sets of morphisms between them
-instead of classes}, and can be thought of as the shape of the graph of
+instead of classes.}, and can be thought of as the shape of the graph of
 interconnections between the objects of $C$ selected by the functor $D$. A \emph{cocone} of
 a network $D:G\to C$ consists of an object $c$ of $C$ and a family of
 morphisms $\alpha_i\map{D(i)}{c}$, for each object $i$ of $G$, such that for
@@ -4647,15 +4666,82 @@ We assume that for each institution in the heterogeneous logical environment the
 $\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
 from $\emptyset$ to any signature of the institution. Moreover we assume the existence of a designated 
 error logic in the graph, and a partial union operation on logics, denoted $\bigcup$: 
-$L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined.
+$L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism 
+and at most one morphism is marked as default.
 
-We assume that for each institution, there exist (possibly partial) union and difference operations on signatures  
-Some of the comorphisms are marked as default translations.
-\ednote{Till: provide axioms for difference operation}
+We assume that for each institution, there exist (possibly partial) union and difference operations on signatures.
+These concepts can be captured in a categorical setting using \emph{inclusion systems} \cite{Diaconescu1993}.
+However, inclusion systems are too strong for our purposes and therefore we will work under weaker assumptions.
+
+\begin{definition}  
+ An \emph{inclusive category} \cite{DBLP:conf/birthday/GoguenR04} 
+ is a category having a broad subcategory\footnote{That is, with the same objects as the original category.}
+which is a partially ordered class with finite products and coproducts, called intersection (denoted $\cap$) and union
+(denoted $\cup$) such that for each pair of objects $A, B$, $A \cup B$ is a pushout of $A \cap B$ in the category.
+ \end{definition}
+
+\noindent
+A category \emph{has pushouts which preserve inclusions} iff 
+there exists a pushout
+$$
+\xymatrix{
+  A  \ar[d] \ar@{^{(}->}[r]& A' \ar[d]\\
+  B \ar@{^{(}->}[r] & B'
+}
+$$ for each span where one arrow is an inclusion.
+
+A functor between two inclusive categories is inclusive if it takes inclusions in the source category to inclusions in the target category.
+
+\begin{definition}
+ An institution is \emph{weakly inclusive} if
+   \begin{itemize}
+     \item $\Sign$ is inclusive and has pushouts which preserve inclusions,
+     \item $\Sen$ is inclusive, and
+     \item each model category have a broad subcategory of inclusions.
+   \end{itemize}
+\end{definition}
+
+Let $I$ be a weakly inclusive institution. We say that $I$  \emph{has differences}, if there is a binary operation $\setminus$ on signatures, 
+such that for each pair of signatures 
+$\Sigma_1, \Sigma_2$, we have:
+\begin{enumerate}
+  \item $\Sigma_1\setminus \Sigma_2 \subseteq \Sigma_1$
+  \item $(\Sigma_1\setminus \Sigma_2) \cap \Sigma_2 = \emptyset$
+   \item for any $\Sigma$ with the properties 1.\ and 2.\ above, $\Sigma \subseteq \Sigma_1\setminus \Sigma_2$.
+\end{enumerate} 
+  
+
 
 This concludes the definition of heterogeneous logical environment and the assumptions made about it.
 
 \medskip
+
+The semantics of OMS generally depends on a global environment
+$\Gamma$ containing:
+ \begin{itemize}
+    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
+               we also denote by $\Gamma$, providing access to previous definitions,
+    \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
+    \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
+ \end{itemize}
+
+If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
+extends the domain of $\Gamma$ with \syntax{IRI} and
+the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
+ $\Gamma_\emptyset$ is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set,
+the prefix map is empty and the current triple contains the error logic together with its language and serialization.
+The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
+denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$,
+and of $\Gamma_1.\prefix$ and $\Gamma_2.\prefix$ are disjoint, and then
+$\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
+\Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
+\Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
+\end{cases}$, $\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
+and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
+We will write $\Gamma.\{\prefix = \PMap\}$ for the global environment that set the prefix map of 
+$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
+$(lang, logic, ser)$.
+
 
 DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of models 
 over some signature of an institution. This is called \emph{model-level}  semantics. In some cases, but not in all, we can also define
@@ -4664,21 +4750,57 @@ related by the fact that, when both the model-level and the theory-level semanti
 sense that the class of models given by the model-level semantics is exactly the model class of the theory given by the
 theory-level semantics. 
 
-We will use the notations $sem^T(O)$ and $sem^M(O)$ for the theory-level and model-level semantics of 
-an OMS $O$, respectively. Thus, $sem^T(O)$ will be a triple $(I, \Sigma, \Delta)$ and 
-$sem^M(O)$, a triple $(I, \Sigma, \cM)$, where $I$ is an institution, $\Sigma$ is a signature of $I$, $\Delta$ is a set of 
-$\Sigma$-sentences and $\cM$ a class of $\Sigma$-models. The compatibility mentioned above can be then formally expressed as
-follows. Let $O$ be a OMS such that $sem^T(O)=(\cI, \Sigma, \Delta)$. Then $$sem^M(O)= \{\cI, \Sigma, \{ M \in \Mod^I(\Sigma) \mid M \models^\cI \Delta \}).$$
+We will use the following unifying notation for the two semantics of an OMS $O$: 
+\begin{itemize}
+ \item the institution of $O$ is denoted $\Inst(O)$,
+  \item the signature of $O$ is denoted $\Sign(O)$ (which is a signature in $\Inst(O)$),
+  \item the models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sign(O)$),
+  \item the axioms of $O$is denoted $\Th(O)$ (which is a set of sentences over $\Sign(O)$).
+\end{itemize}
+\noindent Moreover, we may denote the semantics of $O$ as a tuple $sem(O) = (I, \Sigma, \cM,\Delta)$
+when $\Inst(O) = I$, $\Sign(O) = \Sigma$, $\Mod(O) = \cM$ and $\Th(O) = \Delta$.
+
+The theory-level semantics of $O$ can be undefined, and then so is $\Th(O)$. When $\Th(O)$ is defined, $\Mod(O)$ can be obtained as $\Mod(O)=\{M\in\Mod(\Sign(O)) \,|\, M\models\Th(O)\}$.
 
 We assume a \emph{language-specific semantics} of basic 
 OMS, inherited from the OMS language. For a basic OMS $O$ in a
 language $L$ based on an institution $\I$ we denote 
-by $sem^T_L(O)$ the theory-level language-specific semantics of $O$
-and by 
-$sem^M_L(O)$, the model-level language-specific semantics of $O$.
+by $sem_L(O)$ the language-specific semantics of $O$.
 We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
-the context of previous declarations, denoted $sem^{(\Sigma,\Delta)}_L(O)$ and
-$sem^{(\Sigma,\cM)}_L(O)$ respectively.
+the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.
+
+Intuitively, OMS mappings denote various types of links between two or more OMS. 
+The semantics of OMS mappings can be captured uniformly as a graph whose nodes $N$ are labeled with 
+\begin{itemize}
+ \item $Name(N)$, the name of the node
+ \item $\Inst(N)$, the institution of the node
+ \item $\Sign(N)$, the signature of the node
+ \item $\Mod(N)$, the class of $\Sign(N)$-models of the node
+ \item $\Th(N)$, the set of $\Th(N)$-sentences of the node
+\end{itemize}
+and whose edges are labeled with signature morphisms between the signatures of the source and target nodes. 
+The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
+the class of models of that node is the class of models of $\Th(N)$. 
+For brevity, we may write the label of a node as a tuple. We make the simplifying 
+assumption that any OMS can be assigned a unique name.
+
+Finally, we can give the semantics of networks in two alternative ways.
+In both cases, the semantics of a network is a graph and the labels
+are like in the semantics of OMS mappings. What differs is the labels of
+edges: in the first case, edges are labelled with signature morphisms 
+between the signatures 
+$Sign(S)$ and $Sign(T)$ of the source and target nodes $S$ and $T$ of the
+edge, while in the second case, an edge is labelled with a mapping
+relating the OMS of the nodes connected by it. 
+The intuition is that
+network provide means of putting together graphs of OMS and OMS mappings
+and of removing sub-graphs of existing networks. In the first 
+variant, the graph of a mapping is added explicitly to the network, and
+thus the network may contain more nodes than just those of the OMS
+related by the mapping. The second variant provides a more compact
+representation of the graph of the network but has the drawback that
+one cannot operate on the subgraph of a mapping, e.g. eliminating just a 
+node of it.
 
 %We  assume a \emph{language-specific semantics} of basic
 %OMS, inherited from the OMS language.  
@@ -4709,32 +4831,7 @@ $sem^{(\Sigma,\cM)}_L(O)$ respectively.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
-The semantics of OMS generally depends on a global environment
-$\Gamma$ containing:
- \begin{itemize}
-    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
-               we also denote by $\Gamma$, providing access to previous definitions,
-    \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
-    \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
- \end{itemize}
 
-If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
-extends the domain of $\Gamma$ with \syntax{IRI} and
-the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
- $\Gamma_\emptyset$ is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set,
-the prefix map is empty and the current triple contains the error logic together with its language and serialization.
-The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
-denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$,
-and of $\Gamma_1.\prefix$ and $\Gamma_2.\prefix$ are disjoint, and then
-$\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
-\Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
-\Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
-\end{cases}$, $\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
-and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
-We will write $\Gamma.\{\prefix = \PMap\}$ for the global environment that set the prefix map of 
-$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
-$(lang, logic, ser)$.
-%
 \ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
 
@@ -4784,20 +4881,15 @@ $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Gamma, \syntax{OMSInConformingLanguage})= (\cI, \Sigma, \Delta)}
+\semdom{sem(\Gamma, \syntax{OMSInConformingLanguage})= (\cI, \Sigma, \cM, \Delta)}
 
-$$sem^T(\Gamma, \syntax{OMSInConformingLanguage}) = (\cI, \Sigma, \Delta) $$
+$$sem(\Gamma, \syntax{OMSInConformingLanguage}) = (\cI, \Sigma, \cM, \Delta) $$
 \noindent where 
 $\cI = logic(\Gamma.\current)$ and
-$sem^T_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \Delta)$. 
+$sem_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM,\Delta)$. 
 
 Note that if the OMS in the library does not conform with the logic determined by
-the extension of the library, $sem^T_I(\syntax{OMSInConformingLanguage})$ will be undefined.
-
-\semdom{sem^M(\Gamma,\syntax{OMSInConformingLanguage})=(I, \Sigma, \cM)}
-
-$$sem^M(\Gamma, \syntax{OMSInConformingLanguage}) =  (\cI, \Sigma, \cM)$$
-\noindent where $\cI = logic(\Gamma.\current)$ and $sem^M_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM)$.
+the extension of the library, $sem_I(\syntax{OMSInConformingLanguage})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4945,50 +5037,38 @@ $$sem(\Gamma, G, \syntax{exclude-imports, IRI$_1, \ldots,$ IRI$_n$}) = G'$$
 
 \ssclause{Semantics of OMS}
 
-\semdom{sem^M(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM)}
-For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the model-level semantics is defined as follows:  
+\semdom{sem(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM, \Delta)}
+For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
 
-$$sem^M(\Gamma, \syntax{BasicOMS})= sem^M_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
-
-
-\semdom{sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \Delta)}
-
-For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the theory-level semantics is defined as follows:  
-$$sem^T(\Gamma, \syntax{BasicOMS})= sem^T_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
+$$sem(\Gamma, \syntax{BasicOMS})= sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Gamma, (\Sigma, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \Delta')}
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \cM',\Delta')}
 
-$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{BasicOMS}) = (I, \Sigma', \Delta')$$
-where $(\Sigma, \Delta)$ give the local environment of previously declared symbols\\
-and $sem^{\Sigma, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \Delta')$.
-Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\Delta\subseteq\Delta'$.
+The semantics of a \syntax{BasicOMS} $O$ in the local environment of
+previous declarations $(\Sigma, \cM, \Delta)$ and global environment
+$\Gamma$, is given by
+ \begin{itemize}
+   \item $\Inst(O) = I$,
+   \item $\Sign(O) = \Sigma'$ 
+   \item $\Mod(O) = \cM'$
+   \item $\Th(O) = \Delta'$
+ \end{itemize}
+\noindent where $sem^{\Sigma, \cM, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM', \Delta')$ such that $\Sigma$ is a sub-signature of $\Sigma'$, $\Delta  \subseteq \Delta'$ and
+$\{ M'\forget\Sigma \mid M' \in \cM' \} \subseteq \cM$.
 
-
-
-$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{oms-ref, OMSRef}) = (I, \Sigma', \Delta')$$ 
-where 
-$(\Sigma, \Delta)$ give the local environment of previously declared symbols,
-$sem^T(\Gamma, L, \syntax{OMSRef}) = (I, \Sigma'', \Delta'')$,
-$\Sigma' = \Sigma \cup \Sigma''$ and 
-$\Delta' = \Delta \cup \Delta''$.
-
+The semantics of an OMS reference $O$ in the local environment of
+previous declarations $(\Sigma, \cM, \Delta)$ and global environment
+$\Gamma$, is given by
+ \begin{itemize}
+   \item $\Inst(\syntax{'oms-ref', O}) = \Inst(O)$ which must be the same
+   with the current logic of $\Gamma$
+   \item $\Sign(\syntax{'oms-ref', O}) = \Sigma \cup \Sign(O)$
+   \item $\Mod(\syntax{'oms-ref', O}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sign(O)} \in \Mod(O) \}$
+   \item $\Th(\syntax{'oms-ref' O}) = \Delta \cup \Th(O)$
+ \end{itemize}
 \todonote{why allow to change the name of an OMS here?}
-
-\semdom{sem^M(\Gamma, (\Sigma, \cM), \syntax{MinimizableOMS}) = (I, \Sigma', \cM')}
-
-$$sem^M(\Gamma, (\Sigma, \cM), \syntax{BasicOMS}) = (I, \Sigma', \cM')$$
-where $(\Sigma, \cM)$ give the local environment
-and $sem^{\Sigma, \cM}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM')$.
-Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\{ M'\forget\Sigma \mid M' \in \cM'  \} \subseteq \cM$.
-
-$$sem^M(\Gamma, (\Sigma, \cM), \syntax{OMSRef}) = (I, \Sigma', \cM')$$ 
-where 
-$(\Sigma, \cM)$ give the local environment,
-$sem^M(\Gamma, L, \syntax{OMSRef}) = (I, \Sigma'', \cM'')$,
-$\Sigma' = \Sigma \cup \Sigma''$ and 
-$\cM' = \{ M \in Mod(\Sigma') \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sigma''} \in \cM'' \}$.
 
 %\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
 % 
@@ -5001,30 +5081,36 @@ $\cM' = \{ M \in Mod(\Sigma') \mid M\forget\Sigma \in \cM \text{ and } M \forget
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\semdom{sem^M(\Gamma, (\Sigma, \cM), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM', \bot)}
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-$$sem^M(\Gamma, (\Sigma, \cM), \syntax{minimize MinimizableOMS}) = (\cI,  \Sigma', \cM'')$$
-where $sem^M(\Gamma, (\Sigma, \cM), \syntax{MinimizableOMS}) = (\cI, \Sigma', \cM')$
-and\\ $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+Formally, we have
+\begin{itemize}
+ \item $\Inst(\syntax{minimize}\ O)= \Inst(O)$
+ \item $\Sig(\syntax{minimize}\ O) = \Sig(O)$
+ \item $\Mod( \syntax{minimize}\ O) = 
+        \{ M \in  \Mod(O) \mid  M \text{ is minimal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+ \item $\Th( \syntax{minimize}\ O) = \bot$ 
+\end{itemize}
+\noindent where the semantics of the \syntax{MinimizableOMS} $O$ is given relative to 
+the environment
+$\Gamma$ and the context $(\Sigma, \cM, \Delta)$.
 
-Theory-level semantics for  \syntax{minimize MinimizableOMS} cannot be defined.
-
+The theory-level semantics for  \syntax{minimize O} cannot be defined.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^M(\Gamma,\syntax{OMS})=(\cI,\Sigma,\cM)}
-\semdom{sem^T(\Gamma,\syntax{OMS}) = (\cI, \Sigma, \Delta)}
+\semdom{sem(\Gamma,\syntax{OMS})=(\cI,\Sigma,\cM, \Delta)}
 
 \syntax{OMS} is interpreted in a context similar to that for
-\syntax{MinimizableOMS}; the difference being that there is
+\syntax{MinimizableOMS}, the difference being that there is
 no local environment.
 
-$$sem^M(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')$$
+$$sem(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')$$
 where \todonote{didn't look at this} \todonote{closed-world, free, cofree, maximize are missing}
 \begin{align*}
 (I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma, \\
@@ -5037,92 +5123,182 @@ $$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fi
 $$
 
 %Translation
-$$sem^M(\Gamma, \syntax{translation, OMS , Translation}) = (J,\Sigma', \cM')$$
-where  $(I,\Sigma,\cM) = sem^M(\Gamma,\syntax{OMS})$,
- $sem(\Gamma,\Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
-and
-$\cM' = \{M \,|\, \beta_\Sigma(M\forget\sigma)\in \cM\}$
 
-$$sem^T(\Gamma, \syntax{translation, OMS , Translation}) = (J,\Sigma', \Delta')$$
-where $(I, \Sigma, \Delta) = sem^T(\Gamma, \syntax{OMS})$,
-$sem(\Gamma, \Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
-and
-$\Delta' = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Delta \}$.
-It is only defined if $\syntax{OMS}$ is flattenable.
+The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is given by
+\begin{itemize}
+ \item $\Inst(O') = J$, when $\Inst(\syntax{Translation}) = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$ 
+ \item $\Sig(O') = \Sigma'$, when $\Mor(\syntax{Translation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
+ \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(\syntax{OMS})\}$
+ \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(\syntax{OMS}) \}$. It is defined only if \syntax{OMS} is flattenable.
+\end{itemize}
 
 %Reduction
-$$sem^M(\Gamma, \syntax{reduction, OMS , Reduction}) = (J,\Sigma', \cM')$$
+
+The semantics of a reduction
+$O' = \syntax{reduction, OMS , Reduction}$
+is
+\begin{itemize}
+
+  \item $\Inst(O') = J$, when $\Inst(\syntax{Reduction})
+  = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$
+  \item $\Sig(O') = \Sigma'$, when
+   $\Mor(\syntax{Reduction}) = \sigma:\Sigma'\to
+    \Phi(\Sig(\syntax{OMS}))$
+  \item $\Mod(O') = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \Mod(\syntax{OMS})\}$
+  \item $\Th(O') = \bot$
+
+\end{itemize}
+
+%Module Extract 
+
+The semantics of $O' = \syntax{'module extract', OMS, 
+'keep-signature', InterfaceSignature}$ is
+\begin{itemize}
+  \item $\Inst(O') = \Inst(\syntax{OMS})$
+  \item $\Sig(O') = \Sigma \cup \Sigma'$, where
+          $\Sig(\syntax{InterfaceSignature}) = \Sigma$
+  \item $\Th(O') = \Delta'$
+  \item $\Mod(O')$ is the class of $\Delta'$-models
+\end{itemize}
 where
-$(I,\Sigma,\cM)=sem^M(\Gamma,\syntax{OMS})$,
-$sem(\Gamma,  \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta):I\to J, \sigma: \Sigma'\to\Phi(\Sigma))$
-and $\cM' = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \cM\}$. 
+$\langle\Sigma',\Delta'\rangle$ is the smallest depleting
+$\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
+smallest\footnote{If the smallest such sub-theory does not exist, the
+  semantics is undefined. In \cite{DBLP:journals/ai/KontchakovWZ10},
+  it is shown that it does exist in usual institutions.}  sub-theory
+$\langle\Sigma',\Delta'\rangle$ of $(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$  
+such that the following model-theoretic inseparability
+holds
+  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma}  \emptyset.$$
+This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
+cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma$ concerns) and formally that 
+$$\begin{array}{ll}
+&\{M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
+= &\{ M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
+\end{array}$$
+%which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
+%of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
+%satisfying $\Th(O) \setminus \Delta'$.
 
-The theory-level semantics of reductions is not defined.
+\noindent
+Dually, the semantics of 
+\syntax{'module extract', OMS, 
+'remove-signature', InterfaceSignature}
+is equivalent to the semantics of
+\syntax{'module extract', OMS, 
+'keep-signature',} $\Sig(\syntax{OMS})\setminus 
+\Sig(\syntax{InterfaceSignature})$ 
+\footnote{Note that the resulting module
+    can still contain symbols from $\Sigma$, because the resulting
+    signature may be enlarged.}.
 
-%Module Extract
-$$sem^T(\Gamma, \Sigma , \syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta')$$
-where \syntax{OMS} must be a flattenable OMS, 
-$sem^T(\Gamma,  \syntax{OMS}) = (I, \Sigma, \Delta)$ and \\
-$sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})=(I, \Sigma', \Delta').$  
-Model level semantics is given by the class of models of $(I, \Sigma', \Delta')$.
-%
-%\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta)}
+\ednote{Update cf. last paper}
 
 %Approximation
-\semdom{sem^M(\syntax{'approximation', OMS , Approximation} =   TODO }
+The semantics of $O = \syntax{'approximation', OMS, 
+'keep-signature', InterfaceSignature, LogicRef }$ is
+\begin{itemize}
+  \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \Inst(\syntax{LogicRef})$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
+  \item $\Sig(O) =
+   \Phi(\Sig(\syntax{InterfaceSignature}))$
+  \item $\Th(O) = \alpha^{-1}_{\Sig(\syntax{OMS})}(\Th(\syntax{OMS})^\bullet)\cap\Sen^I(\Sig(\syntax{OMS}))$
+  \footnote{In practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(\syntax{OMS})$ that can be expressed in the smaller signature and logic 
+  \item $\Mod(O)$ is the class of $\Th(O)$-models
+\end{itemize}
+
+%\smallskip
+%\noindent
+The semantics of 
+\syntax{'approximation', OMS, 
+'remove-signature', InterfaceSignature, LogicRef }
+is the same as the semantics of
+\syntax{'approximation', OMS, 
+'keep-signature', $\Sig(OMS)\setminus \Sig(\syntax{InterfaceSignature})$ , LogicRef }.
+
 
 %Filtering
 
-$$sem^T(\Gamma, \syntax{'filtering' , OMS,  Filtering}) = (I,\Sigma', \Delta') $$
-where \syntax{OMS} must be a flattenable OMS,
-$sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \Delta)$
-and\\
-$sem^T(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (I,\Sigma', \Delta')$.
-Model-level semantics is given by the class of models of $(I,\Sigma',\Delta')$.
+The semantics of $O =$ 
+\syntax{'filtering', OMS, 'select', BasicOMS}
+is
+defined only if  $\Sig(\syntax{BasicOMS})\subseteq\Sig(\syntax{OMS})$ and $\Th(\syntax{BasicOMS})\subseteq\Th(\syntax{OMS})$.
+In that case, we denote
+$\Sigma = \Sig(\syntax{BasicOMS})$ and
+$\Delta = \Th(\syntax{BasicOMS})$ and 
+the semantics of $O$ is given by
+\begin{itemize}
+  \item $\Inst(O) = \Inst(\syntax{OMS})$
+  \item $\Sig(O) = \Sigma'$ where $\Sigma'$ is the smallest signature
+with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$\ednote{the prime was missing but I think it must be there}\footnote
+{If this smallest signature does not exist, the semantics is undefined.}
+  \item $\Th(O) = (\Th(\syntax{OMS})\cap\Sen(\Sig(O)))\cup\Delta$
+  \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+\end{itemize}
+
+\noindent
+If $\Sigma = \Sig(\syntax{BasicOMS})$ and
+$\Delta = \Th(\syntax{BasicOMS})$,
+the semantics of $O =$
+\syntax{'filtering', OMS, 'reject', BasicOMS} is
+\begin{itemize}
+  \item $\Inst(O) = \Inst(\syntax{OMS})$
+  \item $\Sig(O) = \Sign(\syntax{OMS})\setminus \Sigma$ 
+  \item $\Th(O) = \Th(\syntax{OMS})\cap\Sen(\Sig(O))\setminus\Delta$
+  \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+\end{itemize}
 
 %Union
-$$sem^T(\Gamma, \syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \Delta)$$
-where 
- $sem^T(\Gamma, \syntax{OMS}_1) = (\cI_1, \Sigma_1, \Delta_1)$,
- $sem^T(\Gamma, \syntax{OMS}_2) = (\cI_2, \Sigma_2, \Delta_2)$,\\
- $(\cI, \rho_1=(\Phi^1,\alpha^1,\beta^1), \rho_2=(\Phi^2,\alpha^2,\beta^2)) = \cI_1 \bigcup \cI_2$,\\
-$\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
-$\Delta = \alpha^1(\Delta_1)\cup\alpha^2(\Delta_2)$.
- This is only defined if both \syntax{OMS}$_1$ and \syntax{OMS}$_2$
-are flattenable. If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\Delta)$ must be a conservative extension
-of the appropriate strength of $(\cI_1, \Sigma_1, \Delta_1)$.
 
-$$sem^M(\Gamma, \syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \cM)$$
-where 
- $sem^M(\Gamma, \syntax{OMS}_1) = (\cI_1, \Sigma_1, \cM_1)$,
- $sem^M(\Gamma, \syntax{OMS}_2) = (\cI_2, \Sigma_2, \cM_2)$,\\
-$(\cI, \rho_1=(\Phi^1,\alpha^1,\beta^1), \rho_2=(\Phi^2,\alpha^2,\beta^2)) = \cI_1 \bigcup \cI_2$,\\
-$\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
-$\cM = \{ M \in \Mod^I(\Sigma) \mid \beta^i(M\forget{\Phi^i(\Sigma_i)}) \in \cM_i, i=1,2  \}$.
-If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\cM)$ must be a conservative extension
-of the appropriate strength of $(\cI_1, \Sigma_1, \cM_1)$.
+The semantics of $O =$
+\syntax{'union', OMS$_1$, ConsStrength, OMS$_2$} is
+\begin{itemize}
+  \item $\Inst(O) = I$ where
+    $\Inst(\syntax{OMS}_1) \bigcup \Inst(\syntax{OMS}_2) =(I, (\Phi_1, \alpha_1,\beta_1) : \Inst(\syntax{OMS}_1) \rightarrow I, 
+                    (\Phi_2, \alpha_2,\beta_2) : \Inst(\syntax{OMS}_2) \rightarrow I)$
+  \item $\Sig(O) = \Phi_1(\Sig(\syntax{OMS}_1)) \cup \Phi_2(\Sig(\syntax{OMS}_2))$
+  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(\syntax{OMS}_i))}) \in \Mod(\syntax{OMS}_i), \text{ for } i=1,2 \}$
+  \item $\Th(O) = \alpha_1(\Th(\syntax{OMS}_1)) \cup \alpha_2(\Th(\syntax{OMS}_2))$.
+\end{itemize}
 
+If \syntax{ConsStrength} is present, then $O$ must be a conservative extension
+of the appropriate strength of \syntax{OMS}$_1$.
 
 %Extension
 
- $$sem^T(\Gamma, \syntax{extension , OMS , ExtensionOMS}) = (I, \Sigma', \Delta')$$
+The semantics of $O=$
+\syntax{extension , OMS , ExtensionOMS} is
 
-where
-  $sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \Delta)$,
-  $sem^T(\Gamma, (\Sigma, \Delta), \syntax{ExtensionOMS}) = (I,  \Sigma',\Delta')$.
+\begin{itemize}
+  \item $\Inst(O) = \Inst(O_1) = I$ (which means that
+  the instutions of \syntax{OMS} and 
+  \syntax{ExtensionOMS} must be the same)
+  \item $\Sig(O) = \Sig(O_1) \cup \Sigma$
+  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(O_1)} \in \Mod(O_1)
+  \text{ and }
+  M \forget{\Sigma} \in \cM\}$
+  \item $\Th(O) = \Th(O_1) \cup \Delta$
+\end{itemize}
+\noindent where $(I, \Sigma,\cM, \Delta) = 
+sem(\Gamma, (\Inst(O_1), \Sig(O_1), \Mod(O_1), \Th(O_1)), \syntax{ExtensionOMS})$. 
 
- $$sem^M(\Gamma, \syntax{extension , OMS , ExtensionOMS)}) = (I, \Sigma', \cM')$$
-
-where
-  $sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \cM)$,
-  $sem^T(\Gamma, (\Sigma, \cM), \syntax{ExtensionOMS}) = (I,  \Sigma',\cM')$.
+If \syntax{ExtConsStrength} is a \syntax{ConsStrength}, then $O$ must be a conservative extension
+of the appropriate strength of \syntax{OMS}$_1$.
+If \syntax{ExtConsStrength} is \syntax{'\%implied'}, then
+we must have that $M\models \delta$
+for each $M\in \Mod(\syntax{OMS})$ and each
+$\delta \in \Delta$.
 
 %Qualification
  
-$$sem(\Gamma, \syntax{qual-oms, Qualification, OMS}) = sem(\Gamma', \syntax{OMS})$$
-
-where $sem(\Gamma, \syntax{Qualification}) = \Gamma'$. 
-\todonote{This means that $L$ is not changed after the analysis of this OMS. Is this obvious?}
+The semantics of \syntax{qual-oms, Qualification, OMS}
+in the context $\Gamma$ is the same as the
+semantics of \syntax{OMS} in the context
+$\Gamma'$ given by the semantics of
+\syntax{Qualification} in the context $\Gamma$.
+The change of context is local to \syntax{OMS}, which
+means that if the qualification appears as a term in 
+a larger expression, after its analysis the context will
+be $\Gamma$ and not $\Gamma'$.
 
 %Bridge
 
@@ -5144,21 +5320,15 @@ $sem^M(\Gamma, (\cI_2, \Phi(\Sigma_1), \cM'_1), \syntax{OMS}_2) = (\cI,\Sigma,\c
 
 
 %Combination
-$$sem^T(\Gamma, \syntax{combination, Network})= (\cI,\Sigma,\Delta)$$
 
-where 
-$sem^T(\Gamma,\syntax{Network}) = G$ and
-$(\Sigma, \Delta) = colimit(G)$.
-This is defined only if all ontologies in \syntax{Network} are flattenable. 
-
-$$sem^M(\Gamma, \syntax{combination, Network})= (\cI,\Sigma,\cM)$$
-
-where 
-$sem^M(\Gamma, \syntax{Network}) = G$,
-$\Sigma$ is the colimit of $G$ with labels restricted to signatures 
-and \\
-$\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{ is a family of models compatible with } G \}$. 
-
+The semantics of 
+$O=$ \syntax{combination, Network} is
+\begin{itemize}
+  \item $\Inst(O) = I$,
+  \item $\Sig(O) = \Sigma$, where $(I,\Sigma,  \{\mu_i\}_{i\in |G|})$ is the colimit of the graph $G$ given by the semantics of \syntax{Network},
+  \item $\Th(O) = \cup_{i\in |G|} \mu_i(\Th(O_i))$, where $O_i$ is the OMS label of the node $i$ in $G$
+  \item $\Mod(O) =  \{ M\in\Mod(\Sigma) \mid M\forget{\mu_i} \in \Mod(O_i), i\in |G| \}$, where $O_i$ is the OMS label of the node $i$ in $G$.
+\end{itemize}
 
 %Application
 \semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
@@ -5170,11 +5340,14 @@ $\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{
 
 \semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
 
-$$sem(\Gamma, \Sigma, \syntax{renaming, LogicTranslation, SymbolMapItems}) = ((\Phi, \alpha,\beta), \sigma)$$
+The semantics of a translation
+$O=$ \syntax{renaming, LogicTranslation, SymbolMapItems}
+is given by
+\begin{itemize}
+ \item $\Inst(O) = sem(LogicTranslation) : \Gamma.logic \to logic'$
+ \item $\Mor(O) = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolMapItems})$
+\end{itemize}
 
-where $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)$ and\\
-$sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolMapItems}) = \sigma$,
-where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.
 If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5188,20 +5361,28 @@ named by \syntax{LogicTranslation} in the heterogeneous logical environment.
 
 \semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta), \sigma)}
 
-$$sem(\Gamma, \Sigma, \syntax{hidden, LogicReduction, SymbolItems}) = ((\Phi,\alpha,\beta),\sigma)$$
+The semantics of a reduction
+$O=$ \syntax{hidden, LogicReduction, SymbolItems}
+is given by
+\begin{itemize}
+ \item $\Inst(O) = sem(LogicReduction) : \Gamma.logic \to logic'$
+ \item $\Mor(O) = \iota:\sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolItems}) \to
+ \Phi(\Sigma)$, where $\iota$ is the inclusion morphism.
+\end{itemize}
 
-where 
-$sem(\Gamma,  \syntax{LogicReduction}) = (\Phi, \alpha,\beta)$,
-$sem(\Gamma, \Phi(\Sigma), \syntax{SymbolItems}) = \Sigma'$ and
-$\sigma:\Sigma'\to\Phi(\Sigma)$ is the inclusion morphism. If \syntax{LogicReduction} is missing, 
+If \syntax{LogicReduction} is missing, 
 it defaults to the identity morphism of the current logic of $\Gamma$.
 
-$$sem(\Gamma, L, \Sigma, \syntax{revealed, SymbolItems}) = (id_L,\sigma)$$
-where 
-$sem(\Gamma, L, \Sigma, \syntax{SymbolItems}) = \Sigma'$,
-$id_L$ is the identity morphism on the current logic of $\Gamma$,
-and $\sigma:\Sigma'\to\Sigma$ is the inclusion.
 
+The semantics of a reduction
+$O=$ \syntax{revealed, SymbolItems}
+is 
+ \begin{itemize}
+  \item $\Inst(O)$ is the identity morphism on the current logic of $\Gamma$
+  \item $\Mor(O)$ is the inclusion of
+  $sem(\Gamma, \Sigma, \syntax{SymbolItems})$ in
+   $\Sigma$.
+ \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6194,10 +6375,17 @@ such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the represen
 \end{definition}
 
 
-\infannex{Conformance of UML class diagrams DOL}\label{a:uml-class}
+\infannex{Conformance of UML class and object diagrams with DOL}\label{a:uml-class}
 
-We present a translation of UML class diagrams to Common Logic,
-following the fUML specification and \cite{Seidewitz08}.
+This informative annex demonstrates conformance of UML class and
+object diagrams with DOL by defining an institution for both. We
+concentrate on the static aspects of class diagrams; that is, change
+of state is ignored. This means that all operations are query
+operations.
+
+The institution of UML class and object diagrams is defined using a
+translation of UML class diagrams to Common Logic, following the fUML
+specification and \cite{Seidewitz08}.
 
 From the fUML specification, section 10.3.1, we inherit the axioms for
 primitive types: Booleans, numbers, sequences and strings.  These
@@ -6207,84 +6395,383 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 \texttt{form:Sequence}, \texttt{form:Character}, and
 \texttt{buml:String}.
 
+We additionally need to axiomatize a number of predicates in Common Logic
+(note that enumerations are not axiomatized in fUML):
+\begin{lstlisting}[language=clif]
+(distinct)        // the empty sequence is distinct
+(distinct x)    // singleton sequences are distinct
+(iff (distinct x y ...) // recursion for length > 1
+     (and (not (= x y))       // the first two elements must be different
+          (distinct x ...)    // and each of them distinct
+          (distinct y ...) )) // to the rest
+
+(iff (exhaustive c ...) (forall (x) (if (c x) (oneof x ...))))
+     // does ... exhaust the extension of c?
+(not (oneof x)) // is x among the remaining arguments?
+(iff (oneof x y ...) (or (= x y) (oneof x ...)))
+(iff (enumeration c ...) (and (exhaustive c ...) (distinct ...)))
+   // c is an enumeration type with values ...
+
+// fuml:sequence - membership of an element in a sequence
+(forall (x s)
+    (if (member x s)
+        (form:Sequence s)))
+
+(forall (x s)
+    (iff (member x s)
+         (exists (pt) 
+             (and (form:in-sequence s pt)
+                  (form:in-position pt x)) )))
 
 
-Using this translation, we obtain an institution for UML class diagrams
-as follows:
+\end{lstlisting}
 
-\smallskip\noindent \textit{Class nets --- Signatures.}  The
-signatures of the UML class diagram institution are given by
-\emph{class nets} $\Sigma = ((C, {\leq_C}), K, P, M, A)$ where $(C,
-{\leq_C})$ describes the \emph{class hierarchy} as a partial order
-which is closed w.r.t.\ to the built-in type $\mathsf{Boolean}$ (i.e.,
-$\mathsf{Boolean} \in C$), and ``downwards'' closed w.r.t.\ the unary
-built-in type formers $\mathsf{List}$ and $\mathsf{Set}$, and the
-binary built-in type former $\mathsf{Pair}$ (i.e., if
-$\mathsf{List}[c] \in C$ or $\mathsf{Set}[c] \in C$, then $c \in C$;
-and if $\mathsf{Pair}[c_1, c_2] \in C$, then $c_1, c_2 \in C$); 
-$K$ fixes the \emph{instance specifications declarations} of the form
-$k : c$ with $c \in C$; $P$ contains the \emph{property declarations}
-of the form $c.p(x_1 : c_1, \dots, x_n : c_n) : c'$ (where we drop the
-parentheses if the property has no arguments); $M$ gives the
-\emph{composition declarations} of the form $c\composition r : c'$;
-and $A$ comprises the \emph{association declarations} of the form
-$a(r_1 : c_1, \dots, r_n : c_n)$.  We require several conditions in
-order to avoid super-types of built-in types and type formers (e.g.,
-forbidding $\mathsf{Boolean} \leq c$ for all $c \neq
-\mathsf{Boolean}$), overriding of declarations, and also that the
-composition declarations are cycle-free: if $c_1\composition r_1 :
-c_2, \dots, c_n\composition r_n : c_{n+1} \in M$, then $c_{n+1} \neq
-c_1$.
+Using this infrastructure, we obtain an institution for UML class
+diagrams as follows:\ednote{AK: Added the following up to the next ed-note.}
 
-\begin{example}\label{ex:dsl-sig}%\pushQED{\qed}%
+\medskip\noindent\textbf{Classifier hierarchies.}
+A \emph{classifier hierarchy} $(C, {\leq_C})$ is given by a partial
+order where the set $C$ contains the \emph{classifier names}, which are
+closed w.r.t.\ the \emph{built-in types} $\mathsf{Boolean}$,
+$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
+$\mathsf{String}$, i.e.,
+$\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural}, \mathsf{Integer},
+\mathsf{Real}, \mathsf{String} \} \subseteq C$;\ednote{what about
+enumeration types? Should we assume that some classifiers are
+marked as enumeration types and equipped with their set of
+constants?}
+and the partial ordering relation $\leq_C$ represents a
+\emph{generalisation relation} on $C$, where we say that $c_1$ is a
+\emph{sub-classifier} of $c_2$ if $c_1 \leq_C c_2$.
+
+A \emph{classifier hierarchy map}
+$\gamma : (C, {\leq_C}) \to (D, {\leq_D})$ is given by a monotone map
+from $(C, {\leq_C})$ to $(D, {\leq_D})$, i.e.,
+$\gamma(c) \leq_D \gamma(c')$ if $c \leq_C c'$, such that
+$\gamma(c) = c$ for all built-in types
+$c \in \{ \mathsf{Boolean},\allowbreak \mathsf{UnlimitedNatural},\allowbreak
+\mathsf{Integer}, \mathsf{Real}, \mathsf{String} \}$.
+
+For each classifier $c \in C$ of a classifier hierarchy $(C, {\leq_C})$
+we use the \emph{classifier annotations} $\mathsf{OrderedSet}$,
+$\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ representing the
+meta-properties ``ordered'' and ``unique'' according to the following
+table:
+
+\begin{quotation}
+\begin{tabular}{@{}r||c|c@{}}
+             & ordered               & not ordered\\
+\hline\hline
+  unique     & $\mathsf{OrderedSet}$ & $\mathsf{Set}$\\
+\hline
+  not unique & $\mathsf{Sequence}$   & $\mathsf{Bag}$
+\end{tabular}
+\end{quotation}
+
+We write $\tau[c]$ for an annotated classifier for
+$\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
+\mathsf{Bag} \}$.
+The default is ``not ordered'' and ``unique'' (UML Superstructure
+Specification 2.4.1, p.~96).
+
+
+\medskip\noindent\textbf{Classifier nets (Signatures).}
+A \emph{classifier net} $\Sigma = ((C, {\leq_C}), K, P, M, A)$
+comprises
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a \emph{classifier hierarchy} $(C, {\leq_C})$;
+
+  \item a set $K$ of \emph{instance specifications declarations} of
+the form $k : c$ with $k$ an \emph{instance specification name} and $c
+\in C$;
+
+  \item a set $P$ of \emph{property declarations} of the form
+$c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a classifier annotation, and
+$p$ a \emph{property name};
+
+  \item a set $M$ of \emph{composition declarations} of the form
+$c\composition r : \tau[c']$ with $c, c' \in C$, $\tau$ a classifier
+annotation, and $r$ a \emph{composition role name};
+
+  \item and a set $A$ of \emph{association declarations} of the form
+$a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}$ with $n \geq 2$,
+$c_1, \dots, c_n \in C$, $\tau_1, \ldots, \tau_n$ classifier
+annotations, $a$ an \emph{association name}, and $r_1, \dots, r_n$
+\emph{association role names},
+\end{itemize}
+%
+such that the following properties are satisfied:
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item instance specification names are unique: if $k_1 : c_1$ and
+$k_2 : c_2$ are different instance specification declarations in $K$,
+then $k_1 \neq k_2$;
+
+  \item property names are unique along the generalisation relation: if
+$c_1.p_1 : \tau_1[c_1']$ and $c_2.p_2 : \tau_2[c_2']$ are different
+property declararations in $P$ and $c_1 \leq c_2$, then $p_1 \neq p_2$;
+
+  \item composition role names are unique along the generalisation
+relation: if $c_1\composition r_1 : \tau_1[c_1']$ and $c_2\composition r_2 :
+\tau_2[c_2']$ are different composition declararations in $M$ and $c_1 \leq
+c_2$, then $r_1 \neq r_2$;
+
+  \item property and composition role names are unique along the
+generalisation relation: if $c_1.p_1 : \tau_1[c_1']$ is a property
+declaration in $P$ and $c_2\composition r_2 : \tau_2[c_2']$ is a
+composition declaration in $M$ and $c_1 \leq_C c_2$, then
+$p_1 \neq r_2$; and if $c_1\composition r_1 : \tau_1[c_1']$ is a
+composition declaration in $M$ and $c_2.p_2 : \tau_2[c_2']$ is a
+property declaration in $P$ and $c_1 \leq_C c_2$, then $r_1 \neq p_2$;
+
+  \item association role names are unique: if $a\{ r_1 : \tau_1[c_1], \dots,
+r_n : \tau_n[c_n] \}$ is an association declaration in $A$ and $1 \leq i \neq
+j \leq n$, then $r_i \neq r_j$;
+
+  \item composition declarations are cycle-free: if
+$c_1\composition r_1 : \tau_2[c_2], \dots, c_n\composition r_n :
+\tau_{n+1}[c_{n+1}] \in M$, then $c_{n+1} \neq c_1$.
+\end{itemize}
+
+A \emph{classifier net morphism}
+$\sigma = (\gamma, \kappa, \pi, \mu, \alpha) : \Sigma = ((C, {\leq}_C),
+K, P, M, A) \to \Tau = ((D, {\leq}_D),\allowbreak L,\allowbreak Q,\allowbreak N, B)$
+is given by
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a classifier hierarchy map $\gamma : (C, {\leq_C}) \to (D,
+{\leq_D})$;
+
+  \item an instance specification map $\kappa : K \to L$ such
+that if $\kappa({k : c}) = {l : d} \in L$, then $d = \gamma(c)$;
+
+  \item a property declaration map $\pi : P \to Q$ such that if
+$\pi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then $d = \gamma(c)$,
+$d' = \gamma(d')$, and $\tau = \tau'$;
+
+  \item a composition declaration map $\mu : M \to N$ such that if
+$\mu({c\composition r : \tau[c']}) = {d\composition s : \tau'[d']} \in M$, then $d =
+\gamma(c)$, $d' = \gamma(d')$, and $\tau = \tau'$;
+
+  \item an association declaration map $\alpha : A \to B$ such that if
+$\alpha(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}) = b\{ s_1 :
+\tau_1'[d_1], \dots, s_m : \tau_m'[d_m] \} \in B$,
+then there is a bijective map
+$\rho : \{ r_1, \dots, r_n \} \to \{ s_1, \dots, s_m \}$ with
+$d_j = \gamma(c_i)$ and $\tau_j = \tau_i'$ if $\rho(r_i) = s_j$.
+\end{itemize}
+
+Classifier nets as objects and classifier net morphisms as morphisms
+form the category of \emph{classifier nets}, denoted by
+$\mathrm{Cl}$.
+
 \begin{figure}[!tH]
 \centering
-\includegraphics[width=\linewidth]{illustrations/new_uml.png}\\
+\begin{tikzpicture}[transform shape,scale=.7]
+\def\overallfont{\sffamily\fontsize{10pt}{10pt}\selectfont}
+\tikzset{every node/.style={font=\overallfont}}
+%\tikzset{tikzuml class style/.style={inner xsep=32pt}}
+\tikzumlset{font=\overallfont}
+\umlemptyclass{Net}
+\umlemptyclass[x=-2, y=-3]{Station}
+\umlclass[x=2, y=-3]{Line}{- linear : Boolean}{}
+\umlcompo[mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
+\umlcompo[mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
+\umlemptyclass[x=-4, y=-6]{Unit}
+\umlclass[x=0, y=-6]{Track}{- linear : Boolean}{}
+\umlcompo[mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
+\umlcompo[mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
+\umlemptyclass[x=-8, y=-6]{Connector}
+\umlassoc[name=ConnectorUnit, mult1=1..4, pos1=0, align1=left, mult2=1, pos2=1, align2=right]{Connector}{Unit}
+\draw (ConnectorUnit-middle) node[above] {has};
+\umlemptyclass[x=-6, y=-9]{Point}
+\umlemptyclass[x=-2, y=-9]{Linear}
+\umlinherit[geometry=|-|]{Point}{Unit}
+\umlinherit[geometry=|-|]{Linear}{Unit}
+\umlassoc[name=LinearTrack, mult1=1..*, pos1=0, align1=left, anchor1=20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Track}
+\draw (LinearTrack-2) node[right] {has};
+\umlassoc[name=LinearLine, mult1=1..*, pos1=0, align1=left, anchor1=-20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Line}
+\draw (LinearLine-2) node[right] {has};
+\end{tikzpicture}
 \caption{Sample UML class diagram.}
 \label{fig:bjoerners_dsl}
 \end{figure}
-
-The UML class diagram in Fig.~\ref{fig:bjoerners_dsl} leads
-to the following class net:
+%
+\begin{example}
+For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
 %
 \begin{gather*}
-  \text{Classes: } \{ \mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Unit}, \dots, \mathsf{Pair}[\mathsf{Unit}, \mathsf{Path}], \mathsf{List}[\mathsf{Pair}[\mathsf{Unit}, \mathsf{Path}]] \}
+  \text{Classifiers: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear}
 \\
-  \text{Generalisations: } \mathsf{Point} \leq \mathsf{Unit}, \mathsf{Linear} \leq \mathsf{Unit}, \dots, \mathsf{Route} \leq \mathsf{List[Pair[Unit, Path]]}
+  \text{Generalisations: }\mathsf{Point} \leq \mathsf{Unit}, \mathsf{Linear} \leq \mathsf{Unit}
 \\
-  \text{Properties: } \{\mathsf{Net}.\mathsf{ID} : \mathsf{UID}, \dots, \mathsf{Route}.\mathsf{isOpen}(\mathsf{r} : \mathsf{Route}):\mathsf{Boolean} \}
+  \text{Properties: }\mathsf{Line.linear : Set[Boolean]}, \mathsf{Track.linear : Set[Boolean]}
 \\
-  \text{Compositions: } \{ \mathsf{Station} \composition \mathsf{has} : \mathsf{Unit}, \mathsf{Station} \composition \mathsf{has}: \mathsf{Track}\}
+  \text{Compositions: }\mathsf{Station\composition unit : Set[Unit]}, \mathsf{Station\composition track : Set[Track]},
 \\
-  \text{Associations: } \{ \mathsf{stateAt}(\mathsf{unit}: \mathsf{Unit}, \mathsf{state} : \mathsf{UnitState}), \dots \}%\qedhere
-\end{gather*}%\popQED
+  \phantom{\text{Compositions: }}\mathsf{Net\composition station : Set[Station]}, \mathsf{Net\composition line : Set[Line]}
+\\
+  \text{Associations: }\mathsf{has\{ line : Set[Line], linear : Set[Linear] \}},
+\\
+  \phantom{\text{Associations: }}\mathsf{has\{ track : Set[Track], linear : Set[Linear] \}},
+\\
+  \phantom{\text{Associations: }}\mathsf{has\{ connector : Set[Connector], unit : Set[Unit] \}}
+\end{gather*}
 \end{example}
 
-A class net morphism $\sigma = (\gamma, \kappa, \pi,\allowbreak \mu,
-\alpha) : \Sigma = ((C, {\leq}_C), K, P, M, A) \to \Tau = ((D,
-{\leq}_D), L, Q,\allowbreak N, B)$ from $\Sigma$ to $\Tau$ consists of
-a monotone map $\gamma$ from $(C, {\leq_C})$ to $(D, {\leq_D})$ which
-is homomorphic w.r.t.\ the type $\mathsf{Boolean}$, and the type
-formers $\mathsf{List}$, $\mathsf{Set}$, and $\mathsf{Pair}$ (i.e.,
-$\gamma(\mathsf{Boolean}) = \mathsf{Boolean}$,
-$\gamma(\mathsf{List}[c]) = \mathsf{List}[\gamma(c)]$,
-$\gamma(\mathsf{Set}[c]) = \mathsf{Set}[\gamma(c)]$, and
-$\gamma(\mathsf{Pair}[c_1, c_2]) = \mathsf{Pair}[\gamma(c_1),
-\gamma(c_2)]$ for all $c, c_1, c_2 \in C$); maps $\kappa$, $\pi$, and
-$\mu$ between the instance specification, property, and composition
-declarations, such that classes are mapped along $\gamma$; and a map
-$\alpha$ from $A$ to $B$ for the association declarations such that
-$n$-ary association declarations are mapped to $n$-ary association
-declarations along $\gamma$, i.e., if $\alpha(a\{ r_1 : c_1, \dots,
-r_n : c_n \}) = b(s_1 : d_1, \dots, s_m : d_m) \in B$, then $m = n$
-and $d_i = \gamma(c_i)$ for all $1 \leq i \leq n$.
 
-For a class net
+\medskip\noindent\textbf{Multiplicity constraints.}
+The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
+the following grammar:
+%
+\begin{equation*}
+\begin{array}{@{}r@{\ }r@{\ }l@{}}
+  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\ |\ \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}\ |\ \mathit{Composition}\ \mathsf{!}
+\\
+  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Composition}\ |\ \mathit{\#}\ \mathit{Association}\ \mathsf{[}\ \mathit{Role}\ (\mathsf{,}\ \mathit{Role})^*\ \mathsf{]}
+\\
+  \mathit{Composition} & ::= & \mathit{Classifier}\composition\mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ]
+\\
+  \mathit{Association} & ::= & \mathit{Name}\{ \mathit{Role} : \mathit{Annot}\ [\ \mathit{Classifier}\ ](\mathsf{,}\ \mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ])^* \}
+\\
+  \mathit{Classifier} & ::= & \mathit{Name}
+\\
+  \mathit{Role} & ::= & \mathit{Name}
+\\
+  \mathit{Annot} & ::= & \mathsf{OrderedSet} \mid \mathsf{Set} \mid \mathsf{Sequence} \mid \mathsf{Bag}
+\\
+  \mathit{NumLiteral} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
+\end{array}
+\end{equation*}
+%
+where $\mathit{Name}$ is a set of names.
+
+The set of $\Sigma$-\emph{multiplicity constraints}
+$\mathit{Mult}(\Sigma)$ for a classifier net $\Sigma$ is given by the
+multiplicity formulae in $\mathit{Frm}$ such that all mentioned
+elements of $\mathit{Composition}$ and $\mathit{Association}$ correspond
+to composition declarations and association declarations of $\Sigma$,
+respectively, and the role names mentioned in the last clause of
+$\mathit{FunExpr}$ occur in the mentioned association.  The
+\emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
+along a classifier net morphism $\sigma$, written as
+$\sigma(\varphi)$, is given by applying $\sigma$ to compositions,
+associations, and role names.
+
+
+\begin{example}
+For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
+\begin{gather*}
+  \mathsf{2 \leq \#Net\composition station : Set[Station]}
+\\
+  \mathsf{Net\composition station : Set[Station]\,!}
+\\
+  \mathsf{Net\composition line : Set[Line]\,!}
+\\
+  \mathsf{Station\composition unit : Set[Unit]\,!}
+\\
+  \mathsf{Station\composition track : Set[Track]\,!}
+\\
+  \mathsf{1 \leq \#has\{ connector : Set[Connector], unit : Set[Unit] \}[unit]}
+\\
+  \mathsf{\#has\{ connector : Set[Connector], unit : Set[Unit] \}[unit] \leq 4}
+\\
+  \mathsf{\#has\{ connector : Set[Connector], unit : Set[Unit] \}[connector] = 1}
+\\
+  \mathsf{1 \leq \#has\{ track : Set[Track], linear : Set[Linear] \}[track]}
+\\
+  \mathsf{\#has\{ track : Set[Track], linear : Set[Linear] \}[linear] = 1}
+\\
+  \mathsf{1 \leq \#has\{ line : Set[Line], linear : Set[Linear] \}[line]}
+\\
+  \mathsf{\#has\{ line : Set[Line], linear : Set[Linear] \}[linear] = 1}
+\end{gather*}
+%
+where we write ``$=$'' as an abbreviation for two inequations using
+``$\leq$''.
+\end{example}
+
+
+\eat{
+-------------------------------------------------------------------
+
+
+
+A classifier interpretation $C^{\mathcal{I}}$ induces the following
+interpretation of classifier annotations:
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item
+$C^{\mathcal{I}}(\mathsf{OrderedSet}[c]) =
+\finorderedpowerset(C^{\mathcal{I}}(c))$
+(where $\finorderedpowerset(X)$ is the set of finite subsets of $X$ where
+to elements of $\finorderedpowerset(X)$ are equal if, and only if, they
+contain the same elements in the same order);
+
+  \item $C^{\mathcal{I}}(\mathsf{Set}[c]) =
+\finpowerset(C^{\mathcal{I}}(c))$ (where $\finpowerset(X)$ is the set of
+finite subsets of $X$);
+
+  \item $C^{\mathcal{I}}(\mathsf{Sequence}[c]) = (C^{\mathcal{I}}(c))^*$
+(where $X^*$ is the set of finite sequences over $X$);
+
+  \item
+$C^{\mathcal{I}}(\mathsf{Bag}[c]) = [C^{\mathcal{I}}(c)
+\to_{\mathrm{fin}} \mathbb{N}]$
+(where $[X \to_{\mathrm{fin}} \mathbb{N}]$ is the set of finite
+multisets over $X$, i.e., the maps $b : X \to \mathbb{N}$ where
+$b(x) > 0$ only for a finite subset of $X$).
+\end{itemize}
+
+\medskip\noindent\textbf{Instance nets.}
+A $\Sigma$-\emph{instance net} $\mathcal{I} = (C^{\mathcal{I}},
+K^{\mathcal{I}}, P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}})$
+over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given
+by
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a classifier interpretation $C^{\mathcal{I}}$;
+
+  \item an instance specification declaration interpretation
+$K^{\mathcal{I}}$ mapping each ${k : c} \in K$ to an element of
+$C^{\mathcal{I}}(c)$;
+
+  \item a property declaration interpretation $P^{\mathcal{I}}$
+mapping each ${c.p : \tau[c']} \in P$ to a map
+$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
+
+  \item a composition declaration interpretation $M^{\mathcal{I}}$
+mapping each ${c\composition r : \tau[c']} \in M$ to a map
+$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
+
+  \item an association declaration interpretation $A^{\mathcal{I}}$
+mapping each $a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \} \in A$
+to a subset of
+$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(\tau_i[c_i]) =
+\{ \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \mid o_i \in
+C^{\mathcal{I}}(c_i),\ 1 \leq i \leq n \}$,
+\end{itemize}
+%
+such that
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item each instance has at most one owner: if
+$o' \in M^{\mathcal{I}}(c_1\composition r_1 : \tau_1[c_1'])(o_1) \cap
+M^{\mathcal{I}}(c_2\composition r_2 : \tau_2[c_2'])(o_2)$,
+then $o_1 = o_2$.
+\end{itemize}
+
+
+---------------------------------------------------------------
+}
+
+For a classifier net
 $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
 $CL(\Sigma)$ consisting of:
 %
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
-\item for $c \in C$, a predicate $\CL(c)$,  such that 
+\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that\ednote{class predicates should be restricted to be unary} 
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
 \item 
   $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$, 
@@ -6297,47 +6784,69 @@ $CL(\Sigma)$ consisting of:
 \item 
   $\CL(\mathsf{Real}) = \texttt{buml:Real}$,
 \item 
+  $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. Additionally, the Common Logic theory is augmented by
+\texttt{(enumeration $c$ $k_1 \cdots k_n$)},\ednote{Ed Seidewitz:
+enumerations are specializable, but this is type-unsafe, so maybe omit it}
+\item 
   $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$\ednote{UML has typed
   sequences, but fUML appaerantly not. How do we solve this problem?},
 \item 
   $\CL(\mathsf{Set}[c]) = ???$\ednote{UML has sets, but fUML appaerantly not. 
      Do we want to provide our own specification of sets in Common Logic?},
 \item 
-  $\CL(\mathsf{Pair}[c_1,c_2]) = ???$\ednote{UML has pairs, but fUML appaerantly not. 
-     Do we want to provide our own specification of pairs in Common Logic?},
-
+  $\CL(\mathsf{OrderedSet}[c]) = ???$\ednote{UML has ordered sets, but fUML appaerantly not. 
+     Do we want to provide our own specification of ordered sets in Common Logic?},
+\item 
+  $\CL(\mathsf{Bag}[c]) = ???$\ednote{UML has bags, but fUML appaerantly not. 
+     Do we want to provide our own specification of bags in Common Logic?},
+ 
+\end{itemize}
 \item for each relation $c_1
   \leq_C c_2$, an axiom \texttt{(forall (x) (if (C1 x) (C2 x)))},
   where C1$=\CL(c_1)$, C2$=\CL(c_2)$, 
-\end{itemize}
 
   \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
 \texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
-  \item for two instance specifications $k_1 : c$ and $k_2 : c$ with $k_1 \neq
-k_2$, an axiom \texttt{(not (= $k_1$ $k_2$))} (the unique name assumption);
+  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
   \item $\CL$ maps each property declaration $c.p(x_1 : c_1, \dots, x_n : c_n)
-: c' \in P$ to a predicate $\CL(c.p)$ and axioms
+: \tau[c'] \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
+and functionality:
 \begin{itemize}
 \item
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$ x) (if (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x) ($c_i$ $x_i$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
 for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
 \item 
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$ x) (if (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x) ($c'$ $x$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
 \item 
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$ x y)}\\
-\qquad \texttt{(if (and (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x) (c.p $x_1$ $x_2$ $\cdots$  $x_n$ x)) (= x y))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
+\qqquad (if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)}\\
+\qqquad \texttt{(exists (y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y)))}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
+\qqquad \texttt{(if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
-  \item \CL maps each composition declaration ${c\composition r : c'} \in M$ to
-a predicate $\CL(r)$ and an axiom\\
-\texttt{(forall (x y) (if (r x y) (and (c x) (c' y))))}
+  \item \CL maps each composition declaration ${c\composition r : \tau[c']} \in M$ to
+a predicate $\CL(r)$ and axioms\\
+\texttt{(forall (x) (if (c x) (exists (y) (and (r x y) ($\tau$[c'] y)))))}\\
+\texttt{(forall (x y) (if (r x y) (and (c x) ($\tau$[c'] y))))}\\
+\texttt{(forall (x y z) (if (and (r x y) (r x z)) (= y z)))}
   \item 
 for any pair of composition declarations $c_1\composition r_1 : c_1'$
 and $c_2\composition r_2 : c_2'$, an axiom stating ``each instance has
 at most one owner'':\\
-\texttt{(forall ($x_1$ $x_2$ y) (if (and ($r_1$ $x_1$ y) ($r_2$ $x_2$ y)) (= $x_1$ $x_2$)))}
-  \item \CL maps each association declaration $a(r_1 : c_1, \dots, r_n : c_n)
-\in A$ to a predicate $\CL(a)$ and an axiom\\
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}
+\texttt{(forall ($x_1$ $x_2$ $y_1$ $y_2$) (if (and ($r_1$ $x_1$ $y_1$) ($r_2$ $x_2$ $y_2$))}\\
+\qqquad\texttt{(exists (z) (and (member z $x_1$) (member z $x_2$)))))}
+  \item \CL maps each association declaration $a(r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n])\in A$ to a predicate $\CL(a)$ and an axiom\\
+\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}\footnote{
+Ignoring the annotations $\tau_i$ in the interpretation of an
+association is intentional, see the semantics of associations in the UML
+Superstructure Specification 2.4.1, p.~37.}
+\ednote{what does the footnote exactly mean?}
 \end{itemize}
 
 
@@ -6388,6 +6897,13 @@ are inherited as well, using the action of $\CL$ on signature morphisms.
 
 \smallskip\noindent
 \textit{Multiplicity formulae --- Sentences.}
+\ednote{Ed Seidewitz: Multiplicities are different for associations
+  and for properties, this is a bit tricky. Associations are
+  predicates of single values, whereas properties can be over sets
+  etc.  Aexander: we need to correct the representation for
+  compositions used in associations.}
+\ednote{missing: relations between properties, e.g. subsets, unions}
+\ednote{derived associations: one association is the composition of two others}
 For the sentences of the UML class diagram institution we use
 \emph{multiplicity formulae} defined by the following grammar:
 %
@@ -6457,41 +6973,82 @@ associations, and role names.
 
 \smallskip\noindent
 \textit{Satisfaction relation.}
-TODO
-\eat{
-The $\Sigma$-\emph{satisfaction relation} ${{-} \models_{\Sigma} {-}}
-\subseteq |\mathrm{Inst}(\Sigma)| \times \mathit{Sen}(\Sigma)$ of the
-UML class diagram institution is defined for each $\Sigma$-instance
-net $\mathcal{I} = (\CL, \CL, \CL,
-M^{\mathcal{I}}, A^{\mathcal{I}})$ as
-\begin{gather*}
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c'
-\quad\iff\quad
-  \forall o \in \CL(c) \,.\, \sem{\ell} \leq M^{\mathcal{I}}(c\composition r : c')(o)
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c' \leq \ell
-\quad\iff\quad
-  \forall o \in \CL(c) \,.\, M^{\mathcal{I}}(c\composition r : c')(o) \leq \sem{\ell}
-\\
-  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} c'\mathsf{!}
-\quad\iff\quad
-  \forall o' \in \CL(c') \,.\, \exists o \in \CL(c) \,.\, M^{\mathcal{I}}(c\composition r : c')(o) = o'
-\\
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}}
-\quad\iff{}\\\quad
-  \forall o_{i_1} \in \CL(c_{i_1}), \dots, o_{i_m} \in \CL(c_{i_m})\,.\,{}
-\\\qquad
-  \sem{\ell} \leq |\{ t \in A^{\mathcal{I}}(a(r_1 : c_1, \dots, r_n : c_n)) \mid t_{i_1} = o_{i_1}, \dots, t_{i_m} = o_{i_m} \}|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}} \leq \ell
-\quad\iff{}\\\quad
-  \forall o_{i_1} \in \CL(c_{i_1}), \dots, o_{i_m} \in \CL(c_{i_m})\,.\,{}
-\\\qquad
-  |\{ t \in A^{\mathcal{I}}(a(r_1 : c_1, \dots, r_n : c_n)) \mid t_{i_1} = o_{i_1}, \dots, t_{i_m} = o_{i_m} \}| \leq \sem{\ell}
-\end{gather*}
+The satisfaction relation is inherited from Common Logic, using
+a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
+That is, given a UML class and object diagram $\Sigma$, a
+multiplicity formula $\varphi$ and a $\Sigma$-model $M$ (the
+latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic), we define
+$$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
+
+The translation of multiplicity formulas to Common Logic is as follows:
+\begin{itemize}
+  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
+\texttt{(forall (x y n)}\\
+\qqquad\texttt{(if (and (r x y) (form:sequence-length y n)) (leq $\sem{\ell}$ n))}
+  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
+\texttt{(forall (x y n)}\\
+\qqquad\texttt{(if (and (r x y) (form:sequence-length y n)) (geq $\sem{\ell}$ n))}
+  \item $\CL(c\composition r \mathrel{\mathsf{:}} c'\mathsf{!})=$
+\texttt{(forall (y) (if (c' y) (exists (x) (and (c x) (r x y)))))}
+  \item 
+\begin{tabbing}
+$\CL(\ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}}=$\\
+\texttt{(forall ($x_{i_1}$ $\cdots$ $x_{i_m}$)}\\
+\qquad\texttt{(if }\=\texttt{(and ($c_{i_1}$ $x_{i_1}$) $\cdots$ ($c_{i_m}$ $x_{i_m}$))}\\
+\>\texttt{((min-card-tuple a $x_{i_1}$ $\cdots$ $x_{i_m}$) $sel_{i_1}$ $\cdots$ $sel_{i_n}$)))}
+\end{tabbing}
+  \item
+\begin{tabbing}
+ $\CL(\mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}} \leq \ell=$\\
+\texttt{(forall ($x_{i_1}$ $\cdots$ $x_{i_m}$)}\\
+\qquad\texttt{(if }\=\texttt{(and ($c_{i_1}$ $x_{i_1}$) $\cdots$ ($c_{i_m}$ $x_{i_m}$))}\\
+\>\texttt{((max-card-tuple a $x_{i_1}$ $\cdots$ $x_{i_m}$) $sel_{i_1}$ $\cdots$ $sel_{i_n}$)))}
+\end{tabbing}
+\end{itemize}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
-to an integer.
+to an integer.\ednote{the last two items need adaption}
+
+\eat{
+------------------------------------------------------------
+Let $\sem{\ell}$ be the value of a $\mathit{NumLiteral}$ $\ell$.  For a
+subset $X$ of $\Pi y \in Y \,.\, P(y)$ and a map
+$d : \Pi y \in Y' \,.\, P(y)$ with $Y' \subseteq Y$, we write $X[d]$ for
+$\{ \{ y \mapsto p(y) \mid y \in Y \} \in X \mid d(y) = p(y),\ y \in Y' \}$.
+
+Let $\Sigma = ((C, {\leq}), K, P, M, A)$ be a classifier net.  The
+$\Sigma$-\emph{satisfaction relation}
+${-} \models_{\Sigma} {-} \subseteq |\mathrm{Inst}(\Sigma)| \times
+\mathit{Sen}(\Sigma)$
+is defined for each $\Sigma$-instance net
+$\mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}}, P^{\mathcal{I}},
+M^{\mathcal{I}}, A^{\mathcal{I}})$ as
+%
+\begin{gather*}
+  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c']
+\iff
+  \forall o \in C^{\mathcal{I}}(c) \,.\, \sem{\ell} \leq |M^{\mathcal{I}}(c\composition r : \tau[c'])(o)|
+\\
+  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c'] \leq \ell
+\iff
+  \forall o \in C^{\mathcal{I}}(c) \,.\, M^{\mathcal{I}}(c\composition r : \tau[c'])(o) \leq \sem{\ell}
+\\
+  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} \tau[c']\mathsf{!}
+\iff
+  \forall o' \in C^{\mathcal{I}}(\tau[c']) \,.\, \exists o \in C^{\mathcal{I}}(c) \,.\, o' \in M^{\mathcal{I}}(c\composition r : \tau[c'])(o)
+\\
+  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}}
+\iff{}\\\qquad
+  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\\\qquad\qquad
+  \sem{\ell} \leq |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]|
+\\
+  \mathcal{I} \models_{\Sigma} \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}} \leq \ell
+\iff{}\\\qquad
+  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\\\qquad\qquad
+  |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
+\end{gather*}
 }
 
 \normannex{Conformance of CASL with DOL}\label{a:casl}
@@ -6940,11 +7497,13 @@ then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
 end
-  \end{lstlisting}
+\end{lstlisting}
 
-\todo{Instead of Blocks World, perhaps we could specify an ontology that uses inheritance networks with exceptions, and then use circumscription to axiomatize that ontology.}
+\todonote{Instead of Blocks World, perhaps we could specify an ontology that
+  uses inheritance networks with exceptions, and then use
+  circumscription to axiomatize that ontology.}
  
-  \begin{lstlisting}[language=dolText,morekeywords={forall,if,not,circ,var,Class,Individual,EquivalentTo,and,SubClassOf}]
+\begin{lstlisting}[language=dolText,morekeywords={forall,if,not,circ,var,Class,Individual,EquivalentTo,and,SubClassOf}]
 ontology Blocks_Alternative =
   Class: Block
   Class: Abnormal
@@ -6962,7 +7521,7 @@ then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
 end
-  \end{lstlisting}
+\end{lstlisting}
 
 \ssclause{Alignments}
 \index{alignment}

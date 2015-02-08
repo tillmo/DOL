@@ -6423,28 +6423,6 @@ We additionally need to axiomatize a number of predicates in Common Logic
 (iff (enumeration c ...) (and (exhaustive c ...) (distinct ...)))
    // c is an enumeration type with values ...
 
-(forall (p) (holds-all p))
-(forall (p x ...) (iff (holds-all p x ...)
-                       ((and (p x) (holds-all p ...)))))
-((same-length))
-(forall (x ...) (not ((same-length) x ...)))
-(forall (x ...) (not ((same-length x ...))))
-(forall (x y ...a ...b) (iff ((same-length x ...a) y ...b)
-                             ((same-length ...a) ...b)))
-
-(forall (r x y) (iff ((curry-pred r x) y) (r x y)))
-(forall (r ...) (iff ((min-card r ...) x)     // minimum cardinality
-    (exists (...a) (and ((same-length r ...) ...a) // add one to length
-                        (holds-all (curry-pred r x) ...a)
-                        ((distinct ...a))))))
-(forall (r c ...) (iff ((max-card r ...) x)   // maximum cardinality
-    (forall (...a) (if (and ((same-length r ...) ...a) // add one to length
-                            (holds-all (curry-pred r x) ...a))
-                       (not ((distinct ...a)))))))
-
-(forall ($x_1$ $\cdots$ $x_n$) (= ($sel_i$ $x_1$ $\cdots$ $x_n$) ($x_i$)))
-//min-card-tuple, max-card-tuple still need to be defined
-
 // fuml:sequence - membership of an element in a sequence
 (forall (x s)
     (if (member x s)
@@ -6726,6 +6704,7 @@ where we write ``$=$'' as an abbreviation for two inequations using
 \end{example}
 
 
+\eat{
 -------------------------------------------------------------------
 
 
@@ -6796,6 +6775,7 @@ then $o_1 = o_2$.
 
 
 ---------------------------------------------------------------
+}
 
 For a classifier net
 $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
@@ -7013,11 +6993,12 @@ $$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
 
 The translation of multiplicity formulas to Common Logic is as follows:
 \begin{itemize}
-  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$
-\texttt{(forall (x) (if (c x) ((min-card r $s_{x,\sem{\ell}}$) x)))}
-where  $s_n$ is a sequence of $x$'s of length $n$
-  \item $\CL(\mathsf{\#}c\composition r \mathrel{\mathsf{:}} c' \leq \ell)=$
-\texttt{(forall (x) (if (c x) ((max-card r $s_{x,\sem{\ell}}$) x)))}
+  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
+\texttt{(forall (x y n)}\\
+\qqquad\texttt{(if (and (r x y) (form:sequence-length y n)) (leq $\sem{\ell}$ n))}
+  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
+\texttt{(forall (x y n)}\\
+\qqquad\texttt{(if (and (r x y) (form:sequence-length y n)) (geq $\sem{\ell}$ n))}
   \item $\CL(c\composition r \mathrel{\mathsf{:}} c'\mathsf{!})=$
 \texttt{(forall (y) (if (c' y) (exists (x) (and (c x) (r x y)))))}
   \item 
@@ -7037,8 +7018,9 @@ $\CL(\ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\maths
 \end{itemize}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
-to an integer.
+to an integer.\ednote{the last two items need adaption}
 
+\eat{
 ------------------------------------------------------------
 Let $\sem{\ell}$ be the value of a $\mathit{NumLiteral}$ $\ell$.  For a
 subset $X$ of $\Pi y \in Y \,.\, P(y)$ and a map
@@ -7078,7 +7060,7 @@ M^{\mathcal{I}}, A^{\mathcal{I}})$ as
 \\\qquad\qquad
   |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
 \end{gather*}
-
+}
 
 \normannex{Conformance of CASL with DOL}\label{a:casl}
 
