@@ -29,7 +29,7 @@
 %\pdfcommenttrue
 \pdfcommentfalse
 
-\documentclass[10pt,%
+\documentclass[10pt,fleqn,%
 \ifpretendfinal
 final%
 \else
@@ -84,6 +84,7 @@ draft%
 \usepackage{ifmtarg}
 \usepackage{stringstrings}
 \usepackage{stmaryrd}
+\usepackage{enumitem}
 
 %% Graphics
 \usepackage{standalone}
@@ -300,7 +301,9 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\conjclause}{\ensuremath{p_1 \wedge \dots \wedge p_n}}
 \newcommand{\id}{\ensuremath{\operatorname{id}}}
 \newcommand{\powerset}[1]{\mathcal{P}(#1)}
-
+\newcommand{\finorderedpowerset}{\mathcal{P}^{\mathrm{ord}}_{\mathrm{fin}}}
+\newcommand{\finpowerset}{\mathcal{P}_{\mathrm{fin}}}
+\newcommand{\reductop}{\mathnormal{|}}
 
 %% from HetCASL summary
 \newcommand{\Si}{\Sigma}
@@ -6433,10 +6436,445 @@ We additionally need to axiomatize a number of predicates in Common Logic
 //min-card-tuple, max-card-tuple still need to be defined
 \end{lstlisting}
 
-
-
 Using this infrastructure, we obtain an institution for UML class
-diagrams as follows:
+diagrams as follows:\ednote{AK: Added the following up to the next ed-note.}
+
+\paragraph{Classifier hierarchies.}
+A \emph{classifier hierarchy} $(C, {\leq_C})$ is given by a partial
+order where the set $C$ contains the \emph{classifier names}, which are
+closed w.r.t.\ the \emph{built-in types} $\mathsf{Boolean}$,
+$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
+$\mathsf{String}$, i.e.,
+$\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural}, \mathsf{Integer},
+\mathsf{Real}, \mathsf{String} \} \subseteq C$;
+and the partial ordering relation $\leq_C$ represents a
+\emph{generalisation relation} on $C$, where we say that $c_1$ is a
+\emph{sub-classifier} of $c_2$ if $c_1 \leq_C c_2$.
+
+A \emph{classifier hierarchy map}
+$\gamma : (C, {\leq_C}) \to (D, {\leq_D})$ is given by a monotone map
+from $(C, {\leq_C})$ to $(D, {\leq_D})$, i.e.,
+$\gamma(c) \leq_D \gamma(c')$ if $c \leq_C c'$, such that
+$\gamma(c) = c$ for all built-in types
+$c \in \{ \mathsf{Boolean},\allowbreak \mathsf{UnlimitedNatural},\allowbreak
+\mathsf{Integer}, \mathsf{Real}, \mathsf{String} \}$.
+
+For each classifier $c \in C$ of a classifier hierarchy $(C, {\leq_C})$
+we use the \emph{classifier annotations} $\mathsf{OrderedSet}$,
+$\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ representing the
+meta-properties ``ordered'' and ``unique'' according to the following
+table:
+
+\begin{quotation}
+\begin{tabular}{@{}r||c|c@{}}
+             & ordered               & not ordered\\
+\hline\hline
+  unique     & $\mathsf{OrderedSet}$ & $\mathsf{Set}$\\
+\hline
+  not unique & $\mathsf{Sequence}$   & $\mathsf{Bag}$
+\end{tabular}
+\end{quotation}
+
+We write $\tau[c]$ for an annotated classifier for
+$\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
+\mathsf{Bag} \}$.
+The default is ``not ordered'' and ``unique'' (UML Superstructure
+Specification 2.4.1, p.~96).
+
+\paragraph{Classifier interpretations.}
+A \emph{classifier interpretation} $C^\mathcal{I}$ over a classifier
+hierarchy $(C, {\leq_C})$ maps each $c \in C$ to a set such that
+$C^{\mathcal{I}}(c_1) \subseteq C^{\mathcal{I}}(c_2)$ if
+$c_1 \leq_C c_2$, and $C^{\mathcal{I}}(\mathsf{Boolean}) = \mathbb{B}$,
+$C^{\mathcal{I}}(\mathsf{UnlimitedNatural}) = \mathbb{N} \cup \{ \infty
+\}$,
+$C^{\mathcal{I}}(\mathsf{Integer}) = \mathbb{Z}$,
+$C^{\mathcal{I}}(\mathsf{Real}) = \mathbb{R}$, and
+$C^{\mathcal{I}}(\mathsf{String}) = \mathit{Char}^*$ for some domain of
+``characters'' $\mathit{Char}$.
+
+A \emph{classifier interpretation morphism}
+$\zeta : C^{\mathcal{I}} \to C^{\mathcal{J}}$ is given by a map
+$\zeta \in \Pi c \in C \,.\, C^{\mathcal{I}}(c) \to C^{\mathcal{J}}(c)$.
+
+A classifier interpretation $C^{\mathcal{I}}$ induces the following
+interpretation of classifier annotations:
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item
+$C^{\mathcal{I}}(\mathsf{OrderedSet}[c]) =
+\finorderedpowerset(C^{\mathcal{I}}(c))$
+(where $\finorderedpowerset(X)$ is the set of finite subsets of $X$ where
+to elements of $\finorderedpowerset(X)$ are equal if, and only if, they
+contain the same elements in the same order);
+
+  \item $C^{\mathcal{I}}(\mathsf{Set}[c]) =
+\finpowerset(C^{\mathcal{I}}(c))$ (where $\finpowerset(X)$ is the set of
+finite subsets of $X$);
+
+  \item $C^{\mathcal{I}}(\mathsf{Sequence}[c]) = (C^{\mathcal{I}}(c))^*$
+(where $X^*$ is the set of finite sequences over $X$);
+
+  \item
+$C^{\mathcal{I}}(\mathsf{Bag}[c]) = [C^{\mathcal{I}}(c)
+\to_{\mathrm{fin}} \mathbb{N}]$
+(where $[X \to_{\mathrm{fin}} \mathbb{N}]$ is the set of finite
+multisets over $X$, i.e., the maps $b : X \to \mathbb{N}$ where
+$b(x) > 0$ only for a finite subset of $X$).
+\end{itemize}
+
+A classifier interpretation morphism
+$\zeta : C^{\mathcal{I}} \to C^{\mathcal{J}}$ is lifted to
+$\Pi \tau \in \{ \mathsf{OrderedSet}, \mathsf{Set},\allowbreak
+\mathsf{Sequence},\allowbreak \mathsf{Bag} \} \,.\, \Pi c \in C \,.\,
+C^{\mathcal{I}}(\tau[c]) \to C^{\mathcal{J}}(\tau[c])$
+as usual; we write $\zeta(\tau[c])$ for $\zeta(\tau)(c)$.
+
+\paragraph{Classifier nets.}
+A \emph{classifier net} $\Sigma = ((C, {\leq_C}), K, P, M, A)$
+comprises
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a \emph{classifier hierarchy} $(C, {\leq_C})$;
+
+  \item a set $K$ of \emph{instance specifications declarations} of
+the form $k : c$ with $k$ an \emph{instance specification name} and $c
+\in C$;
+
+  \item a set $P$ of \emph{property declarations} of the form
+$c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a classifier annotation, and
+$p$ a \emph{property name};
+
+  \item a set $M$ of \emph{composition declarations} of the form
+$c\composition r : \tau[c']$ with $c, c' \in C$, $\tau$ a classifier
+annotation, and $r$ a \emph{composition role name};
+
+  \item and a set $A$ of \emph{association declarations} of the form
+$a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}$ with $n \geq 2$,
+$c_1, \dots, c_n \in C$, $\tau_1, \ldots, \tau_n$ classifier
+annotations, $a$ an \emph{association name}, and $r_1, \dots, r_n$
+\emph{association role names},
+\end{itemize}
+%
+such that the following properties are satisfied:
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item instance specification names are unique: if $k_1 : c_1$ and
+$k_2 : c_2$ are different instance specification declarations in $K$,
+then $k_1 \neq k_2$;
+
+  \item property names are unique along the generalisation relation: if
+$c_1.p_1 : \tau_1[c_1']$ and $c_2.p_2 : \tau_2[c_2']$ are different
+property declararations in $P$ and $c_1 \leq c_2$, then $p_1 \neq p_2$;
+
+  \item composition role names are unique along the generalisation
+relation: if $c_1\composition r_1 : \tau_1[c_1']$ and $c_2\composition r_2 :
+\tau_2[c_2']$ are different composition declararations in $M$ and $c_1 \leq
+c_2$, then $r_1 \neq r_2$;
+
+  \item property and composition role names are unique along the
+generalisation relation: if $c_1.p_1 : \tau_1[c_1']$ is a property
+declaration in $P$ and $c_2\composition r_2 : \tau_2[c_2']$ is a
+composition declaration in $M$ and $c_1 \leq_C c_2$, then
+$p_1 \neq r_2$; and if $c_1\composition r_1 : \tau_1[c_1']$ is a
+composition declaration in $M$ and $c_2.p_2 : \tau_2[c_2']$ is a
+property declaration in $P$ and $c_1 \leq_C c_2$, then $r_1 \neq p_2$;
+
+  \item association role names are unique: if $a\{ r_1 : \tau_1[c_1], \dots,
+r_n : \tau_n[c_n] \}$ is an association declaration in $A$ and $1 \leq i \neq
+j \leq n$, then $r_i \neq r_j$;
+
+  \item composition declarations are cycle-free: if
+$c_1\composition r_1 : \tau_2[c_2], \dots, c_n\composition r_n :
+\tau_{n+1}[c_{n+1}] \in M$, then $c_{n+1} \neq c_1$.
+\end{itemize}
+
+A \emph{classifier net morphism}
+$\sigma = (\gamma, \kappa, \pi, \mu, \alpha) : \Sigma = ((C, {\leq}_C),
+K, P, M, A) \to \Tau = ((D, {\leq}_D),\allowbreak L,\allowbreak Q,\allowbreak N, B)$
+is given by
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a classifier hierarchy map $\gamma : (C, {\leq_C}) \to (D,
+{\leq_D})$;
+
+  \item an instance specification map $\kappa : K \to L$ such
+that if $\kappa({k : c}) = {l : d} \in L$, then $d = \gamma(c)$;
+
+  \item a property declaration map $\pi : P \to Q$ such that if
+$\pi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then $d = \gamma(c)$,
+$d' = \gamma(d')$, and $\tau = \tau'$;
+
+  \item a composition declaration map $\mu : M \to N$ such that if
+$\mu({c\composition r : \tau[c']}) = {d\composition s : \tau'[d']} \in M$, then $d =
+\gamma(c)$, $d' = \gamma(d')$, and $\tau = \tau'$;
+
+  \item an association declaration map $\alpha : A \to B$ such that if
+$\alpha(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}) = b\{ s_1 :
+\tau_1'[d_1], \dots, s_m : \tau_m'[d_m] \} \in B$,
+then there is a bijective map
+$\rho : \{ r_1, \dots, r_n \} \to \{ s_1, \dots, s_m \}$ with
+$d_j = \gamma(c_i)$ and $\tau_j = \tau_i'$ if $\rho(r_i) = s_j$.
+\end{itemize}
+
+Classifier nets as objects and classifier net morphisms as morphisms
+form the category of \emph{classifier nets}, denoted by
+$\mathrm{Cl}$.
+
+\paragraph{Example.}
+For the example we have
+%
+\begin{gather*}
+  \text{Classifiers: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear}
+\\
+  \text{Generalisations: }\mathsf{Point} \leq \mathsf{Unit}, \mathsf{Linear} \leq \mathsf{Unit}
+\\
+  \text{Properties: }\mathsf{Line.linear : Set[Boolean]}, \mathsf{Track.linear : Set[Boolean]}
+\\
+  \text{Compositions: }\mathsf{Station\composition unit : Set[Unit]}, \mathsf{Station\composition track : Set[Track]},
+\\
+  \phantom{\text{Compositions: }}\mathsf{Net\composition station : Set[Station]}, \mathsf{Net\composition line : Set[Line]}
+\\
+  \text{Associations: }\mathsf{has\{ line : Set[Line], linear : Set[Linear] \}},
+\\
+  \phantom{\text{Associations: }}\mathsf{has\{ track : Set[Track], linear : Set[Linear] \}},
+\\
+  \phantom{\text{Associations: }}\mathsf{has\{ connector : Set[Connector], unit : Set[Unit] \}}
+\end{gather*}
+
+\paragraph{Instance nets.}
+A $\Sigma$-\emph{instance net} $\mathcal{I} = (C^{\mathcal{I}},
+K^{\mathcal{I}}, P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}})$
+over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given
+by
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a classifier interpretation $C^{\mathcal{I}}$;
+
+  \item an instance specification declaration interpretation
+$K^{\mathcal{I}}$ mapping each ${k : c} \in K$ to an element of
+$C^{\mathcal{I}}(c)$;
+
+  \item a property declaration interpretation $P^{\mathcal{I}}$
+mapping each ${c.p : \tau[c']} \in P$ to a map
+$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
+
+  \item a composition declaration interpretation $M^{\mathcal{I}}$
+mapping each ${c\composition r : \tau[c']} \in M$ to a map
+$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
+
+  \item an association declaration interpretation $A^{\mathcal{I}}$
+mapping each $a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \} \in A$
+to a subset of
+$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(\tau_i[c_i]) =
+\{ \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \mid o_i \in
+C^{\mathcal{I}}(c_i),\ 1 \leq i \leq n \}$,
+\end{itemize}
+%
+such that
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item each instance has at most one owner: if
+$o' \in M^{\mathcal{I}}(c_1\composition r_1 : \tau_1[c_1'])(o_1) \cap
+M^{\mathcal{I}}(c_2\composition r_2 : \tau_2[c_2'])(o_2)$,
+then $o_1 = o_2$.
+\end{itemize}
+
+(Ignoring the annotations $\tau_i$ in the interpretation of an
+association is intentional, see the semantics of associations in the UML
+Superstructure Specification 2.4.1, p.~37.)
+
+A $\Sigma$-\emph{instance net morphism}
+$\zeta : \mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}},
+P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}}) \to \mathcal{J} =
+(C^{\mathcal{J}}, K^{\mathcal{J}}, P^{\mathcal{J}}, M^{\mathcal{J}},
+A^{\mathcal{J}})$
+over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given by
+a classifier interpretation morphism
+$\zeta : C^{\mathcal{I}} \to C^{\mathcal{J}}$ such that
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item $K^{\mathcal{J}}({k : c}) = \zeta(c)(K^{\mathcal{I}}({k :
+  c}))$ for each ${k : c} \in K$;
+
+  \item
+$P^{\mathcal{J}}({c.p : \tau[c']})(\zeta(c)(o)) =
+\zeta(\tau[c'])(P^{\mathcal{I}}({c.p : \tau[c']})(o))$
+for each ${c.p : \tau[c']} \in P$ and $o \in C^{\mathcal{I}}(c)$;
+
+  \item
+$M^{\mathcal{J}}({c\composition r : \tau[c']})(\zeta(c)(o)) =
+\zeta(\tau[c'])(P^{\mathcal{I}}({c\composition r : \tau[c']})(o))$
+for each ${c\composition r : \tau[c']} \in M$ and
+$o \in C^{\mathcal{I}}(c)$;
+
+  \item
+$A^{\mathcal{J}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}) =
+\{ \{ r_1 \mapsto \zeta(c_1)(o_1), \dots, r_n \mapsto \zeta(c_n)(o_n) \}
+\mid \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \in
+A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, \tau_n[r_n] \}) \}$.
+\end{itemize}
+
+$\Sigma$-instance nets as objects and $\Sigma$-instance net morphisms
+as morphisms form the category of $\Sigma$-\emph{instance nets},
+denoted by $\mathrm{Inst}(\Sigma)$.
+
+\paragraph{Instance net reducts.}
+Let $\sigma = (\gamma, \kappa, \pi, \mu, \alpha) : \Sigma = ((C,
+{\leq}_C), K, P, M, A) \to \Tau = ((D, {\leq}_D), L, Q,\allowbreak N,
+B)$ be a classifier net morphism.
+
+Let $\mathcal{J} = (D^{\mathcal{J}}, L^{\mathcal{J}}, Q^{\mathcal{J}},
+N^{\mathcal{J}}, B^{\mathcal{J}})$ be a $\Tau$-instance net.  The
+\emph{reduct} of $\mathcal{J}$ along $\sigma$ is the $\Sigma$-instance
+net $\mathcal{J}\reductop\sigma = (C^{\mathcal{J}\reductop\sigma},
+K^{\mathcal{J}\reductop\sigma}, P^{\mathcal{J}\reductop\sigma},
+M^{\mathcal{J}\reductop\sigma}, A^{\mathcal{J}\reductop\sigma})$ with
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item $C^{\mathcal{J}\reductop\sigma}(c) =
+D^{\mathcal{J}}(\gamma(c))$;
+
+  \item $K^{\mathcal{J}\reductop\sigma}({k : c}) =
+L^{\mathcal{J}}(\kappa({k : c}))$;
+
+  \item $P^{\mathcal{J}\reductop\sigma}({c.p : \tau[c']}) =
+Q^{\mathcal{J}}(\pi({c.p : \tau[c']}))$;
+
+  \item $M^{\mathcal{J}\reductop\sigma}({c\composition r : \tau[c']}) =
+N^{\mathcal{J}}(\mu({c\composition r : \tau[c']}))$;
+
+  \item $A^{\mathcal{J}\reductop\sigma}(a\{ r_1 : \tau_1[c_1], \dots, r_n :
+\tau_n[c_n] \}) = B^{\mathcal{J}}(\alpha(a\{r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}))$.
+\end{itemize}
+
+Let $\zeta : \mathcal{J}_1 = (D^{\mathcal{J}_1}, L^{\mathcal{J}_1},
+Q^{\mathcal{J}_1}, N^{\mathcal{J}_1}, B^{\mathcal{J}_1}) \to
+\mathcal{J}_2 = (D^{\mathcal{J}_2}, L^{\mathcal{J}_2},
+Q^{\mathcal{J}_2}, N^{\mathcal{J}_2}, B^{\mathcal{J}_2})$ be a
+$\Tau$-instance net morphism.  The \emph{reduct} of $\zeta$ along
+$\sigma$ is the $\Sigma$-instance net morphism $\zeta\reductop\sigma :
+\mathcal{J}_1\reductop\sigma = (C^{\mathcal{J}_1\reductop\sigma},
+K^{\mathcal{J}_1\reductop\sigma},\allowbreak
+P^{\mathcal{J}_1\reductop\sigma}, M^{\mathcal{J}_1\reductop\sigma},
+A^{\mathcal{J}_1\reductop\sigma}) \to \mathcal{J}_2\reductop\sigma =
+(C^{\mathcal{J}_2\reductop\sigma}, K^{\mathcal{J}_2\reductop\sigma},
+P^{\mathcal{J}_2\reductop\sigma}, M^{\mathcal{J}_2\reductop\sigma},
+A^{\mathcal{J}_2\reductop\sigma})$ with $\zeta\reductop\sigma(c) =
+\zeta(\gamma(c))$.
+
+The $\sigma$-reducts of $\Tau$-instance nets and $\Tau$-instance net
+morphisms yield a functor ${-}\reductop\sigma : \mathrm{Inst}(\Tau)
+\to \mathrm{Inst}(\Gamma)$.
+
+\paragraph{Multiplicity constraints.}
+The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
+the following grammar:
+%
+\begin{equation*}
+\begin{array}{@{}r@{\ }r@{\ }l@{}}
+  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\\
+               &   | & \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}\\
+               & ::= & \mathit{Composition}\ \mathsf{!}
+\\[1ex]
+  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Composition}\\
+                   &   | & \mathit{\#}\ \mathit{Association}\ \mathsf{[}\ \mathit{Role}\ (\mathsf{,}\ \mathit{Role})^*\ \mathsf{]}
+\\[1ex]
+  \mathit{Composition} & ::= & \mathit{Classifier}\composition\mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ]
+\\[1ex]
+  \mathit{Association} & ::= & \mathit{Name}\{ \mathit{Role} : \mathit{Annot}\ [\ \mathit{Classifier}\ ](\mathsf{,}\ \mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ])^* \}
+\\[1ex]
+  \mathit{Classifier} & ::= & \mathit{Name}
+\\
+  \mathit{Role} & ::= & \mathit{Name}
+\\
+  \mathit{Annot} & ::= & \mathsf{OrderedSet} \mid \mathsf{Set} \mid \mathsf{Sequence} \mid \mathsf{Bag}
+\\
+  \mathit{NumLiteral} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
+\end{array}
+\end{equation*}
+%
+where $\mathit{Name}$ is a set of names.
+
+The set of $\Sigma$-\emph{multiplicity constraints}
+$\mathit{Mult}(\Sigma)$ for a classifier net $\Sigma$ is given by the
+multiplicity formulae in $\mathit{Frm}$ such that all mentioned
+elements of $\mathit{Composition}$ and $\mathit{Association}$ correspond
+to composition declarations and association declarations of $\Sigma$,
+respectively, and the role names mentioned in the last clause of
+$\mathit{FunExpr}$ occur in the mentioned association.  The
+\emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
+along a classifier net morphism $\sigma$, written as
+$\sigma(\varphi)$, is given by applying $\sigma$ to compositions,
+associations, and role names.
+
+Let $\sem{\ell}$ be the value of a $\mathit{NumLiteral}$ $\ell$.  For a
+subset $X$ of $\Pi y \in Y \,.\, P(y)$ and a map
+$d : \Pi y \in Y' \,.\, P(y)$ with $Y' \subseteq Y$, we write $X[d]$ for
+$\{ \{ y \mapsto p(y) \mid y \in Y \} \in X \mid d(y) = p(y),\ y \in Y' \}$.
+
+Let $\Sigma = ((C, {\leq}), K, P, M, A)$ be a classifier net.  The
+$\Sigma$-\emph{satisfaction relation}
+${-} \models_{\Sigma} {-} \subseteq |\mathrm{Inst}(\Sigma)| \times
+\mathit{Sen}(\Sigma)$
+is defined for each $\Sigma$-instance net
+$\mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}}, P^{\mathcal{I}},
+M^{\mathcal{I}}, A^{\mathcal{I}})$ as
+%
+\begin{gather*}
+  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c']
+\iff
+  \forall o \in C^{\mathcal{I}}(c) \,.\, \sem{\ell} \leq |M^{\mathcal{I}}(c\composition r : \tau[c'])(o)|
+\\
+  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c'] \leq \ell
+\iff
+  \forall o \in C^{\mathcal{I}}(c) \,.\, M^{\mathcal{I}}(c\composition r : \tau[c'])(o) \leq \sem{\ell}
+\\
+  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} \tau[c']\mathsf{!}
+\iff
+  \forall o' \in C^{\mathcal{I}}(\tau[c']) \,.\, \exists o \in C^{\mathcal{I}}(c) \,.\, o' \in M^{\mathcal{I}}(c\composition r : \tau[c'])(o)
+\\
+  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}}
+\iff \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\\\qquad\qquad
+  \sem{\ell} \leq |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]|
+\\
+  \mathcal{I} \models_{\Sigma} \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}} \leq \ell
+\iff \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\\\qquad\qquad
+  |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
+\end{gather*}
+
+\paragraph{Example.}
+For the example we have
+\begin{gather*}
+  \mathsf{2 \leq \#Net\composition station : Set[Station]}
+\\
+  \mathsf{Net\composition station : Set[Station]\,!}
+\\
+  \mathsf{Net\composition line : Set[Line]\,!}
+\\
+  \mathsf{Station\composition unit : Set[Unit]\,!}
+\\
+  \mathsf{Station\composition track : Set[Track]\,!}
+\\
+  \mathsf{1 \leq \#has\{ connector : Set[Connector], unit : Set[Unit] \}[unit]}
+\\
+  \mathsf{\#has\{ connector : Set[Connector], unit : Set[Unit] \}[unit] \leq 4}
+\\
+  \mathsf{\#has\{ connector : Set[Connector], unit : Set[Unit] \}[connector] = 1}
+\\
+  \mathsf{1 \leq \#has\{ track : Set[Track], linear : Set[Linear] \}[track]}
+\\
+  \mathsf{\#has\{ track : Set[Track], linear : Set[Linear] \}[linear] = 1}
+\\
+  \mathsf{1 \leq \#has\{ line : Set[Line], linear : Set[Linear] \}[line]}
+\\
+  \mathsf{\#has\{ line : Set[Line], linear : Set[Linear] \}[linear] = 1}
+\end{gather*}
+%
+where we write ``$=$'' as an abbreviation for two inequations using
+``$\leq$''.
 
 \ednote{From the Jan-26 telcon: we could separate the basic
   information of the class diagrams from the information whether the
@@ -6481,7 +6919,7 @@ signatures already suffice?}
 \begin{example}\label{ex:dsl-sig}%\pushQED{\qed}%
 \begin{figure}[!tH]
 \centering
-\includegraphics[width=\linewidth]{illustrations/new_uml.png}\\
+%\includegraphics[width=\linewidth]{illustrations/new_uml.png}\\
 \caption{Sample UML class diagram.}
 \label{fig:bjoerners_dsl}
 \end{figure}
@@ -7195,11 +7633,13 @@ then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
 end
-  \end{lstlisting}
+\end{lstlisting}
 
-\todo{Instead of Blocks World, perhaps we could specify an ontology that uses inheritance networks with exceptions, and then use circumscription to axiomatize that ontology.}
+\todonote{Instead of Blocks World, perhaps we could specify an ontology that
+  uses inheritance networks with exceptions, and then use
+  circumscription to axiomatize that ontology.}
  
-  \begin{lstlisting}[language=dolText,morekeywords={forall,if,not,circ,var,Class,Individual,EquivalentTo,and,SubClassOf}]
+\begin{lstlisting}[language=dolText,morekeywords={forall,if,not,circ,var,Class,Individual,EquivalentTo,and,SubClassOf}]
 ontology Blocks_Alternative =
   Class: Block
   Class: Abnormal
@@ -7217,7 +7657,7 @@ then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
 end
-  \end{lstlisting}
+\end{lstlisting}
 
 \ssclause{Alignments}
 \index{alignment}
