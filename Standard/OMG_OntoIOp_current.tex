@@ -502,6 +502,11 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\ZZ}{\mathbb{Z}}
 \newcommand{\sem}[1]{\mathopen\llbracket#1\mathclose\rrbracket}
 
+
+% colors
+\newcommand{\white}[1]{{\color{white}{#1}}}
+\newcommand{\qqquad}{\white{x}\qquad}
+
 \allowdisplaybreaks
 
 
@@ -6439,6 +6444,19 @@ We additionally need to axiomatize a number of predicates in Common Logic
 
 (forall ($x_1$ $\cdots$ $x_n$) (= ($sel_i$ $x_1$ $\cdots$ $x_n$) ($x_i$)))
 //min-card-tuple, max-card-tuple still need to be defined
+
+// fuml:sequence - membership of an element in a sequence
+(forall (x s)
+    (if (member x s)
+        (form:Sequence s)))
+
+(forall (x s)
+    (iff (member x s)
+         (exists (pt) 
+             (and (form:in-sequence s pt)
+                  (form:in-position pt x)) )))
+
+
 \end{lstlisting}
 
 Using this infrastructure, we obtain an institution for UML class
@@ -6451,7 +6469,10 @@ closed w.r.t.\ the \emph{built-in types} $\mathsf{Boolean}$,
 $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
 $\mathsf{String}$, i.e.,
 $\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural}, \mathsf{Integer},
-\mathsf{Real}, \mathsf{String} \} \subseteq C$;
+\mathsf{Real}, \mathsf{String} \} \subseteq C$;\ednote{what about
+enumeration types? Should we assume that some classifiers are
+marked as enumeration types and equipped with their set of
+constants?}
 and the partial ordering relation $\leq_C$ represents a
 \emph{generalisation relation} on $C$, where we say that $c_1$ is a
 \emph{sub-classifier} of $c_2$ if $c_1 \leq_C c_2$.
@@ -6486,56 +6507,8 @@ $\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
 The default is ``not ordered'' and ``unique'' (UML Superstructure
 Specification 2.4.1, p.~96).
 
-\medskip\noindent\textbf{Classifier interpretations.}
-A \emph{classifier interpretation} $C^\mathcal{I}$ over a classifier
-hierarchy $(C, {\leq_C})$ maps each $c \in C$ to a set such that
-$C^{\mathcal{I}}(c_1) \subseteq C^{\mathcal{I}}(c_2)$ if
-$c_1 \leq_C c_2$, and $C^{\mathcal{I}}(\mathsf{Boolean}) = \mathbb{B}$,
-$C^{\mathcal{I}}(\mathsf{UnlimitedNatural}) = \mathbb{N} \cup \{ \infty
-\}$,
-$C^{\mathcal{I}}(\mathsf{Integer}) = \mathbb{Z}$,
-$C^{\mathcal{I}}(\mathsf{Real}) = \mathbb{R}$, and
-$C^{\mathcal{I}}(\mathsf{String}) = \mathit{Char}^*$ for some domain of
-``characters'' $\mathit{Char}$.
 
-A \emph{classifier interpretation morphism}
-$\zeta : C^{\mathcal{I}} \to C^{\mathcal{J}}$ is given by a map
-$\zeta \in \Pi c \in C \,.\, C^{\mathcal{I}}(c) \to C^{\mathcal{J}}(c)$.
-
-A classifier interpretation $C^{\mathcal{I}}$ induces the following
-interpretation of classifier annotations:
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item
-$C^{\mathcal{I}}(\mathsf{OrderedSet}[c]) =
-\finorderedpowerset(C^{\mathcal{I}}(c))$
-(where $\finorderedpowerset(X)$ is the set of finite subsets of $X$ where
-to elements of $\finorderedpowerset(X)$ are equal if, and only if, they
-contain the same elements in the same order);
-
-  \item $C^{\mathcal{I}}(\mathsf{Set}[c]) =
-\finpowerset(C^{\mathcal{I}}(c))$ (where $\finpowerset(X)$ is the set of
-finite subsets of $X$);
-
-  \item $C^{\mathcal{I}}(\mathsf{Sequence}[c]) = (C^{\mathcal{I}}(c))^*$
-(where $X^*$ is the set of finite sequences over $X$);
-
-  \item
-$C^{\mathcal{I}}(\mathsf{Bag}[c]) = [C^{\mathcal{I}}(c)
-\to_{\mathrm{fin}} \mathbb{N}]$
-(where $[X \to_{\mathrm{fin}} \mathbb{N}]$ is the set of finite
-multisets over $X$, i.e., the maps $b : X \to \mathbb{N}$ where
-$b(x) > 0$ only for a finite subset of $X$).
-\end{itemize}
-
-A classifier interpretation morphism
-$\zeta : C^{\mathcal{I}} \to C^{\mathcal{J}}$ is lifted to
-$\Pi \tau \in \{ \mathsf{OrderedSet}, \mathsf{Set},\allowbreak
-\mathsf{Sequence},\allowbreak \mathsf{Bag} \} \,.\, \Pi c \in C \,.\,
-C^{\mathcal{I}}(\tau[c]) \to C^{\mathcal{J}}(\tau[c])$
-as usual; we write $\zeta(\tau[c])$ for $\zeta(\tau)(c)$.
-
-\medskip\noindent\textbf{Classifier nets.}
+\medskip\noindent\textbf{Classifier nets (Signatures).}
 A \emph{classifier net} $\Sigma = ((C, {\leq_C}), K, P, M, A)$
 comprises
 %
@@ -6680,130 +6653,6 @@ For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
 \end{gather*}
 \end{example}
 
-\medskip\noindent\textbf{Instance nets.}
-A $\Sigma$-\emph{instance net} $\mathcal{I} = (C^{\mathcal{I}},
-K^{\mathcal{I}}, P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}})$
-over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given
-by
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item a classifier interpretation $C^{\mathcal{I}}$;
-
-  \item an instance specification declaration interpretation
-$K^{\mathcal{I}}$ mapping each ${k : c} \in K$ to an element of
-$C^{\mathcal{I}}(c)$;
-
-  \item a property declaration interpretation $P^{\mathcal{I}}$
-mapping each ${c.p : \tau[c']} \in P$ to a map
-$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
-
-  \item a composition declaration interpretation $M^{\mathcal{I}}$
-mapping each ${c\composition r : \tau[c']} \in M$ to a map
-$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
-
-  \item an association declaration interpretation $A^{\mathcal{I}}$
-mapping each $a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \} \in A$
-to a subset of
-$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(\tau_i[c_i]) =
-\{ \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \mid o_i \in
-C^{\mathcal{I}}(c_i),\ 1 \leq i \leq n \}$,
-\end{itemize}
-%
-such that
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item each instance has at most one owner: if
-$o' \in M^{\mathcal{I}}(c_1\composition r_1 : \tau_1[c_1'])(o_1) \cap
-M^{\mathcal{I}}(c_2\composition r_2 : \tau_2[c_2'])(o_2)$,
-then $o_1 = o_2$.
-\end{itemize}
-
-(Ignoring the annotations $\tau_i$ in the interpretation of an
-association is intentional, see the semantics of associations in the UML
-Superstructure Specification 2.4.1, p.~37.)
-
-A $\Sigma$-\emph{instance net morphism}
-$\zeta : \mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}},
-P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}}) \to \mathcal{J} =
-(C^{\mathcal{J}}, K^{\mathcal{J}}, P^{\mathcal{J}}, M^{\mathcal{J}},
-A^{\mathcal{J}})$
-over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given by
-a classifier interpretation morphism
-$\zeta : C^{\mathcal{I}} \to C^{\mathcal{J}}$ such that
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item $K^{\mathcal{J}}({k : c}) = \zeta(c)(K^{\mathcal{I}}({k :
-  c}))$ for each ${k : c} \in K$;
-
-  \item
-$P^{\mathcal{J}}({c.p : \tau[c']})(\zeta(c)(o)) =
-\zeta(\tau[c'])(P^{\mathcal{I}}({c.p : \tau[c']})(o))$
-for each ${c.p : \tau[c']} \in P$ and $o \in C^{\mathcal{I}}(c)$;
-
-  \item
-$M^{\mathcal{J}}({c\composition r : \tau[c']})(\zeta(c)(o)) =
-\zeta(\tau[c'])(P^{\mathcal{I}}({c\composition r : \tau[c']})(o))$
-for each ${c\composition r : \tau[c']} \in M$ and
-$o \in C^{\mathcal{I}}(c)$;
-
-  \item
-$A^{\mathcal{J}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}) =
-\{ \{ r_1 \mapsto \zeta(c_1)(o_1), \dots, r_n \mapsto \zeta(c_n)(o_n) \}
-\mid \{ r_1 \mapsto o_1,\allowbreak \dots,\allowbreak r_n \mapsto o_n \} \in
-A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, \tau_n[r_n] \}) \}$.
-\end{itemize}
-
-$\Sigma$-instance nets as objects and $\Sigma$-instance net morphisms
-as morphisms form the category of $\Sigma$-\emph{instance nets},
-denoted by $\mathrm{Inst}(\Sigma)$.
-
-\medskip\noindent\textbf{Instance net reducts.} %
-Let $\sigma = (\gamma, \kappa, \pi, \mu, \alpha) : \Sigma = ((C, {\leq}_C),
-K, P, M, A) \to \Tau = ((D, {\leq}_D),\allowbreak L,\allowbreak
-Q,\allowbreak N, B)$ be a classifier net morphism.
-
-Let $\mathcal{J} = (D^{\mathcal{J}}, L^{\mathcal{J}}, Q^{\mathcal{J}},
-N^{\mathcal{J}}, B^{\mathcal{J}})$ be a $\Tau$-instance net.  The
-\emph{reduct} of $\mathcal{J}$ along $\sigma$ is the $\Sigma$-instance
-net $\mathcal{J}\reductop\sigma = (C^{\mathcal{J}\reductop\sigma},
-K^{\mathcal{J}\reductop\sigma}, P^{\mathcal{J}\reductop\sigma},
-M^{\mathcal{J}\reductop\sigma}, A^{\mathcal{J}\reductop\sigma})$ with
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item $C^{\mathcal{J}\reductop\sigma}(c) =
-D^{\mathcal{J}}(\gamma(c))$;
-
-  \item $K^{\mathcal{J}\reductop\sigma}({k : c}) =
-L^{\mathcal{J}}(\kappa({k : c}))$;
-
-  \item $P^{\mathcal{J}\reductop\sigma}({c.p : \tau[c']}) =
-Q^{\mathcal{J}}(\pi({c.p : \tau[c']}))$;
-
-  \item $M^{\mathcal{J}\reductop\sigma}({c\composition r : \tau[c']}) =
-N^{\mathcal{J}}(\mu({c\composition r : \tau[c']}))$;
-
-  \item $A^{\mathcal{J}\reductop\sigma}(a\{ r_1 : \tau_1[c_1], \dots, r_n :
-\tau_n[c_n] \}) = B^{\mathcal{J}}(\alpha(a\{r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}))$.
-\end{itemize}
-
-Let $\zeta : \mathcal{J}_1 = (D^{\mathcal{J}_1}, L^{\mathcal{J}_1},
-Q^{\mathcal{J}_1}, N^{\mathcal{J}_1}, B^{\mathcal{J}_1}) \to
-\mathcal{J}_2 = (D^{\mathcal{J}_2}, L^{\mathcal{J}_2},
-Q^{\mathcal{J}_2}, N^{\mathcal{J}_2}, B^{\mathcal{J}_2})$ be a
-$\Tau$-instance net morphism.  The \emph{reduct} of $\zeta$ along
-$\sigma$ is the $\Sigma$-instance net morphism $\zeta\reductop\sigma :
-\mathcal{J}_1\reductop\sigma = (C^{\mathcal{J}_1\reductop\sigma},
-K^{\mathcal{J}_1\reductop\sigma},\allowbreak
-P^{\mathcal{J}_1\reductop\sigma}, M^{\mathcal{J}_1\reductop\sigma},
-A^{\mathcal{J}_1\reductop\sigma}) \to \mathcal{J}_2\reductop\sigma =
-(C^{\mathcal{J}_2\reductop\sigma}, K^{\mathcal{J}_2\reductop\sigma},
-P^{\mathcal{J}_2\reductop\sigma}, M^{\mathcal{J}_2\reductop\sigma},
-A^{\mathcal{J}_2\reductop\sigma})$ with $\zeta\reductop\sigma(c) =
-\zeta(\gamma(c))$.
-
-The $\sigma$-reducts of $\Tau$-instance nets and $\Tau$-instance net
-morphisms yield a functor ${-}\reductop\sigma : \mathrm{Inst}(\Tau)
-\to \mathrm{Inst}(\Gamma)$.
 
 \medskip\noindent\textbf{Multiplicity constraints.}
 The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
@@ -6843,44 +6692,6 @@ along a classifier net morphism $\sigma$, written as
 $\sigma(\varphi)$, is given by applying $\sigma$ to compositions,
 associations, and role names.
 
-Let $\sem{\ell}$ be the value of a $\mathit{NumLiteral}$ $\ell$.  For a
-subset $X$ of $\Pi y \in Y \,.\, P(y)$ and a map
-$d : \Pi y \in Y' \,.\, P(y)$ with $Y' \subseteq Y$, we write $X[d]$ for
-$\{ \{ y \mapsto p(y) \mid y \in Y \} \in X \mid d(y) = p(y),\ y \in Y' \}$.
-
-Let $\Sigma = ((C, {\leq}), K, P, M, A)$ be a classifier net.  The
-$\Sigma$-\emph{satisfaction relation}
-${-} \models_{\Sigma} {-} \subseteq |\mathrm{Inst}(\Sigma)| \times
-\mathit{Sen}(\Sigma)$
-is defined for each $\Sigma$-instance net
-$\mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}}, P^{\mathcal{I}},
-M^{\mathcal{I}}, A^{\mathcal{I}})$ as
-%
-\begin{gather*}
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c']
-\iff
-  \forall o \in C^{\mathcal{I}}(c) \,.\, \sem{\ell} \leq |M^{\mathcal{I}}(c\composition r : \tau[c'])(o)|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c'] \leq \ell
-\iff
-  \forall o \in C^{\mathcal{I}}(c) \,.\, M^{\mathcal{I}}(c\composition r : \tau[c'])(o) \leq \sem{\ell}
-\\
-  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} \tau[c']\mathsf{!}
-\iff
-  \forall o' \in C^{\mathcal{I}}(\tau[c']) \,.\, \exists o \in C^{\mathcal{I}}(c) \,.\, o' \in M^{\mathcal{I}}(c\composition r : \tau[c'])(o)
-\\
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}}
-\iff{}\\\qquad
-  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
-\\\qquad\qquad
-  \sem{\ell} \leq |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}} \leq \ell
-\iff{}\\\qquad
-  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
-\\\qquad\qquad
-  |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
-\end{gather*}
 
 \begin{example}
 For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
@@ -6914,84 +6725,79 @@ where we write ``$=$'' as an abbreviation for two inequations using
 ``$\leq$''.
 \end{example}
 
-\ednote{From the Jan-26 telcon: we could separate the basic
-  information of the class diagrams from the information whether the
-  types of properties and return parameters of operations are orderd
-  or not, unique or not etc.  Such a basic signature could be mapped
-  to a larger signature, where sets, bags etc. cannot be used as
-  classifiers}
 
-\smallskip\noindent \textit{Class nets --- Signatures.}  The
-signatures of the UML class diagram institution are given by
-\emph{class nets} $\Sigma = ((C, {\leq_C}), K, P, M, A)$ where $(C,
-{\leq_C})$ describes the \emph{class hierarchy} as a partial order
-which is closed w.r.t.\ to the built-in types $\mathsf{Boolean}$,
-$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$ and
-$\mathsf{String}$ (i.e.,
-$\{\mathsf{Boolean},\mathsf{UnlimitedNatural}, \mathsf{Integer}, \mathsf{Real},
-\mathsf{String}\} \subseteq C$), and ``downwards'' closed w.r.t.\ the unary
-built-in type formers $\mathsf{List}$ and $\mathsf{Set}$, and the
-binary built-in type former $\mathsf{Pair}$ (i.e., if
-$\mathsf{List}[c] \in C$ or $\mathsf{Set}[c] \in C$, then $c \in C$;
-and if $\mathsf{Pair}[c_1, c_2] \in C$, then $c_1, c_2 \in C$);\ednote
-{This needs to be changed: there is no recursive closure under these
-type constructors} 
-$K$ fixes the \emph{instance specifications declarations} (stemming
-from an object diagram) of the form
-$k : c$ with $c \in C$; $P$ contains the \emph{property declarations}
-of the form $c.p(x_1 : c_1, \dots, x_n : c_n) : c'$ (where we drop the
-parentheses if the property has no arguments); $M$ gives the
-\emph{composition declarations} of the form $c\composition r : c'$;
-and $A$ comprises the \emph{association declarations} of the form
-$a(r_1 : c_1, \dots, r_n : c_n)$.  We require several conditions in
-order to avoid super-types of built-in types and type formers (e.g.,
-forbidding $\mathsf{Boolean} \leq c$ for all $c \neq
-\mathsf{Boolean}$), overriding of declarations, and also that the
-composition declarations are cycle-free: if $c_1\composition r_1 :
-c_2, \dots, c_n\composition r_n : c_{n+1} \in M$, then $c_{n+1} \neq
-c_1$.\ednote{From the Jan-26 telcon: cycle check for compositions 
-could be defind using mereology. Or does this static check for
-signatures already suffice?}
+-------------------------------------------------------------------
 
 
-\begin{example}\label{ex:dsl-sig}%\pushQED{\qed}%
-The UML class diagram in Fig.~\ref{fig:bjoerners_dsl} leads
-to the following class net:
+
+A classifier interpretation $C^{\mathcal{I}}$ induces the following
+interpretation of classifier annotations:
 %
-\begin{gather*}
-  \text{Classes: } \{ \mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Unit}, \dots, \mathsf{Pair}[\mathsf{Unit}, \mathsf{Path}], \mathsf{List}[\mathsf{Pair}[\mathsf{Unit}, \mathsf{Path}]] \}
-\\
-  \text{Generalisations: } \mathsf{Point} \leq \mathsf{Unit}, \mathsf{Linear} \leq \mathsf{Unit}, \dots, \mathsf{Route} \leq \mathsf{List[Pair[Unit, Path]]}
-\\
-  \text{Properties: } \{\mathsf{Net}.\mathsf{ID} : \mathsf{UID}, \dots, \mathsf{Route}.\mathsf{isOpen}(\mathsf{r} : \mathsf{Route}):\mathsf{Boolean} \}
-\\
-  \text{Compositions: } \{ \mathsf{Station} \composition \mathsf{has} : \mathsf{Unit}, \mathsf{Station} \composition \mathsf{has}: \mathsf{Track}\}
-\\
-  \text{Associations: } \{ \mathsf{stateAt}(\mathsf{unit}: \mathsf{Unit}, \mathsf{state} : \mathsf{UnitState}), \dots \}%\qedhere
-\end{gather*}%\popQED
-\end{example}
+\begin{itemize}[label={--}, leftmargin=*]
+  \item
+$C^{\mathcal{I}}(\mathsf{OrderedSet}[c]) =
+\finorderedpowerset(C^{\mathcal{I}}(c))$
+(where $\finorderedpowerset(X)$ is the set of finite subsets of $X$ where
+to elements of $\finorderedpowerset(X)$ are equal if, and only if, they
+contain the same elements in the same order);
 
-A class net morphism $\sigma = (\gamma, \kappa, \pi,\allowbreak \mu,
-\alpha) : \Sigma = ((C, {\leq}_C), K, P, M, A) \to \Tau = ((D,
-{\leq}_D), L, Q,\allowbreak N, B)$ from $\Sigma$ to $\Tau$ consists of
-a monotone map $\gamma$ from $(C, {\leq_C})$ to $(D, {\leq_D})$ which
-is homomorphic w.r.t.\ the types $\mathsf{Boolean}$, $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$ and
-$\mathsf{String}$, and the type
-formers $\mathsf{List}$, $\mathsf{Set}$, and $\mathsf{Pair}$ (i.e.,
-$\gamma(\mathsf{Boolean}) = \mathsf{Boolean}$, etc.,
-$\gamma(\mathsf{List}[c]) = \mathsf{List}[\gamma(c)]$,
-$\gamma(\mathsf{Set}[c]) = \mathsf{Set}[\gamma(c)]$, and
-$\gamma(\mathsf{Pair}[c_1, c_2]) = \mathsf{Pair}[\gamma(c_1),
-\gamma(c_2)]$ for all $c, c_1, c_2 \in C$); maps $\kappa$, $\pi$, and
-$\mu$ between the instance specification, property, and composition
-declarations, such that classes are mapped along $\gamma$; and a map
-$\alpha$ from $A$ to $B$ for the association declarations such that
-$n$-ary association declarations are mapped to $n$-ary association
-declarations along $\gamma$, i.e., if $\alpha(a\{ r_1 : c_1, \dots,
-r_n : c_n \}) = b(s_1 : d_1, \dots, s_m : d_m) \in B$, then $m = n$
-and $d_i = \gamma(c_i)$ for all $1 \leq i \leq n$.
+  \item $C^{\mathcal{I}}(\mathsf{Set}[c]) =
+\finpowerset(C^{\mathcal{I}}(c))$ (where $\finpowerset(X)$ is the set of
+finite subsets of $X$);
 
-For a class net
+  \item $C^{\mathcal{I}}(\mathsf{Sequence}[c]) = (C^{\mathcal{I}}(c))^*$
+(where $X^*$ is the set of finite sequences over $X$);
+
+  \item
+$C^{\mathcal{I}}(\mathsf{Bag}[c]) = [C^{\mathcal{I}}(c)
+\to_{\mathrm{fin}} \mathbb{N}]$
+(where $[X \to_{\mathrm{fin}} \mathbb{N}]$ is the set of finite
+multisets over $X$, i.e., the maps $b : X \to \mathbb{N}$ where
+$b(x) > 0$ only for a finite subset of $X$).
+\end{itemize}
+
+\medskip\noindent\textbf{Instance nets.}
+A $\Sigma$-\emph{instance net} $\mathcal{I} = (C^{\mathcal{I}},
+K^{\mathcal{I}}, P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}})$
+over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given
+by
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a classifier interpretation $C^{\mathcal{I}}$;
+
+  \item an instance specification declaration interpretation
+$K^{\mathcal{I}}$ mapping each ${k : c} \in K$ to an element of
+$C^{\mathcal{I}}(c)$;
+
+  \item a property declaration interpretation $P^{\mathcal{I}}$
+mapping each ${c.p : \tau[c']} \in P$ to a map
+$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
+
+  \item a composition declaration interpretation $M^{\mathcal{I}}$
+mapping each ${c\composition r : \tau[c']} \in M$ to a map
+$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
+
+  \item an association declaration interpretation $A^{\mathcal{I}}$
+mapping each $a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \} \in A$
+to a subset of
+$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(\tau_i[c_i]) =
+\{ \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \mid o_i \in
+C^{\mathcal{I}}(c_i),\ 1 \leq i \leq n \}$,
+\end{itemize}
+%
+such that
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item each instance has at most one owner: if
+$o' \in M^{\mathcal{I}}(c_1\composition r_1 : \tau_1[c_1'])(o_1) \cap
+M^{\mathcal{I}}(c_2\composition r_2 : \tau_2[c_2'])(o_2)$,
+then $o_1 = o_2$.
+\end{itemize}
+
+
+---------------------------------------------------------------
+
+For a classifier net
 $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
 $CL(\Sigma)$ consisting of:
 %
@@ -7019,8 +6825,11 @@ enumerations are specializable, but this is type-unsafe, so maybe omit it}
   $\CL(\mathsf{Set}[c]) = ???$\ednote{UML has sets, but fUML appaerantly not. 
      Do we want to provide our own specification of sets in Common Logic?},
 \item 
-  $\CL(\mathsf{Pair}[c_1,c_2]) = ???$\ednote{UML has pairs, but fUML appaerantly not. 
-     Do we want to provide our own specification of pairs in Common Logic?},
+  $\CL(\mathsf{OrderedSet}[c]) = ???$\ednote{UML has ordered sets, but fUML appaerantly not. 
+     Do we want to provide our own specification of ordered sets in Common Logic?},
+\item 
+  $\CL(\mathsf{Bag}[c]) = ???$\ednote{UML has bags, but fUML appaerantly not. 
+     Do we want to provide our own specification of bags in Common Logic?},
  
 \end{itemize}
 \item for each relation $c_1
@@ -7031,7 +6840,7 @@ enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
   \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
   \item $\CL$ maps each property declaration $c.p(x_1 : c_1, \dots, x_n : c_n)
-: c' \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
+: \tau[c'] \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
 and functionality:
 \begin{itemize}
 \item
@@ -7040,22 +6849,35 @@ and functionality:
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
 for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c'$ $y$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
+\qqquad (if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)}\\
+\qqquad \texttt{(exists (y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y)))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
-\qquad \texttt{(if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ z)) (= y z))) }
+\qqquad \texttt{(if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
-  \item \CL maps each composition declaration ${c\composition r : c'} \in M$ to
-a predicate $\CL(r)$ and an axiom\\
-\texttt{(forall (x y) (if (r x y) (and (c x) (c' y))))}
+  \item \CL maps each composition declaration ${c\composition r : \tau[c']} \in M$ to
+a predicate $\CL(r)$ and axioms\\
+\texttt{(forall (x) (if (c x) (exists (y) (and (r x y) ($\tau$[c'] y)))))}\\
+\texttt{(forall (x y) (if (r x y) (and (c x) ($\tau$[c'] y))))}\\
+\texttt{(forall (x y z) (if (and (r x y) (r x z)) (= y z)))}
   \item 
 for any pair of composition declarations $c_1\composition r_1 : c_1'$
 and $c_2\composition r_2 : c_2'$, an axiom stating ``each instance has
 at most one owner'':\\
-\texttt{(forall ($x_1$ $x_2$ y) (if (and ($r_1$ $x_1$ y) ($r_2$ $x_2$ y)) (= $x_1$ $x_2$)))}
-  \item \CL maps each association declaration $a(r_1 : c_1, \dots, r_n : c_n)
-\in A$ to a predicate $\CL(a)$ and an axiom\\
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}
+\texttt{(forall ($x_1$ $x_2$ $y_1$ $y_2$) (if (and ($r_1$ $x_1$ $y_1$) ($r_2$ $x_2$ $y_2$))}\\
+\qqquad\texttt{(exists (z) (and (member z $x_1$) (member z $x_2$)))))}
+  \item \CL maps each association declaration $a(r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n])\in A$ to a predicate $\CL(a)$ and an axiom\\
+\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}\footnote{
+Ignoring the annotations $\tau_i$ in the interpretation of an
+association is intentional, see the semantics of associations in the UML
+Superstructure Specification 2.4.1, p.~37.}
+\ednote{what does the footnote exactly mean?}
 \end{itemize}
 
 
@@ -7216,6 +7038,46 @@ $\CL(\ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\maths
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer.
+
+------------------------------------------------------------
+Let $\sem{\ell}$ be the value of a $\mathit{NumLiteral}$ $\ell$.  For a
+subset $X$ of $\Pi y \in Y \,.\, P(y)$ and a map
+$d : \Pi y \in Y' \,.\, P(y)$ with $Y' \subseteq Y$, we write $X[d]$ for
+$\{ \{ y \mapsto p(y) \mid y \in Y \} \in X \mid d(y) = p(y),\ y \in Y' \}$.
+
+Let $\Sigma = ((C, {\leq}), K, P, M, A)$ be a classifier net.  The
+$\Sigma$-\emph{satisfaction relation}
+${-} \models_{\Sigma} {-} \subseteq |\mathrm{Inst}(\Sigma)| \times
+\mathit{Sen}(\Sigma)$
+is defined for each $\Sigma$-instance net
+$\mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}}, P^{\mathcal{I}},
+M^{\mathcal{I}}, A^{\mathcal{I}})$ as
+%
+\begin{gather*}
+  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c']
+\iff
+  \forall o \in C^{\mathcal{I}}(c) \,.\, \sem{\ell} \leq |M^{\mathcal{I}}(c\composition r : \tau[c'])(o)|
+\\
+  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c'] \leq \ell
+\iff
+  \forall o \in C^{\mathcal{I}}(c) \,.\, M^{\mathcal{I}}(c\composition r : \tau[c'])(o) \leq \sem{\ell}
+\\
+  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} \tau[c']\mathsf{!}
+\iff
+  \forall o' \in C^{\mathcal{I}}(\tau[c']) \,.\, \exists o \in C^{\mathcal{I}}(c) \,.\, o' \in M^{\mathcal{I}}(c\composition r : \tau[c'])(o)
+\\
+  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}}
+\iff{}\\\qquad
+  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\\\qquad\qquad
+  \sem{\ell} \leq |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]|
+\\
+  \mathcal{I} \models_{\Sigma} \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}} \leq \ell
+\iff{}\\\qquad
+  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\\\qquad\qquad
+  |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
+\end{gather*}
 
 
 \normannex{Conformance of CASL with DOL}\label{a:casl}
