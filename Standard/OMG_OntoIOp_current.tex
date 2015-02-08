@@ -6506,9 +6506,8 @@ $c\composition r : \tau[c']$ with $c, c' \in C$, $\tau$ a classifier
 annotation, and $r$ a \emph{composition role name};
 
   \item and a set $A$ of \emph{association declarations} of the form
-$a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}$ with $n \geq 2$,
-$c_1, \dots, c_n \in C$, $\tau_1, \ldots, \tau_n$ classifier
-annotations, $a$ an \emph{association name}, and $r_1, \dots, r_n$
+$a\{ r_1 : c_1, \dots, r_n : c_n \}$ with $n \geq 2$,
+$c_1, \dots, c_n \in C$, $a$ an \emph{association name}, and $r_1, \dots, r_n$
 \emph{association role names},
 \end{itemize}
 %
@@ -6536,8 +6535,8 @@ $p_1 \neq r_2$; and if $c_1\composition r_1 : \tau_1[c_1']$ is a
 composition declaration in $M$ and $c_2.p_2 : \tau_2[c_2']$ is a
 property declaration in $P$ and $c_1 \leq_C c_2$, then $r_1 \neq p_2$;
 
-  \item association role names are unique: if $a\{ r_1 : \tau_1[c_1], \dots,
-r_n : \tau_n[c_n] \}$ is an association declaration in $A$ and $1 \leq i \neq
+  \item association role names are unique: if $a\{ r_1 : c_1, \dots,
+r_n : c_n \}$ is an association declaration in $A$ and $1 \leq i \neq
 j \leq n$, then $r_i \neq r_j$;
 
   \item composition declarations are cycle-free: if
@@ -6757,9 +6756,9 @@ mapping each ${c\composition r : \tau[c']} \in M$ to a map
 $C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
 
   \item an association declaration interpretation $A^{\mathcal{I}}$
-mapping each $a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \} \in A$
+mapping each $a\{ r_1 : c_1, \dots, r_n : c_n \} \in A$
 to a subset of
-$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(\tau_i[c_i]) =
+$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(c_i) =
 \{ \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \mid o_i \in
 C^{\mathcal{I}}(c_i),\ 1 \leq i \leq n \}$,
 \end{itemize}
@@ -6852,12 +6851,11 @@ and $c_2\composition r_2 : c_2'$, an axiom stating ``each instance has
 at most one owner'':\\
 \texttt{(forall ($x_1$ $x_2$ $y_1$ $y_2$) (if (and ($r_1$ $x_1$ $y_1$) ($r_2$ $x_2$ $y_2$))}\\
 \qqquad\texttt{(exists (z) (and (member z $x_1$) (member z $x_2$)))))}
-  \item \CL maps each association declaration $a(r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n])\in A$ to a predicate $\CL(a)$ and an axiom\\
+  \item \CL maps each association declaration $a(r_1 : c_1, \dots, r_n : c_n)\in A$ to a predicate $\CL(a)$ and an axiom\\
 \texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}\footnote{
 Ignoring the annotations $\tau_i$ in the interpretation of an
 association is intentional, see the semantics of associations in the UML
 Superstructure Specification 2.4.1, p.~37.}
-\ednote{what does the footnote exactly mean?}
 \end{itemize}
 
 
