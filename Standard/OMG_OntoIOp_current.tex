@@ -90,6 +90,8 @@ draft%
 \usepackage{standalone}
 \usepackage[final]{graphicx}
 \usepackage{tikz}
+\usetikzlibrary{matrix,shapes,arrows,calc}
+\usepackage{tikz-uml}
 \input{illustrations/DOL-tikz-preamble}
 
 %% Content
@@ -496,11 +498,14 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\aggregation}{\raisebox{0.2pt}{\begin{sideways}\fontsize{6pt}{6pt}\selectfont$\lozenge$\end{sideways}}}
 \newcommand{\composition}{\raisebox{0.2pt}{\begin{sideways}\fontsize{6pt}{6pt}\selectfont$\blacklozenge$\end{sideways}}}
 \newcommand{\Tau}{\mathrm{T}}
-\def\ZZ{\mathbb{Z}}
-\def\sem#1{\mathopen\llbracket#1\mathclose\rrbracket}
+\newcommand{\NZ}{\mathbb{Z}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\sem}[1]{\mathopen\llbracket#1\mathclose\rrbracket}
+
+\allowdisplaybreaks
+
 
 \begin{document}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  FRONTMATTER:
@@ -6439,7 +6444,7 @@ We additionally need to axiomatize a number of predicates in Common Logic
 Using this infrastructure, we obtain an institution for UML class
 diagrams as follows:\ednote{AK: Added the following up to the next ed-note.}
 
-\paragraph{Classifier hierarchies.}
+\medskip\noindent\textbf{Classifier hierarchies.}
 A \emph{classifier hierarchy} $(C, {\leq_C})$ is given by a partial
 order where the set $C$ contains the \emph{classifier names}, which are
 closed w.r.t.\ the \emph{built-in types} $\mathsf{Boolean}$,
@@ -6481,7 +6486,7 @@ $\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
 The default is ``not ordered'' and ``unique'' (UML Superstructure
 Specification 2.4.1, p.~96).
 
-\paragraph{Classifier interpretations.}
+\medskip\noindent\textbf{Classifier interpretations.}
 A \emph{classifier interpretation} $C^\mathcal{I}$ over a classifier
 hierarchy $(C, {\leq_C})$ maps each $c \in C$ to a set such that
 $C^{\mathcal{I}}(c_1) \subseteq C^{\mathcal{I}}(c_2)$ if
@@ -6530,7 +6535,7 @@ $\Pi \tau \in \{ \mathsf{OrderedSet}, \mathsf{Set},\allowbreak
 C^{\mathcal{I}}(\tau[c]) \to C^{\mathcal{J}}(\tau[c])$
 as usual; we write $\zeta(\tau[c])$ for $\zeta(\tau)(c)$.
 
-\paragraph{Classifier nets.}
+\medskip\noindent\textbf{Classifier nets.}
 A \emph{classifier net} $\Sigma = ((C, {\leq_C}), K, P, M, A)$
 comprises
 %
@@ -6621,8 +6626,40 @@ Classifier nets as objects and classifier net morphisms as morphisms
 form the category of \emph{classifier nets}, denoted by
 $\mathrm{Cl}$.
 
-\paragraph{Example.}
-For the example we have
+\begin{figure}[!tH]
+\centering
+\begin{tikzpicture}[transform shape,scale=.7]
+\def\overallfont{\sffamily\fontsize{10pt}{10pt}\selectfont}
+\tikzset{every node/.style={font=\overallfont}}
+%\tikzset{tikzuml class style/.style={inner xsep=32pt}}
+\tikzumlset{font=\overallfont}
+\umlemptyclass{Net}
+\umlemptyclass[x=-2, y=-3]{Station}
+\umlclass[x=2, y=-3]{Line}{- linear : Boolean}{}
+\umlcompo[mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
+\umlcompo[mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
+\umlemptyclass[x=-4, y=-6]{Unit}
+\umlclass[x=0, y=-6]{Track}{- linear : Boolean}{}
+\umlcompo[mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
+\umlcompo[mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
+\umlemptyclass[x=-8, y=-6]{Connector}
+\umlassoc[name=ConnectorUnit, mult1=1..4, pos1=0, align1=left, mult2=1, pos2=1, align2=right]{Connector}{Unit}
+\draw (ConnectorUnit-middle) node[above] {has};
+\umlemptyclass[x=-6, y=-9]{Point}
+\umlemptyclass[x=-2, y=-9]{Linear}
+\umlinherit[geometry=|-|]{Point}{Unit}
+\umlinherit[geometry=|-|]{Linear}{Unit}
+\umlassoc[name=LinearTrack, mult1=1..*, pos1=0, align1=left, anchor1=20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Track}
+\draw (LinearTrack-2) node[right] {has};
+\umlassoc[name=LinearLine, mult1=1..*, pos1=0, align1=left, anchor1=-20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Line}
+\draw (LinearLine-2) node[right] {has};
+\end{tikzpicture}
+\caption{Sample UML class diagram.}
+\label{fig:bjoerners_dsl}
+\end{figure}
+%
+\begin{example}
+For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
 %
 \begin{gather*}
   \text{Classifiers: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear}
@@ -6641,8 +6678,9 @@ For the example we have
 \\
   \phantom{\text{Associations: }}\mathsf{has\{ connector : Set[Connector], unit : Set[Unit] \}}
 \end{gather*}
+\end{example}
 
-\paragraph{Instance nets.}
+\medskip\noindent\textbf{Instance nets.}
 A $\Sigma$-\emph{instance net} $\mathcal{I} = (C^{\mathcal{I}},
 K^{\mathcal{I}}, P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}})$
 over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given
@@ -6711,7 +6749,7 @@ $o \in C^{\mathcal{I}}(c)$;
   \item
 $A^{\mathcal{J}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}) =
 \{ \{ r_1 \mapsto \zeta(c_1)(o_1), \dots, r_n \mapsto \zeta(c_n)(o_n) \}
-\mid \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \in
+\mid \{ r_1 \mapsto o_1,\allowbreak \dots,\allowbreak r_n \mapsto o_n \} \in
 A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, \tau_n[r_n] \}) \}$.
 \end{itemize}
 
@@ -6719,10 +6757,10 @@ $\Sigma$-instance nets as objects and $\Sigma$-instance net morphisms
 as morphisms form the category of $\Sigma$-\emph{instance nets},
 denoted by $\mathrm{Inst}(\Sigma)$.
 
-\paragraph{Instance net reducts.}
-Let $\sigma = (\gamma, \kappa, \pi, \mu, \alpha) : \Sigma = ((C,
-{\leq}_C), K, P, M, A) \to \Tau = ((D, {\leq}_D), L, Q,\allowbreak N,
-B)$ be a classifier net morphism.
+\medskip\noindent\textbf{Instance net reducts.} %
+Let $\sigma = (\gamma, \kappa, \pi, \mu, \alpha) : \Sigma = ((C, {\leq}_C),
+K, P, M, A) \to \Tau = ((D, {\leq}_D),\allowbreak L,\allowbreak
+Q,\allowbreak N, B)$ be a classifier net morphism.
 
 Let $\mathcal{J} = (D^{\mathcal{J}}, L^{\mathcal{J}}, Q^{\mathcal{J}},
 N^{\mathcal{J}}, B^{\mathcal{J}})$ be a $\Tau$-instance net.  The
@@ -6767,23 +6805,20 @@ The $\sigma$-reducts of $\Tau$-instance nets and $\Tau$-instance net
 morphisms yield a functor ${-}\reductop\sigma : \mathrm{Inst}(\Tau)
 \to \mathrm{Inst}(\Gamma)$.
 
-\paragraph{Multiplicity constraints.}
+\medskip\noindent\textbf{Multiplicity constraints.}
 The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
 the following grammar:
 %
 \begin{equation*}
 \begin{array}{@{}r@{\ }r@{\ }l@{}}
-  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\\
-               &   | & \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}\\
-               & ::= & \mathit{Composition}\ \mathsf{!}
-\\[1ex]
-  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Composition}\\
-                   &   | & \mathit{\#}\ \mathit{Association}\ \mathsf{[}\ \mathit{Role}\ (\mathsf{,}\ \mathit{Role})^*\ \mathsf{]}
-\\[1ex]
+  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\ |\ \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}\ |\ \mathit{Composition}\ \mathsf{!}
+\\
+  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Composition}\ |\ \mathit{\#}\ \mathit{Association}\ \mathsf{[}\ \mathit{Role}\ (\mathsf{,}\ \mathit{Role})^*\ \mathsf{]}
+\\
   \mathit{Composition} & ::= & \mathit{Classifier}\composition\mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ]
-\\[1ex]
+\\
   \mathit{Association} & ::= & \mathit{Name}\{ \mathit{Role} : \mathit{Annot}\ [\ \mathit{Classifier}\ ](\mathsf{,}\ \mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ])^* \}
-\\[1ex]
+\\
   \mathit{Classifier} & ::= & \mathit{Name}
 \\
   \mathit{Role} & ::= & \mathit{Name}
@@ -6835,18 +6870,20 @@ M^{\mathcal{I}}, A^{\mathcal{I}})$ as
   \forall o' \in C^{\mathcal{I}}(\tau[c']) \,.\, \exists o \in C^{\mathcal{I}}(c) \,.\, o' \in M^{\mathcal{I}}(c\composition r : \tau[c'])(o)
 \\
   \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}}
-\iff \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\iff{}\\\qquad
+  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
 \\\qquad\qquad
   \sem{\ell} \leq |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]|
 \\
   \mathcal{I} \models_{\Sigma} \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}} \leq \ell
-\iff \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
+\iff{}\\\qquad
+  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
 \\\qquad\qquad
   |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
 \end{gather*}
 
-\paragraph{Example.}
-For the example we have
+\begin{example}
+For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
 \begin{gather*}
   \mathsf{2 \leq \#Net\composition station : Set[Station]}
 \\
@@ -6875,6 +6912,7 @@ For the example we have
 %
 where we write ``$=$'' as an abbreviation for two inequations using
 ``$\leq$''.
+\end{example}
 
 \ednote{From the Jan-26 telcon: we could separate the basic
   information of the class diagrams from the information whether the
@@ -6917,13 +6955,6 @@ signatures already suffice?}
 
 
 \begin{example}\label{ex:dsl-sig}%\pushQED{\qed}%
-\begin{figure}[!tH]
-\centering
-%\includegraphics[width=\linewidth]{illustrations/new_uml.png}\\
-\caption{Sample UML class diagram.}
-\label{fig:bjoerners_dsl}
-\end{figure}
-
 The UML class diagram in Fig.~\ref{fig:bjoerners_dsl} leads
 to the following class net:
 %
