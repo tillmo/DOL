@@ -4800,7 +4800,6 @@ representation of the graph of the network but has the drawback that
 one cannot operate on the subgraph of a mapping, e.g. eliminating just a 
 node of it.
 
-
 %We  assume a \emph{language-specific semantics} of basic
 %OMS, inherited from the OMS language.  
 %%For a basic OMS in 
@@ -5132,78 +5131,172 @@ The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is g
 \end{itemize}
 
 %Reduction
-$$sem^M(\Gamma, \syntax{reduction, OMS , Reduction}) = (J,\Sigma', \cM')$$
+
+The semantics of a reduction
+$O' = \syntax{reduction, OMS , Reduction}$
+is
+\begin{itemize}
+
+  \item $\Inst(O') = J$, when $\Inst(\syntax{Reduction})
+  = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$
+  \item $\Sig(O') = \Sigma'$, when
+   $\Mor(\syntax{Reduction}) = \sigma:\Sigma'\to
+    \Phi(\Sig(\syntax{OMS}))$
+  \item $\Mod(O') = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \Mod(\syntax{OMS})\}$
+  \item $\Th(O') = \bot$
+
+\end{itemize}
+
+%Module Extract 
+
+The semantics of $O' = \syntax{'module extract', OMS, 
+'keep-signature', InterfaceSignature}$ is
+\begin{itemize}
+  \item $\Inst(O') = \Inst(\syntax{OMS})$
+  \item $\Sig(O') = \Sigma \cup \Sigma'$, where
+          $\Sig(\syntax{InterfaceSignature}) = \Sigma$
+  \item $\Th(O') = \Delta'$
+  \item $\Mod(O')$ is the class of $\Delta'$-models
+\end{itemize}
 where
-$(I,\Sigma,\cM)=sem^M(\Gamma,\syntax{OMS})$,
-$sem(\Gamma,  \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta):I\to J, \sigma: \Sigma'\to\Phi(\Sigma))$
-and $\cM' = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \cM\}$. 
+$\langle\Sigma',\Delta'\rangle$ is the smallest depleting
+$\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
+smallest\footnote{If the smallest such sub-theory does not exist, the
+  semantics is undefined. In \cite{DBLP:journals/ai/KontchakovWZ10},
+  it is shown that it does exist in usual institutions.}  sub-theory
+$\langle\Sigma',\Delta'\rangle$ of $(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$  
+such that the following model-theoretic inseparability
+holds
+  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma}  \emptyset.$$
+This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
+cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma$ concerns) and formally that 
+$$\begin{array}{ll}
+&\{M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
+= &\{ M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
+\end{array}$$
+%which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
+%of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
+%satisfying $\Th(O) \setminus \Delta'$.
 
-The theory-level semantics of reductions is not defined.
+\noindent
+Dually, the semantics of 
+\syntax{'module extract', OMS, 
+'remove-signature', InterfaceSignature}
+is equivalent to the semantics of
+\syntax{'module extract', OMS, 
+'keep-signature',} $\Sig(\syntax{OMS})\setminus 
+\Sig(\syntax{InterfaceSignature})$ 
+\footnote{Note that the resulting module
+    can still contain symbols from $\Sigma$, because the resulting
+    signature may be enlarged.}.
 
-%Module Extract
-$$sem^T(\Gamma, \Sigma , \syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta')$$
-where \syntax{OMS} must be a flattenable OMS, 
-$sem^T(\Gamma,  \syntax{OMS}) = (I, \Sigma, \Delta)$ and \\
-$sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})=(I, \Sigma', \Delta').$  
-Model level semantics is given by the class of models of $(I, \Sigma', \Delta')$.
-%
-%\semdom{sem^M(\syntax{'module extract', OMS, Extraction}) = (I, \Sigma', \Delta)}
+\ednote{Update cf. last paper}
 
 %Approximation
-\semdom{sem^M(\syntax{'approximation', OMS , Approximation} =   TODO }
+The semantics of $O = \syntax{'approximation', OMS, 
+'keep-signature', InterfaceSignature, LogicRef }$ is
+\begin{itemize}
+  \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \Inst(\syntax{LogicRef})$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
+  \item $\Sig(O) =
+   \Phi(\Sig(\syntax{InterfaceSignature}))$
+  \item $\Th(O) = \alpha^{-1}_{\Sig(\syntax{OMS})}(\Th(\syntax{OMS})^\bullet)\cap\Sen^I(\Sig(\syntax{OMS}))$
+  \footnote{In practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(\syntax{OMS})$ that can be expressed in the smaller signature and logic 
+  \item $\Mod(O)$ is the class of $\Th(O)$-models
+\end{itemize}
+
+%\smallskip
+%\noindent
+The semantics of 
+\syntax{'approximation', OMS, 
+'remove-signature', InterfaceSignature, LogicRef }
+is the same as the semantics of
+\syntax{'approximation', OMS, 
+'keep-signature', $\Sig(OMS)\setminus \Sig(\syntax{InterfaceSignature})$ , LogicRef }.
+
 
 %Filtering
 
-$$sem^T(\Gamma, \syntax{'filtering' , OMS,  Filtering}) = (I,\Sigma', \Delta') $$
-where \syntax{OMS} must be a flattenable OMS,
-$sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \Delta)$
-and\\
-$sem^T(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (I,\Sigma', \Delta')$.
-Model-level semantics is given by the class of models of $(I,\Sigma',\Delta')$.
+The semantics of $O =$ 
+\syntax{'filtering', OMS, 'select', BasicOMS}
+is
+defined only if  $\Sig(\syntax{BasicOMS})\subseteq\Sig(\syntax{OMS})$ and $\Th(\syntax{BasicOMS})\subseteq\Th(\syntax{OMS})$.
+In that case, we denote
+$\Sigma = \Sig(\syntax{BasicOMS})$ and
+$\Delta = \Th(\syntax{BasicOMS})$ and 
+the semantics of $O$ is given by
+\begin{itemize}
+  \item $\Inst(O) = \Inst(\syntax{OMS})$
+  \item $\Sig(O) = \Sigma'$ where $\Sigma'$ is the smallest signature
+with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$\ednote{the prime was missing but I think it must be there}\footnote
+{If this smallest signature does not exist, the semantics is undefined.}
+  \item $\Th(O) = (\Th(\syntax{OMS})\cap\Sen(\Sig(O)))\cup\Delta$
+  \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+\end{itemize}
+
+\noindent
+If $\Sigma = \Sig(\syntax{BasicOMS})$ and
+$\Delta = \Th(\syntax{BasicOMS})$,
+the semantics of $O =$
+\syntax{'filtering', OMS, 'reject', BasicOMS} is
+\begin{itemize}
+  \item $\Inst(O) = \Inst(\syntax{OMS})$
+  \item $\Sig(O) = \Sign(\syntax{OMS})\setminus \Sigma$ 
+  \item $\Th(O) = \Th(\syntax{OMS})\cap\Sen(\Sig(O))\setminus\Delta$
+  \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+\end{itemize}
 
 %Union
-$$sem^T(\Gamma, \syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \Delta)$$
-where 
- $sem^T(\Gamma, \syntax{OMS}_1) = (\cI_1, \Sigma_1, \Delta_1)$,
- $sem^T(\Gamma, \syntax{OMS}_2) = (\cI_2, \Sigma_2, \Delta_2)$,\\
- $(\cI, \rho_1=(\Phi^1,\alpha^1,\beta^1), \rho_2=(\Phi^2,\alpha^2,\beta^2)) = \cI_1 \bigcup \cI_2$,\\
-$\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
-$\Delta = \alpha^1(\Delta_1)\cup\alpha^2(\Delta_2)$.
- This is only defined if both \syntax{OMS}$_1$ and \syntax{OMS}$_2$
-are flattenable. If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\Delta)$ must be a conservative extension
-of the appropriate strength of $(\cI_1, \Sigma_1, \Delta_1)$.
 
-$$sem^M(\Gamma, \syntax{union , \syntax{OMS}$_1$ , ConsStrength , \syntax{OMS}$_2$)} = (\cI, \Sigma, \cM)$$
-where 
- $sem^M(\Gamma, \syntax{OMS}_1) = (\cI_1, \Sigma_1, \cM_1)$,
- $sem^M(\Gamma, \syntax{OMS}_2) = (\cI_2, \Sigma_2, \cM_2)$,\\
-$(\cI, \rho_1=(\Phi^1,\alpha^1,\beta^1), \rho_2=(\Phi^2,\alpha^2,\beta^2)) = \cI_1 \bigcup \cI_2$,\\
-$\Sigma = \Phi^1(\Sigma_1) \cup \Phi^2(\Sigma_2)$ and
-$\cM = \{ M \in \Mod^I(\Sigma) \mid \beta^i(M\forget{\Phi^i(\Sigma_i)}) \in \cM_i, i=1,2  \}$.
-If \syntax{ConsStrength} is present, then $(\cI,\Sigma,\cM)$ must be a conservative extension
-of the appropriate strength of $(\cI_1, \Sigma_1, \cM_1)$.
+The semantics of $O =$
+\syntax{'union', OMS$_1$, ConsStrength, OMS$_2$} is
+\begin{itemize}
+  \item $\Inst(O) = I$ where
+    $\Inst(\syntax{OMS}_1) \bigcup \Inst(\syntax{OMS}_2) =(I, (\Phi_1, \alpha_1,\beta_1) : \Inst(\syntax{OMS}_1) \rightarrow I, 
+                    (\Phi_2, \alpha_2,\beta_2) : \Inst(\syntax{OMS}_2) \rightarrow I)$
+  \item $\Sig(O) = \Phi_1(\Sig(\syntax{OMS}_1)) \cup \Phi_2(\Sig(\syntax{OMS}_2))$
+  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(\syntax{OMS}_i))}) \in \Mod(\syntax{OMS}_i), \text{ for } i=1,2 \}$
+  \item $\Th(O) = \alpha_1(\Th(\syntax{OMS}_1)) \cup \alpha_2(\Th(\syntax{OMS}_2))$.
+\end{itemize}
 
+If \syntax{ConsStrength} is present, then $O$ must be a conservative extension
+of the appropriate strength of \syntax{OMS}$_1$.
 
 %Extension
 
- $$sem^T(\Gamma, \syntax{extension , OMS , ExtensionOMS}) = (I, \Sigma', \Delta')$$
+The semantics of $O=$
+\syntax{extension , OMS , ExtensionOMS} is
 
-where
-  $sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \Delta)$,
-  $sem^T(\Gamma, (\Sigma, \Delta), \syntax{ExtensionOMS}) = (I,  \Sigma',\Delta')$.
+\begin{itemize}
+  \item $\Inst(O) = \Inst(O_1) = I$ (which means that
+  the instutions of \syntax{OMS} and 
+  \syntax{ExtensionOMS} must be the same)
+  \item $\Sig(O) = \Sig(O_1) \cup \Sigma$
+  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(O_1)} \in \Mod(O_1)
+  \text{ and }
+  M \forget{\Sigma} \in \cM\}$
+  \item $\Th(O) = \Th(O_1) \cup \Delta$
+\end{itemize}
+\noindent where $(I, \Sigma,\cM, \Delta) = 
+sem(\Gamma, (\Inst(O_1), \Sig(O_1), \Mod(O_1), \Th(O_1)), \syntax{ExtensionOMS})$. 
 
- $$sem^M(\Gamma, \syntax{extension , OMS , ExtensionOMS)}) = (I, \Sigma', \cM')$$
-
-where
-  $sem^T(\Gamma, \syntax{OMS}) = (I, \Sigma, \cM)$,
-  $sem^T(\Gamma, (\Sigma, \cM), \syntax{ExtensionOMS}) = (I,  \Sigma',\cM')$.
+If \syntax{ExtConsStrength} is a \syntax{ConsStrength}, then $O$ must be a conservative extension
+of the appropriate strength of \syntax{OMS}$_1$.
+If \syntax{ExtConsStrength} is \syntax{'\%implied'}, then
+we must have that $M\models \delta$
+for each $M\in \Mod(\syntax{OMS})$ and each
+$\delta \in \Delta$.
 
 %Qualification
  
-$$sem(\Gamma, \syntax{qual-oms, Qualification, OMS}) = sem(\Gamma', \syntax{OMS})$$
-
-where $sem(\Gamma, \syntax{Qualification}) = \Gamma'$. 
-\todonote{This means that $L$ is not changed after the analysis of this OMS. Is this obvious?}
+The semantics of \syntax{qual-oms, Qualification, OMS}
+in the context $\Gamma$ is the same as the
+semantics of \syntax{OMS} in the context
+$\Gamma'$ given by the semantics of
+\syntax{Qualification} in the context $\Gamma$.
+The change of context is local to \syntax{OMS}, which
+means that if the qualification appears as a term in 
+a larger expression, after its analysis the context will
+be $\Gamma$ and not $\Gamma'$.
 
 %Bridge
 
@@ -5225,21 +5318,15 @@ $sem^M(\Gamma, (\cI_2, \Phi(\Sigma_1), \cM'_1), \syntax{OMS}_2) = (\cI,\Sigma,\c
 
 
 %Combination
-$$sem^T(\Gamma, \syntax{combination, Network})= (\cI,\Sigma,\Delta)$$
 
-where 
-$sem^T(\Gamma,\syntax{Network}) = G$ and
-$(\Sigma, \Delta) = colimit(G)$.
-This is defined only if all ontologies in \syntax{Network} are flattenable. 
-
-$$sem^M(\Gamma, \syntax{combination, Network})= (\cI,\Sigma,\cM)$$
-
-where 
-$sem^M(\Gamma, \syntax{Network}) = G$,
-$\Sigma$ is the colimit of $G$ with labels restricted to signatures 
-and \\
-$\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{ is a family of models compatible with } G \}$. 
-
+The semantics of 
+$O=$ \syntax{combination, Network} is
+\begin{itemize}
+  \item $\Inst(O) = I$,
+  \item $\Sig(O) = \Sigma$, where $(I,\Sigma,  \{\mu_i\}_{i\in |G|})$ is the colimit of the graph $G$ given by the semantics of \syntax{Network},
+  \item $\Th(O) = \cup_{i\in |G|} \mu_i(\Th(O_i))$, where $O_i$ is the OMS label of the node $i$ in $G$
+  \item $\Mod(O) =  \{ M\in\Mod(\Sigma) \mid M\forget{\mu_i} \in \Mod(O_i), i\in |G| \}$, where $O_i$ is the OMS label of the node $i$ in $G$.
+\end{itemize}
 
 %Application
 \semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
@@ -5251,11 +5338,14 @@ $\cM =  \{ \oplus \{M_i\}_{i \in Nodes(G)} \mid  \{M_i\}_{i \in Nodes(G)} \text{
 
 \semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
 
-$$sem(\Gamma, \Sigma, \syntax{renaming, LogicTranslation, SymbolMapItems}) = ((\Phi, \alpha,\beta), \sigma)$$
+The semantics of a translation
+$O=$ \syntax{renaming, LogicTranslation, SymbolMapItems}
+is given by
+\begin{itemize}
+ \item $\Inst(O) = sem(LogicTranslation) : \Gamma.logic \to logic'$
+ \item $\Mor(O) = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolMapItems})$
+\end{itemize}
 
-where $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)$ and\\
-$sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolMapItems}) = \sigma$,
-where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.
 If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5269,20 +5359,28 @@ named by \syntax{LogicTranslation} in the heterogeneous logical environment.
 
 \semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta), \sigma)}
 
-$$sem(\Gamma, \Sigma, \syntax{hidden, LogicReduction, SymbolItems}) = ((\Phi,\alpha,\beta),\sigma)$$
+The semantics of a reduction
+$O=$ \syntax{hidden, LogicReduction, SymbolItems}
+is given by
+\begin{itemize}
+ \item $\Inst(O) = sem(LogicReduction) : \Gamma.logic \to logic'$
+ \item $\Mor(O) = \iota:\sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolItems}) \to
+ \Phi(\Sigma)$, where $\iota$ is the inclusion morphism.
+\end{itemize}
 
-where 
-$sem(\Gamma,  \syntax{LogicReduction}) = (\Phi, \alpha,\beta)$,
-$sem(\Gamma, \Phi(\Sigma), \syntax{SymbolItems}) = \Sigma'$ and
-$\sigma:\Sigma'\to\Phi(\Sigma)$ is the inclusion morphism. If \syntax{LogicReduction} is missing, 
+If \syntax{LogicReduction} is missing, 
 it defaults to the identity morphism of the current logic of $\Gamma$.
 
-$$sem(\Gamma, L, \Sigma, \syntax{revealed, SymbolItems}) = (id_L,\sigma)$$
-where 
-$sem(\Gamma, L, \Sigma, \syntax{SymbolItems}) = \Sigma'$,
-$id_L$ is the identity morphism on the current logic of $\Gamma$,
-and $\sigma:\Sigma'\to\Sigma$ is the inclusion.
 
+The semantics of a reduction
+$O=$ \syntax{revealed, SymbolItems}
+is 
+ \begin{itemize}
+  \item $\Inst(O)$ is the identity morphism on the current logic of $\Gamma$
+  \item $\Mor(O)$ is the inclusion of
+  $sem(\Gamma, \Sigma, \syntax{SymbolItems})$ in
+   $\Sigma$.
+ \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
