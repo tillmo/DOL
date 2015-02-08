@@ -38,8 +38,8 @@ draft%
 %final,
 ]{scrreprt}
 
+%\usepackage[show]{ed}
 \usepackage[show]{ed}
-%\usepackage[hide]{ed}
 
 %color highlight, for editing
 \usepackage{color}
@@ -308,8 +308,11 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\ModFunctor}{\mathbf{Mod}}
 \newcommand{\SenFunctor}{\mathbf{Sen}}
 \newcommand{\Sig}{\mathbf{Sig}}
+\newcommand{\Mor}{\mathbf{Mor}}
 \newcommand{\PF}{\mathit{PF}}
 \newcommand{\TF}{\mathit{TF}}
+
+\newcommand{\Inst}{\ensuremath{\mathbf{Inst}}}
 
 %\newcommand{\map}[2]{\colon#1\!\longrightarrow\!#2}
 
@@ -4574,7 +4577,7 @@ smaller ones, see \cite{GoguenBurstall92}.
 A \emph{network}\footnote{A network is called a diagram in category theory texts. We prefer this terminology to disambiguate 
 from UML diagrams.} in a category $C$ is 
 a functor $D:G\to C$, where $G$ is a small category\footnote{That is, it has a set of objects and sets of morphisms between them
-instead of classes}, and can be thought of as the shape of the graph of
+instead of classes.}, and can be thought of as the shape of the graph of
 interconnections between the objects of $C$ selected by the functor $D$. A \emph{cocone} of
 a network $D:G\to C$ consists of an object $c$ of $C$ and a family of
 morphisms $\alpha_i\map{D(i)}{c}$, for each object $i$ of $G$, such that for
@@ -4658,15 +4661,82 @@ We assume that for each institution in the heterogeneous logical environment the
 $\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
 from $\emptyset$ to any signature of the institution. Moreover we assume the existence of a designated 
 error logic in the graph, and a partial union operation on logics, denoted $\bigcup$: 
-$L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined.
+$L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism 
+and at most one morphism is marked as default.
 
-We assume that for each institution, there exist (possibly partial) union and difference operations on signatures  
-Some of the comorphisms are marked as default translations.
-\ednote{Till: provide axioms for difference operation}
+We assume that for each institution, there exist (possibly partial) union and difference operations on signatures.
+These concepts can be captured in a categorical setting using \emph{inclusion systems} \cite{Diaconescu1993}.
+However, inclusion systems are too strong for our purposes and therefore we will work under weaker assumptions.
+
+\begin{definition}  
+ An \emph{inclusive category} \cite{DBLP:conf/birthday/GoguenR04} 
+ is a category having a broad subcategory\footnote{That is, with the same objects as the original category.}
+which is a partially ordered class with finite products and coproducts, called intersection (denoted $\cap$) and union
+(denoted $\cup$) such that for each pair of objects $A, B$, $A \cup B$ is a pushout of $A \cap B$ in the category.
+ \end{definition}
+
+\noindent
+A category \emph{has pushouts which preserve inclusions} iff 
+there exists a pushout
+$$
+\xymatrix{
+  A  \ar[d] \ar@{^{(}->}[r]& A' \ar[d]\\
+  B \ar@{^{(}->}[r] & B'
+}
+$$ for each span where one arrow is an inclusion.
+
+A functor between two inclusive categories is inclusive if it takes inclusions in the source category to inclusions in the target category.
+
+\begin{definition}
+ An institution is \emph{weakly inclusive} if
+   \begin{itemize}
+     \item $\Sign$ is inclusive and has pushouts which preserve inclusions,
+     \item $\Sen$ is inclusive, and
+     \item each model category have a broad subcategory of inclusions.
+   \end{itemize}
+\end{definition}
+
+Let $I$ be a weakly inclusive institution. We say that $I$  \emph{has differences}, if there is a binary operation $\setminus$ on signatures, 
+such that for each pair of signatures 
+$\Sigma_1, \Sigma_2$, we have:
+\begin{enumerate}
+  \item $\Sigma_1\setminus \Sigma_2 \subseteq \Sigma_1$
+  \item $(\Sigma_1\setminus \Sigma_2) \cap \Sigma_2 = \emptyset$
+   \item for any $\Sigma$ with the properties 1.\ and 2.\ above, $\Sigma \subseteq \Sigma_1\setminus \Sigma_2$.
+\end{enumerate} 
+  
+
 
 This concludes the definition of heterogeneous logical environment and the assumptions made about it.
 
 \medskip
+
+The semantics of OMS generally depends on a global environment
+$\Gamma$ containing:
+ \begin{itemize}
+    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
+               we also denote by $\Gamma$, providing access to previous definitions,
+    \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
+    \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
+ \end{itemize}
+
+If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
+extends the domain of $\Gamma$ with \syntax{IRI} and
+the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
+ $\Gamma_\emptyset$ is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set,
+the prefix map is empty and the current triple contains the error logic together with its language and serialization.
+The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
+denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$,
+and of $\Gamma_1.\prefix$ and $\Gamma_2.\prefix$ are disjoint, and then
+$\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
+\Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
+\Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
+\end{cases}$, $\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
+and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
+We will write $\Gamma.\{\prefix = \PMap\}$ for the global environment that set the prefix map of 
+$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
+$(lang, logic, ser)$.
+
 
 DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of models 
 over some signature of an institution. This is called \emph{model-level}  semantics. In some cases, but not in all, we can also define
@@ -4675,21 +4745,58 @@ related by the fact that, when both the model-level and the theory-level semanti
 sense that the class of models given by the model-level semantics is exactly the model class of the theory given by the
 theory-level semantics. 
 
-We will use the notations $sem^T(O)$ and $sem^M(O)$ for the theory-level and model-level semantics of 
-an OMS $O$, respectively. Thus, $sem^T(O)$ will be a triple $(I, \Sigma, \Delta)$ and 
-$sem^M(O)$, a triple $(I, \Sigma, \cM)$, where $I$ is an institution, $\Sigma$ is a signature of $I$, $\Delta$ is a set of 
-$\Sigma$-sentences and $\cM$ a class of $\Sigma$-models. The compatibility mentioned above can be then formally expressed as
-follows. Let $O$ be a OMS such that $sem^T(O)=(\cI, \Sigma, \Delta)$. Then $$sem^M(O)= \{\cI, \Sigma, \{ M \in \Mod^I(\Sigma) \mid M \models^\cI \Delta \}).$$
+We will use the following unifying notation for the two semantics of an OMS $O$: 
+\begin{itemize}
+ \item the institution of $O$ is denoted $\Inst(O)$,
+  \item the signature of $O$ is denoted $\Sign(O)$ (which is a signature in $\Inst(O)$),
+  \item the models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sign(O)$),
+  \item the axioms of $O$is denoted $\Th(O)$ (which is a set of sentences over $\Sign(O)$).
+\end{itemize}
+\noindent Moreover, we may denote the semantics of $O$ as a tuple $sem(O) = (I, \Sigma, \cM,\Delta)$
+when $\Inst(O) = I$, $\Sign(O) = \Sigma$, $\Mod(O) = \cM$ and $\Th(O) = \Delta$.
+
+The theory-level semantics of $O$ can be undefined, and then so is $\Th(O)$. When $\Th(O)$ is defined, $\Mod(O)$ can be obtained as $\Mod(O)=\{M\in\Mod(\Sign(O)) \,|\, M\models\Th(O)\}$.
 
 We assume a \emph{language-specific semantics} of basic 
 OMS, inherited from the OMS language. For a basic OMS $O$ in a
 language $L$ based on an institution $\I$ we denote 
-by $sem^T_L(O)$ the theory-level language-specific semantics of $O$
-and by 
-$sem^M_L(O)$, the model-level language-specific semantics of $O$.
+by $sem_L(O)$ the language-specific semantics of $O$.
 We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
-the context of previous declarations, denoted $sem^{(\Sigma,\Delta)}_L(O)$ and
-$sem^{(\Sigma,\cM)}_L(O)$ respectively.
+the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.
+
+Intuitively, OMS mappings denote various types of links between two or more OMS. 
+The semantics of OMS mappings can be captured uniformly as a graph whose nodes $N$ are labeled with 
+\begin{itemize}
+ \item $Name(N)$, the name of the node
+ \item $\Inst(N)$, the institution of the node
+ \item $\Sign(N)$, the signature of the node
+ \item $\Mod(N)$, the class of $\Sign(N)$-models of the node
+ \item $\Th(N)$, the set of $\Th(N)$-sentences of the node
+\end{itemize}
+and whose edges are labeled with signature morphisms between the signatures of the source and target nodes. 
+The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
+the class of models of that node is the class of models of $\Th(N)$. 
+For brevity, we may write the label of a node as a tuple. We make the simplifying 
+assumption that any OMS can be assigned a unique name.
+
+Finally, we can give the semantics of networks in two alternative ways.
+In both cases, the semantics of a network is a graph and the labels
+are like in the semantics of OMS mappings. What differs is the labels of
+edges: in the first case, edges are labelled with signature morphisms 
+between the signatures 
+$Sign(S)$ and $Sign(T)$ of the source and target nodes $S$ and $T$ of the
+edge, while in the second case, an edge is labelled with a mapping
+relating the OMS of the nodes connected by it. 
+The intuition is that
+network provide means of putting together graphs of OMS and OMS mappings
+and of removing sub-graphs of existing networks. In the first 
+variant, the graph of a mapping is added explicitly to the network, and
+thus the network may contain more nodes than just those of the OMS
+related by the mapping. The second variant provides a more compact
+representation of the graph of the network but has the drawback that
+one cannot operate on the subgraph of a mapping, e.g. eliminating just a 
+node of it.
+
 
 %We  assume a \emph{language-specific semantics} of basic
 %OMS, inherited from the OMS language.  
@@ -4720,32 +4827,7 @@ $sem^{(\Sigma,\cM)}_L(O)$ respectively.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
-The semantics of OMS generally depends on a global environment
-$\Gamma$ containing:
- \begin{itemize}
-    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
-               we also denote by $\Gamma$, providing access to previous definitions,
-    \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
-    \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
- \end{itemize}
 
-If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
-extends the domain of $\Gamma$ with \syntax{IRI} and
-the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
- $\Gamma_\emptyset$ is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set,
-the prefix map is empty and the current triple contains the error logic together with its language and serialization.
-The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
-denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$,
-and of $\Gamma_1.\prefix$ and $\Gamma_2.\prefix$ are disjoint, and then
-$\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
-\Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
-\Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
-\end{cases}$, $\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
-and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
-We will write $\Gamma.\{\prefix = \PMap\}$ for the global environment that set the prefix map of 
-$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
-$(lang, logic, ser)$.
-%
 \ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
 
@@ -4795,20 +4877,15 @@ $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Gamma, \syntax{OMSInConformingLanguage})= (\cI, \Sigma, \Delta)}
+\semdom{sem(\Gamma, \syntax{OMSInConformingLanguage})= (\cI, \Sigma, \cM, \Delta)}
 
-$$sem^T(\Gamma, \syntax{OMSInConformingLanguage}) = (\cI, \Sigma, \Delta) $$
+$$sem(\Gamma, \syntax{OMSInConformingLanguage}) = (\cI, \Sigma, \cM, \Delta) $$
 \noindent where 
 $\cI = logic(\Gamma.\current)$ and
-$sem^T_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \Delta)$. 
+$sem_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM,\Delta)$. 
 
 Note that if the OMS in the library does not conform with the logic determined by
-the extension of the library, $sem^T_I(\syntax{OMSInConformingLanguage})$ will be undefined.
-
-\semdom{sem^M(\Gamma,\syntax{OMSInConformingLanguage})=(I, \Sigma, \cM)}
-
-$$sem^M(\Gamma, \syntax{OMSInConformingLanguage}) =  (\cI, \Sigma, \cM)$$
-\noindent where $\cI = logic(\Gamma.\current)$ and $sem^M_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM)$.
+the extension of the library, $sem_I(\syntax{OMSInConformingLanguage})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4956,50 +5033,38 @@ $$sem(\Gamma, G, \syntax{exclude-imports, IRI$_1, \ldots,$ IRI$_n$}) = G'$$
 
 \ssclause{Semantics of OMS}
 
-\semdom{sem^M(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM)}
-For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the model-level semantics is defined as follows:  
+\semdom{sem(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM, \Delta)}
+For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
 
-$$sem^M(\Gamma, \syntax{BasicOMS})= sem^M_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
-
-
-\semdom{sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \Delta)}
-
-For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the theory-level semantics is defined as follows:  
-$$sem^T(\Gamma, \syntax{BasicOMS})= sem^T_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
+$$sem(\Gamma, \syntax{BasicOMS})= sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Gamma, (\Sigma, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \Delta')}
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \cM',\Delta')}
 
-$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{BasicOMS}) = (I, \Sigma', \Delta')$$
-where $(\Sigma, \Delta)$ give the local environment of previously declared symbols\\
-and $sem^{\Sigma, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \Delta')$.
-Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\Delta\subseteq\Delta'$.
+The semantics of a \syntax{BasicOMS} $O$ in the local environment of
+previous declarations $(\Sigma, \cM, \Delta)$ and global environment
+$\Gamma$, is given by
+ \begin{itemize}
+   \item $\Inst(O) = I$,
+   \item $\Sign(O) = \Sigma'$ 
+   \item $\Mod(O) = \cM'$
+   \item $\Th(O) = \Delta'$
+ \end{itemize}
+\noindent where $sem^{\Sigma, \cM, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM', \Delta')$ such that $\Sigma$ is a sub-signature of $\Sigma'$, $\Delta  \subseteq \Delta'$ and
+$\{ M'\forget\Sigma \mid M' \in \cM' \} \subseteq \cM$.
 
-
-
-$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{oms-ref, OMSRef}) = (I, \Sigma', \Delta')$$ 
-where 
-$(\Sigma, \Delta)$ give the local environment of previously declared symbols,
-$sem^T(\Gamma, L, \syntax{OMSRef}) = (I, \Sigma'', \Delta'')$,
-$\Sigma' = \Sigma \cup \Sigma''$ and 
-$\Delta' = \Delta \cup \Delta''$.
-
+The semantics of an OMS reference $O$ in the local environment of
+previous declarations $(\Sigma, \cM, \Delta)$ and global environment
+$\Gamma$, is given by
+ \begin{itemize}
+   \item $\Inst(\syntax{'oms-ref', O}) = \Inst(O)$ which must be the same
+   with the current logic of $\Gamma$
+   \item $\Sign(\syntax{'oms-ref', O}) = \Sigma \cup \Sign(O)$
+   \item $\Mod(\syntax{'oms-ref', O}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sign(O)} \in \Mod(O) \}$
+   \item $\Th(\syntax{'oms-ref' O}) = \Delta \cup \Th(O)$
+ \end{itemize}
 \todonote{why allow to change the name of an OMS here?}
-
-\semdom{sem^M(\Gamma, (\Sigma, \cM), \syntax{MinimizableOMS}) = (I, \Sigma', \cM')}
-
-$$sem^M(\Gamma, (\Sigma, \cM), \syntax{BasicOMS}) = (I, \Sigma', \cM')$$
-where $(\Sigma, \cM)$ give the local environment
-and $sem^{\Sigma, \cM}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM')$.
-Note that we require that $\Sigma$ is a sub-signature of $\Sigma'$ and $\{ M'\forget\Sigma \mid M' \in \cM'  \} \subseteq \cM$.
-
-$$sem^M(\Gamma, (\Sigma, \cM), \syntax{OMSRef}) = (I, \Sigma', \cM')$$ 
-where 
-$(\Sigma, \cM)$ give the local environment,
-$sem^M(\Gamma, L, \syntax{OMSRef}) = (I, \Sigma'', \cM'')$,
-$\Sigma' = \Sigma \cup \Sigma''$ and 
-$\cM' = \{ M \in Mod(\Sigma') \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sigma''} \in \cM'' \}$.
 
 %\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
 % 
@@ -5012,30 +5077,36 @@ $\cM' = \{ M \in Mod(\Sigma') \mid M\forget\Sigma \in \cM \text{ and } M \forget
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\semdom{sem^M(\Gamma, (\Sigma, \cM), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM')}
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM', \bot)}
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-$$sem^M(\Gamma, (\Sigma, \cM), \syntax{minimize MinimizableOMS}) = (\cI,  \Sigma', \cM'')$$
-where $sem^M(\Gamma, (\Sigma, \cM), \syntax{MinimizableOMS}) = (\cI, \Sigma', \cM')$
-and\\ $\cM''=\{ M \in  \cM' \mid  M \text{ is minimal in } \{M' \in \cM' \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+Formally, we have
+\begin{itemize}
+ \item $\Inst(\syntax{minimize}\ O)= \Inst(O)$
+ \item $\Sig(\syntax{minimize}\ O) = \Sig(O)$
+ \item $\Mod( \syntax{minimize}\ O) = 
+        \{ M \in  \Mod(O) \mid  M \text{ is minimal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+ \item $\Th( \syntax{minimize}\ O) = \bot$ 
+\end{itemize}
+\noindent where the semantics of the \syntax{MinimizableOMS} $O$ is given relative to 
+the environment
+$\Gamma$ and the context $(\Sigma, \cM, \Delta)$.
 
-Theory-level semantics for  \syntax{minimize MinimizableOMS} cannot be defined.
-
+The theory-level semantics for  \syntax{minimize O} cannot be defined.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^M(\Gamma,\syntax{OMS})=(\cI,\Sigma,\cM)}
-\semdom{sem^T(\Gamma,\syntax{OMS}) = (\cI, \Sigma, \Delta)}
+\semdom{sem(\Gamma,\syntax{OMS})=(\cI,\Sigma,\cM, \Delta)}
 
 \syntax{OMS} is interpreted in a context similar to that for
-\syntax{MinimizableOMS}; the difference being that there is
+\syntax{MinimizableOMS}, the difference being that there is
 no local environment.
 
-$$sem^M(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')$$
+$$sem(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')$$
 where \todonote{didn't look at this} \todonote{closed-world, free, cofree, maximize are missing}
 \begin{align*}
 (I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma, \\
@@ -5048,18 +5119,14 @@ $$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fi
 $$
 
 %Translation
-$$sem^M(\Gamma, \syntax{translation, OMS , Translation}) = (J,\Sigma', \cM')$$
-where  $(I,\Sigma,\cM) = sem^M(\Gamma,\syntax{OMS})$,
- $sem(\Gamma,\Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
-and
-$\cM' = \{M \,|\, \beta_\Sigma(M\forget\sigma)\in \cM\}$
 
-$$sem^T(\Gamma, \syntax{translation, OMS , Translation}) = (J,\Sigma', \Delta')$$
-where $(I, \Sigma, \Delta) = sem^T(\Gamma, \syntax{OMS})$,
-$sem(\Gamma, \Sigma,\syntax{Translation})=((\Phi,\alpha,\beta):I\to J,  \sigma:\Phi(\Sigma) \to \Sigma')$
-and
-$\Delta' = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Delta \}$.
-It is only defined if $\syntax{OMS}$ is flattenable.
+The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is given by
+\begin{itemize}
+ \item $\Inst(O') = J$, when $\Inst(\syntax{Translation}) = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$ 
+ \item $\Sig(O') = \Sigma'$, when $\Mor(\syntax{Translation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
+ \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(\syntax{OMS})\}$
+ \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(\syntax{OMS}) \}$. It is defined only if \syntax{OMS} is flattenable.
+\end{itemize}
 
 %Reduction
 $$sem^M(\Gamma, \syntax{reduction, OMS , Reduction}) = (J,\Sigma', \cM')$$
