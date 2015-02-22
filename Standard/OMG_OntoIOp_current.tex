@@ -6430,8 +6430,16 @@ oms uml-enumerations =
    // c is an enumeration type with values ...
 end
 
+oms pairs =
+  (forall (x y) (= (form:first (form:pair x y)) x))
+  (forall (x y) (= (form:second (form:pair x y)) y))
+  (forall (x y) (form:Pair (form:pair x y)))
+  (forall (p) (if (form:Pair p)
+                  (= (form:pair (form:first p) (form:second p)) p)))
+end
+
 oms sequences =
-fuml:sequences.clif
+fuml:sequences.clif and pairs
 then
   // fuml:sequence - membership of an element in a sequence
   (forall (x s)
@@ -6445,6 +6453,24 @@ then
                     (form:in-position pt x)) )))
   // insertion of elements
   // todo form:insert-sequence
+
+  // selection of elements
+  (forall (o) (= (form:select1 o form:empty-sequence) form:empty-sequence))
+  (forall (o y s)
+          (= (form:select1 o (form:insert-sequence (form:pair o y))) 
+             (form:insert-sequence y (form:select1 o s))))
+  (forall (o x y s)
+          (if (not (= x o))
+              (= (form:select1 o (form:insert-sequence (form:pair x y))) 
+                 (form:select1 o s))))
+  (forall (o) (= (form:select2 o form:empty-sequence) form:empty-sequence))
+  (forall (o x s)
+          (= (form:select2 o (form:insert-sequence (form:pair x o))) 
+             (form:insert-sequence x (form:select2 o s))))
+  (forall (o x y s)
+          (if (not (= y o))
+              (= (form:select2 o (form:insert-sequence (form:pair x y))) 
+                 (form:select2 o s))))
 end
 
 oms ordered-sets =
@@ -6583,12 +6609,13 @@ then
             (= (form:seq2ordset (form:sequence-insert x s))
                (form:ordered-set-insert x (form:seq2ordset s)))))
 
-// todo: seq2bag, ordered-set2set
+// todo: seq2bag, ordered-set2set, as well as compositions
 
 end
 
+
 oms uml-cd-preliminaries =
-  uml-enumerations and collection-types
+  uml-enumerations and collection-types and pairs
 end
 
 \end{lstlisting}
@@ -6735,17 +6762,23 @@ single attribute with name $p_i$ may exist.)
 \end{itemize}
 
 A \emph{class/data type net morphism}
-$\sigma = (\gamma, \pi, \alpha, \mu) : \Sigma = ((C, {\leq}_C),
-P, A, M) \to \Tau = ((D, {\leq}_D), Q,\allowbreak B, N)$
+$\sigma = (\gamma, \pi, \rho, \alpha, \mu) : \Sigma = ((C, {\leq}_C),
+P, O, A, M) \to \Tau = ((D, {\leq}_D), \allowbreak Q, R, B, N)$
 is given by
 %
 \begin{itemize}[label={--}, leftmargin=*]
   \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
 {\leq_D})$;
 
-  \item a attribute declaration map $\pi : P \to Q$ such that if
+  \item an attribute declaration map $\pi : P \to Q$ such that if
 $\pi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then $d = \gamma(c)$,
 $d' = \gamma(c')$, and $\tau = \tau'$;
+
+  \item a query operation declaration map $\rho : O \to R$ such that if
+$\rho(c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']) =
+d.r(x_1 : \tau'_1[d_1], \dots, x_r : \tau'_n[d_r]) : \tau[d'] \in R$, 
+then $d = \gamma(c)$, $d_i = \gamma(c_i)$, 
+$d' = \gamma(c')$, $\tau'_i = \tau_i$ and $\tau = \tau'$;
 
   \item an association declaration map $\alpha : A \to B$ such that if
 $\alpha(a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])) = b(q_1 :
@@ -6890,50 +6923,96 @@ enumerations are specializable, but this is type-unsafe, so maybe omit it}
   \leq_C c_2$, an axiom \texttt{(forall (x) (if (C1 x) (C2 x)))},
   where C1$=\CL(c_1)$, C2$=\CL(c_2)$, 
 
-  \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
-\texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
-  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
-  \item $\CL$ maps each property declaration $c.p(x_1 : c_1, \dots, x_n : c_n)
-: \tau[c'] \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
+%  \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
+%\texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
+%  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
+  \item $\CL$ maps each attribute declaration $c.p : \tau[c'] \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
 and functionality:
 \begin{itemize}
 \item
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\texttt{(forall (x y) (if (c.p x y) (c x))) }
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
-for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
+\texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote
+{With \texttt{($\tau[c]$ x)}, we abbreviate\\
+\texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.}
+%% \item 
+%% \texttt{(forall (x y m)\\
+%% \qqquad (if (and (c.p x y) (member m y)) (c' m)))}
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
+\texttt{(forall (x)\\
+\qqquad  (if (c x) (exists (y) (c.p x y))))}
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
-\qqquad (if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)}\\
-\ednote{precondition missing!}
-\qqquad \texttt{(exists (y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y)))}
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
-\qqquad \texttt{(if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\texttt{(forall (x y z)}\\
+\qqquad \texttt{(if (and (c.p x y) (c.p x z))}\\
 \qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
-  \item \CL maps each composition declaration ${c\composition r : \tau[c']} \in M$ to
-a predicate $\CL(r)$ and axioms\\
-\texttt{(forall (x) (if (c x) (exists (y) (and (r x y) ($\tau$[c'] y)))))}\\
-\texttt{(forall (x y) (if (r x y) (and (c x) ($\tau$[c'] y))))}\\
-\texttt{(forall (x y z) (if (and (r x y) (r x z)) (= y z)))}
+  \item $\CL$ maps each query operation declaration $c.o(x_1 :
+    \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
+    predicate $\CL(c.o)$ and axioms stating type-correctness and
+    functionality:\ednote{axioms need to be adapted to the fact   
+    that parameter types are collection types}
+\begin{itemize}
+\item
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
+for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
+%% \item 
+%% \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
+%% \qqquad (if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
+\qqquad  (if (and (c x) ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$))\\
+\qqquad\qqquad (exists (y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
+\qqquad \texttt{(if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\qqquad\qqquad\texttt{(= y z)))}
+\end{itemize}
+  \item \CL maps each composition declaration $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ to
+a constant $\CL(m)$ and axioms stating that $\CL(m)$ is a finite
+binary relation represented as a sequence of pairs of the
+correct type:
+\begin{lstlisting}[language=clif,morekeywords={then,with}]
+(from:Sequence m)
+(forall (p) (if (form:sequence-member p m)
+                (and (form:Pair p) (c1 (form:first p)) (c2 (form:second p))))
+\end{lstlisting}
   \item 
-for any pair of composition declarations $c_1\composition r_1 : c_1'$
-and $c_2\composition r_2 : c_2'$, an axiom stating ``each instance has
-at most one owner'':\\
-\red{\texttt{(forall ($x_1$ $x_2$ $y_1$ $y_2$)\\
-\qqquad (if (and ($r_1$ $x_1$ $y_1$) ($r_2$ $x_2$ $y_2$)}\\
-\qqquad\qqquad\texttt{(exists (z) (and (member z $y_1$) (member z $y_2$)))))}\\
-\qqquad\texttt{(= $x_1$ $x_2$)}}
-  \item \CL maps each association declaration $a(r_1 : c_1, \dots, r_n : c_n)\in A$ to a predicate $\CL(a)$ and an axiom\\
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}\footnote{
-Ignoring the annotations $\tau_i$ in the interpretation of an
-association is intentional, see the semantics of associations in the UML
-Superstructure Specification 2.4.1, p.~37.}
+for any pair of composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
+at most one owner'':
+\begin{lstlisting}[language=clif,morekeywords={then,with}]
+(forall (o o' i)
+        (if (and (form:sequence-member (form:pair o i) m)
+                 (form:sequence-member (form:pair o' i) m'))
+            (= o o')))
+\end{lstlisting}
+  \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(m)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
+being represented as sequences):\\
+\texttt{(from:Sequence a)}\\
+\texttt{(forall (t) (if (form:sequence-member t m)\\
+\qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
+\qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
+\ \ \  (= t (form:insert-sequence $x_1$ ($\cdots$ (form:insert-sequence $x_n$ form:empty-sequence)))))))))}
+\item the interpretation of a member end of a binary association
+declaration owned by a class/data type coincides with the interpretation
+of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
+$\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
+$c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))} 
+\item the interpretation of a member end of a composition declaration
+owned by a class/data type coincides with the interpretation of the
+attribute: if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ is owned
+by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))} 
+%% \footnote{
+%% Ignoring the annotations $\tau_i$ in the interpretation of an
+%% association is intentional, see the semantics of associations in the UML
+%% Superstructure Specification 2.4.1, p.~37.}
 \end{itemize}
 
 
@@ -7038,6 +7117,7 @@ latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic), we define
 $$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
 
 The translation of multiplicity formulas to Common Logic is as follows:
+\ednote{This section still needs to be updated!!!}
 \begin{itemize}
   \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
 \texttt{(forall (x y n)}\\

@@ -4,7 +4,7 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.84.1}
+\newcommand{\version}{0.85}
 
 
 %todo
@@ -1577,7 +1577,7 @@ explicit references to the logics used.
 
 
 
-\chapter{Terms and Definitions}
+\chapter{Terms and Definitions}\label{terms-and-defs}
 \ednote{OMG specifications shall not contain glossaries, hence always
 refer to this section if definitions of terms are needed.}
 
@@ -1686,8 +1686,9 @@ of non-logical symbols\index{non-logical symbol} of an
     that moreover satisfies all the axioms\index{axiom} of the OMS.
   \end{note}
   \begin{note}
-  This term is not to be confused with model in the sense of modeling (i.e.,
-  the ``M'' in OMS).
+  This term refers to \emph{model} in the sense of model theory (a
+  branch of logic). It is not to be confused with \emph{model} in the
+  sense of modeling (i.e., the ``M'' in OMS).
   \end{note}
 
   
@@ -6387,6 +6388,8 @@ The institution of UML class and object diagrams is defined using a
 translation of UML class diagrams to Common Logic, following the fUML
 specification and \cite{Seidewitz08}.
 
+\section{Preliminaries}
+
 From the fUML specification, section 10.3.1, we inherit the axioms for
 primitive types: Booleans, numbers, sequences and strings.  These
 axiomatize (among others) predicates corresponding to primitive types,
@@ -6397,7 +6400,10 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 
 We additionally need to axiomatize a number of predicates in Common Logic
 (note that enumerations are not axiomatized in fUML):
-\begin{lstlisting}[language=clif]
+\begin{lstlisting}[language=clif,morekeywords={then,with}]
+logic CLIF
+
+oms uml-enumerations =
 (distinct)        // the empty sequence is distinct
 (distinct x)    // singleton sequences are distinct
 (iff (distinct x y ...) // recursion for length > 1
@@ -6411,30 +6417,209 @@ We additionally need to axiomatize a number of predicates in Common Logic
 (iff (oneof x y ...) (or (= x y) (oneof x ...)))
 (iff (enumeration c ...) (and (exhaustive c ...) (distinct ...)))
    // c is an enumeration type with values ...
+end
 
-// fuml:sequence - membership of an element in a sequence
+oms pairs =
+  (forall (x y) (= (form:first (form:pair x y)) x))
+  (forall (x y) (= (form:second (form:pair x y)) y))
+  (forall (x y) (form:Pair (form:pair x y)))
+  (forall (p) (if (form:Pair p)
+                  (= (form:pair (form:first p) (form:second p)) p)))
+end
+
+oms sequences =
+fuml:sequences.clif and pairs
+then
+  // fuml:sequence - membership of an element in a sequence
+  (forall (x s)
+      (if (form:sequence-member x s)
+          (form:Sequence s)))
+
+  (forall (x s)
+      (iff (form:sequence-member x s)
+           (exists (pt) 
+               (and (form:in-sequence s pt)
+                    (form:in-position pt x)) )))
+  // insertion of elements
+  // todo form:insert-sequence
+
+  // selection of elements
+  (forall (o) (= (form:select1 o form:empty-sequence) form:empty-sequence))
+  (forall (o y s)
+          (= (form:select1 o (form:insert-sequence (form:pair o y))) 
+             (form:insert-sequence y (form:select1 o s))))
+  (forall (o x y s)
+          (if (not (= x o))
+              (= (form:select1 o (form:insert-sequence (form:pair x y))) 
+                 (form:select1 o s))))
+  (forall (o) (= (form:select2 o form:empty-sequence) form:empty-sequence))
+  (forall (o x s)
+          (= (form:select2 o (form:insert-sequence (form:pair x o))) 
+             (form:insert-sequence x (form:select2 o s))))
+  (forall (o x y s)
+          (if (not (= y o))
+              (= (form:select2 o (form:insert-sequence (form:pair x y))) 
+                 (form:select2 o s))))
+end
+
+oms ordered-sets =
+sequences with
+  form:Sequence |-> form:Ordered-Set,
+  form:empty-sequence |-> form:empty-ordered-set,
+  form:sequence-length |-> form:ordered-set-size,
+  form:same-sequence |-> form:same-ordered-set,
+  form:sequence-member |-> form:ordered-set-member,
+  form:in-sequence |-> form:in-ordered-set,
+  form:before-in-sequence |-> form:before-in-ordered-set,
+  form:position-count |-> form:ordered-set-position-count
+then
+//Different positions contain different elements
+  (forall (s1 s2 x1 x2 n1 n2)
+  	    (if (and (form:in-position-count s1 n1 x1)
+  	  	     (form:in-position-count s2 n2 x2)
+                     (= x1 x2))
+                (= n1 n2)))
+end
+
+oms sets =
+//An empty set has no members.
+(forall (s)
+	(if (form:empty-set s)
+	    (form:Set s)))
+(forall (s)
+	(if (form:Set s)
+	    (iff (form:empty-set s)
+		 (not (exists (x)
+			      (form:set-member x s))))))
+//Size of sets
+(forall (s n)
+	(if (form:set-size s n)
+	    (and (form:Set s)
+		 (buml:UnlimtedNatural n))))
+(= (form:set-size form:empty-set) form:0)
 (forall (x s)
-    (if (member x s)
-        (form:Sequence s)))
+        (if (not (form:set-member x s))
+            (= (form:set-size (form:set-insert x s))
+               (form:suc (form:set-size s)))))
 
+//The same-set relation is true for sets that have the same members.
+// but: why not replace same-set with = ?
+(forall (s1 s2)
+	(if (form:same-set s1 s2)
+	    (and (form:Set s1)
+		 (form:Set s2))))
+(forall (s1 s2)
+	(iff (form:same-set s1 s2)
+	     (forall (x)
+		     (iff (form:set-member x s1)
+			  (form:set-member x s2)))))
+//Insertion of elements into sets and set membership
 (forall (x s)
-    (iff (member x s)
-         (exists (pt) 
-             (and (form:in-sequence s pt)
-                  (form:in-position pt x)) )))
+	(if (form:Set s)
+	    (form:Set (form:set-insert x s))))
+(forall (x y s)
+        (iff (form:set-member x (form:set-insert y s))
+             (or (= x y)
+                 (form:set-member x s))))
+end
 
+oms bags =
+//An empty bag has no members.
+(forall (s)
+	(if (form:empty-bag s)
+	    (form:Bag s)))
+(forall (s)
+	(if (form:Bag s)
+	    (iff (form:empty-bag s)
+		 (not (exists (x)
+			      (form:bag-member x s))))))
+//Size of bags
+(forall (s n)
+	(if (form:bag-size s n)
+	    (and (form:Bag s)
+		 (buml:UnlimtedNatural n))))
+(= (form:bag-size form:empty-bag) form:0)
+(forall (x s)
+        (= (form:bag-size (form:bag-insert x s))
+           (form:suc (form:bag-size s)))))
+
+//The same-bag relation is true for bags that have the same members.
+(forall (s1 s2)
+	(if (form:same-bag s1 s2)
+	    (and (form:Bag s1)
+		 (form:Bag s2))))
+(forall (s1 s2)
+	(iff (form:same-bag s1 s2)
+	     (forall (x)
+		     (iff (form:bag-member-count x s1)
+			  (form:bag-member-count x s2)))))
+//Insertion of elements into bags and bag membership
+(forall (x s)
+	(if (form:Bag s)
+	    (form:Bag (form:bag-insert x s))))
+(forall (x y s)
+        (iff (form:bag-member x (form:bag-insert y s))
+             (or (= x y)
+                 (form:bag-member x s))))
+//Member count
+(forall (x s)
+	(if (form:Bag s)
+	    (buml:UnlimtedNatural (form:bag-member-count x s))))
+(= (form:bag-member-count form:empty-bag) form:0)
+(forall (x s)
+        (= (form:bag-member-count x (form:bag-insert x s))
+           (form:suc (form:bag-member-count x s))))
+(forall (x y s)
+        (if (not (= x y))
+            (= (form:bag-member-count x (form:bag-insert y s))
+               (form:bag-member-count x s))))
+end
+
+oms collection-types =
+  sequences and ordered-sets and sets and bags
+then
+//bag to set
+(forall (b)
+	(if (form:Bag s)
+	    (form:Set (form:bag2set b))))
+(= (form:bag2set form:empty-bag) form:empty-set)
+(forall (x b)
+        (if (form:Bag b)
+            (= (form:bag2set (form:set-insert x b))
+               (form:bag-insert x (form:bag2set b)))))
+
+//sequence to ordered list
+(forall (b)
+	(if (form:Sequence s)
+	    (form:Ordered-Set (form:seq2ordset s))))
+(= (form:seq2ordset form:empty-empty) form:empty-ordered-set)
+(forall (x s)
+        (if (form:Sequence s)
+            (= (form:seq2ordset (form:sequence-insert x s))
+               (form:ordered-set-insert x (form:seq2ordset s)))))
+
+// todo: seq2bag, ordered-set2set, as well as compositions
+
+end
+
+
+oms uml-cd-preliminaries =
+  uml-enumerations and collection-types and pairs
+end
 
 \end{lstlisting}
 
 Using this infrastructure, we obtain an institution for UML class
-diagrams as follows:\ednote{AK: Added the following up to the next ed-note.}
+diagrams as described in the following sections.
 
-\medskip\noindent\textbf{Classifier hierarchies.}
-A \emph{classifier hierarchy} $(C, {\leq_C})$ is given by a partial
-order where the set $C$ contains the \emph{classifier names}, which are
-closed w.r.t.\ the \emph{built-in types} $\mathsf{Boolean}$,
-$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
-$\mathsf{String}$, i.e.,
+\section{Signatures}
+
+\medskip\noindent\textbf{Class/data type hierarchies.}
+A \emph{class/data type hierarchy} $(C, {\leq_C})$ is given by a
+partial order where the set $C$ contains the \emph{class/data type
+  names}, which are closed w.r.t.\ the \emph{built-in data types}
+$\mathsf{Boolean}$, $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$,
+$\mathsf{Real}$, and $\mathsf{String}$, i.e.,
 $\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural}, \mathsf{Integer},
 \mathsf{Real}, \mathsf{String} \} \subseteq C$;\ednote{what about
 enumeration types? Should we assume that some classifiers are
@@ -6442,22 +6627,23 @@ marked as enumeration types and equipped with their set of
 constants?}
 and the partial ordering relation $\leq_C$ represents a
 \emph{generalisation relation} on $C$, where we say that $c_1$ is a
-\emph{sub-classifier} of $c_2$ if $c_1 \leq_C c_2$.
+\emph{sub-class/data type} of $c_2$ if $c_1 \leq_C c_2$.
 
-A \emph{classifier hierarchy map}
+A \emph{class/data type hierarchy map}
 $\gamma : (C, {\leq_C}) \to (D, {\leq_D})$ is given by a monotone map
 from $(C, {\leq_C})$ to $(D, {\leq_D})$, i.e.,
 $\gamma(c) \leq_D \gamma(c')$ if $c \leq_C c'$, such that
-$\gamma(c) = c$ for all built-in types
-$c \in \{ \mathsf{Boolean},\allowbreak \mathsf{UnlimitedNatural},\allowbreak
+$\gamma(c) = c$ for all
+$c \in \{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
 \mathsf{Integer}, \mathsf{Real}, \mathsf{String} \}$.
 
-For each classifier $c \in C$ of a classifier hierarchy $(C, {\leq_C})$
-we use the \emph{classifier annotations} $\mathsf{OrderedSet}$,
-$\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ representing the
-meta-properties ``ordered'' and ``unique'' according to the following
-table:
-
+\medskip
+We use the \emph{collection type constructors} $\mathsf{OrderedSet}$,
+$\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ for
+representing the meta-attributes ``ordered'' and ``unique'' of
+\uml{MultiplicityElement} according to the following
+table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128.}
+%
 \begin{quotation}
 \begin{tabular}{@{}r||c|c@{}}
              & ordered               & not ordered\\
@@ -6467,303 +6653,228 @@ table:
   not unique & $\mathsf{Sequence}$   & $\mathsf{Bag}$
 \end{tabular}
 \end{quotation}
+%
+The default is ``not ordered'' and ``unique''.\footnote{UML
+  Superstructure Specification 2.4.1, p.~96.}
 
-We write $\tau[c]$ for an annotated classifier for
+For a class/data type $c \in C$ of a class/data type-hierarchy
+$(C, {\leq_C})$ and a collection type constructor
 $\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
-\mathsf{Bag} \}$.
-The default is ``not ordered'' and ``unique'' (UML Superstructure
-Specification 2.4.1, p.~96).
+\mathsf{Bag} \}$,
+we write $\tau[c]$ for the induced \emph{collection type}.
 
-
-\medskip\noindent\textbf{Classifier nets (Signatures).}
-A \emph{classifier net} $\Sigma = ((C, {\leq_C}), K, P, M, A)$
-comprises
+\medskip
+Let $(C, {\leq_C})$ be a class/data type hierarchy.
 %
 \begin{itemize}[label={--}, leftmargin=*]
-  \item a \emph{classifier hierarchy} $(C, {\leq_C})$;
+  \item An \emph{attribute declaration}\footnote{We separate attributes
+  from association member ends due to their different uses.  In UML,
+  both are of class \uml{Property}.} over $(C, {\leq_C})$ is of the form
+$c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
+constructor, and $p$ an \emph{attribute name}.
 
-  \item a set $K$ of \emph{instance specifications declarations} of
-the form $k : c$ with $k$ an \emph{instance specification name} and $c
-\in C$;
+  \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of the
+form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$ with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
+constructor, and $o$ an \emph{operation name}.\ednote{are the $x_i$ called
+parameter names?}
 
-  \item a set $P$ of \emph{property declarations} of the form
-$c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a classifier annotation, and
-$p$ a \emph{property name};
+  \item An \emph{association declaration} over $(C, {\leq_C})$ is of the
+form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])$ with $r \geq 2$,
+$c_1, \dots, c_r \in C$, $\tau_1, \ldots, \tau_r$ classifier
+annotations, $a$ an \emph{association name}, and $p_1, \dots, p_r$
+\emph{member end names}.\footnote{The member ends are ordered according
+  to the UML Superstructure Specification 2.4.1, p.~29; hence we use a
+  tuple-like notation.}  An association declaration
+$\mathbf{a} = a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])$
+\emph{yields} the \emph{property declarations}
+$\mathbf{a}.p_i : \tau_i[c_i]$ for $1 \leq i \leq r$.  An association
+declaration is \emph{binary} if $r = 2$.\footnote{Only binary
+  association may show member ends that are properties not owned by the
+  association (UML Superstructure Specification 2.4.1, p.~37).  The
+  propery declarations induced by a more than binary association result
+  in a query operation.}
 
-  \item a set $M$ of \emph{composition declarations} of the form
-$c\composition r : \tau[c']$ with $c, c' \in C$, $\tau$ a classifier
-annotation, and $r$ a \emph{composition role name};
-
-  \item and a set $A$ of \emph{association declarations} of the form
-$a\{ r_1 : c_1, \dots, r_n : c_n \}$ with $n \geq 2$,
-$c_1, \dots, c_n \in C$, $a$ an \emph{association name}, and $r_1, \dots, r_n$
-\emph{association role names},
+  \item A \emph{composition declaration} over $(C, {\leq_C})$ is of the
+form $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$ with
+$c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
+\emph{composition name}, and $p_1, p_2$ \emph{member end
+  names}.\footnote{In UML, each \uml{Property} may have
+  \uml{AggregationKind} \uml{composite}.  However, such an aggregation
+  kind has no semantic meaning when the property is not a member end
+  of an association: the UML Superstructure Specification 2.4.1 does not
+  mention the aggregation kind in the description of the semantics of
+  \uml{Property}.  Moreover, composite properties, i.e., properties with
+  aggregation kind \uml{composite} can only be member ends of binary
+  associations (UML Superstructure Specification 2.4.1, p.~37) and their
+  multiplicity must not exceed one (UML Superstructure Specification
+  2.4.1, p.~126).  We thus separate composition declarations from
+  general association declarations.}  A composition declaration
+$\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
+\tau_2[c_2])$
+\emph{yields} the property declarations
+$\mathbf{m}.p_1 : \mathsf{Set}[c_1]$ and $\mathbf{m}.p_2 : \tau_2[c_2]$.
 \end{itemize}
-%
-such that the following properties are satisfied:
+
+\medskip\noindent\textbf{Class/data type nets (Signatures).}
+A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A, M)$
+comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $P$ of
+attribute declarations, a set $O$ of operation declarations,
+ a set $A$ of association declarations over
+$(C, {\leq_C})$, and a set $M$ of composition declarations, such that
+the following properties are satisfied:
 %
 \begin{itemize}[label={--}, leftmargin=*]
-  \item instance specification names are unique: if $k_1 : c_1$ and
-$k_2 : c_2$ are different instance specification declarations in $K$,
-then $k_1 \neq k_2$;
-
-  \item property names are unique along the generalisation relation: if
+  \item attribute names are unique along the generalisation relation: if
 $c_1.p_1 : \tau_1[c_1']$ and $c_2.p_2 : \tau_2[c_2']$ are different
-property declararations in $P$ and $c_1 \leq c_2$, then $p_1 \neq p_2$;
+property declararations in $P$ and $c_1 \leq_C c_2$, then $p_1 \neq
+p_2$;
 
-  \item composition role names are unique along the generalisation
-relation: if $c_1\composition r_1 : \tau_1[c_1']$ and $c_2\composition r_2 :
-\tau_2[c_2']$ are different composition declararations in $M$ and $c_1 \leq
-c_2$, then $r_1 \neq r_2$;
+  \item association and composition names are unique: if $d_1$ and
+$d_2$ are the names of two different association or composition
+declarations in $M \cup A$, then $d_1 \neq d_2$;
 
-  \item property and composition role names are unique along the
-generalisation relation: if $c_1.p_1 : \tau_1[c_1']$ is a property
-declaration in $P$ and $c_2\composition r_2 : \tau_2[c_2']$ is a
-composition declaration in $M$ and $c_1 \leq_C c_2$, then
-$p_1 \neq r_2$; and if $c_1\composition r_1 : \tau_1[c_1']$ is a
-composition declaration in $M$ and $c_2.p_2 : \tau_2[c_2']$ is a
-property declaration in $P$ and $c_1 \leq_C c_2$, then $r_1 \neq p_2$;
+  \item member end names are unique: if $p_1, \ldots, p_r$ are the
+member end names of an association declaration in $A$ or a composition
+declaration in $M$, then $p_i \neq p_j$ for $1 \leq i \neq j \leq r$.
 
-  \item association role names are unique: if $a\{ r_1 : c_1, \dots,
-r_n : c_n \}$ is an association declaration in $A$ and $1 \leq i \neq
-j \leq n$, then $r_i \neq r_j$;
-
-  \item composition declarations are cycle-free: if
-$c_1\composition r_1 : \tau_2[c_2], \dots, c_n\composition r_n :
-\tau_{n+1}[c_{n+1}] \in M$, then $c_{n+1} \neq c_1$.
+  \item the type of a member end\footnote{All member ends are instances
+  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36.}
+owned by a class/data type coincides with its declarations as attribute:
+We say that a property declaration $\mathbf{a}.p_i : \tau_i[c_i]$
+yielded by a binary association
+$\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2])$ is \emph{owned
+  by} $c_0 \in C$ if $c_{3-i} \leq_C c_0$ and there is an attribute
+declaration $c_0.p_i : \tau_i[c_i] \in P$; and similarly for property
+declarations yielded by composition declarations.  (Note that by the
+uniqueness of attribute names along the generalisation hierarchy only a
+single attribute with name $p_i$ may exist.)
 \end{itemize}
 
-A \emph{classifier net morphism}
-$\sigma = (\gamma, \kappa, \pi, \mu, \alpha) : \Sigma = ((C, {\leq}_C),
-K, P, M, A) \to \Tau = ((D, {\leq}_D),\allowbreak L,\allowbreak Q,\allowbreak N, B)$
+A \emph{class/data type net morphism}
+$\sigma = (\gamma, \pi, \rho, \alpha, \mu) : \Sigma = ((C, {\leq}_C),
+P, O, A, M) \to \Tau = ((D, {\leq}_D), \allowbreak Q, R, B, N)$
 is given by
 %
 \begin{itemize}[label={--}, leftmargin=*]
-  \item a classifier hierarchy map $\gamma : (C, {\leq_C}) \to (D,
+  \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
 {\leq_D})$;
 
-  \item an instance specification map $\kappa : K \to L$ such
-that if $\kappa({k : c}) = {l : d} \in L$, then $d = \gamma(c)$;
-
-  \item a property declaration map $\pi : P \to Q$ such that if
+  \item an attribute declaration map $\pi : P \to Q$ such that if
 $\pi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then $d = \gamma(c)$,
-$d' = \gamma(d')$, and $\tau = \tau'$;
+$d' = \gamma(c')$, and $\tau = \tau'$;
 
-  \item a composition declaration map $\mu : M \to N$ such that if
-$\mu({c\composition r : \tau[c']}) = {d\composition s : \tau'[d']} \in M$, then $d =
-\gamma(c)$, $d' = \gamma(d')$, and $\tau = \tau'$;
+  \item a query operation declaration map $\rho : O \to R$ such that if
+$\rho(c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']) =
+d.r(x_1 : \tau'_1[d_1], \dots, x_r : \tau'_n[d_r]) : \tau[d'] \in R$, 
+then $d = \gamma(c)$, $d_i = \gamma(c_i)$, 
+$d' = \gamma(c')$, $\tau'_i = \tau_i$ and $\tau = \tau'$;
 
   \item an association declaration map $\alpha : A \to B$ such that if
-$\alpha(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \}) = b\{ s_1 :
-\tau_1'[d_1], \dots, s_m : \tau_m'[d_m] \} \in B$,
-then there is a bijective map
-$\rho : \{ r_1, \dots, r_n \} \to \{ s_1, \dots, s_m \}$ with
-$d_j = \gamma(c_i)$ and $\tau_j = \tau_i'$ if $\rho(r_i) = s_j$.
+$\alpha(a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])) = b(q_1 :
+\tau_1'[d_1], \dots, q_s : \tau_s'[d_s]) \in B$,
+then $r = s$ and $d_i = \gamma(c_i)$ and $\tau_i = \tau_i'$ for
+$1 \leq i \leq r$, and member ends owned by the association are mapped
+into owned member ends;
+
+  \item a composition declaration map $\mu : M \to N$ such that if
+$\mu(m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])) =
+n(q_1 : \mathsf{Set}[d_1], \composition q_2 : \tau_2'[d_2]) \in N$,
+then $d_1 = \gamma(c_1)$, $d_2 = \gamma(c_2)$, and $\tau_2 = \tau_2'$,
+and member ends owned by the composition are mapped into owned member
+ends.
 \end{itemize}
 
-Classifier nets as objects and classifier net morphisms as morphisms
-form the category of \emph{classifier nets}, denoted by
+Class/data type nets as objects and class/data type net morphisms as
+morphisms form the category of \emph{class/data type nets}, denoted by
 $\mathrm{Cl}$.
 
+\medskip
+For the example in Fig. \ref{fig:bjoerners_dsl} we have
+%
+\begin{gather*}
+  \text{Classes/data types: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear},
+\\[-.5ex]
+  \phantom{\text{Classes/data types: }}\mathsf{Boolean}, \mathsf{UnlimitedNatural}, \mathsf{Integer}, \mathsf{Real}, \mathsf{String}
+\\
+  \text{Generalisations: }\mathsf{Point} \leq \mathsf{Unit}, \mathsf{Linear} \leq \mathsf{Unit}
+\\
+  \text{Properties: }\mathsf{Line.linear : Set[Boolean]}, \mathsf{Track.linear : Set[Boolean]},
+\\[-.5ex]
+  \phantom{\text{Properties: }}\mathsf{Net.station : Set[Station]}, \mathsf{Net.line : Set[Line]},
+\\[-.5ex]
+  \phantom{\text{Properties: }}\mathsf{Station.net : Set[Net]}, \mathsf{Station.unit : Set[Unit]}, \mathsf{Station.track : Set[Track]},
+\\[-.5ex]
+  \phantom{\text{Properties: }}\mathsf{Line.net : Set[Net]}, \mathsf{Line.linear : Set[Linear]},
+\\[-.5ex]
+  \phantom{\text{Properties: }}\mathsf{Connector.unit : Set[Unit]},
+\\[-.5ex]
+  \phantom{\text{Properties: }}\mathsf{Unit.station : Set[Station]}, \mathsf{Unit.connector : Set[Connector]},
+\\[-.5ex]
+  \phantom{\text{Properties: }}\mathsf{Track.station : Set[Station]}, \mathsf{Track.linear : Set[Linear]},
+\\[-.5ex]
+  \phantom{\text{Properties: }}\mathsf{Linear.track : Set[Track]}, \mathsf{Linear.line : Set[Line]}
+\\
+  \text{Associations: }\mathsf{l2l(line : Set[Line], linear : Set[Linear])},
+\\[-.5ex]
+  \phantom{\text{Associations: }}\mathsf{l2t(linear : Set[Linear], track : Set[Track])},
+\\[-.5ex]
+  \phantom{\text{Associations: }}\mathsf{c2u(connector : Set[Connector], unit : Set[Unit])}
+\\
+  \text{Compositions: }\mathsf{n2s(net : Set[Net], \composition station : Set[Station])},
+\\[-.5ex]
+  \phantom{\text{Compositions: }}\mathsf{n2l(net : Set[Net], \composition line : Set[Line])},
+\\[-.5ex]
+  \phantom{\text{Compositions: }}\mathsf{s2u(station : Set[Station], \composition unit : Set[Unit])},
+\\[-.5ex]
+  \phantom{\text{Compositions: }}\mathsf{s2t(station : Set[Station], \composition track : Set[Track])}
+\end{gather*}
+
+Here all member ends are owned by class/data types.
+
+
 \begin{figure}[!tH]
-\centering
-\begin{tikzpicture}[transform shape,scale=.7]
+\begin{center}
+\vspace*{1ex}
+\begin{tikzpicture}[transform shape,scale=.8]
 \def\overallfont{\sffamily\fontsize{10pt}{10pt}\selectfont}
 \tikzset{every node/.style={font=\overallfont}}
 %\tikzset{tikzuml class style/.style={inner xsep=32pt}}
 \tikzumlset{font=\overallfont}
 \umlemptyclass{Net}
 \umlemptyclass[x=-2, y=-3]{Station}
-\umlclass[x=2, y=-3]{Line}{- linear : Boolean}{}
-\umlcompo[mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
-\umlcompo[mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
+\umlclass[x=2.5, y=-3]{Line}{linear : Boolean}{}
+\umlcompo[name=NetStation,mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
+\draw (NetStation-4) node[above] {n2s};
+\umlcompo[name=NetLine,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
+\draw (NetLine-4) node[above] {n2l};
 \umlemptyclass[x=-4, y=-6]{Unit}
-\umlclass[x=0, y=-6]{Track}{- linear : Boolean}{}
-\umlcompo[mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
-\umlcompo[mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
+\umlclass[x=0, y=-6]{Track}{linear : Boolean}{}
+\umlcompo[name=StationUnit,mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
+\draw (StationUnit-4) node[above] {s2u};
+\umlcompo[name=StationTrack,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
+\draw (StationTrack-4) node[above] {s2t};
 \umlemptyclass[x=-8, y=-6]{Connector}
 \umlassoc[name=ConnectorUnit, mult1=1..4, pos1=0, align1=left, mult2=1, pos2=1, align2=right]{Connector}{Unit}
-\draw (ConnectorUnit-middle) node[above] {has};
+\draw (ConnectorUnit-middle) node[above] {c2u};
 \umlemptyclass[x=-6, y=-9]{Point}
 \umlemptyclass[x=-2, y=-9]{Linear}
 \umlinherit[geometry=|-|]{Point}{Unit}
 \umlinherit[geometry=|-|]{Linear}{Unit}
 \umlassoc[name=LinearTrack, mult1=1..*, pos1=0, align1=left, anchor1=20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Track}
-\draw (LinearTrack-2) node[right] {has};
+\draw (LinearTrack-2) node[right] {l2t};
 \umlassoc[name=LinearLine, mult1=1..*, pos1=0, align1=left, anchor1=-20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Line}
-\draw (LinearLine-2) node[right] {has};
+\draw (LinearLine-2) node[right] {l2l};
 \end{tikzpicture}
+\end{center}
 \caption{Sample UML class diagram.}
 \label{fig:bjoerners_dsl}
 \end{figure}
-%
-\begin{example}
-For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
-%
-\begin{gather*}
-  \text{Classifiers: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear}
-\\
-  \text{Generalisations: }\mathsf{Point} \leq \mathsf{Unit}, \mathsf{Linear} \leq \mathsf{Unit}
-\\
-  \text{Properties: }\mathsf{Line.linear : Set[Boolean]}, \mathsf{Track.linear : Set[Boolean]}
-\\
-  \text{Compositions: }\mathsf{Station\composition unit : Set[Unit]}, \mathsf{Station\composition track : Set[Track]},
-\\
-  \phantom{\text{Compositions: }}\mathsf{Net\composition station : Set[Station]}, \mathsf{Net\composition line : Set[Line]}
-\\
-  \text{Associations: }\mathsf{has\{ line : Set[Line], linear : Set[Linear] \}},
-\\
-  \phantom{\text{Associations: }}\mathsf{has\{ track : Set[Track], linear : Set[Linear] \}},
-\\
-  \phantom{\text{Associations: }}\mathsf{has\{ connector : Set[Connector], unit : Set[Unit] \}}
-\end{gather*}
-\end{example}
 
+\section{Models}
 
-\medskip\noindent\textbf{Multiplicity constraints.}
-The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
-the following grammar:
-%
-\begin{equation*}
-\begin{array}{@{}r@{\ }r@{\ }l@{}}
-  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\ |\ \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}\ |\ \mathit{Composition}\ \mathsf{!}
-\\
-  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Composition}\ |\ \mathit{\#}\ \mathit{Association}\ \mathsf{[}\ \mathit{Role}\ (\mathsf{,}\ \mathit{Role})^*\ \mathsf{]}
-\\
-  \mathit{Composition} & ::= & \mathit{Classifier}\composition\mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ]
-\\
-  \mathit{Association} & ::= & \mathit{Name}\{ \mathit{Role} : \mathit{Annot}\ [\ \mathit{Classifier}\ ](\mathsf{,}\ \mathit{Role}\ \mathsf{:}\ \mathit{Annot}\ [\ \mathit{Classifier}\ ])^* \}
-\\
-  \mathit{Classifier} & ::= & \mathit{Name}
-\\
-  \mathit{Role} & ::= & \mathit{Name}
-\\
-  \mathit{Annot} & ::= & \mathsf{OrderedSet} \mid \mathsf{Set} \mid \mathsf{Sequence} \mid \mathsf{Bag}
-\\
-  \mathit{NumLiteral} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
-\end{array}
-\end{equation*}
-%
-where $\mathit{Name}$ is a set of names.
-
-The set of $\Sigma$-\emph{multiplicity constraints}
-$\mathit{Mult}(\Sigma)$ for a classifier net $\Sigma$ is given by the
-multiplicity formulae in $\mathit{Frm}$ such that all mentioned
-elements of $\mathit{Composition}$ and $\mathit{Association}$ correspond
-to composition declarations and association declarations of $\Sigma$,
-respectively, and the role names mentioned in the last clause of
-$\mathit{FunExpr}$ occur in the mentioned association.  The
-\emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
-along a classifier net morphism $\sigma$, written as
-$\sigma(\varphi)$, is given by applying $\sigma$ to compositions,
-associations, and role names.
-
-
-\begin{example}
-For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
-\begin{gather*}
-  \mathsf{2 \leq \#Net\composition station : Set[Station]}
-\\
-  \mathsf{Net\composition station : Set[Station]\,!}
-\\
-  \mathsf{Net\composition line : Set[Line]\,!}
-\\
-  \mathsf{Station\composition unit : Set[Unit]\,!}
-\\
-  \mathsf{Station\composition track : Set[Track]\,!}
-\\
-  \mathsf{1 \leq \#has\{ connector : Set[Connector], unit : Set[Unit] \}[unit]}
-\\
-  \mathsf{\#has\{ connector : Set[Connector], unit : Set[Unit] \}[unit] \leq 4}
-\\
-  \mathsf{\#has\{ connector : Set[Connector], unit : Set[Unit] \}[connector] = 1}
-\\
-  \mathsf{1 \leq \#has\{ track : Set[Track], linear : Set[Linear] \}[track]}
-\\
-  \mathsf{\#has\{ track : Set[Track], linear : Set[Linear] \}[linear] = 1}
-\\
-  \mathsf{1 \leq \#has\{ line : Set[Line], linear : Set[Linear] \}[line]}
-\\
-  \mathsf{\#has\{ line : Set[Line], linear : Set[Linear] \}[linear] = 1}
-\end{gather*}
-%
-where we write ``$=$'' as an abbreviation for two inequations using
-``$\leq$''.
-\end{example}
-
-
-\eat{
--------------------------------------------------------------------
-
-
-
-A classifier interpretation $C^{\mathcal{I}}$ induces the following
-interpretation of classifier annotations:
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item
-$C^{\mathcal{I}}(\mathsf{OrderedSet}[c]) =
-\finorderedpowerset(C^{\mathcal{I}}(c))$
-(where $\finorderedpowerset(X)$ is the set of finite subsets of $X$ where
-to elements of $\finorderedpowerset(X)$ are equal if, and only if, they
-contain the same elements in the same order);
-
-  \item $C^{\mathcal{I}}(\mathsf{Set}[c]) =
-\finpowerset(C^{\mathcal{I}}(c))$ (where $\finpowerset(X)$ is the set of
-finite subsets of $X$);
-
-  \item $C^{\mathcal{I}}(\mathsf{Sequence}[c]) = (C^{\mathcal{I}}(c))^*$
-(where $X^*$ is the set of finite sequences over $X$);
-
-  \item
-$C^{\mathcal{I}}(\mathsf{Bag}[c]) = [C^{\mathcal{I}}(c)
-\to_{\mathrm{fin}} \mathbb{N}]$
-(where $[X \to_{\mathrm{fin}} \mathbb{N}]$ is the set of finite
-multisets over $X$, i.e., the maps $b : X \to \mathbb{N}$ where
-$b(x) > 0$ only for a finite subset of $X$).
-\end{itemize}
-
-\medskip\noindent\textbf{Instance nets.}
-A $\Sigma$-\emph{instance net} $\mathcal{I} = (C^{\mathcal{I}},
-K^{\mathcal{I}}, P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}})$
-over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given
-by
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item a classifier interpretation $C^{\mathcal{I}}$;
-
-  \item an instance specification declaration interpretation
-$K^{\mathcal{I}}$ mapping each ${k : c} \in K$ to an element of
-$C^{\mathcal{I}}(c)$;
-
-  \item a property declaration interpretation $P^{\mathcal{I}}$
-mapping each ${c.p : \tau[c']} \in P$ to a map
-$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
-
-  \item a composition declaration interpretation $M^{\mathcal{I}}$
-mapping each ${c\composition r : \tau[c']} \in M$ to a map
-$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
-
-  \item an association declaration interpretation $A^{\mathcal{I}}$
-mapping each $a\{ r_1 : c_1, \dots, r_n : c_n \} \in A$
-to a subset of
-$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(c_i) =
-\{ \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \mid o_i \in
-C^{\mathcal{I}}(c_i),\ 1 \leq i \leq n \}$,
-\end{itemize}
-%
-such that
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item each instance has at most one owner: if
-$o' \in M^{\mathcal{I}}(c_1\composition r_1 : \tau_1[c_1'])(o_1) \cap
-M^{\mathcal{I}}(c_2\composition r_2 : \tau_2[c_2'])(o_2)$,
-then $o_1 = o_2$.
-\end{itemize}
-
-
----------------------------------------------------------------
-}
+As stated above, models (in the sense of the term \termref{model} defined in
+clause~\ref{terms-and-defs}) of UML class diagrams are obtained 
+via a translation to Common Logic.
 
 For a classifier net
 $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
@@ -6783,106 +6894,116 @@ $CL(\Sigma)$ consisting of:
 \item 
   $\CL(\mathsf{Real}) = \texttt{buml:Real}$,
 \item 
-  $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. Additionally, the Common Logic theory is augmented by
+  $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. In this case, additionally, the Common Logic theory is augmented by
 \texttt{(enumeration $c$ $k_1 \cdots k_n$)},\ednote{Ed Seidewitz:
 enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \item 
-  $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$\ednote{UML has typed
-  sequences, but fUML appaerantly not. How do we solve this problem?},
+  $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$,
 \item 
-  $\CL(\mathsf{Set}[c]) = ???$\ednote{UML has sets, but fUML appaerantly not. 
-     Do we want to provide our own specification of sets in Common Logic?},
+  $\CL(\mathsf{Set}[c]) = \texttt{form:Set}$,
 \item 
-  $\CL(\mathsf{OrderedSet}[c]) = ???$\ednote{UML has ordered sets, but fUML appaerantly not. 
-     Do we want to provide our own specification of ordered sets in Common Logic?},
+  $\CL(\mathsf{OrderedSet}[c]) = \texttt{form:OrderedSet}$,
 \item 
-  $\CL(\mathsf{Bag}[c]) = ???$\ednote{UML has bags, but fUML appaerantly not. 
-     Do we want to provide our own specification of bags in Common Logic?},
- 
+  $\CL(\mathsf{Bag}[c]) = \texttt{form:Bag}$,
+\item 
+  $\CL(\mathsf{c}) = c$, if $c$ a class name which is not one of the above. 
 \end{itemize}
 \item for each relation $c_1
   \leq_C c_2$, an axiom \texttt{(forall (x) (if (C1 x) (C2 x)))},
   where C1$=\CL(c_1)$, C2$=\CL(c_2)$, 
 
-  \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
-\texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
-  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
-  \item $\CL$ maps each property declaration $c.p(x_1 : c_1, \dots, x_n : c_n)
-: \tau[c'] \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
+%  \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
+%\texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
+%  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
+  \item $\CL$ maps each attribute declaration $c.p : \tau[c'] \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
 and functionality:
 \begin{itemize}
 \item
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\texttt{(forall (x y) (if (c.p x y) (c x))) }
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
-for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
+\texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote
+{With \texttt{($\tau[c]$ x)}, we abbreviate\\
+\texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.}
+%% \item 
+%% \texttt{(forall (x y m)\\
+%% \qqquad (if (and (c.p x y) (member m y)) (c' m)))}
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
+\texttt{(forall (x)\\
+\qqquad  (if (c x) (exists (y) (c.p x y))))}
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
-\qqquad (if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)}\\
-\qqquad \texttt{(exists (y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y)))}
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
-\qqquad \texttt{(if (and (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.p x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\texttt{(forall (x y z)}\\
+\qqquad \texttt{(if (and (c.p x y) (c.p x z))}\\
 \qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
-  \item \CL maps each composition declaration ${c\composition r : \tau[c']} \in M$ to
-a predicate $\CL(r)$ and axioms\\
-\texttt{(forall (x) (if (c x) (exists (y) (and (r x y) ($\tau$[c'] y)))))}\\
-\texttt{(forall (x y) (if (r x y) (and (c x) ($\tau$[c'] y))))}\\
-\texttt{(forall (x y z) (if (and (r x y) (r x z)) (= y z)))}
+  \item $\CL$ maps each query operation declaration $c.o(x_1 :
+    \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
+    predicate $\CL(c.o)$ and axioms stating type-correctness and
+    functionality:\ednote{axioms need to be adapted to the fact   
+    that parameter types are collection types}
+\begin{itemize}
+\item
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
+for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
+%% \item 
+%% \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
+%% \qqquad (if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
+\qqquad  (if (and (c x) ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$))\\
+\qqquad\qqquad (exists (y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
+\item 
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
+\qqquad \texttt{(if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\qqquad\qqquad\texttt{(= y z)))}
+\end{itemize}
+  \item \CL maps each composition declaration $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ to
+a constant $\CL(m)$ and axioms stating that $\CL(m)$ is a finite
+binary relation represented as a sequence of pairs of the
+correct type:
+\begin{lstlisting}[language=clif,morekeywords={then,with}]
+(from:Sequence m)
+(forall (p) (if (form:sequence-member p m)
+                (and (form:Pair p) (c1 (form:first p)) (c2 (form:second p))))
+\end{lstlisting}
   \item 
-for any pair of composition declarations $c_1\composition r_1 : c_1'$
-and $c_2\composition r_2 : c_2'$, an axiom stating ``each instance has
-at most one owner'':\\
-\texttt{(forall ($x_1$ $x_2$ $y_1$ $y_2$) (if (and ($r_1$ $x_1$ $y_1$) ($r_2$ $x_2$ $y_2$))}\\
-\qqquad\texttt{(exists (z) (and (member z $x_1$) (member z $x_2$)))))}
-  \item \CL maps each association declaration $a(r_1 : c_1, \dots, r_n : c_n)\in A$ to a predicate $\CL(a)$ and an axiom\\
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}\footnote{
-Ignoring the annotations $\tau_i$ in the interpretation of an
-association is intentional, see the semantics of associations in the UML
-Superstructure Specification 2.4.1, p.~37.}
+for any pair of composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
+at most one owner'':
+\begin{lstlisting}[language=clif,morekeywords={then,with}]
+(forall (o o' i)
+        (if (and (form:sequence-member (form:pair o i) m)
+                 (form:sequence-member (form:pair o' i) m'))
+            (= o o')))
+\end{lstlisting}
+  \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(m)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
+being represented as sequences):\\
+\texttt{(from:Sequence a)}\\
+\texttt{(forall (t) (if (form:sequence-member t m)\\
+\qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
+\qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
+\ \ \  (= t (form:insert-sequence $x_1$ ($\cdots$ (form:insert-sequence $x_n$ form:empty-sequence)))))))))}
+\item the interpretation of a member end of a binary association
+declaration owned by a class/data type coincides with the interpretation
+of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
+$\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
+$c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))} 
+\item the interpretation of a member end of a composition declaration
+owned by a class/data type coincides with the interpretation of the
+attribute: if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ is owned
+by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))} 
+%% \footnote{
+%% Ignoring the annotations $\tau_i$ in the interpretation of an
+%% association is intentional, see the semantics of associations in the UML
+%% Superstructure Specification 2.4.1, p.~37.}
 \end{itemize}
 
-
-
-
-\eat{
-\begin{example}%\pushQED{\qed}%
-%
-An excerpt of an instance net for the class net for
-Fig.~\ref{fig:bjoerners_dsl} is:
-%
-\begin{gather*}
-  \CL(\mathsf{Net}) = \{ \mathtt{LondonUnderground} \}
-\\[-.3ex]
-  \CL(\mathsf{Station}) = \{ \mathtt{CharingCross}, \mathtt{OxfordStreet}, \dots, \mathtt{PicadillyCircus} \}
-\\[-.3ex]
-  \CL(\mathsf{Connector}) = \{ \mathtt{c1}, \mathtt{c2}, \mathtt{c3}, \dots \}
-\\[-.3ex]
-  \CL(\mathsf{Pair}[\mathsf{Connector}, \mathsf{Connector}]) = \{ (\mathtt{c1}, \mathtt{c1}), (\mathtt{c1}, \mathtt{c2}), (\mathtt{c2}, \mathtt{c1}), (\mathtt{c2}, \mathtt{c2}), \dots \}
-\\[-.3ex]
-  \CL(\mathsf{Net}.\mathsf{ID} : \mathsf{UID}) : \CL(\mathsf{Net}) \partialto \CL(\mathsf{UID})\quad\text{where}
-\\[-.5ex]\qquad
-  \mathtt{LondonUnderground} \mapsto \mathtt{\texttt{"}LUG\texttt{"}}\quad\text{etc.}
-\\[-.3ex]
-  \CL(\mathsf{Route}.\mathsf{isOpen} : \mathsf{Boolean}) : \CL(\mathsf{Route}) \partialto \CL(\mathsf{Boolean})\quad\text{where}
-\\[-.5ex]\qquad
-  \mathsf{R1} \mapsto \mathit{tt}\,\text{etc.}
-\\[-.3ex]
-  M^{\mathcal{I}}(\mathsf{Net}\composition\mathsf{has} : \mathsf{Station}) : \CL(\mathsf{Net}) \to \powerset(\CL(\mathsf{Station}))\quad\text{where}
-\\[-.5ex]\qquad
-  \mathsf{LondonUnderground} \mapsto \{ \mathtt{CharingCross}, \dots, \mathtt{PicadillyCircus} \}
-\\[-.3ex]
-  A^{\mathcal{I}}(\mathsf{stateAt}(\mathsf{unit} : \mathsf{Unit}, \mathsf{state} : \mathsf{UnitState})) =
-{}\\[-.5ex]\qquad
-  \{ (\mathtt{LU1}, \{ \mathtt{(c1,c2)} \}), (\mathtt{LU2}, \{ \mathtt{(c2,c3)} \}), \dots \}%\qedhere
-\end{gather*}%\popQED
-\end{example}
-}
 
 It is straightforward to extend $\CL$ from signatures to signature morphisms.
 
@@ -6893,84 +7014,90 @@ $\CL(\Sigma)$-model in Common Logic. That is, the UML class diagram
 institution inherits models from Common Logic. Moreover, model reducts
 are inherited as well, using the action of $\CL$ on signature morphisms.
 
-\smallskip\noindent
-\textit{Multiplicity formulae --- Sentences.}
-\ednote{Ed Seidewitz: Multiplicities are different for associations
-  and for properties, this is a bit tricky. Associations are
-  predicates of single values, whereas properties can be over sets
-  etc.  Aexander: we need to correct the representation for
-  compositions used in associations.}
-\ednote{missing: relations between properties, e.g. subsets, unions}
-\ednote{derived associations: one association is the composition of two others}
-For the sentences of the UML class diagram institution we use
-\emph{multiplicity formulae} defined by the following grammar:
+
+\section{Sentences}
+
+The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
+the following grammar:
 %
 \begin{equation*}
 \begin{array}{@{}r@{\ }r@{\ }l@{}}
-  \mathit{Frm} & ::= & \mathit{NumLit}\ \mathsf{\leq}\ \mathit{FunExpr}\ |\ \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLit}\ |\ \mathit{Composition}\ \mathsf{!}
+  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\\
+               &   | & \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}
+\\[1ex]
+  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Attribute}\\
+                   &   | & \mathit{\#}\ \mathit{Assocation}\ \mathsf{.}\ \mathit{End}\\
+                   &   | & \mathit{\#}\ \mathit{Composition}\ \mathsf{.}\ \mathit{End}
+\\[1ex]
+  \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End} \mathsf{:} \mathit{Type}
 \\
-  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Composition}\ | \ \mathit{\#}\ \mathit{Association}\ \mathsf{[}\ \mathit{Role} (\mathsf{,}\ \mathit{Role})^*\ \mathsf{]}
+  \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )
 \\
-  \mathit{Composition} & ::= & \mathit{Class}\composition\mathit{Role}\ \mathsf{:}\ \mathit{Class}
+  \mathit{Composition} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
+\\[1ex]
+  \mathit{Type} & ::= & \mathit{Annot}\ \mathsf{[}\ \mathit{Classifier}\ \mathsf{]}
 \\
-  \mathit{Association} & ::= & \mathit{Name}\{ \mathit{Role} : \mathit{Class} (\mathsf{,}\ \mathit{Role}\ \mathsf{:}\ \mathit{Class})^* \}
+  \mathit{Classifier} & ::= & \mathit{Name}
 \\
-  \mathit{Class} & ::= & \mathit{Name}
+  \mathit{End} & ::= & \mathit{Name}
 \\
-  \mathit{Role} & ::= & \mathit{Name}
+  \mathit{Annot} & ::= & \mathsf{OrderedSet} \mid \mathsf{Set} \mid \mathsf{Sequence} \mid \mathsf{Bag}
 \\
-  \mathit{NumLit} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
+  \mathit{NumLiteral} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
 \end{array}
 \end{equation*}
 %
-where $\mathit{Name}$ is a set of strings.  The $\leq$-formulae
-express constraints on the cardinalities of composition and
-association declarations, i.e., how many instances are allowed to be
-in a certain relation with others.  The $\#$-expressions return the
-number of links in an association when some roles are fixed.  The
-$!$-formulae for compositions express that the owning end must not be
-empty.
-%
-The set of sentences or $\Sigma$-\emph{multiplicity constraints}
-$\mathit{Mult}(\Sigma)$ for a class net $\Sigma$ is given by the
-multiplicity formulae in $\mathit{Frm}$ such that all mentioned
-elements of $\mathit{Composition}$ and $\mathit{Association}$
-correspond to composition declarations and association declarations of
-$\Sigma$ respectively, and the $\mathit{Role}$ names mentioned in the
-last clause of $\mathit{FunExpr}$ occur in the mentioned association.
+where $\mathit{Name}$ is a set of names and $\mathit{NumLiteral}$ is
+assumed to be equipped with an appropriate function
+$\sem{-} : \mathit{NumLiteral} \to \NZ$.
 
-\begin{example}\label{ex:dsl-sen}
-Some of the cardinality constraints of the running example in
-Fig.~\ref{fig:bjoerners_dsl} can be expressed with multiplicity
-formulae as follows:
-%
+The set of $\Sigma$-\emph{multiplicity constraints}
+$\mathit{Mult}(\Sigma)$ for a class/data type net $\Sigma$ is given by the
+multiplicity formulae in $\mathit{Frm}$ such that all mentioned elements
+of $\mathit{Association}$ and $\mathit{Composition}$ correspond to
+association declarations and composition declarations of $\Sigma$,
+respectively, and the member end name mentioned in the clauses of
+$\mathit{FunExpr}$ occur in the mentioned association and composition,
+respectively.
+
+The \emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
+along a class/data type net morphism $\sigma$, written as $\sigma(\varphi)$,
+is given by applying $\sigma$ to associations, compositions, and member end
+names.
+
+
+\begin{example}
+For the example in Fig. \ref{fig:bjoerners_dsl} we have
 \begin{gather*}
-  \mathsf{Station\composition has : Track \,!}
-\\[-.5ex]
-\quad\text{--- each \uml{Track} is owned by a \uml{Station} via \uml{has}},
+  \mathsf{2 \leq \#n2s(net : Set[Net], \composition station : Set[Station]).station}
 \\
-  \mathsf{2 \leq \#has(connector : Connector, unit : Unit)[unit]}
-\\[-.5ex]
-  \quad\text{--- association \uml{has} links each \uml{Unit} to at least two \uml{Connector}s},
+  \mathsf{\#n2s(net : Set[Net], \composition station : Set[Station]).net = 1}
 \\
-  \mathsf{\#state(unitState : UnitState, unit : Unit)[unit] = 1}
-\\[-.5ex]
-  \quad\text{--- association \uml{state} links each \uml{Unit} to exactly one \uml{UnitState}}.
+  \mathsf{\#n2l(net : Set[Net], \composition line : Set[Line]).net = 1}
+\\
+  \mathsf{\#s2u(station : Set[Station], \composition unit : Set[Unit]).station = 1}
+\\
+  \mathsf{\#s2t(station : Set[Station], \composition track : Set[Track]).station = 1}
+\\
+  \mathsf{1 \leq \#c2u(connector : Set[Connector], unit : Set[Unit]).unit \leq 4}
+\\
+  \mathsf{\#c2u(connector : Set[Connector], unit : Set[Unit]).connector = 1}
+\\
+  \mathsf{1 \leq \#l2t(track : Set[Track], linear : Set[Linear]).track}
+\\
+  \mathsf{\#l2t(track : Set[Track], linear : Set[Linear]).linear = 1}
+\\
+  \mathsf{1 \leq \#l2t(line : Set[Line], linear : Set[Linear]).line}
+\\
+  \mathsf{\#l2l(line : Set[Line], linear : Set[Linear]).linear = 1}
 \end{gather*}
 %
-Note we have used formulae with $=$ instead of two formulae with
-$\leq$ where the left hand side and the right hand side are
-switched.\qed
+where we write ``$=$'' and ``${-} \leq {-} \leq {-}$'' as respective
+abbreviations for two inequations using ``$\leq$''.
 \end{example}
 
-The \emph{translation} of a formula $\varphi \in
-\mathit{Mult}(\Sigma)$ along a class net morphism $\sigma =
-(\gamma, \kappa, \pi, \mu, \alpha) : \Sigma \to \Tau$, written as
-$\sigma(\varphi)$, is given by applying $\sigma$ to compositions,
-associations, and role names.
 
-\smallskip\noindent
-\textit{Satisfaction relation.}
+\section{Satisfaction relation.}
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object diagram $\Sigma$, a
@@ -6979,6 +7106,7 @@ latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic), we define
 $$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
 
 The translation of multiplicity formulas to Common Logic is as follows:
+\ednote{This section still needs to be updated!!!}
 \begin{itemize}
   \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
 \texttt{(forall (x y n)}\\
@@ -7007,47 +7135,6 @@ $\CL(\ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\maths
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer.\ednote{the last two items need adaption}
 
-\eat{
-------------------------------------------------------------
-Let $\sem{\ell}$ be the value of a $\mathit{NumLiteral}$ $\ell$.  For a
-subset $X$ of $\Pi y \in Y \,.\, P(y)$ and a map
-$d : \Pi y \in Y' \,.\, P(y)$ with $Y' \subseteq Y$, we write $X[d]$ for
-$\{ \{ y \mapsto p(y) \mid y \in Y \} \in X \mid d(y) = p(y),\ y \in Y' \}$.
-
-Let $\Sigma = ((C, {\leq}), K, P, M, A)$ be a classifier net.  The
-$\Sigma$-\emph{satisfaction relation}
-${-} \models_{\Sigma} {-} \subseteq |\mathrm{Inst}(\Sigma)| \times
-\mathit{Sen}(\Sigma)$
-is defined for each $\Sigma$-instance net
-$\mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}}, P^{\mathcal{I}},
-M^{\mathcal{I}}, A^{\mathcal{I}})$ as
-%
-\begin{gather*}
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c']
-\iff
-  \forall o \in C^{\mathcal{I}}(c) \,.\, \sem{\ell} \leq |M^{\mathcal{I}}(c\composition r : \tau[c'])(o)|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c'] \leq \ell
-\iff
-  \forall o \in C^{\mathcal{I}}(c) \,.\, M^{\mathcal{I}}(c\composition r : \tau[c'])(o) \leq \sem{\ell}
-\\
-  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} \tau[c']\mathsf{!}
-\iff
-  \forall o' \in C^{\mathcal{I}}(\tau[c']) \,.\, \exists o \in C^{\mathcal{I}}(c) \,.\, o' \in M^{\mathcal{I}}(c\composition r : \tau[c'])(o)
-\\
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}}
-\iff{}\\\qquad
-  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
-\\\qquad\qquad
-  \sem{\ell} \leq |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}} \leq \ell
-\iff{}\\\qquad
-  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
-\\\qquad\qquad
-  |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
-\end{gather*}
-}
 
 \normannex{Conformance of CASL with DOL}\label{a:casl}
 
