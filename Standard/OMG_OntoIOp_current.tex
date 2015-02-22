@@ -6412,6 +6412,9 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 We additionally need to axiomatize a number of predicates in Common Logic
 (note that enumerations are not axiomatized in fUML):
 \begin{lstlisting}[language=clif,morekeywords={then,with}]
+logic CLIF
+
+oms uml-enumerations =
 (distinct)        // the empty sequence is distinct
 (distinct x)    // singleton sequences are distinct
 (iff (distinct x y ...) // recursion for length > 1
@@ -6425,26 +6428,35 @@ We additionally need to axiomatize a number of predicates in Common Logic
 (iff (oneof x y ...) (or (= x y) (oneof x ...)))
 (iff (enumeration c ...) (and (exhaustive c ...) (distinct ...)))
    // c is an enumeration type with values ...
+end
 
-// fuml:sequence - membership of an element in a sequence
-(forall (x s)
-    (if (member x s)
-        (form:Sequence s)))
+oms sequences =
+fuml:sequences.clif
+then
+  // fuml:sequence - membership of an element in a sequence
+  (forall (x s)
+      (if (form:sequence-member x s)
+          (form:Sequence s)))
 
-(forall (x s)
-    (iff (member x s)
-         (exists (pt) 
-             (and (form:in-sequence s pt)
-                  (form:in-position pt x)) )))
+  (forall (x s)
+      (iff (form:sequence-member x s)
+           (exists (pt) 
+               (and (form:in-sequence s pt)
+                    (form:in-position pt x)) )))
+  // insertion of elements
+  // todo form:insert-sequence
+end
 
-%% ordered sets
-then fuml:sequences.clif with
+oms ordered-sets =
+sequences with
   form:Sequence |-> form:Ordered-Set,
   form:empty-sequence |-> form:empty-ordered-set,
   form:sequence-length |-> form:ordered-set-size,
   form:same-sequence |-> form:same-ordered-set,
+  form:sequence-member |-> form:ordered-set-member,
   form:in-sequence |-> form:in-ordered-set,
-  form:before-in-sequence |-> form:before-in-ordered-set
+  form:before-in-sequence |-> form:before-in-ordered-set,
+  form:position-count |-> form:ordered-set-position-count
 then
 //Different positions contain different elements
   (forall (s1 s2 x1 x2 n1 n2)
@@ -6452,6 +6464,133 @@ then
   	  	     (form:in-position-count s2 n2 x2)
                      (= x1 x2))
                 (= n1 n2)))
+end
+
+oms sets =
+//An empty set has no members.
+(forall (s)
+	(if (form:empty-set s)
+	    (form:Set s)))
+(forall (s)
+	(if (form:Set s)
+	    (iff (form:empty-set s)
+		 (not (exists (x)
+			      (form:set-member x s))))))
+//Size of sets
+(forall (s n)
+	(if (form:set-size s n)
+	    (and (form:Set s)
+		 (buml:UnlimtedNatural n))))
+(= (form:set-size form:empty-set) form:0)
+(forall (x s)
+        (if (not (form:set-member x s))
+            (= (form:set-size (form:set-insert x s))
+               (form:suc (form:set-size s)))))
+
+//The same-set relation is true for sets that have the same members.
+// but: why not replace same-set with = ?
+(forall (s1 s2)
+	(if (form:same-set s1 s2)
+	    (and (form:Set s1)
+		 (form:Set s2))))
+(forall (s1 s2)
+	(iff (form:same-set s1 s2)
+	     (forall (x)
+		     (iff (form:set-member x s1)
+			  (form:set-member x s2)))))
+//Insertion of elements into sets and set membership
+(forall (x s)
+	(if (form:Set s)
+	    (form:Set (form:set-insert x s))))
+(forall (x y s)
+        (iff (form:set-member x (form:set-insert y s))
+             (or (= x y)
+                 (form:set-member x s))))
+end
+
+oms bags =
+//An empty bag has no members.
+(forall (s)
+	(if (form:empty-bag s)
+	    (form:Bag s)))
+(forall (s)
+	(if (form:Bag s)
+	    (iff (form:empty-bag s)
+		 (not (exists (x)
+			      (form:bag-member x s))))))
+//Size of bags
+(forall (s n)
+	(if (form:bag-size s n)
+	    (and (form:Bag s)
+		 (buml:UnlimtedNatural n))))
+(= (form:bag-size form:empty-bag) form:0)
+(forall (x s)
+        (= (form:bag-size (form:bag-insert x s))
+           (form:suc (form:bag-size s)))))
+
+//The same-bag relation is true for bags that have the same members.
+(forall (s1 s2)
+	(if (form:same-bag s1 s2)
+	    (and (form:Bag s1)
+		 (form:Bag s2))))
+(forall (s1 s2)
+	(iff (form:same-bag s1 s2)
+	     (forall (x)
+		     (iff (form:bag-member-count x s1)
+			  (form:bag-member-count x s2)))))
+//Insertion of elements into bags and bag membership
+(forall (x s)
+	(if (form:Bag s)
+	    (form:Bag (form:bag-insert x s))))
+(forall (x y s)
+        (iff (form:bag-member x (form:bag-insert y s))
+             (or (= x y)
+                 (form:bag-member x s))))
+//Member count
+(forall (x s)
+	(if (form:Bag s)
+	    (buml:UnlimtedNatural (form:bag-member-count x s))))
+(= (form:bag-member-count form:empty-bag) form:0)
+(forall (x s)
+        (= (form:bag-member-count x (form:bag-insert x s))
+           (form:suc (form:bag-member-count x s))))
+(forall (x y s)
+        (if (not (= x y))
+            (= (form:bag-member-count x (form:bag-insert y s))
+               (form:bag-member-count x s))))
+end
+
+oms collection-types =
+  sequences and ordered-sets and sets and bags
+then
+//bag to set
+(forall (b)
+	(if (form:Bag s)
+	    (form:Set (form:bag2set b))))
+(= (form:bag2set form:empty-bag) form:empty-set)
+(forall (x b)
+        (if (form:Bag b)
+            (= (form:bag2set (form:set-insert x b))
+               (form:bag-insert x (form:bag2set b)))))
+
+//sequence to ordered list
+(forall (b)
+	(if (form:Sequence s)
+	    (form:Ordered-Set (form:seq2ordset s))))
+(= (form:seq2ordset form:empty-empty) form:empty-ordered-set)
+(forall (x s)
+        (if (form:Sequence s)
+            (= (form:seq2ordset (form:sequence-insert x s))
+               (form:ordered-set-insert x (form:seq2ordset s)))))
+
+// todo: seq2bag, ordered-set2set
+
+end
+
+oms uml-cd-preliminaries =
+  uml-enumerations and collection-types
+end
+
 \end{lstlisting}
 
 Using this infrastructure, we obtain an institution for UML class
