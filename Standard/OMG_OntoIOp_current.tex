@@ -6514,8 +6514,10 @@ we write $\tau[c]$ for the induced \emph{collection type}.
 Let $(C, {\leq_C})$ be a class/data type hierarchy.
 %
 \begin{itemize}[label={--}, leftmargin=*]
-  \item An \emph{attribute declaration} over $(C, {\leq_C})$ is of the
-form $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
+  \item An \emph{attribute declaration}\footnote{We separate attributes
+  from association member ends due to their different uses.  In UML,
+  both are of class \uml{Property}.} over $(C, {\leq_C})$ is of the form
+$c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
 constructor, and $p$ an \emph{attribute name}.
 
   \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of the
@@ -6535,7 +6537,9 @@ $\mathbf{a} = a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])$
 $\mathbf{a}.p_i : \tau_i[c_i]$ for $1 \leq i \leq r$.  An association
 declaration is \emph{binary} if $r = 2$.\footnote{Only binary
   association may show member ends that are properties not owned by the
-  association (UML Superstructure Specification 2.4.1, p.~37).}
+  association (UML Superstructure Specification 2.4.1, p.~37).  The
+  propery declarations induced by a more than binary association result
+  in a query operation.}
 
   \item A \emph{composition declaration} over $(C, {\leq_C})$ is of the
 form $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$ with
@@ -6543,7 +6547,7 @@ $c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
 \emph{composition name}, and $p_1, p_2$ \emph{member end
   names}.\footnote{In UML, each \uml{Property} may have
   \uml{AggregationKind} \uml{composite}.  However, such an aggregation
-  kind has no semantical meaning when the property is not a member end
+  kind has no semantic meaning when the property is not a member end
   of an association: the UML Superstructure Specification 2.4.1 does not
   mention the aggregation kind in the description of the semantics of
   \uml{Property}.  Moreover, composite properties, i.e., properties with
@@ -6561,8 +6565,7 @@ $\mathbf{m}.p_1 : \mathsf{Set}[c_1]$ and $\mathbf{m}.p_2 : \tau_2[c_2]$.
 \medskip\noindent\textbf{Class/data type nets (Signatures).}
 A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A, M)$
 comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $P$ of
-property declarations (this includes both the declared attributes and the
-yielded properties)\ednote{is this correct ?!}, a set $O$ of operation declarations,
+attribute declarations, a set $O$ of operation declarations,
  a set $A$ of association declarations over
 $(C, {\leq_C})$, and a set $M$ of composition declarations, such that
 the following properties are satisfied:
@@ -6582,16 +6585,16 @@ member end names of an association declaration in $A$ or a composition
 declaration in $M$, then $p_i \neq p_j$ for $1 \leq i \neq j \leq r$.
 
   \item the type of a member end\footnote{All member ends are instances
-  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36.} owned by a class/data type coincides with its
-declarations as attribute: We say that a property declaration
-$\mathbf{a}.p_i : \tau_i[c_i]$ yielded by a binary association
+  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36.}
+owned by a class/data type coincides with its declarations as attribute:
+We say that a property declaration $\mathbf{a}.p_i : \tau_i[c_i]$
+yielded by a binary association
 $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2])$ is \emph{owned
-  by} $c_0 \in C$ if $c_{2-i+1} \leq_C c_0$ and there is an attribute
-declaration $c_0.p_i : \tau_0[c_0'] \in P$; and similarly for property
-declarations yielded by composition declarations.  If a property
-declaration $\mathbf{d}.p : \tau[c']$ for $\mathbf{d} \in A \cup M$ is
-owned by $c_0 \in C$ with $c_0.p : \tau_0[c_0'] \in P$, then
-$\tau_0 = \tau$ and $c_0' = c'$.
+  by} $c_0 \in C$ if $c_{3-i} \leq_C c_0$ and there is an attribute
+declaration $c_0.p_i : \tau_i[c_i] \in P$; and similarly for property
+declarations yielded by composition declarations.  (Note that by the
+uniqueness of attribute names along the generalisation hierarchy only a
+single attribute with name $p_i$ may exist.)
 \end{itemize}
 
 A \emph{class/data type net morphism}
@@ -6603,7 +6606,7 @@ is given by
   \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
 {\leq_D})$;
 
-  \item a property declaration map $\pi : P \to Q$ such that if
+  \item a attribute declaration map $\pi : P \to Q$ such that if
 $\pi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then $d = \gamma(c)$,
 $d' = \gamma(c')$, and $\tau = \tau'$;
 
@@ -6611,7 +6614,8 @@ $d' = \gamma(c')$, and $\tau = \tau'$;
 $\alpha(a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])) = b(q_1 :
 \tau_1'[d_1], \dots, q_s : \tau_s'[d_s]) \in B$,
 then $r = s$ and $d_i = \gamma(c_i)$ and $\tau_i = \tau_i'$ for
-$1 \leq i \leq r$, and member ends owned by the association are mapped into owned member ends;
+$1 \leq i \leq r$, and member ends owned by the association are mapped
+into owned member ends;
 
   \item a composition declaration map $\mu : M \to N$ such that if
 $\mu(m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])) =
@@ -6838,7 +6842,9 @@ the following grammar:
 \end{array}
 \end{equation*}
 %
-where $\mathit{Name}$ is a set of names.
+where $\mathit{Name}$ is a set of names and $\mathit{NumLiteral}$ is
+assumed to be equipped with an appropriate function
+$\sem{-} : \mathit{NumLiteral} \to \NZ$.
 
 The set of $\Sigma$-\emph{multiplicity constraints}
 $\mathit{Mult}(\Sigma)$ for a class/data type net $\Sigma$ is given by the
