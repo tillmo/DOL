@@ -2,7 +2,7 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.84.1}
+\newcommand{\version}{0.85}
 
 
 %todo
@@ -1575,7 +1575,7 @@ explicit references to the logics used.
 
 
 
-\chapter{Terms and Definitions}
+\chapter{Terms and Definitions}\label{terms-and-defs}
 \ednote{OMG specifications shall not contain glossaries, hence always
 refer to this section if definitions of terms are needed.}
 
@@ -1684,8 +1684,9 @@ of non-logical symbols\index{non-logical symbol} of an
     that moreover satisfies all the axioms\index{axiom} of the OMS.
   \end{note}
   \begin{note}
-  This term is not to be confused with model in the sense of modeling (i.e.,
-  the ``M'' in OMS).
+  This term refers to \emph{model} in the sense of model theory (a
+  branch of logic). It is not to be confused with \emph{model} in the
+  sense of modeling (i.e., the ``M'' in OMS).
   \end{note}
 
   
@@ -6398,6 +6399,8 @@ The institution of UML class and object diagrams is defined using a
 translation of UML class diagrams to Common Logic, following the fUML
 specification and \cite{Seidewitz08}.
 
+\section{Preliminaries}
+
 From the fUML specification, section 10.3.1, we inherit the axioms for
 primitive types: Booleans, numbers, sequences and strings.  These
 axiomatize (among others) predicates corresponding to primitive types,
@@ -6408,7 +6411,7 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 
 We additionally need to axiomatize a number of predicates in Common Logic
 (note that enumerations are not axiomatized in fUML):
-\begin{lstlisting}[language=clif]
+\begin{lstlisting}[language=clif,morekeywords={then,with}]
 (distinct)        // the empty sequence is distinct
 (distinct x)    // singleton sequences are distinct
 (iff (distinct x y ...) // recursion for length > 1
@@ -6433,10 +6436,30 @@ We additionally need to axiomatize a number of predicates in Common Logic
          (exists (pt) 
              (and (form:in-sequence s pt)
                   (form:in-position pt x)) )))
+
+%% ordered sets
+then fuml:sequences.clif with
+  form:in-sequence |-> form:in-ordered-set,
+  form:Sequence |-> form:Ordered-Set,
+  form:before-in-sequence |-> form:before-in-ordered-set,
+  form:Sequence |-> form:Ordered-Set,
+  form:empty-sequence |-> form:empty-ordered-set,
+  form:in-sequence |-> form:in-ordered-set,
+  form:sequence-length |-> form:ordered-set-size,
+  form:same-sequence |-> form:same-ordered-set,
+then
+//Different positions contain different elements
+  (forall (s1 s2 x1 x2 n1 n2)
+  	    (if (and (form:in-position-count s1 n1 x1)
+  	  	     (form:in-position-count s2 n2 x2)
+                     (= x1 x2))
+                (= n1 n2)))
 \end{lstlisting}
 
 Using this infrastructure, we obtain an institution for UML class
-diagrams as follows:
+diagrams as described in the following sections.
+
+\section{Signatures}
 
 \medskip\noindent\textbf{Class/data type hierarchies.}
 A \emph{class/data type hierarchy} $(C, {\leq_C})$ is given by a
@@ -6495,6 +6518,11 @@ Let $(C, {\leq_C})$ be a class/data type hierarchy.
 form $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
 constructor, and $p$ an \emph{attribute name}.
 
+  \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of the
+form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$ with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
+constructor, and $o$ an \emph{operation name}.\ednote{are the $x_i$ called
+parameter names?}
+
   \item An \emph{association declaration} over $(C, {\leq_C})$ is of the
 form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])$ with $r \geq 2$,
 $c_1, \dots, c_r \in C$, $\tau_1, \ldots, \tau_r$ classifier
@@ -6531,9 +6559,11 @@ $\mathbf{m}.p_1 : \mathsf{Set}[c_1]$ and $\mathbf{m}.p_2 : \tau_2[c_2]$.
 \end{itemize}
 
 \medskip\noindent\textbf{Class/data type nets (Signatures).}
-A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, A, M)$
+A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A, M)$
 comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $P$ of
-property declarations, a set $A$ of association declarations over
+property declarations (this includes both the declared attributes and the
+yielded properties)\ednote{is this correct ?!}, a set $O$ of operation declarations,
+ a set $A$ of association declarations over
 $(C, {\leq_C})$, and a set $M$ of composition declarations, such that
 the following properties are satisfied:
 %
@@ -6596,7 +6626,7 @@ morphisms form the category of \emph{class/data type nets}, denoted by
 $\mathrm{Cl}$.
 
 \medskip
-For the example we have
+For the example in Fig. \ref{fig:bjoerners_dsl} we have
 %
 \begin{gather*}
   \text{Classes/data types: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear},
@@ -6676,181 +6706,12 @@ Here all member ends are owned by class/data types.
 \caption{Sample UML class diagram.}
 \label{fig:bjoerners_dsl}
 \end{figure}
-%
-\begin{example}
-For the class diagram in Fig.~\ref{fig:bjoerners_dsl} we have
-%
-\begin{gather*}
-  \text{Classifiers: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear}
-\\
-  \text{Generalisations: }\mathsf{Point} \leq \mathsf{Unit}, \mathsf{Linear} \leq \mathsf{Unit}
-\\
-  \text{Properties: }\mathsf{Line.linear : Set[Boolean]}, \mathsf{Track.linear : Set[Boolean]}
-\\
-  \text{Compositions: }\mathsf{Station\composition unit : Set[Unit]}, \mathsf{Station\composition track : Set[Track]},
-\\
-  \phantom{\text{Compositions: }}\mathsf{Net\composition station : Set[Station]}, \mathsf{Net\composition line : Set[Line]}
-\\
-  \text{Associations: }\mathsf{has\{ line : Set[Line], linear : Set[Linear] \}},
-\\
-  \phantom{\text{Associations: }}\mathsf{has\{ track : Set[Track], linear : Set[Linear] \}},
-\\
-  \phantom{\text{Associations: }}\mathsf{has\{ connector : Set[Connector], unit : Set[Unit] \}}
-\end{gather*}
-\end{example}
 
+\section{Models}
 
-\medskip\noindent\textbf{Multiplicity constraints.}
-The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
-the following grammar:
-%
-\begin{equation*}
-\begin{array}{@{}r@{\ }r@{\ }l@{}}
-  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\\
-               &   | & \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}
-\\[1ex]
-  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Attribute}\\
-                   &   | & \mathit{\#}\ \mathit{Assocation}\ \mathsf{.}\ \mathit{End}\\
-                   &   | & \mathit{\#}\ \mathit{Composition}\ \mathsf{.}\ \mathit{End}
-\\[1ex]
-  \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End} \mathsf{:} \mathit{Type}
-\\
-  \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )
-\\
-  \mathit{Composition} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
-\\[1ex]
-  \mathit{Type} & ::= & \mathit{Annot}\ \mathsf{[}\ \mathit{Classifier}\ \mathsf{]}
-\\
-  \mathit{Classifier} & ::= & \mathit{Name}
-\\
-  \mathit{End} & ::= & \mathit{Name}
-\\
-  \mathit{Annot} & ::= & \mathsf{OrderedSet} \mid \mathsf{Set} \mid \mathsf{Sequence} \mid \mathsf{Bag}
-\\
-  \mathit{NumLiteral} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
-\end{array}
-\end{equation*}
-%
-where $\mathit{Name}$ is a set of names.
-
-The set of $\Sigma$-\emph{multiplicity constraints}
-$\mathit{Mult}(\Sigma)$ for a class/data type net $\Sigma$ is given by the
-multiplicity formulae in $\mathit{Frm}$ such that all mentioned elements
-of $\mathit{Association}$ and $\mathit{Composition}$ correspond to
-association declarations and composition declarations of $\Sigma$,
-respectively, and the member end name mentioned in the clauses of
-$\mathit{FunExpr}$ occur in the mentioned association and composition,
-respectively.
-
-The \emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
-along a class/data type net morphism $\sigma$, written as $\sigma(\varphi)$,
-is given by applying $\sigma$ to associations, compositions, and member end
-names.
-
-
-\begin{example}
-For the example we have
-\begin{gather*}
-  \mathsf{2 \leq \#n2s(net : Set[Net], \composition station : Set[Station]).station}
-\\
-  \mathsf{\#n2s(net : Set[Net], \composition station : Set[Station]).net = 1}
-\\
-  \mathsf{\#n2l(net : Set[Net], \composition line : Set[Line]).net = 1}
-\\
-  \mathsf{\#s2u(station : Set[Station], \composition unit : Set[Unit]).station = 1}
-\\
-  \mathsf{\#s2t(station : Set[Station], \composition track : Set[Track]).station = 1}
-\\
-  \mathsf{1 \leq \#c2u(connector : Set[Connector], unit : Set[Unit]).unit \leq 4}
-\\
-  \mathsf{\#c2u(connector : Set[Connector], unit : Set[Unit]).connector = 1}
-\\
-  \mathsf{1 \leq \#l2t(track : Set[Track], linear : Set[Linear]).track}
-\\
-  \mathsf{\#l2t(track : Set[Track], linear : Set[Linear]).linear = 1}
-\\
-  \mathsf{1 \leq \#l2t(line : Set[Line], linear : Set[Linear]).line}
-\\
-  \mathsf{\#l2l(line : Set[Line], linear : Set[Linear]).linear = 1}
-\end{gather*}
-%
-where we write ``$=$'' and ``${-} \leq {-} \leq {-}$'' as respective
-abbreviations for two inequations using ``$\leq$''.
-\end{example}
-
-
-\eat{
--------------------------------------------------------------------
-
-
-
-A classifier interpretation $C^{\mathcal{I}}$ induces the following
-interpretation of classifier annotations:
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item
-$C^{\mathcal{I}}(\mathsf{OrderedSet}[c]) =
-\finorderedpowerset(C^{\mathcal{I}}(c))$
-(where $\finorderedpowerset(X)$ is the set of finite subsets of $X$ where
-to elements of $\finorderedpowerset(X)$ are equal if, and only if, they
-contain the same elements in the same order);
-
-  \item $C^{\mathcal{I}}(\mathsf{Set}[c]) =
-\finpowerset(C^{\mathcal{I}}(c))$ (where $\finpowerset(X)$ is the set of
-finite subsets of $X$);
-
-  \item $C^{\mathcal{I}}(\mathsf{Sequence}[c]) = (C^{\mathcal{I}}(c))^*$
-(where $X^*$ is the set of finite sequences over $X$);
-
-  \item
-$C^{\mathcal{I}}(\mathsf{Bag}[c]) = [C^{\mathcal{I}}(c)
-\to_{\mathrm{fin}} \mathbb{N}]$
-(where $[X \to_{\mathrm{fin}} \mathbb{N}]$ is the set of finite
-multisets over $X$, i.e., the maps $b : X \to \mathbb{N}$ where
-$b(x) > 0$ only for a finite subset of $X$).
-\end{itemize}
-
-\medskip\noindent\textbf{Instance nets.}
-A $\Sigma$-\emph{instance net} $\mathcal{I} = (C^{\mathcal{I}},
-K^{\mathcal{I}}, P^{\mathcal{I}}, M^{\mathcal{I}}, A^{\mathcal{I}})$
-over a classifier net $\Sigma = ((C, {\leq_C}), K, P, M, A)$ is given
-by
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item a classifier interpretation $C^{\mathcal{I}}$;
-
-  \item an instance specification declaration interpretation
-$K^{\mathcal{I}}$ mapping each ${k : c} \in K$ to an element of
-$C^{\mathcal{I}}(c)$;
-
-  \item a property declaration interpretation $P^{\mathcal{I}}$
-mapping each ${c.p : \tau[c']} \in P$ to a map
-$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
-
-  \item a composition declaration interpretation $M^{\mathcal{I}}$
-mapping each ${c\composition r : \tau[c']} \in M$ to a map
-$C^{\mathcal{I}}(c) \to C^{\mathcal{I}}(\tau[c'])$;
-
-  \item an association declaration interpretation $A^{\mathcal{I}}$
-mapping each $a\{ r_1 : c_1, \dots, r_n : c_n \} \in A$
-to a subset of
-$\Pi r_i \in \{ r_1, \dots, r_n \} \,.\, C^{\mathcal{I}}(c_i) =
-\{ \{ r_1 \mapsto o_1, \dots, r_n \mapsto o_n \} \mid o_i \in
-C^{\mathcal{I}}(c_i),\ 1 \leq i \leq n \}$,
-\end{itemize}
-%
-such that
-%
-\begin{itemize}[label={--}, leftmargin=*]
-  \item each instance has at most one owner: if
-$o' \in M^{\mathcal{I}}(c_1\composition r_1 : \tau_1[c_1'])(o_1) \cap
-M^{\mathcal{I}}(c_2\composition r_2 : \tau_2[c_2'])(o_2)$,
-then $o_1 = o_2$.
-\end{itemize}
-
-
----------------------------------------------------------------
-}
+As stated above, models (in the sense of the term \termref{model} defined in
+clause~\ref{terms-and-defs}) of UML class diagrams are obtained 
+via a translation to Common Logic.
 
 For a classifier net
 $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
@@ -6874,17 +6735,13 @@ $CL(\Sigma)$ consisting of:
 \texttt{(enumeration $c$ $k_1 \cdots k_n$)},\ednote{Ed Seidewitz:
 enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \item 
-  $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$\ednote{UML has typed
-  sequences, but fUML appaerantly not. How do we solve this problem?},
+  $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$,
 \item 
-  $\CL(\mathsf{Set}[c]) = ???$\ednote{UML has sets, but fUML appaerantly not. 
-     Do we want to provide our own specification of sets in Common Logic?},
+  $\CL(\mathsf{Set}[c]) = \texttt{form:Set}$,
 \item 
-  $\CL(\mathsf{OrderedSet}[c]) = ???$\ednote{UML has ordered sets, but fUML appaerantly not. 
-     Do we want to provide our own specification of ordered sets in Common Logic?},
+  $\CL(\mathsf{OrderedSet}[c]) = \texttt{form:OrderedSet}$,
 \item 
-  $\CL(\mathsf{Bag}[c]) = ???$\ednote{UML has bags, but fUML appaerantly not. 
-     Do we want to provide our own specification of bags in Common Logic?},
+  $\CL(\mathsf{Bag}[c]) = \texttt{form:Bag}$,
 \item 
   $\CL(\mathsf{c}) = c$, if $c$ a class name which is not one of the above. 
 \end{itemize}
@@ -6939,42 +6796,6 @@ Superstructure Specification 2.4.1, p.~37.}
 \end{itemize}
 
 
-
-
-\eat{
-\begin{example}%\pushQED{\qed}%
-%
-An excerpt of an instance net for the class net for
-Fig.~\ref{fig:bjoerners_dsl} is:
-%
-\begin{gather*}
-  \CL(\mathsf{Net}) = \{ \mathtt{LondonUnderground} \}
-\\[-.3ex]
-  \CL(\mathsf{Station}) = \{ \mathtt{CharingCross}, \mathtt{OxfordStreet}, \dots, \mathtt{PicadillyCircus} \}
-\\[-.3ex]
-  \CL(\mathsf{Connector}) = \{ \mathtt{c1}, \mathtt{c2}, \mathtt{c3}, \dots \}
-\\[-.3ex]
-  \CL(\mathsf{Pair}[\mathsf{Connector}, \mathsf{Connector}]) = \{ (\mathtt{c1}, \mathtt{c1}), (\mathtt{c1}, \mathtt{c2}), (\mathtt{c2}, \mathtt{c1}), (\mathtt{c2}, \mathtt{c2}), \dots \}
-\\[-.3ex]
-  \CL(\mathsf{Net}.\mathsf{ID} : \mathsf{UID}) : \CL(\mathsf{Net}) \partialto \CL(\mathsf{UID})\quad\text{where}
-\\[-.5ex]\qquad
-  \mathtt{LondonUnderground} \mapsto \mathtt{\texttt{"}LUG\texttt{"}}\quad\text{etc.}
-\\[-.3ex]
-  \CL(\mathsf{Route}.\mathsf{isOpen} : \mathsf{Boolean}) : \CL(\mathsf{Route}) \partialto \CL(\mathsf{Boolean})\quad\text{where}
-\\[-.5ex]\qquad
-  \mathsf{R1} \mapsto \mathit{tt}\,\text{etc.}
-\\[-.3ex]
-  M^{\mathcal{I}}(\mathsf{Net}\composition\mathsf{has} : \mathsf{Station}) : \CL(\mathsf{Net}) \to \powerset(\CL(\mathsf{Station}))\quad\text{where}
-\\[-.5ex]\qquad
-  \mathsf{LondonUnderground} \mapsto \{ \mathtt{CharingCross}, \dots, \mathtt{PicadillyCircus} \}
-\\[-.3ex]
-  A^{\mathcal{I}}(\mathsf{stateAt}(\mathsf{unit} : \mathsf{Unit}, \mathsf{state} : \mathsf{UnitState})) =
-{}\\[-.5ex]\qquad
-  \{ (\mathtt{LU1}, \{ \mathtt{(c1,c2)} \}), (\mathtt{LU2}, \{ \mathtt{(c2,c3)} \}), \dots \}%\qedhere
-\end{gather*}%\popQED
-\end{example}
-}
-
 It is straightforward to extend $\CL$ from signatures to signature morphisms.
 
 \smallskip\noindent
@@ -6984,84 +6805,88 @@ $\CL(\Sigma)$-model in Common Logic. That is, the UML class diagram
 institution inherits models from Common Logic. Moreover, model reducts
 are inherited as well, using the action of $\CL$ on signature morphisms.
 
-\smallskip\noindent
-\textit{Multiplicity formulae --- Sentences.}
-\ednote{Ed Seidewitz: Multiplicities are different for associations
-  and for properties, this is a bit tricky. Associations are
-  predicates of single values, whereas properties can be over sets
-  etc.  Aexander: we need to correct the representation for
-  compositions used in associations.}
-\ednote{missing: relations between properties, e.g. subsets, unions}
-\ednote{derived associations: one association is the composition of two others}
-For the sentences of the UML class diagram institution we use
-\emph{multiplicity formulae} defined by the following grammar:
+
+\section{Sentences}
+
+The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
+the following grammar:
 %
 \begin{equation*}
 \begin{array}{@{}r@{\ }r@{\ }l@{}}
-  \mathit{Frm} & ::= & \mathit{NumLit}\ \mathsf{\leq}\ \mathit{FunExpr}\ |\ \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLit}\ |\ \mathit{Composition}\ \mathsf{!}
+  \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\\
+               &   | & \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}
+\\[1ex]
+  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Attribute}\\
+                   &   | & \mathit{\#}\ \mathit{Assocation}\ \mathsf{.}\ \mathit{End}\\
+                   &   | & \mathit{\#}\ \mathit{Composition}\ \mathsf{.}\ \mathit{End}
+\\[1ex]
+  \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End} \mathsf{:} \mathit{Type}
 \\
-  \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Composition}\ | \ \mathit{\#}\ \mathit{Association}\ \mathsf{[}\ \mathit{Role} (\mathsf{,}\ \mathit{Role})^*\ \mathsf{]}
+  \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )
 \\
-  \mathit{Composition} & ::= & \mathit{Class}\composition\mathit{Role}\ \mathsf{:}\ \mathit{Class}
+  \mathit{Composition} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
+\\[1ex]
+  \mathit{Type} & ::= & \mathit{Annot}\ \mathsf{[}\ \mathit{Classifier}\ \mathsf{]}
 \\
-  \mathit{Association} & ::= & \mathit{Name}\{ \mathit{Role} : \mathit{Class} (\mathsf{,}\ \mathit{Role}\ \mathsf{:}\ \mathit{Class})^* \}
+  \mathit{Classifier} & ::= & \mathit{Name}
 \\
-  \mathit{Class} & ::= & \mathit{Name}
+  \mathit{End} & ::= & \mathit{Name}
 \\
-  \mathit{Role} & ::= & \mathit{Name}
+  \mathit{Annot} & ::= & \mathsf{OrderedSet} \mid \mathsf{Set} \mid \mathsf{Sequence} \mid \mathsf{Bag}
 \\
-  \mathit{NumLit} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
+  \mathit{NumLiteral} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
 \end{array}
 \end{equation*}
 %
-where $\mathit{Name}$ is a set of strings.  The $\leq$-formulae
-express constraints on the cardinalities of composition and
-association declarations, i.e., how many instances are allowed to be
-in a certain relation with others.  The $\#$-expressions return the
-number of links in an association when some roles are fixed.  The
-$!$-formulae for compositions express that the owning end must not be
-empty.
-%
-The set of sentences or $\Sigma$-\emph{multiplicity constraints}
-$\mathit{Mult}(\Sigma)$ for a class net $\Sigma$ is given by the
-multiplicity formulae in $\mathit{Frm}$ such that all mentioned
-elements of $\mathit{Composition}$ and $\mathit{Association}$
-correspond to composition declarations and association declarations of
-$\Sigma$ respectively, and the $\mathit{Role}$ names mentioned in the
-last clause of $\mathit{FunExpr}$ occur in the mentioned association.
+where $\mathit{Name}$ is a set of names.
 
-\begin{example}\label{ex:dsl-sen}
-Some of the cardinality constraints of the running example in
-Fig.~\ref{fig:bjoerners_dsl} can be expressed with multiplicity
-formulae as follows:
-%
+The set of $\Sigma$-\emph{multiplicity constraints}
+$\mathit{Mult}(\Sigma)$ for a class/data type net $\Sigma$ is given by the
+multiplicity formulae in $\mathit{Frm}$ such that all mentioned elements
+of $\mathit{Association}$ and $\mathit{Composition}$ correspond to
+association declarations and composition declarations of $\Sigma$,
+respectively, and the member end name mentioned in the clauses of
+$\mathit{FunExpr}$ occur in the mentioned association and composition,
+respectively.
+
+The \emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
+along a class/data type net morphism $\sigma$, written as $\sigma(\varphi)$,
+is given by applying $\sigma$ to associations, compositions, and member end
+names.
+
+
+\begin{example}
+For the example in Fig. \ref{fig:bjoerners_dsl} we have
 \begin{gather*}
-  \mathsf{Station\composition has : Track \,!}
-\\[-.5ex]
-\quad\text{--- each \uml{Track} is owned by a \uml{Station} via \uml{has}},
+  \mathsf{2 \leq \#n2s(net : Set[Net], \composition station : Set[Station]).station}
 \\
-  \mathsf{2 \leq \#has(connector : Connector, unit : Unit)[unit]}
-\\[-.5ex]
-  \quad\text{--- association \uml{has} links each \uml{Unit} to at least two \uml{Connector}s},
+  \mathsf{\#n2s(net : Set[Net], \composition station : Set[Station]).net = 1}
 \\
-  \mathsf{\#state(unitState : UnitState, unit : Unit)[unit] = 1}
-\\[-.5ex]
-  \quad\text{--- association \uml{state} links each \uml{Unit} to exactly one \uml{UnitState}}.
+  \mathsf{\#n2l(net : Set[Net], \composition line : Set[Line]).net = 1}
+\\
+  \mathsf{\#s2u(station : Set[Station], \composition unit : Set[Unit]).station = 1}
+\\
+  \mathsf{\#s2t(station : Set[Station], \composition track : Set[Track]).station = 1}
+\\
+  \mathsf{1 \leq \#c2u(connector : Set[Connector], unit : Set[Unit]).unit \leq 4}
+\\
+  \mathsf{\#c2u(connector : Set[Connector], unit : Set[Unit]).connector = 1}
+\\
+  \mathsf{1 \leq \#l2t(track : Set[Track], linear : Set[Linear]).track}
+\\
+  \mathsf{\#l2t(track : Set[Track], linear : Set[Linear]).linear = 1}
+\\
+  \mathsf{1 \leq \#l2t(line : Set[Line], linear : Set[Linear]).line}
+\\
+  \mathsf{\#l2l(line : Set[Line], linear : Set[Linear]).linear = 1}
 \end{gather*}
 %
-Note we have used formulae with $=$ instead of two formulae with
-$\leq$ where the left hand side and the right hand side are
-switched.\qed
+where we write ``$=$'' and ``${-} \leq {-} \leq {-}$'' as respective
+abbreviations for two inequations using ``$\leq$''.
 \end{example}
 
-The \emph{translation} of a formula $\varphi \in
-\mathit{Mult}(\Sigma)$ along a class net morphism $\sigma =
-(\gamma, \kappa, \pi, \mu, \alpha) : \Sigma \to \Tau$, written as
-$\sigma(\varphi)$, is given by applying $\sigma$ to compositions,
-associations, and role names.
 
-\smallskip\noindent
-\textit{Satisfaction relation.}
+\section{Satisfaction relation.}
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object diagram $\Sigma$, a
@@ -7098,47 +6923,6 @@ $\CL(\ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\maths
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer.\ednote{the last two items need adaption}
 
-\eat{
-------------------------------------------------------------
-Let $\sem{\ell}$ be the value of a $\mathit{NumLiteral}$ $\ell$.  For a
-subset $X$ of $\Pi y \in Y \,.\, P(y)$ and a map
-$d : \Pi y \in Y' \,.\, P(y)$ with $Y' \subseteq Y$, we write $X[d]$ for
-$\{ \{ y \mapsto p(y) \mid y \in Y \} \in X \mid d(y) = p(y),\ y \in Y' \}$.
-
-Let $\Sigma = ((C, {\leq}), K, P, M, A)$ be a classifier net.  The
-$\Sigma$-\emph{satisfaction relation}
-${-} \models_{\Sigma} {-} \subseteq |\mathrm{Inst}(\Sigma)| \times
-\mathit{Sen}(\Sigma)$
-is defined for each $\Sigma$-instance net
-$\mathcal{I} = (C^{\mathcal{I}}, K^{\mathcal{I}}, P^{\mathcal{I}},
-M^{\mathcal{I}}, A^{\mathcal{I}})$ as
-%
-\begin{gather*}
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c']
-\iff
-  \forall o \in C^{\mathcal{I}}(c) \,.\, \sem{\ell} \leq |M^{\mathcal{I}}(c\composition r : \tau[c'])(o)|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}c\composition r \mathrel{\mathsf{:}} \tau[c'] \leq \ell
-\iff
-  \forall o \in C^{\mathcal{I}}(c) \,.\, M^{\mathcal{I}}(c\composition r : \tau[c'])(o) \leq \sem{\ell}
-\\
-  \mathcal{I} \models_{\Sigma} c\composition r \mathrel{\mathsf{:}} \tau[c']\mathsf{!}
-\iff
-  \forall o' \in C^{\mathcal{I}}(\tau[c']) \,.\, \exists o \in C^{\mathcal{I}}(c) \,.\, o' \in M^{\mathcal{I}}(c\composition r : \tau[c'])(o)
-\\
-  \mathcal{I} \models_{\Sigma} \ell \leq \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}}
-\iff{}\\\qquad
-  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
-\\\qquad\qquad
-  \sem{\ell} \leq |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]|
-\\
-  \mathcal{I} \models_{\Sigma} \mathsf{\#}a\{ r_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} \tau_n[c_n] \}\mathopen{\mathsf{[}}r_{i_1}, \ldots, r_{i_k}\mathclose{\mathsf{]}} \leq \ell
-\iff{}\\\qquad
-  \forall o_{i_1} \in C^{\mathcal{I}}(c_{i_1}), \ldots, o_{i_k} \in C^{\mathcal{I}}(c_{i_k}) \,.\, 
-\\\qquad\qquad
-  |A^{\mathcal{I}}(a\{ r_1 : \tau_1[c_1], \dots, r_n : \tau_n[c_n] \})[\{ r_{i_1} \mapsto o_{i_1}, \ldots, r_{i_k} \mapsto o_{i_k} \}]| \leq \sem{\ell}
-\end{gather*}
-}
 
 \normannex{Conformance of CASL with DOL}\label{a:casl}
 
