@@ -6537,19 +6537,19 @@ then
   // selection of elements
   (forall (o) (= (form:select1 o form:empty-sequence) form:empty-sequence))
   (forall (o y s)
-          (= (form:select1 o (form:insert-sequence (form:pair o y))) 
+          (= (form:select1 o (form:insert-sequence (form:pair o y) s)) 
              (form:insert-sequence y (form:select1 o s))))
   (forall (o x y s)
           (if (not (= x o))
-              (= (form:select1 o (form:insert-sequence (form:pair x y))) 
+              (= (form:select1 o (form:insert-sequence (form:pair x y) s)) 
                  (form:select1 o s))))
   (forall (o) (= (form:select2 o form:empty-sequence) form:empty-sequence))
   (forall (o x s)
-          (= (form:select2 o (form:insert-sequence (form:pair x o))) 
+          (= (form:select2 o (form:insert-sequence (form:pair x o) s)) 
              (form:insert-sequence x (form:select2 o s))))
   (forall (o x y s)
           (if (not (= y o))
-              (= (form:select2 o (form:insert-sequence (form:pair x y))) 
+              (= (form:select2 o (form:insert-sequence (form:pair x y) s)) 
                  (form:select2 o s))))
 end
 
@@ -6565,9 +6565,9 @@ sequences with
   form:position-count |-> form:ordered-set-position-count
 then
 //Different positions contain different elements
-  (forall (s1 s2 x1 x2 n1 n2)
-  	    (if (and (form:in-position-count s1 n1 x1)
-  	  	     (form:in-position-count s2 n2 x2)
+  (forall (s x1 x2 n1 n2)
+  	    (if (and (form:in-position-count s n1 x1)
+  	  	     (form:in-position-count s n2 x2)
                      (= x1 x2))
                 (= n1 n2)))
 end
@@ -6586,7 +6586,7 @@ oms sets =
 (forall (s n)
 	(if (form:set-size s n)
 	    (and (form:Set s)
-		 (buml:UnlimtedNatural n))))
+		 (buml:UnlimitedNatural n))))
 (= (form:set-size form:empty-set) form:0)
 (forall (x s)
         (if (not (form:set-member x s))
@@ -6628,7 +6628,7 @@ oms bags =
 (forall (s n)
 	(if (form:bag-size s n)
 	    (and (form:Bag s)
-		 (buml:UnlimtedNatural n))))
+		 (buml:UnlimitedNatural n))))
 (= (form:bag-size form:empty-bag) form:0)
 (forall (x s)
         (= (form:bag-size (form:bag-insert x s))
@@ -6655,7 +6655,7 @@ oms bags =
 //Member count
 (forall (x s)
 	(if (form:Bag s)
-	    (buml:UnlimtedNatural (form:bag-member-count x s))))
+	    (buml:UnlimitedNatural (form:bag-member-count x s))))
 (= (form:bag-member-count form:empty-bag) form:0)
 (forall (x s)
         (= (form:bag-member-count x (form:bag-insert x s))
@@ -6683,7 +6683,7 @@ then
 (forall (b)
 	(if (form:Sequence s)
 	    (form:Ordered-Set (form:seq2ordset s))))
-(= (form:seq2ordset form:empty-empty) form:empty-ordered-set)
+(= (form:seq2ordset form:empty-sequence) form:empty-ordered-set)
 (forall (x s)
         (if (form:Sequence s)
             (= (form:seq2ordset (form:sequence-insert x s))
@@ -7069,13 +7069,13 @@ at most one owner'':
                  (form:sequence-member (form:pair o' i) m'))
             (= o o')))
 \end{lstlisting}
-  \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(m)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
+  \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(a)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
 being represented as sequences):\\
 \texttt{(from:Sequence a)}\\
-\texttt{(forall (t) (if (form:sequence-member t m)\\
+\texttt{(forall (t) (if (form:sequence-member t a)\\
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
 \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
-\ \ \  (= t (form:insert-sequence $x_1$ ($\cdots$ (form:insert-sequence $x_n$ form:empty-sequence)))))))))}
+\ \ \  (= t (form:insert-sequence $x_1$ ($\cdots$ (form:insert-sequence $x_r$ form:empty-sequence)))))))))}
 \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
 of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
