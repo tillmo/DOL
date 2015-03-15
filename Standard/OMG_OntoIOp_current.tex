@@ -6491,7 +6491,7 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 
 We additionally need to axiomatize a number of predicates in Common Logic
 (note that enumerations are not axiomatized in fUML):
-\begin{lstlisting}[language=clif,morekeywords={then,with}]
+\begin{lstlisting}[language=clif,morekeywords={then,with,logic,oms,end},mathescape]
 logic CLIF
 
 oms uml-enumerations =
@@ -6531,26 +6531,63 @@ then
            (exists (pt) 
                (and (form:in-sequence s pt)
                     (form:in-position pt x)) )))
-  // insertion of elements
-  // todo form:insert-sequence
 
   // selection of elements
   (forall (o) (= (form:select1 o form:empty-sequence) form:empty-sequence))
   (forall (o y s)
-          (= (form:select1 o (form:insert-sequence (form:pair o y) s)) 
-             (form:insert-sequence y (form:select1 o s))))
+          (= (form:select1 o (form:sequence-insert (form:pair o y) s)) 
+             (form:sequence-insert y (form:select1 o s))))
   (forall (o x y s)
           (if (not (= x o))
-              (= (form:select1 o (form:insert-sequence (form:pair x y) s)) 
+              (= (form:select1 o (form:sequence-insert (form:pair x y) s)) 
                  (form:select1 o s))))
   (forall (o) (= (form:select2 o form:empty-sequence) form:empty-sequence))
   (forall (o x s)
-          (= (form:select2 o (form:insert-sequence (form:pair x o) s)) 
-             (form:insert-sequence x (form:select2 o s))))
+          (= (form:select2 o (form:sequence-insert (form:pair x o) s)) 
+             (form:sequence-insert x (form:select2 o s))))
   (forall (o x y s)
           (if (not (= y o))
-              (= (form:select2 o (form:insert-sequence (form:pair x y) s)) 
+              (= (form:select2 o (form:sequence-insert (form:pair x y) s)) 
                  (form:select2 o s))))
+
+  (forall (i s)
+          (= (form:n-select form:empty-sequence i s) 
+             form:empty-sequence))
+  (forall (a i s t x)
+          (if (= (insert-i i x t) s)
+              (= (form:n-select (form:sequence-insert s a) i t)
+                 (form:sequence-insert s (form:n-select a i t)))))
+  (forall (a i s t)
+          (if (not (exists (x) (= (insert-i i x t) s)))
+              (= (form:n-select (form:sequence-insert s a) i t)
+                 (form:n-select a i t))))
+
+  // insert element at i-th position
+  (forall (x s)
+          (= (insert-i form:0 x s) (form:sequence-insert x s)))
+  (forall (i j x y s)
+          (if (form:add-one i j)
+              (= (insert-i j x (form:sequence-insert y s))
+                 (form:sequence-insert y (insert-i i x s)))))
+end
+
+oms sequences-insert =
+sequences then
+  // insertion of elements
+  (forall (x s1 s2)
+    // inserting an element means...
+    (if (= (form:sequence-insert x s1) s2)
+        (and (form:Sequence s1)
+             (form:Sequence s2)
+             // the new element is at the first position
+             (form:in-position-count s2 form:1 x)
+             // and all other elements are shifted by one
+             (forall (n1 n2 y)
+               (if (form:add-one n1 n2)
+                   (iff (form:in-position-count s1 n1 y)
+                        (form:in-position-count s2 n2 y)))))))
+  // synonym
+ (forall (s) (= (form:sequence-length s) (form:sequence-size s)))
 end
 
 oms ordered-sets =
@@ -6563,13 +6600,35 @@ sequences with
   form:in-sequence |-> form:in-ordered-set,
   form:before-in-sequence |-> form:before-in-ordered-set,
   form:position-count |-> form:ordered-set-position-count
+  form:in-position-count |-> form:in-ordered-set-position-count
 then
 //Different positions contain different elements
   (forall (s x1 x2 n1 n2)
-  	    (if (and (form:in-position-count s n1 x1)
-  	  	     (form:in-position-count s n2 x2)
+  	    (if (and (form:in-ordered-set-position-count s n1 x1)
+  	  	     (form:in-ordered-set-position-count s n2 x2)
                      (= x1 x2))
                 (= n1 n2)))
+  // insertion of elements
+  (forall (x s1 s2)
+    (if (= (form:ordered-set-insert x s1) s2)
+        (and (form:Ordererd-Set s1)
+             (form:Ordererd-Set s2)
+  // no element can be inserted twice
+  (forall (x s)
+    (if (from:ordered-set-member x s)
+        (= (form:ordered-set-insert x s) s)))
+  // inserting a new element
+  (forall (x s)
+    (if (not (from:ordered-set-member x s1))
+        (exists (s2)
+          (and (= (form:ordered-set-insert x s1) s2)     
+               // the new element is at the first position
+               (form:in-ordered-set-position-count s2 form:1 x)
+               // and all other elements are shifted by one
+               (forall (n1 n2 y)
+                 (if (form:add-one n1 n2)
+                     (iff (form:in-ordered-set-position-count s1 n1 y)
+                          (form:in-ordered-set-position-count s2 n2 y)))))))
 end
 
 oms sets =
@@ -6590,8 +6649,10 @@ oms sets =
 (= (form:set-size form:empty-set) form:0)
 (forall (x s)
         (if (not (form:set-member x s))
-            (= (form:set-size (form:set-insert x s))
-               (form:suc (form:set-size s)))))
+            (exists (n)
+              (and (form:add-one (form:set-size s) n)
+                   (= (form:set-size (form:set-insert x s))
+                      n)))))
 
 //The same-set relation is true for sets that have the same members.
 // but: why not replace same-set with = ?
@@ -6631,8 +6692,10 @@ oms bags =
 		 (buml:UnlimitedNatural n))))
 (= (form:bag-size form:empty-bag) form:0)
 (forall (x s)
-        (= (form:bag-size (form:bag-insert x s))
-           (form:suc (form:bag-size s)))))
+        (exists (n)
+            (and (form:add-one (form:bag-size s) n)
+                 (= (form:bag-size (form:bag-insert x s))
+                    n))))
 
 //The same-bag relation is true for bags that have the same members.
 (forall (s1 s2)
@@ -6658,8 +6721,10 @@ oms bags =
 	    (buml:UnlimitedNatural (form:bag-member-count x s))))
 (= (form:bag-member-count form:empty-bag) form:0)
 (forall (x s)
-        (= (form:bag-member-count x (form:bag-insert x s))
-           (form:suc (form:bag-member-count x s))))
+        (exists (n)
+           (and (form:add-one (form:bag-member-count x s) n)
+                (= (form:bag-member-count x (form:bag-insert x s))
+                   n))))
 (forall (x y s)
         (if (not (= x y))
             (= (form:bag-member-count x (form:bag-insert y s))
@@ -6667,7 +6732,7 @@ oms bags =
 end
 
 oms collection-types =
-  sequences and ordered-sets and sets and bags
+  sequences-insert and ordered-sets and sets and bags
 then
 //bag to set
 (forall (b)
@@ -6679,8 +6744,8 @@ then
             (= (form:bag2set (form:set-insert x b))
                (form:bag-insert x (form:bag2set b)))))
 
-//sequence to ordered list
-(forall (b)
+//sequence to ordered set
+(forall (s)
 	(if (form:Sequence s)
 	    (form:Ordered-Set (form:seq2ordset s))))
 (= (form:seq2ordset form:empty-sequence) form:empty-ordered-set)
@@ -6689,8 +6754,37 @@ then
             (= (form:seq2ordset (form:sequence-insert x s))
                (form:ordered-set-insert x (form:seq2ordset s)))))
 
-// todo: seq2bag, ordered-set2set, as well as compositions
+//sequence to bag
+(forall (s)
+	(if (form:Sequence s)
+	    (form:Bag (form:seq2bag s))))
+(= (form:seq2bag form:empty-sequence) form:empty-bag)
+(forall (x s)
+        (if (form:Sequence s)
+            (= (form:seq2bag (form:sequence-insert x s))
+               (form:bag-insert x (form:seq2bag s)))))
 
+//ordered-set to set
+(forall (b)
+	(if (form:Ordered-Set s)
+	    (form:Set (form:ordset2set b))))
+(= (form:ordset2set form:empty-ordered-set) form:empty-set)
+(forall (x b)
+        (if (form:Ordered-Set b)
+            (= (form:ordset2set (form:set-insert x b))
+               (form:ordered-set-insert x (form:ordset2set b)))))
+
+//sequence to set
+(forall (s)
+	(if (form:Sequence s)
+	    (form:Set (form:seq2set s))))
+(forall (s) (= (form:seq2set s) (form:ordset2set (form:seq2ordset s))))
+
+// leq
+(forall (x y)
+   (iff (buml:leq x y)
+        (or (= x y)
+            (buml:less-than x y))))
 end
 
 
@@ -7075,7 +7169,7 @@ being represented as sequences):\\
 \texttt{(forall (t) (if (form:sequence-member t a)\\
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
 \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
-\ \ \  (= t (form:insert-sequence $x_1$ ($\cdots$ (form:insert-sequence $x_r$ form:empty-sequence)))))))))}
+\ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert $x_r$ form:empty-sequence)))))))))}
 \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
 of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
@@ -7197,34 +7291,28 @@ latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic), we define
 $$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
 
 The translation of multiplicity formulas to Common Logic is as follows:
-\ednote{This section still needs to be updated!!!}
 \begin{itemize}
-  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
+  \item  $\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) =$\\
 \texttt{(forall (x y n)}\\
-\qqquad\texttt{(if (and (r x y) (form:sequence-length y n)) (leq $\sem{\ell}$ n))}
-  \item $\CL(\ell \leq \mathsf{\#}c\composition r \mathrel{\mathsf{:}} c')=$\\
-\texttt{(forall (x y n)}\\
-\qqquad\texttt{(if (and (r x y) (form:sequence-length y n)) (geq $\sem{\ell}$ n))}
-  \item $\CL(c\composition r \mathrel{\mathsf{:}} c'\mathsf{!})=$
-\texttt{(forall (y) (if (c' y) (exists (x) (and (c x) (r x y)))))}
-  \item 
-\begin{tabbing}
-$\CL(\ell \leq \mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}}=$\\
-\texttt{(forall ($x_{i_1}$ $\cdots$ $x_{i_m}$)}\\
-\qquad\texttt{(if }\=\texttt{(and ($c_{i_1}$ $x_{i_1}$) $\cdots$ ($c_{i_m}$ $x_{i_m}$))}\\
-\>\texttt{((min-card-tuple a $x_{i_1}$ $\cdots$ $x_{i_m}$) $sel_{i_1}$ $\cdots$ $sel_{i_n}$)))}
-\end{tabbing}
-  \item
-\begin{tabbing}
- $\CL(\mathsf{\#}a(r_1 \mathrel{\mathsf{:}} c_1\mathsf{,}\, \dots\mathsf{,}\, r_n \mathrel{\mathsf{:}} c_n)\mathopen{\mathsf{[}}r_{i_1}\mathsf{,}\, \dots\mathsf{,}\, r_{i_m}\mathclose{\mathsf{]}} \leq \ell=$\\
-\texttt{(forall ($x_{i_1}$ $\cdots$ $x_{i_m}$)}\\
-\qquad\texttt{(if }\=\texttt{(and ($c_{i_1}$ $x_{i_1}$) $\cdots$ ($c_{i_m}$ $x_{i_m}$))}\\
-\>\texttt{((max-card-tuple a $x_{i_1}$ $\cdots$ $x_{i_m}$) $sel_{i_1}$ $\cdots$ $sel_{i_n}$)))}
-\end{tabbing}
+\qqquad\texttt{(if (and (c.p x y) (form:$\tau$-size y n)) (buml:leq $\sem{\ell}$ n))}
+  \item $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
+\texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)}\\
+\qqquad\texttt{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$)\\
+\qqquad\qqquad\qqquad  (form:sequence-size \\
+\qqquad\qqquad\qqquad\qqquad(form:n-select a $i$ [$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$]) n))\\
+\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
+  \item  $\CL(\models_{\Sigma} \ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i)=$\\
+\texttt{(forall (x)}\\
+\qqquad\texttt{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))\\
+\qqquad\qqquad (buml:leq $\sem{\ell}$ n))}
 \end{itemize}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
-to an integer.\ednote{the last two items need adaption}
+to an integer, and $[x_1\cdots x_n]$ abbreviates \texttt{(form:sequence-insert $x_1$ $\cdots$ (form:sequence-insert $x_1$ form:empty-sequence))}.
+The translation for  $\mathit{FunExpr} \leq \mathit{NumLiteral}$
+is analogous.
+
+
 
 
 \normannex{Conformance of CASL with DOL}\label{a:casl}
