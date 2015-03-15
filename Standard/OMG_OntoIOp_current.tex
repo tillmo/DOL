@@ -320,6 +320,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\TF}{\mathit{TF}}
 
 \newcommand{\Inst}{\ensuremath{\mathbf{Inst}}}
+\newcommand{\Name}{\ensuremath{\mathbf{Name}}}
 
 %\newcommand{\map}[2]{\colon#1\!\longrightarrow\!#2}
 
@@ -4785,25 +4786,32 @@ the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.
 Intuitively, OMS mappings denote various types of links between two or more OMS. 
 The semantics of OMS mappings can be captured uniformly as a graph whose nodes $N$ are labeled with 
 \begin{itemize}
- \item $Name(N)$, the name of the node
+ \item $\Name(N)$, the name of the node
  \item $\Inst(N)$, the institution of the node
  \item $\Sign(N)$, the signature of the node
  \item $\Mod(N)$, the class of $\Sign(N)$-models of the node
  \item $\Th(N)$, the set of $\Th(N)$-sentences of the node
 \end{itemize}
-and whose edges are labeled with signature morphisms between the signatures of the source and target nodes. 
+and 
+which has two kinds of edges:
+\begin{itemize}
+  \item import links (written using single arrows, $S\rightarrow T$)
+  \item theorem links (written using double arrows, $S\Rightarrow T$)
+\end{itemize}
+both labeled with signature morphisms between the signatures of the source and target nodes. 
 The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
 the class of models of that node is the class of models of $\Th(N)$. 
 For brevity, we may write the label of a node as a tuple. We make the simplifying 
 assumption that any OMS can be assigned a unique name.
 
-Finally, we can give the semantics of networks in two alternative ways.
+We can give the semantics of networks of OMS in two alternative ways.
 In both cases, the semantics of a network is a graph and the labels
 are like in the semantics of OMS mappings. What differs is the labels of
-edges: in the first case, edges are labelled with signature morphisms 
-between the signatures 
-$Sign(S)$ and $Sign(T)$ of the source and target nodes $S$ and $T$ of the
-edge, while in the second case, an edge is labelled with a mapping
+edges: in the first case, edges are labeled with heterogeneous signature morphisms (i.e.~ 
+an edge from the node $S$ to the node $T$ is labeled with a pair 
+$(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
+$\sigma:\Phi(\Sign(S))\to\Sign(T)$ is a signature morphism in $\Inst(T)$), 
+while in the second case, an edge is labeled with a mapping
 relating the OMS of the nodes connected by it. 
 The intuition is that
 network provide means of putting together graphs of OMS and OMS mappings
@@ -4813,7 +4821,9 @@ thus the network may contain more nodes than just those of the OMS
 related by the mapping. The second variant provides a more compact
 representation of the graph of the network but has the drawback that
 one cannot operate on the subgraph of a mapping, e.g. eliminating just a 
-node of it.
+node of it. Also, creating a combination of the 
+network requires that the graphs of the mappings 
+should be unfolded.
 
 %We  assume a \emph{language-specific semantics} of basic
 %OMS, inherited from the OMS language.  
@@ -4955,18 +4965,13 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 %
 %Equations for \syntax{OMSDefn} and \syntax{MappingDefn} are given below.
 
-\ssclause{Semantics of networks}
+\ssclause{Semantics of Networks}
 
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
-and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings,
-or OMS networks. The nodes and edges given in the \syntax{ExcludeExtensions} list are then removed from
-the graph of the network. The theory-level semantics of a network is the labeling of the 
-underlying graph of the network with theories in the nodes and with theory morphisms in the edges.
-The model-level semantics of a network is a family of models \emph{compatible} with the
-graph of the network, i.e. for each node $n$ labeled with $(I_n, \Sigma_n, \cM_n)$ we have a model
-$M_n$ in $\cM_n$ such that for each edge $e:m \rightarrow n$ labeled with a 
-morphism $\sigma: \Sigma_m \rightarrow \Sigma_n$, we have that $M_n\forget \sigma = M_m$.
-Nodes and morphisms are also labeled with \syntax{IRI}s, such that they can be uniquely identified.
+and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings, or OMS networks. Intuitively, the graph of a
+network consists of the union of all graphs of the network elements it
+contains, where an OMS yields a graph with one isolated node.
+The nodes and edges given in the \syntax{ExcludeExtensions} list are then removed from the graph of the network. 
 An additional \syntax{Id} can be specified for each node, with the purpose of letting the user specify a 
 prefix in the colimit of a network for the symbols with the origin in that node that must be disambiguated.
 
@@ -4975,22 +4980,22 @@ We are going to make use of the following notations. If $G$ is a graph, let $ins
     \item if \syntax{IRI} is an OMS in $\Gamma$, then
                  a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
-   \item if \syntax{IRI} is an OMS mapping in $\Gamma$, then $\Gamma(\syntax{IRI})$ can be a theory morphism, or a W-shaped
-               graph if \syntax{IRI} is an alignment (see the semantics of alignments below).  In the first case, we can construct a graph
-               with two nodes and one edge between them, and label the nodes with the source and target \syntax{OMS} of the morphism
-                and the edge with the morphism, respectively.
-               \footnote{We make the simplifying assumption that the source and target OMS of a mapping can be identified by some IRIs. The
-                 way this identification is done can be specific to each DOL-compliant tool.} 
-                 This allows us to uniformly treat $\Gamma(\syntax{IRI})$ as a graph $G'$.
-                 $G$ is then extended with the nodes and edges of $G'$ that are not already present in $G$.               
-   \item if \syntax{IRI} is a network in $\Gamma$, then the result is the union of $G$ with the graph of $\Gamma(\syntax{IRI})$.
+   \item if \syntax{IRI} is an OMS mapping 
+      or a netof work in $\Gamma$, it denotes a graph $G'$. Then
+      the result is the union of $G$ with $G'$.
  \end{itemize}
 Similarly, the operation $remove(\Gamma, G, \syntax{Id})$ is defined as follows:
  \begin{itemize}
     \item if \syntax{IRI} is an OMS in $\Gamma$, then the node labeled with \syntax{IRI} and all its incoming and outgoing
                 edges are removed from $G$,
-   \item  if \syntax{IRI} is an OMS mapping in $\Gamma$, then with the same convention as above $\Gamma(\syntax{IRI})$ is a graph $G'$.
-                Then all nodes of $G'$ and all their incoming and outgoing edges in $G$ (which include those in $G'$) are removed from $G$.
+   \item  if \syntax{IRI} is an OMS mapping in $\Gamma$, then  $\Gamma(\syntax{IRI})$ is a graph $G'$. \ednote{Important: by writing
+   excluding V or excluding A, I would want to remove just the mapping
+   from the network, but NOT the nodes it relates. The nodes should
+   be removed explicitly. Example: we may want to remove an import
+   between two nodes. This is different now: with a mapping,
+   all nodes get removed.}
+                Then all nodes of $G'$ and all their incoming and outgoing edges in $G$ (which include those in $G'$) are removed
+                 from $G$.
    \item if \syntax{IRI} is a network in $\Gamma$, then all the nodes of its graph and all their incoming and outgoing edges are removed 
                from $G$.
  \end{itemize}
@@ -5139,8 +5144,8 @@ $$
 
 The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is given by
 \begin{itemize}
- \item $\Inst(O') = J$, when $\Inst(\syntax{Translation}) = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$ 
- \item $\Sig(O') = \Sigma'$, when $\Mor(\syntax{Translation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
+ \item $\Inst(O') = J$, when $\Inst_{\Sig(\syntax   {OMS})}(\syntax{Translation}) = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$ 
+ \item $\Sig(O') = \Sigma'$, when $\Mor_{\Sig(\syntax   {OMS})}(\syntax{Translation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
  \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(\syntax{OMS})\}$
  \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(\syntax{OMS}) \}$. It is defined only if \syntax{OMS} is flattenable.
 \end{itemize}
@@ -5152,10 +5157,10 @@ $O' = \syntax{reduction, OMS , Reduction}$
 is
 \begin{itemize}
 
-  \item $\Inst(O') = J$, when $\Inst(\syntax{Reduction})
+  \item $\Inst(O') = J$, when $\Inst_{\Sig(\syntax{OMS})}(\syntax{Reduction})
   = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$
   \item $\Sig(O') = \Sigma'$, when
-   $\Mor(\syntax{Reduction}) = \sigma:\Sigma'\to
+   $\Mor_{\Sig(\syntax{OMS})}(\syntax{Reduction}) = \sigma:\Sigma'\to
     \Phi(\Sig(\syntax{OMS}))$
   \item $\Mod(O') = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \Mod(\syntax{OMS})\}$
   \item $\Th(O') = \bot$
@@ -5165,45 +5170,30 @@ is
 %Module Extract 
 
 The semantics of $O' = \syntax{'module extract', OMS, 
-'keep-signature', InterfaceSignature}$ is
+Extraction}$ is
 \begin{itemize}
   \item $\Inst(O') = \Inst(\syntax{OMS})$
-  \item $\Sig(O') = \Sigma \cup \Sigma'$, where
-          $\Sig(\syntax{InterfaceSignature}) = \Sigma$
-  \item $\Th(O') = \Delta'$
-  \item $\Mod(O')$ is the class of $\Delta'$-models
+  \item $\Sig(O') = \Sigma \cup \Sig(Extraction)$,
+     \ednote{probably this does not work for remove}
+  \item $\Th(O') = \Th(Extraction)$
+  \item $\Mod(O')$ is the class of $Th(O)$-models
 \end{itemize}
-where
-$\langle\Sigma',\Delta'\rangle$ is the smallest depleting
-$\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
-smallest\footnote{If the smallest such sub-theory does not exist, the
-  semantics is undefined. In \cite{DBLP:journals/ai/KontchakovWZ10},
-  it is shown that it does exist in usual institutions.}  sub-theory
-$\langle\Sigma',\Delta'\rangle$ of $(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$  
-such that the following model-theoretic inseparability
-holds
-  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma}  \emptyset.$$
-This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
-cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma$ concerns) and formally that 
-$$\begin{array}{ll}
-&\{M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
-= &\{ M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
-\end{array}$$
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
 %of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
 %satisfying $\Th(O) \setminus \Delta'$.
 
 \noindent
-Dually, the semantics of 
-\syntax{'module extract', OMS, 
-'remove-signature', InterfaceSignature}
-is equivalent to the semantics of
-\syntax{'module extract', OMS, 
-'keep-signature',} $\Sig(\syntax{OMS})\setminus 
-\Sig(\syntax{InterfaceSignature})$ 
-\footnote{Note that the resulting module
-    can still contain symbols from $\Sigma$, because the resulting
-    signature may be enlarged.}.
+%Dually, the semantics of 
+%\syntax{'module extract', OMS, 
+%'remove-signature', InterfaceSignature}
+%is equivalent to the semantics of
+%\syntax{'module extract', OMS, 
+%'keep-signature',} $\Sig(\syntax{OMS})\setminus 
+%\Sig(\syntax{InterfaceSignature})$ 
+%\footnote{Note that the resulting module
+%    can still contain symbols from $\Sigma$, because the %resulting
+%    signature may be enlarged.}.
+    
 
 \ednote{Update cf. last paper}
 
@@ -5232,15 +5222,16 @@ is the same as the semantics of
 %Filtering
 
 The semantics of $O =$ 
-\syntax{'filtering', OMS, 'select', BasicOMS}
+\syntax{'filtering', OMS, Filtering} 
 is
-defined only if  $\Sig(\syntax{BasicOMS})\subseteq\Sig(\syntax{OMS})$ and $\Th(\syntax{BasicOMS})\subseteq\Th(\syntax{OMS})$.
-In that case, we denote
-$\Sigma = \Sig(\syntax{BasicOMS})$ and
-$\Delta = \Th(\syntax{BasicOMS})$ and 
+defined only if  $\Sig(\syntax{Filtering})\subseteq\Sig(\syntax{OMS})$ and $\Th(\syntax{Filtering})\subseteq\Th(\syntax{OMS})$.
+We distinguish two cases based on the value of $c$, 
+where $sem(\Gamma, (\Sig(\syntax{OMS}, \Th(\syntax{OMS}), \syntax{Filtering})
+= (c, \cI, \Sigma, \Delta)$ 
+If $c = 'select'$, 
 the semantics of $O$ is given by
 \begin{itemize}
-  \item $\Inst(O) = \Inst(\syntax{OMS})$
+  \item $\Inst(O) = \cI$
   \item $\Sig(O) = \Sigma'$ where $\Sigma'$ is the smallest signature
 with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$\ednote{the prime was missing but I think it must be there}\footnote
 {If this smallest signature does not exist, the semantics is undefined.}
@@ -5249,12 +5240,10 @@ with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$\ednote{the prim
 \end{itemize}
 
 \noindent
-If $\Sigma = \Sig(\syntax{BasicOMS})$ and
-$\Delta = \Th(\syntax{BasicOMS})$,
-the semantics of $O =$
+If $c='reject'$, the semantics of $O =$
 \syntax{'filtering', OMS, 'reject', BasicOMS} is
 \begin{itemize}
-  \item $\Inst(O) = \Inst(\syntax{OMS})$
+  \item $\Inst(O) = \cI$
   \item $\Sig(O) = \Sign(\syntax{OMS})\setminus \Sigma$ 
   \item $\Th(O) = \Th(\syntax{OMS})\cap\Sen(\Sig(O))\setminus\Delta$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
@@ -5347,8 +5336,6 @@ $O=$ \syntax{combination, Network} is
 \semdom{sem^T(\syntax{'application', Substname, Sentence})= TODO}
 \semdom{sem^M(\syntax{'application', Substname, Sentence})= TODO}
 
-\todonote{turn all boxes up to the one with OMS into centered definitions - they are not categories, but subcases.}
-
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
@@ -5357,7 +5344,7 @@ The semantics of a translation
 $O=$ \syntax{renaming, LogicTranslation, SymbolMapItems}
 is given by
 \begin{itemize}
- \item $\Inst(O) = sem(LogicTranslation) : \Gamma.logic \to logic'$
+ \item $\Inst(O) = sem(\syntax{LogicTranslation}) : \Gamma.logic \to logic'$
  \item $\Mor(O) = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolMapItems})$
 \end{itemize}
 
@@ -5379,8 +5366,11 @@ $O=$ \syntax{hidden, LogicReduction, SymbolItems}
 is given by
 \begin{itemize}
  \item $\Inst(O) = sem(LogicReduction) : \Gamma.logic \to logic'$
- \item $\Mor(O) = \iota:\sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolItems}) \to
- \Phi(\Sigma)$, where $\iota$ is the inclusion morphism.
+ \item 
+$\Mor(O) = 
+\iota: \Sigma' \to \Phi(\Sigma)$, where 
+$\Sigma' = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolItems})$
+and $\iota$ is the inclusion morphism.
 \end{itemize}
 
 If \syntax{LogicReduction} is missing, 
@@ -5471,35 +5461,57 @@ the heterogeneous logic env?}
 
 $$sem(\Gamma, \Sigma, \Delta, \syntax{'extraction' , Qual, InterfaceSignature})= (\Sigma', \Delta')$$ 
 %
-where $\Sigma'' = sem(\Sigma, \syntax{Qual}, \syntax{InterfaceSignature})$ and 
- $(\Sigma', \Delta')$  is the smallest  sub-theory of $(\Sigma, \Delta)$ such that % $\Sigma'' \subseteq \Sigma'$ and 
-  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
-The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
+%where $\Sigma'' = sem(\Sigma, \syntax{Qual}, \syntax{InterfaceSignature})$ and 
+% $(\Sigma', \Delta')$  is the smallest  sub-theory of $(\Sigma, \Delta)$ such that % $\Sigma'' \subseteq \Sigma'$ and 
+%  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
+%The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
+
+where
+$\langle\Sigma',\Delta'\rangle$ is the smallest depleting
+$\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
+smallest\footnote{If the smallest such sub-theory does not exist, the
+  semantics is undefined. In \cite{DBLP:journals/ai/KontchakovWZ10},
+  it is shown that it does exist in usual institutions.}  sub-theory
+$\langle\Sigma',\Delta'\rangle$ of $(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$  
+such that the following model-theoretic inseparability
+holds
+  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma}  \emptyset.$$
+This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
+cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma$ concerns) and formally that 
+$$\begin{array}{ll}
+&\{M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
+= &\{ M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
+\end{array}$$
+
+
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\syntax{Approximation})}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^T(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (I,\Sigma', \Delta')}
+\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (c,\cI,\Sigma', \Delta')}
 
-$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{select, BasicOMS}) = (I,\Sigma', \Delta')$$
+$$sem(\Gamma, (\Sigma, \Delta), \syntax{select, BasicOMS}) = 
+('select', \cI,\Sigma', \Delta')$$
 
-where $sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma'', \Delta'')$
-and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
-includes $(\Sigma'',\Delta'')$. 
+where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta')$.
+\ednote{TODO:check!}
+%and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
+%includes $(\Sigma'',\Delta'')$. \ednote{TODO: update}
 
-$$sem^T(\Gamma, (\Sigma, \Delta), \syntax{reject, BasicOMS}) = (I,\Sigma', \Delta')$$
-where $sem^T(\Gamma, \syntax{BasicOMS}) = (I, \Sigma', \Delta'')$,
-$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
-and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
+$$sem(\Gamma, (\Sigma, \Delta), \syntax{reject, BasicOMS}) = 
+('reject',\cI,\Sigma', \Delta')$$
+where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta'')$.
+%$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
+%and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem^M(\Gamma,(\Sigma,\cM),\syntax{ExtensionOMS})=(\Sigma',\cM')}
-$sem^M(\Gamma,(\Sigma,\cM),\syntax{ ConsStrength,  , ExtendingOMS})=
-(\Sigma',\cM')$\\
-where $(\Sigma',\cM')=sem(\Gamma,(\Sigma,\cM),\syntax{ExtendingOMS})$
+\semdom{sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{ExtensionOMS})=(\cI,\Sigma',\cM',\Delta')}
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{ ConsStrength, ExtensionName, ExtendingOMS})=
+(\cI,\Sigma',\cM',\Delta')$\\
+where $(\cI,\Sigma',\cM',\Delta')=sem(\Gamma,(\Sigma,\cM),\syntax{ExtendingOMS})$.
 
 If \syntax{ConsStrength} is \syntax{model-conservative} or
 \syntax{implied}, the semantics is only defined if each model in
@@ -5516,6 +5528,10 @@ If
 \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
 model in $\cM'$.
+
+If \syntax{ExtensionName} is present, the inclusion link is labeled with this name.
+\ednote{This shows that we build at the level of each library a graph, where these
+imports will be added. This has to be propagated in the whole section...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5709,37 +5725,53 @@ See equations for \syntax{IntprDefn},  \syntax{Entailment}, \syntax{EquivDefn}, 
 \semdom{sem(\Gamma,\syntax{IntprDefn}) = \Gamma'}
 
 $$sem(\Gamma, \syntax{intrp-defn, IntprName, IntrpType,LogicTranslation, SymbolMapItems}) = \Gamma'$$
-where\\
-$sem(\Gamma, \syntax{IntrpType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2, \cM_2))$,\\
-$sem(\syntax{LogicTranslation}) = (\Phi,\alpha,\beta):\cI_1\rightarrow \cI_2$,\\
-$sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$,
-where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.
-\\
-$\Gamma'=\Gamma[IntrpName \mapsto ((\Phi,\alpha,\beta),\sigma) ]$.
-If \syntax{LogicTranslation} is missing, the default translations between the logics is selected. 
+where
+ $\Gamma' = \Gamma[\syntax{IntprName} \to G]$\\
+ and $G$ is the graph $L_1\stackrel{(\rho,\sigma)}{\longrightarrow} L_2$
+ where 
+  \begin{itemize}
+  
+   \item $(L_1, L_2) = sem(\Gamma, \syntax{IntrpType})$
+   \item $\rho = (\Phi,\alpha,\beta):
+             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, \syntax{LogicTranslation})$. If \syntax{LogicTranslation} is missing, the default translations between the logics is selected. 
+   \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), \syntax{SymbolMapItems}) = \sigma,$
+where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$. 
+  \end{itemize}
 
-The semantics is only defined if $\beta_{\Sigma_1}(M_2\forget\sigma) \in \cM_1$ for each $M_2\in\cM_2$.
+The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L_1)$ for each $M_2\in\Mod(L_2)$.
 If the optional argument $\syntax{Conservative}$ is \syntax{model-conservative}, for
-each model  $M_1\in\cM_1$ there must exist a model $M_2\in\cM_2$ such that
-$\beta_{\Sigma_1}(M_2\forget\sigma) = M_1$. If the optional argument $\syntax{Conservative}$ is \syntax{consequence-conservative}, 
-for each $\Sigma_1$-sentence $\varphi$, if $\cM_2\models \alpha_{\Sigma_1}(\varphi)$ then
+each model  $M_1\in\Mod(L_1)$ there must exist a model $M_2\in\Mod(L_2)$ such that
+$\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. If the optional argument $\syntax{Conservative}$ is \syntax{consequence-conservative}, 
+for each $\Sig(L_1)$-sentence $\varphi$, if $\cM_2\models \alpha_{\Sig(L_1)}(\varphi)$ then
 $\cM_1\models \varphi$.
 
 $$sem(\Gamma, \syntax{refinement, IntprName, Refinement}) = \Gamma'$$
 
-where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto sem(\Gamma, \syntax{Refinement})]$
+where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto G]$
+and 
+$sem(\Gamma, \syntax{Refinement}) = (G,\sigma)$
+\ednote{TODO: make the graph only here}
 
-\semdom{sem(\Gamma, \syntax{IntprType}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))}
 
-$$sem(\Gamma,  \syntax{intpr-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1,\cM_1),(\cI_2,\Sigma_2,\cM_2))$$
+\semdom{sem(\Gamma, \syntax{IntprType}) = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))}
 
-where 
-$sem^M(\Gamma,  \syntax{OMS}_1) = (\cI_1,\Sigma_1,\cM_1)$ and
-$sem^M(\Gamma,  \syntax{OMS}_2) = (\cI_2,\Sigma_2,\cM_2)$.
+$$sem(\Gamma,  \syntax{intpr-type, OMS$_1$, OMS$_2$}) = (L_1, L_2)$$
+\noindent where
+\begin{itemize}
+ \item $\Name(L_1) = \Name(\syntax{OMS}_1)$ and
+       $\Name(L_2) = \Name(\syntax{OMS}_2)$,
+ \item $(\Inst(L_i), 
+         \Sig(L_i),
+         \Mod(L_i),
+         \Th(L_i)) = sem(\Gamma, \syntax{OMS}_i)$, 
+         for $i=1, 2$.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{Refinement}) = ((\cI_1, \Sigma_1), (\cI_2, \Sigma_2), \cR)}
+\semdom{sem(\Gamma, \syntax{Refinement}) = (G, \sigma, N_1, N_2)}
+
+\ednote{TODO: update intuition}
 
 The signature of a refinement between OMS stores the signature of the OMS being refined and the signature of the 
 OMS after refinement. Since the logic might change along a refinement step, we also store the logics. 
@@ -5765,28 +5797,41 @@ Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$,
 we define $F\forget\sigma$ as the family of models $\{M_i\}_{i\in Nodes(G_1)}$ such that
 $M_i = F_{G(i)}\forget{\sigma^M_{N_i}}$, for each $i\in Nodes(G_1)$.
 
-$$sem(\Gamma, \syntax{ref-oms, OMS}) = ((\cI,\Sigma),(\cI,\Sigma),\cR)$$
+$$sem(\Gamma, \syntax{ref-oms, OMS}) = 
+   (G, \sigma, N, N) $$
+  \noindent where 
+ $G$ is a graph with just one isolated node $N$
+  such that $\Name(N) = \Name(\syntax{OMS})$
+  and the other elements of the tuple labeling
+  $L$ are given by $sem(\Gamma,\syntax{OMS})$
+ and $\sigma$ is the identity morphism on 
+  $\Sig(\syntax{OMS})$.   
 
-where $sem(\Gamma, \syntax{OMS}) = (\cI, \Sigma, \cM)$ and $\cR=\{ (M,M) \mid M\in \cM \}$.
+$$sem(\Gamma, \syntax{ref-network, Network}) = (G, \sigma)$$
 
-$$sem(\Gamma, \syntax{ref-network, Network}) = (G,G, \cR)$$
-
+\noindent 
 where $sem(\Gamma, \syntax{Network}) = G$ and
-$\cR = \{(F,F) \mid F $ is a family of models compatible with $G\}$.
+$\sigma$ is the identity network morphism on $G$.
 
-$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (
- (\cI_1,\Sigma_1),
- (\cI'_2,\Sigma'_2),
- \cR
-)$$
+$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (G, \sigma, N_1,N'_2)$$
 
-where\\ 
-$sem(\Gamma, \syntax{Refinement}_1) = ((\cI_1,\Sigma_1),(\cI_2,\Sigma_2),\cR_1)$,\\
-$sem(\Gamma, \syntax{Refinement}_2) = ((\cI'_1,\Sigma'_1),(\cI'_2,\Sigma'_2),\cR_2)$\\
+\noindent where\\ 
+$sem(\Gamma, \syntax{Refinement}_1) = (G_1, \sigma_1,
+N_1, N_2)$,
+$sem(\Gamma, \syntax{Refinement}_2) = (G_2, \sigma_2,
+N'_1, N'_2)$
 such that 
-$\cI_2 = \cI'_1$, $\Sigma_2 = \Sigma'_1$,\\
+the label of $N_2$ in $G_1$ is
+$(\cI_2, \Sigma_2, \cM_2,\Delta_2)$,
+the label of $N'_1$ in $G_2$ is
+$(\cI'_1, \Sigma'_1, \cM'_1,\Delta_1)$
 and
-$\cM' = \{ (M_1, M'_2) \mid \exists M_2 \text{ such that } (M_1, M_2)\in\cR_1 \text{ and } (M_2, M'_2) \in \cR_2\}$.
+$\cI_2 = \cI'_1$, $\Sigma_2 = \Sigma'_1$,
+$\cM'_1 \subseteq \cM_2$,
+and $G$ is the union of $G_1$ and $G_2$ extended
+ with a theorem link from $N_2$ to $N'_1$ labeled with
+ the identity on $\Sigma_2 = \Sigma'_1$
+ and $\sigma = \sigma_1;\sigma_2$.
 
 $$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = ((G_1, G'_2),\cR')$$
 
@@ -5797,12 +5842,21 @@ such that
 $G_2 = G'_1$ and
 $\cR' = \{(F_1,F'_2) \mid \exists F_2 \text{ such that } (F_1,F_2) \in \cR_1 \text{ and } (F_2,F'_2) \in \cR_2\}$.
 
-$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = ((\cI,\Sigma),(\cI_2,\Sigma_2),\cR')$$
+$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = (G, \sigma, N, N_2)$$
 where\\
- $sem^M(\Gamma,  \syntax{OMS}) = (\cI,\Sigma, \cM)$,\\
- $sem(\Gamma,  \syntax{Refinement}) = ((\cI_1,\Sigma_1),(\cI_2,\Sigma_2),\cR)$,\\ 
- $sem(\Gamma,  (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = ((\Phi, \alpha,\beta):\cI\to\cI_1, \sigma:\Phi(\Sigma)\to\Sigma_1)$,\\
- $\cR' = \{ (\beta_{\Sigma}(M\forget\sigma), N) \mid (M,N) \in \cR \}$.
+ $sem^M(\Gamma,  \syntax{OMS}) = (\cI,\Sigma, \cM, \Delta)$,\\
+ $sem(\Gamma,  \syntax{Refinement}) = (G', \sigma_2, N_1, N_2)$, such that the label of 
+ $N_1$ in G is
+ $(\cI_1, \Sigma_1, \cM_1, \Delta_1)$\\ 
+ $sem(\Gamma,  (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = (\rho = (\Phi, \alpha,\beta):\cI\to\cI_1, \sigma_1:\Phi(\Sigma)\to\Sigma_1)$,\\
+for each $M_1\in \cM_1$ we have that
+$\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM$,
+$\sigma = \sigma_1;\sigma_2$ and
+$G$ extends $G'$ with a new node 
+$N$ labelled with
+$(\Name(\syntax{OMS}), \cI,\Sigma,\cM,\Delta)$
+and with a new theorem link from $N$ to $N_1$ labeled
+with $(\rho, \sigma_1)$.
 
 $$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = ((G''_1,G_2),\cR)$$
 where\\
@@ -5873,27 +5927,46 @@ where $\Gamma' = \Gamma[EntailmentName \mapsto sem(\Gamma, \syntax{EntailmentTyp
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{EntailmentType}) = (\cI,\Sigma, \cM_1,\cM_2)}
+\semdom{sem(\Gamma, \syntax{EntailmentType}) = G}
 
-$$sem(\Gamma, \syntax{oms-oms-entailment, OMS$_1$, OMS$_2$}) = (\cI,\Sigma, \cM_1,\cM_2)$$
+$$sem(\Gamma, \syntax{oms-oms-entailment, OMS$_1$, OMS$_2$}) = L_2 \stackrel{\id}{\to} L_1$$
 
-where 
-$sem(\Gamma, \syntax{OMS}_1) = (\cI, \Sigma, \cM_1)$,
-$sem(\Gamma, \syntax{OMS}_2) = (\cI, \Sigma, \cM_2)$,
-and $\cM_2 \subseteq \cM_1$.
+\noindent where 
+$\Name(L_1) = \Name(\syntax{OMS}_1)$,
+$\Name(L_2) = \Name(\syntax{OMS}_2)$,\\
+$(\Inst(L_i),\Sig(L_i),\Mod(L_i),\Th(L_i)) = 
+sem(\Gamma, \syntax{OMS}_i)$ for $i=1, 2$ 
+such that $\Sig(L_1) = \Sig(L_2)$
+and $\Mod(O_1)\models \Th(O_2)$
+and $id$ is the identity morphism on $\Sig(L_1)$.
 
-$sem(\Gamma,\syntax{network-oms-entailment, Network , OMSName, OMS}) = (\cI,\Sigma, \cM_1,\cM_2)$
+$sem(\Gamma,\syntax{network-oms-entailment, Network , OMSName, OMS}) = G$
 
-where $sem(\Gamma, \syntax{Network}) = G$ such that $G$ consists of just one node labeled with \syntax{OMSName},
-$(\cI,\Sigma, \cM_1)$ is the label of \syntax{OMSName} in $G$,
-$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2)$ and $\cM_2 \subseteq \cM_1$.
+\noindent where $sem(\Gamma, \syntax{Network}) = G'$ such that $'G$ contains a node labeled with 
+$(\Name(\syntax{OMSName}), \cI, \Sigma,\cM_1,\Delta_1)$,
+$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and $\cM_2 \subseteq \cM_1$. Then 
+$G$ extends G' with a new node whose label has 
+the name $\Name(\syntax{OMS})$ and the other 
+components given by $sem(\Gamma,\syntax{OMS})$ and with
+a new theorem link from this new node to the node $\Name(\syntax{OMSName})$, labeled with
+the identity morphism on $\Sigma$.
 
-$$sem(\Gamma,\syntax{network-network-entailment, Network$_1$ ,Network$_2$}) = (G_1, \cM_1,\cM_2)$$
+$$sem(\Gamma,\syntax{network-network-entailment, Network$_1$ ,Network$_2$, NodeMap}) = G$$
 
-where $sem(\Gamma, \syntax{Network}_1) = G_1$,
-$sem(\Gamma, \syntax{Network}_2) = G_2$, such that $G_1$ and $G_2$ have the same shape and the same signatures for 
-corresponding nodes, and moreover the class $\cM_1$ of families of models compatible with $G_1$ includes
-the class $\cM_2$ of families of models compatible with $G_2$.
+\noindent where $sem(\Gamma, \syntax{Network}_1) = G_1$,
+$sem(\Gamma, \syntax{Network}_2) = G_2$, 
+$sem(\Gamma, \syntax{NodeMap}) = \sigma$ 
+such that $\sigma$ is a bijective map
+between the nodes
+of $G_1$ and $G_2$ and moreover the nodes related by 
+$\sigma$ have the same signatures and
+for each such pair of nodes $(N_1, N_2 = \sigma(N_1))$
+ we have that $\Mod(N_1)\models \Th(N_2)$.
+Then $G$ extends the union of $G_1$ and $G_2$ for each 
+pair $(N_1, \sigma(N_1))$ with a theorem link 
+from $\sigma(N_1)$ to $N_1$ labelled with the identity
+on $\Sig(N_1)$. 
+
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -5901,29 +5974,39 @@ the class $\cM_2$ of families of models compatible with $G_2$.
 
 $$sem(\Gamma,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\Gamma'$$
 
-where \\
-$sem(\Gamma, O_1) = (I_1,\Sigma_1,\cM_1)$,\\
-$sem(\Gamma, O_2) = (I_2,\Sigma_2,\cM_2)$,\\
-$(I, \rho_1 = (\Phi^1,\alpha^1,\beta^1),\rho_2 = (\Phi^2,\alpha^2,\beta^2)) = I_1 \bigcup I_2$,\\
-$sem(\Gamma, (\Phi^1(\Sigma_1)\cup\Phi^2(\Sigma_2), \emptyset), O_3) = (I,\Sigma,\cM)$,\\
-such that for each $M_i\in\cM_i$, there exists a unique model $M\in \cM$ such that $\beta^i_{\Sigma_i}(M\forget{\Phi^i(\Sigma_i)}) = M_i$, for $i=1,2$ and\\
-$\Gamma' = \Gamma[\syntax{EquivName} \mapsto((I_1,\Sigma_1,\cM_1),(I_2,\Sigma_2,\cM_2),(I,\Sigma,\cM))]$.
+\noindent where 
+$\Gamma' = \Gamma[\syntax{EquivName} \mapsto G]$
+where 
+$G$ is the graph\\
+$(\Name(O_1), \Inst(O_1), \Sig(O_1),\Mod(O_1), \Th(O_1)) \stackrel{\iota_1}{\rightarrow} \\
+      (\Name(O_3), \Inst(O_3), \Sig_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3), \Mod_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3), \Th_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3))
+     \\  \stackrel{\iota_2}{\leftarrow} 
+     (\Name(O_2), \Inst(O_2),\Sign(O_2), \Mod(O_2), \Th(O_2))
+      $ where
+$\iota_i$ are inclusions and we have that 
+$\Inst(O_1) = \Inst(O_2) = \Inst(O_3)$ and 
+for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \Mod_{(\Sign(O_1)\cup\Sign(O_2),\emptyset)}(O_3)$
+such that $M\forget{\Sign(O_i)} = M_i$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \semdom{sem(\Gamma,  \syntax{ModuleRelDefn}) = \Gamma'}
 
+\ednote{in the manifesto this is called a conservative extension}
+
 $$sem(\Gamma, \syntax{module-defn, ModuleName, Conservative, ModuleType, InterfaceSignature}) = \Gamma'$$
 
-where\\
-$sem(\Gamma, \syntax{ModuleType}) = ((\cI,\Sigma_1,\cM_1),(\cI,\Sigma_2,\cM_2))$\\
-$sem(\Gamma, \Sigma_2,\syntax{InterfaceSignature}) = \Sigma $ such that $\Sigma \subseteq \Sigma_1$ 
-and $\Sigma_1 \subseteq \Sigma_2$
-\todonote{is this condition right?}\\
-such that if \syntax{Conservative} is omitted or equal to \syntax{model-conservative}, then
-for each model $M_1$ in $\cM_1$ there is a model $M_2$  in $\cM_2$ such that $M_2\forget{\Sigma_1} = M_1$, and if
-\syntax{Conservative} is equal to \syntax{consequence-conservative}, then
-for each $\Sigma_1$-sentence $\varphi$ if $\cM_2\models \varphi$ then $\cM_1\models \varphi$, and
-$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (\cI, \Sigma_1,\cM_1,\Sigma_2,\cM_2)]$.
+\noindent where 
+$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto G]$
+and $G$ is the graph 
+ $(O_2, \Inst(O_2),\Sign(O_2),  \Mod(O_2), \Th(O_2))\allowbreak 
+ \stackrel{\iota}{\rightarrow} 
+(O_1, \Inst(O_1),\Sign(O_1), \Mod(O_1), \Th(O_1))$, with $\iota$ being the inclusion, 
+when $\Sigma \subseteq \Sign(O_2) \subseteq \Sign(O_1)$
+and if $c=$\%mcons and for each $M\in\Mod(O_2)$ there is a model $M'\in \Mod(O_1)$ such that
+$M'\forget{\Sigma} = M\forget{\Sigma}$,
+or if $c=$\%ccons and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
+implies $O_2\models\varphi$.
+\ednote{TODO: finish this}
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -5933,69 +6016,65 @@ $\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (\cI, \Sigma_1,\cM_1,\Sigma_2,\cM_2
 $sem(\Gamma, \syntax{align-defn, AlignName, AlignCard, AlignType, AlignSem, Corresps}) = \Gamma' $
 
 where
-$sem(\Gamma,\syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$
+$sem(\Gamma,\syntax{AlignType}) = (L_1, L_2)$
 and\\
 $\Gamma'=\Gamma[\syntax{AlignType} \mapsto 
-                      sem(\Gamma,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, Corresps})]$
+sem(\Gamma, (L_1, L_2), \syntax{AlignCard, AlignSem, Corresps})]$
 
-\semdom{sem(\Gamma, \syntax{AlignType}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))}
+\semdom{sem(\Gamma, \syntax{AlignType}) = (L_1, L_2)}
 
-$$sem(\Gamma, \syntax{align-type, OMS$_1$, OMS$_2$}) = ((\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2))$$
+$$sem(\Gamma, \syntax{align-type, OMS$_1$, OMS$_2$}) = (L_1, L_2)$$
 
-where $sem^T(\Gamma,\syntax{OMS}_1) = (\cI_1,\Sigma_1, \Delta_1)$
-and $sem^T(\Gamma,\syntax{OMS}_2) = (\cI_2,\Sigma_2, \Delta_2)$.
+where $L_1$ is a node label whose name is
+$\Name(\syntax{OMS}_1)$ and whose other components are
+given by $sem(\Gamma, \syntax{OMS}_1)$
+and similarly, $L_2$ is a node label whose name is
+$\Name(\syntax{OMS}_2)$ and whose other components are
+given by $sem(\Gamma, \syntax{OMS}_2)$.
 
-\semdom{sem(\Gamma,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem, Corresps})=
+\semdom{sem(\Gamma,  L_1, L_2, \syntax{AlignCard, AlignSem, Corresps})=
 G}
 
-$$sem(\Gamma,  (\cI_1,\Sigma_1, \Delta_1),(\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem}, C_1,\ldots,C_n)=
+$$sem(\Gamma, L_1, L_2, \syntax{AlignCard, AlignSem}, C_1,\ldots,C_n)=
 G$$
 
 where\\
-$(\cI'_1,\Sigma'_1,\Delta'_1) = sem(\Gamma,  (\cI_1,\Sigma_1,\Delta_1),\syntax{AlignSem})$,\\
-$(\cI'_2,\Sigma'_2,\Delta'_2) = sem(\Gamma,  (\cI_2,\Sigma_2,\Delta_2),\syntax{AlignSem})$,\\
-$WDiag = sem(\Gamma, (\cI'_1,\Sigma'_1,\Delta'_1), (\cI'_2,\Sigma'_2,\Delta'_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)$.
+$L'_1 = sem(\Gamma,L_1,\syntax{AlignSem})$,\\
+$L'_2 = sem(\Gamma,  L_2,\syntax{AlignSem})$,\\
+$G = sem(\Gamma, L'_1,L'_2, \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, (\cI,\Sigma,\Delta),\syntax{AlignSem})=(\cI',\Sigma',\Delta')}
+\semdom{sem(\Gamma, L_1,\syntax{AlignSem})=L'_1}
 
-$$sem(\Gamma,  (\cI,\Sigma,\Delta),\syntax{AlignSem})=\begin{cases}
-                                   (\cI,\Sigma,\Delta) & \mbox{if } \syntax{AlignSem} = \syntax{global-domain}\\
-                                   relativize_{logic(\Gamma.current)}((\Sigma,\Delta))& \mbox{otherwise}
+$$sem(\Gamma, L_1,\syntax{AlignSem})=\begin{cases}
+                                   L_1 & \mbox{if } \syntax{AlignSem} = \syntax{global-domain}\\
+                                   relativize_{logic(\Gamma.current)}(L_1)& \mbox{otherwise}
                                                                                                                    \end{cases}$$
+                                                                                                                   
+                                                                                                                   \noindent where the relativisation procedure is
+                                                                                                                   logic-specific.
+                                                                                                  
+                                                                                                                  
 
-\semdom{sem(\Gamma, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G}
+\semdom{sem(\Gamma, L_1, L_2 \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G}
 
-$sem(\Gamma, (\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G$
+$sem(\Gamma, L_1, L_2, \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G$
 
 where\\
 if at least one of the correspondences $C_1, \ldots,C_n$ has a confidence value different than $1$, then the semantics of the 
 alignment is not defined, and the alignment is ill-formed if the alignment mapping does not have the arities given by
-$\syntax{AlignCard}$,\\
-$sem(\Gamma,(\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), C_1,\ldots,C_n ) = ((\cI'_1, \Sigma''_1, \emptyset),
-  (\cI'_2, \Sigma''_2, \emptyset),
-  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$,\\
-and $G = buildWDiagram((\cI'_1, \Sigma''_1, \emptyset),
-  (\cI'_2, \Sigma''_2, \emptyset),
-  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$\\
-where $buildWDiagram$ returns the W-shaped network: 
+$\syntax{AlignCard}$, otherwise
+$G$ is a W-shaped graph as below
 $$
 \xymatrix{
-(\cI_1,\Sigma_1,\Delta_1) & &  (\cI_B,\Sigma_B,\Delta_B) &&(\cI_2,\Sigma_2,\Delta_2) \\
- & (\cI'_1, \Sigma''_1, \emptyset) \ar[ul]^{\iota_1}\ar[ur]_{\sigma_1} &&(\cI'_2, \Sigma''_2, \emptyset) \ar[ur]^{\iota_2}\ar[ul]_{\sigma_2}& 
+L_1 & &  L_B &&L_2 \\
+ & L_s \ar[ul]^{\iota_1}\ar[ur]_{\sigma_1} &&L_t \ar[ur]^{\iota_2}\ar[ul]_{\sigma_2}& 
 }
 $$
-
-
-$$sem(\Gamma,(\cI_1,\Sigma_1,\Delta_1), (\cI_2,\Sigma_2,\Delta_2), C_1,\ldots,C_n ) = ((\cI_1, \Sigma''_1, \emptyset),
-  (\cI_2, \Sigma''_2, \emptyset),
-  (\cI_B,\Sigma_B,\Delta_B),\iota_1, \iota_2, \sigma_1,\sigma_2)$$
-where for each correspondence $C_i$ we have that $sem(\Gamma, (\cI_1,\Sigma''_1,\Delta_1), (\cI_2,\Sigma''_2,\Delta_2), C_i) = 
-(N^i_1,N^i_2, R^i)$,  $\Sigma''_i$ is  the least sub-signature of $\Sigma_i$  such that
-all symbols $N^i_1$ appear in $\Sigma''_i$, for $i=1,2$, $\iota_i:\Sigma''_i\to\Sigma_i$ is the inclusion,
-and $(\cI_B,\Sigma_B,\Delta_B),\sigma_1:\Sigma''_1\to\Sigma_B,\sigma_2:\Sigma''_2\to\Sigma_B$ are defined in a logic-specific way
-from the correspondences and taking into account \syntax{AlignSem}. 
+where $L_B$, $L_s$ and $L_t$ are built in a 
+logic-specific way from the correspondences 
+$C_1,\ldots, C_n$ taking into account \syntax{AlignSem}.
 \cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
 \ssclause{Semantics of queries}
