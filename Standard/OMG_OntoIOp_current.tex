@@ -5457,16 +5457,19 @@ the heterogeneous logic env?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})= (I, \Sigma', \Delta')}
+\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction}) = 
+        (\Sigma', \Delta')}
 
-$$sem(\Gamma, \Sigma, \Delta, \syntax{'extraction' , Qual, InterfaceSignature})= (\Sigma', \Delta')$$ 
+$sem(\Gamma, (\Sigma, \Delta), \syntax{'extraction' , QualInterfaceSignature}) =
+(\Sigma',\Delta')$
+ 
 %
 %where $\Sigma'' = sem(\Sigma, \syntax{Qual}, \syntax{InterfaceSignature})$ and 
-% $(\Sigma', \Delta')$  is the smallest  sub-theory of $(\Sigma, \Delta)$ such that % $\Sigma'' \subseteq \Sigma'$ and 
+% $(\Sigma', \Delta')$  is the smallest  sub-theory of (\Sigma, \Delta)$ such that % $\Sigma'' \subseteq \Sigma'$ and 
 %  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
 %The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
 
-where
+where \ednote{The signature of \syntax{InterfaceSignature} should appear somewhere...}
 $\langle\Sigma',\Delta'\rangle$ is the smallest depleting
 $\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
 smallest\footnote{If the smallest such sub-theory does not exist, the
@@ -5535,7 +5538,8 @@ imports will be added. This has to be propagated in the whole section...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem( \Gamma, \Sigma, \syntax{QualInterfaceSignature}) = \Sigma'}
+\semdom{sem( \Gamma, \Sigma, \syntax{QualInterfaceSignature}) = 
+\Sigma'}
 
 $sem(\Gamma, \Sigma, \syntax{ Qual, SymbolItems}) = \Sigma'$, 
 where 
@@ -5747,10 +5751,9 @@ $\cM_1\models \varphi$.
 
 $$sem(\Gamma, \syntax{refinement, IntprName, Refinement}) = \Gamma'$$
 
-where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto G]$
+where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto (G,\sigma, N_1, N_2)]$
 and 
-$sem(\Gamma, \syntax{Refinement}) = (G,\sigma)$
-\ednote{TODO: make the graph only here}
+$sem(\Gamma, \syntax{Refinement}) = (G,\sigma, N_1, N_2)$.
 
 
 \semdom{sem(\Gamma, \syntax{IntprType}) = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))}
@@ -5769,7 +5772,7 @@ $$sem(\Gamma,  \syntax{intpr-type, OMS$_1$, OMS$_2$}) = (L_1, L_2)$$
 
 %%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{Refinement}) = (G, \sigma, N_1, N_2)}
+\semdom{sem(\Gamma, \syntax{Refinement}) = ((G_1, G_2), \sigma, \cM)}
 
 \ednote{TODO: update intuition}
 
@@ -5798,79 +5801,66 @@ we define $F\forget\sigma$ as the family of models $\{M_i\}_{i\in Nodes(G_1)}$ s
 $M_i = F_{G(i)}\forget{\sigma^M_{N_i}}$, for each $i\in Nodes(G_1)$.
 
 $$sem(\Gamma, \syntax{ref-oms, OMS}) = 
-   (G, \sigma, N, N) $$
+   ((G, G), \sigma, \cM) $$
   \noindent where 
- $G$ is a graph with just one isolated node $N$
+  \begin{itemize}
+  \item $G$ is a graph with just one isolated node $N$
   such that $\Name(N) = \Name(\syntax{OMS})$
   and the other elements of the tuple labeling
-  $L$ are given by $sem(\Gamma,\syntax{OMS})$
- and $\sigma$ is the identity morphism on 
-  $\Sig(\syntax{OMS})$.   
-
-$$sem(\Gamma, \syntax{ref-network, Network}) = (G, \sigma)$$
+  $L$ are given by $sem(\Gamma,\syntax{OMS})$,
+  \item $\sigma$ is the identity morphism on 
+  $\Sig(\syntax{OMS})$,  
+  \item $\cM = \{(M, M) \mid M \in \Mod(\syntax{OMS})\}$
+  \end{itemize}
+$$sem(\Gamma, \syntax{ref-network, Network}) = ((G, G), \sigma, \cM)$$
 
 \noindent 
-where $sem(\Gamma, \syntax{Network}) = G$ and
-$\sigma$ is the identity network morphism on $G$.
+where $sem(\Gamma, \syntax{Network}) = G$,
+$\sigma$ is the identity network morphism on $G$
+and 
+$\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 
-$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (G, \sigma, N_1,N'_2)$$
+$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = 
+((G_1, G'_2), \sigma, \cM)$$
 
 \noindent where\\ 
-$sem(\Gamma, \syntax{Refinement}_1) = (G_1, \sigma_1,
-N_1, N_2)$,
-$sem(\Gamma, \syntax{Refinement}_2) = (G_2, \sigma_2,
-N'_1, N'_2)$
-such that 
-the label of $N_2$ in $G_1$ is
-$(\cI_2, \Sigma_2, \cM_2,\Delta_2)$,
-the label of $N'_1$ in $G_2$ is
-$(\cI'_1, \Sigma'_1, \cM'_1,\Delta_1)$
+$sem(\Gamma, \syntax{Refinement}_1) = 
+((G_1, G'_1), \sigma_1, \cM_1)$,
+$sem(\Gamma, \syntax{Refinement}_2) = 
+((G_2, G'_2), \sigma_2, \cM_2)$
+such that $G'_1 = G_2$,
+$\sigma = \sigma_1;\sigma_2$
+is a network morphism from $G_1$ to $G'_2$, 
 and
-$\cI_2 = \cI'_1$, $\Sigma_2 = \Sigma'_1$,
-$\cM'_1 \subseteq \cM_2$,
-and $G$ is the union of $G_1$ and $G_2$ extended
- with a theorem link from $N_2$ to $N'_1$ labeled with
- the identity on $\Sigma_2 = \Sigma'_1$
- and $\sigma = \sigma_1;\sigma_2$.
+$\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that } 
+(F_1, F_2) \in \cM_1  \text{ and }
+(F_2, F_3) \in \cM_2  \}$
 
-$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = ((G_1, G'_2),\cR')$$
-
-where\\ 
-$sem(\Gamma, \syntax{Refinement}_1) = ((G_1, G_2), \cR_1)$,\\
-$sem(\Gamma, \syntax{Refinement}_2) = ((G'_1,G'_2),\cR_2)$\\
-such that 
-$G_2 = G'_1$ and
-$\cR' = \{(F_1,F'_2) \mid \exists F_2 \text{ such that } (F_1,F_2) \in \cR_1 \text{ and } (F_2,F'_2) \in \cR_2\}$.
-
-$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = (G, \sigma, N, N_2)$$
+$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = 
+((G_1, G_2), \sigma, \cM)$$
 where\\
  $sem^M(\Gamma,  \syntax{OMS}) = (\cI,\Sigma, \cM, \Delta)$,\\
- $sem(\Gamma,  \syntax{Refinement}) = (G', \sigma_2, N_1, N_2)$, such that the label of 
- $N_1$ in G is
- $(\cI_1, \Sigma_1, \cM_1, \Delta_1)$\\ 
+ $sem(\Gamma,  \syntax{Refinement}) = 
+ ((G_1, G_2), \sigma_2, \cM')$ 
+ such that $G_1$ consists of an isolated node labeled with 
+ $(\cI_1, \Sigma_1, \cM_1, \Delta_1)$\\
  $sem(\Gamma,  (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = (\rho = (\Phi, \alpha,\beta):\cI\to\cI_1, \sigma_1:\Phi(\Sigma)\to\Sigma_1)$,\\
-for each $M_1\in \cM_1$ we have that
+ for each $(M_1, M_2) \in \cM'$
+ we have that 
 $\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM$,
 $\sigma = \sigma_1;\sigma_2$ and
-$G$ extends $G'$ with a new node 
-$N$ labelled with
-$(\Name(\syntax{OMS}), \cI,\Sigma,\cM,\Delta)$
-and with a new theorem link from $N$ to $N_1$ labeled
-with $(\rho, \sigma_1)$.
+$\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
+(M_1, M_2) \in \cM' \}$.
 
-$$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = ((G''_1,G_2),\cR)$$
+$$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = 
+((G_1,G_2),\sigma, \cM)$$
 where\\
- $sem^M(\Gamma,  \syntax{Network}) = G_1$, $\cR_1$ is the class of families of models compatible with $G$,\\
- $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\cR_2)$,\\ 
- $sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G'_1$,\\
- for each node $N_1\in Nodes(G_1)$, 
-if $(\cI_1, \Sigma_1, \cM_1)$ is the label of $N_1$ in $G_1$,\\
-$(\cI_2, \Sigma_2, \cM_2)$ is the label of $N_2 = \sigma^G(N_1)$ in $G_2$ \\
-and $((\Phi,\alpha,\beta):\cI_1\to\cI_2,\phi:\Phi(\Sigma_1)\to\Sigma_2)$ is $\sigma^M_{N_1}$,\\
-then $\cM_1$ must include $\{ \beta_{\Sigma_1}(M_2\forget\phi)  \mid M_2 \in \cM_2\}$,
-and this class of models becomes the new label of $N_1$ in $G''_1$ and\\
-$\cR$ pairs each family of models $F$ compatible with $G_2$ with
-the $F\forget\sigma$.
+ $sem^M(\Gamma,  \syntax{Network}) = G_1$,\\
+ $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\sigma_2, \cM')$,\\ 
+ $sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma_1:G_1\to G'_1$,\\
+ $\sigma = \sigma_1;\sigma_2$ is a network morphism
+ and 
+ $\cM = \{( F_2\forget{\sigma} , F_2) \mid (F_1, F_2) \in \cM' \}$.
 
 
 %%%%%%%%%%%%%%%%%%%%
