@@ -3754,7 +3754,7 @@ IRIs that translate to URLs when applying the algorithm for mapping IRIs to URIs
 identified by a certain IRI \should be \emph{located} at the corresponding URL, so that agents can 
 locate them.  As IRIs are specified with a concrete syntax only in \nisref{IETF/RFC 3987:2005}, DOL 
 adopts the latter into its abstract syntax as well as all of its concrete syntaxes 
-(serializations)
+(serializations).
 %\CLnote[type=q-all]{I meant to say: for IRIs, the abstract syntax is the same as 
 %the concrete syntax.}.
 
@@ -5446,16 +5446,19 @@ the heterogeneous logic env?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})= (I, \Sigma', \Delta')}
+\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction}) = 
+        (\Sigma', \Delta')}
 
-$$sem(\Gamma, \Sigma, \Delta, \syntax{'extraction' , Qual, InterfaceSignature})= (\Sigma', \Delta')$$ 
+$sem(\Gamma, (\Sigma, \Delta), \syntax{'extraction' , QualInterfaceSignature}) =
+(\Sigma',\Delta')$
+ 
 %
 %where $\Sigma'' = sem(\Sigma, \syntax{Qual}, \syntax{InterfaceSignature})$ and 
-% $(\Sigma', \Delta')$  is the smallest  sub-theory of $(\Sigma, \Delta)$ such that % $\Sigma'' \subseteq \Sigma'$ and 
+% $(\Sigma', \Delta')$  is the smallest  sub-theory of (\Sigma, \Delta)$ such that % $\Sigma'' \subseteq \Sigma'$ and 
 %  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
 %The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
 
-where
+where \ednote{The signature of \syntax{InterfaceSignature} should appear somewhere...}
 $\langle\Sigma',\Delta'\rangle$ is the smallest depleting
 $\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
 smallest\footnote{If the smallest such sub-theory does not exist, the
@@ -5524,7 +5527,8 @@ imports will be added. This has to be propagated in the whole section...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem( \Gamma, \Sigma, \syntax{QualInterfaceSignature}) = \Sigma'}
+\semdom{sem( \Gamma, \Sigma, \syntax{QualInterfaceSignature}) = 
+\Sigma'}
 
 $sem(\Gamma, \Sigma, \syntax{ Qual, SymbolItems}) = \Sigma'$, 
 where 
@@ -5736,10 +5740,9 @@ $\cM_1\models \varphi$.
 
 $$sem(\Gamma, \syntax{refinement, IntprName, Refinement}) = \Gamma'$$
 
-where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto G]$
+where $ \Gamma' =\Gamma[\syntax{IntprName} \mapsto (G,\sigma, N_1, N_2)]$
 and 
-$sem(\Gamma, \syntax{Refinement}) = (G,\sigma)$
-\ednote{TODO: make the graph only here}
+$sem(\Gamma, \syntax{Refinement}) = (G,\sigma, N_1, N_2)$.
 
 
 \semdom{sem(\Gamma, \syntax{IntprType}) = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))}
@@ -5758,7 +5761,7 @@ $$sem(\Gamma,  \syntax{intpr-type, OMS$_1$, OMS$_2$}) = (L_1, L_2)$$
 
 %%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{Refinement}) = (G, \sigma, N_1, N_2)}
+\semdom{sem(\Gamma, \syntax{Refinement}) = ((G_1, G_2), \sigma, \cM)}
 
 \ednote{TODO: update intuition}
 
@@ -5787,79 +5790,66 @@ we define $F\forget\sigma$ as the family of models $\{M_i\}_{i\in Nodes(G_1)}$ s
 $M_i = F_{G(i)}\forget{\sigma^M_{N_i}}$, for each $i\in Nodes(G_1)$.
 
 $$sem(\Gamma, \syntax{ref-oms, OMS}) = 
-   (G, \sigma, N, N) $$
+   ((G, G), \sigma, \cM) $$
   \noindent where 
- $G$ is a graph with just one isolated node $N$
+  \begin{itemize}
+  \item $G$ is a graph with just one isolated node $N$
   such that $\Name(N) = \Name(\syntax{OMS})$
   and the other elements of the tuple labeling
-  $L$ are given by $sem(\Gamma,\syntax{OMS})$
- and $\sigma$ is the identity morphism on 
-  $\Sig(\syntax{OMS})$.   
-
-$$sem(\Gamma, \syntax{ref-network, Network}) = (G, \sigma)$$
+  $L$ are given by $sem(\Gamma,\syntax{OMS})$,
+  \item $\sigma$ is the identity morphism on 
+  $\Sig(\syntax{OMS})$,  
+  \item $\cM = \{(M, M) \mid M \in \Mod(\syntax{OMS})\}$
+  \end{itemize}
+$$sem(\Gamma, \syntax{ref-network, Network}) = ((G, G), \sigma, \cM)$$
 
 \noindent 
-where $sem(\Gamma, \syntax{Network}) = G$ and
-$\sigma$ is the identity network morphism on $G$.
+where $sem(\Gamma, \syntax{Network}) = G$,
+$\sigma$ is the identity network morphism on $G$
+and 
+$\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 
-$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = (G, \sigma, N_1,N'_2)$$
+$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = 
+((G_1, G'_2), \sigma, \cM)$$
 
 \noindent where\\ 
-$sem(\Gamma, \syntax{Refinement}_1) = (G_1, \sigma_1,
-N_1, N_2)$,
-$sem(\Gamma, \syntax{Refinement}_2) = (G_2, \sigma_2,
-N'_1, N'_2)$
-such that 
-the label of $N_2$ in $G_1$ is
-$(\cI_2, \Sigma_2, \cM_2,\Delta_2)$,
-the label of $N'_1$ in $G_2$ is
-$(\cI'_1, \Sigma'_1, \cM'_1,\Delta_1)$
+$sem(\Gamma, \syntax{Refinement}_1) = 
+((G_1, G'_1), \sigma_1, \cM_1)$,
+$sem(\Gamma, \syntax{Refinement}_2) = 
+((G_2, G'_2), \sigma_2, \cM_2)$
+such that $G'_1 = G_2$,
+$\sigma = \sigma_1;\sigma_2$
+is a network morphism from $G_1$ to $G'_2$, 
 and
-$\cI_2 = \cI'_1$, $\Sigma_2 = \Sigma'_1$,
-$\cM'_1 \subseteq \cM_2$,
-and $G$ is the union of $G_1$ and $G_2$ extended
- with a theorem link from $N_2$ to $N'_1$ labeled with
- the identity on $\Sigma_2 = \Sigma'_1$
- and $\sigma = \sigma_1;\sigma_2$.
+$\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that } 
+(F_1, F_2) \in \cM_1  \text{ and }
+(F_2, F_3) \in \cM_2  \}$
 
-$$sem(\Gamma, \syntax{ref-composition, Refinement$_1$, Refinement$_2$}) = ((G_1, G'_2),\cR')$$
-
-where\\ 
-$sem(\Gamma, \syntax{Refinement}_1) = ((G_1, G_2), \cR_1)$,\\
-$sem(\Gamma, \syntax{Refinement}_2) = ((G'_1,G'_2),\cR_2)$\\
-such that 
-$G_2 = G'_1$ and
-$\cR' = \{(F_1,F'_2) \mid \exists F_2 \text{ such that } (F_1,F_2) \in \cR_1 \text{ and } (F_2,F'_2) \in \cR_2\}$.
-
-$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = (G, \sigma, N, N_2)$$
+$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = 
+((G_1, G_2), \sigma, \cM)$$
 where\\
  $sem^M(\Gamma,  \syntax{OMS}) = (\cI,\Sigma, \cM, \Delta)$,\\
- $sem(\Gamma,  \syntax{Refinement}) = (G', \sigma_2, N_1, N_2)$, such that the label of 
- $N_1$ in G is
- $(\cI_1, \Sigma_1, \cM_1, \Delta_1)$\\ 
+ $sem(\Gamma,  \syntax{Refinement}) = 
+ ((G_1, G_2), \sigma_2, \cM')$ 
+ such that $G_1$ consists of an isolated node labeled with 
+ $(\cI_1, \Sigma_1, \cM_1, \Delta_1)$\\
  $sem(\Gamma,  (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = (\rho = (\Phi, \alpha,\beta):\cI\to\cI_1, \sigma_1:\Phi(\Sigma)\to\Sigma_1)$,\\
-for each $M_1\in \cM_1$ we have that
+ for each $(M_1, M_2) \in \cM'$
+ we have that 
 $\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM$,
 $\sigma = \sigma_1;\sigma_2$ and
-$G$ extends $G'$ with a new node 
-$N$ labelled with
-$(\Name(\syntax{OMS}), \cI,\Sigma,\cM,\Delta)$
-and with a new theorem link from $N$ to $N_1$ labeled
-with $(\rho, \sigma_1)$.
+$\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
+(M_1, M_2) \in \cM' \}$.
 
-$$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = ((G''_1,G_2),\cR)$$
+$$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = 
+((G_1,G_2),\sigma, \cM)$$
 where\\
- $sem^M(\Gamma,  \syntax{Network}) = G_1$, $\cR_1$ is the class of families of models compatible with $G$,\\
- $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\cR_2)$,\\ 
- $sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G'_1$,\\
- for each node $N_1\in Nodes(G_1)$, 
-if $(\cI_1, \Sigma_1, \cM_1)$ is the label of $N_1$ in $G_1$,\\
-$(\cI_2, \Sigma_2, \cM_2)$ is the label of $N_2 = \sigma^G(N_1)$ in $G_2$ \\
-and $((\Phi,\alpha,\beta):\cI_1\to\cI_2,\phi:\Phi(\Sigma_1)\to\Sigma_2)$ is $\sigma^M_{N_1}$,\\
-then $\cM_1$ must include $\{ \beta_{\Sigma_1}(M_2\forget\phi)  \mid M_2 \in \cM_2\}$,
-and this class of models becomes the new label of $N_1$ in $G''_1$ and\\
-$\cR$ pairs each family of models $F$ compatible with $G_2$ with
-the $F\forget\sigma$.
+ $sem^M(\Gamma,  \syntax{Network}) = G_1$,\\
+ $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\sigma_2, \cM')$,\\ 
+ $sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma_1:G_1\to G'_1$,\\
+ $\sigma = \sigma_1;\sigma_2$ is a network morphism
+ and 
+ $\cM = \{( F_2\forget{\sigma} , F_2) \mid (F_1, F_2) \in \cM' \}$.
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -6894,7 +6884,7 @@ A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A, M)$
 comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $P$ of
 attribute declarations, a set $O$ of operation declarations,
  a set $A$ of association declarations over
-$(C, {\leq_C})$, and a set $M$ of composition declarations, such that
+$(C, {\leq_C})$, and a set $M$ of composition declarations over $(C, {\leq_C})$, such that
 the following properties are satisfied:
 %
 \begin{itemize}[label={--}, leftmargin=*]
@@ -6909,7 +6899,11 @@ declarations in $M \cup A$, then $d_1 \neq d_2$;
 
   \item member end names are unique: if $p_1, \ldots, p_r$ are the
 member end names of an association declaration in $A$ or a composition
-declaration in $M$, then $p_i \neq p_j$ for $1 \leq i \neq j \leq r$.
+declaration in $M$, then $p_i \neq p_j$ for $1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not
+  be unique.  However, for (1)~a simpler handling of selecting a
+  particular member end in the sentences and avoiding the use of
+  number selectors, and (2)~making the notion of member ends ``owned''
+  by a class/data type, we add this constraint.}
 
   \item the type of a member end\footnote{All member ends are instances
   of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36.}
@@ -6925,17 +6919,17 @@ single attribute with name $p_i$ may exist.)
 \end{itemize}
 
 A \emph{class/data type net morphism}
-$\sigma = (\gamma, \pi, \rho, \alpha, \mu) : \Sigma = ((C, {\leq}_C),
-P, O, A, M) \to \Tau = ((D, {\leq}_D), \allowbreak Q, R, B, N)$
-is given by
+$\sigma = (\gamma, \varphi, \alpha, \mu) : \Sigma = ((C,
+{\leq}_C), P, A, M) \to \Tau = ((D, {\leq}_D),\allowbreak
+Q,\allowbreak B, N)$ is given by
 %
 \begin{itemize}[label={--}, leftmargin=*]
   \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
 {\leq_D})$;
 
-  \item an attribute declaration map $\pi : P \to Q$ such that if
-$\pi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then $d = \gamma(c)$,
-$d' = \gamma(c')$, and $\tau = \tau'$;
+  \item an attribute declaration map $\varphi : P \to Q$ such that if
+$\varphi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then
+$d = \gamma(c)$, $d' = \gamma(c')$, and $\tau = \tau'$;
 
   \item a query operation declaration map $\rho : O \to R$ such that if
 $\rho(c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']) =
@@ -7518,6 +7512,55 @@ $C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (
 
 \sclause{$\OWL \rightarrow \CL$}
 
+
+\section{Queries}
+
+\paragraph
+Let $(C, {\leq_C})$ be a class/data type hierarchy.
+A \emph{query declaration} over $(C, {\leq_C})$ is of the form
+$c.q(f_1 : \tau[c_1], \ldots, f_k : \tau[c_k]) : \tau'[c']$ with
+$c, c' \in C$, $\tau_1, \ldots, \tau_k, \tau'$ collection type
+constructors, $q$ a \emph{query name}, and $f_1, \ldots, f_k$
+\emph{parameter names}.\footnote{We disregard parameter direction
+  kinds with the exception of \uml{return}.  However, we consider
+  \uml{return} parameters to be anonymous; in UML, only a single
+  \uml{return} parameter is allowed.}
+
+A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), Q)$
+comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $Q$ of query declarations
+over $(C, {\leq_C})$, such that the following property is
+satisfied:
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item query names are unique along the generalisation
+relation:\footnote{In particular, we disregard overloading and
+  refinement of queries in sub-classes.} if
+$c_1.q_1(f_{11} : \tau_{11}[c_{11}], \ldots, f_{1k_1} :
+\tau_{1k_1}[c_{1k_1}]) : \tau_1'[c_1']$
+and
+$c_2.q_2(f_{21} : \tau_{21}[c_{21}], \ldots, f_{2k_2} :
+\tau_{2k_1}[c_{2k_2}]) : \tau_2'[c_2']$
+are different query declarations in $Q$ and $c_1 \leq_C c_2$, then
+$q_1 \neq q_2$.
+\end{itemize}
+
+A \emph{class/data type net morphism}
+$\sigma = (\gamma, \pi) : \Sigma = ((C, {\leq}_C),
+ Q) \to \Tau = ((D, {\leq}_D),\allowbreak R)$
+is given by
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
+{\leq_D})$; and
+
+  \item a query declaration map $\pi : Q \to R$ such that if
+$\pi({c.q(f_1 : \tau_1[c_1], \ldots, f_k : \tau_k[c_k]) : \tau[c']}) =
+{d.r(g_1 : \tau'_1[d_1], \ldots, g_l : \tau'_l[d_l]) : \tau'[d']} \in
+R$,
+then $d = \gamma(c)$, $d' = \gamma(c')$, $k = l$,
+$d_1 = \gamma(c_1), \ldots, d_k = \gamma(d_k)$,
+$\tau_1 = \tau_1', \ldots, \tau_k = \tau_k'$, and $\tau = \tau'$;
+\end{itemize}
 
 \infannex{Extended Logic Graph}\label{a:ext-graph}
 
@@ -8465,7 +8508,7 @@ straight-forward coding of the additional features not present in
 
 \ssclause{$\SimpleRDF\rightarrow \FOL^{=}$}
 
-The subinstitution comorphism from \SimpleRDF to $\FOL^{=}$ maps a a \SimpleRDF
+The subinstitution comorphism from \SimpleRDF to $\FOL^{=}$ maps a \SimpleRDF
 signature $\mathbf{R_s}$ to the $\FOL^{=}$ signature
 $\Phi(\mathbf{R_s})$ which has $\mathbf{R_s}$ as set of constants, and
 moreover is equipped with a unary predicate $P$ and a ternary
