@@ -1026,7 +1026,7 @@ This is left for future work.
 \multicolumn{3}{l}%
 {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
 \hline
-\textbf{ID} & \textbf{Discussion item} & \textbf{Resolution}\\
+\textbf{ID} & \textbf{Discussion item} & \textbf{Resolution}\
 \hline
 \endhead
 \hline \multicolumn{3}{l}{\textit{Continued on next page}} \\
@@ -3430,7 +3430,9 @@ NetworkName            = IRI ;
 Network                = 'network', NetworkElements , ExcludeExtensions ;
 NetworkElements        = 'network-elements' , { NetworkElement } ;
 NetworkElement         = 'network-element' , [ Id ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorNetworkRef } ; 
+ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorPathorNetworkRef } ; 
+OMSOrMappingorPathorNetworkRef   = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef 
+                                   | OMSOrMappingorNetworkRef
 OMSOrMappingorNetworkRef  = IRI ;
 \end{lstlisting}
 
@@ -3997,6 +3999,7 @@ Network                = NetworkElements , [ ExcludeExtensions ] ;
 NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
 NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
 ExcludeExtensions      = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
+OMSOrMappingorPathorNetworkRef = IRI '->' IRI
 OMSOrMappingorNetworkRef        = IRI ;
 Id                     = Letter , { LetterOrDigit } ;
 \end{lstlisting}
@@ -4098,7 +4101,7 @@ SymbolOrMap          = Symbol
 OMSName             = IRI ;
 
 OMSRef              = IRI ;
-ExtensionRef         = IRI ;
+ExtensionRef         = IRI  | IRI '->' IRI;
 
 LanguageRef          = IRI ;
 LogicRef             = IRI ;
@@ -4482,8 +4485,7 @@ A $\Sigma$-model consists of a set $\UR$,
 the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
 the universe of discourse, and four mappings:
   \begin{itemize}
-   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{<x_1,\ldots,x_n> |
-x_1,\ldots,x_n \in \UD\}$ (i.e., the set of finite sequences of
+   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{\langle x_1,\ldots,x_n \rangle \mid x_1,\ldots,x_n \in \UD\}$ (i.e., the set of finite sequences of
 elements of $\UD$);
    \item $\fun$ from $\UR$ to total functions from $\UD^*$ into $\UD$;
    \item $\intCL$ from names in $\Sigma$ to $\UR$, such that
@@ -4745,31 +4747,6 @@ This concludes the definition of heterogeneous logical environment and the assum
 
 \medskip
 
-The semantics of OMS generally depends on a global environment
-$\Gamma$ containing:
- \begin{itemize}
-    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
-               we also denote by $\Gamma$, providing access to previous definitions,
-    \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
-    \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
- \end{itemize}
-
-If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
-extends the domain of $\Gamma$ with \syntax{IRI} and
-the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
- $\Gamma_\emptyset$ is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set,
-the prefix map is empty and the current triple contains the error logic together with its language and serialization.
-The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
-denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$,
-and of $\Gamma_1.\prefix$ and $\Gamma_2.\prefix$ are disjoint, and then
-$\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
-\Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
-\Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
-\end{cases}$, $\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
-and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
-We will write $\Gamma.\{\prefix = \PMap\}$ for the global environment that set the prefix map of 
-$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
-$(lang, logic, ser)$.
 
 
 DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of models 
@@ -4840,6 +4817,37 @@ node of it. Also, creating a combination of the
 network requires that the graphs of the mappings 
 should be unfolded.
 
+The semantics of OMS generally depends on a global environment
+$\Gamma$ containing:
+ \begin{itemize}
+    \item a graph of imports between OMS, as in the semantics of OMS mappings but
+          only with import links between nodes, denoted $\Gamma.imports$
+    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
+               we also denote by $\Gamma$, providing access to previous definitions,
+    \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
+    \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
+ \end{itemize}
+
+If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
+extends the domain of $\Gamma$ with \syntax{IRI} and
+the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
+ $\Gamma_\emptyset$ is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set, its import graph $\Gamma.imports$ is empty,
+the prefix map is empty and the current triple contains the error logic together with its language and serialization.
+The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
+denoted $\Gamma_1\cup\Gamma_2$, is defined only if the domains of $\Gamma_1$ and $\Gamma_2$,
+and of $\Gamma_1.\prefix$ and $\Gamma_2.\prefix$ are disjoint, and then
+$\Gamma_1\cup\Gamma_2(\syntax{IRI}) = \begin{cases}
+\Gamma_1(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_1) \\
+\Gamma_2(\syntax{IRI})& \mbox{if } \syntax{IRI} \in dom(\Gamma_2)
+\end{cases}$, 
+$\Gamma_1\cup\Gamma_2.imports = \Gamma_1.imports \cup \Gamma_2.imports$,
+$\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
+and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
+We will write $\Gamma.\{\prefix = \PMap\}$ for the global environment that set the prefix map of 
+$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
+$(lang, logic, ser)$.
+
+
 %We  assume a \emph{language-specific semantics} of basic
 %OMS, inherited from the OMS language.  
 %%For a basic OMS in 
@@ -4884,21 +4892,13 @@ $$sem(\syntax{PrefixMap, LibraryDefn}) = \Gamma''$$
  $sem(\syntax{PrefixMap}) = \PMap$, $\Gamma'' = \Gamma_\emptyset.\{\prefix = \PMap\}$ and 
 $sem(\Gamma'', \syntax{LibraryDefn}) = \Gamma'$. 
 
-$$sem^T(\syntax{OMSInConformingLanguage}) = \Gamma''$$
+$$sem(\syntax{OMSInConformingLanguage}) = \Gamma''$$
 
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
-$sem^T(\Gamma', \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \Delta)$,
+$sem(\Gamma', \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM, \Delta)$,
 \syntax{IRI} is the IRI of the library and 
-$\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \Delta)]$.
-
-$$sem^M(\syntax{OMSInConformingLanguage}) = \Gamma''$$
-
-\noindent where 
-$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
-$sem^M(\Gamma', \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM)$,
-\syntax{IRI} is the IRI of the library and 
-$\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM)]$.
+$\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM,\Delta)]$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -4985,8 +4985,12 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
 and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings, or OMS networks. Intuitively, the graph of a
 network consists of the union of all graphs of the network elements it
-contains, where an OMS yields a graph with one isolated node.
+contains, where an OMS yields a graph with one isolated node. We make the convention that
+all imports in the graph $\Gamma.imports$ of the current context between nodes that are
+specified in the list of \syntax{NetworkElements} are also included in the graph of 
+the network. 
 The nodes and edges given in the \syntax{ExcludeExtensions} list are then removed from the graph of the network. 
+
 An additional \syntax{Id} can be specified for each node, with the purpose of letting the user specify a 
 prefix in the colimit of a network for the symbols with the origin in that node that must be disambiguated.
 
@@ -4996,24 +5000,37 @@ We are going to make use of the following notations. If $G$ is a graph, let $ins
                  a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
    \item if \syntax{IRI} is an OMS mapping 
-      or a netof work in $\Gamma$, it denotes a graph $G'$. Then
+      or a network in $\Gamma$, it denotes a graph $G'$. Then
       the result is the union of $G$ with $G'$.
  \end{itemize}
-Similarly, the operation $remove(\Gamma, G, \syntax{Id})$ is defined as follows:
+ 
+ 
+Similarly, the operation $remove(\Gamma, G, \syntax{OMSOrMappingorPathorNetworkRef})$ is defined as follows:
+
+\begin{itemize}
+
+\item if \syntax{OMSOrMappingorPathorNetworkRef} is an \syntax{IRI}, then
+
  \begin{itemize}
     \item if \syntax{IRI} is an OMS in $\Gamma$, then the node labeled with \syntax{IRI} and all its incoming and outgoing
                 edges are removed from $G$,
-   \item  if \syntax{IRI} is an OMS mapping in $\Gamma$, then  $\Gamma(\syntax{IRI})$ is a graph $G'$. \ednote{Important: by writing
-   excluding V or excluding A, I would want to remove just the mapping
-   from the network, but NOT the nodes it relates. The nodes should
-   be removed explicitly. Example: we may want to remove an import
-   between two nodes. This is different now: with a mapping,
-   all nodes get removed.}
-                Then all nodes of $G'$ and all their incoming and outgoing edges in $G$ (which include those in $G'$) are removed
-                 from $G$.
+   \item  if \syntax{IRI} is an OMS mapping in $\Gamma$, then  
+   $\Gamma(\syntax{IRI})$ gives a graph $G'$ and two nodes 
+   $N_1$ and $N_2$. Then all nodes of $G'$ other than $N_1$ and
+   $N_2$ and all the edges of $G'$ are removed from $G$.
    \item if \syntax{IRI} is a network in $\Gamma$, then all the nodes of its graph and all their incoming and outgoing edges are removed 
                from $G$.
  \end{itemize}
+ 
+ \item if \syntax{OMSOrMappingorPathorNetworkRef} is an \syntax{'path',IRI$_1$, IRI$_2$},
+ then all paths of imports in $G$ between the nodes labeled with 
+ \syntax{IRI}$_1$ and \syntax{IRI}$_2$ are removed from $G$.
+
+\end{itemize}
+
+Finally, the operation $addImports(\Gamma, G, \syntax{NetworkElements})$ adds to G
+all import edges in $\Gamma.imports$ between nodes which appear 
+in the list \syntax{NetworkElements}. 
 
 
 \semdom{sem(\Gamma, \syntax{NetworkDefn}) = \Gamma'}
@@ -5032,7 +5049,8 @@ defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
 class of families of models.
 
 If \syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
+defined if $sem(\Gamma,\syntax{OMS})$ is at most a singleton.
+\ednote{@Till: is this right? When is this needed?}
 
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
@@ -5053,7 +5071,8 @@ $$sem(\Gamma, \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
  $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
  $G_2 = sem(\Gamma, G_1, \syntax{NetworkElement}_2)$\\
  $\ldots$\\
- $G' = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$
+ $G_n = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$,
+ $G' = addImports(\Gamma, G_n, \syntax{NetworkElements})$.
 
 \semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
@@ -5061,13 +5080,14 @@ $$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = insert(G, \Gamma, \syntax{
 
 \semdom{sem(\Gamma, G, \syntax{ExcludeExtensions})= G'}
 
-$$sem(\Gamma, G, \syntax{exclude-imports, IRI$_1, \ldots,$ IRI$_n$}) = G'$$
+$$sem(\Gamma, G, \syntax{exclude-imports, R$_1, \ldots,$ R$_n$}) = G'$$
 
 \noindent where\\
- $G_1 = remove(\Gamma, G, \syntax{IRI}_1)$\\
- $G_2 = remove(\Gamma, G_1, \syntax{IRI}_2)$\\
+ $R_i = \syntax{OMSOrMappingorPathorNetworkRef}_i$ for each $i=1,\ldots,n$
+ $G_1 = remove(\Gamma, G, \syntax{R}_1)$\\
+ $G_2 = remove(\Gamma, G_1, \syntax{R}_2)$\\
   $\ldots$ \\
- $G' = remove(\Gamma, G_{n-1}, \syntax{IRI}_n)$
+ $G' = remove(\Gamma, G_{n-1}, \syntax{R}_n)$
 
 \ssclause{Semantics of OMS}
 
@@ -5096,13 +5116,14 @@ The semantics of an OMS reference $O$ in the local environment of
 previous declarations $(\Sigma, \cM, \Delta)$ and global environment
 $\Gamma$, is given by
  \begin{itemize}
-   \item $\Inst(\syntax{'oms-ref', O}) = \Inst(O)$ which must be the same
+   \item $\Inst(\syntax{'oms-ref', O, ImportName}) = \Inst(O)$ which must be the same
    with the current logic of $\Gamma$
-   \item $\Sign(\syntax{'oms-ref', O}) = \Sigma \cup \Sign(O)$
-   \item $\Mod(\syntax{'oms-ref', O}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sign(O)} \in \Mod(O) \}$
-   \item $\Th(\syntax{'oms-ref' O}) = \Delta \cup \Th(O)$
+   \item $\Sign(\syntax{'oms-ref', O, ImportName}) = \Sigma \cup \Sign(O)$
+   \item $\Mod(\syntax{'oms-ref', O, ImportName}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O, ImportName})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sign(O)} \in \Mod(O) \}$
+   \item $\Th(\syntax{'oms-ref', O, ImportName}) = \Delta \cup \Th(O)$
  \end{itemize}
-\todonote{why allow to change the name of an OMS here?}
+
+\ednote{remove importname?}
 
 %\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
 % 
@@ -5321,21 +5342,15 @@ be $\Gamma$ and not $\Gamma'$.
 
 %Bridge
 
-$$sem^T(\Gamma, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\Delta)$$
+\ednote{@Till: check}
 
+The semantics of \syntax{bridge, OMS$_1$, \{ Translation\}, OMS$_2$} is 
+$(\cI, \Sigma,\cM, \Delta)$
 where \\
-$sem^T(\Gamma,  \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\Delta_1)$,\\
-$sem^T(\Gamma,  \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
-$sem^T(\Gamma,  (\cI_2, \Phi(\Sigma_1), \alpha_{\Sigma_1}(\Delta_1)), \syntax{OMS}_2) = (\cI, \Sigma,\Delta)$. 
-
-
-$$sem^M(\Gamma, \syntax{'bridge', OMS$_1$, \{ Translation\}, OMS$_2$ })= (\cI, \Sigma,\cM)$$
-
-where \\
-$sem^M(\Gamma,  \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\cM_1)$,\\
-$sem^M(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
+$sem(\Gamma,  \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\cM_1,\Delta_1)$,\\
+$sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
 $\cM'_1 = \{ M \in \Mod^{I_2}(\Phi(\Sigma_1)) \mid \beta_{\Sigma_1}(M) \in \cM_1 \}$ and \\
-$sem^M(\Gamma, (\cI_2, \Phi(\Sigma_1), \cM'_1), \syntax{OMS}_2) = (\cI,\Sigma,\cM)$.
+$sem(\Gamma, (\cI_2, \Phi(\Sigma_1), \cM'_1, \alpha_{\Sigma_1}(\Delta_1)), \syntax{OMS}_2) = (\cI,\Sigma,\cM,\Delta)$.
 
 
 %Combination
@@ -5747,7 +5762,7 @@ See equations for \syntax{IntprDefn},  \syntax{Entailment}, \syntax{EquivDefn}, 
 
 $$sem(\Gamma, \syntax{intrp-defn, IntprName, IntrpType,LogicTranslation, SymbolMapItems}) = \Gamma'$$
 where
- $\Gamma' = \Gamma[\syntax{IntprName} \to G]$\\
+ $\Gamma' = \Gamma[\syntax{IntprName} \to (G, (\rho,\sigma), L_1, L_2)]$\\
  and $G$ is the graph $L_1\stackrel{(\rho,\sigma)}{\longrightarrow} L_2$
  where 
   \begin{itemize}
@@ -5791,17 +5806,10 @@ $$sem(\Gamma,  \syntax{intpr-type, OMS$_1$, OMS$_2$}) = (L_1, L_2)$$
 
 \semdom{sem(\Gamma, \syntax{Refinement}) = ((G_1, G_2), \sigma, \cM)}
 
-\ednote{TODO: update intuition}
-
-The signature of a refinement between OMS stores the signature of the OMS being refined and the signature of the 
-OMS after refinement. Since the logic might change along a refinement step, we also store the logics. 
-Given a refinement signature $((\cI_1,\Sigma_1),(\cI_2,\Sigma_2))$, a refinement model is 
-a class $\cR = \{ (M_1, M_2) \mid M_1 \in \Mod^{\cI_1}(\Sigma_1), M_2\in \Mod^{\cI_2}(\Sigma_2)  \}$ such that
-$\cR^{-1}$ is a partial function mapping $\Mod^{\cI_2}(\Sigma_2)$-models to $\Mod^{\cI_1}(\Sigma_1)$-models.
-
-Similarly, for a refinement between networks we store the graph of the network before and after refinement.
-A refinement model in such case is a class of pairs of families of models compatible with the two networks. By
-a slight abuse of notation, we will denote such models also by $\cR$. 
+The signature of a refinement is a pair consisting of the graph of the
+OMS or network of OMS being refined and the 
+graph of the OMS or network of OMS after refinement. Together with this pair
+we store the mapping along which the refinement is done. 
 Given two networks $G_1$ and $G_2$, a \emph{network morphisms} 
 $\sigma : G_1\to G_2$ is a 
 functor $\sigma^G: Shape(G_1)\to Shape(G_2)$ 
@@ -5813,8 +5821,11 @@ where $\rho = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorph
 $\sigma^M_{N_1} : \Phi(\Sigma_1) \to \Sigma_2$ is a signature morphism,
 such that $\beta_{\Sigma_1}(M_2\forget{\sigma^M_{N_1}}) \in \cM_1$ for each $M_2 \in  \cM_2$.
 
+A refinement model is a class $\cM$ 
+of pairs of families of models compatible with the two networks. 
 Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$, 
-we define $F\forget\sigma$ as the family of models $\{M_i\}_{i\in Nodes(G_1)}$ such that
+we define $F\forget\sigma$ as the family of models 
+$\{M_i\}_{i\in Nodes(G_1)}$ such that
 $M_i = F_{G(i)}\forget{\sigma^M_{N_i}}$, for each $i\in Nodes(G_1)$.
 
 $$sem(\Gamma, \syntax{ref-oms, OMS}) = 
@@ -5934,7 +5945,7 @@ where $\Gamma' = \Gamma[EntailmentName \mapsto sem(\Gamma, \syntax{EntailmentTyp
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{EntailmentType}) = G}
+\semdom{sem(\Gamma, \syntax{EntailmentType}) = (G, id, L_2,L_1)}
 
 $$sem(\Gamma, \syntax{oms-oms-entailment, OMS$_1$, OMS$_2$}) = L_2 \stackrel{\id}{\to} L_1$$
 
@@ -5982,14 +5993,16 @@ on $\Sig(N_1)$.
 $$sem(\Gamma,\syntax{'equiv-defn' , EquivName , ( 'equiv-type' }O_1\ O_2\syntax{ )}\ O_3)=\Gamma'$$
 
 \noindent where 
-$\Gamma' = \Gamma[\syntax{EquivName} \mapsto G]$
+$\Gamma' = \Gamma[\syntax{EquivName} \mapsto (G, id, N_1, N_2)]$
 where 
-$G$ is the graph\\
-$(\Name(O_1), \Inst(O_1), \Sig(O_1),\Mod(O_1), \Th(O_1)) \stackrel{\iota_1}{\rightarrow} \\
-      (\Name(O_3), \Inst(O_3), \Sig_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3), \Mod_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3), \Th_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3))
-     \\  \stackrel{\iota_2}{\leftarrow} 
-     (\Name(O_2), \Inst(O_2),\Sign(O_2), \Mod(O_2), \Th(O_2))
-      $ where
+$G$ is the graph
+$N_1 \stackrel{\iota_1}{\rightarrow} N_3 \stackrel{\iota_2}{\leftarrow} 
+N_3$ where
+$N_1$ is labelled with $(\Name(O_1), \Inst(O_1), \Sig(O_1),\Mod(O_1), \Th(O_1))$,\\
+$N_2$ with $(\Name(O_2), \Inst(O_2),\Sign(O_2), \Mod(O_2), \Th(O_2))$
+and \\
+$N_3$ with $(\Name(O_3), \Inst(O_3), \Sig_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3), \Mod_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3),\allowbreak  \Th_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3))$\\
+such that
 $\iota_i$ are inclusions and we have that 
 $\Inst(O_1) = \Inst(O_2) = \Inst(O_3)$ and 
 for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \Mod_{(\Sign(O_1)\cup\Sign(O_2),\emptyset)}(O_3)$
@@ -6003,17 +6016,19 @@ such that $M\forget{\Sign(O_i)} = M_i$.
 $$sem(\Gamma, \syntax{module-defn, ModuleName, Conservative, ModuleType, InterfaceSignature}) = \Gamma'$$
 
 \noindent where 
-$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto G]$
+$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (G,\iota, N_2,N_1)]$
 and $G$ is the graph 
- $(O_2, \Inst(O_2),\Sign(O_2),  \Mod(O_2), \Th(O_2))\allowbreak 
- \stackrel{\iota}{\rightarrow} 
-(O_1, \Inst(O_1),\Sign(O_1), \Mod(O_1), \Th(O_1))$, with $\iota$ being the inclusion, 
+$N_1 \stackrel{\iota}{\rightarrow} N_2$
+where $N_1$ is labeled with $(O_1, \Inst(O_1),\Sign(O_1), \Mod(O_1), \Th(O_1)$
+$N_2$ with 
+ $(O_2, \Inst(O_2),\Sign(O_2),  \Mod(O_2), \Th(O_2))$, 
+and $\iota$ is an inclusion, 
 when $\Sigma \subseteq \Sign(O_2) \subseteq \Sign(O_1)$
 and if $c=$\%mcons and for each $M\in\Mod(O_2)$ there is a model $M'\in \Mod(O_1)$ such that
 $M'\forget{\Sigma} = M\forget{\Sigma}$,
 or if $c=$\%ccons and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
 implies $O_2\models\varphi$.
-\ednote{TODO: finish this}
+\ednote{This should be checked.}
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -6026,7 +6041,9 @@ where
 $sem(\Gamma,\syntax{AlignType}) = (L_1, L_2)$
 and\\
 $\Gamma'=\Gamma[\syntax{AlignType} \mapsto 
-sem(\Gamma, (L_1, L_2), \syntax{AlignCard, AlignSem, Corresps})]$
+(sem(\Gamma, (L_1, L_2), \syntax{AlignCard, AlignSem, Corresps})
+id,L_1,L_2)
+]$
 
 \semdom{sem(\Gamma, \syntax{AlignType}) = (L_1, L_2)}
 
@@ -6064,7 +6081,7 @@ $$sem(\Gamma, L_1,\syntax{AlignSem})=\begin{cases}
                                                                                                   
                                                                                                                   
 
-\semdom{sem(\Gamma, L_1, L_2 \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G}
+\semdom{sem(\Gamma, L_1, L_2, \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G}
 
 $sem(\Gamma, L_1, L_2, \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G$
 
