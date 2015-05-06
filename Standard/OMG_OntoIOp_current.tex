@@ -3524,7 +3524,8 @@ ExtConsStrength      = ConsStrength | Implied ;
 
 Implied 	     = 'implied' ;
 
-Conservative         = 'consequence-conservative' | 'model-conservative' ;
+Conservative         = 'consequence-conservative' | 'model-conservative' 
+                     | 'not-consequence-conservative' | 'not-model-conservative' ;
 
 QualInterfaceSignature   = 'keep-signature' , InterfaceSignature 
                          | 'remove-signature' , InterfaceSignature ;
@@ -3541,10 +3542,13 @@ ExtensionName        = IRI ;
 An OMS definition \syntax{OMSDefn} names an  OMS.  
 
 It can be
-optionally marked as consistent, monomorphic or having a unique model using 
+optionally marked as inconsistent, consistent, monomorphic or having a unique model using 
 \syntax{ConsStrength}.\footnote{More precisely, \syntax{'consequence-conservative'}
-here requires the OMS to have a non-trivial set of logical consequences, while \syntax{'model-conservative'}
-requires its satisfiability. \syntax{'definitional'} expresses the unique model property; this may be interesting for 
+here requires the OMS to have only tautologies as signature-free logical consequences, while \syntax{'not-consequence-conservative'} expresses that this is not the case. 
+\syntax{'model-conservative'}
+requires satisfiability of the OMS, \syntax{'model-conservative'} its
+unsatisfiability.
+\syntax{'definitional'} expresses the unique model property; this may be interesting for characterizing
 OMS (e.g.\ returned by model finders) that are used to describe single models.}. An
 \syntax{SymbolItems}, used in an OMS \syntax{Reduction}, is a
 list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
@@ -4003,6 +4007,13 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 
 \ssclause{OMS}\label{a:dol-text:OMS}
 
+While in most cases the translation from concrete to abstract syntax
+is obvious, we note that both \syntax{\%consistent} and
+\syntax{\%mcons} are translated to \syntax{model-conservative}, while
+both \syntax{\%inconsistent} and \syntax{\%notmcons} are translated to
+\syntax{not-model-conservative}.
+                       
+                       
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
 BasicOMS            = OMSInConformingLanguage ;
 MinimizableOMS      = BasicOMS
@@ -4064,7 +4075,11 @@ ConsStrength         = Conservative
                      | '%def' ;
 ExtConsStrength      = ConsStrength | '%implied' ;
 Conservative         = '%ccons'
-                     | '%mcons' ; 
+                     | '%mcons'  
+                     | '%notccons'  
+                     | '%notmcons'  
+                     | '%consistent'  
+                     | '%inconsistent' ; 
 
 InterfaceSignature   = SymbolItems ;
 
@@ -5022,6 +5037,7 @@ defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 
+\ednote{Please also cover the new case of \syntax{ConsStrength} being \syntax{not-model-conservative} resp.\ \syntax{not-consequence-conservative}.}
 
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 

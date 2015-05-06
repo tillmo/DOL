@@ -472,7 +472,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\nisref}[1]{#1}
 
 
-\renewcommand{\subjectfield}[1]{#1}
+\renewcommand{\subjectfield}[1]{} % {#1}
 %\renewcommand{\bref}[1]{#1}
 
 \newcommand{\normannex}[1]{ \chapter{Annex (normative): #1} }
@@ -3515,7 +3515,10 @@ ConsStrength       ::= Conservative | MonoDef
 MonoDef            ::= monomorphic | weak-definitional | definitional
 ExtConsStrength    ::= ConsStrength | Implied
 Implied            ::= implied
-Conservative       ::= consequence-conservative | model-conservative
+Conservative       ::= consequence-conservative
+                     | model-conservative
+                     | not-consequence-conservative
+                     | not-model-conservative
 QualInterfaceSignature ::= keep-signature InterfaceSignature
                      | remove-signature InterfaceSignature
 InterfaceSignature ::= SymbolItems
@@ -3531,10 +3534,13 @@ ExtensionName      ::= IRI
 An OMS definition \syntax{OMSDefn} names an  OMS.  
 
 It can be
-optionally marked as consistent, monomorphic or having a unique model using 
+optionally marked as inconsistent, consistent, monomorphic or having a unique model using 
 \syntax{ConsStrength}.\footnote{More precisely, \syntax{'consequence-conservative'}
-here requires the OMS to have a non-trivial set of logical consequences, while \syntax{'model-conservative'}
-requires its satisfiability. \syntax{'definitional'} expresses the unique model property; this may be interesting for 
+here requires the OMS to have only tautologies as signature-free logical consequences, while \syntax{'not-consequence-conservative'} expresses that this is not the case. 
+\syntax{'model-conservative'}
+requires satisfiability of the OMS, \syntax{'model-conservative'} its
+unsatisfiability.
+\syntax{'definitional'} expresses the unique model property; this may be interesting for characterizing
 OMS (e.g.\ returned by model finders) that are used to describe single models.}. An
 \syntax{SymbolItems}, used in an OMS \syntax{Reduction}, is a
 list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
@@ -4003,6 +4009,13 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 
 \ssclause{OMS}\label{a:dol-text:OMS}
 
+While in most cases the translation from concrete to abstract syntax
+is obvious, we note that both \syntax{\%consistent} and
+\syntax{\%mcons} are translated to \syntax{model-conservative}, while
+both \syntax{\%inconsistent} and \syntax{\%notmcons} are translated to
+\syntax{not-model-conservative}.
+                       
+                       
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
 
 BasicOMS         ::= OMSInConformingLanguage
@@ -4050,7 +4063,12 @@ Filtering        ::= 'select' BasicOMS | 'reject' BasicOMS
 ExtensionOMS     ::= [ExtConsStrength] [ExtensionName] ExtendingOMS
 ConsStrength     ::= Conservative | '%mono' | '%wdef' | '%def'
 ExtConsStrength  ::= ConsStrength | '%implied'
-Conservative     ::= '%ccons' | '%mcons'
+Conservative     ::= '%ccons'
+                   | '%mcons'
+                   | '%notccons'
+                   | '%notmcons'
+                   | '%consistent'
+                   | '%inconsistent'
 InterfaceSignature ::= SymbolItems
 ImportName       ::= '%(' IRI ')%'
 ExtensionName    ::= '%(' IRI ')%'
@@ -5011,6 +5029,7 @@ defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 
+\ednote{Please also cover the new case of \syntax{ConsStrength} being \syntax{not-conservative}.}
 
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 
@@ -5138,7 +5157,8 @@ The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is g
  \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(\syntax{OMS})\}$
  \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(\syntax{OMS}) \}$. It is defined only if \syntax{OMS} is flattenable.
 \end{itemize}
-
+\ednote{if only the target logic is given, the default translation should
+be looked up in the logic graph.}
 %Reduction
 
 The semantics of a reduction
