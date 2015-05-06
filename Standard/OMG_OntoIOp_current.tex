@@ -2729,7 +2729,7 @@ contains alignments\index{alignment} between a number of foundational ontologies
 entities. We select three such ontologies, containing spatial and temporal concepts: DOLCE\footnote{See \url{http://www.loa.istc.cnr.it/DOLCE.html}}, GFO\footnote{See \url{http://www.onto-med.de/ontologies/gfo/}} and BFO\footnote{See \url{http://www.ifomis.org/bfo/}}, and present alignments between them 
 using \DOL syntax:
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
 %prefix(
            gfo: <http://www.onto-med.de/ontologies/>
            dolce: <http://www.loa-cnr.it/ontologies/>
@@ -2770,7 +2770,7 @@ alignment BFO2GFO :
 We can then combine the ontologies while taking into account the semantic dependencies given by the alignments using
 \DOL combinations:
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
 ontology Space =
  combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
 \end{lstlisting} 
@@ -2856,7 +2856,7 @@ The specification below illustrates DOL refinements by expressing that natural n
 natural numbers can be efficiently represented for implementation as lists of binary digits, together with several equivalent
 ways of composing these refinements.
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]	
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
 
 spec Monoid =
  sort Elem
@@ -2920,7 +2920,7 @@ maintainability, and for more efficient tool support. The lack of a standard for
 and the reuse of specifications.
 DOL  provides a notion of structured modular specification that is equally applicable to all DOL-conforming logical languages.
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={spec,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,from},escapechar=@,mathescape]	
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={spec,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
 spec Monoid =
      sort Elem
      ops  e:       Elem;
@@ -3466,7 +3466,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 maximization, freeness (minimizing also data sets and equalities on these), and cofreeness
 (maximizing also data sets and equalities on these),}
 \item \red{the application of a substitution to a sentence.}
-\todonote{@Till: why are the bridges not in this list?}
+
 
 \end{itemize}
 % derived from CASL (see CASL reference manual)
@@ -3489,7 +3489,6 @@ OMS                  = ExtendingOMS
                      | 'union' , OMS , [ ConsStrength ] , OMS 
                      | 'extension' , OMS , ExtensionOMS
                      | 'qual-oms' , { Qualification } , OMS
-                     | 'bridge' , OMS, { Translation } , ExtendingOMS
                      | 'combination' , Network
                      | 'application', OMS, SubstName ;
 
@@ -4035,7 +4034,6 @@ OMS                 = ExtendingOMS
                      | OMS , 'and' , [ ConsStrength ] , OMS 
                      | OMS , 'then' , ExtensionOMS
                      | { Qualification } , ':' , GroupOMS
-                     | OMS , 'bridge' , { Translation } , ExtendingOMS 
                      | 'combine' , NetworkElements , [ ExcludeExtensions ]  
                      | OMS , 'with' , SubstName
                      | GroupOMS ;
@@ -5342,7 +5340,7 @@ be $\Gamma$ and not $\Gamma'$.
 
 %Bridge
 
-\ednote{@Till: check}
+\ednote{@Till: check. @Mihai: I have removed bridges}
 
 The semantics of \syntax{bridge, OMS$_1$, \{ Translation\}, OMS$_2$} is 
 $(\cI, \Sigma,\cM, \Delta)$
@@ -7708,7 +7706,6 @@ OMS then \%implied OMS  &  BlocksWithCircumscription \\\hline
 logic IRI : OMS  &  \\\hline
 language IRI : OMS  &  \\\hline
 serialization IRI : OMS  &  \\\hline
-OMS bridge Translation OMS  & Publications \\\hline
 combine NetworkElements  & Alignments, Publications \\\hline
 combine NetworkElements excluding IRIs  &  \\\hline
 \end{tabular}
@@ -7866,7 +7863,7 @@ end
 
 \ssclause{Alignments}
 \index{alignment}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
          owl:   <http://www.w3.org/2002/07/owl#>
          log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
@@ -7922,7 +7919,7 @@ end
 
 \sclause{Distributed Description Logics}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
          log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
@@ -7955,9 +7952,10 @@ combine
   2 : Publications2 with translation OWL2MS-OWL
   %% implicitly: Article $\mapsto$ 1:Article @\ldots@
   %%             Article $\mapsto$ 2:Article @\ldots@  
-bridge with translation MS-OWL2DDL
-  %% implicitly added my translation MS-OWL2DDL: 
+  with translation MS-OWL2DDL
+  %% implicitly added by translation MS-OWL2DDL: 
   %% binary relation providing the bridge
+then
   1:Publication $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:Publication
   1:PhdThesis $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:Thesis
   1:InBook $\stackrel{\sqsubseteq}{\longrightarrow}$ 2:BookArticle
@@ -7967,9 +7965,7 @@ end
 
 
 ontology Publications_Extended =
-Publications
-then
-bridge with translation DDL2-ECO
+Publications with translation DDL2-ECO
   %% turns implicit domain-relation into default relation 'D'
   %% add E-connection style bridge rules on top
 end
@@ -7985,7 +7981,8 @@ combine
   2 : { ObjectProperty: Buyer
        ObjectProperty: Good
        ObjectProperty: BoughtBy }
-bridge with translation OWL2DDLwithRoles
+  with translation OWL2DDLwithRoles
+then
   1:PurchaseOrder -into-> 2:BoughtBy
 %% means in FOL: 
 %% forall x 1PurchaseOrder(x) -> forall yz CR12(x,y,z) -> 2BoughtBy(y,z)
@@ -7996,7 +7993,7 @@ end
 
 \sclause{Ontology modules}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,extract},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
 library GalenModule
 logic OWL
 ontology myGalen = 
@@ -8011,7 +8008,7 @@ end
 \sclause{Algebra}
 \ednote{use ``spec'' here???}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,equivalence},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,equivalence},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
          owl:   <http://www.w3.org/2002/07/owl#>
          log:   <http://www.omg.org/spec/DOL/logics/> %% descriptions of logics ...
@@ -8158,7 +8155,7 @@ We can now state the fact that the state machine of the
 \uml{atm}, shown in Fig.~\ref{fig:state-machine}, is a refinement of
 the protocol state machine in Fig.~\ref{fig:psm} as follows in DOL:
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,bridge,distributed,refinement},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/uml#>
          uml:   <http://www.uml.org/spec/UML/>
 %% descriptions of logics ...		 
