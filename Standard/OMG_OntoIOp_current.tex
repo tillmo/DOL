@@ -446,10 +446,13 @@ author=,date=,id=,replyto=,type=}{}%
 
 %%%% Code which is used to produce minipages with border
 \usepackage{xparse}
+\n\newlength{\currentindent}
 \newsavebox{\fminipagebox}
+\setlength{\currentindent}{\parindent}
 \NewDocumentEnvironment{fminipage}{m O{\fboxsep}}
- {\par\kern#2\noindent\begin{lrbox}{\fminipagebox}
-  \begin{minipage}{#1}\ignorespaces}
+ {
+  \par\kern#2\noindent\begin{lrbox}{\fminipagebox}
+  \begin{minipage}{#1}\ignorespaces  \setlength{\parindent}{\currentindent}}
  {\end{minipage}\end{lrbox}%
   \makebox[#1]{%
     \kern\dimexpr-\fboxsep-\fboxrule\relax
@@ -457,6 +460,7 @@ author=,date=,id=,replyto=,type=}{}%
     \kern\dimexpr-\fboxsep-\fboxrule\relax
   }\par\kern#2
  }
+
 %%%% 
 
 
@@ -1415,9 +1419,9 @@ serialization of the OMS language, be it plain text, some serialization of RDF, 
 structured text format, we can be more specific about what the annotation/commenting facilities of
 that serialization must look like in order to support this identifier injection.  
 Well-behaved XML and RDF schemas support identifier injection in a `nice' way (rather than using
-text-level comments).   In the worst case we cannot 
+text-level comments). In the worst case we cannot 
 inject anything into an OMS language fragment, because the OMS language serialization simply
-wouldn't allow us to write suitable comments, but we'd have to point into it from the enclosing context by
+wouldn't allow us to write suitable comments, but we'd have to point into it from the enclosing context
 by using \termref{standoff markup}.
 
 
