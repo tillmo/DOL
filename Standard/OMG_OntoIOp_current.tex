@@ -1348,7 +1348,9 @@ The \emph{logical language aspect}\index{language aspect ! logical} of an OMS la
 is %semantically
 conforming with DOL if each logic corresponding to a profile (including
 the logic corresponding to the whole logical language aspect) is presented as an
-institution \cite{GoguenBurstall92}.
+institution \cite{GoguenBurstall92}, and there is a mapping from
+the abstract syntax of the OMS language to signatures and sentences
+of the institution.
 % It may additionally be presented as an institution, leading
 %to the possibility of interpreting additional DOL language constructs.%
 %\footnote{Institutions are necessarily monotonic; conformance criteria for non-monotonic logics arestill under development. However, minimization provides non-monotonic reasoning in DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.} 
@@ -1394,9 +1396,21 @@ as an institution comorphism.
 %\may also be presented as an institution morphism or an institution
 %comorphism.
 
-A language translation is conforming with DOL if it is a mapping
-between the abstract syntaxes that restricts to a conforming logic
-translation when restricted to the logical language aspect. Language
+A language translation \shall provide a mapping between
+the abstract syntaxes (it \may also provide mappings between concrete
+syntaxes). 
+A language translation  from language $L_1$ (based on institution
+$I_1$) to language $L_2$ (based on institution $I_2$) is conforming
+with DOL if it is based on a logic translation such the following
+diagram commutes:
+$$\xymatrix{
+L_1 \ar[rrrrr]^{\Text{mapping between abstract syntaxes}} \ar[ddd]_{\Text{abstract syntax to institution}}
+&&&&& L_2 \ar[ddd]^{\Text{abstract syntax to institution}}\\
+&&&&&\\
+&&&&&\\
+I_1\ar[rrrrr]^{\Text{institution (co)comorphism}} &&&&& I_2
+}$$
+Language
 translations \may also translate the structuring language aspect, in
 this case, they \shall preserve the semantics of the structuring
 language aspect.  Furthermore, language translations \should preserve
