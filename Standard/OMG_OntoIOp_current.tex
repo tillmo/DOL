@@ -1133,7 +1133,7 @@ A registry is discussed in clause \ref{c:conformance}.
 6.8(a)	& 
 Proposals covering a broader range of features and of use cases will be favored. As a minimum, proposals shall define conformance criteria for logical languages and translations, and their proposed metalanguage shall cover some metalogical relationships and shall be applicable to multiple logics.	&
 Conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
-DOL is applicable to multiple logics (see also 6.8(c) below).\ednote{Terry: Do you want to mention institutions here, presaging 6.5.4 ? and add 8.4 to the see list?}
+DOL is applicable to multiple logics (see also 6.8(c) below).
    \\ \hline
 %
 6.8(b)		&
@@ -1151,6 +1151,7 @@ with DOL.
 \end{longtable}
 \end{center}
 
+\ednote{Terry: Do you want to mention institutions in 6.8(a), presaging 6.5.4 ? and add 8.4 to the see list?}
 
 \section{Proof of Concept}
 Prototypical open source tools for DOL are already available, see
@@ -1609,7 +1610,7 @@ explicit references to the logics used.
   \item{W3C/TR REC-rdf11-mt:2014}{RDF 1.1 Semantics.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/}}
 
 \todonote{Please have a look. I am pretty sure I did not fill them out correctly. Maria Hedblom}
-  \item{ODM ???}{Ontology Definition Metamodel, 2 September 2014. \\ url{http://www.omg.org/spec/ODM/1.1/}
+  \item{ODM ???}{Ontology Definition Metamodel, 2 September 2014. \\ url{http://www.omg.org/spec/ODM/1.1/}}
 \item{MOF}{ Meta Object Facility} \\ \url{http://http://www.omg.org/mof/}
 \item{SMOF}{ Support for Semantic Structure, April 2013} \\ \url{http://www.omg.org/spec/SMOF/1.0/}
 \item{XML}{Metadata Interchange (XMI) – using MOF 2 XMI, April 2014} \\ \url{http://www.omg.org/spec/XMI//}
@@ -3920,14 +3921,14 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
-CURIE     = [ Prefix ] , Reference ;
-Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$) 
+\begin{lstlisting}[language=ebnf,escapeinside={!!}]
+CURIE     = ( [ Prefix ] , Reference ) - ;
+Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$!
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
-Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
-Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
+            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
 \end{lstlisting}
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
@@ -4295,16 +4296,16 @@ Vars                 = Symbol , { ',' , Symbol } ;
 
 \sclause{Identifiers}
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
+\begin{lstlisting}[language=ebnf,escapeinside={!!}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
-FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
-CURIE     = [ Prefix ] , Reference ;
-Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$) 
+FullIRI = !$<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$! ;
+CURIE     = ( [ Prefix ] , Reference ) - ;
+Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$! 
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
-Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
-Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
+            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
 \end{lstlisting}
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
@@ -7814,10 +7815,10 @@ network IRI = IRI, \ldots, IRI & Alignments \\\hline
 network IRI = IRI, \ldots, IRI & \\
 \qquad excluding IRI, \ldots, IRI -> IRI & \\\hline
 interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
-interpretation IRI : OMS to OMS = \%cons SymbolMap  &  \\\hline
+interpretation IRI : OMS to OMS = \%cons SymbolMap  &  Engine\\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
 refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-1} \\\hline
-refinement IRI = OMS refined via translation IRI to OMS & \\\hline
+refinement IRI = OMS refined via translation IRI to OMS & ATM \\\hline
 refinement IRI = IRI then IRI & section~\ref{spec-1} \\\hline
 refinement IRI = Network refined via IRI |-> IRI & \\
 \qquad using translation to Network & \\\hline
@@ -7926,6 +7927,7 @@ end
 entailment Ent = SingleModel entails { . not ( A=>B ) }
 end
 
+
 library PropositionalMereology
 
 %% non-standard serialization built into Hets: 
@@ -7938,6 +7940,88 @@ ontology Taxonomy = %conssistent
   . S $\wedge$  T  $\longrightarrow$ $\bot$                  %% PD, S, T, AR are pairwise disjoint
   . T $\wedge$ AR $\longrightarrow$ $\bot$                                                                         %% and so on
 end
+\end{lstlisting}
+
+\sclause{Engine Diagnosis and Repair}\label{engine}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+library Engine
+
+logic Propositional
+
+%% possible symptoms of an engine that is malfunctioning
+spec EngineSymptoms =
+  props black_exhaust, blue_exhaust, low_power, overheat,
+	ping, incorrect_timing,	low_compression
+end
+
+%% diagnosis derived from symptoms
+spec EngineDiagnosis = EngineSymptoms
+then %cons
+  props carbon_deposits,
+	clogged_filter,
+	clogged_radiator,
+	defective_carburetor,
+	worn_rings,
+	worn_seals
+  . overheat /\ not incorrect_timing => clogged_radiator
+                          %(diagnosis1)%
+  . ping /\ not incorrect_timing => carbon_deposits
+                          %(diagnosis2)%
+  . low_power /\ not incorrect_timing =>
+                worn_rings \/ defective_carburetor \/ clogged_filter
+                          %(diagnosis3)%
+  . black_exhaust => defective_carburetor \/ clogged_filter
+                          %(diagnosis4)%
+  . blue_exhaust => worn_rings \/ worn_seals
+                          %(diagnosis5)%
+  . low_compression <=> worn_rings
+                          %(diagnosis6)%
+end
+
+%% needed repair, derived from diagnosis
+spec EngineRepair = EngineDiagnosis
+then %cons
+  props replace_auxiliary,
+	repair_engine,
+	replace_engine
+  . worn_rings => replace_engine
+                          %(rule_replace_engine)%
+  . carbon_deposits \/ defective_carburetor \/ worn_seals =>
+                repair_engine
+                          %(rule_repair_engine)%
+  . clogged_filter \/ clogged_radiator => replace_auxiliary
+                          %(rule_replace_auxiliary)%
+end
+
+%% application to a specific case
+spec MyObservedSymptoms =
+  EngineSymptoms
+then
+  . overheat              %(symptom_overheat)%
+  . not incorrect_timing  %(symptom_not_incorrect_timing)%
+end
+
+spec MyRepair =
+  MyObservedSymptoms
+and 
+  EngineRepair
+end
+
+spec Repair =
+  prop repair
+  . repair
+end
+
+interpretation repair1 : Repair to MyRepair = %cons
+  repair |-> replace_engine end
+interpretation repair2 : Repair to MyRepair = %cons
+  repair |-> repair_engine end
+interpretation repair3 : Repair to MyRepair = %cons
+  repair |-> replace_auxiliary end 
+%% only repair3 is a valid interpretation. That is, 'replace_auxiliary'
+%% is the required action
+
 
 \end{lstlisting}
 
@@ -8505,19 +8589,20 @@ We can now state the fact that the state machine of the
 \uml{atm}, shown in Fig.~\ref{fig:state-machine}, is a refinement of
 the protocol state machine in Fig.~\ref{fig:psm} as follows in DOL:
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/uml#>
          uml:   <http://www.uml.org/spec/UML/>
 %% descriptions of logics ...		 
          log:   <http://www.omg.org/spec/DOL/logics/>
-
+library ATM
 logic log:uml
 
 refinement abstract_to_concrete_atm =
-  psm refined to {  atm with Idle |-> Idle, CardEntered |-> Idle, 
-                             PINEntered |-> Idle, Verified |-> Idle, 
-                             Verifying |-> Verifying 
-                    hide card, PIN   }
+  psm refined via psm2msb to 
+       {  atm with Idle |-> Idle, CardEntered |-> Idle, 
+                   PINEntered |-> Idle, Verified |-> Idle, 
+                   Verifying |-> Verifying 
+          hide card, PIN   }
 end
 \end{lstlisting}
 
