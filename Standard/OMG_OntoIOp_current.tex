@@ -2872,7 +2872,7 @@ The Dublin Core to PROV ontology translation%
 SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which is different from the model-theoretic semantics of the OWL and RDFS languages; nevertheless SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules between ontologies in RDF-based languages in a subset of FOL.
 DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL ontologies as modules of a distributed ontology (= OMS network), but it is also able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.
 
-\section{Use case Spec-1: Specification Refinements}
+\section{Use case Spec-1: Specification Refinements}\label{spec-1}
 Especially in safety-critical areas such as medical systems, the automotive industry, avionics and the aerospace industry, but also for microprocessor design, often 
 a formal software and hardware development process is used in order to ensure the correct functioning of systems. Typically, a requirement specification is refined 
 into a design specification and then an implementation, often involving several intermediate steps (see, e.g. the V-model [V-model], although this does not require 
@@ -2896,7 +2896,7 @@ spec Monoid =
          __+__ : Elem * Elem -> Elem, assoc, unit 0
 end
 
-spec NatWithSuc =
+spec NatWithSuc = %mono
  free type Nat ::= 0 | suc(Nat)
  op __+__ : Nat * Nat -> Nat, unit 0 
  forall x , y : Nat . x + suc(y) = suc(x + y)
@@ -2946,7 +2946,7 @@ refinement R3''' = R1 then R2
 
 \end{lstlisting}
 
-\section{Use case Spec-2: Modularity of Specifications}
+\section{Use case Spec-2: Modularity of Specifications}\label{spec-2}
 In the context of use case Spec-1, often specifications become so large that it is necessary to structure them in a modular way, both for human readability, 
 maintainability, and for more efficient tool support. The lack of a standard for such modular structuring hinders interoperability among different development efforts 
 and the reuse of specifications.
@@ -7756,7 +7756,7 @@ PrefixMap  & Mereology \\\hline
 oms IRI = OMS end  &  Alignments, Mereology \\\hline
 oms IRI = \%consistent OMS end  & PropositionalExamples, Mereology \\\hline
 oms IRI = \%inconsistent OMS end  & PropositionalExamples \\\hline
-oms IRI = \%mono OMS end  &  \\\hline
+oms IRI = \%mono OMS end  & section~\ref{spec-1} \\\hline
 oms IRI = \%def OMS end  & PropositionalExamples \\\hline
 network IRI = IRI, \ldots, IRI & \\\hline
 network IRI = IRI, \ldots, IRI & \\
@@ -7764,8 +7764,9 @@ network IRI = IRI, \ldots, IRI & \\
 interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
 interpretation IRI : OMS to OMS = \%cons SymbolMap  &  \\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
-refinement IRI = OMS refined via SymbolMap to OMS & \\\hline
+refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-1} \\\hline
 refinement IRI = OMS refined via translation IRI to OMS & \\\hline
+refinement IRI = IRI then IRI & section~\ref{spec-1} \\\hline
 refinement IRI = Network refined via IRI |-> IRI & \\
 \qquad using translation to Network & \\\hline
 entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
@@ -7805,7 +7806,7 @@ OMS then minimize { OMS } &  \\\hline
 OMS then maximize { OMS } &  \\\hline
 OMS then free { OMS } &  \\\hline
 OMS then cofree { OMS } &  \\\hline
-OMS with SymbolMap  & Alignments \\\hline
+OMS with SymbolMap  & Alignments,  section~\ref{spec-1} \\\hline
 OMS with translation IRI  & Mereology \\\hline
 OMS with translation IRI : IRI $\to$ IRI  &  \\\hline
 OMS with translation IRI $\to$ IRI  &  \\\hline
@@ -7832,7 +7833,7 @@ OMS then \%ccons \%( IRI )\% OMS  &  \\\hline
 OMS then \%mcons OMS  &  \\\hline
 OMS then \%notccons OMS  &  \\\hline
 OMS then \%notmcons OMS  &  \\\hline
-OMS then \%mono OMS  &  \\\hline
+OMS then \%mono OMS  & Sorting \\\hline
 OMS then \%wdef OMS  &  \\\hline
 OMS then \%def OMS  &  \\\hline
 OMS then \%implied OMS  &  BlocksWithCircumscription \\\hline
@@ -8340,9 +8341,13 @@ end
 \sclause{Sorting}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,spec,free,type,op,ops,spec,pred,preds},escapechar=@,mathescape]
+library Sorting
 logic CASL
-spec List =  sort Elem
+spec List =  
+  sort Elem
+then %mono
   free type List[Elem] ::= [] | __::__(Elem; List[Elem])
+then
   pred __elem__ : Elem * List[Elem}
   forall x,y:Elem; L,L1,L2:List[Elem]
   . not x elem []  . x elem (y :: L) <=>  x=y \/ x elem L
