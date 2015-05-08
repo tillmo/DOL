@@ -7787,7 +7787,7 @@ interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
 interpretation IRI : OMS to OMS = \%cons SymbolMap  &  Engine\\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
 refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-1} \\\hline
-refinement IRI = OMS refined via translation IRI to OMS & \\\hline
+refinement IRI = OMS refined via translation IRI to OMS & ATM \\\hline
 refinement IRI = IRI then IRI & section~\ref{spec-1} \\\hline
 refinement IRI = Network refined via IRI |-> IRI & \\
 \qquad using translation to Network & \\\hline
@@ -8558,19 +8558,20 @@ We can now state the fact that the state machine of the
 \uml{atm}, shown in Fig.~\ref{fig:state-machine}, is a refinement of
 the protocol state machine in Fig.~\ref{fig:psm} as follows in DOL:
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/uml#>
          uml:   <http://www.uml.org/spec/UML/>
 %% descriptions of logics ...		 
          log:   <http://www.omg.org/spec/DOL/logics/>
-
+library ATM
 logic log:uml
 
 refinement abstract_to_concrete_atm =
-  psm refined to {  atm with Idle |-> Idle, CardEntered |-> Idle, 
-                             PINEntered |-> Idle, Verified |-> Idle, 
-                             Verifying |-> Verifying 
-                    hide card, PIN   }
+  psm refined via psm2msb to 
+       {  atm with Idle |-> Idle, CardEntered |-> Idle, 
+                   PINEntered |-> Idle, Verified |-> Idle, 
+                   Verifying |-> Verifying 
+          hide card, PIN   }
 end
 \end{lstlisting}
 
