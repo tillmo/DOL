@@ -7804,13 +7804,13 @@ OMS hide along IRI : IRI $\to$ IRI  &  \\\hline
 OMS hide along IRI $\to$ IRI  &  \\\hline
 OMS hide along $\to$ IRI  &  \\\hline
 OMS extract Symbols  &  \\\hline
-OMS remove Symbols  &  \\\hline
-OMS forget Symbols  &  \\\hline
+OMS remove Symbols  & All\_kinds\_of\_group\_specifications \\\hline
+OMS forget Symbols  & All\_kinds\_of\_group\_specifications \\\hline
 OMS forget Symbols keep Logic  &  \\\hline
 OMS keep Symbols  &  \\\hline
 OMS keep Symbols keep Logic &  \\\hline
 OMS select BasicOMS  &  \\\hline
-OMS reject BasicOMS  &  \\\hline
+OMS reject BasicOMS  & All\_kinds\_of\_group\_specifications \\\hline
 OMS and OMS   &  \\\hline
 OMS then OMS  & Mereology \\\hline
 OMS then \%ccons OMS  &  \\\hline
@@ -8157,7 +8157,7 @@ end
 \end{lstlisting}
 
 \sclause{Algebra}
-\ednote{use ``spec'' here???}
+
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,equivalence},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
@@ -8169,7 +8169,7 @@ library Algebra
 
 logic log:CommonLogic syntax ser:CommonLogic/CLIF
 
-ontology implicit_group =
+spec implicit_group =
 (forall (x y z)
         (= (op x (op y z)) (op (op x y) z)))
 (exists (e)
@@ -8182,7 +8182,7 @@ ontology implicit_group =
                         (= x (op x (op y x))))))
 end
 
-ontology explicit_group =
+spec explicit_group =
 (forall (x y z)
         (= (op x (op y z)) (op (op x y) z)))
 (forall (x)     (and    (= x (op e x))
@@ -8223,6 +8223,129 @@ entailment ent = InterpolatedGroup
   entails { . forall x:Elem . exists y . Elem . x+y=0 }
 end
 \end{lstlisting}
+
+\ssclause{Groups specified with different forms of hiding and forgetting}
+
+\sssclause{Groups and Hiding}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
+library All_kinds_of_group_specifications
+logic CASL
+spec Group_with_inverse =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem; inv:Elem->Elem
+  forall x,y,z:elem . x+0=x
+                    . x+(y+z) = (x+y)+z
+                    . x+inv(x)=0
+end
+
+spec Group_via_hiding =
+  Group_with_inverse hide inv
+end
+\end{lstlisting}
+
+The semantics of this specification is the class of all monoids that
+can be extended with an inverse, i.e.\ class of all groups. The effect
+is second-order quantification:
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
+logic HasCASL
+spec Group_in_second_order_logic =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem; 
+  exists inv:Elem->Elem .
+    forall x,y,z:elem . x+0=x
+                        /\ x+(y+z) = (x+y)+z
+                        /\ x+inv(x)=0
+end
+\end{lstlisting}
+
+\sssclause{Groups and Module Extraction}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_module_extraction_1 =
+  Group_with_inverse remove inv
+end
+\end{lstlisting}
+The semantics is just \syntax{Group\_with\_inverse},
+since the module needs to be enlarged to the whole specification.
+This is of course unsatisfactory. A better use of module extraction
+is the following:
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_with_implicit_inverse =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem; inv:Elem->Elem
+  forall x,y,z:elem . x+0=x
+                    . x+(y+z) = (x+y)+z
+                    . x+inv(x) = 0
+                    . exists y:Elem . x+y=0
+end
+
+spec Group_via_module_extraction_2 =
+  Group_with_implicit_inverse remove inv
+end
+\end{lstlisting}
+The semantics of \syntax{Group\_via\_module\_extraction\_2} is just
+\syntax{Group\_with\_implicit\_inverse}, because adding \texttt{inv}
+is conservative.
+\medskip
+
+\sssclause{Groups via interpolation}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_interpolation =
+  Group_with_inverse forget inv
+end
+\end{lstlisting}
+The semantics is \syntax{Group\_with\_implicit\_inverse}.
+Computing interpolants can be hard, even undecidable.
+\medskip
+
+\sssclause{Groups and Filtering}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_ =
+  Group_with_inverse reject inv
+end
+\end{lstlisting}
+The semantics is the following theory which just omits the inverse
+axioms (and hence does not specify groups):
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_reject =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem
+  forall x,y,z:elem . x+0=x
+                    . x+(y+z) = (x+y)+z
+end
+\end{lstlisting}
+
+\sclause{Sorting}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,spec,free,type,op,ops,spec,pred,preds},escapechar=@,mathescape]
+logic CASL
+spec List =  sort Elem
+  free type List[Elem] ::= [] | __::__(Elem; List[Elem])
+  pred __elem__ : Elem * List[Elem}
+  forall x,y:Elem; L,L1,L2:List[Elem]
+  . not x elem []  . x elem (y :: L) <=>  x=y \/ x elem L
+spec Sorting = List then
+  preds is_ordered : List[Elem];
+        permutation : List[Elem] * List[Elem]
+  op sorter : List[Elem]->List[Elem]
+  forall x,y:Elem; L,L1,L2:List[Elem]
+  . is_ordered([])       . is_ordered(x::[])
+  . is_ordered(x::y::L) <=> x<=y /\ is_ordered(y::L)
+  . permutation(L1,L2) <=> 
+            (forall x:Elem . x elem L1 <=> x elem L2)
+  . is_ordered(sorter(L)) . permutation(L,sorter(L))
+hide permutation, is_ordered
+\end{lstlisting}
+
+
 
 \sclause{Model-driven development}
 
