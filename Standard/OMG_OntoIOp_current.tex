@@ -2082,7 +2082,7 @@ specialization relation
 
   \termdefinition{import}{\termref{OMS mapping} between two
     \termref{OMS} such that one OMS behaves as if it were
-    included into the other}
+    included into the other; also import of \termref{libraries}}
   \begin{note}
 Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration
   \end{note}
@@ -2094,6 +2094,9 @@ Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclus
   \end{note}
   \begin{note}
     An owl:import in OWL is an import.
+  \end{note}
+  \begin{note}
+    The import of a whole library into another library is also called import.
   \end{note}
   
   \termdefinition{renaming}{assignment of new names
@@ -7753,7 +7756,7 @@ The actual translations are specified in \cite{OntoGraph}.
 \multicolumn{2}{|c|}{\textbf{Top-level declarations in libraries}}\\\hline
 \textbf{Top-level declaration} & \textbf{Examples} \\\hline
 library \ldots & all examples\\\hline
-import IRI & \\\hline
+import IRI & Mereology\\\hline
 language IRI  & Alignments, Publications \\\hline
 logic IRI  & Alignments, Mereology \\\hline
 serialization IRI  & Alignments, Mereology \\\hline
@@ -7763,7 +7766,7 @@ oms IRI = \%consistent OMS end  & PropositionalExamples, Mereology \\\hline
 oms IRI = \%inconsistent OMS end  & PropositionalExamples \\\hline
 oms IRI = \%mono OMS end  & section~\ref{spec-1} \\\hline
 oms IRI = \%def OMS end  & PropositionalExamples \\\hline
-network IRI = IRI, \ldots, IRI & \\\hline
+network IRI = IRI, \ldots, IRI & Alignments \\\hline
 network IRI = IRI, \ldots, IRI & \\
 \qquad excluding IRI, \ldots, IRI -> IRI & \\\hline
 interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
@@ -7878,21 +7881,8 @@ end
 
 entailment Ent = SingleModel entails { . not ( A=>B ) }
 end
-\end{lstlisting}
 
-
-\sclause{Mereology: Distributed and Heterogeneous Ontologies}
-\label{dist-het-onto}
-\CLnote[type=q-aut]{In the TKE paper we made the name of the propositional logic ontology syntax explicit.  The propositional logic listing now leaves us with a problem: neither is propositional logic specified as DOL-conformant, nor is Hets' CASL-like syntax, nor is anything of this intended to ever be normative. TM: hence either leave it out, or make propositional logic normative. What about the examples in OWL+CL develop during the Ontology Summit Hackathon?}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
-%prefix( :      <http://www.example.org/mereology#>
-         owl:   <http://www.w3.org/2002/07/owl#>
-         log:   <http://www.omg.org/spec/DOL/logics/>    
-		 		%% descriptions of logics ...
-         trans: <http://www.omg.org/spec/DOL/translations/> )%  
-		 		%% ... and translations
-
-library Mereology
+library PropositionalMereology
 
 %% non-standard serialization built into Hets: 
 logic log:Propositional syntax ser:Prop/Hets       
@@ -7904,6 +7894,24 @@ ontology Taxonomy = %conssistent
   . S $\wedge$  T  $\longrightarrow$ $\bot$                  %% PD, S, T, AR are pairwise disjoint
   . T $\wedge$ AR $\longrightarrow$ $\bot$                                                                         %% and so on
 end
+
+\end{lstlisting}
+
+
+\sclause{Mereology: Distributed and Heterogeneous Ontologies}
+\label{dist-het-onto}
+\CLnote[type=q-aut]{In the TKE paper we made the name of the propositional logic ontology syntax explicit.  The propositional logic listing now leaves us with a problem: neither is propositional logic specified as DOL-conformant, nor is Hets' CASL-like syntax, nor is anything of this intended to ever be normative. TM: hence either leave it out, or make propositional logic normative. What about the examples in OWL+CL develop during the Ontology Summit Hackathon?}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+%prefix( :      <http://www.example.org/mereology#>
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/>    
+		 		%% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )%  
+		 		%% ... and translations
+
+library Mereology
+
+import PropositionalMereology
 
 %% OWL Manchester syntax declaration: 
 language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester           
