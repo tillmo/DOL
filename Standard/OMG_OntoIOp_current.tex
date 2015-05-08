@@ -444,6 +444,22 @@ author=,date=,id=,replyto=,type=}{}%
 \vspace{3pt}
 }
 
+%%%% Code which is used to produce minipages with border
+\usepackage{xparse}
+\newsavebox{\fminipagebox}
+\NewDocumentEnvironment{fminipage}{m O{\fboxsep}}
+ {\par\kern#2\noindent\begin{lrbox}{\fminipagebox}
+  \begin{minipage}{#1}\ignorespaces}
+ {\end{minipage}\end{lrbox}%
+  \makebox[#1]{%
+    \kern\dimexpr-\fboxsep-\fboxrule\relax
+    \fbox{\usebox{\fminipagebox}}%
+    \kern\dimexpr-\fboxsep-\fboxrule\relax
+  }\par\kern#2
+ }
+%%%% 
+
+
 \newenvironment{symbols}[0]{\begin{longtable}{p{.15\textwidth}p{.84\textwidth}}}{\end{longtable}}
 \newcommand{\symboldef}[2]{ #1 & #2 \\}
 
@@ -1281,7 +1297,8 @@ expected to become the basis for normative activities.
 
 \sclause{Conformance of an OMS language/a logic with DOL}\label{c:conform:logic}
 
-Rationale: for an OMS language to conform with DOL,
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: for an OMS language to conform with DOL,
 \begin{itemize}
 \item its logical language aspect\index{language aspect ! logical} either needs to satisfy certain criteria about its abstract
 syntax and formal semantics itself, or there must be a translation (again satisfying certain
@@ -1290,8 +1307,10 @@ criteria) to a language that already is DOL-conforming.
 mechanisms
 \item its annotation language aspect\index{language aspect ! annotation} must not conflict with DOL's meta-language constructs.
 \end{itemize}
-We  define different conformance levels with respect to the usage of IRIs as identifiers for all kinds
+We also define different conformance levels with respect to the usage of IRIs as identifiers for all kinds
 of entities that the OMS language supports.
+\end{fminipage}
+
 
 %
 %\begin{description}
@@ -1358,11 +1377,11 @@ Any conforming language and logic shall have a machine-processable description
  as detailed in \cref{c:conform:description}.
 
 \ssclause{Conformance of language/logic translations with DOL}\label{c:conform:translation}
-
-Rationale: a translation between logics must satisfy certain criteria in order to conform with DOL.
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: a translation between logics must satisfy certain criteria in order to conform with DOL.
 Also, a translation between OMS languages based on such logics must be consistent with the
 translation between these logics.  Translations should break neither structuring language aspects nor comments/annotations\index{language aspect ! (general)}.
-
+\end{fminipage}{\textwidth}
 
 A logic translation is conforming with DOL if it is presented either as an institution morphism or
 as an institution comorphism.  
@@ -1383,8 +1402,8 @@ target (if there are more than one sentences (resp.\ symbols)
 expressing the translation, to at least one of them).
 
 \sclause{Conformance of a serialization of an OMS language with DOL}\label{c:conform:serialization}
-
-Rationale: The main reason for the following specifications is identifier injection. DOL is capable
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: The main reason for the following specifications is identifier injection. DOL is capable
 of assigning identifiers to entities (symbols, axioms, modules, etc.) inside fragments of OMS
 languages that occur in a DOL document, even if that OMS language doesn't support such identifiers
 by its own means. 
@@ -1406,7 +1425,7 @@ Further conformance criteria in this section are introduced to facilitate the co
 verbatim fragments of OMS language inside a DOL document.\\
 Independently from these criteria, we distinguish different levels of conformance of a
 serialization with respect to its means of conveniently abbreviating long IRI identifiers.
-
+\end{fminipage}{\textwidth}
 
 We define four levels of conformance of a serialization of an OMS language with DOL.
 
@@ -1492,18 +1511,21 @@ Any conforming serialization of an OMS language shall have a machine-processable
 
 \sclause{Machine-processable description of conforming languages, logics, and serializations}\label{c:conform:description}
 
-Rationale: When a parser processes a DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further DOL-supporting software needs to know, e.g., what other DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with DOL describe themselves in a machine-comprehensible way.
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: When a parser processes a DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further DOL-supporting software needs to know, e.g., what other DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with DOL describe themselves in a machine-comprehensible way.
+\end{fminipage}{\textwidth}
 
 For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:lola}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
 
 
 \sclause{Conformance of a document with DOL}\label{c:conform:document}
-
-Rationale: for exchanging DOL documents with other users/tools, nothing that has a formal semantics
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: for exchanging DOL documents with other users/tools, nothing that has a formal semantics
 must be left implicit.  One DOL tool may assume that by default any OMS fragments inside a DOL
 document are in some fixed OMS language unless specified otherwise, but another DOL tool can't be
 assumed to understand such DOL documents.  Defaults are, however, practically convenient, which is
 the reason for having the following section about the conformance of an \emph{application}.
+\end{fminipage}{\textwidth}
 
 A document conforms with DOL if it contains a DOL text that is well-formed according to the
 grammar.  That means, in particular, that any information related to logics has to be made explicit
