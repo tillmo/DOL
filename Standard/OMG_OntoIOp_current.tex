@@ -3945,7 +3945,9 @@ PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
 BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
 IRIBoundToPrefix = 'full-iri' , FullIRI ;
 Separators       = 'separators' , String , String ;
-String           = ($<$ \rm any list of unicode characters $>$) ;
+String           = SeparatorChar , { SeparatorChar } ;
+SeparatorChar    = ipchar | '/' | '?' | '#' ;
+                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
@@ -4074,6 +4076,7 @@ PrefixBinding            = BoundPrefix , IRIBoundToPrefix , [ Separators ] ;
 BoundPrefix              = ':' | Prefix ; +$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+ 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
 Separators               = 'separators' , String , String ;
+                           +$<$\rm see definition in \cref{c:curies}$>$+
 
 NetworkDefn            = NetworkKeyword , NetworkName , '=' , 
                          [ ConsStrength ] , Network ;
