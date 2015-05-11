@@ -6,11 +6,6 @@
 
 
 %todo
-% %(in)consistent
-% precedences of operators. 'bridge' binds weakest
-% explain: extensions for small additions, unions for sums of large OMS
-% %safe as synonym for %cons
-% in grammar, use NT+
 % language/logic/mapping registration process - maybe in a different document
 
 % more useful EBNF (see CASL RefMan)
@@ -1261,6 +1256,7 @@ and sentences;
 \item a syntax for embedding the constructs mentioned under (\ref{it:scope-heterogeneous})–(\ref{it:scope-annotation}) as annotations into existing OMS;
 \item a syntax for expressing (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation}) as standoff markup that points into existing OMS;
 \item a formal semantics of (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation});
+\item structuring constructs for modeling non-monotonic behaviour; 
 \item criteria for existing or future OMS languages to conform with DOL.
 \end{enumerate}
 
@@ -1273,7 +1269,9 @@ stating sentences about them;
 \item concrete OMS and their conceptualization and application;
 %% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
 % \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
-\item mappings between services and devices, and definitions of service and device interoperability.
+\item mappings between services and devices, and definitions of service and device interoperability;
+\item non-monotonic logics\footnote{Logics (formalised as institutions) are necessarily monotonic; conformance criteria for non-monotonic logics arestill under development. However, minimization provides non-monotonic reasoning in DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.}. 
+
 \end{enumerate}
 
 This \IS describes the syntax and the semantics of the Distributed Ontology, Model and
@@ -1354,7 +1352,6 @@ the abstract syntax of the OMS language to signatures and sentences
 of the institution.
 % It may additionally be presented as an institution, leading
 %to the possibility of interpreting additional DOL language constructs.%
-%\footnote{Institutions are necessarily monotonic; conformance criteria for non-monotonic logics arestill under development. However, minimization provides non-monotonic reasoning in DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.} 
 Note that one OMS language can have several sublanguages or profiles 
 corresponding to several logics (for example, OWL 2 has profiles EL, RL and QL, apart from the
 whole OWL 2 itself).
@@ -2612,19 +2609,28 @@ The following organizations are supporting this specification:
 \subsection{Participants}
 The following people contributed directly to the development of this specification. 
 	\begin{itemize}
-	\item Tara Athan, Athan Services 
-	\item Conrad Bock, National Institute of Standards and Technology  
-	\item Mihai Codescu, Otto-von-Guericke University Magdeburg 
-	\item Michael Gruninger, University of Toronto  
-	\item Andreas Hoffmann, Fraunhofer FOKUS 
-	\item Maria Keet, University of Cape Town 
-	\item Elisa Kendall,  Thematix Partners LLC	
-	\item Oliver Kutz, Otto-von-Guericke University Magdeburg  
-	\item Christoph Lange, University of Bonn and Fraunhofer IAIS
-	\item Terry Longstreth, Independent Consultant 	
-	\item Till Mossakowski, Otto-von-Guericke University Magdeburg  	
-	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg  
-	\item Leo Obrst, MITRE  
+	\item Tara Athan, Athan Services, USA 
+	\item Conrad Bock, National Institute of Standards and Technology, USA
+	\item Mihai Codescu, Otto-von-Guericke University Magdeburg, Germany 
+        \item Daniel Couto Vale, University of Bremen, Germany
+        \item Martin Glauer, Otto-von-Guericke University Magdeburg, Germany
+	\item Michael Gruninger, University of Toronto, Canada  
+        \item Stephan Günther, Otto-von-Guericke University Magdeburg, Germany
+        \item Maria Hedblom, Otto-von-Guericke University Magdeburg, Germany
+	\item Andreas Hoffmann, Fraunhofer FOKUS, Germany 
+        \item Yazmin Angelica Iba\~nez, University of Bremen
+	\item Maria Keet, University of Cape Town, South Africa 
+	\item Elisa Kendall, Thematix Partners LLC, USA	
+        \item Alexander Knapp, University of Augsburg, Germany
+	\item Oliver Kutz, Free University of Bolzano, Italy
+	\item Christoph Lange, University of Bonn and Fraunhofer IAIS, Germany
+	\item Terry Longstreth, Independent Consultant, USA 	
+        \item Christian Maeder, Jacobs-University Bremen, Germany
+	\item Till Mossakowski, Otto-von-Guericke University Magdeburg, Germany  	
+	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg, Germany  	  
+	\item Leo Obrst, MITRE, USA
+        \item Madhura Thosar, Otto-von-Guericke University Magdeburg, Germany
+   
 	\end{itemize}
 %	
 
@@ -8880,7 +8886,8 @@ to the term \termref{structured OMS} in this \IS}
 \infannex{Tools for DOL}\label{a:tools}
 
 \sclause{The Heterogeneous Tool Set (Hets)}\label{a:hets} The
-Heterogeneous Tool Set (Hets) is a parsing, analysis and proof tool
+Heterogeneous Tool Set (Hets) is the reference implementation of
+DOL. Hets a parsing, analysis and proof tool
 for OMS, OMS networks and OMS mappings written in DOL and
 DOL-conforming languages.  It supports a wide range of OMS languages
 and language translations, in particular OWL, RDF, Common Logic,
@@ -8982,7 +8989,7 @@ an XML and a JSON version for processing with tools.
 \sclause{APIs}\label{c:APIs}
 
 Both Hets and Ontohub/Modelhub/Spechub provide APIs for the interchange
-with other tools. Ontohub/Modelhub/Spechub also provides an API for
+with other tools\footnote{See \url{https://github.com/spechub/hets/wiki} and \url{https://github.com/ontohub/ontohub/wiki/}.}. Ontohub/Modelhub/Spechub also provides an API for
 exchange with other instances, so that e.g.\ Ontohub and Modelhub
 can exchange information about available repositories and their OMS.
 
