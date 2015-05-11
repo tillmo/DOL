@@ -3582,6 +3582,7 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % derived from CASL (see CASL reference manual)
 % and HetCASL (see HetCASL summary)
 
+\ednote{ExtensionOMS seems to be missing from the abstract syntax}
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
 
 BasicOMS             = BasicOMSInConformingLanguage ;
@@ -3597,7 +3598,7 @@ OMS                  = ExtendingOMS
                      | 'approximation' , OMS , Approximation
                      | 'filtering', OMS, Filtering
                      | 'union' , OMS , [ ConsStrength ] , OMS 
-                     | 'extension' , OMS , ExtensionOMS
+                     | 'extension' , OMS , ExtensionOMS 
                      | 'qual-oms' , { Qualification } , OMS
                      | 'combination' , Network
                      | 'application', OMS, SubstName ;
@@ -5278,7 +5279,7 @@ node labeled with $(Name(\syntax{BasicOMS}),I, \Sigma', \cM',\Delta')$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{MinimizableOMS}) = 
+\semdom{sem(\Gamma, \syntax{MinimizableOMS}) = 
 (\Gamma', (\cI', \Sigma', \cM',\Delta'))}
 
 
@@ -5287,50 +5288,25 @@ $Env(\Gamma, \syntax{OMS})$ for the global environment $\Gamma'$
 such that
 $sem(\Gamma, \syntax{OMS}) = \Gamma'$.
 
-The semantics of a \syntax{BasicOMS} $O$ in the local environment of
-previous declarations $(\cI, \Sigma, \cM, \Delta)$ and global environment
-$\Gamma$, is given by
- \begin{itemize}
-   \item $\Inst(O) = I$,
-   \item $\Sign(O) = \Sigma'$ 
-   \item $\Mod(O) = \cM'$
-   \item $\Th(O) = \Delta'$
- \end{itemize}
-\noindent where $sem^{\Sigma, \cM, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (\Sigma', \cM', \Delta')$ such that $\Sigma$ is a sub-signature of $\Sigma'$, $\Delta  \subseteq \Delta'$ and 
-$\{ M'\forget\Sigma \mid M' \in \cM' \} \subseteq \cM$.
+The semantics of a \syntax{BasicOMS} $O$ has been defined above.
 
-The semantics of $O = \syntax{'oms-ref', O', ImportName}$ in the local environment of
-previous declarations $(\Sigma, \cM, \Delta)$ and global environment
-$\Gamma$, is given by
+The semantics of $O = \syntax{'oms-ref', O', ImportName}$
+\ednote{remove importname?}
+is given by
  \begin{itemize}
    \item $\Inst(\syntax{'oms-ref', O', ImportName}) = \Inst(O')$ which must be the same
    with the current logic of $\Gamma$
-   \item $\Sig(\syntax{'oms-ref', O', ImportName}) = \Sigma \cup \Sig(O')$
-   \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O', ImportName})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sig(O')} \in \Mod(O') \}$
-   \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Delta \cup \Th(O')$
+   \item $\Sig(\syntax{'oms-ref', O', ImportName}) = \Sig(O')$
+   \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \Mod(O')$
+   \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Th(O')$
+   \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
+         with a new node for $O$ labeled as defined in the items above.
  \end{itemize}
- 
- In both cases, $Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
-node $N$ labeled as defined in the corresponding items above, for each case,
-and with an edge from the node of the previous declarations \ednote{how to obtain it?}
-to $N$ labeled with the inclusion. \ednote{of the environment signature in the
-extending one.}
-
-\ednote{remove importname?}
-
-%\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
-% 
-%In the context of a global environment $\Gamma$,
-%the current language, logic and serialization $L$,  and a local environment $(\Sigma,\cM)$ (of previously declared
-%non-logical symbols), an OMS (\syntax{MinimizableOMS})
-%$O$ is interpreted as an institution $\cI=logic(\Gamma,L,O)$, a signature $\Sigma=sig(\Gamma,L,O)$ in institution $\cI$ and a class
-%of models $\cM=Mod(\Gamma,L,O)$ over signature $\Sigma$.
-%We combine this into $sem(\Gamma,L,O)=(logic(\Gamma,L,O),sig(\Gamma,L,O),Mod(\Gamma,L,O))$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
 \semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
-(\Gamma',(\cI,\Sigma',\cM', \bot))}
+(\Gamma',(\cI,\Sigma',\cM', \Delta))}
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
@@ -5354,8 +5330,6 @@ $Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O')))$ and
 an edge from the node of $O$ to the node of $O'$ labeled with the identity
 morphism on $\Sig(O')$.
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
