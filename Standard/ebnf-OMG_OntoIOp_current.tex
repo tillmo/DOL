@@ -4,15 +4,10 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.85}
+\newcommand{\version}{0.9}
 
 
 %todo
-% %(in)consistent
-% precedences of operators. 'bridge' binds weakest
-% explain: extensions for small additions, unions for sums of large OMS
-% %safe as synonym for %cons
-% in grammar, use NT+
 % language/logic/mapping registration process - maybe in a different document
 
 % more useful EBNF (see CASL RefMan)
@@ -446,6 +441,26 @@ author=,date=,id=,replyto=,type=}{}%
 \vspace{3pt}
 }
 
+%%%% Code which is used to produce minipages with border
+\usepackage{xparse}
+\newlength{\currentindent}
+\newsavebox{\fminipagebox}
+\setlength{\currentindent}{\parindent}
+\NewDocumentEnvironment{fminipage}{m O{\fboxsep}}
+ {
+  \par\kern#2\noindent\begin{lrbox}{\fminipagebox}
+  \begin{minipage}{#1}\ignorespaces  \setlength{\parindent}{\currentindent}}
+ {\end{minipage}\end{lrbox}%
+  \makebox[#1]{%
+    \kern\dimexpr-\fboxsep-\fboxrule\relax
+    \fbox{\usebox{\fminipagebox}}%
+    \kern\dimexpr-\fboxsep-\fboxrule\relax
+  }\par\kern#2
+ }
+
+%%%% 
+
+
 \newenvironment{symbols}[0]{\begin{longtable}{p{.15\textwidth}p{.84\textwidth}}}{\end{longtable}}
 \newcommand{\symboldef}[2]{ #1 & #2 \\}
 
@@ -622,7 +637,7 @@ part of this work covered by copyright herein may be reproduced or used in any f
 
 \OMGparagraph{DISCLAIMER OF WARRANTY}
 WHILE THIS PUBLICATION IS BELIEVED TO BE ACCURATE, IT IS PROVIDED ``AS IS'' AND MAY CONTAIN ERRORS OR MISPRINTS. THE OBJECT MANAGEMENT GROUP AND THE COMPANIES LISTED ABOVE MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS PUBLICATION, INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF TITLE OR OWNERSHIP, IMPLIED WARRANTY OF MERCHANTABILITY OR WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE OR USE. 
-IN NO EVENT SHALL THE OBJECT MANAGEMENT GROUP OR ANY OF THE COMPANIES LISTED ABOVE BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELIANCE OR COVER DAMAGES, INCLUDING LOSS
+IN NO EVENT SHALL THE OBJECT MANAGEMENT GROUP OR ANY OF THE COMPANIES LISTED ABOVE BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELI\-ANCE OR COVER DAMAGES, INCLUDING LOSS
  OF PROFITS, REVENUE, DATA OR USE, INCURRED BY ANY USER OR ANY THIRD PARTY IN CONNECTION WITH THE FURNISHING, PERFORMANCE, OR USE OF THIS MATERIAL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. 
 
 The entire risk as to the quality and performance of software developed using this specification is borne by you. This disclaimer of warranty constitutes an
@@ -634,7 +649,7 @@ Use, duplication or disclosure by the U.S. Government  is subject to the restric
   the Federal Acquisition Regulations and its successors, as applicable. The specification copyright owners are as indicated above and may be contacted through the Object Management Group, 140 Kendrick Street, Needham, MA 02494, U.S.A.
 
 \OMGparagraph{TRADEMARKS}
-MDA\rtm, Model Driven Architecture\rtm, UML\rtm, UML Cube logo\rtm, OMG Logo\rtm, CORBA\rtm\ and XMI\rtm\ are registered trademarks of the Object Management Group, Inc., and Object Management Group\texttrademark\xspace, OMG\texttrademark\xspace , Unified Modeling Language\texttrademark\xspace, Model Driven Architecture Logo\texttrademark\xspace, Model Driven Architecture Diagram\texttrademark\xspace, CORBA logos\texttrademark\xspace, XMI Logo\texttrademark\xspace, CWM\texttrademark\xspace, CWM Logo\texttrademark\xspace, IIOP\texttrademark\xspace , IMM\texttrademark\xspace , MOF\texttrademark\xspace , OMG Interface Definition Language (IDL)\texttrademark\xspace , and OMG  SysML\texttrademark\xspace\   are trademarks of the Object Management Group. All other products or company names mentioned are used for identification purposes only, and may be trademarks of their respective owners.
+MDA\rtm, Model Driven Architecture\rtm, UML\rtm, UML Cube logo\rtm, OMG Logo\rtm, COR\-BA\rtm\ and XMI\rtm\ are registered trademarks of the Object Management Group, Inc., and Object Management Group\texttrademark\xspace, OMG\texttrademark\xspace , Unified Modeling Language\texttrademark\xspace, Model Driven Architecture Logo\texttrademark\xspace, Model Driven Architecture Diagram\texttrademark\xspace, CORBA logos\texttrademark\xspace, XMI Logo\texttrademark\xspace, CWM\texttrademark\xspace, CWM Logo\texttrademark\xspace, IIOP\texttrademark\xspace , IMM\texttrademark\xspace , MOF\texttrademark\xspace , OMG Interface Definition Language (IDL)\texttrademark\xspace , and OMG  SysML\texttrademark\xspace\   are trademarks of the Object Management Group. All other products or company names mentioned are used for identification purposes only, and may be trademarks of their respective owners.
 
 \OMGparagraph{COMPLIANCE}
 The copyright holders listed above acknowledge that the Object Management Group (acting itself or through its designees) is and shall at all times be the sole entity that may authorize developers, suppliers and sellers of computer
@@ -649,7 +664,7 @@ Software developed under the terms of this license may claim compliance or confo
 All OMG specifications are subject to continuous review and improvement. As part of this process 
 we encourage readers to report any ambiguities, inconsistencies, or inaccuracies
 they may find by completing the Issue Reporting Form listed on the main web page
-http://www.omg.org, under Documents, Report a Bug/Issue\\ (http://www.omg.org/technology/agreement.htm).
+\url{http://www.omg.org}, under Documents, Report a Bug/Issue (\url{http://www.omg.org/technology/agreement.htm}).
 
 \renewcommand{\contentsname}{Table of Contents}
 
@@ -843,7 +858,7 @@ DOL provides such a construct with syntax \syntax{o keep logic},  see \ref{c:foc
 Proposals shall provide a specification of a metalanguage for links such as imports,
 interpretations, refinements, and alignments between OMS/modules.
 	&
-DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.\ednote{Terry: Do you want to mention institutions here, presaging 6.5.4 ? and add 8.4 to the see list? Till: I do not fully understand.}
+DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
 	\\ \hline
 %
 6.5.1(g) & 
@@ -886,15 +901,15 @@ any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for refer
 %
 6.5.3(a)& 
 An abstract syntax specified as an SMOF compliant meta model.	&
-Currently, the abstract syntax is specified using EBNF, see clause \ref{c:abstract-syntax}. An 
-initial SMOF meta model is given in annex \ref{a:MOF}.
+Currently, the abstract syntax is specified using EBNF, see clause \ref{c:abstract-syntax}. The
+SMOF meta model is given in annex \ref{a:MOF}.
    \\ \hline
 %
 6.5.3(b)& 
 A human-readable lexical concrete syntax in EBNF and serialization in XML, for the latter XMI shall
 be used.	&
 The concrete syntax (in EBNF) is specified in clause \ref{a:text-syntax}. The XMI representation 
-will be automatically derived from the SMOF meta model.
+is automatically derived from the SMOF meta model.
    \\ \hline
 %
 6.5.3(c)& 
@@ -1016,7 +1031,7 @@ This is left for future work.
 
 \clearpage
 
-\section{Issues to be discussed}
+\section{Issues to be Discussed}
 
 \begin{center}
 \begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
@@ -1114,8 +1129,8 @@ A registry is discussed in clause \ref{c:conformance}.
 %
 6.8(a)	& 
 Proposals covering a broader range of features and of use cases will be favored. As a minimum, proposals shall define conformance criteria for logical languages and translations, and their proposed metalanguage shall cover some metalogical relationships and shall be applicable to multiple logics.	&
-Conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
-DOL is applicable to multiple logics (see also 6.8(c) below).\ednote{Terry: Do you want to mention institutions here, presaging 6.5.4 ? and add 8.4 to the see list?}
+Based on the notion of institution, conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
+DOL is applicable to multiple logics (see also 6.8(c) and~\ref{sem-foundations} below).
    \\ \hline
 %
 6.8(b)		&
@@ -1132,7 +1147,7 @@ with DOL.
 
 \end{longtable}
 \end{center}
-\ednote{in 6.8(c), also mention at least UML class diagrams}
+
 
 \section{Proof of Concept}
 Prototypical open source tools for DOL are already available, see
@@ -1148,7 +1163,7 @@ This specification proposes no changes to adopted OMG specifications.
 
 \chapter{Scope}
 \pagenumbering{arabic} 
-This \IS specifies the Distributed Ontology, Modeling and Specification
+This \IS specifies the Distributed Ontology, Model and Specification
  Language (DOL)\index{\dolindex ! definition}.  DOL is designed to achieve integration  
 and interoperability of
 ontologies, specifications and models (OMS for short). DOL is a language for
@@ -1167,7 +1182,7 @@ machine-processable texts that carry a formal semantics. Among those fields are 
 of systems. Ontologies, models  and specifications will (for the purpose of this document) 
 henceforth be abbreviated as \textbf{OMS}\index{OMS}.
 
-An OMS provides formal descriptions which range in scope from domain knowledge and activities
+An OMS provides formal descriptions, which range in scope from domain knowledge and activities
 (ontologies, models) to properties and behaviors of hardware and software systems (models,
 specifications). These formal descriptions can be used for the analysis and verification of domain
 models, system models and systems themselves, using rigorous and effective reasoning tools.   As 
@@ -1177,20 +1192,20 @@ perspectives on a domain or system.
  Hence, interoperability becomes
 a crucial issue, in particular, formal interoperability, i.e.\ interoperability that is based on
 the formal semantics of the different viewpoints. Interoperability is both about the ability to 
-interface different domains and systems, to enable the use of several OMS in a common application
-scenario, as well as about coherence and consistency, ensuring at an early stage of the development
+interface different domains and systems and the ability to use several OMS in a common application
+scenario. Further,  interoperability is about coherence and consistency, ensuring at an early stage of the development
 that a coherent system can be reached.
 
-\ednote{@Till: the beginning of this paragraph needs revision}
+
 In complex applications, which involve multiple OMS with overlapping concept spaces,
-data mapping may also be  between different OMS, and is then called OMS \index{alignment}. 
+it is often necessary to identify correspondence between concepts in the different OMS; this is called  OMS alignment\index{alignment}. 
 While OMS alignment is most commonly studied for OMS formalized in the same OMS 
 language, the different OMS used by complex applications may also be written in different 
-OMS languages, even if they have different levels of expressiveness. 
+OMS languages, which may even vary in their expressiveness. 
 This \IS faces this diversity not by proposing yet another OMS language that would subsume all the others.  
 Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) 
 to compare and integrate OMS that are written in different formalisms.
-It specifies DOL (Distributed Ontology, Modeling and Specification Language), a formal language for
+It specifies DOL, a formal language for
 expressing not only OMS but also mappings between OMS formalized in different OMS languages.
 
 Thus, DOL gives interoperability a formal grounding and makes heterogeneous OMS and services based
@@ -1223,59 +1238,55 @@ and compliance).
 
 
 
-\ednote{State somewhere: A DOL theory is at level M1 in MDA speak, the same level as an UML
-diagram. Also a DOL OMS network, containing interpretations, alignments between OMS etc. is at
-level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in
-MOF.}
-
-\section{Features within Scope}\index{\dolindex ! scope}
+\section{Features Within Scope}\index{\dolindex ! scope}
 % Can't use \begin{inscope}, as that creates an itemize environment
 The following are within the scope of this \IS:
 \begin{enumerate}
-\item\label{it:scope-heterogeneous} homogeneous OMS as well as heterogeneous OMS (the combining parts written in different languages)
-\item mappings between OMS (mapping OMS symbols to OMS symbols)
-\item OMS as well as OMS networks (the latter involve several OMS and mappings between them)
-\item \label{it:scope-translation} translations between different OMS languages conforming with DOL (translating whole OMS to another language)
+\item\label{it:scope-heterogeneous} homogeneous OMS as well as heterogeneous OMS (OMS that consist of parts, which are written in different languages);
+\item mappings between OMS (mapping OMS symbols to OMS symbols);
+\item OMS networks (they involve several OMS and mappings between them);
+\item \label{it:scope-translation} translations between different OMS languages conforming with DOL (translating whole OMS to another language);
 \item\label{it:scope-annotation} annotation and documentation of OMS, mappings between OMS, symbols,
-and sentences
-\item recommendations of vocabularies for annotating and documenting OMS
-\item a syntax for embedding the constructs mentioned under (\ref{it:scope-heterogeneous})–(\ref{it:scope-annotation}) as annotations into existing OMS
-\item a syntax for expressing (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation}) as standoff markup that points into existing OMS
-\item a formal semantics of (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation})
-\item criteria for existing or future OMS languages to conform with DOL
+and sentences;
+\item recommendations of vocabularies for annotating and documenting OMS;
+\item a syntax for embedding the constructs mentioned under (\ref{it:scope-heterogeneous})–(\ref{it:scope-annotation}) as annotations into existing OMS;
+\item a syntax for expressing (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation}) as standoff markup that points into existing OMS;
+\item a formal semantics of (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation});
+\item structuring constructs for modeling non-monotonic behaviour; 
+\item criteria for existing or future OMS languages to conform with DOL.
 \end{enumerate}
 
 The following are outside the scope of this \IS:
 \begin{enumerate}
 \item the (re)definition of elementary OMS languages, \ie languages that allow the declaration of OMS symbols (non-logical symbols) 
 and
-stating sentences about them
-\item algorithms for obtaining mappings between OMS
-\item concrete OMS and their conceptualization and application
+stating sentences about them;
+\item algorithms for obtaining mappings between OMS;
+\item concrete OMS and their conceptualization and application;
 %% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
 % \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
-\item mappings between services and devices, and definitions of service and device interoperability.
+\item mappings between services and devices, and definitions of service and device interoperability;
+\item non-monotonic logics\footnote{Logics (formalised as institutions) are necessarily monotonic; conformance criteria for non-monotonic logics arestill under development. However, minimization provides non-monotonic reasoning in DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.}. 
+
 \end{enumerate}
 
-This \IS describes the syntax and the semantics of the Distributed Ontology, Modeling and
+This \IS describes the syntax and the semantics of the Distributed Ontology, Model and
 Specification Language (DOL) by defining an abstract syntax and an associated model-theoretic
 semantics for DOL. 
 
 
 \chapter{Conformance}\label{c:conformance}
 \index{conformance|(}
-This clause defines conformance criteria for languages and logics that can be used with the
-distributed ontology, modeling and specification language DOL, as well as conformance criteria for
-serializations, translations and applications. This \IS describes the conformance with DOL of a
-number of OMS languages, namely OWL 2, Common Logic, RDF and RDFS, as well as translations among
-these, in its informative annexes.
+This clause defines conformance criteria for languages and logics that can be used with DOL, as well as conformance criteria for
+serializations, translations and applications. The conformance of a
+number of OMS languages (namely OWL 2, Common Logic, RDF and RDFS, UML Class Diagrams, CASL) as well as translations among
+these is discussed in informative annexes of this \IS.
 
-It is expected that DOL will be used for more languages than this normative set of DOL-conforming
-languages. There will be a \textbf{\termref{registry} for DOL-conforming languages and translations} hosted
-at \url{http://ontohub.org}.  This will ensure that this \IS remains interoperable with past,
-present and even future OMS languages.  The registry shall also include descriptions of
+It is expected that DOL will be used for other languages than the  set of DOL-conforming
+languages that are discussed in this \IS. There is a  \textbf{\termref{registry} for DOL-conforming languages and translations} hosted
+at \url{http://ontohub.org}.  The registry  also includes descriptions of
 DOL-conforming languages and translations (as well as other information needed by implementors
-and users) in machine-processable form.  
+and users) in both human-readable and machine-processable form.  
 
 There will be Maintenance Authority (MA)\footnote{or, depending on advisability, a Registration
 Authority} established to maintain the registry as an informative resource governed by the
@@ -1283,12 +1294,13 @@ standard.  The registry contents itself will not be normative; however, it is
 expected to become the basis for normative activities.
 
 
-\sclause{Conformance of an OMS language/a logic with DOL}\label{c:conform:logic}
+\sclause{Conformance of an OMS Language/a Logic with DOL}\label{c:conform:logic}
 
-Rationale: for an OMS language to conform with DOL,
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: for an OMS language to conform with DOL,
 \begin{itemize}
 \item its logical language aspect\index{language aspect ! logical} either needs to satisfy certain criteria about its abstract
-syntax or formal semantics itself, or there must be a translation (again satisfying certain
+syntax and formal semantics itself, or there must be a translation (again satisfying certain
 criteria) to a language that already is DOL-conforming.
 \item its structuring language aspect\index{language aspect ! structuring} (if present) must not conflict with DOL's own structuring
 mechanisms
@@ -1296,6 +1308,8 @@ mechanisms
 \end{itemize}
 We also define different conformance levels with respect to the usage of IRIs as identifiers for all kinds
 of entities that the OMS language supports.
+\end{fminipage}
+
 
 %
 %\begin{description}
@@ -1309,8 +1323,6 @@ An OMS language is conforming with DOL if it satisfies the following conditions:
 \begin{enumerate}
 \item its abstract syntax is specified as an SMOF compliant meta model
 or as an EBNF grammar;
-\item its logical language aspect\index{language aspect ! logical} (for expressing basic OMS) is conforming,
- and in particular has a semantics (see below),
 \item it has at least one serialization in the sense of section~\ref{c:conform:serialization};
 %\item complete round-trip mappings from the human-readable serialization
 %to the abstract syntax and vice versa;
@@ -1331,11 +1343,12 @@ The \emph{logical language aspect}\index{language aspect ! logical} of an OMS la
 is %semantically
 conforming with DOL if each logic corresponding to a profile (including
 the logic corresponding to the whole logical language aspect) is presented as an
-institution \cite{GoguenBurstall92}.
+institution \cite{GoguenBurstall92}, and there is a mapping from
+the abstract syntax of the OMS language to signatures and sentences
+of the institution.
 % It may additionally be presented as an institution, leading
 %to the possibility of interpreting additional DOL language constructs.%
-\footnote{Institutions are necessarily monotonic; conformance criteria for non-monotonic logics are
-still under development. However, minimization provides non-monotonic reasoning in DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.} Note that one OMS language can have several sublanguages or profiles 
+Note that one OMS language can have several sublanguages or profiles 
 corresponding to several logics (for example, OWL 2 has profiles EL, RL and QL, apart from the
 whole OWL 2 itself).
 
@@ -1364,11 +1377,11 @@ Any conforming language and logic shall have a machine-processable description
  as detailed in \cref{c:conform:description}.
 
 \ssclause{Conformance of language/logic translations with DOL}\label{c:conform:translation}
-
-Rationale: a translation between logics must satisfy certain criteria in order to conform with DOL.
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: a translation between logics must satisfy certain criteria in order to conform with DOL.
 Also, a translation between OMS languages based on such logics must be consistent with the
 translation between these logics.  Translations should break neither structuring language aspects nor comments/annotations\index{language aspect ! (general)}.
-
+\end{fminipage}
 
 A logic translation is conforming with DOL if it is presented either as an institution morphism or
 as an institution comorphism.  
@@ -1377,9 +1390,22 @@ as an institution comorphism.
 %\may also be presented as an institution morphism or an institution
 %comorphism.
 
-A language translation is conforming with DOL if it is a mapping
-between the abstract syntaxes that restricts to a conforming logic
-translation when restricted to the logical language aspect. Language
+A language translation \shall provide a mapping between
+the abstract syntaxes (it \may also provide mappings between concrete
+syntaxes). 
+A language translation  from language $L_1$ (based on institution
+$I_1$) to language $L_2$ (based on institution $I_2$) is conforming
+with DOL if it is based on a logic translation such the following
+diagram commutes (i.e.\ following both possible paths from 
+$L_1$ to $I_2$ leads to the same result):
+$$\xymatrix{
+L_1 \ar[rrrrr]^{\Text{mapping between abstract syntaxes}} \ar[ddd]_{\Text{abstract syntax to institution}}
+&&&&& L_2 \ar[ddd]^{\Text{abstract syntax to institution}}\\
+&&&&&\\
+&&&&&\\
+I_1\ar[rrrrr]^{\Text{institution (co)morphism}} &&&&& I_2
+}$$
+Language
 translations \may also translate the structuring language aspect, in
 this case, they \shall preserve the semantics of the structuring
 language aspect.  Furthermore, language translations \should preserve
@@ -1388,9 +1414,9 @@ symbol) in the source \should be attached to its translation in the
 target (if there are more than one sentences (resp.\ symbols)
 expressing the translation, to at least one of them).
 
-\sclause{Conformance of a serialization of an OMS language with DOL}\label{c:conform:serialization}
-
-Rationale: The main reason for the following specifications is identifier injection. DOL is capable
+\sclause{Conformance of a Serialization of an OMS Language With DOL}\label{c:conform:serialization}
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: The main reason for the following specifications is identifier injection. DOL is capable
 of assigning identifiers to entities (symbols, axioms, modules, etc.) inside fragments of OMS
 languages that occur in a DOL document, even if that OMS language doesn't support such identifiers
 by its own means. 
@@ -1402,17 +1428,18 @@ serialization of the OMS language, be it plain text, some serialization of RDF, 
 structured text format, we can be more specific about what the annotation/commenting facilities of
 that serialization must look like in order to support this identifier injection.  
 Well-behaved XML and RDF schemas support identifier injection in a `nice' way (rather than using
-text-level comments).   In the worst case we cannot 
+text-level comments). In the worst case we cannot 
 inject anything into an OMS language fragment, because the OMS language serialization simply
-wouldn't allow us to write suitable comments, but we'd have to point into it from the enclosing context by
+wouldn't allow us to write suitable comments, but we'd have to point into it from the enclosing context
 by using \termref{standoff markup}.
 
 
 Further conformance criteria in this section are introduced to facilitate the convenient reuse of
-verbatim fragments of OMS language inside a DOL document.\\
+verbatim fragments of OMS language inside a DOL document.
+
 Independently from these criteria, we distinguish different levels of conformance of a
 serialization with respect to its means of conveniently abbreviating long IRI identifiers.
-
+\end{fminipage}
 
 We define four levels of conformance of a serialization of an OMS language with DOL.
 
@@ -1432,7 +1459,7 @@ explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
 of  a serialization that is merely text conforming).}
 \item The serialization shall use XML elements to represent all structural elements of an OMS.
 \item The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
- DOL namespace \url{http://www.omg.org/spec/DOL/0.8/xml}) on any elements.\footnote{This is because either an attribute or a child element will be used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
+ DOL namespace \url{http://www.omg.org/spec/DOL/0.8/xml}) on any elements.\footnote{This is because either an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
 \end{itemize}
 
 \item[RDF conformance]
@@ -1475,7 +1502,7 @@ example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying te
 Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs, listed from highest to lowest:
 \begin{description}
 \item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}).  The serialization is \notrequired to support CURIEs with no prefix.\\
-  Informative comment: In this case, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a basic OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+  Informative comment: In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a basic OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
 \item[Non-prefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
   Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the basic OMS to IRIs, which are located in one flat namespace.
 \end{description}
@@ -1496,20 +1523,23 @@ CURIEs altogether.
 
 Any conforming serialization of an OMS language shall have a machine-processable description as detailed in \cref{c:conform:description}.
 
-\sclause{Machine-processable description of conforming languages, logics, and serializations}\label{c:conform:description}
+\sclause{Machine-Processable Description of Conforming Languages, Logics, and Serializations}\label{c:conform:description}
 
-Rationale: When a parser processes a DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further DOL-supporting software needs to know, e.g., what other DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with DOL describe themselves in a machine-comprehensible way.
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: When a parser processes a DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further DOL-supporting software needs to know, e.g., what other DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with DOL describe themselves in a machine-comprehensible way.
+\end{fminipage}
 
 For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:lola}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
 
 
-\sclause{Conformance of a document with DOL}\label{c:conform:document}
-
-Rationale: for exchanging DOL documents with other users/tools, nothing that has a formal semantics
+\sclause{Conformance of a Document With DOL}\label{c:conform:document}
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: for exchanging DOL documents with other users/tools, nothing that has a formal semantics
 must be left implicit.  One DOL tool may assume that by default any OMS fragments inside a DOL
 document are in some fixed OMS language unless specified otherwise, but another DOL tool can't be
 assumed to understand such DOL documents.  Defaults are, however, practically convenient, which is
 the reason for having the following section about the conformance of an \emph{application}.
+\end{fminipage}
 
 A document conforms with DOL if it contains a DOL text that is well-formed according to the
 grammar.  That means, in particular, that any information related to logics has to be made explicit
@@ -1522,7 +1552,7 @@ However, details about aspects of an OMS that do not have a formal, logic-based 
 left implicit.  For example, a conforming document may omit explicit references to matching
 algorithms that have been employed in obtaining an alignment.
 
-\sclause{Conformance of an application with DOL}\label{c:conform:application}
+\sclause{Conformance of an Application With DOL}\label{c:conform:application}
 
 In practice, DOL-aware \emph{applications} may also deal with documents that are not conforming 
 with DOL according to the criteria established in \cref{c:conform:document}.  However, an 
@@ -1549,32 +1579,39 @@ explicit references to the logics used.
 % The following referenced documents are indispensable for the application of this document. For dated references, only
 % the edition cited applies. For undated references, the latest edition of the referenced document (including any
 % amendments) applies.
-  \item{W3C/TR REC-owl2-syntax:2009}{OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax. W3C Recommendation, 27 October 2009.\\ \url{http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/}}
-  \item{ISO/IEC 14977:1996}{Information technology – Syntactic metalanguage – Extended BNF}
-  \item{W3C/TR REC-xml:2008}{Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \\
+  \item{W3C/TR REC-owl2-syntax:2009} {OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax. W3C Recommendation, 27 October 2009.\\ \url{http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/}}
+  \item{ISO/IEC 14977:1996} {Information technology – Syntactic metalanguage – Extended BNF}
+  \item{W3C/TR REC-xml:2008} {Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \\
   \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
-  \item{W3C/TR REC-owl2-profiles:2009}{OWL 2 Web Ontology Language: Profiles. W3C Recommendation, 27 October 2009. \\
+  \item{W3C/TR REC-owl2-profiles:2009} {OWL 2 Web Ontology Language: Profiles. W3C Recommendation, 27 October 2009. \\
   \url{http://www.w3.org/TR/2009/REC-owl2-profiles-20091027/}}
-  \item{ISO/IEC 24707:2007}{Information technology – Common Logic (CL): a framework for a family of logic-based languages}
-  \item{OMG Document ptc/2010-11-14:}{OMG Unified Modeling Language (OMG UML), Superstructure, Version 2.4. \\
+  \item{ISO/IEC 24707:2007} {Information technology – Common Logic (CL): a framework for a family of logic-based languages}
+  \item{OMG Document ptc/2010-11-14:} {OMG Unified Modeling Language (OMG UML), Superstructure, Version 2.4. \\
   \url{http://www.omg.org/spec/UML/2.4/Superstructure}. Section 7 (Classes)}
-  \item{IETF/RFC 3986}{Uniform Resource Identifier (URI): Generic Syntax. January 2005.\\ \url{http://tools.ietf.org/html/rfc3986}}
-  \item{IETF/RFC 3987}{Internationalized Resource Identifiers (IRIs). January 2005.\\ \url{http://tools.ietf.org/html/rfc3987}}
-  \item{IETF/RFC 5147}{URI Fragment Identifiers for the text/plain Media Type.  April 2008.\\ \url{http://tools.ietf.org/html/rfc5147}}
-  \item{W3C/TR REC-xptr-framework:2003}{XPointer Framework.  W3C Recommendation, 25 March 2003. \\ \url{http://www.w3.org/TR/2003/REC-xptr-framework-20030325/}}
-  \item{W3C/TR REC-rdf11-concepts:2014}{RDF 1.1 Concepts and Abstract Syntax.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/}}
-  \item{W3C/TR REC-xml-names:2009}{Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009.\\
+  \item{IETF/RFC 3986} {Uniform Resource Identifier (URI): Generic Syntax. January 2005.\\ \url{http://tools.ietf.org/html/rfc3986}}
+  \item{IETF/RFC 3987} {Internationalized Resource Identifiers (IRIs). January 2005.\\ \url{http://tools.ietf.org/html/rfc3987}}
+  \item{IETF/RFC 5147} {URI Fragment Identifiers for the text/plain Media Type.  April 2008.\\ \url{http://tools.ietf.org/html/rfc5147}}
+  \item{W3C/TR REC-xptr-framework:2003} {XPointer Framework.  W3C Recommendation, 25 March 2003. \\ \url{http://www.w3.org/TR/2003/REC-xptr-framework-20030325/}}
+  \item{W3C/TR REC-rdf11-concepts:2014} {RDF 1.1 Concepts and Abstract Syntax.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/}}
+  \item{W3C/TR REC-xml-names:2009} {Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009.\\
    \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
-  \item{W3C/TR REC-rdfa-core:2013}{RDFa Core 1.1 -- Second Edition.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 22 August 2013.\\ \url{http://www.w3.org/TR/2013/REC-rdfa-core-20130822/}}
+  \item{W3C/TR REC-rdfa-core:2013} {RDFa Core 1.1 -- Second Edition.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 22 August 2013.\\ \url{http://www.w3.org/TR/2013/REC-rdfa-core-20130822/}}
   % This standard has no unique year, as it consist of multiple parts (see http://tools.ietf.org/html/rfc3629#ref-ISO.10646)
-  \item{ISO/IEC 10646}{Information technology – Universal Multiple-Octet coded Character Set (UCS)}
-  %\item{W3C/TR REC-rdf-sparql-query:2008}{SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
-  \item{W3C/TR REC-rdf-schema:2014}{RDF Schema 1.1. W3C Recommendation, 25 February 2014.\\ \url{http://www.w3.org/TR/2014/REC-rdf-schema-20140225/}}
-  \item{W3C/TR REC-rdf11-mt:2014}{RDF 1.1 Semantics.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/}}
+  \item{ISO/IEC 10646} {Information technology – Universal Multiple-Octet coded Character Set (UCS)}
+  %\item{W3C/TR REC-rdf-sparql-query:2008} {SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
+  \item{W3C/TR REC-rdf-schema:2014} {RDF Schema 1.1. W3C Recommendation, 25 February 2014.\\ \url{http://www.w3.org/TR/2014/REC-rdf-schema-20140225/}}
+  \item{W3C/TR REC-rdf11-mt:2014} {RDF 1.1 Semantics.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/}}
+  \item{ODM} {Ontology Definition Metamodel, 2 September 2014. \\ \url{http://www.omg.org/spec/ODM/1.1/}}
+\item{MOF} { Meta Object Facility} \\ \url{http://http://www.omg.org/mof/}
+\item{SMOF} { Support for Semantic Structure, April 2013} \\ \url{http://www.omg.org/spec/SMOF/1.0/}
+\item{XML} {Metadata Interchange (XMI) – using MOF 2 XMI, April 2014} \\ \url{http://www.omg.org/spec/XMI//}
+%\item{PRR} {Production Rule Representation, December 2009} \\ \url{ http://www.omg.org/spec/PRR/1.0// }
+\item{SBVR} {Semantics Of Business Vocabulary And Rules, November 2013} \\ \url{http://www.omg.org/spec/SBVR/}
+\item{DTV} {Date-Time Vocabulary, August 2013} \\ \url{http://www.omg.org/spec/DTV/1.0/}
+\item{RIF} {Rule Interchange Format, February 2013} \\ \url{http://www.w3.org/TR/rif-overview/}
+\item{SKOS} { Simple Knowledge Organization System} \\ \url{ http://www.w3.org/2004/02/skos/}
+
 \end{enumerate}
-\ednote{more, see RFP}
-\ednote{introduce a separate reference scheme for normative references}
-\todonote[author=Christoph Lange,date=D:201107301339+02'00',type=q-all]{I have listed them roughly in the order of occurrence: OK?}
 
 
 
@@ -1585,20 +1622,20 @@ refer to this section if definitions of terms are needed.}
 
 For the purposes of this document, the following terms and definitions apply.
 
-\sclause{Distributed Ontology, Modeling and Specification Language}
+\sclause{Distributed Ontology, Model and Specification Language}
 
 \begin{definitions}
-  \termdefinitionLight{Distributed Ontology, Modeling and Specification Language\synonym
+  \termdefinitionLight{Distributed Ontology, Model and Specification Language\synonym
   DOL}\index{\dolindex ! definition}{language for formalizing {libraries}\index{library} of \termref{OMS} and OMS networks\index{OMS network}, 
-  whose syntax and semantics are specified in this \IS}
-
-\begin{note}
- When viewed as an \termref{OMS language}, DOL has \termref{OMS} as its
-non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mapping} as its sentences\index{sentence}.
-\end{note}
+  whose syntax and semantics are specified in this \IS{}.}
+%
+% \begin{note}
+%  When viewed as an \termref{OMS language}, DOL has \termref{OMS} as its
+% non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mapping} as its sentences\index{sentence}.
+% \end{note}
 
 \red{
-  \termdefinition{library}{collection of named \termref{OMS} and OMS networks\index{OMS network}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}}
+  \termdefinition{library}{collection of named \termref{OMS} and OMS networks\index{OMS network}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}.}
 }
 
 \end{definitions}
@@ -1623,14 +1660,14 @@ non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mappin
 
 
 \begin{definitions}
-\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{\termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}, which may be used as a building block for a larger \termref{OMS}}
+\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{\termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}, which may be used as a building block for a larger \termref{OMS}.}
   \begin{note}
     The sentences must use only those non-logical symbols that are present in the signature.
   \end{note}
 
 
 \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
-plus non-logical annotations\index{annotation}}
+plus non-logical annotations\index{annotation}.}
   \begin{note}
   An OMS language is used for the formal specification of \termref{OMS}.
   \end{note}
@@ -1640,7 +1677,7 @@ plus non-logical annotations\index{annotation}}
 
 
   \termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
- }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}}
+ }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}.}
 
   \begin{note}
   This differs from the notion of ``atomic sentence'': such sentences
@@ -1671,9 +1708,8 @@ plus non-logical annotations\index{annotation}}
 
 \termdefinitionLight{\termref{signature}\synonym vocabulary}\index{vocabulary|see {signature}}
 {set (or otherwise
-  structured entity) \ednote{\color{red}{What about `collection`? Structure is not important here.}} 
-of non-logical symbols\index{non-logical symbol} of an
-  \termref{OMS}}
+  structured entity)\ednote{\color{red}{What about `collection`? Structure is not important here.}} 
+of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
    \begin{note}
      The signature of a term is the set of all non-logical symbols occurring
      in the \termref{term}. The signature of an \termref{OMS language} is the
@@ -1682,7 +1718,9 @@ of non-logical symbols\index{non-logical symbol} of an
    \begin{note}
     The signature of an OMS is usually uniquely determined.
    \end{note}
-  \termdefinition{model}{semantic interpretation of all non-logical symbols\index{non-logical symbol} of a \termref{signature}}
+
+
+\termdefinition{model}{semantic interpretation of all non-logical symbols\index{non-logical symbol} of a \termref{signature}.}
   \begin{note}
     A model of an OMS is a model of the signature of the OMS
     that moreover satisfies all the axioms\index{axiom} of the OMS.
@@ -1694,9 +1732,10 @@ of non-logical symbols\index{non-logical symbol} of an
   \end{note}
 
   
-  \termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms)}
+\termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms).}
+
   
-  \termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.\CLnote[type=fyi]{From Common Logic, I changed ``unit of logical text'' to ``term''.}}
+\termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.\CLnote[type=fyi]{From Common Logic, I changed ``unit of logical text'' to ``term''.}}
   \begin{note}
 In a \termref{model}, on the one hand, a sentence is always true or false. In an \termref{OMS}, on the
 other hand, a sentence can have several logical statuses: it can be an axiom, if postulated to be true;
@@ -1713,26 +1752,27 @@ other axioms and theorems; or have another of many possible statuses.
   \end{note}
 
 
-  \termdefinition{axiom}{\termref{sentence} postulated to be valid (i.e.\ true in every \termref{model})}
+\termdefinition{axiom}{\termref{sentence} that is  postulated to be valid (i.e.\ true in every \termref{model}).}
 
-  \termdefinition{theorem}{\termref{sentence} that has been proven from other \termref{axiom}s and \termref{theorem}s}
 
-  \termdefinition{satisfaction relation}{relation between models and sentences indicating which sentences hold true in the model}
+  \termdefinition{theorem}{\termref{sentence} that has been proven from other axioms \index{axiom} and theorems\index{theorem}.}
+
+  \termdefinition{satisfaction relation}{relation between models and sentences indicating which sentences hold true in the model.}
 
 \red{
-  \termdefinition{logical theory}{\termref{signature} equipped with a set of sentences\index{sentence} over the signature}
+  \termdefinition{logical theory}{\termref{signature} equipped with a set of sentences\index{sentence} over the signature.}
 }
 
 \red{
  \termdefinitionLight{\termref{entailment}\synonym specialization}{relation between two \termref{OMS}
-expressing that the second one is logically implied by the first one}
+expressing that the second one is logically implied by the first one.}
 \begin{note}
 The converse is generalization.
 \end{note}
 }
 
 \red{
-  \termdefinition{query language}{\termref{OMS language} specifically dedicated to queries\index{query}}
+  \termdefinition{query language}{\termref{OMS language} specifically dedicated to queries\index{query}.}
 \begin{example}
 SPARQL, Prolog
 \end{example}
@@ -1741,11 +1781,13 @@ There are also general purpose OMS languages, which can express both \termref{OM
 \end{note}
 }
 
-  \termdefinition{query}{\termref{sentence} containing query variables\index{query variable}
-   that can be instantiated by a \termref{substitution}}
+
+\termdefinition{query}{\termref{sentence} containing query variables\index{query variable}
+   that can be instantiated by a \termref{substitution}.}
+
 
 \termdefinition{query variable}{\termref{symbol} that will be used in a \termref{query} and a
-\termref{substitution}}
+\termref{substitution}.}
   \begin{note}
    From an abstract point of view, query variables are just symbols; 
    they are used in a way
@@ -1761,19 +1803,26 @@ There are also general purpose OMS languages, which can express both \termref{OM
   variables.
   \end{note}
 
-  \termdefinition{substitution}{\termref{OMS mapping} that maps query variables\index{query variable} of one \termref{OMS} to complex terms\index{term} of another OMS}
 
-  \termdefinition{answer substitution}{\termref{substitution} that, when applied to
+\termdefinition{substitution}{\termref{OMS mapping} that maps query variables\index{query variable} of one \termref{OMS} to complex terms\index{term} of another OMS.}
+
+
+
+\termdefinition{answer substitution}{\termref{substitution} that, when applied to
    a given \termref{query}, turns the latter into a logical consequence of a
-   given \termref{OMS}}
+   given \termref{OMS}.}
 \ednote{we have to revisit this once we design the abstract syntax of queries etc.}
-
 \end{definitions}  
 
-\sclause{Semantic Web}\label{c:terms-semantic-web}
 
+
+
+%%%%%%%%%%%%%%%%%%%%
+\sclause{Semantic Web}\label{c:terms-semantic-web}
+%%%%%%%%%%%%%%%%%%%%
 \begin{definitions}
-  \termdefinition{resource\subjectfield{web}}{something that can be globally identified}
+
+\termdefinition{resource\subjectfield{web}}{something that can be globally identified.}
   \begin{note}
     \nisref{IETF/RFC 3986:2005, Section 1.1} deliberately defines a resource as ``in a general sense \textelp{} whatever might be identified by \textins*{an IRI}''.  The original source refers to URIs, but DOL uses the compatible IRI standard \nisref{IETF/RFC 3987:2005} for identification.
   \end{note}
@@ -1786,9 +1835,13 @@ resources. Likewise, abstract concepts can be resources, such as the operators a
 mathematical equation, the types of a relationship (\eg, ``parent'' or ``employee''), or numeric 
 values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
   \end{example}
-  \termdefinition{element (of an OMS)}{any \termref{resource} in an \termref{OMS} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{OMS} itself, ...) or a named set of such \termref{resources}.}
+
+
+
+\termdefinition{element (of an OMS)}{any \termref{resource} in an \termref{OMS} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{OMS} itself, ...) or a named set of such \termref{resources}.}
   
-  \termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \cite{BernersLee:LinkedData2006,BizerHeath09}}
+
+\termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \cite{BernersLee:LinkedData2006,BizerHeath09}.}
   \begin{note}
     The linked data principles (adapted from \cite{BernersLee:LinkedData2006} and its paraphrase at \cite{Wikipedia:LinkedData2011}) are the following:
     \begin{enumerate}
@@ -1811,7 +1864,7 @@ values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
 \sclause{OMS Annotation and Documentation}\label{c:terms-annotation}
  
 \begin{definitions}
-  \termdefinition{annotation}{additional information without a logical semantics that is attached to an element\index{element (of an OMS)} of an \termref{OMS}}
+  \termdefinition{annotation}{additional information without a logical semantics that is attached to an element\index{element (of an OMS)} of an \termref{OMS}.}
   \begin{note}\label{note:annotation-rdf}
 Formally, an annotation is given as a $(\text{subject}, \text{predicate}, \text{object})$ triple as 
 defined by \nisref{SOURCE: W3C/TR REC-rdf11-concepts:2014, Section 3.1}.  The subject of an annotation 
@@ -1852,7 +1905,7 @@ not considered sentences of that OMS.
 %    The particular strength of literate programming is that one can generate both a reference manual and compilable/executable code (here: a formal OMS) from the same source, which facilitates maintenance.
 %  \end{note}
 
-  \termdefinition{OMS documentation}{set of all annotations\index{annotation} to an \termref{OMS}, plus any other documents and explanatory comments generated during the entire OMS building process}
+  \termdefinition{OMS documentation}{set of all annotations\index{annotation} to an \termref{OMS}, plus any other documents and explanatory comments generated during the entire OMS building process.}
   \begin{note}
     Adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}
   \end{note}
@@ -1862,43 +1915,52 @@ not considered sentences of that OMS.
 
 \red{
 \termdefinition{structured OMS}
-{\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations}
+{\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations.}
 
 
 \termdefinition{flattenable OMS}
-{OMS that can be seen, by purely syntactical means, to be logically 
-equivalent to a flat OMS}
+{OMS that can be seen, by purely syntactical means, to be logically  equivalent to a flat OMS.}
 \begin{note}
 More precisely, an OMS is flattenable if and only if it is either a basic OMS or it is an \termref{extension},
  \termref{union}, translation, \termref{module extraction}, \termref{approximation}, \termref{filtering},
   or reference of named OMS involving only flattenable OMS. 
 \end{note}
 
+
 \termdefinition{elusive OMS}
-{OMS that is not flattenable\index{flattenable OMS}}
+{OMS that is not flattenable\index{flattenable OMS}.}
 }
 
 
-  \termdefinition{subOMS}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are subsets of those present in a given larger \termref{OMS}}
 
-  \termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in a given smaller \termref{OMS}}
-   \termdefinition{extension mapping}{inclusion \termref{OMS mapping} between two
+\termdefinition{subOMS}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are subsets of those present in a given larger \termref{OMS}.}
+
+
+
+\termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in a given smaller \termref{OMS}.}
+
+
+
+\termdefinition{extension mapping}{inclusion \termref{OMS mapping} between two
    OMS where the sets of non-logical symbols\index{non-logical symbol} and
    sentences\index{sentence} of the second OMS are supersets of those
-   present in the first OMS} 
+   present in the first OMS.} 
 \begin{note} 
 The second OMS is said to extend the first, and is an extension of the
 first OMS.
 \end{note} 
 
-  \termdefinitionLight{consequence-theoretic conservative extension\index{conservative extension ! consequence-theoretic}}{extension that does
-   not add new theorems\index{theorem} (in terms of the unextended \termref{signature})}
+
+
+\termdefinitionLight{consequence-theoretic conservative extension\index{conservative extension ! consequence-theoretic}}{extension that does
+   not add new theorems\index{theorem} (in terms of the unextended \termref{signature}).}
   \begin{note}
     An extension $O_2$ of an OMS $O_1$ is a consequence-theoretic conservative extension, if all properties formulated in the signature of $O_1$ hold for $O_1$ whenever they hold for $O_2$.
   \end{note}
 
-  \termdefinitionLight{model-theoretic conservative extension\index{conservative extension ! model-theoretic}}{extension
-   that does not lead to a restriction of class of \termref{model}s of an \termref{OMS}}
+
+\termdefinitionLight{model-theoretic conservative extension\index{conservative extension ! model-theoretic}}{extension
+   that does not lead to a restriction of class of \termref{model}s of an \termref{OMS}.}
   \begin{note}
     An extension $O_2$ of an OMS $O_1$ is a model-theoretic conservative extension, if all properties formulated in the signature of $O_1$ hold for $O_1$ whenever they hold for $O_2$.
   \end{note}
@@ -1906,13 +1968,15 @@ first OMS.
    Any model-theoretic conservative extension is also a consequence-theoretic one.
   \end{note}
 
-  \termdefinitionLight{conservative extension\index{conservative extension ! (general)}}{consequence-theoretic or model-theoretic conservative extension\index{conservative extension ! model-theoretic}}
+
+\termdefinitionLight{conservative extension\index{conservative extension ! (general)}}{consequence-theoretic or model-theoretic conservative extension\index{conservative extension ! model-theoretic}.}
   \begin{note}
    If used without qualification, the consequence-theoretic version is meant.
   \end{note}
 
-  \termdefinition{monomorphic extension}{\termref{extension} whose newly introduced
-   non-logical symbols\index{non-logical symbol} are interpreted in a way unique up to isomorphism}
+
+\termdefinition{monomorphic extension}{\termref{extension} whose newly introduced
+   non-logical symbols\index{non-logical symbol} are interpreted in a way unique up to isomorphism.}
   \begin{note}
 An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a monomorphic extension, if each model of $O_1$ can be expanded to a model of $O_2$ that is unique up to isomorphism.
   \end{note}
@@ -1921,7 +1985,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a monomorphic extensio
   \end{note}
 
   \termdefinition{definitional extension}{\termref{extension} whose newly introduced
-   non-logical symbols\index{non-logical symbol} are interpreted in a unique way}
+   non-logical symbols\index{non-logical symbol} are interpreted in a unique way.}
   \begin{note}
 An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a definitional extension, if each model of $O_1$ can be uniquely expanded to a model of $O_2$.
   \end{note}
@@ -1933,7 +1997,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a definitional extensi
   \end{note}
 
   \termdefinition{weak definitional extension}{\termref{extension} whose newly introduced
-   non-logical symbols\index{non-logical symbol} can be interpreted in at most one way}
+   non-logical symbols\index{non-logical symbol} can be interpreted in at most one way.}
   \begin{note}
 An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional extension, if each model of $O_1$ can be expanded to at most one model of $O_2$.
   \end{note}
@@ -1942,7 +2006,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
    and model-theoretically conservative.
   \end{note}
 
-  \termdefinition{implied extension}{model-theoretic conservative extension\index{conservative extension ! model-theoretic} that does not introduce new non-logical symbols\index{non-logical symbol}}
+  \termdefinition{implied extension}{model-theoretic conservative extension\index{conservative extension ! model-theoretic} that does not introduce new non-logical symbols\index{non-logical symbol}.}
   \begin{note}
     A conservative extension $O_2$ of an \termref{OMS}
     $O_1$ is an implied extension, if and only if the signature of
@@ -1954,7 +2018,8 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     Each implied extension is also a definitional extension but not vice versa.
   \end{note}
 
-  \termdefinition{module}{\termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}}
+
+\termdefinition{module}{\termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}.}
 %\todonote[author=Christoph Lange]{a more formal definition, from \todonoteURL{http://iswc2011.semanticweb.org/fileadmin/iswc/Papers/PostersDemos/iswc11pd_submission_75.pdf}: Modules are subsets of
 %OMS that preserve all entailments over a set of terms $\Sigma$ called seed signature.  Modules based on syntactic locality are defined in Cuenca Grau, B., Horrocks, I., Kazakov, Y., Sattler, U.: Modular reuse of ontologies: Theory and practice. J. of Artif. Intell. Research 31, 273–318 (2008)}}
   \begin{note}
@@ -1963,15 +2028,16 @@ The conservative extension can be either model-theoretic or consequence-theoreti
   \end{note}
 \ednote{this is about coverage only. Should we also care about safety?}
 
-  \termdefinition{module extraction}{activity of obtaining from an \termref{OMS} concrete 
+
+\termdefinition{module extraction}{activity of obtaining from an \termref{OMS} concrete 
 modules\index{module} to be used for a particular purpose (\eg to contain a particular 
-sub-\termref{signature} of the original \termref{OMS})}
+sub-\termref{signature} of the original \termref{OMS}).}
   \begin{note}
-    Cited and slightly adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}
+    Cited and slightly adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}.
   \end{note}
   \begin{note}
 The goal of module extraction is ``decomposing an OMS into smaller, more manageable modules with
-appropriate dependencies'' \cite{DBLP:series/lncs/5445}
+appropriate dependencies'' \cite{DBLP:series/lncs/5445}.
   \end{note}
 
   \begin{example}
@@ -1984,19 +2050,21 @@ non-logical symbols.
 
 \termdefinition{approximant}{approximation (in the sense of a logically implied theory, possibly 
 after suitable translation)  of an OMS in a smaller \termref{signature} or
-\termref{OMS language}}
+\termref{OMS language}.}
+
+
 \termdefinition{maximum approximant}{
 best possible (in the sense of a maximum set of logical consequences)
-\termref{approximant} of an OMS in a smaller \termref{signature} or \termref{OMS language}}
+\termref{approximant} of an OMS in a smaller \termref{signature} or \termref{OMS language}.}
 \begin{note}
  Technically, a maximum approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
 \end{note}
 
 
-\termdefinition{closed world assumption}{presumption that what is not known to be true, is false}
+\termdefinition{closed world assumption}{presumption that what is not known to be true, is false.}
 
 \termdefinitionLight{\termref{minimization}\synonym circumscription\index{circumscription|see {minimization}}}
-{way of implementing the \termref{closed world assumption} by restricting the models\index{model} to those that are minimal}
+{way of implementing the \termref{closed world assumption} by restricting the models\index{model} to those that are minimal.}
   \begin{note}
     See \cite{circ1}, \cite{circ2}.
   \end{note}
@@ -2047,7 +2115,7 @@ specialization relation
 
   \termdefinition{import}{\termref{OMS mapping} between two
     \termref{OMS} such that one OMS behaves as if it were
-    included into the other}
+    included into the other; also import of \termref{libraries}}
   \begin{note}
 Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration
   \end{note}
@@ -2059,6 +2127,9 @@ Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclus
   \end{note}
   \begin{note}
     An owl:import in OWL is an import.
+  \end{note}
+  \begin{note}
+    The import of a whole library into another library is also called import.
   \end{note}
   
   \termdefinition{renaming}{assignment of new names
@@ -2387,7 +2458,7 @@ As listed below, these symbols and abbreviations are generally for the main clau
 \symboldef{CURIE}{Compact URI expression}
 \symboldef{CWM}{Common Warehouse Metamodel}
 \symboldef{DDL}{Distributed description logic}
-\symboldef{DOL}{Distributed Ontology, Modeling and Specification Language}
+\symboldef{DOL}{Distributed Ontology, Model and Specification Language}
 \symboldef{DTV}{Date-Time Vocabulary}
 \symboldef{EBNF}{Extended Backus-Naur Form}
 \symboldef{E-connections}{a modular ontology language (closely related to DDL)}
@@ -2429,7 +2500,7 @@ using the OWL 2 RDF-Based Semantics \cite{W3C:REC-owl2-rdf-based-semantics-20091
 \section{Changes to Adopted OMG Specifications}
 This specification does not require or request any change to any other OMG specification. 
 
-\section{How to Read this Specification}
+\section{How to Read This Specification}
 The initial eight chapters of this specification are \emph{informative} providing  a high-level
  summary of usage scenarios and goals (Chapter \ref{c:goal}) and an overview over the design of
 \DOL  (Chapter \ref{c:design}).
@@ -2521,19 +2592,28 @@ The following organizations are supporting this specification:
 \subsection{Participants}
 The following people contributed directly to the development of this specification. 
 	\begin{itemize}
-	\item Tara Athan, Athan Services 
-	\item Conrad Bock, National Institute of Standards and Technology  
-	\item Mihai Codescu, Otto-von-Guericke University Magdeburg 
-	\item Michael Gruninger, University of Toronto  
-	\item Andreas Hoffmann, Fraunhofer FOKUS 
-	\item Maria Keet, University of Cape Town 
-	\item Elisa Kendall,  Thematix Partners LLC	
-	\item Oliver Kutz, Otto-von-Guericke University Magdeburg  
-	\item Christoph Lange, University of Bonn and Fraunhofer IAIS
-	\item Terry Longstreth, Independent Consultant 	
-	\item Till Mossakowski, Otto-von-Guericke University Magdeburg  	
-	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg  
-	\item Leo Obrst, MITRE  
+	\item Tara Athan, Athan Services, USA 
+	\item Conrad Bock, National Institute of Standards and Technology, USA
+	\item Mihai Codescu, Otto-von-Guericke University Magdeburg, Germany 
+        \item Daniel Couto Vale, University of Bremen, Germany
+        \item Martin Glauer, Otto-von-Guericke University Magdeburg, Germany
+	\item Michael Gruninger, University of Toronto, Canada  
+        \item Stephan Günther, Otto-von-Guericke University Magdeburg, Germany
+        \item Maria Hedblom, Otto-von-Guericke University Magdeburg, Germany
+	\item Andreas Hoffmann, Fraunhofer FOKUS, Germany 
+        \item Yazmin Angelica Iba\~nez, University of Bremen
+	\item Maria Keet, University of Cape Town, South Africa 
+	\item Elisa Kendall, Thematix Partners LLC, USA	
+        \item Alexander Knapp, University of Augsburg, Germany
+	\item Oliver Kutz, Free University of Bolzano, Italy
+	\item Christoph Lange, University of Bonn and Fraunhofer IAIS, Germany
+	\item Terry Longstreth, Independent Consultant, USA 	
+        \item Christian Maeder, Jacobs-University Bremen, Germany
+	\item Till Mossakowski, Otto-von-Guericke University Magdeburg, Germany  	
+	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg, Germany  	  
+	\item Leo Obrst, MITRE, USA
+        \item Madhura Thosar, Otto-von-Guericke University Magdeburg, Germany
+   
 	\end{itemize}
 %	
 
@@ -2666,7 +2746,7 @@ between OMS as part of OMS networks in a semantically well-defined way. Thus, to
 %
 %These challenges can be illustrated by the following set of use cases:
 
-\section{Use case Onto-1: Interoperability between OWL and FOL ontologies}
+\section{Use Case Onto-1: Interoperability Between OWL and FOL Ontologies}
 
 In order to achieve interoperability, during ontology development it is often necessary to describe 
 concepts in a language more expressive than OWL.  Therefore, it is common practice to informally 
@@ -2704,7 +2784,7 @@ then
 \end{lstlisting}
 \OWL can express transitivity, but not together with asymmetry.
 
-\section{Use Case Onto-2: Ontology integration by means of a foundational ontology}
+\section{Use Case Onto-2: Ontology Integration by Means of a Foundational Ontology}
 One major use case for ontologies in industry is to achieve interoperability and data integration. 
 However, if ontologies are developed independently and used  within the same domain, the 
 differences between the ontologies may actually impede interoperability. One strategy to avoid this 
@@ -2777,7 +2857,7 @@ ontology Space =
  combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
 \end{lstlisting} 
 
-\section{Use Case Onto-3: Module extraction from large ontologies}
+\section{Use Case Onto-3: Module Extraction From Large Ontologies}
 Especially in the biomedical domain, ontologies tend to become very large (e.g., SNOMED CT, FMA) 
 with over 100000 concepts and relationships. Yet, none of these ontologies covers all aspects of a 
 domain, and frequently provide coverage at various levels of specificity, with excessive detail in 
@@ -2803,7 +2883,7 @@ integration.
 
  
 
-\section{Use case Onto-4: Interoperability between closed-world data and open-world metadata}
+\section{Use Case Onto-4: Interoperability Between Closed-World Data and Open-World Metadata}
 Data collection has become easier and much more widespread over the years. This data has to be 
 assigned a meaning somehow, which occurs traditionally in the  form of metadata annotations. For 
 instance, consider geographical datasets derived from satellite data and raw sensor readings. 
@@ -2829,7 +2909,7 @@ sciences.
 
 DOL  provides the framework for expressing such bridge rules in a systematic way, maintaining these, and building tools for them. 
 
-\section{Use Case Onto-5: Verification of rules translating Dublin Core into PROV}
+\section{Use Case Onto-5: Verification of Rules Translating Dublin Core Into PROV}
 The Dublin Core Metadata terms, which have been formalized as an RDF Schema vocabulary, developed initially by the digital library community, are less 
 comprehensive but more widely used than PROV (cf. Use Case Onto-1). The rules for translating Dublin Core to the OWL subset of PROV (and, with restrictions, 
 vice versa) are not known to yield valid instances of the PROV data model, i.e. they are not known to yield OWL ontologies consistent with respect to the OWL axioms that 
@@ -2842,7 +2922,7 @@ The Dublin Core to PROV ontology translation%
 SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which is different from the model-theoretic semantics of the OWL and RDFS languages; nevertheless SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules between ontologies in RDF-based languages in a subset of FOL.
 DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL ontologies as modules of a distributed ontology (= OMS network), but it is also able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.
 
-\section{Use case Spec-1: Specification Refinements}
+\section{Use Case Spec-1: Specification Refinements}\label{spec-1}
 Especially in safety-critical areas such as medical systems, the automotive industry, avionics and the aerospace industry, but also for microprocessor design, often 
 a formal software and hardware development process is used in order to ensure the correct functioning of systems. Typically, a requirement specification is refined 
 into a design specification and then an implementation, often involving several intermediate steps (see, e.g. the V-model [V-model], although this does not require 
@@ -2866,7 +2946,7 @@ spec Monoid =
          __+__ : Elem * Elem -> Elem, assoc, unit 0
 end
 
-spec NatWithSuc =
+spec NatWithSuc = %mono
  free type Nat ::= 0 | suc(Nat)
  op __+__ : Nat * Nat -> Nat, unit 0 
  forall x , y : Nat . x + suc(y) = suc(x + y)
@@ -2916,7 +2996,7 @@ refinement R3''' = R1 then R2
 
 \end{lstlisting}
 
-\section{Use case Spec-2: Modularity of Specifications}
+\section{Use Case Spec-2: Modularity of Specifications}\label{spec-2}
 In the context of use case Spec-1, often specifications become so large that it is necessary to structure them in a modular way, both for human readability, 
 maintainability, and for more efficient tool support. The lack of a standard for such modular structuring hinders interoperability among different development efforts 
 and the reuse of specifications.
@@ -2961,7 +3041,7 @@ then
 end
 \end{lstlisting}
 
-\section{Use case Model-1: Coherent semantics for multi-language models}
+\section{Use Case Model-1: Coherent Semantics for Multi-Language Models}
 \ednote{Isn't this one about ontologies,too?}
 	
 Often a single problem area within a given domain must be described using several formalisms, due to user community requirements, expressiveness, tool support 
@@ -2985,7 +3065,7 @@ With DOL, one can, e.g.,
 \end{itemize}
 Note that the last point does not specify what information is lost in the approximation. Indeed, DOL provides the means to specify requirements on the approximation, e.g., that it maximally preserves the information. 
 
-\section{Use case Model-2: Consistency among UML diagrams of different types}
+\section{Use Case Model-2: Consistency Among UML Diagrams of Different Types}
 
 A typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
 requirements. Typical questions that arise in this context are, e.g.,
@@ -3003,7 +3083,7 @@ consistency. Under some restrictions, the proof of semantic consistency can be (
 Once a formal semantics for the different diagram types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use DOL to specify in which 
 sense the diagrams need to be consistent, and check this by suitable tools.
 
-\section{Use case Model-3: Refinements between UML diagrams of different types, and their reuse}
+\section{Use Case Model-3: Refinements Between UML Diagrams of Different Types, and Their Reuse}
 A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
 sequence diagrams and OCL constraints. Assume further that this model is not directly implemented, but first refined to a UML behavior state machine (which then 
 can be automatically or semi-automatically transformed into some implementation using standard UML tools). However, there is no standardized language to 
@@ -3136,7 +3216,7 @@ This clause is informative. Its purpose is to briefly describe the
 We give an overview of the most important and innovative language
 constructs of DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
-\section{DOL in a nutshell}
+\section{DOL in a Nutshell}
 
 As the usage scenarios in clause \ref{c:goal} illustrate, the use of multiple OMS may lead to lack 
  of interoperability. The goal of \DOL is to enable users to overcome these interoperability issues by providing a language for representing 
@@ -3228,7 +3308,7 @@ Since \DOL is a meta-language,  it \textit{inherits} the logical language aspect
 %
 
 
-\section{OMS languages}
+\section{OMS Languages}
 %DOL gives interoperability a formal grounding and makes heterogeneous OMS and OMS networks and services based on them amenable to checking of coherence (e.g. consistency, conservativity, intended consequences, and compliance).
  OMS languages are declarative languages for making ontological distinctions formally precise, for modeling a domain in an unambiguous way, or for expressing algebraic specifications of software.   OMS languages are distinguished by the following features:
 
@@ -3242,8 +3322,37 @@ Whereas the first feature determines the expressivity of the language and the po
 Acknowledging the wide tool support that conforming established languages such as OWL, Common Logic, MOF, or \CASL\ednote{review language list when annexes are finished} enjoy, existing OMS in these languages remain as they are within the DOL framework. DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. 
 DOL's modularity and annotation constructs can either be embedded into existing OMS as non-disruptive annotations, or they can be provided as standoff markup, pointing to the OMS they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported OMS languages.\ednote{Till, is this standoff markup remark up to date?}
 
+\section{DOL in the Metamodelling Hierarchy}
 
-\section{Semantic foundations of DOL}
+DOL uses the metamodelling hierarchy known from model-driven engineering:
+$$\xymatrix{
+\Text{M4} &&&
+\Text{Set \& category theory}\ar@(ul,ur)^{\Text{specified in}} \restore \\
+\Text{M3} &
+\Text{MOF}\ar@(ul,ur)^{\Text{conforms to}} &
+\Text{EBNF}\ar@(ul,ur)^{\Text{conforms to}} &
+\Text{Institutions} \ar[u]^{\Text{specified in}}
+\\
+\Text{M2} &
+\Text{DOL metamodel} \ar[u]^{\Text{conforms to}} \ar[ur]_(0.3){\Text{conforms to}}&
+\Text{OMS language metamodel}
+\ar[u]_{\Text{conforms to}} \ar[ul]_(0.7){\Text{\ conforms to}} \ar[ur]_{\Text{conforms to}}
+&\\
+\Text{M1} & 
+\Text{DOL document} \ar[r]^{\Text{contains}} \ar[u]^{\Text{conforms to}}&
+\Text{specific OMS}\ar[u]^{\Text{conforms to}}&\\
+}$$
+
+The syntax of a DOL conformant language can be written in MOF or EBNF,
+which are self-describing.  The semantics of a DOL conformant language
+is its presentation as an institution. Institutions themselves are
+specified in the language of set theory and category
+theory.\footnote{In the future, it may be possible to specify the
+  semantics of a DOL conformant language using a semantics-based
+  logical framework such as MMT. This would close the loop already at
+  M3 also for the semantics.}
+
+\section{Semantic Foundations of DOL}\label{sem-foundations}
 
 
 A large variety of OMS languages in use can be captured at an abstract level using the concept of 
@@ -3276,7 +3385,7 @@ OMS mappings, OMS networks, and other DOL expressions is defined using model-the
 on top of institutions. 
 
 
-\section{DOL enables expression of logically heterogeneous OMS and literal reuse of existing OMS.}
+\section{DOL Enables Expression of Logically Heterogeneous OMS and Literal Reuse of Existing OMS}
 DOL is a mechanism for expressing logically heterogeneous OMS. It can be used to combine sentences and structured OMS expressed in different conforming OMS languages
 and logics into single documents or modules. With DOL, sentences or structured OMS of previously existing OMS in
 conforming languages can be reused by literally including them into a DOL OMS. A minimum of wrapping constructs and other annotations (e.g., for identifying the language of a sentence) are provided. 
@@ -3304,7 +3413,7 @@ implicitly apply as many default translations as possible, and to
 concentrate on making explicit only those translations that deviate
 from the default.
 
-\section{DOL includes provisions for expressing mappings between OMS.}\label{c:req:links}
+\section{DOL Includes Provisions for Expressing Mappings Between OMS}\label{c:req:links}
 
 DOL provides a syntax for expressing mappings between OMS.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}.  OMS mappings supported by DOL include:
 \begin{itemize}
@@ -3344,7 +3453,7 @@ the rule for \syntax{combination} for the abstract syntax category
 
 ~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{ask Michael Gr{\"u}ninger for his mereology example in CL}
 
-\section{DOL provides a mechanism for rich annotation and documentation of OMS.}\label{c:req:annotation}
+\section{DOL Provides a Mechanism for Rich Annotation and Documentation of OMS}\label{c:req:annotation}
 
 DOL provides a mechanism for identifying anything of relevance in OMS by assigning an IRI to it.  With RDF there is a standard mechanism for annotating things identified by IRIs.  Thus, DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.  The DOL serializations further support the fine-grained embedding of annotations into OMS. % up to the granularity of literate programming.
 
@@ -3352,9 +3461,9 @@ The DOL serializations also supports the \termref{annotation} of existing OMS vi
 
 %A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:lola}.
 
-\clause{DOL abstract syntax}\label{c:abstract-syntax}
+\clause{DOL Abstract Syntax}\label{c:abstract-syntax}
 
-\sclause{Abstract syntax categories}
+\sclause{Abstract Syntax Categories}
 
 DOL provides abstract syntax categories for
 \begin{itemize}
@@ -3401,6 +3510,7 @@ Library            ::= [PrefixMap] LibraryDefn
                      | OMSInConformingLanguage
 LibraryDefn        ::= library LibraryName Qualification LibraryItem*
 OMSInConformingLanguage ::= ($<$)language specific($>$) 
+BasicOMSInConformingLanguage ::= ($<$)language specific($>$) 
 LibraryItem        ::= LibImport
                      | OMSDefn
                      | NetworkDefn
@@ -3424,7 +3534,7 @@ LibraryName        ::= IRI
 
 At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
 
-\sclause{OMS networks}\label{c:networks}
+\sclause{OMS Networks}\label{c:networks}
 \red{
 Inside a library, one can define OMS networks (\syntax{NetworkDefn}).
 A \syntax{NetworkDefn} names an
@@ -3482,9 +3592,10 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % derived from CASL (see CASL reference manual)
 % and HetCASL (see HetCASL summary)
 
+\ednote{ExtensionOMS seems to be missing from the abstract syntax}
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
 
-BasicOMS           ::= OMSInConformingLanguage
+BasicOMS           ::= BasicOMSInConformingLanguage
 MinimizableOMS     ::= BasicOMS | oms-ref OMSRef [ImportName]
 ExtendingOMS       ::= MinimizableOMS | minimize MinimizableOMS
 OMS                ::= ExtendingOMS
@@ -3830,16 +3941,15 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
-
-CURIE   ::= [Prefix] Reference
-Prefix  ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference ::= Path [Query] [Fragment]
-Path    ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query   ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+\begin{lstlisting}[language=ebnf,escapeinside={!!}]
+CURIE     = ( [ Prefix ] , Reference ) - ;
+Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$!
+Reference = Path , [ Query ] , [ Fragment ] ;
+Path      = ipath-absolute | ipath-rootless | ipath-empty ;
+            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
 \end{lstlisting}
-
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
 
@@ -3855,7 +3965,8 @@ PrefixBinding  ::= prefix-binding BoundPrefix IRIBoundToPrefix
 BoundPrefix    ::= bound-prefix [Prefix]
 IRIBoundToPrefix ::= full-iri FullIRI
 Separators     ::= separators String String
-String         ::= ($<$ \rm any list of unicode characters $>$) 
+String         ::= SeparatorChar SeparatorChar*
+SeparatorChar  ::= ipchar | / | ? | #($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
 
 
@@ -3945,9 +4056,9 @@ prefix maps, even if the serialization does not support prefix maps otherwise.
 %% ~\todonote[author=Christoph Lange,date=D:201108061340+02'00',type=todo]{Properly integrate this text from our LaRC 2011 paper} Annotations always have a subject, which is identified by an IRI. Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as a means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilize the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
 
 
-\clause{DOL text serialization}\label{a:text-syntax}
+\clause{DOL Text Serialization}\label{a:text-syntax}
 
-\sclause{Document type}
+\sclause{Document Type}
 
 \begin{description}
 \item[MIME type] \mimetype{application/dol+text}
@@ -3991,7 +4102,7 @@ PrefixMap          ::= '%prefix(' PrefixBinding* ')%'
 PrefixBinding      ::= BoundPrefix IRIBoundToPrefix [Separators]
 BoundPrefix        ::= ':' | Prefix+$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+
 IRIBoundToPrefix   ::= '<' FullIRI '>'
-Separators         ::= 'separators' String String
+Separators         ::= 'separators' String String+$<$\rm see definition in \cref{c:curies}$>$+
 NetworkDefn        ::= NetworkKeyword NetworkName '='
                        [ConsStrength] Network
 NetworkKeyword     ::= 'network'
@@ -4101,9 +4212,9 @@ OMSLangTransRef ::= IRI
 \end{lstlisting}
 
 
-\ednote{\%safe is more a statement about an import of a module, 
-and hence should be a statement in an OMS network. Recall:
-ModuleProperties     =  '\%safe' ; }
+%\ednote{\%safe is more a statement about an import of a module, 
+%and hence should be a statement in an OMS network. Recall:
+%ModuleProperties     =  '\%safe' ; }
 
 \ssclause{OMS Mappings}\label{a:dol-text:mappings}
 \index{alignment}
@@ -4203,18 +4314,17 @@ Vars           ::= Symbol ( ',' Symbol )*
 
 \sclause{Identifiers}
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
-
-IRI     ::= '<' FullIRI '>' | CURIE
-FullIRI ::= ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) 
-CURIE   ::= [Prefix] Reference
-Prefix  ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference ::= Path [Query] [Fragment]
-Path    ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query   ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+\begin{lstlisting}[language=ebnf,escapeinside={!!}]
+IRI     = '<' , FullIRI , '>' | CURIE ;
+FullIRI = !$<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$! ;
+CURIE     = ( [ Prefix ] , Reference ) - ;
+Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$! 
+Reference = Path , [ Query ] , [ Fragment ] ;
+Path      = ipath-absolute | ipath-rootless | ipath-empty ;
+            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
 \end{lstlisting}
-
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
 
@@ -4222,11 +4332,11 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 
 The character set for the DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nisref{IETF/RFC 3987:2005}.}  For enhanced readability of OMS, the DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
-\ssclause{Key Words and Signs}\label{c:keywords}
+\ssclause{Key words and signs}\label{c:keywords}
 
 The lexical symbols of the DOL text serialization include various key words and signs that occur as terminal symbols in the context-free grammar in \aref{a:dol-text:concrete}.  Key words and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
 
-\sssclause{Key Words}
+\sssclause{Key words}
 
 Key words are always written lowercase. The following key words are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  None of these rewritings changes the semantics.}, although they can be used as parts of tokens. 
 
@@ -4254,9 +4364,73 @@ keep
 forget
 select
 reject
+%
+for
+result
+substitution
+% #
+% ?
+% :
+% >
+% <
+% ,
+% =
+along
+where
+query
+ni
+in
+% \%(
+% )\%
+% }
+% {
+% *
+relation
+% +
+% 1
+assuming
+alignment
+of
+module
+% < - >
+equivalence
+entails
+entailment
+using 
+% |->
+via
+refined
+refinement
+% - >
+oms
+\%complete
+\%inconsistent
+\%consistent
+\%notmcons
+\%notccons
+\%mcons
+\%ccons
+\%implied
+\%def
+\%wdef
+\%mono
+remove
+extract
+translation
+cofree
+free
+maximize
+closed-world
+combine
+excluding
+separators
+\%prefix(
+serialization
+language
+import
 }
 
-\sssclause{Key Signs}
+\sssclause{Key signs}
 
 Table~\ref{tab:key-signs} following key signs are reserved, and are not available for use as complete identifiers.  Key signs that are outside of the Basic Latin subset of Unicode may alternatively be encoded as a sequence of Basic Latin characters.
 
@@ -4292,7 +4466,7 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 
 Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use 
 
-\clause{DOL semantics}\label{c:semantics}
+\clause{DOL Semantics}\label{c:semantics}
 
 %We pursue a threefold approach of assigning a semantics to the DOL
 %abstract syntax:
@@ -4358,7 +4532,7 @@ values for the semantics. Additionally, \emph{semantic rules} are
 presented, mapping the abstract syntax to some suitable semantic
 domain.
 
-\sclause{Theoretical foundations of the DOL semantics}
+\sclause{Theoretical Foundations of the DOL Semantics}
 
 We now specify the theoretical foundations of the semantics of DOL.
 The notions of \emph{institution} and institution 
@@ -4666,7 +4840,7 @@ a function $\oplus$ taking as argument a family of models compatible with a netw
 and returning its selected amalgamation.
 
 
-\sclause{Semantics of DOL language constructs}\label{c:direct-sematics}
+\sclause{Semantics of DOL Language Constructs}\label{c:direct-sematics}
 
 The semantics of DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
 environment.  The semantic domains are based on this heterogeneous logical environment. 
@@ -4692,7 +4866,7 @@ $L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined. Fina
 and at most one morphism is marked as default.
 
 We assume that for each institution, there exist (possibly partial) union and difference operations on signatures.
-These concepts can be captured in a categorical setting using \emph{inclusion systems} \cite{Diaconescu1993}.
+These concepts can be captured in a categorical setting using \emph{inclusion systems} \cite{DGS91}.
 However, inclusion systems are too strong for our purposes and therefore we will work under weaker assumptions.
 
 \begin{definition}  
@@ -4750,7 +4924,7 @@ theory-level semantics.
 We will use the following unifying notation for the two semantics of an OMS $O$: 
 \begin{itemize}
  \item the institution of $O$ is denoted $\Inst(O)$,
-  \item the signature of $O$ is denoted $\Sign(O)$ (which is a signature in $\Inst(O)$),
+  \item the signature of $O$ is denoted $\Sig(O)$ (which is a signature in $\Inst(O)$),
   \item the models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sign(O)$),
   \item the axioms of $O$is denoted $\Th(O)$ (which is a set of sentences over $\Sign(O)$).
 \end{itemize}
@@ -5041,7 +5215,7 @@ class of families of models.
 
 If \syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ is at most a singleton.
-\ednote{@Till: is this right? When is this needed?}
+\ednote{@Till: is this right? When is this needed? TM: yes, this is correct.}
 
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
 defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
@@ -5062,12 +5236,12 @@ $$sem(\Gamma, \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
  $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
  $G_2 = sem(\Gamma, G_1, \syntax{NetworkElement}_2)$\\
  $\ldots$\\
- $G_n = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$,
+ $G_n = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$,\\
  $G' = addImports(\Gamma, G_n, \syntax{NetworkElements})$.
 
 \semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
-$$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$$.
+$$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$$
 
 \semdom{sem(\Gamma, G, \syntax{ExcludeExtensions})= G'}
 
@@ -5082,58 +5256,52 @@ $$sem(\Gamma, G, \syntax{exclude-imports, R$_1, \ldots,$ R$_n$}) = G'$$
 
 \ssclause{Semantics of OMS}
 
-\semdom{sem(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM, \Delta)}
+\semdom{sem(\Gamma, \syntax{BasicOMS}) = (\Gamma',(I, \Sigma, \cM, \Delta))}
 For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
 
 $$sem(\Gamma, \syntax{BasicOMS})= sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
 
+$\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
+node labeled with $(Name(\syntax{BasicOMS}),I, \Sigma', \cM',\Delta')$.
+\ednote{names of OMS?}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \cM',\Delta')}
+\semdom{sem(\Gamma, \syntax{MinimizableOMS}) = 
+(\Gamma', (\cI', \Sigma', \cM',\Delta'))}
 
-The semantics of a \syntax{BasicOMS} $O$ in the local environment of
-previous declarations $(\Sigma, \cM, \Delta)$ and global environment
-$\Gamma$, is given by
- \begin{itemize}
-   \item $\Inst(O) = I$,
-   \item $\Sign(O) = \Sigma'$ 
-   \item $\Mod(O) = \cM'$
-   \item $\Th(O) = \Delta'$
- \end{itemize}
-\noindent where $sem^{\Sigma, \cM, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM', \Delta')$ such that $\Sigma$ is a sub-signature of $\Sigma'$, $\Delta  \subseteq \Delta'$ and
-$\{ M'\forget\Sigma \mid M' \in \cM' \} \subseteq \cM$.
 
-The semantics of an OMS reference $O$ in the local environment of
-previous declarations $(\Sigma, \cM, \Delta)$ and global environment
-$\Gamma$, is given by
- \begin{itemize}
-   \item $\Inst(\syntax{'oms-ref', O, ImportName}) = \Inst(O)$ which must be the same
-   with the current logic of $\Gamma$
-   \item $\Sign(\syntax{'oms-ref', O, ImportName}) = \Sigma \cup \Sign(O)$
-   \item $\Mod(\syntax{'oms-ref', O, ImportName}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O, ImportName})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sign(O)} \in \Mod(O) \}$
-   \item $\Th(\syntax{'oms-ref', O, ImportName}) = \Delta \cup \Th(O)$
- \end{itemize}
+In the rest of this section, we will use the notation 
+$Env(\Gamma, \syntax{OMS})$ for the global environment $\Gamma'$
+such that
+$sem(\Gamma, \syntax{OMS}) = \Gamma'$.
 
+The semantics of a \syntax{BasicOMS} $O$ has been defined above.
+
+The semantics of $O = \syntax{'oms-ref', O', ImportName}$
 \ednote{remove importname?}
-
-%\semdom{sem(\Gamma,L,(\Sigma,\cM),\syntax{MinimizableOMS})=(I,\Sigma',\cM')}
-% 
-%In the context of a global environment $\Gamma$,
-%the current language, logic and serialization $L$,  and a local environment $(\Sigma,\cM)$ (of previously declared
-%non-logical symbols), an OMS (\syntax{MinimizableOMS})
-%$O$ is interpreted as an institution $\cI=logic(\Gamma,L,O)$, a signature $\Sigma=sig(\Gamma,L,O)$ in institution $\cI$ and a class
-%of models $\cM=Mod(\Gamma,L,O)$ over signature $\Sigma$.
-%We combine this into $sem(\Gamma,L,O)=(logic(\Gamma,L,O),sig(\Gamma,L,O),Mod(\Gamma,L,O))$.
+is given by
+ \begin{itemize}
+   \item $\Inst(\syntax{'oms-ref', O', ImportName}) = \Inst(O')$ which must be the same
+   with the current logic of $\Gamma$
+   \item $\Sig(\syntax{'oms-ref', O', ImportName}) = \Sig(O')$
+   \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \Mod(O')$
+   \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Th(O')$
+   \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
+         with a new node for $O$ labeled as defined in the items above.
+ \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM', \bot)}
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
+(\Gamma',(\cI,\Sigma',\cM', \Delta))}
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-Formally, we have
+Formally, if $O' = \syntax{minimize}\ O$, we have
 \begin{itemize}
  \item $\Inst(\syntax{minimize}\ O)= \Inst(O)$
  \item $\Sig(\syntax{minimize}\ O) = \Sig(O)$
@@ -5147,10 +5315,14 @@ $\Gamma$ and the context $(\Sigma, \cM, \Delta)$.
 
 The theory-level semantics for  \syntax{minimize O} cannot be defined.
 
+$Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
+node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O')))$ and
+an edge from the node of $O$ to the node of $O'$ labeled with the identity
+morphism on $\Sig(O')$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,\syntax{OMS})=(\cI,\Sigma,\cM, \Delta)}
+\semdom{sem(\Gamma,\syntax{OMS})=(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
 \syntax{OMS} is interpreted in a context similar to that for
 \syntax{MinimizableOMS}, the difference being that there is
@@ -5176,9 +5348,13 @@ The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is g
  \item $\Sig(O') = \Sigma'$, when $\Mor_{\Sig(\syntax   {OMS})}(\syntax{Translation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
  \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(\syntax{OMS})\}$
  \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(\syntax{OMS}) \}$. It is defined only if \syntax{OMS} is flattenable.
+ \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $O$ to the node of $O'$ labeled with
+        $\sigma$.
 \end{itemize}
-\ednote{if only the target logic is given, the default translation should
-be looked up in the logic graph.}
 %Reduction
 
 The semantics of a reduction
@@ -5193,6 +5369,12 @@ is
     \Phi(\Sig(\syntax{OMS}))$
   \item $\Mod(O') = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \Mod(\syntax{OMS})\}$
   \item $\Th(O') = \bot$
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $O'$ to the node of $O$ labeled with
+        $\sigma$
 
 \end{itemize}
 
@@ -5202,32 +5384,26 @@ The semantics of $O' = \syntax{'module extract', OMS,
 Extraction}$ is
 \begin{itemize}
   \item $\Inst(O') = \Inst(\syntax{OMS})$
-  \item $\Sig(O') = \Sigma \cup \Sig(Extraction)$,
-     \ednote{probably this does not work for remove}
-  \item $\Th(O') = \Th(Extraction)$
+  \item $\Sig(O') = \Sigma'$,
+     
+  \item $\Th(O') = \Delta'$
   \item $\Mod(O')$ is the class of $Th(O)$-models
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $O'$ to the node of $O$ labeled with
+        the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$
 \end{itemize}
+where 
+$sem(\Gamma, (\Sig(\syntax{OMS}, \Th(\syntax{OMS})), \syntax{Extraction})) = 
+(\Sigma',\Delta')$.
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
 %of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
 %satisfying $\Th(O) \setminus \Delta'$.
 
-\noindent
-%Dually, the semantics of 
-%\syntax{'module extract', OMS, 
-%'remove-signature', InterfaceSignature}
-%is equivalent to the semantics of
-%\syntax{'module extract', OMS, 
-%'keep-signature',} $\Sig(\syntax{OMS})\setminus 
-%\Sig(\syntax{InterfaceSignature})$ 
-%\footnote{Note that the resulting module
-%    can still contain symbols from $\Sigma$, because the %resulting
-%    signature may be enlarged.}.
-    
-
-\ednote{Update cf. last paper}
-
 %Approximation
-The semantics of $O = \syntax{'approximation', OMS, 
+The semantics of $O' = \syntax{'approximation', OMS, 
 'keep-signature', InterfaceSignature, LogicRef }$ is
 \begin{itemize}
   \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \Inst(\syntax{LogicRef})$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
@@ -5236,6 +5412,13 @@ The semantics of $O = \syntax{'approximation', OMS,
   \item $\Th(O) = \alpha^{-1}_{\Sig(\syntax{OMS})}(\Th(\syntax{OMS})^\bullet)\cap\Sen^I(\Sig(\syntax{OMS}))$
   \footnote{In practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(\syntax{OMS})$ that can be expressed in the smaller signature and logic 
   \item $\Mod(O)$ is the class of $\Th(O)$-models
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $\syntax{OMS}$ to the node of $O'$ 
+        labeled with $((\Phi,\alpha,\beta),id)$ \ednote{check}
+
 \end{itemize}
 
 %\smallskip
@@ -5266,16 +5449,28 @@ with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$\ednote{the prim
 {If this smallest signature does not exist, the semantics is undefined.}
   \item $\Th(O) = (\Th(\syntax{OMS})\cap\Sen(\Sig(O)))\cup\Delta$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with a new edge from the node of $O$ to the node of $\syntax{OMS}$
+        labeled with the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$.
 \end{itemize}
 
 \noindent
-If $c='reject'$, the semantics of $O =$
+If $c = 'reject'$, the semantics of $O =$
 \syntax{'filtering', OMS, 'reject', BasicOMS} is
 \begin{itemize}
   \item $\Inst(O) = \cI$
   \item $\Sig(O) = \Sign(\syntax{OMS})\setminus \Sigma$ 
   \item $\Th(O) = \Th(\syntax{OMS})\cap\Sen(\Sig(O))\setminus\Delta$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+    \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with a new edge from the node of $O$ to the node of $\syntax{OMS}$
+        labeled with the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$.
 \end{itemize}
 
 %Union
@@ -5289,6 +5484,15 @@ The semantics of $O =$
   \item $\Sig(O) = \Phi_1(\Sig(\syntax{OMS}_1)) \cup \Phi_2(\Sig(\syntax{OMS}_2))$
   \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(\syntax{OMS}_i))}) \in \Mod(\syntax{OMS}_i), \text{ for } i=1,2 \}$
   \item $\Th(O) = \alpha_1(\Th(\syntax{OMS}_1)) \cup \alpha_2(\Th(\syntax{OMS}_2))$.
+    \item 
+        $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(Env(\Gamma,\syntax{OMS}_1), \syntax{OMS}_2)$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with edges from the nodes of $\syntax{OMS}_1$ and $\syntax{OMS}_2$,
+       respectively, to the node of $O$,
+        labeled with the inclusion of $\Sig(\syntax{OMS}_i)$ in $\Sig(O)$,
+        for $i=1,2$.
 \end{itemize}
 
 If \syntax{ConsStrength} is present, then $O$ must be a conservative extension
@@ -5300,17 +5504,23 @@ The semantics of $O=$
 \syntax{extension , OMS , ExtensionOMS} is
 
 \begin{itemize}
-  \item $\Inst(O) = \Inst(O_1) = I$ (which means that
+  \item $\Inst(O) = \Inst(\syntax{OMS}) = \Inst(\syntax{ExtensionOMS})$ 
+  (which means that
   the instutions of \syntax{OMS} and 
   \syntax{ExtensionOMS} must be the same)
-  \item $\Sig(O) = \Sig(O_1) \cup \Sigma$
-  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(O_1)} \in \Mod(O_1)
+  \item $\Sig(O) = \Sig(\syntax{OMS}) \cup \Sig(\syntax{ExtensionOMS})$
+  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(\syntax{OMS})} \in \Mod(\syntax{OMS})
   \text{ and }
-  M \forget{\Sigma} \in \cM\}$
-  \item $\Th(O) = \Th(O_1) \cup \Delta$
+  M \forget{\Sig(\syntax{ExtensionOMS})} \in \Mod(\syntax{ExtensionOMS})\}$
+  \item $\Th(O) = \Th(\syntax{OMS}) \cup \Th(\syntax{ExtensionOMS})$
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with a new edge from the node of $\syntax{OMS}$ to the node of $O$
+        labeled with the inclusion of $\Sig(\syntax{OMS})$ in 
+        $\Sig(O)$.
 \end{itemize}
-\noindent where $(I, \Sigma,\cM, \Delta) = 
-sem(\Gamma, (\Inst(O_1), \Sig(O_1), \Mod(O_1), \Th(O_1)), \syntax{ExtensionOMS})$. 
 
 If \syntax{ExtConsStrength} is a \syntax{ConsStrength}, then $O$ must be a conservative extension
 of the appropriate strength of \syntax{OMS}$_1$.
@@ -5331,19 +5541,6 @@ means that if the qualification appears as a term in
 a larger expression, after its analysis the context will
 be $\Gamma$ and not $\Gamma'$.
 
-%Bridge
-
-\ednote{@Till: check. @Mihai: I have removed bridges}
-
-The semantics of \syntax{bridge, OMS$_1$, \{ Translation\}, OMS$_2$} is 
-$(\cI, \Sigma,\cM, \Delta)$
-where \\
-$sem(\Gamma,  \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\cM_1,\Delta_1)$,\\
-$sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
-$\cM'_1 = \{ M \in \Mod^{I_2}(\Phi(\Sigma_1)) \mid \beta_{\Sigma_1}(M) \in \cM_1 \}$ and \\
-$sem(\Gamma, (\cI_2, \Phi(\Sigma_1), \cM'_1, \alpha_{\Sigma_1}(\Delta_1)), \syntax{OMS}_2) = (\cI,\Sigma,\cM,\Delta)$.
-
-
 %Combination
 
 The semantics of 
@@ -5353,6 +5550,9 @@ $O=$ \syntax{combination, Network} is
   \item $\Sig(O) = \Sigma$, where $(I,\Sigma,  \{\mu_i\}_{i\in |G|})$ is the colimit of the graph $G$ given by the semantics of \syntax{Network},
   \item $\Th(O) = \cup_{i\in |G|} \mu_i(\Th(O_i))$, where $O_i$ is the OMS label of the node $i$ in $G$
   \item $\Mod(O) =  \{ M\in\Mod(\Sigma) \mid M\forget{\mu_i} \in \Mod(O_i), i\in |G| \}$, where $O_i$ is the OMS label of the node $i$ in $G$.
+  \item $Env(\Gamma,O)$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ 
+  a new node for $O$ labeled as in the items above and with edges from each node in
+  $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
 \end{itemize}
 
 %Application
@@ -5388,7 +5588,7 @@ The semantics of a reduction
 $O=$ \syntax{hidden, LogicReduction, SymbolItems}
 is given by
 \begin{itemize}
- \item $\Inst(O) = sem(LogicReduction) : \Gamma.logic \to logic'$
+ \item $\Inst(O) = sem(\syntax{LogicReduction}) : \Gamma.logic \to logic'$
  \item 
 $\Mor(O) = 
 \iota: \Sigma' \to \Phi(\Sigma)$, where 
@@ -5492,22 +5692,26 @@ $sem(\Gamma, (\Sigma, \Delta), \syntax{'extraction' , QualInterfaceSignature}) =
 %  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
 %The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
 
-where \ednote{The signature of \syntax{InterfaceSignature} should appear somewhere...}
+where 
+$sem(\Gamma, \Sigma, \syntax{QualInterfaceSignature}) = \Sigma''$,
 $\langle\Sigma',\Delta'\rangle$ is the smallest depleting
-$\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
+$\Sigma''$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
 smallest\footnote{If the smallest such sub-theory does not exist, the
   semantics is undefined. In \cite{DBLP:journals/ai/KontchakovWZ10},
   it is shown that it does exist in usual institutions.}  sub-theory
 $\langle\Sigma',\Delta'\rangle$ of $(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$  
 such that the following model-theoretic inseparability
 holds
-  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma}  \emptyset.$$
+  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma''}  \emptyset.$$
 This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
-cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma$ concerns) and formally that 
+cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma''$ concerns) and formally that 
 $$\begin{array}{ll}
-&\{M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
-= &\{ M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
+&\{M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
+= &\{ M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
 \end{array}$$
+
+\ednote{@Till: check that the signature of \syntax{QualInterfaceSigature} appears
+in the right place.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -5556,8 +5760,6 @@ defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
 model in $\cM'$.
 
 If \syntax{ExtensionName} is present, the inclusion link is labeled with this name.
-\ednote{This shows that we build at the level of each library a graph, where these
-imports will be added. This has to be propagated in the whole section...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6092,7 +6294,7 @@ logic-specific way from the correspondences
 $C_1,\ldots, C_n$ taking into account \syntax{AlignSem}.
 \cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
-\ssclause{Semantics of queries}
+\ssclause{Semantics of Queries}
 
  \semdom{sem(QueryRelatedDefn)}
 
@@ -6171,7 +6373,7 @@ $C_1,\ldots, C_n$ taking into account \syntax{AlignSem}.
 
 
 
-\sclause{OMS language translations}
+\sclause{OMS Language Translations}
 The concept of OMS language translation has been
 formalized as institution comorphism.
 
@@ -6190,7 +6392,7 @@ special cases to be described
 
 \appendix
 
-\chapter[LoLa RDF vocabulary]{Annex (normative): LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL}\label{a:lola}
+\chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL}\label{a:lola}
 
 \begin{figure}
   \centering
@@ -6275,7 +6477,7 @@ pos=h,
   \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsSerialization.}\LL
 }
 
-\infannex{Conformance of OWL 2 DL with DOL}\label{a:owl}
+\infannex{Conformance of OWL 2 DL With DOL}\label{a:owl}
 
 The semantic conformance of OWL 2 DL (as specified in \nisref{W3C/TR REC-owl2-syntax:2009}) with DOL
 is established in \cite{OntoGraph}.
@@ -7301,7 +7503,7 @@ abbreviations for two inequations using ``$\leq$''.
 \end{example}
 
 
-\section{Satisfaction relation.}
+\section{Satisfaction Relation}
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object diagram $\Sigma$, a
@@ -7474,7 +7676,7 @@ $(s,p,o)$ is translated to the \SROIQ(D) sentence
 
 \sclause{$\OWL \rightarrow FOL$}
 
-\ssclause{Translation of Signatures}
+\ssclause{Translation of signatures}
 
  $\Phi((\Concepts, \Roles, \Individuals)) =  (F, P)$ with
 \begin{itemize}
@@ -7483,7 +7685,7 @@ $(s,p,o)$ is translated to the \SROIQ(D) sentence
 \end{itemize}
 
 
-\ssclause{Translation of Sentences}
+\ssclause{Translation of sentences}
 
 Concepts are translated as follows:
 \begin{itemize}
@@ -7526,7 +7728,7 @@ $ \forall x,y . (\exists z_1,\ldots z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \we
 
 
 
-\ssclause{Translation of Models}
+\ssclause{Translation of models}
 
 \begin{itemize}
 	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define $\beta_\Sigma(M') := (\Delta, \cdot^I)$
@@ -7645,7 +7847,7 @@ The actual translations are specified in \cite{OntoGraph}.
 \multicolumn{2}{|c|}{\textbf{Top-level declarations in libraries}}\\\hline
 \textbf{Top-level declaration} & \textbf{Examples} \\\hline
 library \ldots & all examples\\\hline
-import IRI & \\\hline
+import IRI & Mereology\\\hline
 language IRI  & Alignments, Publications \\\hline
 logic IRI  & Alignments, Mereology \\\hline
 serialization IRI  & Alignments, Mereology \\\hline
@@ -7653,40 +7855,40 @@ PrefixMap  & Mereology \\\hline
 oms IRI = OMS end  &  Alignments, Mereology \\\hline
 oms IRI = \%consistent OMS end  & PropositionalExamples, Mereology \\\hline
 oms IRI = \%inconsistent OMS end  & PropositionalExamples \\\hline
-oms IRI = \%mono OMS end  &  \\\hline
+oms IRI = \%mono OMS end  & section~\ref{spec-1} \\\hline
 oms IRI = \%def OMS end  & PropositionalExamples \\\hline
-network IRI = IRI, \ldots, IRI & \\\hline
-network IRI = IRI, \ldots, IRI & \\
-\qquad excluding IRI, \ldots, IRI -> IRI & \\\hline
+network IRI = IRI, \ldots, IRI & Alignments \\\hline
+%network IRI = IRI, \ldots, IRI & \\
+%\qquad excluding IRI, \ldots, IRI -> IRI & \\\hline
 interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
-interpretation IRI : OMS to OMS = \%cons SymbolMap  &  \\\hline
+interpretation IRI : OMS to OMS = \%cons SymbolMap  &  Engine\\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
-refinement IRI = OMS refined via SymbolMap to OMS & \\\hline
-refinement IRI = OMS refined via translation IRI to OMS & \\\hline
-refinement IRI = Network refined via IRI |-> IRI & \\
-\qquad using translation to Network & \\\hline
+refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-1} \\\hline
+refinement IRI = OMS refined via translation IRI to OMS & ATM \\\hline
+refinement IRI = IRI then IRI & section~\ref{spec-1} \\\hline
+refinement IRI = Network refined to Network & ATM \\\hline
 entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
-entailment IRI = OMSName in Network entails OMS & \\\hline
-entailment IRI = Network entails Network & \\\hline
+entailment IRI = OMSName in Network entails OMS & ATM\\\hline
+entailment IRI = Network entails Network & ATM\\\hline
 equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
-equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
-module IRI : OMS of OMS for Symbols  &  \\\hline
-module IRI \%ccons : OMS of OMS for Symbols  &  \\\hline
-alignment IRI : OMS to OMS end  &  \\\hline
-alignment IRI 1 : OMS to OMS end  &  \\\hline
-alignment IRI ? : OMS to OMS end  &  \\\hline
-alignment IRI + : OMS to OMS end  &  \\\hline
-alignment IRI * : OMS to OMS end  &  \\\hline
+%equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
+module IRI : OMS of OMS for Symbols  & GalenModule \\\hline
+%module IRI \%ccons : OMS of OMS for Symbols  &  \\\hline
+%alignment IRI : OMS to OMS end  &  \\\hline
+%alignment IRI 1 : OMS to OMS end  &  \\\hline
+%alignment IRI ? : OMS to OMS end  &  \\\hline
+%alignment IRI + : OMS to OMS end  &  \\\hline
+%alignment IRI * : OMS to OMS end  &  \\\hline
 alignment IRI : OMS to OMS = Correspondences  & Alignments \\\hline
 alignment IRI : OMS to OMS = Correspondences & \\
-\qquad assuming SingleDomain &  \\\hline
+\qquad assuming SingleDomain & \cite{OM2014} \\\hline
 alignment IRI : OMS to OMS = Correspondences & \\
-\qquad assuming GlobalDomain &  \\\hline
+\qquad assuming GlobalDomain & \cite{OM2014} \\\hline
 alignment IRI : OMS to OMS = Correspondences & \\
-\qquad assuming ContextualizedDomain &  \\\hline
-query IRI = select ars where Sen in OMS & \\\hline
-substitution IRI : OMS to OMS = SymbolMap & \\\hline
-result IRI = IRIs for IRI & \\\hline
+\qquad assuming ContextualizedDomain & \cite{OM2014} \\\hline
+query IRI = select ars where Sen in OMS & MyQuery\\\hline
+substitution IRI : OMS to OMS = SymbolMap & MyQuery\\\hline
+result IRI = IRIs for IRI & MyQuery\\\hline
 \end{tabular}
 
 \begin{tabular}{|l|l|}\hline
@@ -7694,50 +7896,50 @@ result IRI = IRIs for IRI & \\\hline
 \textbf{OMS notation} & \textbf{Examples} \\\hline
 BasicOMS  & Alignments, Mereology \\\hline
 IRI  & Alignments, Mereology \\\hline
-IRI \%( IRI )\%  &  \\\hline
+%IRI \%( IRI )\%  &  \\\hline
 minimize \{ OMS \}  & BlocksWithCircumscription \\\hline
 OMS minimize Symbols var Symbols  & BlocksWithCircumscription \\\hline
-OMS maximize Symbols var Symbols  &  \\\hline
-OMS then minimize { OMS } &  \\\hline
-OMS then maximize { OMS } &  \\\hline
-OMS then free { OMS } &  \\\hline
-OMS then cofree { OMS } &  \\\hline
-OMS with SymbolMap  & Alignments \\\hline
+OMS maximize Symbols var Symbols  & BlocksWithCircumscription \\\hline
+%OMS then minimize \{ OMS \} &  \\\hline
+%OMS then maximize \{ OMS \} &  \\\hline
+free \{ OMS \} & Datatypes \\\hline
+cofree \{ OMS \} & Datatypes \\\hline
+OMS with SymbolMap  & Alignments,  section~\ref{spec-1} \\\hline
 OMS with translation IRI  & Mereology \\\hline
-OMS with translation IRI : IRI $\to$ IRI  &  \\\hline
-OMS with translation IRI $\to$ IRI  &  \\\hline
-OMS with translation $\to$ IRI  &  \\\hline
+%OMS with translation IRI : IRI $\to$ IRI  &  \\\hline
+%OMS with translation IRI $\to$ IRI  &  \\\hline
+%OMS with translation $\to$ IRI  &  \\\hline
 OMS hide SymbolItems  &  Algebra \\\hline
-OMS reveal Symbols  &  \\\hline
-OMS reveal Symbol |-> Symbol ...  &  \\\hline
-OMS hide along IRI  &  \\\hline
-OMS hide along IRI : IRI $\to$ IRI  &  \\\hline
-OMS hide along IRI $\to$ IRI  &  \\\hline
-OMS hide along $\to$ IRI  &  \\\hline
-OMS extract Symbols  &  \\\hline
-OMS remove Symbols  &  \\\hline
-OMS forget Symbols  &  \\\hline
-OMS forget Symbols keep Logic  &  \\\hline
-OMS keep Symbols  &  \\\hline
-OMS keep Symbols keep Logic &  \\\hline
-OMS select BasicOMS  &  \\\hline
-OMS reject BasicOMS  &  \\\hline
-OMS and OMS   &  \\\hline
+OMS reveal Symbols  & Datatypes \\\hline
+%OMS reveal Symbol |-> Symbol ...  &  \\\hline
+OMS hide along IRI  & ATM \\\hline
+%OMS hide along IRI : IRI $\to$ IRI  &  \\\hline
+%OMS hide along IRI $\to$ IRI  &  \\\hline
+%OMS hide along $\to$ IRI  &  \\\hline
+OMS extract Symbols  & GalenModule \\\hline
+OMS remove Symbols  & All\_kinds\_of\_group\_specifications \\\hline
+OMS forget Symbols  & All\_kinds\_of\_group\_specifications \\\hline
+%OMS forget Symbols keep Logic  &  \\\hline
+OMS keep Symbols  & All\_kinds\_of\_group\_specifications \\\hline
+%OMS keep Symbols keep Logic &  \\\hline
+OMS select BasicOMS  & All\_kinds\_of\_group\_specifications  \\\hline
+OMS reject BasicOMS  & All\_kinds\_of\_group\_specifications \\\hline
+OMS and OMS   & Engine \\\hline
 OMS then OMS  & Mereology \\\hline
-OMS then \%ccons OMS  &  \\\hline
-OMS then \%ccons \%( IRI )\% OMS  &  \\\hline
-OMS then \%mcons OMS  &  \\\hline
-OMS then \%notccons OMS  &  \\\hline
-OMS then \%notmcons OMS  &  \\\hline
-OMS then \%mono OMS  &  \\\hline
-OMS then \%wdef OMS  &  \\\hline
-OMS then \%def OMS  &  \\\hline
+OMS then \%ccons OMS  &  \cite{DBLP:conf/ijcai/LutzWW07} \\\hline
+%OMS then \%ccons \%( IRI )\% OMS  &  \\\hline
+OMS then \%mcons OMS  & Propositional \\\hline
+OMS then \%notccons OMS  & \cite{DBLP:conf/ijcai/LutzWW07} \\\hline
+OMS then \%notmcons OMS  & \cite{DBLP:conf/ijcai/LutzWW07} \\\hline
+OMS then \%mono OMS  & Sorting \\\hline
+%OMS then \%wdef OMS  &  \\\hline
+OMS then \%def OMS  & Persons \\\hline
 OMS then \%implied OMS  &  BlocksWithCircumscription \\\hline
-logic IRI : OMS  &  \\\hline
-language IRI : OMS  &  \\\hline
-serialization IRI : OMS  &  \\\hline
+logic IRI : OMS  &  all examples\\\hline
+language IRI : OMS  &  Mereology\\\hline
+serialization IRI : OMS  & Mereology \\\hline
 combine NetworkElements  & Alignments, Publications \\\hline
-combine NetworkElements excluding IRIs  &  \\\hline
+%combine NetworkElements excluding IRIs  &  \\\hline
 \end{tabular}
 
 \sclause{Simple Examples in Propositional Logic}
@@ -7771,18 +7973,7 @@ entailment Ent = SingleModel entails { . not ( A=>B ) }
 end
 
 
-\sclause{Mereology: Distributed and Heterogeneous Ontologies}
-\label{dist-het-onto}
-\CLnote[type=q-aut]{In the TKE paper we made the name of the propositional logic ontology syntax explicit.  The propositional logic listing now leaves us with a problem: neither is propositional logic specified as DOL-conformant, nor is Hets' CASL-like syntax, nor is anything of this intended to ever be normative. TM: hence either leave it out, or make propositional logic normative. What about the examples in OWL+CL develop during the Ontology Summit Hackathon?}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
-%prefix( :      <http://www.example.org/mereology#>
-         owl:   <http://www.w3.org/2002/07/owl#>
-         log:   <http://www.omg.org/spec/DOL/logics/>    
-		 		%% descriptions of logics ...
-         trans: <http://www.omg.org/spec/DOL/translations/> )%  
-		 		%% ... and translations
-
-library Mereology
+library PropositionalMereology
 
 %% non-standard serialization built into Hets: 
 logic log:Propositional syntax ser:Prop/Hets       
@@ -7794,6 +7985,104 @@ ontology Taxonomy = %conssistent
   . S $\wedge$  T  $\longrightarrow$ $\bot$                  %% PD, S, T, AR are pairwise disjoint
   . T $\wedge$ AR $\longrightarrow$ $\bot$                                                                         %% and so on
 end
+\end{lstlisting}
+
+\sclause{Engine Diagnosis and Repair}\label{engine}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+library Engine
+
+logic Propositional
+
+%% possible symptoms of an engine that is malfunctioning
+spec EngineSymptoms =
+  props black_exhaust, blue_exhaust, low_power, overheat,
+	ping, incorrect_timing,	low_compression
+end
+
+%% diagnosis derived from symptoms
+spec EngineDiagnosis = EngineSymptoms
+then %mcons
+  props carbon_deposits,
+	clogged_filter,
+	clogged_radiator,
+	defective_carburetor,
+	worn_rings,
+	worn_seals
+  . overheat /\ not incorrect_timing => clogged_radiator
+                          %(diagnosis1)%
+  . ping /\ not incorrect_timing => carbon_deposits
+                          %(diagnosis2)%
+  . low_power /\ not incorrect_timing =>
+                worn_rings \/ defective_carburetor \/ clogged_filter
+                          %(diagnosis3)%
+  . black_exhaust => defective_carburetor \/ clogged_filter
+                          %(diagnosis4)%
+  . blue_exhaust => worn_rings \/ worn_seals
+                          %(diagnosis5)%
+  . low_compression <=> worn_rings
+                          %(diagnosis6)%
+end
+
+%% needed repair, derived from diagnosis
+spec EngineRepair = EngineDiagnosis
+then %cons
+  props replace_auxiliary,
+	repair_engine,
+	replace_engine
+  . worn_rings => replace_engine
+                          %(rule_replace_engine)%
+  . carbon_deposits \/ defective_carburetor \/ worn_seals =>
+                repair_engine
+                          %(rule_repair_engine)%
+  . clogged_filter \/ clogged_radiator => replace_auxiliary
+                          %(rule_replace_auxiliary)%
+end
+
+%% application to a specific case
+spec MyObservedSymptoms =
+  EngineSymptoms
+then
+  . overheat              %(symptom_overheat)%
+  . not incorrect_timing  %(symptom_not_incorrect_timing)%
+end
+
+spec MyRepair =
+  MyObservedSymptoms
+and 
+  EngineRepair
+end
+
+spec Repair =
+  prop repair
+  . repair
+end
+
+interpretation repair1 : Repair to MyRepair = %cons
+  repair |-> replace_engine end
+interpretation repair2 : Repair to MyRepair = %cons
+  repair |-> repair_engine end
+interpretation repair3 : Repair to MyRepair = %cons
+  repair |-> replace_auxiliary end 
+%% only repair3 is a valid interpretation. That is, 'replace_auxiliary'
+%% is the required action
+\end{lstlisting}
+
+
+\sclause{Mereology: Distributed and Heterogeneous Ontologies}
+\label{dist-het-onto}
+\CLnote[type=q-aut]{In the TKE paper we made the name of the propositional logic ontology syntax explicit.  The propositional logic listing now leaves us with a problem: neither is propositional logic specified as DOL-conformant, nor is Hets' CASL-like syntax, nor is anything of this intended to ever be normative. TM: hence either leave it out, or make propositional logic normative. What about the examples in OWL+CL develop during the Ontology Summit Hackathon?}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+%prefix( :      <http://www.example.org/mereology#>
+         owl:   <http://www.w3.org/2002/07/owl#>
+         log:   <http://www.omg.org/spec/DOL/logics/>    
+		 		%% descriptions of logics ...
+         trans: <http://www.omg.org/spec/DOL/translations/> )%  
+		 		%% ... and translations
+
+library Mereology
+
+import PropositionalMereology
 
 %% OWL Manchester syntax declaration: 
 language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester           
@@ -7916,6 +8205,24 @@ ontology Blocks_Alternative =
 	SubClassOf: Ontable 
         %% Normally, a block is on the table
   minimize Abnormal var Ontable, BlockNotAbnormal
+then %implied
+  Individual: B2 Types: Ontable
+     %% B2 is on the table
+end
+
+ontology Blocks_Alternative2 =
+  Class: Block
+  Class: Normal
+  Individual: B1 Types: Block, not Normal
+  Individual: B2 Types: Block DifferentFrom: B1
+              %% B1 and B2 are different blocks
+              %% B1 is abnormal
+  Class: Ontable 
+  Class: NormalBlock
+  	EquivalentTo: Block and Normal 
+	SubClassOf: Ontable 
+        %% Normally, a block is on the table
+  maximize Normal var Ontable, BlockNotAbnormal
 then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
@@ -8052,7 +8359,7 @@ end
 
 \end{lstlisting}
 
-\sclause{Ontology modules}
+\sclause{Ontology Modules}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
 library GalenModule
@@ -8067,7 +8374,7 @@ end
 \end{lstlisting}
 
 \sclause{Algebra}
-\ednote{use ``spec'' here???}
+
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,equivalence},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/alignment#>
@@ -8079,7 +8386,7 @@ library Algebra
 
 logic log:CommonLogic syntax ser:CommonLogic/CLIF
 
-ontology implicit_group =
+spec implicit_group =
 (forall (x y z)
         (= (op x (op y z)) (op (op x y) z)))
 (exists (e)
@@ -8092,7 +8399,7 @@ ontology implicit_group =
                         (= x (op x (op y x))))))
 end
 
-ontology explicit_group =
+spec explicit_group =
 (forall (x y z)
         (= (op x (op y z)) (op (op x y) z)))
 (forall (x)     (and    (= x (op e x))
@@ -8134,7 +8441,142 @@ entailment ent = InterpolatedGroup
 end
 \end{lstlisting}
 
-\sclause{Model-driven development}
+\ssclause{Groups specified with different forms of hiding and forgetting}
+
+\sssclause{Groups and hiding}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
+library All_kinds_of_group_specifications
+logic CASL
+spec Group_with_inverse =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem; inv:Elem->Elem
+  forall x,y,z:elem . x+0=x
+                    . x+(y+z) = (x+y)+z
+                    . x+inv(x)=0
+end
+
+spec Group_via_hiding =
+  Group_with_inverse hide inv
+end
+\end{lstlisting}
+
+The semantics of this specification is the class of all monoids that
+can be extended with an inverse, i.e.\ class of all groups. The effect
+is second-order quantification:
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
+logic HasCASL
+spec Group_in_second_order_logic =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem; 
+  exists inv:Elem->Elem .
+    forall x,y,z:elem . x+0=x
+                        /\ x+(y+z) = (x+y)+z
+                        /\ x+inv(x)=0
+end
+\end{lstlisting}
+
+\sssclause{Groups and module extraction}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_module_extraction_1 =
+  Group_with_inverse remove inv
+end
+\end{lstlisting}
+The semantics is just \syntax{Group\_with\_inverse},
+since the module needs to be enlarged to the whole specification.
+This is of course unsatisfactory. A better use of module extraction
+is the following:
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_with_implicit_inverse =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem; inv:Elem->Elem
+  forall x,y,z:elem . x+0=x
+                    . x+(y+z) = (x+y)+z
+                    . x+inv(x) = 0
+                    . exists y:Elem . x+y=0
+end
+
+spec Group_via_module_extraction_2 =
+  Group_with_implicit_inverse remove inv
+end
+\end{lstlisting}
+The semantics of \syntax{Group\_via\_module\_extraction\_2} is just
+\syntax{Group\_with\_implicit\_inverse}, because adding \texttt{inv}
+is conservative.
+\medskip
+
+\sssclause{Groups via interpolation}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_interpolation1 =
+  Group_with_inverse forget inv
+end
+spec Group_via_interpolation2 =
+  Group_with_inverse keep Elem, 0, __+__
+end
+\end{lstlisting}
+Both specifications are equivalent, and they 
+are equivalent to \syntax{Group\_with\_implicit\_inverse}.
+%Computing interpolants can be hard, even undecidable.
+\medskip
+
+\sssclause{Groups and filtering}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_Filtering_1 =
+  Group_with_inverse reject inv
+end
+spec Group_via_Filtering_2 =
+  Group_with_inverse select Elem, 0, __+__
+end
+\end{lstlisting}
+Both specifications are equivalent, and they are equivalent 
+to the following theory which just omits the inverse
+axioms (and hence does not specify groups):
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+logic CASL
+spec Group_via_reject =
+  sort Elem
+  ops 0:Elem; __+__:Elem*Elem->Elem
+  forall x,y,z:elem . x+0=x
+                    . x+(y+z) = (x+y)+z
+end
+\end{lstlisting}
+
+\sclause{Sorting}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,spec,free,type,op,ops,spec,pred,preds},escapechar=@,mathescape]
+library Sorting
+logic CASL
+spec List =  
+  sort Elem
+then %mono
+  free type List[Elem] ::= [] | __::__(Elem; List[Elem])
+then
+  pred __elem__ : Elem * List[Elem}
+  forall x,y:Elem; L,L1,L2:List[Elem]
+  . not x elem []  . x elem (y :: L) <=>  x=y \/ x elem L
+spec Sorting = List then
+  preds is_ordered : List[Elem];
+        permutation : List[Elem] * List[Elem]
+  op sorter : List[Elem]->List[Elem]
+  forall x,y:Elem; L,L1,L2:List[Elem]
+  . is_ordered([])       . is_ordered(x::[])
+  . is_ordered(x::y::L) <=> x<=y /\ is_ordered(y::L)
+  . permutation(L1,L2) <=> 
+            (forall x:Elem . x elem L1 <=> x elem L2)
+  . is_ordered(sorter(L)) . permutation(L,sorter(L))
+hide permutation, is_ordered
+\end{lstlisting}
+
+
+
+\sclause{Model-Driven Development}
 
 We present as a small example in model-deriven development using UML,
 taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
@@ -8212,23 +8654,26 @@ our example there are no such activities).  If the interaction with
 the bank results in \uml{reenterPIN}, and the \emph{guard}
 \uml{trialsNum < 3} is true, the user can again enter a \uml{PIN}.
 
-We can now state the fact that the state machine of the
-\uml{atm}, shown in Fig.~\ref{fig:state-machine}, is a refinement of
-the protocol state machine in Fig.~\ref{fig:psm} as follows in DOL:
+We can now state the fact that the state machine of the \uml{atm},
+shown in Fig.~\ref{fig:state-machine}, is a refinement of the protocol
+state machine in Fig.~\ref{fig:psm} as follows in DOL, assuming that
+XMI representations of the relevant UML models have been stored at
+\url{http://www.example.org/uml/}, e.g.\ \url{http://www.example.org/uml/atm.xmi}:
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement},escapechar=@,mathescape]
-%prefix( :     <http://www.example.org/uml#>
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
+%prefix( :     <http://www.example.org/uml/>
          uml:   <http://www.uml.org/spec/UML/>
 %% descriptions of logics ...		 
          log:   <http://www.omg.org/spec/DOL/logics/>
-
+library ATM
 logic log:uml
 
 refinement abstract_to_concrete_atm =
-  psm refined to {  atm with Idle |-> Idle, CardEntered |-> Idle, 
-                             PINEntered |-> Idle, Verified |-> Idle, 
-                             Verifying |-> Verifying 
-                    hide card, PIN   }
+  psm refined via psm2atm to 
+       {  atm with Idle |-> Idle, CardEntered |-> Idle, 
+                   PINEntered |-> Idle, Verified |-> Idle, 
+                   Verifying |-> Verifying 
+          hide card, PIN   }
 end
 \end{lstlisting}
 
@@ -8236,6 +8681,35 @@ The refinement uses an abstraction of the \uml{atm}, expressed by the
 translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in a two-state machine. Moreover, some detail of the \uml{atm} is hidden using
 \syntax{hide}. Then, the protocol state machine can be refined to
 the thus abstracted \uml{atm}.
+
+\ssclause{Networks of UML Models}
+
+The ATM example in Fig.~\ref{fig:psm} consists of five different
+models, which naturally form a network. We continue the library
+\uml{ATM} above, again assuming that XMI representations of the
+relevant UML models have been stored at
+\url{http://www.example.org/uml/},
+e.g.\ \url{http://www.example.org/uml/cd.xmi}:
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via,network,entailment,entails,refined},escapechar=@,mathescape]
+view cd2atm = cd to { atm hide along atm2cd} end
+view cd2psm = cd to { psm hide along psm2cd} end
+view cd2int = cd to { interaction hide along sqd2cd} end
+network ATM_network = cd, atm, psm, csd,
+                      cd2atm, cd2psm, abstract_to_concrete_atm
+entailment atm in ATM_network entails interaction
+network Some_refined_ATM_network = ...
+refinement r = ATM_network refined to Some_refined_ATM_network
+entailment e = Some_refined_ATM_network entails ATM_network
+\end{lstlisting}
+
+
+%% refinement IRI = Network refined via IRI |-> IRI & \\
+%% \qquad using translation IRI to Network & \\\hline
+%% entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
+%% entailment IRI = OMSName in Network entails OMS & \\\hline
+%% entailment IRI = Network entails Network & \\\hline
+%% equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
+%% equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
 
 \sclause{Queries}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,query,select,where,in,substitution,result,for,along,library,spec,sort,pred,op},escapechar=@,mathescape]
@@ -8251,6 +8725,41 @@ end
 substitution MySubst : { Person then op x:Person } to Person = x |-> max
 end
 result MyResult = MySubst for MyQuery
+\end{lstlisting}
+
+\sclause{Datatypes}
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,free,cofree,spec},escapechar=@,mathescape]
+library Datatypes
+logic CASL
+
+spec Bag =
+  sort Elem
+  then free {
+     sort Bag
+     ops mt:Bag;
+         __union__:Bag*Bag->Bag, assoc, comm, unit mt
+           }
+end
+
+spec Stream =
+  sort Elem
+  then cofree {
+     sort Stream
+     ops head:Stream->Elem;
+         tail:Stream->Stream
+           }
+end
+
+spec Finite =
+  sort Elem
+  free type Nat ::= 0 | suc(Nat)
+  op f: Nat ->? Elem
+  . forall x:Elem . exists n:Nat . f(n)=x           %(f_surjective)%
+  . exists n:Nat . forall m:Nat . def f(m) => m<n   %(f_bounded)%
+  reveal Elem
+end
+
 \end{lstlisting}
 
 \infannex{Use cases}\label{a:use-cases}
@@ -8406,7 +8915,8 @@ to the term \termref{structured OMS} in this \IS}
 \infannex{Tools for DOL}\label{a:tools}
 
 \sclause{The Heterogeneous Tool Set (Hets)}\label{a:hets} The
-Heterogeneous Tool Set (Hets) is a parsing, analysis and proof tool
+Heterogeneous Tool Set (Hets) is the reference implementation of
+DOL. Hets a parsing, analysis and proof tool
 for OMS, OMS networks and OMS mappings written in DOL and
 DOL-conforming languages.  It supports a wide range of OMS languages
 and language translations, in particular OWL, RDF, Common Logic,
@@ -8508,7 +9018,7 @@ an XML and a JSON version for processing with tools.
 \sclause{APIs}\label{c:APIs}
 
 Both Hets and Ontohub/Modelhub/Spechub provide APIs for the interchange
-with other tools. Ontohub/Modelhub/Spechub also provides an API for
+with other tools\footnote{See \url{https://github.com/spechub/Hets/wiki/RESTful-Interface} and \url{https://github.com/ontohub/ontohub/wiki/}.}. Ontohub/Modelhub/Spechub also provides an API for
 exchange with other instances, so that e.g.\ Ontohub and Modelhub
 can exchange information about available repositories and their OMS.
 
@@ -8534,8 +9044,6 @@ effort API4KB.
 
 \newpage
 \clearpage
-%\clause{Keyword index}
-%/to be supplemented in the final version/
 
 %\backmatter 
 \printindex
