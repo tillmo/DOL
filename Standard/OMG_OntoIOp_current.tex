@@ -1127,8 +1127,8 @@ A registry is discussed in clause \ref{c:conformance}.
 %
 6.8(a)	& 
 Proposals covering a broader range of features and of use cases will be favored. As a minimum, proposals shall define conformance criteria for logical languages and translations, and their proposed metalanguage shall cover some metalogical relationships and shall be applicable to multiple logics.	&
-Conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
-DOL is applicable to multiple logics (see also 6.8(c) below).
+Based on the notion of institution, conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
+DOL is applicable to multiple logics (see also 6.8(c) and~\ref{sem-foundations} below).
    \\ \hline
 %
 6.8(b)		&
@@ -1146,7 +1146,6 @@ with DOL.
 \end{longtable}
 \end{center}
 
-\ednote{Terry: Do you want to mention institutions in 6.8(a), presaging 6.5.4 ? and add 8.4 to the see list?}
 
 \section{Proof of Concept}
 Prototypical open source tools for DOL are already available, see
@@ -1236,11 +1235,6 @@ and compliance).
 %  application scenario is enabled.}
 
 
-
-\ednote{State somewhere: A DOL theory is at level M1 in MDA speak, the same level as an UML
-diagram. Also a DOL OMS network, containing interpretations, alignments between OMS etc. is at
-level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in
-MOF.}
 
 \section{Features Within Scope}\index{\dolindex ! scope}
 % Can't use \begin{inscope}, as that creates an itemize environment
@@ -3331,8 +3325,31 @@ Whereas the first feature determines the expressivity of the language and the po
 Acknowledging the wide tool support that conforming established languages such as OWL, Common Logic, MOF, or \CASL\ednote{review language list when annexes are finished} enjoy, existing OMS in these languages remain as they are within the DOL framework. DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. 
 DOL's modularity and annotation constructs can either be embedded into existing OMS as non-disruptive annotations, or they can be provided as standoff markup, pointing to the OMS they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported OMS languages.\ednote{Till, is this standoff markup remark up to date?}
 
+\section{DOL in the Metamodelling Hierarchy}
 
-\section{Semantic Foundations of DOL}
+$$\xymatrix{
+\Text{M3} &
+\Text{MOF} &
+\Text{EBNF} &
+\Text{Institutions}
+\\
+\Text{M2} &
+\Text{DOL metamodel} \ar[u]^{\Text{conforms to}} \ar[ur]_(0.3){\Text{conforms to}}&
+\Text{OMS language metamodel}
+\ar[u]_{\Text{conforms to}} \ar[ul]_(0.7){\Text{\ conforms to}} \ar[ur]_{\Text{conforms to}}
+&\\
+\Text{M1} & 
+\Text{DOL document} \ar[r]^{\Text{contains}} \ar[u]^{\Text{conforms to}}&
+\Text{specific OMS}\ar[u]^{\Text{conforms to}}&\\
+}$$
+
+\ednote{State somewhere: A DOL theory is at level M1 in MDA speak, the same level as an UML
+diagram. Also a DOL OMS network, containing interpretations, alignments between OMS etc. is at
+level M1. The specification of DOL  lives at M2, like the UML specification. Both are written in
+MOF.}
+
+
+\section{Semantic Foundations of DOL}\label{sem-foundations}
 
 
 A large variety of OMS languages in use can be captured at an abstract level using the concept of 
@@ -3490,6 +3507,7 @@ Library                  = [ PrefixMap ] , LibraryDefn
                          | OMSInConformingLanguage ;
 LibraryDefn              = 'library' , LibraryName , Qualification , { LibraryItem } ;
 OMSInConformingLanguage  = ($<$)language specific($>$) ;
+BasicOMSInConformingLanguage = ($<$)language specific($>$) ;
 LibraryItem              = LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 LibImport                = 'lib-import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
@@ -3565,7 +3583,7 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
 
-BasicOMS             = OMSInConformingLanguage ;
+BasicOMS             = BasicOMSInConformingLanguage ;
 MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
 ExtendingOMS         = MinimizableOMS
