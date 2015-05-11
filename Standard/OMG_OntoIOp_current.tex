@@ -1675,16 +1675,8 @@ plus non-logical annotations\index{annotation}.}
   An OMS language is used for the formal specification of \termref{OMS}.
   \end{note}
   \begin{example}
-    OMS languages include OWL 2 DL, Common Logic Interchange Format (CLIF), F-logic, UML class diagrams, RDFS, and OBO.
+    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
   \end{example}
-
-
-
-\termdefinition{OMS language family}{a set of OMS languages, whose abstract syntax is very similar but differ either with respect to expressivity or semantics.}
-  \begin{example}
- OWL 2 EL, OWL 2 QL, OWL 2 RL are members of the OWL 2 language family. Common Logic Interchange Format (CLIF) and  Conceptual Graph Interchange Format (CGIF) are members of the Common Logic language family.
-  \end{example}
-
 
 
   \termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
@@ -5428,36 +5420,23 @@ The semantics of $O' = \syntax{'module extract', OMS,
 Extraction}$ is
 \begin{itemize}
   \item $\Inst(O') = \Inst(\syntax{OMS})$
-  \item $\Sig(O') = \Sigma \cup \Sig(\syntax{Extraction})$,
+  \item $\Sig(O') = \Sigma'$,
      
-  \item $\Th(O') = \Th(\syntax{Extraction})$
+  \item $\Th(O') = \Delta'$
   \item $\Mod(O')$ is the class of $Th(O)$-models
   \item $Env(\Gamma, O')$ is obtained from 
        $\Gamma'' = Env(\Gamma, \syntax{OMS})$
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $O'$ to the node of $O$ labeled with
-        the inclusion \ednote{todo}
-
+        the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$
 \end{itemize}
+where 
+$sem(\Gamma, (\Sig(\syntax{OMS}, \Th(\syntax{OMS})), \syntax{Extraction})) = 
+(\Sigma',\Delta')$.
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
 %of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
 %satisfying $\Th(O) \setminus \Delta'$.
-
-\noindent
-%Dually, the semantics of 
-%\syntax{'module extract', OMS, 
-%'remove-signature', InterfaceSignature}
-%is equivalent to the semantics of
-%\syntax{'module extract', OMS, 
-%'keep-signature',} $\Sig(\syntax{OMS})\setminus 
-%\Sig(\syntax{InterfaceSignature})$ 
-%\footnote{Note that the resulting module
-%    can still contain symbols from $\Sigma$, because the %resulting
-%    signature may be enlarged.}.
-    
-
-\ednote{Update cf. last paper}
 
 %Approximation
 The semantics of $O' = \syntax{'approximation', OMS, 
@@ -5749,22 +5728,26 @@ $sem(\Gamma, (\Sigma, \Delta), \syntax{'extraction' , QualInterfaceSignature}) =
 %  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
 %The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
 
-where \ednote{The signature of \syntax{InterfaceSignature} should appear somewhere...}
+where 
+$sem(\Gamma, \Sigma, \syntax{QualInterfaceSignature}) = \Sigma''$,
 $\langle\Sigma',\Delta'\rangle$ is the smallest depleting
-$\Sigma$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
+$\Sigma''$-module \cite{DBLP:journals/ai/KontchakovWZ10}, i.e.\ the
 smallest\footnote{If the smallest such sub-theory does not exist, the
   semantics is undefined. In \cite{DBLP:journals/ai/KontchakovWZ10},
   it is shown that it does exist in usual institutions.}  sub-theory
 $\langle\Sigma',\Delta'\rangle$ of $(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$  
 such that the following model-theoretic inseparability
 holds
-  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma}  \emptyset.$$
+  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma''}  \emptyset.$$
 This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
-cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma$ concerns) and formally that 
+cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma''$ concerns) and formally that 
 $$\begin{array}{ll}
-&\{M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
-= &\{ M\forget{\Sigma'\cup \Sigma} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
+&\{M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
+= &\{ M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
 \end{array}$$
+
+\ednote{@Till: check that the signature of \syntax{QualInterfaceSigature} appears
+in the right place.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
