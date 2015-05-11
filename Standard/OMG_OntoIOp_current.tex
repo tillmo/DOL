@@ -4923,7 +4923,7 @@ theory-level semantics.
 We will use the following unifying notation for the two semantics of an OMS $O$: 
 \begin{itemize}
  \item the institution of $O$ is denoted $\Inst(O)$,
-  \item the signature of $O$ is denoted $\Sign(O)$ (which is a signature in $\Inst(O)$),
+  \item the signature of $O$ is denoted $\Sig(O)$ (which is a signature in $\Inst(O)$),
   \item the models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sign(O)$),
   \item the axioms of $O$is denoted $\Th(O)$ (which is a set of sentences over $\Sign(O)$).
 \end{itemize}
@@ -5235,12 +5235,12 @@ $$sem(\Gamma, \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
  $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
  $G_2 = sem(\Gamma, G_1, \syntax{NetworkElement}_2)$\\
  $\ldots$\\
- $G_n = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$,
+ $G_n = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$,\\
  $G' = addImports(\Gamma, G_n, \syntax{NetworkElements})$.
 
 \semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
-$$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$$.
+$$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$$
 
 \semdom{sem(\Gamma, G, \syntax{ExcludeExtensions})= G'}
 
@@ -5255,17 +5255,29 @@ $$sem(\Gamma, G, \syntax{exclude-imports, R$_1, \ldots,$ R$_n$}) = G'$$
 
 \ssclause{Semantics of OMS}
 
-\semdom{sem(\Gamma, \syntax{BasicOMS}) = (I, \Sigma, \cM, \Delta)}
+\semdom{sem(\Gamma, \syntax{BasicOMS}) = (\Gamma',(I, \Sigma, \cM, \Delta))}
 For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
 
 $$sem(\Gamma, \syntax{BasicOMS})= sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
 
+$\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
+node labeled with $(Name(\syntax{BasicOMS}),I, \Sigma', \cM',\Delta')$.
+\ednote{names of OMS?}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{MinimizableOMS}) = (I, \Sigma', \cM',\Delta')}
+\semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{MinimizableOMS}) = 
+(\Gamma', (\cI', \Sigma', \cM',\Delta'))}
+
+
+In the rest of this section, we will use the notation 
+$Env(\Gamma, \syntax{OMS})$ for the global environment $\Gamma'$
+such that
+$sem(\Gamma, \syntax{OMS}) = \Gamma'$.
 
 The semantics of a \syntax{BasicOMS} $O$ in the local environment of
-previous declarations $(\Sigma, \cM, \Delta)$ and global environment
+previous declarations $(\cI, \Sigma, \cM, \Delta)$ and global environment
 $\Gamma$, is given by
  \begin{itemize}
    \item $\Inst(O) = I$,
@@ -5273,19 +5285,25 @@ $\Gamma$, is given by
    \item $\Mod(O) = \cM'$
    \item $\Th(O) = \Delta'$
  \end{itemize}
-\noindent where $sem^{\Sigma, \cM, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (I, \Sigma', \cM', \Delta')$ such that $\Sigma$ is a sub-signature of $\Sigma'$, $\Delta  \subseteq \Delta'$ and
+\noindent where $sem^{\Sigma, \cM, \Delta}_{logic(\Gamma.\current)}(\syntax{BasicOMS}) = (\Sigma', \cM', \Delta')$ such that $\Sigma$ is a sub-signature of $\Sigma'$, $\Delta  \subseteq \Delta'$ and 
 $\{ M'\forget\Sigma \mid M' \in \cM' \} \subseteq \cM$.
 
-The semantics of an OMS reference $O$ in the local environment of
+The semantics of $O = \syntax{'oms-ref', O', ImportName}$ in the local environment of
 previous declarations $(\Sigma, \cM, \Delta)$ and global environment
 $\Gamma$, is given by
  \begin{itemize}
-   \item $\Inst(\syntax{'oms-ref', O, ImportName}) = \Inst(O)$ which must be the same
+   \item $\Inst(\syntax{'oms-ref', O', ImportName}) = \Inst(O')$ which must be the same
    with the current logic of $\Gamma$
-   \item $\Sign(\syntax{'oms-ref', O, ImportName}) = \Sigma \cup \Sign(O)$
-   \item $\Mod(\syntax{'oms-ref', O, ImportName}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O, ImportName})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sign(O)} \in \Mod(O) \}$
-   \item $\Th(\syntax{'oms-ref', O, ImportName}) = \Delta \cup \Th(O)$
+   \item $\Sig(\syntax{'oms-ref', O', ImportName}) = \Sigma \cup \Sig(O')$
+   \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \{ M \in Mod(\Sign(\syntax{'oms-ref', O', ImportName})) \mid M\forget\Sigma \in \cM \text{ and } M \forget{\Sig(O')} \in \Mod(O') \}$
+   \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Delta \cup \Th(O')$
  \end{itemize}
+ 
+ In both cases, $Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
+node $N$ labeled as defined in the corresponding items above, for each case,
+and with an edge from the node of the previous declarations \ednote{how to obtain it?}
+to $N$ labeled with the inclusion. \ednote{of the environment signature in the
+extending one.}
 
 \ednote{remove importname?}
 
@@ -5300,13 +5318,14 @@ $\Gamma$, is given by
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=(\cI,\Sigma',\cM', \bot)}
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
+(\Gamma',(\cI,\Sigma',\cM', \bot))}
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-Formally, we have
+Formally, if $O' = \syntax{minimize}\ O$, we have
 \begin{itemize}
  \item $\Inst(\syntax{minimize}\ O)= \Inst(O)$
  \item $\Sig(\syntax{minimize}\ O) = \Sig(O)$
@@ -5320,10 +5339,16 @@ $\Gamma$ and the context $(\Sigma, \cM, \Delta)$.
 
 The theory-level semantics for  \syntax{minimize O} cannot be defined.
 
+$Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
+node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O')))$ and
+an edge from the node of $O$ to the node of $O'$ labeled with the identity
+morphism on $\Sig(O')$.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,\syntax{OMS})=(\cI,\Sigma,\cM, \Delta)}
+\semdom{sem(\Gamma,\syntax{OMS})=(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
 \syntax{OMS} is interpreted in a context similar to that for
 \syntax{MinimizableOMS}, the difference being that there is
@@ -5349,9 +5374,13 @@ The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is g
  \item $\Sig(O') = \Sigma'$, when $\Mor_{\Sig(\syntax   {OMS})}(\syntax{Translation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
  \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(\syntax{OMS})\}$
  \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(\syntax{OMS}) \}$. It is defined only if \syntax{OMS} is flattenable.
+ \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $O$ to the node of $O'$ labeled with
+        $\sigma$.
 \end{itemize}
-\ednote{if only the target logic is given, the default translation should
-be looked up in the logic graph.}
 %Reduction
 
 The semantics of a reduction
@@ -5366,6 +5395,12 @@ is
     \Phi(\Sig(\syntax{OMS}))$
   \item $\Mod(O') = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \Mod(\syntax{OMS})\}$
   \item $\Th(O') = \bot$
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $O'$ to the node of $O$ labeled with
+        $\sigma$
 
 \end{itemize}
 
@@ -5375,10 +5410,17 @@ The semantics of $O' = \syntax{'module extract', OMS,
 Extraction}$ is
 \begin{itemize}
   \item $\Inst(O') = \Inst(\syntax{OMS})$
-  \item $\Sig(O') = \Sigma \cup \Sig(Extraction)$,
-     \ednote{probably this does not work for remove}
-  \item $\Th(O') = \Th(Extraction)$
+  \item $\Sig(O') = \Sigma \cup \Sig(\syntax{Extraction})$,
+     
+  \item $\Th(O') = \Th(\syntax{Extraction})$
   \item $\Mod(O')$ is the class of $Th(O)$-models
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $O'$ to the node of $O$ labeled with
+        the inclusion \ednote{todo}
+
 \end{itemize}
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
 %of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
@@ -5400,7 +5442,7 @@ Extraction}$ is
 \ednote{Update cf. last paper}
 
 %Approximation
-The semantics of $O = \syntax{'approximation', OMS, 
+The semantics of $O' = \syntax{'approximation', OMS, 
 'keep-signature', InterfaceSignature, LogicRef }$ is
 \begin{itemize}
   \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \Inst(\syntax{LogicRef})$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
@@ -5409,6 +5451,13 @@ The semantics of $O = \syntax{'approximation', OMS,
   \item $\Th(O) = \alpha^{-1}_{\Sig(\syntax{OMS})}(\Th(\syntax{OMS})^\bullet)\cap\Sen^I(\Sig(\syntax{OMS}))$
   \footnote{In practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(\syntax{OMS})$ that can be expressed in the smaller signature and logic 
   \item $\Mod(O)$ is the class of $\Th(O)$-models
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+        with a new node for $O'$ labeled as in the items above
+        and with a new edge from the node of $\syntax{OMS}$ to the node of $O'$ 
+        labeled with $((\Phi,\alpha,\beta),id)$ \ednote{check}
+
 \end{itemize}
 
 %\smallskip
@@ -5439,16 +5488,28 @@ with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$\ednote{the prim
 {If this smallest signature does not exist, the semantics is undefined.}
   \item $\Th(O) = (\Th(\syntax{OMS})\cap\Sen(\Sig(O)))\cup\Delta$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with a new edge from the node of $O$ to the node of $\syntax{OMS}$
+        labeled with the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$.
 \end{itemize}
 
 \noindent
-If $c='reject'$, the semantics of $O =$
+If $c = 'reject'$, the semantics of $O =$
 \syntax{'filtering', OMS, 'reject', BasicOMS} is
 \begin{itemize}
   \item $\Inst(O) = \cI$
   \item $\Sig(O) = \Sign(\syntax{OMS})\setminus \Sigma$ 
   \item $\Th(O) = \Th(\syntax{OMS})\cap\Sen(\Sig(O))\setminus\Delta$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
+    \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with a new edge from the node of $O$ to the node of $\syntax{OMS}$
+        labeled with the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$.
 \end{itemize}
 
 %Union
@@ -5462,6 +5523,15 @@ The semantics of $O =$
   \item $\Sig(O) = \Phi_1(\Sig(\syntax{OMS}_1)) \cup \Phi_2(\Sig(\syntax{OMS}_2))$
   \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(\syntax{OMS}_i))}) \in \Mod(\syntax{OMS}_i), \text{ for } i=1,2 \}$
   \item $\Th(O) = \alpha_1(\Th(\syntax{OMS}_1)) \cup \alpha_2(\Th(\syntax{OMS}_2))$.
+    \item 
+        $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(Env(\Gamma,\syntax{OMS}_1), \syntax{OMS}_2)$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with edges from the nodes of $\syntax{OMS}_1$ and $\syntax{OMS}_2$,
+       respectively, to the node of $O$,
+        labeled with the inclusion of $\Sig(\syntax{OMS}_i)$ in $\Sig(O)$,
+        for $i=1,2$.
 \end{itemize}
 
 If \syntax{ConsStrength} is present, then $O$ must be a conservative extension
@@ -5473,17 +5543,23 @@ The semantics of $O=$
 \syntax{extension , OMS , ExtensionOMS} is
 
 \begin{itemize}
-  \item $\Inst(O) = \Inst(O_1) = I$ (which means that
+  \item $\Inst(O) = \Inst(\syntax{OMS}) = \Inst(\syntax{ExtensionOMS})$ 
+  (which means that
   the instutions of \syntax{OMS} and 
   \syntax{ExtensionOMS} must be the same)
-  \item $\Sig(O) = \Sig(O_1) \cup \Sigma$
-  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(O_1)} \in \Mod(O_1)
+  \item $\Sig(O) = \Sig(\syntax{OMS}) \cup \Sig(\syntax{ExtensionOMS})$
+  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(\syntax{OMS})} \in \Mod(\syntax{OMS})
   \text{ and }
-  M \forget{\Sigma} \in \cM\}$
-  \item $\Th(O) = \Th(O_1) \cup \Delta$
+  M \forget{\Sig(\syntax{ExtensionOMS})} \in \Mod(\syntax{ExtensionOMS})\}$
+  \item $\Th(O) = \Th(\syntax{OMS}) \cup \Th(\syntax{ExtensionOMS})$
+  \item $Env(\Gamma, O')$ is obtained from 
+       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       by extending $\Gamma''.imports$
+       with a new node for $O$ labeled as in the items above and
+       with a new edge from the node of $\syntax{OMS}$ to the node of $O$
+        labeled with the inclusion of $\Sig(\syntax{OMS})$ in 
+        $\Sig(O)$.
 \end{itemize}
-\noindent where $(I, \Sigma,\cM, \Delta) = 
-sem(\Gamma, (\Inst(O_1), \Sig(O_1), \Mod(O_1), \Th(O_1)), \syntax{ExtensionOMS})$. 
 
 If \syntax{ExtConsStrength} is a \syntax{ConsStrength}, then $O$ must be a conservative extension
 of the appropriate strength of \syntax{OMS}$_1$.
@@ -5504,19 +5580,6 @@ means that if the qualification appears as a term in
 a larger expression, after its analysis the context will
 be $\Gamma$ and not $\Gamma'$.
 
-%Bridge
-
-\ednote{@Till: check. @Mihai: I have removed bridges}
-
-The semantics of \syntax{bridge, OMS$_1$, \{ Translation\}, OMS$_2$} is 
-$(\cI, \Sigma,\cM, \Delta)$
-where \\
-$sem(\Gamma,  \syntax{'bridge', OMS$_1$})= (\cI_1, \Sigma_1,\cM_1,\Delta_1)$,\\
-$sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta) : \cI_1 \to \cI_2$,\\
-$\cM'_1 = \{ M \in \Mod^{I_2}(\Phi(\Sigma_1)) \mid \beta_{\Sigma_1}(M) \in \cM_1 \}$ and \\
-$sem(\Gamma, (\cI_2, \Phi(\Sigma_1), \cM'_1, \alpha_{\Sigma_1}(\Delta_1)), \syntax{OMS}_2) = (\cI,\Sigma,\cM,\Delta)$.
-
-
 %Combination
 
 The semantics of 
@@ -5526,6 +5589,9 @@ $O=$ \syntax{combination, Network} is
   \item $\Sig(O) = \Sigma$, where $(I,\Sigma,  \{\mu_i\}_{i\in |G|})$ is the colimit of the graph $G$ given by the semantics of \syntax{Network},
   \item $\Th(O) = \cup_{i\in |G|} \mu_i(\Th(O_i))$, where $O_i$ is the OMS label of the node $i$ in $G$
   \item $\Mod(O) =  \{ M\in\Mod(\Sigma) \mid M\forget{\mu_i} \in \Mod(O_i), i\in |G| \}$, where $O_i$ is the OMS label of the node $i$ in $G$.
+  \item $Env(\Gamma,O)$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ 
+  a new node for $O$ labeled as in the items above and with edges from each node in
+  $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
 \end{itemize}
 
 %Application
@@ -5561,7 +5627,7 @@ The semantics of a reduction
 $O=$ \syntax{hidden, LogicReduction, SymbolItems}
 is given by
 \begin{itemize}
- \item $\Inst(O) = sem(LogicReduction) : \Gamma.logic \to logic'$
+ \item $\Inst(O) = sem(\syntax{LogicReduction}) : \Gamma.logic \to logic'$
  \item 
 $\Mor(O) = 
 \iota: \Sigma' \to \Phi(\Sigma)$, where 
@@ -5729,8 +5795,6 @@ defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
 model in $\cM'$.
 
 If \syntax{ExtensionName} is present, the inclusion link is labeled with this name.
-\ednote{This shows that we build at the level of each library a graph, where these
-imports will be added. This has to be propagated in the whole section...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
