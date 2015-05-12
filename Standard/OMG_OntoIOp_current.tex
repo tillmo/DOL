@@ -2856,7 +2856,7 @@ ontology Space =
  combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
 \end{lstlisting} 
 
-\section{Use Case Onto-3: Module Extraction From Large Ontologies}
+\section{Use Case Onto-3: Module Extraction From Large Ontologies}\label{onto-3}
 Especially in the biomedical domain, ontologies tend to become very large (e.g., SNOMED CT, FMA) 
 with over 100000 concepts and relationships. Yet, none of these ontologies covers all aspects of a 
 domain, and frequently provide coverage at various levels of specificity, with excessive detail in 
@@ -2880,7 +2880,20 @@ integration.
 \end{center}
 \end{figure}
 
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
+library GalenModule
+logic OWL
+ontology myGalen = 
+  http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
+end
+
+module myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
+  for Drugs, Joints, Bodyparts
+end
+\end{lstlisting}
  
+
 
 \section{Use Case Onto-4: Interoperability Between Closed-World Data and Open-World Metadata}
 Data collection has become easier and much more widespread over the years. This data has to be 
@@ -7841,7 +7854,7 @@ entailment IRI = OMSName in Network entails OMS & ATM\\\hline
 entailment IRI = Network entails Network & ATM\\\hline
 equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
 %equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
-module IRI : OMS of OMS for Symbols  & GalenModule \\\hline
+module IRI : OMS of OMS for Symbols  & section~\ref{onto-3} \\\hline
 %module IRI \%ccons : OMS of OMS for Symbols  &  \\\hline
 %alignment IRI : OMS to OMS end  &  \\\hline
 %alignment IRI 1 : OMS to OMS end  &  \\\hline
@@ -7885,7 +7898,7 @@ OMS hide along IRI  & ATM \\\hline
 %OMS hide along IRI : IRI $\to$ IRI  &  \\\hline
 %OMS hide along IRI $\to$ IRI  &  \\\hline
 %OMS hide along $\to$ IRI  &  \\\hline
-OMS extract Symbols  & GalenModule \\\hline
+OMS extract Symbols  & section~\ref{onto-3} \\\hline
 OMS remove Symbols  & All\_kinds\_of\_group\_specifications \\\hline
 OMS forget Symbols  & All\_kinds\_of\_group\_specifications \\\hline
 %OMS forget Symbols keep Logic  &  \\\hline
@@ -8328,19 +8341,6 @@ end
 
 \end{lstlisting}
 
-\sclause{Ontology Modules}
-
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
-library GalenModule
-logic OWL
-ontology myGalen = 
-  http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
-end
-
-module myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
-  for Drugs, Joints, Bodyparts
-end
-\end{lstlisting}
 
 \sclause{Algebra}
 
