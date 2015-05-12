@@ -3053,8 +3053,168 @@ then
 end
 \end{lstlisting}
 
-\section{Use Case Model-1: Coherent Semantics for Multi-Language Models}
-\ednote{Isn't this one about ontologies,too?}
+
+\section{Use Case Model-1: Consistency Among UML Diagrams of Different Types}
+\label{model-1}
+
+A typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
+requirements. Typical questions that arise in this context are, e.g.,
+
+\begin{itemize}
+\item whether the multiplicities in a class diagram are consistent with each other
+\item wether the attributes and operations in a state machine are
+available in a class diagram
+\item	  whether the sequential composition of actions in an interaction diagram is justified by an accompanying OCL specification,
+\item 	whether cooperating state machines comply with pre-/post-conditions and invariants
+\item 	if the behavior prescribed in an interaction diagram is realizable by several state machines cooperating according to a composite structure diagram.
+\end{itemize}
+Such questions are currently hard to answer in a systematic manner. One method to answer these questions and find such errors is a check for semantic 
+consistency. Under some restrictions, the proof of semantic consistency can be (at least partially) performed using model-checking tools like Hugo/RT \cite{knapp-wuttke:models06wsh:2007}. 
+Once a formal semantics for the different diagram types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use DOL to specify in which 
+sense the diagrams need to be consistent, and check this by suitable tools.
+
+
+\ssclause{The ATM Example}
+
+We present as a small example in model-deriven development using UML,
+taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
+the design of a traditional automatic teller machine (ATM) connected
+to a bank. For simplicity, we only describe the handling of entering a
+card and a PIN with the ATM. After entering the card, one has three
+trials for entering the correct PIN (which is checked by the
+bank). After three unsuccessful trials the card is kept.
+
+\begin{figure}[!Ht]
+\centering
+\subfigure[Interaction\label{fig:interaction}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/scenario.png}%\\[-1.5ex]
+}
+\hspace*{0.5cm}
+\subfigure[Composite structure\label{fig:system}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/system.png}%\\[-1.5ex]
+}
+\\
+\subfigure[Protocol state machine\label{fig:psm}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=.65]{illustrations/uml/protocol.png}%\\[-1.5ex]
+}
+\hspace*{0.4cm}
+\subfigure[Interface\label{fig:class}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/interfaceWithOCL.png}%\\[-1.5ex]
+}
+\\
+\subfigure[State machine\label{fig:state-machine}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/atm-behaviour.png}%\\[-1.5ex]
+}
+\vspace*{-1.5ex}
+\caption{ATM example}\label{fig:atm-example}
+\end{figure}
+
+Figure~\ref{fig:interaction} shows a possible \emph{interaction}
+between an \uml{atm} and a \uml{bank} object, which consists out of
+four messages: the \uml{atm} requests the \uml{bank} to \uml{verify}
+if a card and PIN number combination is valid, in the first case the
+\uml{bank} requests to reenter the PIN, in the second case the
+verification is successful.  This interaction presumes that the system
+has an \uml{atm} and a \uml{bank} as objects. This can, e.g., be
+ensured by a \emph{composite structure diagram}, see
+Fig.~\ref{fig:system}, which --- among other things --- specifies the
+objects in the initial system state.  Furthermore, it specifies that
+the communication between \uml{atm} and \uml{bank} goes through the
+two ports \uml{bankCom} and \uml{atmCom} linked by a connector.  The
+communication protocol on this connector is captured with a
+\emph{protocol state machine}, see Fig.~\ref{fig:psm}.  The protocol
+state machine fixes in which order the messages \uml{verify},
+\uml{verified}, \uml{reenterPIN}, and \uml{markInvalid} between
+\uml{atm} and \uml{bank} may occur.  Figure~\ref{fig:class} provides
+structural information in form of an interface specifying what is
+provided at the \uml{userCom} port of the \uml{atm} instance. An
+interface is a set of operations that other model elements have to
+implement. In our case, the interface is described in a \emph{class
+  diagram}. Here, the operation \uml{keepCard} is enriched with the
+OCL constraint \uml{trialsNum >= 3}, which refines its semantics:
+\uml{keepCard} can only be invoked if the OCL constraints holds.
+
+Finally, the dynamic behaviour of the \uml{atm} object is specified by
+the \emph{behavioural state machine} shown in
+Fig.~\ref{fig:state-machine}. The machine consists of five states
+including \uml{Idle}, \uml{CardEntered}, etc.  Beginning in the
+initial \uml{Idle} state, the user can \emph{trigger} a state change
+by entering the \uml{card}. This has the \emph{effect} that the
+parameter \uml{c} from the \uml{card} event is assigned to the
+\uml{cardId} in the \uml{atm} object (parameter names are not shown on
+triggers). Entering a \uml{PIN} triggers another transition to
+\uml{PINEntered}.  Then the ATM requests verification from the bank
+using its \uml{bankCom} port.  The transition to \uml{Verifying} uses
+a \emph{completion event}: No explicit trigger is declared and the
+machine autonomously creates such an event whenever a state is
+completed, i.e., all internal activities of the state are finished (in
+our example there are no such activities).  If the interaction with
+the bank results in \uml{reenterPIN}, and the \emph{guard}
+\uml{trialsNum < 3} is true, the user can again enter a \uml{PIN}.
+
+
+The ATM example in Fig.~\ref{fig:psm} consists of five different
+models, which naturally form a network. Coherence of this network
+is expressed as its consistency.
+We assume that XMI representations of the
+relevant UML models have been stored at
+\url{http://www.example.org/uml/},
+e.g.\ \url{http://www.example.org/uml/cd.xmi}:
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via,network,entailment,entails,refined,consistent},escapechar=@,mathescape]
+%prefix( :     <http://www.example.org/uml/>
+         uml:   <http://www.uml.org/spec/UML/>
+%% descriptions of logics ...		 
+         log:   <http://www.omg.org/spec/DOL/logics/>
+library ATM
+
+view cd2atm = cd to { atm hide along atm2cd} end
+view cd2psm = cd to { psm hide along psm2cd} end
+view cd2int = cd to { interaction hide along sqd2cd} end
+network ATM_network = %consistent
+                      cd, atm, psm, csd,
+                      cd2atm, cd2psm, abstract_to_concrete_atm
+entailment atm in ATM_network entails interaction
+network Some_refined_ATM_network = ...
+refinement r = ATM_network refined to Some_refined_ATM_network
+entailment e = Some_refined_ATM_network entails ATM_network
+\end{lstlisting}
+
+\section{Use Case Model-2: Refinements Between UML Diagrams of Different Types, and Their Reuse}
+\label{model-2}
+
+A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
+sequence diagrams and OCL constraints. Assume further that this model is not directly implemented, but first refined to a UML behavior state machine (which then 
+can be automatically or semi-automatically transformed into some implementation using standard UML tools). However, there is no standardized language to 
+express, document and maintain the refinement relation itself (UML only allows very simple refinements, namely between state machines). This hinders both the 
+reuse of such refinements in different contexts, as well as the interoperability of tools proving such refinements to be correct. DOL  
+addresses these problems by providing a standardized notation with formal semantics for such refinements. Refinements expressed in this language could, e.g., be 
+parameterized and reused in different contexts.
+
+Coming to a DOL example, we want to state the fact that the state
+machine of the \uml{atm}, shown in Fig.~\ref{fig:state-machine}, is a
+refinement of the protocol state machine in Fig.~\ref{fig:psm} as
+follows in DOL.  We continue the library \uml{ATM} above, again
+assuming that XMI representations of the relevant UML models have been
+stored at \url{http://www.example.org/uml/},
+e.g.\ \url{http://www.example.org/uml/atm.xmi}:
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
+refinement abstract_to_concrete_atm =
+  psm refined via psm2atm to 
+       {  atm with Idle |-> Idle, CardEntered |-> Idle, 
+                   PINEntered |-> Idle, Verified |-> Idle, 
+                   Verifying |-> Verifying 
+          hide card, PIN   }
+end
+\end{lstlisting}
+
+The refinement uses an abstraction of the \uml{atm}, expressed by the
+translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in a two-state machine. Moreover, some detail of the \uml{atm} is hidden using
+\syntax{hide}. Then, the protocol state machine can be refined to
+the thus abstracted \uml{atm}.
+
+\section{Use Case Model-3: Coherent Semantics for Multi-Language Models}
+\label{model-3}
 	
 Often a single problem area within a given domain must be described using several formalisms, due to user community requirements, expressiveness, tool support 
 and usage, and so forth. A challenge is that typically the different formalizations are written by different people using different logics, and, thus, their overall 
@@ -3077,32 +3237,74 @@ With DOL, one can, e.g.,
 \end{itemize}
 Note that the last point does not specify what information is lost in the approximation. Indeed, DOL provides the means to specify requirements on the approximation, e.g., that it maximally preserves the information. 
 
-\section{Use Case Model-2: Consistency Among UML Diagrams of Different Types}
+Coming to a DOL example,
+a model like the ATM model developed above typically is part of an
+application context that also contains some common terminology.
+This terminology often is specified by an ontology, and then
+it is desirable to relate the model to the ontology. Consider
+the following financial ontology fragment:
 
-A typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
-requirements. Typical questions that arise in this context are, e.g.,
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, Irreflexive, Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract},escapechar=@,mathescape]
+ontology myTaxonomy =
+  ObjectProperty: owns 
+    Characteristics: Irreflexive, Asymmetric
 
+  Class: FinancialIntermediary
+    SubClassOf: CorporatePerson 
+  Class: CorporatePerson
+    SubClassOf: ImmaterialEntity
+  Class: ImmaterialEntity
+    DisjointWith: MaterialEntity
+    SubClassOf: has_part only ImmaterialEntity
+  Class: Livestock 	
+    SubClassOf: MaterialEntity 
+...
+end
+\end{lstlisting}
+
+When we want to relate this ontology with the ATM model, 
+we need to take care of various aspects:
 \begin{itemize}
-\item whether the multiplicities in a class diagram are consistent with each other
-\item wether the attributes and operations in a state machine are
-available in a class diagram
-\item	  whether the sequential composition of actions in an interaction diagram is justified by an accompanying OCL specification,
-\item 	whether cooperating state machines comply with pre-/post-conditions and invariants
-\item 	if the behavior prescribed in an interaction diagram is realizable by several state machines cooperating according to a composite structure diagram.
+  \item Translating into shared language (here, we choose Common Logic)
+  \item Unifying terminology (Bank vs. FinancialIntermediary)
+  \item Connecting related concepts (bank.owns.ATM vs. owns)
+  \item Removing irrelevant parts (livestock) 
 \end{itemize}
-Such questions are currently hard to answer in a systematic manner. One method to answer these questions and find such errors is a check for semantic 
-consistency. Under some restrictions, the proof of semantic consistency can be (at least partially) performed using model-checking tools like Hugo/RT \cite{knapp-wuttke:models06wsh:2007}. 
-Once a formal semantics for the different diagram types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use DOL to specify in which 
-sense the diagrams need to be consistent, and check this by suitable tools.
 
-\section{Use Case Model-3: Refinements Between UML Diagrams of Different Types, and Their Reuse}
-A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
-sequence diagrams and OCL constraints. Assume further that this model is not directly implemented, but first refined to a UML behavior state machine (which then 
-can be automatically or semi-automatically transformed into some implementation using standard UML tools). However, there is no standardized language to 
-express, document and maintain the refinement relation itself (UML only allows very simple refinements, namely between state machines). This hinders both the 
-reuse of such refinements in different contexts, as well as the interoperability of tools proving such refinements to be correct. DOL  
-addresses these problems by providing a standardized notation with formal semantics for such refinements. Refinements expressed in this language could, e.g., be 
-parameterized and reused in different contexts.
+\begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, OMS, Characteristics,Transitive,Asymmetric,translation,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,oms,model},escapechar=@,mathescape]
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi>
+
+model clStateModel = xmiStateModel with
+                     translation UMLState2CL
+
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi>			
+
+model clClassModel = xmiClassModel with 
+            translation UMLClass2CL 
+            Bank |-> FinancialIntermediary
+
+ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>			
+
+ontology NoLivestockTaxonomy = BigTaxonomy reject
+                               Class: Livestock
+						  end
+
+ontology ExtendedTaxonomy = NoLivestockTaxonomy then 
+         ObjectProperty FinancialIntermediary.owns.ATM
+           SubPropertyOf: owns 
+           Domain: FinancialIntermediary 
+           Range: ATM
+end
+
+ontology clTaxonomy = ExtendedTaxonomy with 
+                      translation OWL22CommonLogic
+
+oms JointModel = clStateModel and 
+                 clClassModel and 
+                 clTaxonomy
+end
+\end{lstlisting}
+
 
 \section{Conclusion}
 
@@ -7846,12 +8048,12 @@ interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
 interpretation IRI : OMS to OMS = \%cons SymbolMap  &  Engine\\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
 refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-1} \\\hline
-refinement IRI = OMS refined via translation IRI to OMS & ATM \\\hline
+refinement IRI = OMS refined via translation IRI to OMS & section~\ref{model-1} \\\hline
 refinement IRI = IRI then IRI & section~\ref{spec-1} \\\hline
-refinement IRI = Network refined to Network & ATM \\\hline
+refinement IRI = Network refined to Network & section~\ref{model-1} \\\hline
 entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
-entailment IRI = OMSName in Network entails OMS & ATM\\\hline
-entailment IRI = Network entails Network & ATM\\\hline
+entailment IRI = OMSName in Network entails OMS & section~\ref{model-1}\\\hline
+entailment IRI = Network entails Network & section~\ref{model-1}\\\hline
 equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
 %equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
 module IRI : OMS of OMS for Symbols  & section~\ref{onto-3} \\\hline
@@ -7894,7 +8096,7 @@ OMS with translation IRI  & Mereology \\\hline
 OMS hide SymbolItems  &  Algebra \\\hline
 OMS reveal Symbols  & Datatypes \\\hline
 %OMS reveal Symbol |-> Symbol ...  &  \\\hline
-OMS hide along IRI  & ATM \\\hline
+OMS hide along IRI  & section~\ref{model-1} \\\hline
 %OMS hide along IRI : IRI $\to$ IRI  &  \\\hline
 %OMS hide along IRI $\to$ IRI  &  \\\hline
 %OMS hide along $\to$ IRI  &  \\\hline
@@ -8545,202 +8747,6 @@ hide permutation, is_ordered
 
 
 
-\sclause{Model-Driven Development}
-
-\ssclause{The ATM Example}
-
-We present as a small example in model-deriven development using UML,
-taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
-the design of a traditional automatic teller machine (ATM) connected
-to a bank. For simplicity, we only describe the handling of entering a
-card and a PIN with the ATM. After entering the card, one has three
-trials for entering the correct PIN (which is checked by the
-bank). After three unsuccessful trials the card is kept.
-
-\begin{figure}[!Ht]
-\centering
-\subfigure[Interaction\label{fig:interaction}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/scenario.png}%\\[-1.5ex]
-}
-\hspace*{0.5cm}
-\subfigure[Composite structure\label{fig:system}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/system.png}%\\[-1.5ex]
-}
-\\
-\subfigure[Protocol state machine\label{fig:psm}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=.65]{illustrations/uml/protocol.png}%\\[-1.5ex]
-}
-\hspace*{0.4cm}
-\subfigure[Interface\label{fig:class}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/interfaceWithOCL.png}%\\[-1.5ex]
-}
-\\
-\subfigure[State machine\label{fig:state-machine}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/atm-behaviour.png}%\\[-1.5ex]
-}
-\vspace*{-1.5ex}
-\caption{ATM example}\label{fig:atm-example}
-\end{figure}
-
-Figure~\ref{fig:interaction} shows a possible \emph{interaction}
-between an \uml{atm} and a \uml{bank} object, which consists out of
-four messages: the \uml{atm} requests the \uml{bank} to \uml{verify}
-if a card and PIN number combination is valid, in the first case the
-\uml{bank} requests to reenter the PIN, in the second case the
-verification is successful.  This interaction presumes that the system
-has an \uml{atm} and a \uml{bank} as objects. This can, e.g., be
-ensured by a \emph{composite structure diagram}, see
-Fig.~\ref{fig:system}, which --- among other things --- specifies the
-objects in the initial system state.  Furthermore, it specifies that
-the communication between \uml{atm} and \uml{bank} goes through the
-two ports \uml{bankCom} and \uml{atmCom} linked by a connector.  The
-communication protocol on this connector is captured with a
-\emph{protocol state machine}, see Fig.~\ref{fig:psm}.  The protocol
-state machine fixes in which order the messages \uml{verify},
-\uml{verified}, \uml{reenterPIN}, and \uml{markInvalid} between
-\uml{atm} and \uml{bank} may occur.  Figure~\ref{fig:class} provides
-structural information in form of an interface specifying what is
-provided at the \uml{userCom} port of the \uml{atm} instance. An
-interface is a set of operations that other model elements have to
-implement. In our case, the interface is described in a \emph{class
-  diagram}. Here, the operation \uml{keepCard} is enriched with the
-OCL constraint \uml{trialsNum >= 3}, which refines its semantics:
-\uml{keepCard} can only be invoked if the OCL constraints holds.
-
-Finally, the dynamic behaviour of the \uml{atm} object is specified by
-the \emph{behavioural state machine} shown in
-Fig.~\ref{fig:state-machine}. The machine consists of five states
-including \uml{Idle}, \uml{CardEntered}, etc.  Beginning in the
-initial \uml{Idle} state, the user can \emph{trigger} a state change
-by entering the \uml{card}. This has the \emph{effect} that the
-parameter \uml{c} from the \uml{card} event is assigned to the
-\uml{cardId} in the \uml{atm} object (parameter names are not shown on
-triggers). Entering a \uml{PIN} triggers another transition to
-\uml{PINEntered}.  Then the ATM requests verification from the bank
-using its \uml{bankCom} port.  The transition to \uml{Verifying} uses
-a \emph{completion event}: No explicit trigger is declared and the
-machine autonomously creates such an event whenever a state is
-completed, i.e., all internal activities of the state are finished (in
-our example there are no such activities).  If the interaction with
-the bank results in \uml{reenterPIN}, and the \emph{guard}
-\uml{trialsNum < 3} is true, the user can again enter a \uml{PIN}.
-
-We can now state the fact that the state machine of the \uml{atm},
-shown in Fig.~\ref{fig:state-machine}, is a refinement of the protocol
-state machine in Fig.~\ref{fig:psm} as follows in DOL, assuming that
-XMI representations of the relevant UML models have been stored at
-\url{http://www.example.org/uml/}, e.g.\ \url{http://www.example.org/uml/atm.xmi}:
-
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
-%prefix( :     <http://www.example.org/uml/>
-         uml:   <http://www.uml.org/spec/UML/>
-%% descriptions of logics ...		 
-         log:   <http://www.omg.org/spec/DOL/logics/>
-library ATM
-logic log:uml
-
-refinement abstract_to_concrete_atm =
-  psm refined via psm2atm to 
-       {  atm with Idle |-> Idle, CardEntered |-> Idle, 
-                   PINEntered |-> Idle, Verified |-> Idle, 
-                   Verifying |-> Verifying 
-          hide card, PIN   }
-end
-\end{lstlisting}
-
-The refinement uses an abstraction of the \uml{atm}, expressed by the
-translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in a two-state machine. Moreover, some detail of the \uml{atm} is hidden using
-\syntax{hide}. Then, the protocol state machine can be refined to
-the thus abstracted \uml{atm}.
-
-\ssclause{Networks of UML Models}
-
-The ATM example in Fig.~\ref{fig:psm} consists of five different
-models, which naturally form a network. We continue the library
-\uml{ATM} above, again assuming that XMI representations of the
-relevant UML models have been stored at
-\url{http://www.example.org/uml/},
-e.g.\ \url{http://www.example.org/uml/cd.xmi}:
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via,network,entailment,entails,refined},escapechar=@,mathescape]
-view cd2atm = cd to { atm hide along atm2cd} end
-view cd2psm = cd to { psm hide along psm2cd} end
-view cd2int = cd to { interaction hide along sqd2cd} end
-network ATM_network = cd, atm, psm, csd,
-                      cd2atm, cd2psm, abstract_to_concrete_atm
-entailment atm in ATM_network entails interaction
-network Some_refined_ATM_network = ...
-refinement r = ATM_network refined to Some_refined_ATM_network
-entailment e = Some_refined_ATM_network entails ATM_network
-\end{lstlisting}
-
-\ssclause{Link to a Financial Ontology}
-
-A model like the ATM model developed above typically is part of an
-application context that also contains some common terminology.
-This terminology often is specified by an ontology, and then
-it is desirable to relate the model to the ontology. Consider
-the following financial ontology fragment:
-
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, Irreflexive, Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract},escapechar=@,mathescape]
-ontology myTaxonomy =
-  ObjectProperty: owns 
-    Characteristics: Irreflexive, Asymmetric
-
-  Class: FinancialIntermediary
-    SubClassOf: CorporatePerson 
-  Class: CorporatePerson
-    SubClassOf: ImmaterialEntity
-  Class: ImmaterialEntity
-    DisjointWith: MaterialEntity
-    SubClassOf: has_part only ImmaterialEntity
-  Class: Livestock 	
-    SubClassOf: MaterialEntity 
-...
-end
-\end{lstlisting}
-
-When we want to relate this ontology with the ATM model, 
-we need to take care of various aspects:
-\begin{itemize}
-  \item Translating into shared language (here, we choose Common Logic)
-  \item Unifying terminology (Bank vs. FinancialIntermediary)
-  \item Connecting related concepts (bank.owns.ATM vs. owns)
-  \item Removing irrelevant parts (livestock) 
-\end{itemize}
-
-\begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, OMS, Characteristics,Transitive,Asymmetric,translation,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,oms,model},escapechar=@,mathescape]
-model xmiClassModel = <https://ontohub.org/ATM/class.xmi>
-
-model clStateModel = xmiStateModel with
-                     translation UMLState2CL
-
-model xmiClassModel = <https://ontohub.org/ATM/class.xmi>			
-
-model clClassModel = xmiClassModel with 
-            translation UMLClass2CL 
-            Bank |-> FinancialIntermediary
-
-ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>			
-
-ontology NoLivestockTaxonomy = BigTaxonomy reject
-                               Class: Livestock
-						  end
-
-ontology ExtendedTaxonomy = NoLivestockTaxonomy then 
-         ObjectProperty FinancialIntermediary.owns.ATM
-           SubPropertyOf: owns 
-           Domain: FinancialIntermediary 
-           Range: ATM
-end
-
-ontology clTaxonomy = ExtendedTaxonomy with 
-                      translation OWL22CommonLogic
-
-oms JointModel = clStateModel and 
-                 clClassModel and 
-                 clTaxonomy
-end
-\end{lstlisting}
 
 
 \sclause{Queries}
