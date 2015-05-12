@@ -9066,10 +9066,12 @@ by Tim Reddehase
   {\end{itemize}}
 
 
-This appendix describes the way how Ontohub assigns IRIs to DOL libraries,
-OMS, symbols etc. Ontohub is a reference implementation for DOL, and
-it is suggested that other tools should adopt the same or a similar
-scheme for IRIs.
+This appendix describes the way how Ontohub assigns IRIs to DOL
+libraries, OMS, symbols etc. Ontohub\footnote{In this appendix,
+  ``Ontohub'' could equally well be substituted by ``Modelhub'' and
+  ``Spechub''.} is a reference implementation for DOL, and it is
+suggested that other tools supporting DOL should adopt the same or a
+similar scheme for IRIs.
 
 
 \section{Concept}
@@ -9093,14 +9095,14 @@ that is easily understood by a user.
 
 \section{Ontohub-Style}
 
-Identifying Ontologies and their members in Ontohub is a hierarchical
-task. An OMS library belong to a repository. An OMS may belong
+Identifying OMS and their members in Ontohub is a hierarchical
+task. An OMS library belongs to a repository. An OMS may belong
 directly to a repository, or indirectly through a library. Mappings,
 symbols and sentences in turn belong to an OMS. So we could use the
 hierarchical portion of an IRI instead of the query string.  This
 would mean using a forward slash (\emph{/}) as separator.
 
-Ontohub loc/ids are specific to an instance of the Ontohub-Application. However
+Ontohub loc/ids are specific to an instance of the Ontohub application. However
 such an instance might be reachable via multiple multiple FQDNs (fully
 qualified domain name) and ports. So instead we should expect a
 \emph{qualified loc/id} to be a tuple consisting of the specific application
@@ -9112,7 +9114,7 @@ actual identifying portion beginning with the hierarchical forward slash
 
 \begin{enumerate}
   \item Set of Schema + FQDNs + Port for an instance: \emph{INSTANCE}, e.g.\\
-    \{ \url{http://localhost:3000}, \url{http://localhost:9001}, \url{http://ontohub.dev} \}
+    \{ \url{http://ontohub.org}, \url{http://model-hub.org}, \url{http://spechub.org} \}
   \item Identifying portion loc/id with leading forward slash (\emph{/})
   \begin{itemize}
     \item The identifying portion is split into three parts.
@@ -9121,7 +9123,7 @@ actual identifying portion beginning with the hierarchical forward slash
     \item \emph{MEMBER}: is the element of the OMS at the specific
       position. It is being separated from the \emph{HIERARCHY} by two
       forward slashes (\emph{//}). These forward slashes are also being used to
-      separate members inside of \emph{MEMBER} (e.g. in the case of a
+      separate members inside of \emph{MEMBER} (e.g.\ in the case of an
       OMS which contains a symbol).
     \item \emph{COMMAND}: is not really an element or part of an OMS,
       but a command the user wishes to execute on the object selected by the
@@ -9151,7 +9153,7 @@ actual identifying portion beginning with the hierarchical forward slash
   Sentence & \url{/default/pizza//Ax02}\\
 \end{tabularx}
 
-Fully qualified symbols (e.g. $+:NatxNat\mapsto Nat$) will need to be escaped
+Fully qualified symbols (e.g.\ $+:Nat \times Nat\mapsto Nat$) will need to be escaped
 but will be supported.
 
 \section{Specification}
@@ -9196,7 +9198,7 @@ There is one additional syntax-element that we haven't covered yet. One of the
 main features that Ontohub provides in its role as an \emph{Open OMS Repository}
 is versioning of OMS by backing the repositories with git. It is quite
 important that we can access such versions and other related files inside of a
-repository, which can be basically viewed as a directory in a filesystem.
+repository, which can be basically viewed as a directory in a file system.
 \texttt{ref/}-style IRIs accomplish this task.
 
 The \texttt{ref/\emph{argument}}-form is a prefix of the \emph{HIERARCHY},
@@ -9215,7 +9217,8 @@ unqualified loc/id, or in short: loc/id.
     \begin{itemize}
       \item Does not refer to a specifically designated version of the element,
         but always refers to the current one instead. This version allows to
-        use MMT-style IRIs, which should guarantee basic support for tools
+        use MMT-style IRIs \cite{RabKoh:WSMSML13}, 
+        which should guarantee basic support for tools
         which expect the MMT-style.
     \end{itemize}
 \end{itemize}
@@ -9223,7 +9226,7 @@ unqualified loc/id, or in short: loc/id.
 \subsection{References inside of the tree}
 
 Additionally we need to provide a way to reference files inside a repository,
-This especially applies to files that do not represent ontologies. This
+This especially applies to files that do not represent OMS. This
 will be accomplished by the \texttt{tree/} special form. Additionally
 we will support a \texttt{treeref} special form which allows to reference
 a specific version of a files using the \emph{Commit}, \emph{Branch} and
@@ -9247,16 +9250,16 @@ which would be possible if there were a directory named \textbf{pizza} and an
 ontology named \textbf{pizza.owl} -- will the loc/id be resolved to a
 disambiguating page.
 
-This page will contain a link to the tree for the directory, e.g.
+This page will contain a link to the tree for the directory, e.g.\ 
 \url{/tree/default/pizza}, and a link to a \texttt{ref/} special form
-version of the ontology, e.g. \url{/ref/master/default/pizza}.
+version of the OMS, e.g.\ \url{/ref/master/default/pizza}.
 
 If however the loc/id is requested with a \emph{text/plain} content type we
-will always serve the ontology. This is in part because there is no reasonable
+will always serve the OMS. This is in part because there is no reasonable
 representation of a directory that we would want to support. Another reason is
-that Ontohub serves ontologies as its main objects. And as \emph{text/plain} is
+that Ontohub serves OMS as its main objects. And as \emph{text/plain} is
 the MIME-type that was chosen to always return the textual content of an
-ontologies (the raw file), we will need to serve that, even if the loc/id would
+OMS (the raw file), we will need to serve that, even if the loc/id would
 be ambiguous in a normal request.
 
 
