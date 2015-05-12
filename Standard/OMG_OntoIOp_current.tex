@@ -8546,6 +8546,8 @@ hide permutation, is_ordered
 
 \sclause{Model-Driven Development}
 
+\ssclause{The ATM Example}
+
 We present as a small example in model-deriven development using UML,
 taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
 the design of a traditional automatic teller machine (ATM) connected
@@ -8670,14 +8672,75 @@ refinement r = ATM_network refined to Some_refined_ATM_network
 entailment e = Some_refined_ATM_network entails ATM_network
 \end{lstlisting}
 
+\ssclause{Link to a Financial Ontology}
 
-%% refinement IRI = Network refined via IRI |-> IRI & \\
-%% \qquad using translation IRI to Network & \\\hline
-%% entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
-%% entailment IRI = OMSName in Network entails OMS & \\\hline
-%% entailment IRI = Network entails Network & \\\hline
-%% equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
-%% equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
+A model like the ATM model developed above typically is part of an
+application context that also contains some common terminology.
+This terminology often is specified by an ontology, and then
+it is desirable to relate the model to the ontology. Consider
+the following financial ontology fragment:
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, Irreflexive, Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract},escapechar=@,mathescape]
+ontology myTaxonomy =
+  ObjectProperty: owns 
+    Characteristics: Irreflexive, Asymmetric
+
+  Class: FinancialIntermediary
+    SubClassOf: CorporatePerson 
+  Class: CorporatePerson
+    SubClassOf: ImmaterialEntity
+  Class: ImmaterialEntity
+    DisjointWith: MaterialEntity
+    SubClassOf: has_part only ImmaterialEntity
+  Class: Livestock 	
+    SubClassOf: MaterialEntity 
+...
+end
+\end{lstlisting}
+
+When we want to relate this ontology with the ATM model, 
+we need to take care of various aspects:
+\begin{itemize}
+  \item Translating into shared language (here, we choose Common Logic)
+  \item Unifying terminology (Bank vs. FinancialIntermediary)
+  \item Connecting related concepts (bank.owns.ATM vs. owns)
+  \item Removing irrelevant parts (livestock) 
+\end{itemize}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, OMS, Characteristics,Transitive,Asymmetric,translation,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,oms,model},escapechar=@,mathescape]
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi>
+
+model clStateModel = xmiStateModel with
+                     translation UMLState2CL
+
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi>			
+
+model clClassModel = xmiClassModel with 
+            translation UMLClass2CL 
+            Bank |-> FinancialIntermediary
+
+ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>			
+
+ontology NoLivestockTaxonomy = BigTaxonomy reject
+                               Class: Livestock
+						  end
+
+ontology ExtendedTaxonomy = NoLivestockTaxonomy then 
+         ObjectProperty FinancialIntermediary.owns.ATM
+           SubPropertyOf: owns 
+           Domain: FinancialIntermediary 
+           Range: ATM
+end
+
+ontology clTaxonomy = ExtendedTaxonomy with 
+                      translation OWL22CommonLogic
+
+oms JointModel = clStateModel and 
+                 clClassModel and 
+                 clTaxonomy
+end
+\end{lstlisting}
+
 
 \sclause{Queries}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,query,select,where,in,substitution,result,for,along,library,spec,sort,pred,op},escapechar=@,mathescape]
