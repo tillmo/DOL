@@ -1,0 +1,40 @@
+; Author: Tim Reddehase
+; E-Mail: robustus AT rightsrestricted DOT com
+; Last-Changed: 2015-02-22
+; Version: 0.1.2
+;
+; This ABNF for Loc/Ids is based on the definition
+; of IRIs and as such uses Rules from the RFC-Definition
+; of IRIs: http://tools.ietf.org/html/rfc3987#section-2.2
+; Rules that represent an IRI-rule usually start with an
+; i char.
+
+Loc-Id-IRI = li-instance [ li-ref ] Loc-Id [ "?" iquery ] [ "#" ifragment ]
+
+; Represents an Ontohub-Application instance.
+; Semantically multiple <li-instance> values
+; can be equivalent and thus forming the
+; set of INSTANCE. <scheme> is a rule inside
+; of the IRI RFC.
+li-instance = scheme "://" iauthority
+
+; a lone repository is also a Loc/Id
+Loc-Id = "/" li-repository [ li-hierarchy [ li-member ] ] [ li-command ]
+
+; Represents the path/directory name of the repository
+li-repository = isegment-nz
+
+; Represents a ref/ special form
+li-ref = "/" "ref/" isegment-nz
+
+; Represents the path inside the Repository to the ontology
+li-hierarchy = *( "/" isegment-nz )
+
+; Represents internal 'path' inside of the ontology
+; where child-ontologies, mappings, symbols and sentences
+; are first-class members.
+li-member = *2( "//" isegment-nz )
+
+; Represents a command to be 'executed' on the
+; specific resource
+li-command = *( "///" isegment-nz )
