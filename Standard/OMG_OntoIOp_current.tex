@@ -7324,17 +7324,20 @@ diagrams as described in the following sections.
 
 \section{Signatures}
 
-\medskip\noindent\textbf{Class/data type hierarchies.}
-A \emph{class/data type hierarchy} $(C, {\leq_C})$ is given by a
-partial order where the set $C$ contains the \emph{class/data type
-  names}, which are closed w.r.t.\ the \emph{built-in data types}
-$\mathsf{Boolean}$, $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$,
-$\mathsf{Real}$, and $\mathsf{String}$, i.e.,
-$\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural}, \mathsf{Integer},
-\mathsf{Real}, \mathsf{String} \} \subseteq C$;\ednote{what about
-enumeration types? Should we assume that some classifiers are
-marked as enumeration types and equipped with their set of
-constants?}
+\medskip\noindent\textbf{Class/data type hierarchies.}  A
+\emph{class/data type hierarchy} $(C, {\leq_C})$ is given by a partial
+order where the set $C$ contains the \emph{class/data type names}, which
+are closed w.r.t.\ the \emph{built-in data types} $\mathsf{Boolean}$,
+$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
+$\mathsf{String}$, i.e.,
+$\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
+\mathsf{Integer}, \mathsf{Real}, \mathsf{String} \} \subseteq
+C$;\ednote{what
+  about enumeration types? Should we assume that some classifiers are
+  marked as enumeration types and equipped with their set of constants?
+  AK: In UML, \uml{Enumeration} is a specialisation of \uml{DataType}.
+  The set of constants are \uml{EnumerationLiteral}s.  These could be
+  added like \uml{Property}.}
 and the partial ordering relation $\leq_C$ represents a
 \emph{generalisation relation} on $C$, where we say that $c_1$ is a
 \emph{sub-class/data type} of $c_2$ if $c_1 \leq_C c_2$.
@@ -7344,7 +7347,7 @@ $\gamma : (C, {\leq_C}) \to (D, {\leq_D})$ is given by a monotone map
 from $(C, {\leq_C})$ to $(D, {\leq_D})$, i.e.,
 $\gamma(c) \leq_D \gamma(c')$ if $c \leq_C c'$, such that
 $\gamma(c) = c$ for all
-$c \in \{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
+$c \in \{ \mathsf{Boolean},\allowbreak \mathsf{UnlimitedNatural},\allowbreak
 \mathsf{Integer}, \mathsf{Real}, \mathsf{String} \}$.
 
 \medskip
@@ -7352,7 +7355,8 @@ We use the \emph{collection type constructors} $\mathsf{OrderedSet}$,
 $\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ for
 representing the meta-attributes ``ordered'' and ``unique'' of
 \uml{MultiplicityElement} according to the following
-table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128.}
+table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128; UML
+  2.5, p.~27.}
 %
 \begin{quotation}
 \begin{tabular}{@{}r||c|c@{}}
@@ -7365,7 +7369,8 @@ table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128.}
 \end{quotation}
 %
 The default is ``not ordered'' and ``unique''.\footnote{UML
-  Superstructure Specification 2.4.1, p.~96.}
+  Superstructure Specification 2.4.1, p.~96; there does not seem to be
+  default in UML 2.5.}
 
 For a class/data type $c \in C$ of a class/data type-hierarchy
 $(C, {\leq_C})$ and a collection type constructor
@@ -7383,26 +7388,27 @@ Let $(C, {\leq_C})$ be a class/data type hierarchy.
 $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
 constructor, and $p$ an \emph{attribute name}.
 
-  \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of the
-form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$ with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
-constructor, and $o$ an \emph{operation name}.\ednote{are the $x_i$ called
-parameter names?}
+  \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of
+the form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$
+with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
+constructor, $o$ an \emph{operation name}, and $x_1, \ldots, x_r$
+\emph{parameter names}.
 
-  \item An \emph{association declaration} over $(C, {\leq_C})$ is of the
+\item An \emph{association declaration} over $(C, {\leq_C})$ is of the
 form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])$ with $r \geq 2$,
 $c_1, \dots, c_r \in C$, $\tau_1, \ldots, \tau_r$ classifier
 annotations, $a$ an \emph{association name}, and $p_1, \dots, p_r$
 \emph{member end names}.\footnote{The member ends are ordered according
-  to the UML Superstructure Specification 2.4.1, p.~29; hence we use a
-  tuple-like notation.}  An association declaration
+  to the UML Superstructure Specification 2.4.1, p.~29; UML 2.5, p.~206;
+  hence we use a tuple-like notation.}  An association declaration
 $\mathbf{a} = a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])$
 \emph{yields} the \emph{property declarations}
 $\mathbf{a}.p_i : \tau_i[c_i]$ for $1 \leq i \leq r$.  An association
 declaration is \emph{binary} if $r = 2$.\footnote{Only binary
   association may show member ends that are properties not owned by the
-  association (UML Superstructure Specification 2.4.1, p.~37).  The
-  propery declarations induced by a more than binary association result
-  in a query operation.}
+  association (UML Superstructure Specification 2.4.1, p.~37; UML 2.5,
+  p.~228).  The propery declarations induced by a more than binary
+  association result in a query operation.}
 
   \item A \emph{composition declaration} over $(C, {\leq_C})$ is of the
 form $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$ with
@@ -7410,15 +7416,19 @@ $c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
 \emph{composition name}, and $p_1, p_2$ \emph{member end
   names}.\footnote{In UML, each \uml{Property} may have
   \uml{AggregationKind} \uml{composite}.  However, such an aggregation
-  kind has no semantic meaning when the property is not a member end
-  of an association: the UML Superstructure Specification 2.4.1 does not
+  kind has no semantic meaning when the property is not a member end of
+  an association: the UML Superstructure Specification 2.4.1 does not
   mention the aggregation kind in the description of the semantics of
-  \uml{Property}.  Moreover, composite properties, i.e., properties with
+  \uml{Property}, and UML 2.5 explains the use of aggregations for
+  \uml{Property} as ``to model circumstances in which \emph{one
+    instance} is used to group together a set of instances'' (p.~112,
+  our emphasis).  Moreover, composite properties, i.e., properties with
   aggregation kind \uml{composite} can only be member ends of binary
-  associations (UML Superstructure Specification 2.4.1, p.~37) and their
-  multiplicity must not exceed one (UML Superstructure Specification
-  2.4.1, p.~126).  We thus separate composition declarations from
-  general association declarations.}  A composition declaration
+  associations (UML Superstructure Specification 2.4.1, p.~37; UML 2.5,
+  p.~228) and their multiplicity must not exceed one (UML Superstructure
+  Specification 2.4.1, p.~126; UML 2.5, p.~155).  We thus separate
+  composition declarations from general association declarations.}  A
+composition declaration
 $\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
 \tau_2[c_2])$
 \emph{yields} the property declarations
@@ -7445,14 +7455,16 @@ declarations in $M \cup A$, then $d_1 \neq d_2$;
 
   \item member end names are unique: if $p_1, \ldots, p_r$ are the
 member end names of an association declaration in $A$ or a composition
-declaration in $M$, then $p_i \neq p_j$ for $1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not
-  be unique.  However, for (1)~a simpler handling of selecting a
-  particular member end in the sentences and avoiding the use of
-  number selectors, and (2)~making the notion of member ends ``owned''
-  by a class/data type, we add this constraint.}
+declaration in $M$, then $p_i \neq p_j$ for
+$1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not be
+  unique.  However, for (1)~a simpler handling of selecting a particular
+  member end in the sentences and avoiding the use of number selectors,
+  and (2)~making the notion of member ends ``owned'' by a class/data
+  type, we add this constraint.}
 
   \item the type of a member end\footnote{All member ends are instances
-  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36.}
+  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36; UML
+  2.5, p.~206.}
 owned by a class/data type coincides with its declarations as attribute:
 We say that a property declaration $\mathbf{a}.p_i : \tau_i[c_i]$
 yielded by a binary association
