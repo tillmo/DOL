@@ -2921,6 +2921,8 @@ sciences.
 
 DOL  provides the framework for expressing such bridge rules in a systematic way, maintaining these, and building tools for them. 
 
+\ednote{Omit this use case, because we have no sample DOL text?}
+
 \section{Use Case Onto-5: Verification of Rules Translating Dublin Core Into PROV}
 The Dublin Core Metadata terms, which have been formalized as an RDF Schema vocabulary, developed initially by the digital library community, are less 
 comprehensive but more widely used than PROV (cf. Use Case Onto-1). The rules for translating Dublin Core to the OWL subset of PROV (and, with restrictions, 
@@ -2934,24 +2936,140 @@ The Dublin Core to PROV ontology translation%
 SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which is different from the model-theoretic semantics of the OWL and RDFS languages; nevertheless SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules between ontologies in RDF-based languages in a subset of FOL.
 DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL ontologies as modules of a distributed ontology (= OMS network), but it is also able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.
 
-\section{Use Case Spec-1: Specification Refinements}\label{spec-1}
-Especially in safety-critical areas such as medical systems, the automotive industry, avionics and the aerospace industry, but also for microprocessor design, often 
-a formal software and hardware development process is used in order to ensure the correct functioning of systems. Typically, a requirement specification is refined 
-into a design specification and then an implementation, often involving several intermediate steps (see, e.g. the V-model [V-model], although this does not require 
-formal specification).
-There are numerous specification formalisms in use, including the OMG's SysML language; moreover, often during development, the formalism needs to be 
-changed (e.g. from a specification to a programming language, or from a temporal logic to a state machine). For each of these formalisms, notions of refinement 
-have been defined and implemented. However, the lack of a standardized, logically sound language and methodology for such refinement hinders interoperability 
-among different development efforts and the reuse of refinements.
-DOL  provides the capability to represent refinement that is equally applicable to all DOL-conforming logical languages, and that  
-covers at least the most relevant of the industrial use cases of specification refinement.
+\ednote{Omit this use case, because we have no sample DOL text?}
 
-The specification below illustrates DOL refinements by expressing that natural numbers with addition form a monoid, and that 
-natural numbers can be efficiently represented for implementation as lists of binary digits, together with several equivalent
-ways of composing these refinements.
+\section{Use Case Spec-1: Modularity of Specifications}\label{spec-1}
+Often specifications become so large that it is necessary to structure
+them in a modular way, both for human readability, maintainability,
+and for more efficient tool support. The lack of a standard for such
+modular structuring hinders interoperability among different
+development efforts and the reuse of specifications.  DOL provides a
+notion of structured modular specification that is equally applicable
+to all DOL-conforming logical languages.
+
+Structuring pays off even for small specifications. For example, it makes
+structuring a simple specification of sorting lists in the 
+following way enhances both readability and potential for re-use
+of specifications:
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+library Sorting
 
+%% refinement from abstract sorting to insert sort
+
+logic CASL
+%right_assoc __::__
+spec TotalOrder =
+  sort Elem
+  pred __<=__ : Elem * Elem
+  forall x,y,z : Elem
+  . x <= x                         %(reflexive)%
+  . x <= z if x <= y /\ y <= z     %(transitive)%
+  . x = y if x <= y /\ y <= x      %(antisymmetric)%
+  . x <= y \/ y <= x               %(dichotomous)%
+end
+
+spec Nat =
+  free type Nat ::= 0 | suc(Nat)
+end
+
+spec List =
+  Nat
+then
+  sort Elem
+  free type List ::= [] | __::__(Elem; List)
+  op count : Elem * List -> Nat
+  forall x,y : Elem; L : List
+  . count(x,[]) = 0
+  . count(x,x :: L) = suc(count(x,L))
+  . count(x,y :: L) = count(x,L) if not x=y
+end
+
+spec Sorting =
+  TotalOrder and List
+then
+  preds is_ordered : List;
+        permutation : List * List
+  vars x,y:Elem; L,L1,L2:List
+  . is_ordered([])
+  . is_ordered(x::[])
+  . is_ordered(x::y::L) <=> x<=y /\ is_ordered(y::L)
+  . permutation(L1,L2) <=> (forall x:Elem . count(x,L1) = count(x,L2))
+then
+  op sorter : List->List
+  var L:List
+  . is_ordered(sorter(L))
+  . permutation(L,sorter(L))
+hide is_ordered, permutation
+end
+\end{lstlisting}
+
+In the last step, the structuring operation of hiding is used to
+restrict the specification to an export interface: we hide the
+predicates \texttt{is\_ordered} and \texttt{permutation}, because they
+are only auxiliary and need not be implemented.
+
+
+\section{Use Case Spec-2: Specification Refinements}\label{spec-2}
+Especially in safety-critical areas such as medical systems, the
+automotive industry, avionics and the aerospace industry, but also for
+microprocessor design, often a formal software and hardware
+development process is used in order to ensure the correct functioning
+of systems. Typically, a requirement specification is refined into a
+design specification and then an implementation, often involving
+several intermediate steps (see, e.g. the V-model [V-model], although
+this does not require formal specification).  There are numerous
+specification formalisms in use, including the OMG's SysML language;
+moreover, often during development, the formalism needs to be changed
+(e.g. from a specification to a programming language, or from a
+temporal logic to a state machine). For each of these formalisms,
+notions of refinement have been defined and implemented. However, the
+lack of a standardized, logically sound language and methodology for
+such refinement hinders interoperability among different development
+efforts and the reuse of refinements.  DOL provides the capability to
+represent refinement that is equally applicable to all DOL-conforming
+logical languages, and that covers at least the most relevant of the
+industrial use cases of specification refinement.
+
+A simple example is the refinement of the (purely declarative) sorting
+specification above into a specification of a particular sorting
+algorithm (for simplicity, we choose insert sort):
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+spec InsertSort = 
+  TotalOrder and List
+then
+  ops insert : Elem*List -> List;
+      insert_sort : List->List
+  vars x,y:Elem; L:List
+  . insert(x,[]) = x::[]
+  . insert(x,y::L) = x::insert(y,L) when x<=y else y::insert(x,L)
+  . insert_sort([]) = []
+  . insert_sort(x::L) = insert(x,insert_sort(L))
+ hide insert
+end
+
+refinement InsertSortCorrectness =
+   Sorting refined via sorter |-> insert_sort to InsertSort
+end
+\end{lstlisting}
+Note that hiding is essential here to make the signatures of
+both specifications compabtile. If we had not hidden the
+predicates \texttt{is\_ordered} and \texttt{permutation}
+in the \texttt{Sorting} specification, a refinement would
+not have been possible, since \texttt{InsertSort} does not
+implement these predicates (and it would be rather artificial
+to add an implementation for them).
+
+\medskip
+
+Refinements can be composed. A simple example below illustrates this
+by expressing that natural numbers with addition form a monoid, and
+that natural numbers can be efficiently represented for implementation
+as lists of binary digits, together with several equivalent ways of
+composing these refinements.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
 spec Monoid =
  sort Elem
  ops 0 : Elem;
@@ -2967,10 +3085,6 @@ end
 
 spec Nat =
   NatWithSuc hide suc
-end
-
-refinement R1 =
-Monoid refined via Elem |-> Nat to Nat
 end
 
 spec NatBin =
@@ -3008,50 +3122,6 @@ refinement R3''' = R1 then R2
 
 \end{lstlisting}
 
-\section{Use Case Spec-2: Modularity of Specifications}\label{spec-2}
-In the context of use case Spec-1, often specifications become so large that it is necessary to structure them in a modular way, both for human readability, 
-maintainability, and for more efficient tool support. The lack of a standard for such modular structuring hinders interoperability among different development efforts 
-and the reuse of specifications.
-DOL  provides a notion of structured modular specification that is equally applicable to all DOL-conforming logical languages.
-
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={spec,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
-spec Monoid =
-     sort Elem
-     ops  e:       Elem;
-          __ * __: Elem * Elem -> Elem, assoc, unit e
-end
-
-spec CommutativeMonoid =
-     Monoid
-then
-     op __ * __: Elem * Elem -> Elem, comm
-end
-
-spec Group =
-     Monoid
-then
-     forall x: Elem
-     . exists x': Elem . x' * x = e   %(inv_Group)%
-end
-
-spec AbelianGroup =
-     Group
-and
-     CommutativeMonoid
-end
-
-spec Ring =
-     AbelianGroup with sort Elem,
-                       ops __ * __ |-> __ + __,
-                           e       |-> 0
-and
-     Monoid with ops e, __*__
-then
-     forall x,y,z:Elem
-     . (x + y) * z = (x * z) + (y * z)          %(distr1_Ring)%
-     . z * ( x + y ) = (z * x) + (z * y)        %(distr2_Ring)%
-end
-\end{lstlisting}
 
 
 \section{Use Case Model-1: Consistency Among UML Diagrams of Different Types}
@@ -4163,7 +4233,7 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
-\begin{lstlisting}[language=ebnf,escapeinside={!!}]
+ \begin{lstlisting}[language=ebnf,escapeinside={!!}]
 CURIE     = ( [ Prefix ] , Reference ) - ;
 Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$!
 Reference = Path , [ Query ] , [ Fragment ] ;
@@ -4546,7 +4616,7 @@ Vars                 = Symbol , { ',' , Symbol } ;
 
 \sclause{Identifiers}
 
-\begin{lstlisting}[language=ebnf,escapeinside={!!}]
+ \begin{lstlisting}[language=ebnf,escapeinside={!!}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
 FullIRI = !$<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$! ;
 CURIE     = ( [ Prefix ] , Reference ) - ;
@@ -8044,7 +8114,7 @@ PrefixMap  & Mereology \\\hline
 oms IRI = OMS end  &  Alignments, Mereology \\\hline
 oms IRI = \%consistent OMS end  & PropositionalExamples, Mereology \\\hline
 oms IRI = \%inconsistent OMS end  & PropositionalExamples \\\hline
-oms IRI = \%mono OMS end  & section~\ref{spec-1} \\\hline
+oms IRI = \%mono OMS end  & section~\ref{spec-2} \\\hline
 oms IRI = \%def OMS end  & PropositionalExamples \\\hline
 network IRI = IRI, \ldots, IRI & Alignments \\\hline
 %network IRI = IRI, \ldots, IRI & \\
@@ -8052,9 +8122,9 @@ network IRI = IRI, \ldots, IRI & Alignments \\\hline
 interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
 interpretation IRI : OMS to OMS = \%cons SymbolMap  &  Engine\\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
-refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-1} \\\hline
+refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-2} \\\hline
 refinement IRI = OMS refined via translation IRI to OMS & section~\ref{model-1} \\\hline
-refinement IRI = IRI then IRI & section~\ref{spec-1} \\\hline
+refinement IRI = IRI then IRI & section~\ref{spec-2} \\\hline
 refinement IRI = Network refined to Network & section~\ref{model-1} \\\hline
 entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
 entailment IRI = OMSName in Network entails OMS & section~\ref{model-1}\\\hline
@@ -8093,7 +8163,7 @@ OMS maximize Symbols var Symbols  & BlocksWithCircumscription \\\hline
 %OMS then maximize \{ OMS \} &  \\\hline
 free \{ OMS \} & Datatypes \\\hline
 cofree \{ OMS \} & Datatypes \\\hline
-OMS with SymbolMap  & Alignments,  section~\ref{spec-1} \\\hline
+OMS with SymbolMap  & Alignments,  section~\ref{spec-2} \\\hline
 OMS with translation IRI  & Mereology \\\hline
 %OMS with translation IRI : IRI $\to$ IRI  &  \\\hline
 %OMS with translation IRI $\to$ IRI  &  \\\hline
@@ -8722,32 +8792,6 @@ spec Group_via_reject =
   forall x,y,z:elem . x+0=x
                     . x+(y+z) = (x+y)+z
 end
-\end{lstlisting}
-
-\sclause{Sorting}
-
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,spec,free,type,op,ops,spec,pred,preds},escapechar=@,mathescape]
-library Sorting
-logic CASL
-spec List =  
-  sort Elem
-then %mono
-  free type List[Elem] ::= [] | __::__(Elem; List[Elem])
-then
-  pred __elem__ : Elem * List[Elem}
-  forall x,y:Elem; L,L1,L2:List[Elem]
-  . not x elem []  . x elem (y :: L) <=>  x=y \/ x elem L
-spec Sorting = List then
-  preds is_ordered : List[Elem];
-        permutation : List[Elem] * List[Elem]
-  op sorter : List[Elem]->List[Elem]
-  forall x,y:Elem; L,L1,L2:List[Elem]
-  . is_ordered([])       . is_ordered(x::[])
-  . is_ordered(x::y::L) <=> x<=y /\ is_ordered(y::L)
-  . permutation(L1,L2) <=> 
-            (forall x:Elem . x elem L1 <=> x elem L2)
-  . is_ordered(sorter(L)) . permutation(L,sorter(L))
-hide permutation, is_ordered
 \end{lstlisting}
 
 
