@@ -2,7 +2,7 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.9}
+\newcommand{\version}{0.91}
 
 
 %todo
@@ -2610,6 +2610,7 @@ The following people contributed directly to the development of this specificati
 	\item Till Mossakowski, Otto-von-Guericke University Magdeburg, Germany  	
 	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg, Germany  	  
 	\item Leo Obrst, MITRE, USA
+        \item Tim Reddehase, University of Bremen, Germany
         \item Madhura Thosar, Otto-von-Guericke University Magdeburg, Germany
    
 	\end{itemize}
@@ -2855,7 +2856,7 @@ ontology Space =
  combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
 \end{lstlisting} 
 
-\section{Use Case Onto-3: Module Extraction From Large Ontologies}
+\section{Use Case Onto-3: Module Extraction From Large Ontologies}\label{onto-3}
 Especially in the biomedical domain, ontologies tend to become very large (e.g., SNOMED CT, FMA) 
 with over 100000 concepts and relationships. Yet, none of these ontologies covers all aspects of a 
 domain, and frequently provide coverage at various levels of specificity, with excessive detail in 
@@ -2879,7 +2880,20 @@ integration.
 \end{center}
 \end{figure}
 
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
+library GalenModule
+logic OWL
+ontology myGalen = 
+  http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
+end
+
+module myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
+  for Drugs, Joints, Bodyparts
+end
+\end{lstlisting}
  
+
 
 \section{Use Case Onto-4: Interoperability Between Closed-World Data and Open-World Metadata}
 Data collection has become easier and much more widespread over the years. This data has to be 
@@ -2907,6 +2921,8 @@ sciences.
 
 DOL  provides the framework for expressing such bridge rules in a systematic way, maintaining these, and building tools for them. 
 
+\ednote{Omit this use case, because we have no sample DOL text?}
+
 \section{Use Case Onto-5: Verification of Rules Translating Dublin Core Into PROV}
 The Dublin Core Metadata terms, which have been formalized as an RDF Schema vocabulary, developed initially by the digital library community, are less 
 comprehensive but more widely used than PROV (cf. Use Case Onto-1). The rules for translating Dublin Core to the OWL subset of PROV (and, with restrictions, 
@@ -2920,24 +2936,140 @@ The Dublin Core to PROV ontology translation%
 SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which is different from the model-theoretic semantics of the OWL and RDFS languages; nevertheless SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules between ontologies in RDF-based languages in a subset of FOL.
 DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL ontologies as modules of a distributed ontology (= OMS network), but it is also able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.
 
-\section{Use Case Spec-1: Specification Refinements}\label{spec-1}
-Especially in safety-critical areas such as medical systems, the automotive industry, avionics and the aerospace industry, but also for microprocessor design, often 
-a formal software and hardware development process is used in order to ensure the correct functioning of systems. Typically, a requirement specification is refined 
-into a design specification and then an implementation, often involving several intermediate steps (see, e.g. the V-model [V-model], although this does not require 
-formal specification).
-There are numerous specification formalisms in use, including the OMG's SysML language; moreover, often during development, the formalism needs to be 
-changed (e.g. from a specification to a programming language, or from a temporal logic to a state machine). For each of these formalisms, notions of refinement 
-have been defined and implemented. However, the lack of a standardized, logically sound language and methodology for such refinement hinders interoperability 
-among different development efforts and the reuse of refinements.
-DOL  provides the capability to represent refinement that is equally applicable to all DOL-conforming logical languages, and that  
-covers at least the most relevant of the industrial use cases of specification refinement.
+\ednote{Omit this use case, because we have no sample DOL text?}
 
-The specification below illustrates DOL refinements by expressing that natural numbers with addition form a monoid, and that 
-natural numbers can be efficiently represented for implementation as lists of binary digits, together with several equivalent
-ways of composing these refinements.
+\section{Use Case Spec-1: Modularity of Specifications}\label{spec-1}
+Often specifications become so large that it is necessary to structure
+them in a modular way, both for human readability, maintainability,
+and for more efficient tool support. The lack of a standard for such
+modular structuring hinders interoperability among different
+development efforts and the reuse of specifications.  DOL provides a
+notion of structured modular specification that is equally applicable
+to all DOL-conforming logical languages.
+
+Structuring pays off even for small specifications. For example, it makes
+structuring a simple specification of sorting lists in the 
+following way enhances both readability and potential for re-use
+of specifications:
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+library Sorting
 
+%% refinement from abstract sorting to insert sort
+
+logic CASL
+%right_assoc __::__
+spec TotalOrder =
+  sort Elem
+  pred __<=__ : Elem * Elem
+  forall x,y,z : Elem
+  . x <= x                         %(reflexive)%
+  . x <= z if x <= y /\ y <= z     %(transitive)%
+  . x = y if x <= y /\ y <= x      %(antisymmetric)%
+  . x <= y \/ y <= x               %(dichotomous)%
+end
+
+spec Nat =
+  free type Nat ::= 0 | suc(Nat)
+end
+
+spec List =
+  Nat
+then
+  sort Elem
+  free type List ::= [] | __::__(Elem; List)
+  op count : Elem * List -> Nat
+  forall x,y : Elem; L : List
+  . count(x,[]) = 0
+  . count(x,x :: L) = suc(count(x,L))
+  . count(x,y :: L) = count(x,L) if not x=y
+end
+
+spec Sorting =
+  TotalOrder and List
+then
+  preds is_ordered : List;
+        permutation : List * List
+  vars x,y:Elem; L,L1,L2:List
+  . is_ordered([])
+  . is_ordered(x::[])
+  . is_ordered(x::y::L) <=> x<=y /\ is_ordered(y::L)
+  . permutation(L1,L2) <=> (forall x:Elem . count(x,L1) = count(x,L2))
+then
+  op sorter : List->List
+  var L:List
+  . is_ordered(sorter(L))
+  . permutation(L,sorter(L))
+hide is_ordered, permutation
+end
+\end{lstlisting}
+
+In the last step, the structuring operation of hiding is used to
+restrict the specification to an export interface: we hide the
+predicates \texttt{is\_ordered} and \texttt{permutation}, because they
+are only auxiliary and need not be implemented.
+
+
+\section{Use Case Spec-2: Specification Refinements}\label{spec-2}
+Especially in safety-critical areas such as medical systems, the
+automotive industry, avionics and the aerospace industry, but also for
+microprocessor design, often a formal software and hardware
+development process is used in order to ensure the correct functioning
+of systems. Typically, a requirement specification is refined into a
+design specification and then an implementation, often involving
+several intermediate steps (see, e.g. the V-model [V-model], although
+this does not require formal specification).  There are numerous
+specification formalisms in use, including the OMG's SysML language;
+moreover, often during development, the formalism needs to be changed
+(e.g. from a specification to a programming language, or from a
+temporal logic to a state machine). For each of these formalisms,
+notions of refinement have been defined and implemented. However, the
+lack of a standardized, logically sound language and methodology for
+such refinement hinders interoperability among different development
+efforts and the reuse of refinements.  DOL provides the capability to
+represent refinement that is equally applicable to all DOL-conforming
+logical languages, and that covers at least the most relevant of the
+industrial use cases of specification refinement.
+
+A simple example is the refinement of the (purely declarative) sorting
+specification above into a specification of a particular sorting
+algorithm (for simplicity, we choose insert sort):
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+spec InsertSort = 
+  TotalOrder and List
+then
+  ops insert : Elem*List -> List;
+      insert_sort : List->List
+  vars x,y:Elem; L:List
+  . insert(x,[]) = x::[]
+  . insert(x,y::L) = x::insert(y,L) when x<=y else y::insert(x,L)
+  . insert_sort([]) = []
+  . insert_sort(x::L) = insert(x,insert_sort(L))
+ hide insert
+end
+
+refinement InsertSortCorrectness =
+   Sorting refined via sorter |-> insert_sort to InsertSort
+end
+\end{lstlisting}
+Note that hiding is essential here to make the signatures of
+both specifications compabtile. If we had not hidden the
+predicates \texttt{is\_ordered} and \texttt{permutation}
+in the \texttt{Sorting} specification, a refinement would
+not have been possible, since \texttt{InsertSort} does not
+implement these predicates (and it would be rather artificial
+to add an implementation for them).
+
+\medskip
+
+Refinements can be composed. A simple example below illustrates this
+by expressing that natural numbers with addition form a monoid, and
+that natural numbers can be efficiently represented for implementation
+as lists of binary digits, together with several equivalent ways of
+composing these refinements.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
 spec Monoid =
  sort Elem
  ops 0 : Elem;
@@ -2953,10 +3085,6 @@ end
 
 spec Nat =
   NatWithSuc hide suc
-end
-
-refinement R1 =
-Monoid refined via Elem |-> Nat to Nat
 end
 
 spec NatBin =
@@ -2994,53 +3122,169 @@ refinement R3''' = R1 then R2
 
 \end{lstlisting}
 
-\section{Use Case Spec-2: Modularity of Specifications}\label{spec-2}
-In the context of use case Spec-1, often specifications become so large that it is necessary to structure them in a modular way, both for human readability, 
-maintainability, and for more efficient tool support. The lack of a standard for such modular structuring hinders interoperability among different development efforts 
-and the reuse of specifications.
-DOL  provides a notion of structured modular specification that is equally applicable to all DOL-conforming logical languages.
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={spec,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
-spec Monoid =
-     sort Elem
-     ops  e:       Elem;
-          __ * __: Elem * Elem -> Elem, assoc, unit e
-end
 
-spec CommutativeMonoid =
-     Monoid
-then
-     op __ * __: Elem * Elem -> Elem, comm
-end
+\section{Use Case Model-1: Consistency Among UML Diagrams of Different Types}
+\label{model-1}
 
-spec Group =
-     Monoid
-then
-     forall x: Elem
-     . exists x': Elem . x' * x = e   %(inv_Group)%
-end
+A typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
+requirements. Typical questions that arise in this context are, e.g.,
 
-spec AbelianGroup =
-     Group
-and
-     CommutativeMonoid
-end
+\begin{itemize}
+\item whether the multiplicities in a class diagram are consistent with each other
+\item wether the attributes and operations in a state machine are
+available in a class diagram
+\item	  whether the sequential composition of actions in an interaction diagram is justified by an accompanying OCL specification,
+\item 	whether cooperating state machines comply with pre-/post-conditions and invariants
+\item 	if the behavior prescribed in an interaction diagram is realizable by several state machines cooperating according to a composite structure diagram.
+\end{itemize}
+Such questions are currently hard to answer in a systematic manner. One method to answer these questions and find such errors is a check for semantic 
+consistency. Under some restrictions, the proof of semantic consistency can be (at least partially) performed using model-checking tools like Hugo/RT \cite{knapp-wuttke:models06wsh:2007}. 
+Once a formal semantics for the different diagram types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use DOL to specify in which 
+sense the diagrams need to be consistent, and check this by suitable tools.
 
-spec Ring =
-     AbelianGroup with sort Elem,
-                       ops __ * __ |-> __ + __,
-                           e       |-> 0
-and
-     Monoid with ops e, __*__
-then
-     forall x,y,z:Elem
-     . (x + y) * z = (x * z) + (y * z)          %(distr1_Ring)%
-     . z * ( x + y ) = (z * x) + (z * y)        %(distr2_Ring)%
+
+\ssclause{The ATM Example}
+
+We present as a small example in model-deriven development using UML,
+taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
+the design of a traditional automatic teller machine (ATM) connected
+to a bank. For simplicity, we only describe the handling of entering a
+card and a PIN with the ATM. After entering the card, one has three
+trials for entering the correct PIN (which is checked by the
+bank). After three unsuccessful trials the card is kept.
+
+\begin{figure}[!Ht]
+\centering
+\subfigure[Interaction\label{fig:interaction}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/scenario.png}%\\[-1.5ex]
+}
+\hspace*{0.5cm}
+\subfigure[Composite structure\label{fig:system}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/system.png}%\\[-1.5ex]
+}
+\\
+\subfigure[Protocol state machine\label{fig:psm}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=.65]{illustrations/uml/protocol.png}%\\[-1.5ex]
+}
+\hspace*{0.4cm}
+\subfigure[Interface\label{fig:class}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/interfaceWithOCL.png}%\\[-1.5ex]
+}
+\\
+\subfigure[State machine\label{fig:state-machine}]{%
+  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/atm-behaviour.png}%\\[-1.5ex]
+}
+\vspace*{-1.5ex}
+\caption{ATM example}\label{fig:atm-example}
+\end{figure}
+
+Figure~\ref{fig:interaction} shows a possible \emph{interaction}
+between an \uml{atm} and a \uml{bank} object, which consists out of
+four messages: the \uml{atm} requests the \uml{bank} to \uml{verify}
+if a card and PIN number combination is valid, in the first case the
+\uml{bank} requests to reenter the PIN, in the second case the
+verification is successful.  This interaction presumes that the system
+has an \uml{atm} and a \uml{bank} as objects. This can, e.g., be
+ensured by a \emph{composite structure diagram}, see
+Fig.~\ref{fig:system}, which --- among other things --- specifies the
+objects in the initial system state.  Furthermore, it specifies that
+the communication between \uml{atm} and \uml{bank} goes through the
+two ports \uml{bankCom} and \uml{atmCom} linked by a connector.  The
+communication protocol on this connector is captured with a
+\emph{protocol state machine}, see Fig.~\ref{fig:psm}.  The protocol
+state machine fixes in which order the messages \uml{verify},
+\uml{verified}, \uml{reenterPIN}, and \uml{markInvalid} between
+\uml{atm} and \uml{bank} may occur.  Figure~\ref{fig:class} provides
+structural information in form of an interface specifying what is
+provided at the \uml{userCom} port of the \uml{atm} instance. An
+interface is a set of operations that other model elements have to
+implement. In our case, the interface is described in a \emph{class
+  diagram}. Here, the operation \uml{keepCard} is enriched with the
+OCL constraint \uml{trialsNum >= 3}, which refines its semantics:
+\uml{keepCard} can only be invoked if the OCL constraints holds.
+
+Finally, the dynamic behaviour of the \uml{atm} object is specified by
+the \emph{behavioural state machine} shown in
+Fig.~\ref{fig:state-machine}. The machine consists of five states
+including \uml{Idle}, \uml{CardEntered}, etc.  Beginning in the
+initial \uml{Idle} state, the user can \emph{trigger} a state change
+by entering the \uml{card}. This has the \emph{effect} that the
+parameter \uml{c} from the \uml{card} event is assigned to the
+\uml{cardId} in the \uml{atm} object (parameter names are not shown on
+triggers). Entering a \uml{PIN} triggers another transition to
+\uml{PINEntered}.  Then the ATM requests verification from the bank
+using its \uml{bankCom} port.  The transition to \uml{Verifying} uses
+a \emph{completion event}: No explicit trigger is declared and the
+machine autonomously creates such an event whenever a state is
+completed, i.e., all internal activities of the state are finished (in
+our example there are no such activities).  If the interaction with
+the bank results in \uml{reenterPIN}, and the \emph{guard}
+\uml{trialsNum < 3} is true, the user can again enter a \uml{PIN}.
+
+
+The ATM example in Fig.~\ref{fig:psm} consists of five different
+models, which naturally form a network. Coherence of this network
+is expressed as its consistency.
+We assume that XMI representations of the
+relevant UML models have been stored at
+\url{http://www.example.org/uml/},
+e.g.\ \url{http://www.example.org/uml/cd.xmi}:
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via,network,entailment,entails,refined,consistent},escapechar=@,mathescape]
+%prefix( :     <http://www.example.org/uml/>
+         uml:   <http://www.uml.org/spec/UML/>
+%% descriptions of logics ...		 
+         log:   <http://www.omg.org/spec/DOL/logics/>
+library ATM
+
+view cd2atm = cd to { atm hide along atm2cd} end
+view cd2psm = cd to { psm hide along psm2cd} end
+view cd2int = cd to { interaction hide along sqd2cd} end
+network ATM_network = %consistent
+                      cd, atm, psm, csd,
+                      cd2atm, cd2psm, abstract_to_concrete_atm
+entailment atm in ATM_network entails interaction
+network Some_refined_ATM_network = ...
+refinement r = ATM_network refined to Some_refined_ATM_network
+entailment e = Some_refined_ATM_network entails ATM_network
+\end{lstlisting}
+
+\section{Use Case Model-2: Refinements Between UML Diagrams of Different Types, and Their Reuse}
+\label{model-2}
+
+A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
+sequence diagrams and OCL constraints. Assume further that this model is not directly implemented, but first refined to a UML behavior state machine (which then 
+can be automatically or semi-automatically transformed into some implementation using standard UML tools). However, there is no standardized language to 
+express, document and maintain the refinement relation itself (UML only allows very simple refinements, namely between state machines). This hinders both the 
+reuse of such refinements in different contexts, as well as the interoperability of tools proving such refinements to be correct. DOL  
+addresses these problems by providing a standardized notation with formal semantics for such refinements. Refinements expressed in this language could, e.g., be 
+parameterized and reused in different contexts.
+
+Coming to a DOL example, we want to state the fact that the state
+machine of the \uml{atm}, shown in Fig.~\ref{fig:state-machine}, is a
+refinement of the protocol state machine in Fig.~\ref{fig:psm} as
+follows in DOL.  We continue the library \uml{ATM} above, again
+assuming that XMI representations of the relevant UML models have been
+stored at \url{http://www.example.org/uml/},
+e.g.\ \url{http://www.example.org/uml/atm.xmi}:
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
+refinement abstract_to_concrete_atm =
+  psm refined via psm2atm to 
+       {  atm with Idle |-> Idle, CardEntered |-> Idle, 
+                   PINEntered |-> Idle, Verified |-> Idle, 
+                   Verifying |-> Verifying 
+          hide card, PIN   }
 end
 \end{lstlisting}
 
-\section{Use Case Model-1: Coherent Semantics for Multi-Language Models}
-\ednote{Isn't this one about ontologies,too?}
+The refinement uses an abstraction of the \uml{atm}, expressed by the
+translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in a two-state machine. Moreover, some detail of the \uml{atm} is hidden using
+\syntax{hide}. Then, the protocol state machine can be refined to
+the thus abstracted \uml{atm}.
+
+\section{Use Case Model-3: Coherent Semantics for Multi-Language Models}
+\label{model-3}
 	
 Often a single problem area within a given domain must be described using several formalisms, due to user community requirements, expressiveness, tool support 
 and usage, and so forth. A challenge is that typically the different formalizations are written by different people using different logics, and, thus, their overall 
@@ -3063,32 +3307,74 @@ With DOL, one can, e.g.,
 \end{itemize}
 Note that the last point does not specify what information is lost in the approximation. Indeed, DOL provides the means to specify requirements on the approximation, e.g., that it maximally preserves the information. 
 
-\section{Use Case Model-2: Consistency Among UML Diagrams of Different Types}
+Coming to a DOL example,
+a model like the ATM model developed above typically is part of an
+application context that also contains some common terminology.
+This terminology often is specified by an ontology, and then
+it is desirable to relate the model to the ontology. Consider
+the following financial ontology fragment:
 
-A typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
-requirements. Typical questions that arise in this context are, e.g.,
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, Irreflexive, Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract},escapechar=@,mathescape]
+ontology myTaxonomy =
+  ObjectProperty: owns 
+    Characteristics: Irreflexive, Asymmetric
 
+  Class: FinancialIntermediary
+    SubClassOf: CorporatePerson 
+  Class: CorporatePerson
+    SubClassOf: ImmaterialEntity
+  Class: ImmaterialEntity
+    DisjointWith: MaterialEntity
+    SubClassOf: has_part only ImmaterialEntity
+  Class: Livestock 	
+    SubClassOf: MaterialEntity 
+...
+end
+\end{lstlisting}
+
+When we want to relate this ontology with the ATM model, 
+we need to take care of various aspects:
 \begin{itemize}
-\item whether the multiplicities in a class diagram are consistent with each other
-\item wether the attributes and operations in a state machine are
-available in a class diagram
-\item	  whether the sequential composition of actions in an interaction diagram is justified by an accompanying OCL specification,
-\item 	whether cooperating state machines comply with pre-/post-conditions and invariants
-\item 	if the behavior prescribed in an interaction diagram is realizable by several state machines cooperating according to a composite structure diagram.
+  \item Translating into shared language (here, we choose Common Logic)
+  \item Unifying terminology (Bank vs. FinancialIntermediary)
+  \item Connecting related concepts (bank.owns.ATM vs. owns)
+  \item Removing irrelevant parts (livestock) 
 \end{itemize}
-Such questions are currently hard to answer in a systematic manner. One method to answer these questions and find such errors is a check for semantic 
-consistency. Under some restrictions, the proof of semantic consistency can be (at least partially) performed using model-checking tools like Hugo/RT \cite{knapp-wuttke:models06wsh:2007}. 
-Once a formal semantics for the different diagram types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use DOL to specify in which 
-sense the diagrams need to be consistent, and check this by suitable tools.
 
-\section{Use Case Model-3: Refinements Between UML Diagrams of Different Types, and Their Reuse}
-A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
-sequence diagrams and OCL constraints. Assume further that this model is not directly implemented, but first refined to a UML behavior state machine (which then 
-can be automatically or semi-automatically transformed into some implementation using standard UML tools). However, there is no standardized language to 
-express, document and maintain the refinement relation itself (UML only allows very simple refinements, namely between state machines). This hinders both the 
-reuse of such refinements in different contexts, as well as the interoperability of tools proving such refinements to be correct. DOL  
-addresses these problems by providing a standardized notation with formal semantics for such refinements. Refinements expressed in this language could, e.g., be 
-parameterized and reused in different contexts.
+\begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, OMS, Characteristics,Transitive,Asymmetric,translation,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,oms,model},escapechar=@,mathescape]
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi>
+
+model clStateModel = xmiStateModel with
+                     translation UMLState2CL
+
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi>			
+
+model clClassModel = xmiClassModel with 
+            translation UMLClass2CL 
+            Bank |-> FinancialIntermediary
+
+ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>			
+
+ontology NoLivestockTaxonomy = BigTaxonomy reject
+                               Class: Livestock
+						  end
+
+ontology ExtendedTaxonomy = NoLivestockTaxonomy then 
+         ObjectProperty FinancialIntermediary.owns.ATM
+           SubPropertyOf: owns 
+           Domain: FinancialIntermediary 
+           Range: ATM
+end
+
+ontology clTaxonomy = ExtendedTaxonomy with 
+                      translation OWL22CommonLogic
+
+oms JointModel = clStateModel and 
+                 clClassModel and 
+                 clTaxonomy
+end
+\end{lstlisting}
+
 
 \section{Conclusion}
 
@@ -3540,10 +3826,10 @@ NetworkName            = IRI ;
 Network                = 'network', NetworkElements , ExcludeExtensions ;
 NetworkElements        = 'network-elements' , { NetworkElement } ;
 NetworkElement         = 'network-element' , [ Id ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions    = 'exclude-imports' , { OMSOrMappingorPathorNetworkRef } ; 
-OMSOrMappingorPathorNetworkRef   = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef 
-                                   | OMSOrMappingorNetworkRef ;
-Omsormappingornetworkref  = IRI ;
+ExcludeExtensions    = 'exclude-imports' , { ElementRef } ; 
+ElementRef   = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef 
+               | OMSOrMappingorNetworkRef ;
+OMSOrMappingorNetworkRef  = IRI ;
 \end{lstlisting}
 
 An OMS network by default also includes all inclusions (generated by
@@ -3947,7 +4233,7 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
-\begin{lstlisting}[language=ebnf,escapeinside={!!}]
+ \begin{lstlisting}[language=ebnf,escapeinside={!!}]
 CURIE     = ( [ Prefix ] , Reference ) - ;
 Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$!
 Reference = Path , [ Query ] , [ Fragment ] ;
@@ -4103,6 +4389,15 @@ BoundPrefix              = ':' | Prefix ; +$<$\rm see definition in \cref{c:curi
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
 Separators               = 'separators' , String , String ;
                            +$<$\rm see definition in \cref{c:curies}$>$+
+\end{lstlisting}
+
+Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2013, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+
+\vspace{1em}
+
+\ssclause{Networks}
+
+\begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
 NetworkDefn            = NetworkKeyword , NetworkName , '=' , 
                          [ ConsStrength ] , Network ;
@@ -4111,15 +4406,12 @@ NetworkName            = IRI ;
 Network                = NetworkElements , [ ExcludeExtensions ] ;
 NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
 NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions      = 'excluding' , ExtensionRef , { ',' , ExtensionRef } ;
-OMSOrMappingorPathorNetworkRef = IRI , '->' , IRI ;
+ExcludeExtensions      = 'excluding' , ElementRef , { ',' , ElementRef } ;
+ElementRef             = IRI , '->' , IRI 
+                         | OMSOrMappingorNetworkRef;
 OMSOrMappingorNetworkRef        = IRI ;
 Id                     = Letter , { LetterOrDigit } ;
 \end{lstlisting}
-
-Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2013, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
-
-\vspace{1em}
 
 \ssclause{OMS}\label{a:dol-text:OMS}
 
@@ -4213,7 +4505,6 @@ SymbolOrMap          = Symbol
 OMSName             = IRI ;
 
 OMSRef              = IRI ;
-ExtensionRef         = IRI  | IRI , '->' , IRI;
 
 LanguageRef          = IRI ;
 LogicRef             = IRI ;
@@ -4325,7 +4616,7 @@ Vars                 = Symbol , { ',' , Symbol } ;
 
 \sclause{Identifiers}
 
-\begin{lstlisting}[language=ebnf,escapeinside={!!}]
+ \begin{lstlisting}[language=ebnf,escapeinside={!!}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
 FullIRI = !$<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$! ;
 CURIE     = ( [ Prefix ] , Reference ) - ;
@@ -7853,7 +8144,7 @@ PrefixMap  & Mereology \\\hline
 oms IRI = OMS end  &  Alignments, Mereology \\\hline
 oms IRI = \%consistent OMS end  & PropositionalExamples, Mereology \\\hline
 oms IRI = \%inconsistent OMS end  & PropositionalExamples \\\hline
-oms IRI = \%mono OMS end  & section~\ref{spec-1} \\\hline
+oms IRI = \%mono OMS end  & section~\ref{spec-2} \\\hline
 oms IRI = \%def OMS end  & PropositionalExamples \\\hline
 network IRI = IRI, \ldots, IRI & Alignments \\\hline
 %network IRI = IRI, \ldots, IRI & \\
@@ -7861,16 +8152,16 @@ network IRI = IRI, \ldots, IRI & Alignments \\\hline
 interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
 interpretation IRI : OMS to OMS = \%cons SymbolMap  &  Engine\\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
-refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-1} \\\hline
-refinement IRI = OMS refined via translation IRI to OMS & ATM \\\hline
-refinement IRI = IRI then IRI & section~\ref{spec-1} \\\hline
-refinement IRI = Network refined to Network & ATM \\\hline
+refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-2} \\\hline
+refinement IRI = OMS refined via translation IRI to OMS & section~\ref{model-1} \\\hline
+refinement IRI = IRI then IRI & section~\ref{spec-2} \\\hline
+refinement IRI = Network refined to Network & section~\ref{model-1} \\\hline
 entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
-entailment IRI = OMSName in Network entails OMS & ATM\\\hline
-entailment IRI = Network entails Network & ATM\\\hline
+entailment IRI = OMSName in Network entails OMS & section~\ref{model-1}\\\hline
+entailment IRI = Network entails Network & section~\ref{model-1}\\\hline
 equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
 %equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
-module IRI : OMS of OMS for Symbols  & GalenModule \\\hline
+module IRI : OMS of OMS for Symbols  & section~\ref{onto-3} \\\hline
 %module IRI \%ccons : OMS of OMS for Symbols  &  \\\hline
 %alignment IRI : OMS to OMS end  &  \\\hline
 %alignment IRI 1 : OMS to OMS end  &  \\\hline
@@ -7902,7 +8193,7 @@ OMS maximize Symbols var Symbols  & BlocksWithCircumscription \\\hline
 %OMS then maximize \{ OMS \} &  \\\hline
 free \{ OMS \} & Datatypes \\\hline
 cofree \{ OMS \} & Datatypes \\\hline
-OMS with SymbolMap  & Alignments,  section~\ref{spec-1} \\\hline
+OMS with SymbolMap  & Alignments,  section~\ref{spec-2} \\\hline
 OMS with translation IRI  & Mereology \\\hline
 %OMS with translation IRI : IRI $\to$ IRI  &  \\\hline
 %OMS with translation IRI $\to$ IRI  &  \\\hline
@@ -7910,11 +8201,11 @@ OMS with translation IRI  & Mereology \\\hline
 OMS hide SymbolItems  &  Algebra \\\hline
 OMS reveal Symbols  & Datatypes \\\hline
 %OMS reveal Symbol |-> Symbol ...  &  \\\hline
-OMS hide along IRI  & ATM \\\hline
+OMS hide along IRI  & section~\ref{model-1} \\\hline
 %OMS hide along IRI : IRI $\to$ IRI  &  \\\hline
 %OMS hide along IRI $\to$ IRI  &  \\\hline
 %OMS hide along $\to$ IRI  &  \\\hline
-OMS extract Symbols  & GalenModule \\\hline
+OMS extract Symbols  & section~\ref{onto-3} \\\hline
 OMS remove Symbols  & All\_kinds\_of\_group\_specifications \\\hline
 OMS forget Symbols  & All\_kinds\_of\_group\_specifications \\\hline
 %OMS forget Symbols keep Logic  &  \\\hline
@@ -8357,19 +8648,6 @@ end
 
 \end{lstlisting}
 
-\sclause{Ontology Modules}
-
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
-library GalenModule
-logic OWL
-ontology myGalen = 
-  http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
-end
-
-module myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
-  for Drugs, Joints, Bodyparts
-end
-\end{lstlisting}
 
 \sclause{Algebra}
 
@@ -8546,168 +8824,9 @@ spec Group_via_reject =
 end
 \end{lstlisting}
 
-\sclause{Sorting}
-
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,spec,free,type,op,ops,spec,pred,preds},escapechar=@,mathescape]
-library Sorting
-logic CASL
-spec List =  
-  sort Elem
-then %mono
-  free type List[Elem] ::= [] | __::__(Elem; List[Elem])
-then
-  pred __elem__ : Elem * List[Elem}
-  forall x,y:Elem; L,L1,L2:List[Elem]
-  . not x elem []  . x elem (y :: L) <=>  x=y \/ x elem L
-spec Sorting = List then
-  preds is_ordered : List[Elem];
-        permutation : List[Elem] * List[Elem]
-  op sorter : List[Elem]->List[Elem]
-  forall x,y:Elem; L,L1,L2:List[Elem]
-  . is_ordered([])       . is_ordered(x::[])
-  . is_ordered(x::y::L) <=> x<=y /\ is_ordered(y::L)
-  . permutation(L1,L2) <=> 
-            (forall x:Elem . x elem L1 <=> x elem L2)
-  . is_ordered(sorter(L)) . permutation(L,sorter(L))
-hide permutation, is_ordered
-\end{lstlisting}
 
 
 
-\sclause{Model-Driven Development}
-
-We present as a small example in model-deriven development using UML,
-taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
-the design of a traditional automatic teller machine (ATM) connected
-to a bank. For simplicity, we only describe the handling of entering a
-card and a PIN with the ATM. After entering the card, one has three
-trials for entering the correct PIN (which is checked by the
-bank). After three unsuccessful trials the card is kept.
-
-\begin{figure}[!Ht]
-\centering
-\subfigure[Interaction\label{fig:interaction}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/scenario.png}%\\[-1.5ex]
-}
-\hspace*{0.5cm}
-\subfigure[Composite structure\label{fig:system}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/system.png}%\\[-1.5ex]
-}
-\\
-\subfigure[Protocol state machine\label{fig:psm}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=.65]{illustrations/uml/protocol.png}%\\[-1.5ex]
-}
-\hspace*{0.4cm}
-\subfigure[Interface\label{fig:class}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/interfaceWithOCL.png}%\\[-1.5ex]
-}
-\\
-\subfigure[State machine\label{fig:state-machine}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/atm-behaviour.png}%\\[-1.5ex]
-}
-\vspace*{-1.5ex}
-\caption{ATM example}\label{fig:atm-example}
-\end{figure}
-
-Figure~\ref{fig:interaction} shows a possible \emph{interaction}
-between an \uml{atm} and a \uml{bank} object, which consists out of
-four messages: the \uml{atm} requests the \uml{bank} to \uml{verify}
-if a card and PIN number combination is valid, in the first case the
-\uml{bank} requests to reenter the PIN, in the second case the
-verification is successful.  This interaction presumes that the system
-has an \uml{atm} and a \uml{bank} as objects. This can, e.g., be
-ensured by a \emph{composite structure diagram}, see
-Fig.~\ref{fig:system}, which --- among other things --- specifies the
-objects in the initial system state.  Furthermore, it specifies that
-the communication between \uml{atm} and \uml{bank} goes through the
-two ports \uml{bankCom} and \uml{atmCom} linked by a connector.  The
-communication protocol on this connector is captured with a
-\emph{protocol state machine}, see Fig.~\ref{fig:psm}.  The protocol
-state machine fixes in which order the messages \uml{verify},
-\uml{verified}, \uml{reenterPIN}, and \uml{markInvalid} between
-\uml{atm} and \uml{bank} may occur.  Figure~\ref{fig:class} provides
-structural information in form of an interface specifying what is
-provided at the \uml{userCom} port of the \uml{atm} instance. An
-interface is a set of operations that other model elements have to
-implement. In our case, the interface is described in a \emph{class
-  diagram}. Here, the operation \uml{keepCard} is enriched with the
-OCL constraint \uml{trialsNum >= 3}, which refines its semantics:
-\uml{keepCard} can only be invoked if the OCL constraints holds.
-
-Finally, the dynamic behaviour of the \uml{atm} object is specified by
-the \emph{behavioural state machine} shown in
-Fig.~\ref{fig:state-machine}. The machine consists of five states
-including \uml{Idle}, \uml{CardEntered}, etc.  Beginning in the
-initial \uml{Idle} state, the user can \emph{trigger} a state change
-by entering the \uml{card}. This has the \emph{effect} that the
-parameter \uml{c} from the \uml{card} event is assigned to the
-\uml{cardId} in the \uml{atm} object (parameter names are not shown on
-triggers). Entering a \uml{PIN} triggers another transition to
-\uml{PINEntered}.  Then the ATM requests verification from the bank
-using its \uml{bankCom} port.  The transition to \uml{Verifying} uses
-a \emph{completion event}: No explicit trigger is declared and the
-machine autonomously creates such an event whenever a state is
-completed, i.e., all internal activities of the state are finished (in
-our example there are no such activities).  If the interaction with
-the bank results in \uml{reenterPIN}, and the \emph{guard}
-\uml{trialsNum < 3} is true, the user can again enter a \uml{PIN}.
-
-We can now state the fact that the state machine of the \uml{atm},
-shown in Fig.~\ref{fig:state-machine}, is a refinement of the protocol
-state machine in Fig.~\ref{fig:psm} as follows in DOL, assuming that
-XMI representations of the relevant UML models have been stored at
-\url{http://www.example.org/uml/}, e.g.\ \url{http://www.example.org/uml/atm.xmi}:
-
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
-%prefix( :     <http://www.example.org/uml/>
-         uml:   <http://www.uml.org/spec/UML/>
-%% descriptions of logics ...		 
-         log:   <http://www.omg.org/spec/DOL/logics/>
-library ATM
-logic log:uml
-
-refinement abstract_to_concrete_atm =
-  psm refined via psm2atm to 
-       {  atm with Idle |-> Idle, CardEntered |-> Idle, 
-                   PINEntered |-> Idle, Verified |-> Idle, 
-                   Verifying |-> Verifying 
-          hide card, PIN   }
-end
-\end{lstlisting}
-
-The refinement uses an abstraction of the \uml{atm}, expressed by the
-translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEntered |-> Idle, Verified |-> Idle, Verifying |-> Verifying}, resulting in a two-state machine. Moreover, some detail of the \uml{atm} is hidden using
-\syntax{hide}. Then, the protocol state machine can be refined to
-the thus abstracted \uml{atm}.
-
-\ssclause{Networks of UML Models}
-
-The ATM example in Fig.~\ref{fig:psm} consists of five different
-models, which naturally form a network. We continue the library
-\uml{ATM} above, again assuming that XMI representations of the
-relevant UML models have been stored at
-\url{http://www.example.org/uml/},
-e.g.\ \url{http://www.example.org/uml/cd.xmi}:
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via,network,entailment,entails,refined},escapechar=@,mathescape]
-view cd2atm = cd to { atm hide along atm2cd} end
-view cd2psm = cd to { psm hide along psm2cd} end
-view cd2int = cd to { interaction hide along sqd2cd} end
-network ATM_network = cd, atm, psm, csd,
-                      cd2atm, cd2psm, abstract_to_concrete_atm
-entailment atm in ATM_network entails interaction
-network Some_refined_ATM_network = ...
-refinement r = ATM_network refined to Some_refined_ATM_network
-entailment e = Some_refined_ATM_network entails ATM_network
-\end{lstlisting}
-
-
-%% refinement IRI = Network refined via IRI |-> IRI & \\
-%% \qquad using translation IRI to Network & \\\hline
-%% entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
-%% entailment IRI = OMSName in Network entails OMS & \\\hline
-%% entailment IRI = Network entails Network & \\\hline
-%% equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
-%% equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
 
 \sclause{Queries}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,query,select,where,in,substitution,result,for,along,library,spec,sort,pred,op},escapechar=@,mathescape]
@@ -9028,7 +9147,7 @@ effort API4KB.
 
 
 \infannex{Ontohub loc/id v2}\label{loc/id}
-by Tim Reddehase
+
 
 
 \lstset{ %
