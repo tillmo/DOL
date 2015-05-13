@@ -3566,8 +3566,8 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item a module extracted from an OMS, using a restriction signature,
 \item an approximation of an OMS, in a subsignature or sublogic, with the effect that sentences not expressible in the subsignature resp.\ sublogic are replaced with a suitable approximation,
 \item \red{a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,}
-\item a union of several OMS,
 \item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional or implied,
+\item a union of several OMS (the major difference between a union and extension is that the members of the unions need to be self-contained OMS, while the extensions may reuse the signature of the extended OMS), 
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
 \item a combination of an OMS network (technically, this is a colimit, see \cite{ZimmermanEtAl06}),
@@ -7070,15 +7070,10 @@ Let $(C, {\leq_C})$ be a class/data type hierarchy.
 $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
 constructor, and $p$ an \emph{attribute name}.
 
-A \emph{query operation declaration} over $(C, {\leq_C})$ is of the form
-$c.q(f_1 : \tau[c_1], \ldots, f_k : \tau[c_k]) : \tau'[c']$ with
-$c, c' \in C$, $\tau_1, \ldots, \tau_k, \tau'$ collection type
-constructors, $q$ a \emph{query name}, and $f_1, \ldots, f_k$
-\emph{parameter names}.\footnote{We disregard parameter direction
-  kinds with the exception of \uml{return}.  However, we consider
-  \uml{return} parameters to be anonymous; in UML, only a single
-  \uml{return} parameter is allowed.}
-
+  \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of the
+form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$ with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
+constructor, and $o$ an \emph{operation name}.\ednote{are the $x_i$ called
+parameter names?}
 
   \item An \emph{association declaration} over $(C, {\leq_C})$ is of the
 form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])$ with $r \geq 2$,
@@ -7118,9 +7113,9 @@ $\mathbf{m}.p_1 : \mathsf{Set}[c_1]$ and $\mathbf{m}.p_2 : \tau_2[c_2]$.
 \end{itemize}
 
 \medskip\noindent\textbf{Class/data type nets (Signatures).}
-A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, Q, A, M)$
+A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A, M)$
 comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $P$ of
-attribute declarations, a set $Q$ of query operation declarations,
+attribute declarations, a set $O$ of operation declarations,
  a set $A$ of association declarations over
 $(C, {\leq_C})$, and a set $M$ of composition declarations over $(C, {\leq_C})$, such that
 the following properties are satisfied:
@@ -7154,39 +7149,26 @@ declaration $c_0.p_i : \tau_i[c_i] \in P$; and similarly for property
 declarations yielded by composition declarations.  (Note that by the
 uniqueness of attribute names along the generalisation hierarchy only a
 single attribute with name $p_i$ may exist.)
-
-  \item query operation names are unique along the generalisation
-relation:\footnote{In particular, we disregard overloading and
-  refinement of queries in sub-classes.} if
-$c_1.q_1(f_{11} : \tau_{11}[c_{11}], \ldots, f_{1k_1} :
-\tau_{1k_1}[c_{1k_1}]) : \tau_1'[c_1']$
-and
-$c_2.q_2(f_{21} : \tau_{21}[c_{21}], \ldots, f_{2k_2} :
-\tau_{2k_1}[c_{2k_2}]) : \tau_2'[c_2']$
-are different query declarations in $Q$ and $c_1 \leq_C c_2$, then
-$q_1 \neq q_2$.
 \end{itemize}
 
 A \emph{class/data type net morphism}
 $\sigma = (\gamma, \varphi, \alpha, \mu) : \Sigma = ((C,
-{\leq}_C), P, Q, A, M) \to \Tau = ((D, {\leq}_D),\allowbreak
-R,\allowbreak S, B, N)$ is given by
+{\leq}_C), P, A, M) \to \Tau = ((D, {\leq}_D),\allowbreak
+Q,\allowbreak B, N)$ is given by
 %
 \begin{itemize}[label={--}, leftmargin=*]
   \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
 {\leq_D})$;
 
-  \item an attribute declaration map $\varphi : P \to R$ such that if
+  \item an attribute declaration map $\varphi : P \to Q$ such that if
 $\varphi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then
 $d = \gamma(c)$, $d' = \gamma(c')$, and $\tau = \tau'$;
 
-  \item a query operattion declaration map $\pi : Q \to S$ such that if
-$\pi({c.q(f_1 : \tau_1[c_1], \ldots, f_k : \tau_k[c_k]) : \tau[c']}) =
-{d.r(g_1 : \tau'_1[d_1], \ldots, g_l : \tau'_l[d_l]) : \tau'[d']} \in
-R$,
-then $d = \gamma(c)$, $d' = \gamma(c')$, $k = l$,
-$d_1 = \gamma(c_1), \ldots, d_k = \gamma(d_k)$,
-$\tau_1 = \tau_1', \ldots, \tau_k = \tau_k'$, and $\tau = \tau'$;
+  \item a query operation declaration map $\rho : O \to R$ such that if
+$\rho(c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']) =
+d.r(x_1 : \tau'_1[d_1], \dots, x_r : \tau'_n[d_r]) : \tau[d'] \in R$, 
+then $d = \gamma(c)$, $d_i = \gamma(c_i)$, 
+$d' = \gamma(c')$, $\tau'_i = \tau_i$ and $\tau = \tau'$;
 
   \item an association declaration map $\alpha : A \to B$ such that if
 $\alpha(a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])) = b(q_1 :
@@ -7355,29 +7337,29 @@ and functionality:
 \qqquad \texttt{(if (and (c.p x y) (c.p x z))}\\
 \qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
-  \item $\CL$ maps each query operation declaration $c.q(x_1 :
-    \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau'[c'] \in O$ to a
-    predicate $\CL(c.q)$ and axioms stating type-correctness and
+  \item $\CL$ maps each query operation declaration $c.o(x_1 :
+    \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
+    predicate $\CL(c.o)$ and axioms stating type-correctness and
     functionality:\ednote{axioms need to be adapted to the fact   
     that parameter types are collection types}
 \begin{itemize}
 \item
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
 for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau'[c']$ $y$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
 %% \item 
 %% \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
-%% \qqquad (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
+%% \qqquad (if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
 \qqquad  (if (and (c x) ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$))\\
-\qqquad\qqquad (exists (y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
+\qqquad\qqquad (exists (y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
-\qqquad \texttt{(if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\qqquad \texttt{(if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
 \qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
   \item \CL maps each composition declaration $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ to
@@ -7767,6 +7749,54 @@ $C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (
 \sclause{$\OWL \rightarrow \CL$}
 
 
+\section{Queries}
+
+\paragraph
+Let $(C, {\leq_C})$ be a class/data type hierarchy.
+A \emph{query declaration} over $(C, {\leq_C})$ is of the form
+$c.q(f_1 : \tau[c_1], \ldots, f_k : \tau[c_k]) : \tau'[c']$ with
+$c, c' \in C$, $\tau_1, \ldots, \tau_k, \tau'$ collection type
+constructors, $q$ a \emph{query name}, and $f_1, \ldots, f_k$
+\emph{parameter names}.\footnote{We disregard parameter direction
+  kinds with the exception of \uml{return}.  However, we consider
+  \uml{return} parameters to be anonymous; in UML, only a single
+  \uml{return} parameter is allowed.}
+
+A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), Q)$
+comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $Q$ of query declarations
+over $(C, {\leq_C})$, such that the following property is
+satisfied:
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item query names are unique along the generalisation
+relation:\footnote{In particular, we disregard overloading and
+  refinement of queries in sub-classes.} if
+$c_1.q_1(f_{11} : \tau_{11}[c_{11}], \ldots, f_{1k_1} :
+\tau_{1k_1}[c_{1k_1}]) : \tau_1'[c_1']$
+and
+$c_2.q_2(f_{21} : \tau_{21}[c_{21}], \ldots, f_{2k_2} :
+\tau_{2k_1}[c_{2k_2}]) : \tau_2'[c_2']$
+are different query declarations in $Q$ and $c_1 \leq_C c_2$, then
+$q_1 \neq q_2$.
+\end{itemize}
+
+A \emph{class/data type net morphism}
+$\sigma = (\gamma, \pi) : \Sigma = ((C, {\leq}_C),
+ Q) \to \Tau = ((D, {\leq}_D),\allowbreak R)$
+is given by
+%
+\begin{itemize}[label={--}, leftmargin=*]
+  \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
+{\leq_D})$; and
+
+  \item a query declaration map $\pi : Q \to R$ such that if
+$\pi({c.q(f_1 : \tau_1[c_1], \ldots, f_k : \tau_k[c_k]) : \tau[c']}) =
+{d.r(g_1 : \tau'_1[d_1], \ldots, g_l : \tau'_l[d_l]) : \tau'[d']} \in
+R$,
+then $d = \gamma(c)$, $d' = \gamma(c')$, $k = l$,
+$d_1 = \gamma(c_1), \ldots, d_k = \gamma(d_k)$,
+$\tau_1 = \tau_1', \ldots, \tau_k = \tau_k'$, and $\tau = \tau'$;
+\end{itemize}
 
 \infannex{Extended Logic Graph}\label{a:ext-graph}
 
