@@ -7859,17 +7859,46 @@ The translation of multiplicity formulas to Common Logic is as follows:
 \qqquad\texttt{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$)\\
 \qqquad\qqquad\qqquad  (form:sequence-size \\
 \qqquad\qqquad\qqquad\qqquad(form:n-select a $i$ [$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$]) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
+\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}\\
+If $a$ is represented in simplified form, we use instead:\\
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
+\texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)\\
+\qqquad(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$))\\
+\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
+\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
+\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_1$ $x_{i+1}$ $\cdots$ $x_r$)\\
+\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
+\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_{\sem{\ell}}$ $x_{i+1}$ $\cdots$ $x_r$) ))))}
   \item  $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i)=$\\
 \texttt{(forall (x)}\\
 \qqquad\texttt{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n))}
+\qqquad\qqquad (buml:leq $\sem{\ell}$ n))}\\
+If $m$ is represented in simplified form, we use instead:\\
+$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1)=$\\
+\texttt{(forall (x)\\
+\qqquad(if ($c_2$ $x$) \\
+\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
+\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
+\qqquad\qqquad\qqquad\qqquad\qquad(m $y_1$ x)\\
+\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
+\qqquad\qqquad\qqquad\qqquad\qquad(m $y_{\sem{\ell}}$ x) ))))}\\
+$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2)=$\\
+\texttt{(forall (x)\\
+\qqquad(if ($c_1$ $x$) \\
+\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
+\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
+\qqquad\qqquad\qqquad\qqquad\qquad(m x  $y_1$)\\
+\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
+\qqquad\qqquad\qqquad\qqquad\qquad(m x $y_{\sem{\ell}}$) ))))}
 \end{itemize}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer, and $[x_1\cdots x_n]$ abbreviates \texttt{(form:sequence-insert $x_1$ $\cdots$ (form:sequence-insert $x_n$ form:empty-sequence))}.
 The translation for  $\mathit{FunExpr} \leq \mathit{NumLiteral}$
-is analogous.
+is analogous. In case of simplified representation, we need to replace
+the existence of $\sem{\ell}$ distinct individuals with a statement
+expressing that if $\sem{\ell}+1$ individuals have the specified property,
+at least two of them must be equal.
 
 
 \infannex{Conformance of Essential MOF with DOL}\label{a:EMOF}
