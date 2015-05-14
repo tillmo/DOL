@@ -880,7 +880,7 @@ environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
 6.5.2(c)& 
 The metalanguage shall not replace the object language constructs of the conforming logical
 languages.	&
-The syntax of a \syntax{BasicOMS} is left unspecified in this standard. Rather, here this standard relies on other
+The syntax of a \syntax{NativeOMS} is left unspecified in this standard. Rather, here this standard relies on other
 standards and language definitions.
 See \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
    \\ \hline
@@ -1637,15 +1637,47 @@ For the purposes of this document, the following terms and definitions apply.
 \end{definitions}
 
 
-\sclause{Native OMS, Basic OMS}
+\sclause{Native OMS, OMS, and OMS Languages}
 
 \begin{definitions}
 
+\termdefinition{native OMS}{A
+collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) from a given \termref{OMS language}.}
+  \begin{example}
+    An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASLE are three different native OMS. 
+  \end{example}
+	\begin{note}
+	An \termref{OMS} can be written in different \termref{OMS language} 	serializations\index{serialization}.
+	\end{note}	
+
+
+\termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
+plus non-logical annotations\index{annotation}.}
+  \begin{example}
+    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
+  \end{example}
+  \begin{note}
+  An OMS language is used for the formal specification of \termref{native OMS}.
+  \end{note}
+  \begin{note}
+  We distinguish between the {logical language aspect}, the {structuring language aspect}, and the {annotation language aspect} of an OMS language. 
+  \end{note}
+
+
+
+%\begin{definitions}
+\termdefinition{DOL structured OMS}{A syntactically valid \DOL library (as defined in this \IS) that contains a library definition (see section \ref{c:keywords}).}
+  \begin{note}
+   \DOL structured OMS, typically, use native OMS as building blocks for defining structured OMS, OMS mappings or OMS networks.  
+  \end{note}
+  \begin{note}
+   All \DOL structured OMS are structured OMS. 
+  \end{note}
+	
+
+
 \termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
-{collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) in a given \termref{OMS language} (or several such languages).}
-\begin{note}
-	An \termref{OMS} can be written in different \termref{OMS language} serializations\index{serialization}.
-\end{note}	
+{A native OMS or a \DOL structured OMS.}
 \begin{note}
 	An OMS is either a basic or a structured OMS.
 \end{note}
@@ -1655,48 +1687,20 @@ For the purposes of this document, the following terms and definitions apply.
 
 
 
-%\begin{definitions}
-\termdefinition{native OMS}{An OMS that is written in exactly one OMS language.}
-  \begin{example}
-    An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASLE are three different native OMS. 
-  \end{example}
-  \begin{note}
-   From the perspective of DOL, native OMS are the basic building blocks for larger OMS. 
-  \end{note}
-
-
-
-
-\termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
-plus non-logical annotations\index{annotation}.}
-  \begin{example}
-    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
-  \end{example}
-  \begin{note}
-  An OMS language is used for the formal specification of \termref{OMS}.
-  \end{note}
-  \begin{note}
-  We distinguish between the {logical language aspect}, the {structuring language aspect}, and the {annotation language aspect} of an OMS language. 
-  \end{note}
-
-
-
 \begin{definitions}
-\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{An OMS that does not utilize any elements from the structuring language aspects of its languages.}
+\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{A native OMS that does not utilize any elements from the structuring language aspects of its language.}
   \begin{note}
     Basic OMS are self-contained in the sense that it semantics does not depend on some other OMS.  In particular, the OMS does not involve any importations.
   \end{note}
   \begin{note}
     Since a basic OMS has no structuring elements, it consists just of a \termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}.
   \end{note}
-
-
+	
 
 
 
   \termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
  }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}.}
-
   \begin{note}
   This differs from the notion of ``atomic sentence'': such sentences
   may involve several non-logical symbols.
@@ -1934,7 +1938,11 @@ not considered sentences of that OMS.
 \red{
 \termdefinition{structured OMS}
 {\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations.}
-
+\begin{note}
+	  Structured OMS are either \DOL structured OMS or native OMS that utilize elements of their structuring language aspect. 
+  \end{note}
+	
+	
 
 \termdefinition{flattenable OMS}
 {OMS that can be seen, by purely syntactical means, to be logically  equivalent to a flat OMS.}
