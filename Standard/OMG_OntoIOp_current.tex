@@ -880,8 +880,7 @@ environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
 6.5.2(c)& 
 The metalanguage shall not replace the object language constructs of the conforming logical
 languages.	&
-A \syntax{BasicOMS} is explicitly defined to be a \syntax{OMSInConformingLanguage}, and the syntax
-of the latter is left unspecified in this standard. Rather, here this standard relies on other
+The syntax of a \syntax{BasicOMS} is left unspecified in this standard. Rather, here this standard relies on other
 standards and language definitions.
 See \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
    \\ \hline
@@ -3808,15 +3807,15 @@ a definition related to queries
 or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verbatim inclusion of an OMS written in
-an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
+an OMS language that conforms with DOL (\syntax{NativeOMS}; \cf \ref{c:conform:logic}).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 Library                  = [ PrefixMap ] , LibraryDefn
-                         | OMSInConformingLanguage ;
+                         | NativeOMS ;
 LibraryDefn              = 'library' , LibraryName , Qualification , { LibraryItem } ;
-OMSInConformingLanguage  = ($<$)language specific($>$) ;
-BasicOMSInConformingLanguage = ($<$)language specific($>$) ;
+NativeOMS  = ($<$)language specific($>$) ;
+BasicOMS = ($<$)language specific($>$) ;
 LibraryItem              = LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification ;
 LibImport                = 'lib-import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
@@ -3893,7 +3892,6 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 \ednote{ExtensionOMS seems to be missing from the abstract syntax}
 \begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
 
-BasicOMS             = BasicOMSInConformingLanguage ;
 MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
 ExtendingOMS         = MinimizableOMS
@@ -4353,7 +4351,7 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
   \RETURN $i$
 \end{algorithmic}
 
-This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{OMSInConformingLanguage}); the latter \shall be self-contained.
+This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{NativeOMS}); the latter \shall be self-contained.
 
 While CURIEs used for identifying parts of a library (\cf \cref{c:curies}) are merely syntactic 
 sugar, the prefix map for a basic OMS is essential to determining the semantics of the basic OMS 
@@ -4391,9 +4389,10 @@ disambiguate heterogeneous texts.
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 Library                 = [ PrefixMap ] , LibraryDefn
-                         | OMSInConformingLanguage ;
+                         | NativeOMS ;
 LibraryDefn             = 'library' , LibraryName , Qualification , { LibraryItem } ;
-OMSInConformingLanguage = ($<$) language and serialization specific ($>$) ;
+NativeOMS = ($<$) language and serialization specific ($>$) ;
+BasicOMS = ($<$) language and serialization specific ($>$) ;
 LibraryItem             = LibImport | OMSDefn | NetworkDefn | MappingDefn 
                           | QueryRelatedDefn | Qualification ;
 LibImport                = 'import' , LibraryName ;
@@ -4445,7 +4444,6 @@ both \syntax{\%inconsistent} and \syntax{\%notmcons} are translated to
                        
                        
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-BasicOMS            = OMSInConformingLanguage ;
 MinimizableOMS      = BasicOMS
                      | OMSRef , [ ImportName ] ; 
                      
@@ -5361,7 +5359,7 @@ $(lang, logic, ser)$.
 %We further assume a language-specific semantics of complete (basic,
 %but possibly also
 %structured) OMS
-%$sem(L,\syntax{OMSInConformingLanguage})=(\Sigma,\cM)$, where
+%$sem(L,\syntax{NativeOMS})=(\Sigma,\cM)$, where
 %$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
@@ -5381,11 +5379,11 @@ $$sem(\syntax{PrefixMap, LibraryDefn}) = \Gamma''$$
  $sem(\syntax{PrefixMap}) = \PMap$, $\Gamma'' = \Gamma_\emptyset.\{\prefix = \PMap\}$ and 
 $sem(\Gamma'', \syntax{LibraryDefn}) = \Gamma'$. 
 
-$$sem(\syntax{OMSInConformingLanguage}) = \Gamma''$$
+$$sem(\syntax{NativeOMS}) = \Gamma''$$
 
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
-$sem(\Gamma', \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM, \Delta)$,
+$sem(\Gamma', \syntax{NativeOMS}) = (I,  \Sigma, \cM, \Delta)$,
 \syntax{IRI} is the IRI of the library and 
 $\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM,\Delta)]$.
 
@@ -5408,15 +5406,15 @@ $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{OMSInConformingLanguage})= (\cI, \Sigma, \cM, \Delta)}
+\semdom{sem(\Gamma, \syntax{NativeOMS})= (\cI, \Sigma, \cM, \Delta)}
 
-$$sem(\Gamma, \syntax{OMSInConformingLanguage}) = (\cI, \Sigma, \cM, \Delta) $$
+$$sem(\Gamma, \syntax{NativeOMS}) = (\cI, \Sigma, \cM, \Delta) $$
 \noindent where 
 $\cI = logic(\Gamma.\current)$ and
-$sem_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM,\Delta)$. 
+$sem_\cI(\syntax{NativeOMS}) = (\cI,  \Sigma, \cM,\Delta)$. 
 
 Note that if the OMS in the library does not conform with the logic determined by
-the extension of the library, $sem_I(\syntax{OMSInConformingLanguage})$ will be undefined.
+the extension of the library, $sem_I(\syntax{NativeOMS})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
