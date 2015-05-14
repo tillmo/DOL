@@ -7696,6 +7696,8 @@ correct type:
 (forall (p) (if (form:sequence-member p m)
                 (and (form:Pair p) (c1 (form:first p)) (c2 (form:second p))))
 \end{lstlisting}
+In case $\tau_2$ is not present or $\tau_2=\mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:\\
+\texttt{(forall (x y) (if (m x y) (and ($c_1$ x) ($c_2$ y))))}\\
   \item 
 for any pair of composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
 at most one owner'':
@@ -7705,6 +7707,7 @@ at most one owner'':
                  (form:sequence-member (form:pair o' i) m'))
             (= o o')))
 \end{lstlisting}
+In case \texttt{m} is represented in the simplified way, \texttt{(form:sequence-member (form:pair o i) m)} is replaced by \texttt{(m o i)}, and analogously for \texttt{m'}.
   \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(a)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
 being represented as sequences)\footnote{Ignoring the annotations $\tau_i$ in the interpretation of an association is intentional, see OMG UML version 2.5 (ptc/2013-09-05) in section 11.5.3: ``When one or more ends of the Association have isUnique =false, it is possible to have several links associating the same set of
 instances. In such a case, links carry an additional identifier apart from their end values.
@@ -7714,19 +7717,28 @@ When one or more ends of the Association are ordered, links carry ordering infor
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
 \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
 \ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert $x_r$ form:empty-sequence)))))))))}
+In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
+$\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:\\
+\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}
 \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
 of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
 $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
 $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))} 
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))}\\
+If $\mathbf{a}$ is represented in simplified form, then instead we use\\
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (forall (x) (iff (member x s) (a o x)))))}
 \item the interpretation of a member end of a composition declaration
 owned by a class/data type coincides with the interpretation of the
 attribute: if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ is owned
 by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))} 
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))}\\
+Again, if $\mathbf{m}$ is represented in simplified form, then instead we use\\
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (forall (x) (iff (member x s) (m o x)))))}
 %% \footnote{
 %% Ignoring the annotations $\tau_i$ in the interpretation of an
 %% association is intentional, see the semantics of associations in the UML
