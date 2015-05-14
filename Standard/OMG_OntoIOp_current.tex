@@ -7649,8 +7649,9 @@ and functionality:
 \texttt{(forall (x y) (if (c.p x y) (c x))) }
 \item 
 \texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote
-{With \texttt{($\tau[c]$ x)}, we abbreviate\\
-\texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.}
+{With \texttt{($\tau[c]$ x)}, we abbreviate either (if $\tau$ is present)\\
+\texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.\\
+or (if $\tau$ is omitted) just \texttt{(c x)}.}
 %% \item 
 %% \texttt{(forall (x y m)\\
 %% \qqquad (if (and (c.p x y) (member m y)) (c' m)))}
@@ -7665,13 +7666,12 @@ and functionality:
   \item $\CL$ maps each query operation declaration $c.o(x_1 :
     \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
     predicate $\CL(c.o)$ and axioms stating type-correctness and
-    functionality:\ednote{axioms need to be adapted to the fact   
-    that parameter types are collection types}
+    functionality:
 \begin{itemize}
 \item
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau_i[c_i]$ $x_i$))) }
 for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
@@ -7680,7 +7680,7 @@ for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, n
 %% \qqquad (if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-\qqquad  (if (and (c x) ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$))\\
+\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
 \qqquad\qqquad (exists (y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
