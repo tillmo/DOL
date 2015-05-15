@@ -55,7 +55,7 @@ draft%
 %\usepackage{lmodern} % FN: commented out since OMG wants its own fonts
 %\usepackage[scaled=.8]{beramono} % FN: commented out since OMG wants its own fonts
 \usepackage{courier}
-\usepackage{helvet}
+\usepackage[scaled=.9]{helvet}
 
 % set up Unicode symbols
 \DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
@@ -882,8 +882,7 @@ environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
 6.5.2(c)& 
 The metalanguage shall not replace the object language constructs of the conforming logical
 languages.	&
-A \syntax{BasicOMS} is explicitly defined to be a \syntax{OMSInConformingLanguage}, and the syntax
-of the latter is left unspecified in this standard. Rather, here this standard relies on other
+The syntax of a \syntax{BasicOMS} is left unspecified in this standard. Rather, here this standard relies on other
 standards and language definitions.
 See \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
    \\ \hline
@@ -893,9 +892,8 @@ The metalanguage shall provide syntactic constructs for (i) structuring OMS rega
 logic in which their sentences are formalized and (ii) basic and structured OMS and facilities to
 identify them in a globally unique way.
 	&
-For basic OMS, see 6.5.2(c) above.
 The structuring constructs for OMS in \ref{c:focused-OMS} and \ref{a:dol-text:OMS} can be used for 
-any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for referencing OMS, see
+any logic, see the semantics in \ref{c:direct-sematics}. DOL uses IRIs for referencing both basic and structured OMS, see
 \ref{c:iris}.
    \\ \hline
 %
@@ -1502,9 +1500,9 @@ example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying te
 Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs, listed from highest to lowest:
 \begin{description}
 \item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}).  The serialization is \notrequired to support CURIEs with no prefix.\\
-  Informative comment: In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a basic OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+  Informative comment: In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a native OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
 \item[Non-prefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
-  Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the basic OMS to IRIs, which are located in one flat namespace.
+  Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the native OMS to IRIs, which are located in one flat namespace.
 \end{description}
 
 CURIEs that have a prefix may not be acceptable identifiers in every
@@ -1641,7 +1639,7 @@ For the purposes of this document, the following terms and definitions apply.
 \end{definitions}
 
 
-\sclause{Basic OMS}
+\sclause{Native OMS, Basic OMS}
 
 \begin{definitions}
 
@@ -1659,21 +1657,43 @@ For the purposes of this document, the following terms and definitions apply.
 
 
 
-\begin{definitions}
-\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{\termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}, which may be used as a building block for a larger \termref{OMS}.}
+%\begin{definitions}
+\termdefinition{native OMS}{An OMS that is written in exactly one OMS language.}
+  \begin{example}
+    An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASLE are three different native OMS. 
+  \end{example}
   \begin{note}
-    The sentences must use only those non-logical symbols that are present in the signature.
+   From the perspective of DOL, native OMS are the basic building blocks for larger OMS. 
   \end{note}
+
+
 
 
 \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
 plus non-logical annotations\index{annotation}.}
-  \begin{note}
-  An OMS language is used for the formal specification of \termref{OMS}.
-  \end{note}
   \begin{example}
     OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
   \end{example}
+  \begin{note}
+  An OMS language is used for the formal specification of \termref{OMS}.
+  \end{note}
+  \begin{note}
+  We distinguish between the {logical language aspect}, the {structuring language aspect}, and the {annotation language aspect} of an OMS language. 
+  \end{note}
+
+
+
+\begin{definitions}
+\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{An OMS that does not utilize any elements from the structuring language aspects of its languages.}
+  \begin{note}
+    Basic OMS are self-contained in the sense that it semantics does not depend on some other OMS.  In particular, the OMS does not involve any importations.
+  \end{note}
+  \begin{note}
+    Since a basic OMS has no structuring elements, it consists just of a \termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}.
+  \end{note}
+
+
+
 
 
   \termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
@@ -2410,27 +2430,12 @@ alignments, etc.}\\
 AENOR commented on the latter: ``The definition of this term needs some revision and more precision 
 in the document as for the real criteria that shall be applied to evaluate the degree of 
 interoperability between OMS.''}\\
-~\todonote[author=Christoph Lange]{Frank Farance cited the following from ISO/IEC 2381-1 Information Technology Vocabulary -- Part 1: Fundamental Terms:\textLF
-01.01.47\textLF
-interoperability\textLF
-The capability to communicate, execute programs, or transfer data among various functional units in 
-a manner that requires the user to have little or no knowledge of the unique characteristics of 
-those units.\textLF
-01.01.40\textLF
-functional unit\textLF
-An entity of hardware or software, or both, capable of accomplishing a specified purpose.\textLF
-... and the following from the FDIS 20944-1 Information technology -- Metadata Registries 
-Interoperability and Bindings (MDR-IB)-- Part 1: Framework, common vocabulary, and common 
-provisions for conformance\textLF
-3.21.12.4\textLF
-data interoperability\textLF
-interoperability concerning the creation, meaning, computation, use, transfer, and exchange of data\textLF
-3.21.12.5\textLF
-metadata interoperability\textLF
-interoperability concerning the creation, meaning, computation, use, transfer, and exchange of descriptive data}
 
 \begin{definitions}
-  \termdefinition{logically interoperable}{property of \termref{structured OMS}, which may be written in different OMS languages\index{OMS language} \markupcomment[author=Christoph Lange,type=todo]{based on different logics\index{logic}}{phrase this more precisely, based on the previously introduced terms}, of being usable jointly in a coherent way (via suitable {OMS language translations}\termref{OMS language translation}), such that the notions of their overall consistency and logical entailment have a precise logical semantics}
+
+\termdefinition{OMS integration} {the union of OMS which preserves the satisfaction and entailment relations among constituent OMS.}
+
+  \termdefinition{logically interoperable}{property of \termref{structured OMS}, which may be written in different OMS languages\index{OMS language} \markupcomment[author=Christoph Lange,type=todo]{based on different logics\index{logic}}{phrase this more precisely, based on the previously introduced terms}, of being usable jointly in a coherent way (via suitable OMS language translations), such that the notions of their overall consistency and logical entailment have a precise logical semantics.}
 \end{definitions}
 \begin{note}
 Within ISO 19763 and ISO 20943, metamodel interoperability is
@@ -2441,9 +2446,19 @@ models that semantically represent this overlap. Within these
 standards, a model is a representation of some aspect of a domain of
 interest using a normative modelling facility and modelling
 constructs.
+
+The notion of logical interoperability is distinct from the notion of 
+interoperability used in 
+ISO/IEC 2381-1 Information Technology Vocabulary -- Part 1: Fundamental Terms,
+which is restricted to
+the capability to communicate, execute programs, or transfer data among 
+various hardware or software entities 
+in a manner that requires the user to have little or no knowledge of the 
+unique characteristics of those entities.
 \end{note}
 
-
+\termdefinition{OMS interoperability} {relation among OMS (via OMS alignments)
+which are logically interoperable.}
 
 \chapter{Symbols}
 
@@ -3160,23 +3175,28 @@ bank). After three unsuccessful trials the card is kept.
 \begin{figure}[!Ht]
 \centering
 \subfigure[Interaction\label{fig:interaction}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/scenario.png}%\\[-1.5ex]
+\includegraphics[scale=.5]{illustrations/uml/sd-atm2bank.pdf}
+%  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/scenario.png}%\\[-1.5ex]
 }
 \hspace*{0.5cm}
 \subfigure[Composite structure\label{fig:system}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/system.png}%\\[-1.5ex]
+\includegraphics[scale=.5]{illustrations/uml/cmp-system.pdf}
+%  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/system.png}%\\[-1.5ex]
 }
 \\
 \subfigure[Protocol state machine\label{fig:psm}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=.65]{illustrations/uml/protocol.png}%\\[-1.5ex]
+\includegraphics[scale=.5]{illustrations/uml/stm-atm2bank-protocol.pdf}
+%  \includegraphics[trim=6 6 6 6,clip,scale=.65]{illustrations/uml/protocol.png}%\\[-1.5ex]
 }
 \hspace*{0.4cm}
-\subfigure[Interface\label{fig:class}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/interfaceWithOCL.png}%\\[-1.5ex]
+\subfigure[Interfaces and components\label{fig:class}]{%
+\includegraphics[scale=.5]{illustrations/uml/pkg-components.pdf}
+%  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/interfaceWithOCL.png}%\\[-1.5ex]
 }
 \\
 \subfigure[State machine\label{fig:state-machine}]{%
-  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/atm-behaviour.png}%\\[-1.5ex]
+\includegraphics[scale=.5]{illustrations/uml/stm-atm-behaviour.pdf}
+%  \includegraphics[trim=6 6 6 6,clip,scale=0.65]{illustrations/uml/atm-behaviour.png}%\\[-1.5ex]
 }
 \vspace*{-1.5ex}
 \caption{ATM example}\label{fig:atm-example}
@@ -3520,22 +3540,21 @@ language', but a meta-language that is used on top of existing OMS languages.
 The major functions of \DOL are the following: 
 \begin{itemize}
 		\item \DOL allows the use of OMS in other OMS languages (e.g., UML class diagrams, \CASL, 
-		OWL, Common Logic) without requiring any changes. These are called \emph{basic OMS}.  
-		\item \DOL provides for defining new, more complex  OMS based on existing OMS. These OMS are
-		called \emph{structured OMS}. \DOL provides a number of operations for this purpose; e.g.,
+		OWL, Common Logic) without requiring any changes. These are called \emph{native OMS}.  
+		\item \DOL provides for defining new, \emph{structured OMS} based on existing OMS. \ednote{note that this may be read as implying that no native OMS are structured} \DOL provides a number of operations for this purpose; e.g.,
 		it is possible to define a structured OMS $C$ as the union of an OWL
 		ontology $A$ and a Common Logic ontology $B$.
 		\item \DOL provides for defining connections between two OMS by using 
 		\emph{OMS mappings}. \DOL provides a variety of mappings; e.g.,  one can align terminology 
 		between different OMS or specify that some OMS is an extension of another. A set of OMS
 		and OMS mappings may form together an \emph{OMS network}.
-		\item Basic OMS inherit their semantics from the underlying OMS languages. Structured OMS, 
+		\item Native OMS inherit their semantics from the underlying OMS languages. The \DOL
+		 operations for defining structured OMS, 
 		OMS mappings, and OMS networks have a declarative model-theoretic semantics, which is 
 		 defined in \cref{c:semantics}.  
 \end{itemize}
  
-The syntax of \DOL roughly follows these functions; basic OMS, structured OMS, OMS
-mappings, and OMS networks are the most important syntactic categories of \DOL. 
+The syntax of \DOL roughly follows these functions; native OMS, the various kind of structured OMS, OMS mappings, and OMS networks are the most important syntactic categories of \DOL. 
 They (together with queries and importation) form the items in a \emph{DOL library}.
  
 
@@ -3790,27 +3809,25 @@ a definition related to queries
 or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verbatim inclusion of an OMS written in
-an OMS language that conforms with DOL (\syntax{OMSInConformingLanguage}; \cf \ref{c:conform:logic}).
+an OMS language that conforms with DOL (\syntax{NativeOMS}; \cf \ref{c:conform:logic}).
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-Library            ::= [PrefixMap] LibraryDefn
-                     | OMSInConformingLanguage
-LibraryDefn        ::= library LibraryName Qualification LibraryItem*
-OMSInConformingLanguage ::= ($<$)language specific($>$) 
-BasicOMSInConformingLanguage ::= ($<$)language specific($>$) 
-LibraryItem        ::= LibImport
-                     | OMSDefn
-                     | NetworkDefn
-                     | MappingDefn
-                     | QueryRelatedDefn
-                     | Qualification
-LibImport          ::= lib-import LibraryName
-Qualification      ::= LanguageQual | LogicQual | SyntaxQual
-LanguageQual       ::= lang-select LanguageRef
-LogicQual          ::= logic-select LogicRef
-SyntaxQual         ::= syntax-select SyntaxRef
-LibraryName        ::= IRI
+Library     ::= [PrefixMap] LibraryDefn | NativeOMS
+LibraryDefn ::= library LibraryName Qualification LibraryItem*
+NativeOMS   ::= ($<$)language specific($>$) 
+LibraryItem ::= LibImport
+              | OMSDefn
+              | NetworkDefn
+              | MappingDefn
+              | QueryRelatedDefn
+              | Qualification
+LibImport   ::= lib-import LibraryName
+Qualification ::= LanguageQual | LogicQual | SyntaxQual
+LanguageQual ::= lang-select LanguageRef
+LogicQual   ::= logic-select LogicRef
+SyntaxQual  ::= syntax-select SyntaxRef
+LibraryName ::= IRI
 \end{lstlisting}
 
 ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
@@ -3881,9 +3898,9 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % and HetCASL (see HetCASL summary)
 
 \ednote{ExtensionOMS seems to be missing from the abstract syntax}
-\begin{lstlisting}[language=ebnf,escapeinside={<>}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-BasicOMS           ::= BasicOMSInConformingLanguage
+BasicOMS           ::= ($<$)language specific($>$) 
 MinimizableOMS     ::= BasicOMS | oms-ref OMSRef [ImportName]
 ExtendingOMS       ::= MinimizableOMS | minimize MinimizableOMS
 OMS                ::= ExtendingOMS
@@ -4229,15 +4246,16 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
- \begin{lstlisting}[language=ebnf,escapeinside={!!}]
-CURIE     = ( [ Prefix ] , Reference ) - ;
-Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$!
-Reference = Path , [ Query ] , [ Fragment ] ;
-Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
+
+CURIE   ::= ($($) [ Prefix ] , Reference ($)$) - 
+Prefix  ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
+Reference ::= Path [Query] [Fragment]
+Path    ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query   ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
+
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
 
@@ -4327,7 +4345,7 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
   \RETURN $i$
 \end{algorithmic}
 
-This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{OMSInConformingLanguage}); the latter \shall be self-contained.
+This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{NativeOMS}); the latter \shall be self-contained.
 
 While CURIEs used for identifying parts of a library (\cf \cref{c:curies}) are merely syntactic 
 sugar, the prefix map for a basic OMS is essential to determining the semantics of the basic OMS 
@@ -4365,22 +4383,21 @@ disambiguate heterogeneous texts.
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
-Library            ::= [PrefixMap] LibraryDefn
-                     | OMSInConformingLanguage
-LibraryDefn        ::= 'library' LibraryName Qualification LibraryItem*
-OMSInConformingLanguage ::= ($<$) language and serialization specific ($>$) 
-LibraryItem        ::= LibImport
-                     | OMSDefn
-                     | NetworkDefn
-                     | MappingDefn
-                     | QueryRelatedDefn
-                     | Qualification
-LibImport          ::= 'import' LibraryName
-Qualification      ::= LanguageQual | LogicQual | SyntaxQual
-LanguageQual       ::= 'language' LanguageRef
-LogicQual          ::= 'logic' LogicRef
-SyntaxQual         ::= 'serialization' SyntaxRef
-LibraryName        ::= IRI
+Library     ::= [PrefixMap] LibraryDefn | NativeOMS
+LibraryDefn ::= 'library' LibraryName Qualification LibraryItem*
+NativeOMS   ::= ($<$) language and serialization specific ($>$) 
+LibraryItem ::= LibImport
+              | OMSDefn
+              | NetworkDefn
+              | MappingDefn
+              | QueryRelatedDefn
+              | Qualification
+LibImport   ::= 'import' LibraryName
+Qualification ::= LanguageQual | LogicQual | SyntaxQual
+LanguageQual ::= 'language' LanguageRef
+LogicQual   ::= 'logic' LogicRef
+SyntaxQual  ::= 'serialization' SyntaxRef
+LibraryName ::= IRI
 \end{lstlisting}
 
 
@@ -4425,9 +4442,9 @@ both \syntax{\%inconsistent} and \syntax{\%notmcons} are translated to
 \syntax{not-model-conservative}.
                        
                        
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 
-BasicOMS         ::= OMSInConformingLanguage
+BasicOMS         ::= ($<$)language and serialization specific($>$) 
 MinimizableOMS   ::= BasicOMS | OMSRef [ImportName]
 ExtendingOMS     ::= MinimizableOMS
                    | MinimizeKeyword '{' MinimizableOMS '}'
@@ -4885,7 +4902,7 @@ signatures, and linked coherently by signature morphisms.
 
 
 \begin{definition}\label{def:inst} An
-\defsty{institution} \cite{Institutions} is a quadruple $I=(\Sign,\sen,\IMod,{\models})$
+\defsty{institution} \cite{GoguenBurstall92} is a quadruple $I=(\Sign,\sen,\IMod,{\models})$
 consisting of the following:
 %
 \begin{itemize}
@@ -5331,7 +5348,7 @@ $(lang, logic, ser)$.
 %We further assume a language-specific semantics of complete (basic,
 %but possibly also
 %structured) OMS
-%$sem(L,\syntax{OMSInConformingLanguage})=(\Sigma,\cM)$, where
+%$sem(L,\syntax{NativeOMS})=(\Sigma,\cM)$, where
 %$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
@@ -5351,11 +5368,11 @@ $$sem(\syntax{PrefixMap, LibraryDefn}) = \Gamma''$$
  $sem(\syntax{PrefixMap}) = \PMap$, $\Gamma'' = \Gamma_\emptyset.\{\prefix = \PMap\}$ and 
 $sem(\Gamma'', \syntax{LibraryDefn}) = \Gamma'$. 
 
-$$sem(\syntax{OMSInConformingLanguage}) = \Gamma''$$
+$$sem(\syntax{NativeOMS}) = \Gamma''$$
 
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
-$sem(\Gamma', \syntax{OMSInConformingLanguage}) = (I,  \Sigma, \cM, \Delta)$,
+$sem(\Gamma', \syntax{NativeOMS}) = (I,  \Sigma, \cM, \Delta)$,
 \syntax{IRI} is the IRI of the library and 
 $\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM,\Delta)]$.
 
@@ -5378,15 +5395,15 @@ $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{OMSInConformingLanguage})= (\cI, \Sigma, \cM, \Delta)}
+\semdom{sem(\Gamma, \syntax{NativeOMS})= (\cI, \Sigma, \cM, \Delta)}
 
-$$sem(\Gamma, \syntax{OMSInConformingLanguage}) = (\cI, \Sigma, \cM, \Delta) $$
+$$sem(\Gamma, \syntax{NativeOMS}) = (\cI, \Sigma, \cM, \Delta) $$
 \noindent where 
 $\cI = logic(\Gamma.\current)$ and
-$sem_\cI(\syntax{OMSInConformingLanguage}) = (\cI,  \Sigma, \cM,\Delta)$. 
+$sem_\cI(\syntax{NativeOMS}) = (\cI,  \Sigma, \cM,\Delta)$. 
 
 Note that if the OMS in the library does not conform with the logic determined by
-the extension of the library, $sem_I(\syntax{OMSInConformingLanguage})$ will be undefined.
+the extension of the library, $sem_I(\syntax{NativeOMS})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7294,17 +7311,20 @@ diagrams as described in the following sections.
 
 \section{Signatures}
 
-\medskip\noindent\textbf{Class/data type hierarchies.}
-A \emph{class/data type hierarchy} $(C, {\leq_C})$ is given by a
-partial order where the set $C$ contains the \emph{class/data type
-  names}, which are closed w.r.t.\ the \emph{built-in data types}
-$\mathsf{Boolean}$, $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$,
-$\mathsf{Real}$, and $\mathsf{String}$, i.e.,
-$\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural}, \mathsf{Integer},
-\mathsf{Real}, \mathsf{String} \} \subseteq C$;\ednote{what about
-enumeration types? Should we assume that some classifiers are
-marked as enumeration types and equipped with their set of
-constants?}
+\medskip\noindent\textbf{Class/data type hierarchies.}  A
+\emph{class/data type hierarchy} $(C, {\leq_C})$ is given by a partial
+order where the set $C$ contains the \emph{class/data type names}, which
+are closed w.r.t.\ the \emph{built-in data types} $\mathsf{Boolean}$,
+$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
+$\mathsf{String}$, i.e.,
+$\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
+\mathsf{Integer}, \mathsf{Real}, \mathsf{String} \} \subseteq
+C$;\ednote{what
+  about enumeration types? Should we assume that some classifiers are
+  marked as enumeration types and equipped with their set of constants?
+  AK: In UML, \uml{Enumeration} is a specialisation of \uml{DataType}.
+  The set of constants are \uml{EnumerationLiteral}s.  These could be
+  added like \uml{Property}.}
 and the partial ordering relation $\leq_C$ represents a
 \emph{generalisation relation} on $C$, where we say that $c_1$ is a
 \emph{sub-class/data type} of $c_2$ if $c_1 \leq_C c_2$.
@@ -7314,7 +7334,7 @@ $\gamma : (C, {\leq_C}) \to (D, {\leq_D})$ is given by a monotone map
 from $(C, {\leq_C})$ to $(D, {\leq_D})$, i.e.,
 $\gamma(c) \leq_D \gamma(c')$ if $c \leq_C c'$, such that
 $\gamma(c) = c$ for all
-$c \in \{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
+$c \in \{ \mathsf{Boolean},\allowbreak \mathsf{UnlimitedNatural},\allowbreak
 \mathsf{Integer}, \mathsf{Real}, \mathsf{String} \}$.
 
 \medskip
@@ -7322,7 +7342,8 @@ We use the \emph{collection type constructors} $\mathsf{OrderedSet}$,
 $\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ for
 representing the meta-attributes ``ordered'' and ``unique'' of
 \uml{MultiplicityElement} according to the following
-table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128.}
+table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128; UML
+  2.5, p.~27.}
 %
 \begin{quotation}
 \begin{tabular}{@{}r||c|c@{}}
@@ -7335,7 +7356,8 @@ table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128.}
 \end{quotation}
 %
 The default is ``not ordered'' and ``unique''.\footnote{UML
-  Superstructure Specification 2.4.1, p.~96.}
+  Superstructure Specification 2.4.1, p.~96; there does not seem to be
+  default in UML 2.5.}
 
 For a class/data type $c \in C$ of a class/data type-hierarchy
 $(C, {\leq_C})$ and a collection type constructor
@@ -7353,26 +7375,27 @@ Let $(C, {\leq_C})$ be a class/data type hierarchy.
 $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
 constructor, and $p$ an \emph{attribute name}.
 
-  \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of the
-form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$ with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
-constructor, and $o$ an \emph{operation name}.\ednote{are the $x_i$ called
-parameter names?}
+  \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of
+the form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$
+with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
+constructor, $o$ an \emph{operation name}, and $x_1, \ldots, x_r$
+\emph{parameter names}.
 
-  \item An \emph{association declaration} over $(C, {\leq_C})$ is of the
+\item An \emph{association declaration} over $(C, {\leq_C})$ is of the
 form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])$ with $r \geq 2$,
 $c_1, \dots, c_r \in C$, $\tau_1, \ldots, \tau_r$ classifier
 annotations, $a$ an \emph{association name}, and $p_1, \dots, p_r$
 \emph{member end names}.\footnote{The member ends are ordered according
-  to the UML Superstructure Specification 2.4.1, p.~29; hence we use a
-  tuple-like notation.}  An association declaration
+  to the UML Superstructure Specification 2.4.1, p.~29; UML 2.5, p.~206;
+  hence we use a tuple-like notation.}  An association declaration
 $\mathbf{a} = a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])$
 \emph{yields} the \emph{property declarations}
 $\mathbf{a}.p_i : \tau_i[c_i]$ for $1 \leq i \leq r$.  An association
 declaration is \emph{binary} if $r = 2$.\footnote{Only binary
   association may show member ends that are properties not owned by the
-  association (UML Superstructure Specification 2.4.1, p.~37).  The
-  propery declarations induced by a more than binary association result
-  in a query operation.}
+  association (UML Superstructure Specification 2.4.1, p.~37; UML 2.5,
+  p.~228).  The propery declarations induced by a more than binary
+  association result in a query operation.}
 
   \item A \emph{composition declaration} over $(C, {\leq_C})$ is of the
 form $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$ with
@@ -7380,15 +7403,19 @@ $c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
 \emph{composition name}, and $p_1, p_2$ \emph{member end
   names}.\footnote{In UML, each \uml{Property} may have
   \uml{AggregationKind} \uml{composite}.  However, such an aggregation
-  kind has no semantic meaning when the property is not a member end
-  of an association: the UML Superstructure Specification 2.4.1 does not
+  kind has no semantic meaning when the property is not a member end of
+  an association: the UML Superstructure Specification 2.4.1 does not
   mention the aggregation kind in the description of the semantics of
-  \uml{Property}.  Moreover, composite properties, i.e., properties with
+  \uml{Property}, and UML 2.5 explains the use of aggregations for
+  \uml{Property} as ``to model circumstances in which \emph{one
+    instance} is used to group together a set of instances'' (p.~112,
+  our emphasis).  Moreover, composite properties, i.e., properties with
   aggregation kind \uml{composite} can only be member ends of binary
-  associations (UML Superstructure Specification 2.4.1, p.~37) and their
-  multiplicity must not exceed one (UML Superstructure Specification
-  2.4.1, p.~126).  We thus separate composition declarations from
-  general association declarations.}  A composition declaration
+  associations (UML Superstructure Specification 2.4.1, p.~37; UML 2.5,
+  p.~228) and their multiplicity must not exceed one (UML Superstructure
+  Specification 2.4.1, p.~126; UML 2.5, p.~155).  We thus separate
+  composition declarations from general association declarations.}  A
+composition declaration
 $\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
 \tau_2[c_2])$
 \emph{yields} the property declarations
@@ -7415,14 +7442,19 @@ declarations in $M \cup A$, then $d_1 \neq d_2$;
 
   \item member end names are unique: if $p_1, \ldots, p_r$ are the
 member end names of an association declaration in $A$ or a composition
-declaration in $M$, then $p_i \neq p_j$ for $1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not
-  be unique.  However, for (1)~a simpler handling of selecting a
-  particular member end in the sentences and avoiding the use of
-  number selectors, and (2)~making the notion of member ends ``owned''
-  by a class/data type, we add this constraint.}
+declaration in $M$, then $p_i \neq p_j$ for
+$1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not be
+  unique.  However, for (1)~a simpler handling of selecting a particular
+  member end in the sentences and avoiding the use of number selectors,
+  and (2)~making the notion of member ends ``owned'' by a class/data
+  type, we add this constraint. An association declaration violating this
+  uniqueness constraints can easily be transformed into an association 
+  declaration satisfying it by decorating member end names with the
+  numbers $1,\ldots,r$.}
 
   \item the type of a member end\footnote{All member ends are instances
-  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36.}
+  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36; UML
+  2.5, p.~206.}
 owned by a class/data type coincides with its declarations as attribute:
 We say that a property declaration $\mathbf{a}.p_i : \tau_i[c_i]$
 yielded by a binary association
@@ -7607,8 +7639,9 @@ and functionality:
 \texttt{(forall (x y) (if (c.p x y) (c x))) }
 \item 
 \texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote
-{With \texttt{($\tau[c]$ x)}, we abbreviate\\
-\texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.}
+{With \texttt{($\tau[c]$ x)}, we abbreviate either (if $\tau$ is present)\\
+\texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.\\
+or (if $\tau$ is omitted) just \texttt{(c x)}.}
 %% \item 
 %% \texttt{(forall (x y m)\\
 %% \qqquad (if (and (c.p x y) (member m y)) (c' m)))}
@@ -7623,13 +7656,12 @@ and functionality:
   \item $\CL$ maps each query operation declaration $c.o(x_1 :
     \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
     predicate $\CL(c.o)$ and axioms stating type-correctness and
-    functionality:\ednote{axioms need to be adapted to the fact   
-    that parameter types are collection types}
+    functionality:
 \begin{itemize}
 \item
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c_i$ $x_i$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau_i[c_i]$ $x_i$))) }
 for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
@@ -7638,7 +7670,7 @@ for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, n
 %% \qqquad (if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-\qqquad  (if (and (c x) ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$))\\
+\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
 \qqquad\qqquad (exists (y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
@@ -7654,6 +7686,8 @@ correct type:
 (forall (p) (if (form:sequence-member p m)
                 (and (form:Pair p) (c1 (form:first p)) (c2 (form:second p))))
 \end{lstlisting}
+In case $\tau_2$ is not present or $\tau_2=\mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:\\
+\texttt{(forall (x y) (if (m x y) (and ($c_1$ x) ($c_2$ y))))}\\
   \item 
 for any pair of composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
 at most one owner'':
@@ -7663,28 +7697,38 @@ at most one owner'':
                  (form:sequence-member (form:pair o' i) m'))
             (= o o')))
 \end{lstlisting}
+In case \texttt{m} is represented in the simplified way, \texttt{(form:sequence-member (form:pair o i) m)} is replaced by \texttt{(m o i)}, and analogously for \texttt{m'}.
   \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(a)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
 being represented as sequences)\footnote{Ignoring the annotations $\tau_i$ in the interpretation of an association is intentional, see OMG UML version 2.5 (ptc/2013-09-05) in section 11.5.3: ``When one or more ends of the Association have isUnique =false, it is possible to have several links associating the same set of
 instances. In such a case, links carry an additional identifier apart from their end values.
-When one or more ends of the Association are ordered, links carry ordering information in addition to their end values.'' We cover the additional information required for links by using sequences of tuples.}:\\
+When one or more ends of the Association are ordered, links carry ordering information in addition to their end values.'' Similarly in UML Superstructure Specification 2.4.1, p.~37. We cover the additional information required for links by using sequences of tuples.}:\\
 \texttt{(from:Sequence a)}\\
 \texttt{(forall (t) (if (form:sequence-member t a)\\
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
 \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
 \ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert $x_r$ form:empty-sequence)))))))))}
+In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
+$\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:\\
+\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}
 \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
 of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
 $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
 $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))} 
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))}\\
+If $\mathbf{a}$ is represented in simplified form, then instead we use\\
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (forall (x) (iff (member x s) (a o x)))))}
 \item the interpretation of a member end of a composition declaration
 owned by a class/data type coincides with the interpretation of the
 attribute: if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ is owned
 by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))} 
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))}\\
+Again, if $\mathbf{m}$ is represented in simplified form, then instead we use\\
+\texttt{(forall (o s)\\
+\qqquad (if (c.p o s) (forall (x) (iff (member x s) (m o x)))))}
 %% \footnote{
 %% Ignoring the annotations $\tau_i$ in the interpretation of an
 %% association is intentional, see the semantics of associations in the UML
@@ -7802,19 +7846,53 @@ The translation of multiplicity formulas to Common Logic is as follows:
 \qqquad\texttt{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$)\\
 \qqquad\qqquad\qqquad  (form:sequence-size \\
 \qqquad\qqquad\qqquad\qqquad(form:n-select a $i$ [$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$]) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
+\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}\\
+If $a$ is represented in simplified form, we use instead:\\
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
+\texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)\\
+\qqquad(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$))\\
+\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
+\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
+\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_1$ $x_{i+1}$ $\cdots$ $x_r$)\\
+\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
+\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_{\sem{\ell}}$ $x_{i+1}$ $\cdots$ $x_r$) ))))}
   \item  $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i)=$\\
 \texttt{(forall (x)}\\
 \qqquad\texttt{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n))}
+\qqquad\qqquad (buml:leq $\sem{\ell}$ n))}\\
+If $m$ is represented in simplified form, we use instead:\\
+$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1)=$\\
+\texttt{(forall (x)\\
+\qqquad(if ($c_2$ $x$) \\
+\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
+\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
+\qqquad\qqquad\qqquad\qqquad\qquad(m $y_1$ x)\\
+\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
+\qqquad\qqquad\qqquad\qqquad\qquad(m $y_{\sem{\ell}}$ x) ))))}\\
+$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2)=$\\
+\texttt{(forall (x)\\
+\qqquad(if ($c_1$ $x$) \\
+\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
+\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
+\qqquad\qqquad\qqquad\qqquad\qquad(m x  $y_1$)\\
+\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
+\qqquad\qqquad\qqquad\qqquad\qquad(m x $y_{\sem{\ell}}$) ))))}
 \end{itemize}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer, and $[x_1\cdots x_n]$ abbreviates \texttt{(form:sequence-insert $x_1$ $\cdots$ (form:sequence-insert $x_n$ form:empty-sequence))}.
 The translation for  $\mathit{FunExpr} \leq \mathit{NumLiteral}$
-is analogous.
+is analogous. In case of simplified representation, we need to replace
+the existence of $\sem{\ell}$ distinct individuals with a statement
+expressing that if $\sem{\ell}+1$ individuals have the specified property,
+at least two of them must be equal.
 
 
+\infannex{Conformance of Essential MOF with DOL}\label{a:EMOF}
+
+Since essential MOF (EMOF) is a sublanguage of UML class diagrams,
+we can define a corresponding institution that is a subinstitution
+of that for UML class diagrams (see annex~\ref{a:uml-class}).
 
 
 \infannex{Conformance of CASL with DOL}\label{a:casl}
@@ -9054,7 +9132,7 @@ mappings written in DOL and DOL-conforming languages.  It supports the
 same range of OMS languages and language translations as Hets (indeed,
 Hets is used for analyzing DOL files). The novel aspect w.r.t.\ Hets
 is the provision of git-based repositories and IRIs for libraries,
-OMS, symbols and mappings (see also Appendix~\ref{loc/id}).
+OMS, symbols and mappings (see also Annex~\ref{loc/id}).
 
 Users of Ontohub/Modelhub/Spechub can upload, browse, search and annotate 
 OMS in various languages via a web frontend, 
@@ -9177,8 +9255,8 @@ effort API4KB.
   {\end{itemize}}
 
 
-This appendix describes the way how Ontohub assigns IRIs to DOL
-libraries, OMS, symbols etc. Ontohub\footnote{In this appendix,
+This annex describes the way how Ontohub assigns IRIs to DOL
+libraries, OMS, symbols etc. Ontohub\footnote{In this annex,
   ``Ontohub'' could equally well be substituted by ``Modelhub'' and
   ``Spechub''.} is a reference implementation for DOL, and it is
 suggested that other tools supporting DOL should adopt the same or a
