@@ -4253,7 +4253,10 @@ CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}
 we can restate the CURIE grammar supported by DOL as follows:
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
 CURIE     = MaybeEmptyCURIE - ;
-MaybeEmptyCURIE = [ Prefix ] , Reference ;
+MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
+RefWithoutComma = Reference - StringWithComma ;
+StringWithComma = { UChar } , ',' , { UChar } ;
+UChar     = $<$ any unicode character $>$ ;
 Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty ;
@@ -4652,7 +4655,10 @@ Vars                 = Symbol , { ',' , Symbol } ;
 IRI     = '<' , FullIRI , '>' | CURIE ;
 FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
 CURIE     = MaybeEmptyCURIE - ;
-MaybeEmptyCURIE = [ Prefix ] , Reference ;
+MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
+RefWithoutComma = Reference - StringWithComma ;
+StringWithComma = { UChar } , ',' , { UChar } ;
+UChar     = $<$ any unicode character $>$ ;
 Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty ;
