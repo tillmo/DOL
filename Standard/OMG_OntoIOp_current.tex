@@ -4540,6 +4540,21 @@ OMSLangTransRef     = IRI ;
 %and hence should be a statement in an OMS network. Recall:
 %ModuleProperties     =  '\%safe' ; }
 
+The above grammar allows for some grouping ambiguity when using operators in
+OMS definitions. These ambiguities are resolved according to the following
+list, listing operators in decreasing order of precedence:
+\begin{itemize}
+  \item \syntax{extract}, \syntax{forget}, \syntax{hide}, \syntax{keep},
+    \syntax{reject}, \syntax{remove}, \syntax{reveal}, \syntax{select} and
+    \syntax{with}.
+  \item \syntax{and}.
+  \item \syntax{then}.
+\end{itemize}
+Multiple occurrences of the same operator are grouped in a left associative
+manner. In all other cases operators on the same precedence level are not
+implicitly grouped and have to be grouped explicitly. Omitting such an explicit
+grouping results in a parse error.
+
 \ssclause{OMS Mappings}\label{a:dol-text:mappings}
 \index{alignment}
 \newcommand*{\lessthan}{<}
