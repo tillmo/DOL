@@ -2,7 +2,7 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.92}
+\newcommand{\version}{0.93}
 
 
 %todo
@@ -2712,14 +2712,14 @@ in which the OMS are axiomatized in different logical languages?
 \end{itemize}
 
 
-To illustrate these challenges, in this clause we present a set of usage scenarios that involve the use of more than one OMS. These scenarios are in the areas of ontology design, formal specification, and model-driven development. In spite of their many differences, they  all highlight one common theme:  
+To illustrate these challenges, in this clause we present a set of usage scenarios that involve the use of more than one OMS. These scenarios address the areas of ontology design, formal specification, and model-driven development. In spite of their many differences, they  all highlight one common theme:  
  the use of multiple OMS leads to interoperability challenges. 
  %There  are ad-hoc solutions to these challenges, and specialized languages and tools are used in practice. 
 
 
 The purpose of \DOL is to provide  a
-standardized representation language, which allows to represent structured OMS and the relations 
-between OMS as part of OMS networks in a semantically well-defined way. Thus, tools that implement \DOL are able to integrate different OMS into a coherent whole.  This enables users of \DOL to overcome the different kind of interoperability issues that illustrated by the usage scenarios in this clause.  
+standardized representation language, which can be used to represent structured OMS and the relations 
+between OMS as part of OMS networks in a semantically well-defined way. Thus, tools that implement \DOL are able to integrate different OMS into a coherent whole, thereby enabling users of \DOL to overcome the different kind of interoperability issues that illustrated by the usage scenarios in this clause.  
 
 
 
@@ -2760,7 +2760,7 @@ between OMS as part of OMS networks in a semantically well-defined way. Thus, to
 
 \section{Use Case Onto-1: Interoperability Between OWL and FOL Ontologies}
 
-In order to achieve interoperability, during ontology development it is often necessary to describe 
+In order to achieve interoperability during ontology development it is often necessary to describe 
 concepts in a language more expressive than OWL.  Therefore, it is common practice to informally 
 annotate OWL ontologies with FOL axioms (e.g., Keet's mereotopological ontology [Part-Whole], 
 Dolce Lite [Dolce-lite], BFO-OWL). OWL is used because of better tool support, FOL because of 
@@ -2769,7 +2769,19 @@ are not available for machine processing.  Another example of this problem is th
 formally representing concept schemes (including taxonomies, thesauri and classification schemes) 
 and provenance information there are the two W3C standards SKOS (Simple Knowledge Organization 
 System) and PROV, as well as \ednote{CL: Did we mean something like “ISO 12345” here, i.e.\ some 
-specific ISO standard that we reference by number?}ISO and other domain-specific  standards for 
+specific ISO standard that we reference by number? Terry: (re: footnote 29) Probably the family headed by ISO 11179 Information Technology -- Metadata registries (MDR) (http://metadata-stds.org/)
+The 11179 standard is a multipart standard that includes the following parts:·         '          Part 1: Framework
+·         Part 2: Classification
+·         Part 3: Registry metamodel and basic attributes
+·         Part 4: Formulation of data definitions
+·         Part 5: Naming and identification principles
+·         Part 6: Registration
+Other standards in the series are 
+ISO 19583  Concepts and usage of metadata
+ISO 19763-* Metamodel interoperability
+ISO 19773   Metadata modules
+ISO 24706   Metadata for technical stds
+ISO 24707   Common logic}ISO and other domain-specific  standards for 
 metadata representation. The semantics for the SKOS and PROV languages are largely specified as OWL 
 ontologies; however, as OWL cannot capture the full semantics, the rest is specified using some 
 informal first-order rules. In other words, valid instance models that use SKOS or PROV may be 
@@ -2798,7 +2810,7 @@ then
 
 \section{Use Case Onto-2: Ontology Integration by Means of a Foundational Ontology}
 One major use case for ontologies in industry is to achieve interoperability and data integration. 
-However, if ontologies are developed independently and used  within the same domain, the 
+However if ontologies are developed independently and used  within the same domain, the 
 differences between the ontologies may actually impede interoperability. One strategy to avoid this 
 problem is the use of a shared  foundational ontology (e.g., DOLCE or BFO), which can be used to 
 harmonize different domain ontologies. One challenge for this approach is that foundational 
@@ -2953,8 +2965,7 @@ DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL o
 
 \section{Use Case Spec-1: Modularity of Specifications}\label{spec-1}
 Often specifications become so large that it is necessary to structure
-them in a modular way, both for human readability, maintainability,
-and for more efficient tool support. The lack of a standard for such
+them in a modular way, for human readability and maintainability, and for more efficient tool support. The lack of a standard for such
 modular structuring hinders interoperability among different
 development efforts and the reuse of specifications.  DOL provides a
 notion of structured modular specification that is equally applicable
@@ -3024,11 +3035,15 @@ are only auxiliary and need not be implemented.
 
 
 \section{Use Case Spec-2: Specification Refinements}\label{spec-2}
-Especially in safety-critical areas such as medical systems, the
-automotive industry, avionics and the aerospace industry, but also for
-microprocessor design, often a formal software and hardware
-development process is used in order to ensure the correct functioning
-of systems. Typically, a requirement specification is refined into a
+Formal software and hardware development methods are often used to
+ensure the correct function of systems which have safety-critical
+requirements or which may not be easily accessible for repair or
+replacement.  Examples of such requirements can be found in
+safety-critical areas such as medical systems, or in the automotive,
+avionics and aerospace industries, as well as in components used by
+those industries such as in microprocessor design.
+
+Typically, a requirement specification is refined into a
 design specification and then an implementation, often involving
 several intermediate steps (see, e.g. the V-model [V-model], although
 this does not require formal specification).  There are numerous
@@ -3067,7 +3082,7 @@ refinement InsertSortCorrectness =
 end
 \end{lstlisting}
 Note that hiding is essential here to make the signatures of
-both specifications compabtile. If we had not hidden the
+both specifications compatible. If we had not hidden the
 predicates \texttt{is\_ordered} and \texttt{permutation}
 in the \texttt{Sorting} specification, a refinement would
 not have been possible, since \texttt{InsertSort} does not
@@ -3160,7 +3175,7 @@ sense the diagrams need to be consistent, and check this by suitable tools.
 \ssclause{The ATM Example}
 \label{sec:atm-example}
 
-We present as a small example in model-deriven development using UML,
+We present as a small example in model-driven development using UML,
 taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
 the design of a traditional automatic teller machine (ATM) connected
 to a bank. For simplicity, we only describe the handling of entering a
@@ -4251,7 +4266,7 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
+ \begin{lstlisting}[language=ebnf,escapeinside={()}]
 CURIE     = MaybeEmptyCURIE - ;
 MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
 RefWithoutComma = Reference - StringWithComma ;
@@ -4272,7 +4287,7 @@ Note that outside the context of a basic OMS the prefix/reference separator of a
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
 Their syntax is:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+ \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 PrefixMap        = 'prefix-map' , { PrefixBinding } ;
 PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
@@ -4653,7 +4668,7 @@ Vars                 = Symbol , { ',' , Symbol } ;
 
 \sclause{Identifiers}
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
+ \begin{lstlisting}[language=ebnf,escapeinside={()}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
 FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
 CURIE     = MaybeEmptyCURIE - ;

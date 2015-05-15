@@ -4,7 +4,7 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.92}
+\newcommand{\version}{0.93}
 
 
 %todo
@@ -882,7 +882,7 @@ environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
 6.5.2(c)& 
 The metalanguage shall not replace the object language constructs of the conforming logical
 languages.	&
-The syntax of a \syntax{BasicOMS} is left unspecified in this standard. Rather, here this standard relies on other
+The syntax of a \syntax{NativeOMS} is left unspecified in this standard. Rather, here this standard relies on other
 standards and language definitions.
 See \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
    \\ \hline
@@ -1264,7 +1264,7 @@ stating sentences about them;
 %% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
 % \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
 \item mappings between services and devices, and definitions of service and device interoperability;
-\item non-monotonic logics\footnote{Logics (formalised as institutions) are necessarily monotonic; conformance criteria for non-monotonic logics arestill under development. However, minimization provides non-monotonic reasoning in DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.}. 
+\item non-monotonic logics\footnote{Logics (formalized as institutions) are necessarily monotonic; conformance criteria for non-monotonic logics ares till under development. However, minimization provides non-monotonic reasoning in DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.}. 
 
 \end{enumerate}
 
@@ -1359,7 +1359,7 @@ The \emph{annotation language aspect}\index{language aspect ! annotation} of an 
 have no impact on the semantics. The annotation language aspect \shall be non-empty; it \shall
 provide the facility to express comments.
 
-We define the following levels of conformance of the abstract syntax of a basic
+We define the following levels of conformance of the abstract syntax of a 
  OMS language with DOL, listed from highest to lowest:
 
 \begin{description}
@@ -1497,27 +1497,17 @@ example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying te
 
 ~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
 
-Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs, listed from highest to lowest:
+Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs (grammar specified in \cref{c:curies}), listed from highest to lowest:
 \begin{description}
-\item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}).  The serialization is \notrequired to support CURIEs with no prefix.\\
-  Informative comment: In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a native OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+\item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}, where a declaration of DOL-conformance of a serialization \may redefine the separator character to a character different from \syntax{:}).  A serialization that conforms \wrt prefixed CURIE conformande is \notrequired to support CURIEs with no prefix: its declaration of DOL-conformance \may forbid the use of prefixed CURIEs.\\
+  Informative comments:
+  \begin{itemize}
+  \item In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a native OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+  \item The reason for allowing redefinitions of the prefix/reference separator character is that certain serializations of OMS languages may not allow the colon (\syntax{:}) in identifiers.
+  \end{itemize}
 \item[Non-prefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
   Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the native OMS to IRIs, which are located in one flat namespace.
 \end{description}
-
-CURIEs that have a prefix may not be acceptable identifiers in every
-serialization of a basic OMS language, as the standard CURIE separator
-character, the colon (\syntax{:}), may not be allowed in identifiers.
-\CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we
-  agreed on this – but does it really make sense?  Are there any
-  relevant OMS language serializations that do not allow : in
-  identifiers (or that do allow it theoretically but discourage it in
-  practice) but allow some other non-letter character?}Therefore, the
-declaration of DOL-conformance of the respective serialization
-(cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative
-  CURIE separator character}, or it \may forbid the use of prefixed
-CURIEs altogether.
-
 
 Any conforming serialization of an OMS language shall have a machine-processable description as detailed in \cref{c:conform:description}.
 
@@ -1639,15 +1629,47 @@ For the purposes of this document, the following terms and definitions apply.
 \end{definitions}
 
 
-\sclause{Native OMS, Basic OMS}
+\sclause{Native OMS, OMS, and OMS Languages}
 
 \begin{definitions}
 
+\termdefinition{native OMS}{A
+collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) from a given \termref{OMS language}.}
+  \begin{example}
+    An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASLE are three different native OMS. 
+  \end{example}
+	\begin{note}
+	An \termref{OMS} can be written in different \termref{OMS language} 	serializations\index{serialization}.
+	\end{note}	
+
+
+\termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
+plus non-logical annotations\index{annotation}.}
+  \begin{example}
+    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
+  \end{example}
+  \begin{note}
+  An OMS language is used for the formal specification of \termref{native OMS}.
+  \end{note}
+  \begin{note}
+  We distinguish between the {logical language aspect}, the {structuring language aspect}, and the {annotation language aspect} of an OMS language. 
+  \end{note}
+
+
+
+%\begin{definitions}
+\termdefinition{DOL structured OMS}{A syntactically valid \DOL library (as defined in this \IS) that contains a library definition (see section \ref{c:keywords}).}
+  \begin{note}
+   \DOL structured OMS, typically, use native OMS as building blocks for defining structured OMS, OMS mappings or OMS networks.  
+  \end{note}
+  \begin{note}
+   All \DOL structured OMS are structured OMS. 
+  \end{note}
+	
+
+
 \termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
-{collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) in a given \termref{OMS language} (or several such languages).}
-\begin{note}
-	An \termref{OMS} can be written in different \termref{OMS language} serializations\index{serialization}.
-\end{note}	
+{A native OMS or a \DOL structured OMS.}
 \begin{note}
 	An OMS is either a basic or a structured OMS.
 \end{note}
@@ -1657,48 +1679,20 @@ For the purposes of this document, the following terms and definitions apply.
 
 
 
-%\begin{definitions}
-\termdefinition{native OMS}{An OMS that is written in exactly one OMS language.}
-  \begin{example}
-    An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASLE are three different native OMS. 
-  \end{example}
-  \begin{note}
-   From the perspective of DOL, native OMS are the basic building blocks for larger OMS. 
-  \end{note}
-
-
-
-
-\termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
-plus non-logical annotations\index{annotation}.}
-  \begin{example}
-    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDFS, and OBO.
-  \end{example}
-  \begin{note}
-  An OMS language is used for the formal specification of \termref{OMS}.
-  \end{note}
-  \begin{note}
-  We distinguish between the {logical language aspect}, the {structuring language aspect}, and the {annotation language aspect} of an OMS language. 
-  \end{note}
-
-
-
 \begin{definitions}
-\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{An OMS that does not utilize any elements from the structuring language aspects of its languages.}
+\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{A native OMS that does not utilize any elements from the structuring language aspects of its language.}
   \begin{note}
     Basic OMS are self-contained in the sense that it semantics does not depend on some other OMS.  In particular, the OMS does not involve any importations.
   \end{note}
   \begin{note}
     Since a basic OMS has no structuring elements, it consists just of a \termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}.
   \end{note}
-
-
+	
 
 
 
   \termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
  }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}.}
-
   \begin{note}
   This differs from the notion of ``atomic sentence'': such sentences
   may involve several non-logical symbols.
@@ -1753,6 +1747,9 @@ of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
 
   
 \termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms).}
+  \begin{note}
+	  A term belongs to the logical language aspect of an OMS language.
+  \end{note}
 
   
 \termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.\CLnote[type=fyi]{From Common Logic, I changed ``unit of logical text'' to ``term''.}}
@@ -1769,6 +1766,9 @@ other axioms and theorems; or have another of many possible statuses.
   \begin{note}
   It is quite common that sentences are required to be closed (i.e.\ have no
   free variables). However, this depends on the OMS language at hand.
+  \end{note}
+  \begin{note}
+	  A sentence belongs to the logical language aspect of an OMS language.
   \end{note}
 
 
@@ -1927,7 +1927,7 @@ not considered sentences of that OMS.
 
   \termdefinition{OMS documentation}{set of all annotations\index{annotation} to an \termref{OMS}, plus any other documents and explanatory comments generated during the entire OMS building process.}
   \begin{note}
-    Adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}
+    Adapted from \cite{SuarezFigueroaEtAl:OntologyGlossary2008}.
   \end{note}
 \end{definitions}
 
@@ -1936,7 +1936,11 @@ not considered sentences of that OMS.
 \red{
 \termdefinition{structured OMS}
 {\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations.}
-
+\begin{note}
+	  Structured OMS are either \DOL structured OMS or native OMS that utilize elements of their structuring language aspect. 
+  \end{note}
+	
+	
 
 \termdefinition{flattenable OMS}
 {OMS that can be seen, by purely syntactical means, to be logically  equivalent to a flat OMS.}
@@ -2059,7 +2063,6 @@ sub-\termref{signature} of the original \termref{OMS}).}
 The goal of module extraction is ``decomposing an OMS into smaller, more manageable modules with
 appropriate dependencies'' \cite{DBLP:series/lncs/5445}.
   \end{note}
-
   \begin{example}
 Consider an OWL DL ontology about wines, from which we would like to extract a module about white 
 wines. That module would contain the declaration of the non-logical symbol ``white wine'', all 
@@ -2069,13 +2072,12 @@ non-logical symbols.
 
 
 \termdefinition{approximant}{approximation (in the sense of a logically implied theory, possibly 
-after suitable translation)  of an OMS in a smaller \termref{signature} or
-\termref{OMS language}.}
+after suitable translation)  of an OMS in a smaller \termref{signature} or a \termref{sublanguage}.}
 
 
 \termdefinition{maximum approximant}{
 best possible (in the sense of a maximum set of logical consequences)
-\termref{approximant} of an OMS in a smaller \termref{signature} or \termref{OMS language}.}
+\termref{approximant} of an OMS in a smaller \termref{signature} or a \termref{sublanguage}.}
 \begin{note}
  Technically, a maximum approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
 \end{note}
@@ -2091,7 +2093,7 @@ best possible (in the sense of a maximum set of logical consequences)
 
 \sclause{Mappings Between OMS}
 
-   \termdefinitionLight{\termref{OMS mapping}\synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}}
+   \termdefinitionLight{\termref{OMS mapping}\synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}.}
   
 %%   \termdefinition{logical OMS mapping}{\termref{OMS mapping} that has a formal, logic-based semantics}
 %%   \begin{note}
@@ -2104,40 +2106,37 @@ best possible (in the sense of a maximum set of logical consequences)
  \termdefinition{symbol map item}{pair of symbols of two OMS, indicating how a symbol from the first OMS is mapped by a signature morphism to a symbol of the second OMS}
  \begin{note}
    A symbol map item is given as $s_1 \mapsto s_2$, where $s_1$ is a symbol from the \emph{source} OMS 
-   and $s_2$ is a symbol from the \emph{target} source of the OMS mapping.
+   and $s_2$ is a symbol from the \emph{target}  of the OMS mapping.
  \end{note}
 
   \termdefinitionLight{interpretation\index{interpretation}\synonym view\synonym refinement}{\termref{OMS mapping} that postulates a
 specialization relation
- between two \termref{OMS}} along a morphism between their signatures
+ between two \termref{OMS}} along a morphism between their signatures.
   \begin{note}
     An interpretation typically leads to proof obligations, \ie one has to prove that 
   translations of axioms\index{axiom} of the source OMS along the morphism accompanying the interpretation are theorems in the target OMS.
   \end{note}
-  \begin{note}
-    When an interpretation is given as a set of correspondences, these are given as tuples, where the type of relationship is given by the specific kind of interpretation. \ednote{\red{I don't understand this sentence.}}
-  \end{note}
 
   \termdefinition{equivalence}
 {\termref{OMS mapping} ensuring that two \termref{OMS} share the
-  same definable concepts}
+  same definable concepts.}
   \begin{note}
     Two OMS are equivalent if they have a common definitional extension.
     The OMS may be written in different OMS languages.
   \end{note}
 
-  \termdefinition{interface signature}{\termref{signature} mediating between an \termref{OMS} and a \termref{module} of that \termref{OMS} in the sense that it contains those non-logical symbols\index{non-logical symbol} that the sentences\index{sentence} of the \termref{module} and the sentences\index{sentence} of the \termref{OMS} have in common}
+  \termdefinition{interface signature}{\termref{signature} mediating between an \termref{OMS} and a \termref{module} of that \termref{OMS} in the sense that it contains those non-logical symbols\index{non-logical symbol} that the sentences\index{sentence} of the \termref{module} and the sentences\index{sentence} of the \termref{OMS} have in common.}
   \begin{note}
-    Adapted from \cite{CuencaGrauEtAl:ExtractingModulesOntologies2007}
+    Adapted from \cite{CuencaGrauEtAl:ExtractingModulesOntologies2007}.
   \end{note}
 
   \termdefinition{module relation}{\termref{OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
 
   \termdefinition{import}{\termref{OMS mapping} between two
     \termref{OMS} such that one OMS behaves as if it were
-    included into the other; also import of \termref{libraries}}
+    included into the other; also import of \termref{libraries}.}
   \begin{note}
-Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration
+Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration.
   \end{note}
   \begin{note}
     The purpose of $O_2$ importing $O_1$ is to make non-logical symbols and sentences of $O_1$ available in $O_2$.
@@ -2153,21 +2152,21 @@ Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclus
   \end{note}
   
   \termdefinition{renaming}{assignment of new names
-   to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}}
+   to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
 \begin{note}
 A renaming results in an \termref{OMS mapping} between the
 original and the renamed OMS.
 \end{note}
-  \termdefinition{reduction}{\termref{OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}}
+  \termdefinition{reduction}{\termref{OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}.}
 
-\termdefinition{alignment}{flexible \termref{OMS mapping} expressing a collection of semantic
-relations between entities of the two OMS}
+\termdefinition{alignment}{an \termref{OMS mapping} expressing a collection of semantic
+relations between entities of the two OMS.}
 \begin{note}
 Alignments consist of correspondences\index{correspondence}, each of which may have a confidence value. If all
 confidence values are 1, the alignment can be given a formal, logic-based semantics.
 \end{note}
 
- \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from non-logical symbols\index{non-logical symbol} from $O_2$
+ \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from non-logical symbols\index{non-logical symbol} from $O_2$.
   \begin{note}
 A correspondence is given as a quadruple 
 $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$,
@@ -2183,21 +2182,20 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
      Not all OMS languages implement logical equivalence.  For example, OWL does not implement logical equivalence in general, but separately implements equivalence relations restricted to individuals (\textit{owl:sameAs}), classes (\textit{owl:equivalentClass}) and properties (\textit{owl:equivalentProperty}).
   \end{note}
 
-  \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}}
+  \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}.}
   \begin{note}
     For both matching and alignment, see \cite{DBLP:books/daglib/0032976,KhanKeet13}.
   \end{note}
 
   \termdefinition{union}{aggregation of several \termref{OMS}
-    to a new \termref{OMS}, without any renaming}
+    to a new \termref{OMS}, without any renaming.}
 \ednote{\red{why is this here?}}
  
-\termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology} graph with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked
+\termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology} graph with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked.
 \ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
 ``heterogeneous OMS''?}
 \begin{note}
- The opposite of an OMS network is an \termref{OMS}, which
- focuses on the specification of a single \termref{logical theory}.
+ In \cite{MossakowskiTarlecki09}, a distinction between focused and distributed heterogeneous specifications is made. In the terminology of this standard, this is the distinction between \termref{OMS} and OMS networks.
 \end{note}
   \begin{note}
     An OMS network is a diagram of OMS in the sense of category theory, but different from a diagram
@@ -2215,7 +2213,7 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
 
 
 
-  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network}
+  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
 and another one involving \texttt{Human being}, and an \termref{alignment}
@@ -2225,7 +2223,7 @@ along the alignment, there is only one concept, representing both
 \end{example}
 
  
-  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of an \termref{OMS network}}
+  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of an \termref{OMS network}.}
  \begin{note}
   Sharing is always relative to a given OMS network that
   relates different OMS. That is, two given OMS symbols
@@ -2238,8 +2236,8 @@ along the alignment, there is only one concept, representing both
 \sclause{Features of OMS Languages}
  
 \begin{definitions}
-  \termdefinition{OMS language translation}{mapping from constructs in the source \termref{OMS language} to their equivalents in the target \termref{OMS language}}
-
+  \termdefinition{OMS language translation}{mapping from constructs in the source \termref{OMS language} to their equivalents in the target \termref{OMS language}.}
+%
 \begin{note}
   An OMS language translation shall satisfy the property that the
   result of a translation is a well-formed text in the target
@@ -2248,7 +2246,7 @@ along the alignment, there is only one concept, representing both
 
 \red{
 \termdefinition{OMS language graph}{graph of OMS languages\index{OMS language} and
-OMS language translations\index{language translation}, typically used in a \termref{heterogeneous environment}}
+OMS language translations\index{language translation}, typically used in a \termref{heterogeneous environment}.}
 \begin{note}
   In an OMS language graph, some of the OMS language translations can be
   marked to be default translations\index{default translation}.
@@ -2257,14 +2255,14 @@ OMS language translations\index{language translation}, typically used in a \term
 \termdefinition{default translation}{specially marked \termref{OMS language
     translation} or \termref{logic translation} that will be used
   whenever a translation is needed and no explicit translation is
-  given} 
+  given.} 
 }
 
 \red{
 \termdefinition{heterogeneous environment}{environment for the
   expression of homogeneous and \termref{heterogeneous OMS}, comprising
 a \termref{logic graph}, an \termref{OMS language graph} and a
-\termref{supports relation}}
+\termref{supports relation}.}
 \begin{note}
   Although in principle, there can be many heterogeneous environments,
   for ensuring \termref{interoperability}, there will be a global
@@ -2277,21 +2275,21 @@ OMS languages and serializations.}
 
 
 
-  \termdefinition{sublanguage}{syntactically specified subset of a given language, consisting of a subset of its terminal and nonterminal symbols and grammar rules}
+  \termdefinition{sublanguage}{syntactically specified subset of a given language, consisting of a subset of its terminal and nonterminal symbols and grammar rules.}
 
- \termdefinitionLight{language aspect\index{language aspect ! (general)}}{set of language constructs of a given language, not necessarily forming a sublanguage}
+ \termdefinitionLight{language aspect\index{language aspect ! (general)}}{set of language constructs of a given language, not necessarily forming a sublanguage.}
 
-  \termdefinitionLight{logical language aspect\index{language aspect ! logical}}{the (unique) language aspect of an \termref{OMS language} that enables the expression of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} in a logic}
+  \termdefinitionLight{logical language aspect\index{language aspect ! logical}}{the (unique) language aspect of an \termref{OMS language} that enables the expression of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} in a logic.}
 
 \termdefinitionLight{structuring language aspect\index{language aspect ! structuring}}{the (unique) language aspect of an \termref{OMS language} 
 that covers \termref{structured OMS} as well as the relations of \termref{basic OMS} and \termref{structured OMS} 
 to each other, including, but not limited to {imports}\index{import}, OMS mappings\index{OMS mapping}, conservative extensions\index{conservative extension ! (general)}, 
-and the handling of prefixes for CURIEs}
+and the handling of prefixes for CURIEs.}
 
-  \termdefinitionLight{annotation language aspect\index{language aspect ! annotation}}{the (unique) language aspect of an \termref{OMS language} that enables the  expression of comments and annotations\index{annotation}}
+  \termdefinitionLight{annotation language aspect\index{language aspect ! annotation}}{the (unique) language aspect of an \termref{OMS language} that enables the  expression of comments and annotations\index{annotation}.}
 
   \termdefinition{profile}{(syntactic) \termref{sublanguage} of an \termref{OMS language} interpreting according to a particular \termref{logic}
-that targets specific applications or reasoning methods}
+that targets specific applications or reasoning methods.}
   \begin{example}
     Profiles of OWL 2 include OWL 2 EL, OWL 2 QL, OWL 2 RL, OWL 2 DL, and OWL 2 Full.
   \end{example}
@@ -2311,7 +2309,7 @@ that targets specific applications or reasoning methods}
 \sclause{OMS Language Serializations}
 
 \begin{definitions}
-  \termdefinition{serialization}{specific syntactic encoding of a given \termref{OMS language}}
+  \termdefinition{serialization}{specific syntactic encoding of a given \termref{OMS language}.}
   \begin{note}
     Serializations serve as standard formats for exchanging OMS between tools.
   \end{note}
@@ -2323,17 +2321,17 @@ Common Logic uses the term ``dialect''; the following are standard Common Logic 
   \end{example}
 
 
-   \termdefinition{document}{result of serializing an OMS using a given serialization}
+   \termdefinition{document}{result of serializing an OMS using a given serialization.}
 
 
-  \termdefinition{standoff markup}{way of providing {annotations}\index{annotation} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS})}
+  \termdefinition{standoff markup}{way of providing {annotations}\index{annotation} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS}).}
 \end{definitions}
 
 \sclause{Logic}
 
 \begin{definitions}
   \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}, sentences\index{sentence},
-models \index{model}, and a \termref{satisfaction relation} between models\index{module} and sentences\index{sentence} }
+models \index{model}, and a \termref{satisfaction relation} between models\index{module} and sentences\index{sentence}.}
   \begin{note}
     Most OMS languages have an underlying logic.
   \end{note}
@@ -2349,11 +2347,11 @@ models \index{model}, and a \termref{satisfaction relation} between models\index
   \termdefinition{supports relation}{relation between OMS
       languages\index{OMS language} and logics\index{logic} expressing the \termref{logical
       language aspect} of the former, namely that the constructs of
-    the former lead to a \termref{logical theory} in the latter} 
+    the former lead to a \termref{logical theory} in the latter.} 
 }
 
  \termdefinition{institution}{metaframework mathematically formalizing
-the notion of a \termref{logic}}
+the notion of a \termref{logic}.}
 \begin{note}
  See clause~\ref{c:semantics} for a formal definition.
 \end{note}
@@ -2361,13 +2359,13 @@ the notion of a \termref{logic}}
   \termdefinition{logic translation}{mapping of a source
     \termref{logic} into a target \termref{logic} (mapping
     signatures\index{signature}, sentences\index{sentence} and models\index{model})
-    that keeps or encodes the logical content of \termref{OMS}}
+    that keeps or encodes the logical content of \termref{OMS}.}
 
   \termdefinition{logic reduction}{mapping of a source \termref{logic}
     onto a (usually less expressive) target \termref{logic} (mapping
 	signatures\index{signature}, sentences\index{sentence} and models\index{model})
     that simply forgets those parts of the logical structure not
-    fitting the target \termref{logic}}
+    fitting the target \termref{logic}.}
 
 \termdefinition{theoroidal logic translation} translation that maps 
 signatures of the source logic to theories (i.e.~signatures and sets of sentences)
@@ -2377,11 +2375,11 @@ of the target logic.
  to its first-order axiomatization as a datatype.
 \end{example}
 
-\termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semantics}
+\termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semantics.}
 
 \red{
 \termdefinition{logic graph}{graph of logics\index{logic}, logic 
-translations\index{logic translation} and logic reductions\index{logic reduction}, typically used in a \termref{heterogeneous environment}}
+translations\index{logic translation} and logic reductions\index{logic reduction}, typically used in a \termref{heterogeneous environment}.}
 \begin{note}
   In a logic graph, some of the logic translations and reductions can be
   marked to be {default translations}\index{default translation}.
@@ -2392,12 +2390,12 @@ translations\index{logic translation} and logic reductions\index{logic reduction
 }
 
 \red{
-  \termdefinition{homogeneous OMS}{\termref{OMS} whose parts are all formulated in one and the same \termref{logic}}
+  \termdefinition{homogeneous OMS}{\termref{OMS} whose parts are all formulated in one and the same \termref{logic}.}
 \begin{note}
 Opposite of \termref{heterogeneous OMS}.
 \end{note}
 
-  \termdefinition{heterogeneous OMS}{\termref{OMS} whose parts are formulated in different logics\index{logic}}
+  \termdefinition{heterogeneous OMS}{\termref{OMS} whose parts are formulated in different logics\index{logic}.}
 \begin{note}
 Opposite of \termref{homogeneous OMS}.
 \end{note}
@@ -2408,7 +2406,7 @@ Opposite of \termref{homogeneous OMS}.
 
 \termdefinition{logic approximation}{mapping of a source \termref{logic} onto a (usually less
 expressive) target \termref{logic} that tries to approximate the OMS expressed in the source
-\termref{logic} with means of the expressivity of the target \termref{logic}}
+\termref{logic} with means of the expressivity of the target \termref{logic}.}
 \begin{note}
   A unique maximal approximation need not exist.
 \end{note}
@@ -2716,14 +2714,14 @@ in which the OMS are axiomatized in different logical languages?
 \end{itemize}
 
 
-To illustrate these challenges, in this clause we present a set of usage scenarios that involve the use of more than one OMS. These scenarios are in the areas of ontology design, formal specification, and model-driven development. In spite of their many differences, they  all highlight one common theme:  
+To illustrate these challenges, in this clause we present a set of usage scenarios that involve the use of more than one OMS. These scenarios address the areas of ontology design, formal specification, and model-driven development. In spite of their many differences, they  all highlight one common theme:  
  the use of multiple OMS leads to interoperability challenges. 
  %There  are ad-hoc solutions to these challenges, and specialized languages and tools are used in practice. 
 
 
 The purpose of \DOL is to provide  a
-standardized representation language, which allows to represent structured OMS and the relations 
-between OMS as part of OMS networks in a semantically well-defined way. Thus, tools that implement \DOL are able to integrate different OMS into a coherent whole.  This enables users of \DOL to overcome the different kind of interoperability issues that illustrated by the usage scenarios in this clause.  
+standardized representation language, which can be used to represent structured OMS and the relations 
+between OMS as part of OMS networks in a semantically well-defined way. Thus, tools that implement \DOL are able to integrate different OMS into a coherent whole, thereby enabling users of \DOL to overcome the different kind of interoperability issues that illustrated by the usage scenarios in this clause.  
 
 
 
@@ -2764,7 +2762,7 @@ between OMS as part of OMS networks in a semantically well-defined way. Thus, to
 
 \section{Use Case Onto-1: Interoperability Between OWL and FOL Ontologies}
 
-In order to achieve interoperability, during ontology development it is often necessary to describe 
+In order to achieve interoperability during ontology development it is often necessary to describe 
 concepts in a language more expressive than OWL.  Therefore, it is common practice to informally 
 annotate OWL ontologies with FOL axioms (e.g., Keet's mereotopological ontology [Part-Whole], 
 Dolce Lite [Dolce-lite], BFO-OWL). OWL is used because of better tool support, FOL because of 
@@ -2773,7 +2771,19 @@ are not available for machine processing.  Another example of this problem is th
 formally representing concept schemes (including taxonomies, thesauri and classification schemes) 
 and provenance information there are the two W3C standards SKOS (Simple Knowledge Organization 
 System) and PROV, as well as \ednote{CL: Did we mean something like “ISO 12345” here, i.e.\ some 
-specific ISO standard that we reference by number?}ISO and other domain-specific  standards for 
+specific ISO standard that we reference by number? Terry: (re: footnote 29) Probably the family headed by ISO 11179 Information Technology -- Metadata registries (MDR) (http://metadata-stds.org/)
+The 11179 standard is a multipart standard that includes the following parts:·         '          Part 1: Framework
+·         Part 2: Classification
+·         Part 3: Registry metamodel and basic attributes
+·         Part 4: Formulation of data definitions
+·         Part 5: Naming and identification principles
+·         Part 6: Registration
+Other standards in the series are 
+ISO 19583  Concepts and usage of metadata
+ISO 19763-* Metamodel interoperability
+ISO 19773   Metadata modules
+ISO 24706   Metadata for technical stds
+ISO 24707   Common logic}ISO and other domain-specific  standards for 
 metadata representation. The semantics for the SKOS and PROV languages are largely specified as OWL 
 ontologies; however, as OWL cannot capture the full semantics, the rest is specified using some 
 informal first-order rules. In other words, valid instance models that use SKOS or PROV may be 
@@ -2802,7 +2812,7 @@ then
 
 \section{Use Case Onto-2: Ontology Integration by Means of a Foundational Ontology}
 One major use case for ontologies in industry is to achieve interoperability and data integration. 
-However, if ontologies are developed independently and used  within the same domain, the 
+However if ontologies are developed independently and used  within the same domain, the 
 differences between the ontologies may actually impede interoperability. One strategy to avoid this 
 problem is the use of a shared  foundational ontology (e.g., DOLCE or BFO), which can be used to 
 harmonize different domain ontologies. One challenge for this approach is that foundational 
@@ -2957,8 +2967,7 @@ DOL  not only supports the reuse of the existing Dublin Core RDFS and PROV OWL o
 
 \section{Use Case Spec-1: Modularity of Specifications}\label{spec-1}
 Often specifications become so large that it is necessary to structure
-them in a modular way, both for human readability, maintainability,
-and for more efficient tool support. The lack of a standard for such
+them in a modular way, for human readability and maintainability, and for more efficient tool support. The lack of a standard for such
 modular structuring hinders interoperability among different
 development efforts and the reuse of specifications.  DOL provides a
 notion of structured modular specification that is equally applicable
@@ -3028,11 +3037,15 @@ are only auxiliary and need not be implemented.
 
 
 \section{Use Case Spec-2: Specification Refinements}\label{spec-2}
-Especially in safety-critical areas such as medical systems, the
-automotive industry, avionics and the aerospace industry, but also for
-microprocessor design, often a formal software and hardware
-development process is used in order to ensure the correct functioning
-of systems. Typically, a requirement specification is refined into a
+Formal software and hardware development methods are often used to
+ensure the correct function of systems which have safety-critical
+requirements or which may not be easily accessible for repair or
+replacement.  Examples of such requirements can be found in
+safety-critical areas such as medical systems, or in the automotive,
+avionics and aerospace industries, as well as in components used by
+those industries such as in microprocessor design.
+
+Typically, a requirement specification is refined into a
 design specification and then an implementation, often involving
 several intermediate steps (see, e.g. the V-model [V-model], although
 this does not require formal specification).  There are numerous
@@ -3071,7 +3084,7 @@ refinement InsertSortCorrectness =
 end
 \end{lstlisting}
 Note that hiding is essential here to make the signatures of
-both specifications compabtile. If we had not hidden the
+both specifications compatible. If we had not hidden the
 predicates \texttt{is\_ordered} and \texttt{permutation}
 in the \texttt{Sorting} specification, a refinement would
 not have been possible, since \texttt{InsertSort} does not
@@ -3164,7 +3177,7 @@ sense the diagrams need to be consistent, and check this by suitable tools.
 \ssclause{The ATM Example}
 \label{sec:atm-example}
 
-We present as a small example in model-deriven development using UML,
+We present as a small example in model-driven development using UML,
 taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
 the design of a traditional automatic teller machine (ATM) connected
 to a bank. For simplicity, we only describe the handling of entering a
@@ -3293,7 +3306,7 @@ e.g.\ \url{http://www.example.org/uml/atm.xmi}:
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
 refinement abstract_to_concrete_atm =
-  psm refined via psm2atm to 
+  psm refined via translation psm2atm to 
        {  atm with Idle |-> Idle, CardEntered |-> Idle, 
                    PINEntered |-> Idle, Verified |-> Idle, 
                    Verifying |-> Verifying 
@@ -3774,7 +3787,7 @@ The DOL serializations also supports the \termref{annotation} of existing OMS vi
 
 DOL provides abstract syntax categories for
 \begin{itemize}
-\item \red{OMS} (which can be basic OMS in some OMS language, or unions, translations, minimizations, combinations, approximations of OMS, among others)
+\item \red{OMS} (which can be native OMS in some OMS language, or unions, translations, minimizations, combinations, approximations of OMS, among others)
 \item OMS mappings 
 \item OMS networks
 \item \red{queries}
@@ -3881,7 +3894,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item a module extracted from an OMS, using a restriction signature,
 \item an approximation of an OMS, in a subsignature or sublogic, with the effect that sentences not expressible in the subsignature resp.\ sublogic are replaced with a suitable approximation,
 \item \red{a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,}
-\item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional or implied,
+\item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied,
 \item a union of several OMS (the major difference between a union and extension is that the members of the unions need to be self-contained OMS, while the extensions may reuse the signature of the extended OMS), 
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
@@ -3890,7 +3903,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
   non-logical symbols to be interpreted in a minimal way, while the non-logical symbols declared so far are fixed (alternatively, the non-logical symbols to be minimized and to be varied can be explicitly declared). \red{Variants are
 maximization, freeness (minimizing also data sets and equalities on these), and cofreeness
 (maximizing also data sets and equalities on these),}
-\item \red{the application of a substitution to a sentence.}
+\item \red{the application of a substitution to an OMS.}
 
 
 \end{itemize}
@@ -3979,8 +3992,8 @@ OMSDefn       ::= oms-defn OMSName [ConsStrength] OMS
 Symbol        ::= IRI
 SymbolMap     ::= symbol-map Symbol Symbol
 SymbolOrMap   ::= Symbol | SymbolMap
-Term          ::= ($<$)an expression specific to a basic OMS language($>$) 
-Sentence      ::= ($<$)an expression specific to a basic OMS language($>$) 
+Term          ::= ($<$)an expression specific to an OMS language($>$) 
+Sentence      ::= ($<$)an expression specific to an OMS language($>$) 
 OMSName       ::= IRI
 OMSRef        ::= IRI
 ExtensionRef  ::= IRI
@@ -4199,7 +4212,7 @@ not offer a mechanism for defining a base IRI, against which relative IRIs could
 Concerning these languages, note that they allow arbitrary IRIs in principle, but in practice they 
 strongly recommend using IRIs consisting of two components \cite{W3C:NOTE-swbp-vocab-pub-20080828}:
 \begin{description}
-\item[namespace] an IRI that identifies the complete OMS (a \emph{basic OMS} in DOL terminology), 
+\item[namespace] an IRI that identifies an OMS,\ednote{Check against annex M}
 usually ending with \syntax{\#} or \syntax{/}
 \item[local name] a name that identifies a non-logical symbol within an OMS
 \end{description}
@@ -4231,7 +4244,7 @@ DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core
 \item DOL does support the declaration  of a ``no prefix'' mapping (covering CURIEs such as 
 \syntax{name}). \red{If there is no explicit declaration for the ``no prefix'', it defaults to a 
 context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a 
-structured OMS where named OMS a referenced) resp.\ the current OMS IRI (in the context of a basic 
+structured OMS where named OMS are referenced) resp.\ the current OMS IRI (in the context of a basic
 OMS) to a symbol name. Both the separator between the library and the OMS name and that between the 
 OMS name and the symbol name can be declared (using the keyword \syntax{separators}), and both default to ``//''.}
 
@@ -4246,41 +4259,47 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
-
-CURIE   ::= ($($) [ Prefix ] , Reference ($)$) - 
-Prefix  ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference ::= Path [Query] [Fragment]
-Path    ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query   ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+ \begin{lstlisting}[language=ebnf,escapeinside={()}]
+CURIE     = MaybeEmptyCURIE - ;
+MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
+RefWithoutComma = Reference - StringWithComma ;
+StringWithComma = { UChar } , ',' , { UChar } ;
+UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
+Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
+Reference = Path , [ Query ] , [ Fragment ] ;
+Path      = ipath-absolute | ipath-rootless | ipath-empty ;
+            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
 \end{lstlisting}
-
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
 
+Note that outside the context of a basic OMS the prefix/reference separator of a CURIE is always the colon (\syntax{:}); only for serializations of OMS languages other than DOL it may be redefined as stated in \cref{c:conform:serialization}.
 
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
 Their syntax is:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+ \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-PrefixMap      ::= prefix-map PrefixBinding*
-PrefixBinding  ::= prefix-binding BoundPrefix IRIBoundToPrefix
-                                  [Separators]
-BoundPrefix    ::= bound-prefix [Prefix]
-IRIBoundToPrefix ::= full-iri FullIRI
-Separators     ::= separators String String
-String         ::= SeparatorChar SeparatorChar*
-SeparatorChar  ::= ipchar | / | ? | #($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+PrefixMap        = 'prefix-map' , { PrefixBinding } ;
+PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
+                   [ Separators ] ;
+BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
+IRIBoundToPrefix = 'full-iri' , FullIRI ;
+Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
+LibraryOMSSeparator = SeparatorString ;
+OMSSymbolSeparator  = SeparatorString ;
+SeparatorString  = SeparatorChar , { SeparatorChar } ;
+SeparatorChar    = ipchar | gen-delims - '#' ;
+                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
-
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
 
 \ssclause{Mapping identifiers in basic OMS to IRIs}\label{c:map-ids}
 
-While DOL uses IRIs as identifiers throughout, basic OMS languages do not necessarily do; for example:
+While DOL uses IRIs as identifiers throughout, OMS languages do not necessarily do; for example:
 \begin{itemize}
 \item OWL \nisref{W3C/TR REC-owl2-syntax:2009, Section 5.5} does use IRIs.
 \item Common Logic \nisref{ISO/IEC 24707:2007} supports them but does not enforce their use.
@@ -4289,11 +4308,6 @@ While DOL uses IRIs as identifiers throughout, basic OMS languages do not necess
 However, DOL OMS mappings as well as 
 %\CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of SymbolRef}
 certain operations on OMS require making unambiguous references to non-logical symbols of basic OMS (\syntax{SymbolRef}).  Therefore, DOL provides a function that maps global identifiers used within basic OMS to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
-
-CURIEs that have a prefix may not be acceptable identifiers in every serialization of a basic OMS language,
-as the standard CURIE separator character, the colon (\syntax{:}), may not be allowed in identifiers.  
-%\CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we agreed on this – but does it really make sense?  Are there any relevant OMS language serializations that do not allow : in identifiers (or that do allow it theoretically but discourage it in practice) but allow some other non-letter character?}
-Therefore, the declaration of DOL-conformance of the respective serialization (cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative CURIE separator character}, or it \may forbid the use of prefixed CURIEs altogether.
 
 The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by the following function:
 \begin{algorithmic}
@@ -4305,7 +4319,7 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
     \STATE $i\leftarrow\mathit{id}$
   \ELSE
     \STATE \COMMENT{first construct a pattern $\mathit{cp}$ for CURIEs in $S$, then match $\mathit{id}$ against that pattern}
-    \IF{$S$ defines an alternative CURIE separator character $\mathit{cs}$}
+    \IF{the declaration of DOL-conformance of $S$ redefines the prefix/reference separator character $\mathit{cs}$ (cf.\ \cref{c:conform:serialization})}
       \STATE $\mathit{sep}\leftarrow \mathit{cs}$
     \ELSIF{$S$ forbids prefixed CURIEs}
       \STATE $\mathit{sep}\leftarrow\text{undefined}$
@@ -4352,7 +4366,7 @@ sugar, the prefix map for a basic OMS is essential to determining the semantics 
 within the library.  Therefore, any DOL serialization \shall provide constructs for expressing such 
 prefix maps, even if the serialization does not support prefix maps otherwise.
 
-~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
+%% ~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
 
 
 
@@ -4507,6 +4521,8 @@ OMSDefn          ::= OMSkeyword OMSName '=' [ConsStrength] OMS 'end'
 Symbol           ::= IRI
 SymbolMap        ::= Symbol '|->' Symbol
 SymbolOrMap      ::= Symbol | SymbolMap
+Term             ::= ($<$)an expression specific to an OMS language($>$) 
+Sentence         ::= ($<$)an expression specific to an OMS language($>$) 
 OMSName          ::= IRI
 OMSRef           ::= IRI
 LanguageRef      ::= IRI
@@ -4526,6 +4542,21 @@ OMSLangTransRef ::= IRI
 %\ednote{\%safe is more a statement about an import of a module, 
 %and hence should be a statement in an OMS network. Recall:
 %ModuleProperties     =  '\%safe' ; }
+
+The above grammar allows for some grouping ambiguity when using operators in
+OMS definitions. These ambiguities are resolved according to the following
+list, listing operators in decreasing order of precedence:
+\begin{itemize}
+  \item \syntax{extract}, \syntax{forget}, \syntax{hide}, \syntax{keep},
+    \syntax{reject}, \syntax{remove}, \syntax{reveal}, \syntax{select} and
+    \syntax{with}.
+  \item \syntax{and}.
+  \item \syntax{then}.
+\end{itemize}
+Multiple occurrences of the same operator are grouped in a left associative
+manner. In all other cases operators on the same precedence level are not
+implicitly grouped and have to be grouped explicitly. Omitting such an explicit
+grouping results in a parse error.
 
 \ssclause{OMS Mappings}\label{a:dol-text:mappings}
 \index{alignment}
@@ -4625,16 +4656,20 @@ Vars           ::= Symbol ( ',' Symbol )*
 
 \sclause{Identifiers}
 
- \begin{lstlisting}[language=ebnf,escapeinside={!!}]
+ \begin{lstlisting}[language=ebnf,escapeinside={()}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
-FullIRI = !$<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$! ;
-CURIE     = ( [ Prefix ] , Reference ) - ;
-Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$! 
+FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
+CURIE     = MaybeEmptyCURIE - ;
+MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
+RefWithoutComma = Reference - StringWithComma ;
+StringWithComma = { UChar } , ',' , { UChar } ;
+UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
+Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
@@ -8223,7 +8258,7 @@ interpretation IRI : OMS to OMS = SymbolMap  & Mereology \\\hline
 interpretation IRI : OMS to OMS = \%cons SymbolMap  &  Engine\\\hline
 interpretation IRI : OMS to OMS = translation IRI  & Mereology \\\hline
 refinement IRI = OMS refined via SymbolMap to OMS & section~\ref{spec-2} \\\hline
-refinement IRI = OMS refined via translation IRI to OMS & section~\ref{model-1} \\\hline
+refinement IRI = OMS refined via translation IRI to OMS & section~\ref{model-2} \\\hline
 refinement IRI = IRI then IRI & section~\ref{spec-2} \\\hline
 refinement IRI = Network refined to Network & section~\ref{model-1} \\\hline
 entailment IRI = OMS entails OMS & PropositionalExamples \\\hline
