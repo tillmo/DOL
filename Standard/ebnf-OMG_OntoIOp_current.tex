@@ -4259,19 +4259,20 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
- \begin{lstlisting}[language=ebnf,escapeinside={()}]
-CURIE     = MaybeEmptyCURIE - ;
-MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
-RefWithoutComma = Reference - StringWithComma ;
-StringWithComma = { UChar } , ',' , { UChar } ;
-UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
-Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference = Path , [ Query ] , [ Fragment ] ;
-Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
+
+CURIE         ::= MaybeEmptyCURIE -
+MaybeEmptyCURIE ::= [Prefix] RefWithoutComma
+RefWithoutComma ::= Reference - StringWithComma
+StringWithComma ::= UChar* ',' UChar*
+UChar         ::= ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) 
+Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
+Reference     ::= Path [Query] [Fragment]
+Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query         ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment      ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
+
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
 
@@ -4280,20 +4281,20 @@ Note that outside the context of a basic OMS the prefix/reference separator of a
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
 Their syntax is:
- \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-PrefixMap        = 'prefix-map' , { PrefixBinding } ;
-PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
-                   [ Separators ] ;
-BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
-IRIBoundToPrefix = 'full-iri' , FullIRI ;
-Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
-LibraryOMSSeparator = SeparatorString ;
-OMSSymbolSeparator  = SeparatorString ;
-SeparatorString  = SeparatorChar , { SeparatorChar } ;
-SeparatorChar    = ipchar | gen-delims - '#' ;
-                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+PrefixMap         ::= prefix-map PrefixBinding*
+PrefixBinding     ::= prefix-binding BoundPrefix
+                                     IRIBoundToPrefix [Separators]
+BoundPrefix       ::= bound-prefix [Prefix]
+IRIBoundToPrefix  ::= full-iri FullIRI
+Separators        ::= separators LibraryOMSSeparator OMSSymbolSeparator
+LibraryOMSSeparator ::= SeparatorString
+OMSSymbolSeparator ::= SeparatorString
+SeparatorString   ::= SeparatorChar SeparatorChar*
+SeparatorChar     ::= ipchar | gen-delims - #($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
+
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
 
@@ -4656,21 +4657,22 @@ Vars           ::= Symbol ( ',' Symbol )*
 
 \sclause{Identifiers}
 
- \begin{lstlisting}[language=ebnf,escapeinside={()}]
-IRI     = '<' , FullIRI , '>' | CURIE ;
-FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
-CURIE     = MaybeEmptyCURIE - ;
-MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
-RefWithoutComma = Reference - StringWithComma ;
-StringWithComma = { UChar } , ',' , { UChar } ;
-UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
-Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference = Path , [ Query ] , [ Fragment ] ;
-Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
+
+IRI           ::= '<' FullIRI '>' | CURIE
+FullIRI       ::= ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) 
+CURIE         ::= MaybeEmptyCURIE -
+MaybeEmptyCURIE ::= [Prefix] RefWithoutComma
+RefWithoutComma ::= Reference - StringWithComma
+StringWithComma ::= UChar* ',' UChar*
+UChar         ::= ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) 
+Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
+Reference     ::= Path [Query] [Fragment]
+Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query         ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment      ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
+
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
 

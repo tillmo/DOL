@@ -4266,10 +4266,10 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
- \begin{lstlisting}[language=ebnf,escapeinside={()}]
-CURIE     = MaybeEmptyCURIE - ;
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
+CURIE     = MaybeEmptyCURIE , - ;
 MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
-RefWithoutComma = Reference - StringWithComma ;
+RefWithoutComma = Reference , - , StringWithComma ;
 StringWithComma = { UChar } , ',' , { UChar } ;
 UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
 Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
@@ -4287,7 +4287,7 @@ Note that outside the context of a basic OMS the prefix/reference separator of a
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
 Their syntax is:
- \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 PrefixMap        = 'prefix-map' , { PrefixBinding } ;
 PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
@@ -4298,7 +4298,7 @@ Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
 LibraryOMSSeparator = SeparatorString ;
 OMSSymbolSeparator  = SeparatorString ;
 SeparatorString  = SeparatorChar , { SeparatorChar } ;
-SeparatorChar    = ipchar | gen-delims - '#' ;
+SeparatorChar    = ipchar | gen-delims , - , '#' ;
                    ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
 
@@ -4668,12 +4668,12 @@ Vars                 = Symbol , { ',' , Symbol } ;
 
 \sclause{Identifiers}
 
- \begin{lstlisting}[language=ebnf,escapeinside={()}]
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
 FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
-CURIE     = MaybeEmptyCURIE - ;
+CURIE     = MaybeEmptyCURIE , - ;
 MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
-RefWithoutComma = Reference - StringWithComma ;
+RefWithoutComma = Reference , - , StringWithComma ;
 StringWithComma = { UChar } , ',' , { UChar } ;
 UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
 Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
