@@ -1495,27 +1495,17 @@ example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying te
 
 ~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
 
-Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs, listed from highest to lowest:
+Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs (grammar specified in \cref{c:curies}), listed from highest to lowest:
 \begin{description}
-\item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}).  The serialization is \notrequired to support CURIEs with no prefix.\\
-  Informative comment: In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a native OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+\item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}, where a declaration of DOL-conformance of a serialization \may redefine the separator character to a character different from \syntax{:}).  A serialization that conforms \wrt prefixed CURIE conformande is \notrequired to support CURIEs with no prefix: its declaration of DOL-conformance \may forbid the use of prefixed CURIEs.\\
+  Informative comments:
+  \begin{itemize}
+  \item In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a native OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+  \item The reason for allowing redefinitions of the prefix/reference separator character is that certain serializations of OMS languages may not allow the colon (\syntax{:}) in identifiers.
+  \end{itemize}
 \item[Non-prefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
   Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the native OMS to IRIs, which are located in one flat namespace.
 \end{description}
-
-CURIEs that have a prefix may not be acceptable identifiers in every
-serialization of a  OMS language, as the standard CURIE separator
-character, the colon (\syntax{:}), may not be allowed in identifiers.
-\CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we
-  agreed on this – but does it really make sense?  Are there any
-  relevant OMS language serializations that do not allow : in
-  identifiers (or that do allow it theoretically but discourage it in
-  practice) but allow some other non-letter character?}Therefore, the
-declaration of DOL-conformance of the respective serialization
-(cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative
-  CURIE separator character}, or it \may forbid the use of prefixed
-CURIEs altogether.
-
 
 Any conforming serialization of an OMS language shall have a machine-processable description as detailed in \cref{c:conform:description}.
 
@@ -4246,7 +4236,7 @@ DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core
 \item DOL does support the declaration  of a ``no prefix'' mapping (covering CURIEs such as 
 \syntax{name}). \red{If there is no explicit declaration for the ``no prefix'', it defaults to a 
 context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a 
-structured OMS where named OMS a referenced) resp.\ the current OMS IRI (in the context of a basic 
+structured OMS where named OMS are referenced) resp.\ the current OMS IRI (in the context of a basic
 OMS) to a symbol name. Both the separator between the library and the OMS name and that between the 
 OMS name and the symbol name can be declared (using the keyword \syntax{separators}), and both default to ``//''.}
 
@@ -4261,18 +4251,23 @@ serializations, including N-Triples, only support full IRIs.}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
 we can restate the CURIE grammar supported by DOL as follows:
- \begin{lstlisting}[language=ebnf,escapeinside={!!}]
-CURIE     = ( [ Prefix ] , Reference ) - ;
-Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$!
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
+CURIE     = MaybeEmptyCURIE - ;
+MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
+RefWithoutComma = Reference - StringWithComma ;
+StringWithComma = { UChar } , ',' , { UChar } ;
+UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
+Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
 \end{lstlisting}
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
 
+Note that outside the context of a basic OMS the prefix/reference separator of a CURIE is always the colon (\syntax{:}); only for serializations of OMS languages other than DOL it may be redefined as stated in \cref{c:conform:serialization}.
 
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
@@ -4284,9 +4279,11 @@ PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
                    [ Separators ] ;
 BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
 IRIBoundToPrefix = 'full-iri' , FullIRI ;
-Separators       = 'separators' , String , String ;
-String           = SeparatorChar , { SeparatorChar } ;
-SeparatorChar    = ipchar | '/' | '?' | '#' ;
+Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
+LibraryOMSSeparator = SeparatorString ;
+OMSSymbolSeparator  = SeparatorString ;
+SeparatorString  = SeparatorChar , { SeparatorChar } ;
+SeparatorChar    = ipchar | gen-delims - '#' ;
                    ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
 
@@ -4304,11 +4301,6 @@ However, DOL OMS mappings as well as
 %\CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of SymbolRef}
 certain operations on OMS require making unambiguous references to non-logical symbols of basic OMS (\syntax{SymbolRef}).  Therefore, DOL provides a function that maps global identifiers used within basic OMS to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
 
-CURIEs that have a prefix may not be acceptable identifiers in every serialization of an OMS language,
-as the standard CURIE separator character, the colon (\syntax{:}), may not be allowed in identifiers.  
-%\CLnote[type=q-all]{I recall that in the 2012-04-18 teleconference we agreed on this – but does it really make sense?  Are there any relevant OMS language serializations that do not allow : in identifiers (or that do allow it theoretically but discourage it in practice) but allow some other non-letter character?}
-Therefore, the declaration of DOL-conformance of the respective serialization (cf.\ \cref{c:conform:serialization}) \may define an \emph{alternative CURIE separator character}, or it \may forbid the use of prefixed CURIEs altogether.
-
 The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by the following function:
 \begin{algorithmic}
   \REQUIRE $D$ is a library
@@ -4319,7 +4311,7 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
     \STATE $i\leftarrow\mathit{id}$
   \ELSE
     \STATE \COMMENT{first construct a pattern $\mathit{cp}$ for CURIEs in $S$, then match $\mathit{id}$ against that pattern}
-    \IF{$S$ defines an alternative CURIE separator character $\mathit{cs}$}
+    \IF{the declaration of DOL-conformance of $S$ redefines the prefix/reference separator character $\mathit{cs}$ (cf.\ \cref{c:conform:serialization})}
       \STATE $\mathit{sep}\leftarrow \mathit{cs}$
     \ELSIF{$S$ forbids prefixed CURIEs}
       \STATE $\mathit{sep}\leftarrow\text{undefined}$
@@ -4366,7 +4358,7 @@ sugar, the prefix map for a basic OMS is essential to determining the semantics 
 within the library.  Therefore, any DOL serialization \shall provide constructs for expressing such 
 prefix maps, even if the serialization does not support prefix maps otherwise.
 
-~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
+%% ~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
 
 
 
@@ -4553,6 +4545,21 @@ OMSLangTransRef     = IRI ;
 %and hence should be a statement in an OMS network. Recall:
 %ModuleProperties     =  '\%safe' ; }
 
+The above grammar allows for some grouping ambiguity when using operators in
+OMS definitions. These ambiguities are resolved according to the following
+list, listing operators in decreasing order of precedence:
+\begin{itemize}
+  \item \syntax{extract}, \syntax{forget}, \syntax{hide}, \syntax{keep},
+    \syntax{reject}, \syntax{remove}, \syntax{reveal}, \syntax{select} and
+    \syntax{with}.
+  \item \syntax{and}.
+  \item \syntax{then}.
+\end{itemize}
+Multiple occurrences of the same operator are grouped in a left associative
+manner. In all other cases operators on the same precedence level are not
+implicitly grouped and have to be grouped explicitly. Omitting such an explicit
+grouping results in a parse error.
+
 \ssclause{OMS Mappings}\label{a:dol-text:mappings}
 \index{alignment}
 \newcommand*{\lessthan}{<}
@@ -4644,16 +4651,20 @@ Vars                 = Symbol , { ',' , Symbol } ;
 
 \sclause{Identifiers}
 
- \begin{lstlisting}[language=ebnf,escapeinside={!!}]
+\begin{lstlisting}[language=ebnf,escapeinside={()}]
 IRI     = '<' , FullIRI , '>' | CURIE ;
-FullIRI = !$<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$! ;
-CURIE     = ( [ Prefix ] , Reference ) - ;
-Prefix    = NCName , ':' ; !$<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$! 
+FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
+CURIE     = MaybeEmptyCURIE - ;
+MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
+RefWithoutComma = Reference - StringWithComma ;
+StringWithComma = { UChar } , ',' , { UChar } ;
+UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
+Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
 Reference = Path , [ Query ] , [ Fragment ] ;
 Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Query     = '?' , iquery ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
-Fragment  = '#' , ifragment ; !$<$ \rm as defined in \nisref{IETF/RFC 3987} $>$! 
+            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the DOL syntax (cf.\ clause \label{c:keywords}).
