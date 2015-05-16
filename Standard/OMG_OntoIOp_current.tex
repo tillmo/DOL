@@ -5605,7 +5605,7 @@ $$sem(\Gamma, G, \syntax{network-element, Id, IRI}) = insert(G, \Gamma, \syntax{
 $$sem(\Gamma, G, \syntax{exclude-imports, R$_1, \ldots,$ R$_n$}) = G'$$
 
 \noindent where\\
- $R_i = \syntax{OMSOrMappingorPathorNetworkRef}_i$ for each $i=1,\ldots,n$
+ $R_i = \syntax{OMSOrMappingorPathorNetworkRef}_i$ for each $i=1,\ldots,n$\\
  $G_1 = remove(\Gamma, G, \syntax{R}_1)$\\
  $G_2 = remove(\Gamma, G_1, \syntax{R}_2)$\\
   $\ldots$ \\
@@ -5617,9 +5617,10 @@ $$sem(\Gamma, G, \syntax{exclude-imports, R$_1, \ldots,$ R$_n$}) = G'$$
 For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
 
 $$sem(\Gamma, \syntax{BasicOMS})= sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
+\ednote{This equation is not type-correct.}
 
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
-node labeled with $(Name(\syntax{BasicOMS}),I, \Sigma', \cM',\Delta')$.
+node labeled with $(Name(\syntax{BasicOMS}),I, \Sigma', \cM',\Delta')$.\ednote{what is $\Sigma', \cM',\Delta'$?}
 \ednote{names of OMS?}
 
 
@@ -5638,10 +5639,10 @@ The semantics of a \syntax{BasicOMS} $O$ has been defined above.
 
 The semantics of $O = \syntax{'oms-ref', O', ImportName}$
 \ednote{remove importname?}
-is given by
+is given by\ednote{doesn't $\Gamma$ play a role here? I would expect to see $\Gamma(O')$ is use...}
  \begin{itemize}
    \item $\Inst(\syntax{'oms-ref', O', ImportName}) = \Inst(O')$ which must be the same
-   with the current logic of $\Gamma$
+   with the current logic of $\Gamma$\ednote{TM: can't we remove this condition?}
    \item $\Sig(\syntax{'oms-ref', O', ImportName}) = \Sig(O')$
    \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \Mod(O')$
    \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Th(O')$
@@ -5668,7 +5669,9 @@ Formally, if $O' = \syntax{minimize}\ O$, we have
 \end{itemize}
 \noindent where the semantics of the \syntax{MinimizableOMS} $O$ is given relative to 
 the environment
-$\Gamma$ and the context $(\Sigma, \cM, \Delta)$.
+$\Gamma$ and the context $(\Sigma, \cM, \Delta)$, and ``minimal''
+is interpreted in the pre-order defined by $\Sigma_1\leq\Sigma_2$
+if there is a signature morphism $\Sigma_1\to\Sigma_2$.
 
 The theory-level semantics for  \syntax{minimize O} cannot be defined.
 
@@ -5676,6 +5679,7 @@ $Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O')))$ and
 an edge from the node of $O$ to the node of $O'$ labeled with the identity
 morphism on $\Sig(O')$.
+\ednote{missing: maximize, free, cofree (see the slightly changed AS)}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5686,9 +5690,9 @@ morphism on $\Sig(O')$.
 no local environment.
 
 $$sem(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')$$
-where \todonote{didn't look at this} \todonote{closed-world, free, cofree, maximize are missing}
+where \todonote{didn't look at this} \todonote{free, cofree, maximize are missing} \ednote{what is $sem(\syntax{CircVars},\Sigma)$?}
 \begin{align*}
-(I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma, \\
+(I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma), \\
 \Sigma_{\mathit{var}} & = sem(\syntax{CircVars},\Sigma),
 & \Sigma_{\mathit{fixed}} &=\Sigma \setminus (\Sigma_{\mathit{min}} \cup \Sigma_{\mathit{var}})
 \end{align*}
@@ -5710,7 +5714,7 @@ The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is g
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $O$ to the node of $O'$ labeled with
-        $\sigma$.
+        $\sigma$.\ednote{what about the comorphism?}
 \end{itemize}
 %Reduction
 
@@ -5731,7 +5735,7 @@ is
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $O'$ to the node of $O$ labeled with
-        $\sigma$
+        $\sigma$.\ednote{what about the institution morphism?}
 
 \end{itemize}
 
@@ -5753,7 +5757,7 @@ Extraction}$ is
         the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$
 \end{itemize}
 where 
-$sem(\Gamma, (\Sig(\syntax{OMS}, \Th(\syntax{OMS})), \syntax{Extraction})) = 
+$sem(\Gamma, (\Sig(\syntax{OMS}), \Th(\syntax{OMS})), \syntax{Extraction})) = 
 (\Sigma',\Delta')$.
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
 %of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
@@ -5774,7 +5778,7 @@ The semantics of $O' = \syntax{'approximation', OMS,
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $\syntax{OMS}$ to the node of $O'$ 
-        labeled with $((\Phi,\alpha,\beta),id)$ \ednote{check}
+        labeled with $((\Phi,\alpha,\beta),id)$ \ednote{check}\ednote{shouldn't $is$ be replaced with the inclusion?}
 
 \end{itemize}
 
@@ -5795,7 +5799,7 @@ The semantics of $O =$
 is
 defined only if  $\Sig(\syntax{Filtering})\subseteq\Sig(\syntax{OMS})$ and $\Th(\syntax{Filtering})\subseteq\Th(\syntax{OMS})$.
 We distinguish two cases based on the value of $c$, 
-where $sem(\Gamma, (\Sig(\syntax{OMS}, \Th(\syntax{OMS}), \syntax{Filtering})
+where $sem(\Gamma, (\Sig(\syntax{OMS}), \Th(\syntax{OMS}), \syntax{Filtering})
 = (c, \cI, \Sigma, \Delta)$ 
 If $c = 'select'$, 
 the semantics of $O$ is given by
