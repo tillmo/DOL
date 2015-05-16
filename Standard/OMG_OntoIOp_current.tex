@@ -3919,7 +3919,7 @@ BasicOMS = ($<$)language specific($>$) ;
 MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
 ExtendingOMS         = MinimizableOMS
-                     | 'minimize' , MinimizableOMS ;
+                     | 'minimize' , MinType , MinimizableOMS ;
 OMS                  = ExtendingOMS
                      | 'minimize-symbols' , OMS , Minimization
                      | 'translation' , OMS , Translation
@@ -4865,7 +4865,7 @@ theorem provers, model-checkers, SMT solvers etc.  Last but not least,
 the semantics has provided valuable feedback on the language design,
 and has led to some corrections on the abstract syntax.  These
 reasons, plus the requirement in the OntoIOp RFP to provide a
-semantics, have lead us to include the semantics in the standard
+semantics, have lead to inclusion of the semantics in the standard
 document proper, even though the semantics is quite technical and
 therefore has a more limited readership than the other chapters of
 this standard.
@@ -4877,10 +4877,11 @@ Hence, the most important need is to capture precisely what a
 heterogeneous logical environment is.
 
 The DOL semantics itself gives a formal meaning to libraries, OMS
-network, OMS, OMS mappings, and queries. For each synactic construct,
+networks, OMS, OMS mappings, and queries. For each synactic construct
+in the abstract syntax,
 a \emph{semantic domain} is given. It specifies the range of possible
 values for the semantics. Additionally, \emph{semantic rules} are
-presented, mapping the abstract syntax to some suitable semantic
+presented, mapping abstract syntax trees to some suitable semantic
 domain.
 
 \sclause{Theoretical Foundations of the DOL Semantics}
@@ -4935,7 +4936,10 @@ While this signature-free treatment enjoys simplicity and is wide-spread in the 
 concepts and definitions found in logics, e.g.\ the notion of a conservative extension, involve the
 \emph{vocabulary} or \emph{signature} $\Sigma$ \label{vocabulary} used in sentences.  Signatures 
 can be extended with new non-logical symbols, or some of these symbols can be renamed; abstractly, 
-this is captured using signature morphisms. \todonote{Motivate morphisms between models.}
+this is captured using signature morphisms. Moreover, also morphisms
+between models are needed in order to give a semantics to \syntax{minimize},
+\syntax{maximize}, \syntax{free} and \syntax{cofree}---these constructs
+use model morphisms to select certain models, e.g.\ the minimial ones.
 This leads to the notion of \emph{institution}. An institution
 is nothing more than a family of satisfaction systems, indexed by
 signatures, and linked coherently by signature morphisms.
@@ -4946,7 +4950,7 @@ signatures, and linked coherently by signature morphisms.
 consisting of the following:
 %
 \begin{itemize}
-\item a category $\Sign$ of \emph{signatures} and \emph{signature morphisms},
+\item a category\ednote{provide introductory references} $\Sign$ of \emph{signatures} and \emph{signature morphisms},
 \item a functor $\sen\map{\Sign}{\Set}$\footnote{$\Set$ is the
 category having all small \textsc{}sets as objects and functions as
 arrows.}  giving, for each signature $\Sigma$, the set of
@@ -4985,12 +4989,13 @@ context.  \qed
 The signatures of propositional logic are sets $\Sigma$ of propositional symbols, and signature morphisms are just
 functions $\sigma:{\Sigma_1}\to{\Sigma_2}$ between these sets. 
 A $\Sigma$-model is a function $M : {\Sigma}\to{\{True, False\}}$, and the reduct of a 
-$\Sigma_2$-model $M_2$along a signature morphism $\sigma:{\Sigma_1}\to{\Sigma_2}$ is 
+$\Sigma_2$-model $M_2$ along a signature morphism $\sigma:{\Sigma_1}\to{\Sigma_2}$ is 
 the $\Sigma_1$-model given by the composition of $\sigma$ with $M_2$. $\Sigma$-sentences are built from the
 propositional symbols with the usual connectives, and sentence translation is replacing the propositional
-symbols along the morphism. Finally, the satisfaction relation is defined by the standard truth-tables
+symbols in $\Sigma$ along the morphism. Finally, the satisfaction relation is defined by the standard truth-tables
 semantics. It is straightforward to see that the satisfaction condition holds.
 \end{definition}
+\ednote{be uniform with using or not using $\backslash$qed}
 
 \begin{definition}[Common Logic - \Clogic]\label{CommonLogic}
 A common logic signature
@@ -5018,8 +5023,8 @@ given by the interpretation $s$ is in this relation.
 Similarly, a function application $t(s)$ is interpreted using $\fun$.
 Otherwise, interpretation of terms and formulae is as in
 first-order logic. 
-A further
-difference is the presence of sequence terms (namely sequence markers and
+A 
+difference to first-order logic is the presence of sequence terms (namely sequence markers and
 juxtapositions of terms), which denote sequences in $\UD^*$, with term
 juxtaposition interpreted by sequence concatenation.
 Note that sequences are essentially a non-first-order feature that
@@ -5060,6 +5065,7 @@ Institution comorphisms capture the intuition of encoding or embedding a logic i
 \begin{definition}[Institution Comorphism] An \defsty{institution comorphism} from an institution $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ to an institution $J=(\Sign^J, \Mod^J,\Sen^J, \models^J)$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
 two natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
 and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
+for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^I(\Sigma)$ and each model $M'\in\Mod^J(\Phi(\Sigma))$
 $$ M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi) \Leftrightarrow
 \beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
 $$
@@ -5072,7 +5078,7 @@ institution $I$ to institution $J$, $\alpha_{\Sigma}(\varphi)$ is the
 translation of the $\Sigma$-sentence $\varphi$ to a
 $\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
 (or perhaps better: reduction) of the $\Phi(\Sigma)$-model $M'$ to a
-$\Sigma$-model. The naturality of $\alpha$ and $\beta$ mean that for each
+$\Sigma$-model. Naturality of $\alpha$ and $\beta$ means that for each
 signature morphism $\sigma:\Sigma\rightarrow\Sigma'$ in $I$ the following 
 squares commute:
 
@@ -5114,15 +5120,16 @@ An \defsty{institution morphism} from an institution $I = (\Sign^I,$ $ \Mod^I, \
 an institution $J = (\Sign^J, \Mod^J,
 \Sen^J, \models^J)$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and two
 natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi$
-and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that 
+and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^J(\Phi(\Sigma))$ and each model $M\in\Mod^I(\Sigma)$
 $$ M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi) \Leftrightarrow
-\beta_{\Phi(\Sigma)}(M)\models^J_{\Phi(\Sigma)}\varphi.
+\beta_{\Sigma}(M)\models^J_{\Phi(\Sigma)}\varphi.
 $$
 holds, called the \defsty{satisfaction condition}.
 \end{definition}
 
 Colimits are a categorical concept providing means of
-combining interconnected objects consistently to this interconnection.
+combining objects interconnected by morphisms, where the colimit
+glues together objects along the morphisms.
 They can be employed for constructing larger theories from already available 
 smaller ones, see \cite{GoguenBurstall92}. 
 
@@ -5143,10 +5150,10 @@ uniqueness condition and requiring only that a morphism $\gamma$ should exist,
 we obtain a \emph{weak} colimit. 
 
 When $G$ is the category $\xymatrix{\bullet & \bullet \ar[l] \ar[r]
-& \bullet }$ with 3 objects and 2 non-identity arrows, the $G$-colimits are
+& \bullet }$ with 3 objects and 2 non-identity arrows, $G$-colimits are
 called  \emph{pushouts}.  
 
-A major property of colimits of specifications is \emph{amalgamation} (called `exactness' in \cite{DGS91}). It can be intuitively explained as 
+A major property of colimits of specifications is \emph{amalgamation} (called `exactness' in \cite{DGS91}).\ednote{I think that amalgamation is the property for models only, whereas exactness is the property for models and morphisms.} It can be intuitively explained as 
 stating that models of given
 specifications can be combined to yield a uniquely determined model of
 a colimit specification, provided that the original models coincide on
@@ -5212,7 +5219,7 @@ serializations.
 We assume that for each institution in the heterogeneous logical environment there is a trivial signature
 $\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
 from $\emptyset$ to any signature of the institution. Moreover we assume the existence of a designated 
-error logic in the graph, and a partial union operation on logics, denoted $\bigcup$: 
+error logic\ednote{why? what would be this error logic in our logic graph in the annex?} in the graph, and a partial union operation on logics, denoted $\bigcup$: 
 $L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism 
 and at most one morphism is marked as default.
 
@@ -5272,12 +5279,12 @@ related by the fact that, when both the model-level and the theory-level semanti
 sense that the class of models given by the model-level semantics is exactly the model class of the theory given by the
 theory-level semantics. 
 
-We will use the following unifying notation for the two semantics of an OMS $O$: 
+We will use the following unifying notation for the two semantics of an OMS $O$:\ednote{Both $\Sig$ and $\Sign$ are used. This should be made uniform. Why is $\Mod$ not in boldface like the others?} 
 \begin{itemize}
  \item the institution of $O$ is denoted $\Inst(O)$,
   \item the signature of $O$ is denoted $\Sig(O)$ (which is a signature in $\Inst(O)$),
-  \item the models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sign(O)$),
-  \item the axioms of $O$is denoted $\Th(O)$ (which is a set of sentences over $\Sign(O)$).
+  \item the class of models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sign(O)$),
+  \item the set of axioms of $O$ is denoted $\Th(O)$ (which is a set of sentences over $\Sign(O)$).
 \end{itemize}
 \noindent Moreover, we may denote the semantics of $O$ as a tuple $sem(O) = (I, \Sigma, \cM,\Delta)$
 when $\Inst(O) = I$, $\Sign(O) = \Sigma$, $\Mod(O) = \cM$ and $\Th(O) = \Delta$.
@@ -5289,7 +5296,7 @@ OMS, inherited from the OMS language. For a basic OMS $O$ in a
 language $L$ based on an institution $\I$ we denote 
 by $sem_L(O)$ the language-specific semantics of $O$.
 We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
-the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.
+the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.\ednote{This should be moved to the definition of heterogeneous logical environment. Moreover, logic, language and serialization should all be parameters of this basic OMS semantics. Finally, we also need a semantic for structured native OMS (new terminology).}
 
 Intuitively, OMS mappings denote various types of links between two or more OMS. 
 The semantics of OMS mappings can be captured uniformly as a graph whose nodes $N$ are labeled with 
@@ -5298,7 +5305,7 @@ The semantics of OMS mappings can be captured uniformly as a graph whose nodes $
  \item $\Inst(N)$, the institution of the node
  \item $\Sign(N)$, the signature of the node
  \item $\Mod(N)$, the class of $\Sign(N)$-models of the node
- \item $\Th(N)$, the set of $\Th(N)$-sentences of the node
+ \item $\Th(N)$, the set of $\Sign(N)$-sentences of the node
 \end{itemize}
 and 
 which has two kinds of edges:
@@ -5306,7 +5313,7 @@ which has two kinds of edges:
   \item import links (written using single arrows, $S\rightarrow T$)
   \item theorem links (written using double arrows, $S\Rightarrow T$)
 \end{itemize}
-both labeled with signature morphisms between the signatures of the source and target nodes. 
+both labeled with signature morphisms between the signatures of the source and target nodes.\ednote{Below, also comorphisms come into play.} 
 The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
 the class of models of that node is the class of models of $\Th(N)$. 
 For brevity, we may write the label of a node as a tuple. We make the simplifying 
@@ -5319,7 +5326,8 @@ edges: in the first case, edges are labeled with heterogeneous signature morphis
 an edge from the node $S$ to the node $T$ is labeled with a pair 
 $(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
 $\sigma:\Phi(\Sign(S))\to\Sign(T)$ is a signature morphism in $\Inst(T)$), 
-while in the second case, an edge is labeled with a mapping
+while in the second case, an edge is labeled with a mapping\ednote{what
+kind of mapping? Actually, I do not understand this ``second case''. TM.}
 relating the OMS of the nodes connected by it. 
 The intuition is that
 network provide means of putting together graphs of OMS and OMS mappings
@@ -5331,7 +5339,7 @@ representation of the graph of the network but has the drawback that
 one cannot operate on the subgraph of a mapping, e.g. eliminating just a 
 node of it. Also, creating a combination of the 
 network requires that the graphs of the mappings 
-should be unfolded.
+should be unfolded.\ednote{TM: this is a bit unclear}
 
 The semantics of OMS generally depends on a global environment
 $\Gamma$ containing:
@@ -5402,7 +5410,7 @@ We define the semantics of DOL constructs regarding libraries.
 A library is either a list of definitions of OMS, OMS mappings and OMS networks, possibly starting with a prefix map, or
 an OMS in one of the languages supported by the heterogeneous logical environment.
 
-$$sem(\syntax{PrefixMap, LibraryDefn}) = \Gamma''$$
+$$sem(\syntax{PrefixMap, LibraryDefn}) = \Gamma'$$
  
 \noindent where 
  $sem(\syntax{PrefixMap}) = \PMap$, $\Gamma'' = \Gamma_\emptyset.\{\prefix = \PMap\}$ and 
@@ -5412,7 +5420,7 @@ $$sem(\syntax{NativeOMS}) = \Gamma''$$
 
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
-$sem(\Gamma', \syntax{NativeOMS}) = (I,  \Sigma, \cM, \Delta)$,
+$sem(\Gamma', \syntax{NativeOMS}) = (I,  \Sigma, \cM, \Delta)$,\ednote{Why is the semantics of \syntax{NativeOMS} mentioned twice, here and below?}
 \syntax{IRI} is the IRI of the library and 
 $\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM,\Delta)]$.
 
@@ -5423,15 +5431,11 @@ $\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM,\Delta)]$.
 $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots \syntax{LibraryItem}_n)= \Gamma'$\\
 \noindent where  $sem(\Gamma, \syntax{Qualification}) = \Gamma'$, $sem(\Gamma', \syntax{LibraryItem}_1) = \Gamma_1$,\\
   $sem(\Gamma_1,  \syntax{LibraryItem}_2) = \Gamma_2$, $\ldots$,  $sem(\Gamma_{n-1}, \syntax{LibraryItem}_n) = \Gamma'$.
-\todonote{\syntax{LibraryName} is not used. How could we use it?
-  It seems that the individual OMS are directly named with
-  IRIs, and the \syntax{LibraryName} is not relevant for that?
-  Answer from telco: The \syntax{LibraryName} is an IRI that should (as a
-  good practice, but not enforced) agree with the IRI of the document.
-  Indeed, this applies to any usage of IRI in the standard. This
-  should be stated in the standard (Christoph). (This is known as
-  "linked data compliance", a good practice to be encouraged but not
-  to be enforced, as it would break a lot of old OMS)}
+\footnote{Note that \syntax{LibraryName} is just discarded here.
+  However, \syntax{LibraryName} should be the IRI of the document
+  containing the \syntax{Library}.  This is known as ``linked data
+  compliance''. Tools can issue a warning (not an error), if a
+  \syntax{Library} does not follow this practice.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5440,7 +5444,9 @@ $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots 
 $$sem(\Gamma, \syntax{NativeOMS}) = (\cI, \Sigma, \cM, \Delta) $$
 \noindent where 
 $\cI = logic(\Gamma.\current)$ and
-$sem_\cI(\syntax{NativeOMS}) = (\cI,  \Sigma, \cM,\Delta)$. 
+$sem_\cI(\syntax{NativeOMS}) = (\cI,  \Sigma, \cM,\Delta)$.\ednote{This is
+misplaced here. Note that a \syntax{LibraryDefn} cannot be a \syntax{NativeOMS},
+only a \syntax{Library} can be.} 
 
 Note that if the OMS in the library does not conform with the logic determined by
 the extension of the library, $sem_I(\syntax{NativeOMS})$ will be undefined.
@@ -5463,9 +5469,9 @@ $$sem(\Gamma,\syntax{lang-select, LanguageRef})=\Gamma'$$
 
 \noindent where $\Gamma' = \Gamma.\{\current = (\syntax{LanguageRef},logic',ser')\}$ and \\
 $logic = logic(\Gamma.\current)$,\\
- $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\\
-$ser = ser(\Gamma.\current)$\\
- $ser'=\twocase{ser(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } ser}{\textrm{default serialization for }\syntax{LanguageRef}}$
+ $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\ednote{what is this default? should be added to the notion of heterogeneous logical env}\\
+$ser = ser(\Gamma.\current)$\ednote{this is not used}\\
+ $ser'=\twocase{ser(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } ser}{\textrm{default serialization for }\syntax{LanguageRef}}$\ednote{what is this default? should be added to the notion of heterogeneous logical env}
 
  $$sem(\Gamma,\syntax{logic-select, LogicRef})=\Gamma'$$
 
@@ -5475,10 +5481,10 @@ $lang = lang(\Gamma.\current)$, $ser=ser(\Gamma.\current)$\\
 $lang'=\twocase{lang}{lang \textrm{ supports }
    \syntax{LogicRef}} {\textrm{the unique language supporting
    }\syntax{LogicRef}}
- $\\
+ $\ednote{if this unique language is used, also the serialization needs to be changed.}\\
  Note that ``the unique language supporting \syntax{LogicRef}'' may
  be undefined; in this case, the semantics of the whole
- \syntax{'logic-select', LogicRef} construct is undefined.
+ \syntax{'logic-select', LogicRef}\ednote{Please do not use quotes and commas in the abstract syntax. See the EBNF'd version of this document at the github home page, or the CASL reference manual.} construct is undefined.
 
 $$sem(\Gamma,\syntax{syntax-select, SyntaxRef})=\Gamma'$$
 
@@ -5501,7 +5507,7 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
 and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings, or OMS networks. Intuitively, the graph of a
 network consists of the union of all graphs of the network elements it
-contains, where an OMS yields a graph with one isolated node. We make the convention that
+contains, where an OMS\ednote{basic OMS?} yields a graph with one isolated node. We make the convention that
 all imports in the graph $\Gamma.imports$ of the current context between nodes that are
 specified in the list of \syntax{NetworkElements} are also included in the graph of 
 the network. 
@@ -5512,7 +5518,7 @@ prefix in the colimit of a network for the symbols with the origin in that node 
 
 We are going to make use of the following notations. If $G$ is a graph, let $insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$ be defined as follows:
  \begin{itemize}
-    \item if \syntax{IRI} is an OMS in $\Gamma$, then
+    \item if \syntax{IRI} is\ednote{better: denotes also in the sequel)} an OMS in $\Gamma$, then
                  a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
    \item if \syntax{IRI} is an OMS mapping 
@@ -7998,6 +8004,9 @@ constraint $(S', F', \sigma')$ holds in a model $M$ if the carriers of the reduc
 of the sorts in $S'$ are generated by function symbols in $F'$.
 
 \infannex{A Core Logic Graph}\label{a:graph}
+
+\ednote{Instantiate the whole heterogeneous environment, that is, error
+logic, unions, etc.}
 
 \begin{figure}
   \centering
