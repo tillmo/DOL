@@ -7416,13 +7416,13 @@ $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
 constructor, and $p$ an \emph{attribute name}.
 
   \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of
-the form $c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$
+the form $c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_r[c_r]) : \tau[c']$
 with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
 constructor, $o$ an \emph{operation name}, and $x_1, \ldots, x_r$
 \emph{parameter names}.
 
 \item An \emph{association declaration} over $(C, {\leq_C})$ is of the
-form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])$ with $r \geq 2$,
+form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_r[c_r])$ with $r \geq 2$,
 $c_1, \dots, c_r \in C$, $\tau_1, \ldots, \tau_r$ classifier
 annotations, $a$ an \emph{association name}, and $p_1, \dots, p_r$
 \emph{member end names}.\footnote{The member ends are ordered according
@@ -7520,13 +7520,13 @@ $\varphi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then
 $d = \gamma(c)$, $d' = \gamma(c')$, and $\tau = \tau'$;
 
   \item a query operation declaration map $\rho : O \to R$ such that if
-$\rho(c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']) =
-d.r(x_1 : \tau'_1[d_1], \dots, x_r : \tau'_n[d_r]) : \tau[d'] \in R$, 
+$\rho(c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_r[c_r]) : \tau[c']) =
+d.r(x_1 : \tau'_1[d_1], \dots, x_r : \tau'_r[d_r]) : \tau[d'] \in R$, 
 then $d = \gamma(c)$, $d_i = \gamma(c_i)$, 
 $d' = \gamma(c')$, $\tau'_i = \tau_i$ and $\tau = \tau'$;
 
   \item an association declaration map $\alpha : A \to B$ such that if
-$\alpha(a(p_1 : \tau_1[c_1], \dots, p_r : \tau_n[c_r])) = b(q_1 :
+$\alpha(a(p_1 : \tau_1[c_1], \dots, p_r : \tau_r[c_r])) = b(q_1 :
 \tau_1'[d_1], \dots, q_s : \tau_s'[d_s]) \in B$,
 then $r = s$ and $d_i = \gamma(c_i)$ and $\tau_i = \tau_i'$ for
 $1 \leq i \leq r$, and member ends owned by the association are mapped
@@ -7584,7 +7584,7 @@ For the example in Fig. \ref{fig:bjoerners_dsl} we have
 \\[-.5ex]
   \phantom{\text{Compositions: }}\mathsf{s2t(station : Set[Station], \composition track : Set[Track])}
 \end{gather*}
-
+%
 Here all member ends are owned by class/data types.
 
 
@@ -7651,7 +7651,7 @@ $CL(\Sigma)$ consisting of:
   $\CL(\mathsf{Real}) = \texttt{buml:Real}$,
 \item 
   $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. In this case, additionally, the Common Logic theory is augmented by
-\texttt{(not (= $k_i \cdots k_j$))} for $i\neq j$ and
+\texttt{(not (= $k_i$ $\cdots$ $k_j$))} for $i\neq j$ and
 \texttt{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))},\ednote{Ed Seidewitz:
 enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \item 
@@ -7666,8 +7666,8 @@ enumerations are specializable, but this is type-unsafe, so maybe omit it}
   $\CL(\mathsf{c}) = c$, if $c$ a class name which is not one of the above. 
 \end{itemize}
 \item for each relation $c_1
-  \leq_C c_2$, an axiom \texttt{(forall (x) (if (C1 x) (C2 x)))},
-  where C1$=\CL(c_1)$, C2$=\CL(c_2)$, 
+  \leq_C c_2$, an axiom \texttt{(forall (x) (if ($C_1$ x) ($C_2$ x)))},
+  where $C_1 = \CL(c_1)$, $C_2 = \CL(c_2)$, 
 
 %  \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
 %\texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
