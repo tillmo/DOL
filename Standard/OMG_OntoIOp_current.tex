@@ -7424,7 +7424,7 @@ $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
 constructor, and $p$ an \emph{attribute name}.
 
   \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of
-the form $c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$
+the form $c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']$
 with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
 constructor, $o$ an \emph{operation name}, and $x_1, \ldots, x_r$
 \emph{parameter names}.
@@ -7528,7 +7528,7 @@ $\varphi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then
 $d = \gamma(c)$, $d' = \gamma(c')$, and $\tau = \tau'$;
 
   \item a query operation declaration map $\rho : O \to R$ such that if
-$\rho(c.o(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']) =
+$\rho(c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c']) =
 d.r(x_1 : \tau'_1[d_1], \dots, x_r : \tau'_n[d_r]) : \tau[d'] \in R$, 
 then $d = \gamma(c)$, $d_i = \gamma(c_i)$, 
 $d' = \gamma(c')$, $\tau'_i = \tau_i$ and $\tau = \tau'$;
@@ -7701,28 +7701,26 @@ or (if $\tau$ is omitted) just \texttt{(c x)}.}
 \qqquad \texttt{(if (and (c.p x y) (c.p x z))}\\
 \qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
-  \item $\CL$ maps each query operation declaration $c.o(x_1 :
+  \item $\CL$ maps each query operation declaration $c.q(x_1 :
     \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
-    predicate $\CL(c.o)$ and axioms stating type-correctness and
-    functionality:
+    predicate $\CL(c.q)$ and axioms stating type-correctness and
+    functionality:\footnote{Query operations are modeled as partial
+functions: they may be undefined for certain arguments due to
+violation of multiplicity constraints.}
 \begin{itemize}
 \item
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau_i[c_i]$ $x_i$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau_i[c_i]$ $x_i$))) }
 for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
 \item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
 %% \item 
 %% \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
-%% \qqquad (if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
-\qqquad\qqquad (exists (y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
+%% \qqquad (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
-\qqquad \texttt{(if (and (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.o x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
+\qqquad \texttt{(if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
 \qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
   \item \CL maps each composition declaration $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ to
@@ -7807,18 +7805,24 @@ the following grammar:
   \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Attribute}\\
                    &   | & \mathit{\#}\ \mathit{Assocation}\ \mathsf{.}\ \mathit{End}\\
                    &   | & \mathit{\#}\ \mathit{Composition}\ \mathsf{.}\ \mathit{End}
+\\
+                   &   | & \mathit{\#}\ \mathit{Operation}\ \mathsf{.}\ \mathit{Param}
 \\[1ex]
   \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End} \mathsf{:} \mathit{Type}
 \\
   \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )
 \\
   \mathit{Composition} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
+\\
+  \mathit{Operation} & ::= & \mathit{Name}\ (\ \mathit{Param} : \mathit{Type}(\ \mathsf{,}\ \mathit{Param}\ \mathsf{:}\ \mathit{Type})^*\ ) : Type
 \\[1ex]
   \mathit{Type} & ::= & \mathit{Annot}\ \mathsf{[}\ \mathit{Classifier}\ \mathsf{]}
 \\
   \mathit{Classifier} & ::= & \mathit{Name}
 \\
   \mathit{End} & ::= & \mathit{Name}
+\\
+  \mathit{Param} & ::= & \mathit{Name}
 \\
   \mathit{Annot} & ::= & \mathsf{OrderedSet} \mid \mathsf{Set} \mid \mathsf{Sequence} \mid \mathsf{Bag}
 \\
@@ -7925,6 +7929,14 @@ $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}
 \qqquad\qqquad\qqquad\qqquad\qquad(m x  $y_1$)\\
 \qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
 \qqquad\qqquad\qqquad\qqquad\qquad(m x $y_{\sem{\ell}}$) ))))}
+\item
+$\CL(\ell \leq \mathsf{\#}c.q(f_1 : \tau_1[c_1], \ldots, f_k : \tau_k[c_k]) : \tau[c'].f_i)=$\\
+\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
+\qqquad  (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (form:$\tau$-size $x_i$ n)) \\
+\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
+%\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
+%\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
+%\qqquad\qqquad (exists (y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
 \end{itemize}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
