@@ -3835,6 +3835,18 @@ LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
 SyntaxQual               = 'syntax-select' , SyntaxRef ;
 LibraryName              = IRI ;
+
+PrefixMap        = 'prefix-map' , { PrefixBinding } ;
+PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
+                   [ Separators ] ;
+BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
+IRIBoundToPrefix = 'full-iri' , FullIRI ;
+Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
+LibraryOMSSeparator = SeparatorString ;
+OMSSymbolSeparator  = SeparatorString ;
+SeparatorString  = SeparatorChar , { SeparatorChar } ;
+SeparatorChar    = ipchar | gen-delims , - , '#' ;
+                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
 ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
   • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
@@ -3843,7 +3855,7 @@ LibraryName              = IRI ;
   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
 
-At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for details.
+At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for further details.
 
 \sclause{OMS Networks}\label{c:networks}
 \red{
@@ -3901,7 +3913,6 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % derived from CASL (see CASL reference manual)
 % and HetCASL (see HetCASL summary)
 
-\ednote{ExtensionOMS seems to be missing from the abstract syntax}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 BasicOMS = ($<$)language specific($>$) ;
@@ -3917,7 +3928,8 @@ OMS                  = ExtendingOMS
                      | 'approximation' , OMS , Approximation
                      | 'filtering', OMS, Filtering
                      | 'union' , OMS , [ ConsStrength ] , OMS 
-                     | 'extension' , OMS , ExtensionOMS 
+                     | 'extension' , OMS , [ ExtConsStrength ] , 
+                                     [ ExtensionName ] , ExtendingOMS ;
                      | 'qual-oms' , { Qualification } , OMS
                      | 'combination' , Network
                      | 'application', OMS, SubstName ;
@@ -3945,15 +3957,11 @@ Filtering            = 'select' , BasicOMS
                      | 'reject' , BasicOMS ;
 
 ConsStrength         = Conservative 
-		     |  MonoDef ;
-
-MonoDef 	     = 'monomorphic'  
+		     | 'monomorphic'  
 		     | 'weak-definitional' 
 		     | 'definitional' ;
 
-ExtConsStrength      = ConsStrength | Implied ;
-
-Implied 	     = 'implied' ;
+ExtConsStrength      = ConsStrength | 'implied' ;
 
 Conservative         = 'consequence-conservative' | 'model-conservative' 
                      | 'not-consequence-conservative' | 'not-model-conservative' ;
@@ -4286,21 +4294,7 @@ Note that outside the context of a basic OMS the prefix/reference separator of a
 
 Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
 these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
-Their syntax is:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
-PrefixMap        = 'prefix-map' , { PrefixBinding } ;
-PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
-                   [ Separators ] ;
-BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
-IRIBoundToPrefix = 'full-iri' , FullIRI ;
-Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
-LibraryOMSSeparator = SeparatorString ;
-OMSSymbolSeparator  = SeparatorString ;
-SeparatorString  = SeparatorChar , { SeparatorChar } ;
-SeparatorChar    = ipchar | gen-delims , - , '#' ;
-                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-\end{lstlisting}
+%Their syntax is:
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
 
@@ -4434,9 +4428,8 @@ Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
-NetworkDefn            = NetworkKeyword , NetworkName , '=' , 
+NetworkDefn            = 'network' , NetworkName , '=' , 
                          [ ConsStrength ] , Network ;
-NetworkKeyword         = 'network' ;
 NetworkName            = IRI ;
 Network                = NetworkElements , [ ExcludeExtensions ] ;
 NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
@@ -4463,8 +4456,7 @@ MinimizableOMS      = BasicOMS
                      | OMSRef , [ ImportName ] ; 
                      
 ExtendingOMS        = MinimizableOMS
-                     | MinimizeKeyword , '{' , MinimizableOMS , '}' 
-                     | OMS , Extraction ;
+                     | MinimizeKeyword , '{' , MinimizableOMS , '}' ;
                      
 OMS                 = ExtendingOMS
                      | OMS , Minimization 
@@ -4823,7 +4815,7 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
-Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use 
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
 
 \clause{DOL Semantics}\label{c:semantics}
 
