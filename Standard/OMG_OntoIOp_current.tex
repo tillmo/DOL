@@ -7024,7 +7024,7 @@ set of names, with a subset called the set of discourse names, and a
 set of sequence markers. An signature morphism maps
 names and sequence markers separately, subject to the requirement
  that a name is a discourse
-name in the smaller signature if and only if it is one in the larger signature.  A $\Sigma$-model $I=(\UR,\UD,\rel,\fun,\intCL)$ consists of a set $\UR$,
+name in the smaller signature if and only if it is one in the larger signature.  A $\Sigma$-model $I=(\UR,\UD,\rel,\fun,\intCL,\seq)$ consists of a set $\UR$,
 the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
 the universe of discourse, and four mappings:
   \begin{itemize}
@@ -7056,7 +7056,7 @@ can be expressed in second-order logic.
 
 Model reducts are defined in the following way: 
 Given a signature inclusion\ednote{generalize to morphisms} $\Sigma'\leq\Sigma$ and a $\Sigma$-model
-$I=(\UR,\UD,\rel,\fun,\intCL)$, $I\forget{\Sigma'}=(\UR',\UD,\rel',\fun',\intCL')$ is defined by
+$I=(\UR,\UD,\rel,\fun,\intCL,\seq)$, $I\forget{\Sigma'}=(\UR',\UD,\rel',\fun',\intCL',\seq')$ is defined by
 \begin{itemize}
 \item $UR'$ is the restriction of $\UR$ to those elements satisfying the
 following conditions:
@@ -7074,15 +7074,29 @@ Note that with this notion of reduct, extensions commonly understood
 as definitions in segregated dialects of Common Logic are indeed both
 definitional and conservative extensions.
 
-\todonote{Ordering on models! Universes agree, $\fun_1(x)= \fun_2(x)$, $\rel_1(x)\subseteq \rel_2(x)$, $\intCL_1(n)=\intCL_2(n)$
-}
+Given two \CL models $I_1=(\UR_1,\UD_1,\rel_1,\fun_1,\intCL_1,\seq_1)$
+and  $I_2=(\UR_2,\UD_2,\rel_2,\fun_2,\intCL_2,\seq_2)$, a homomorphism
+$h:I_1\to I_2$ is a function $h:\UR_1\to\UR_2$ such that
+\begin{itemize}
+\item $h$ restricts to $k:\UD_1\to\UD_2$,
+\item for each $x\in\UR_1$ and $s\in\UD_1^*$, if $s\in\rel_1(x)$, then $k^*(s)\in\rel_2(h(x))$\footnote{$k^*$ is the extension of $h$ to sequences.},
+\item for each $x\in\UR_1$, $k\circ\fun_1(x)=\fun_2(h(x))\circ k^*$,
+\item for each name $n$ in $\Sigma$, $\intCL_2(n)=h(\intCL_1(n))$,
+\item for each sequence marker $n$ in $\Sigma$, $\seq_2(n)=k^*(\seq_1(n))$.
+\end{itemize}
 
 %For details, see \cite{CommonLogic:oldfashioned}.
 We call the restriction of \CL to sentence
 without sequence markers \CLminus.
 \end{definition}
 
-
+Note that Common Logic also includes sentence formation constructs like
+\texttt{cl:import}s that in DOL terms belong to the structuring
+language. They have been omitted from the institution, because
+they must not occur in basic OMS. They can occur in
+structured native OMS, however, and need to be flattened out
+in order to obtain a theory in the \CL institution.
+ 
 \infannex{Conformance of RDF and RDF Schema with DOL}\label{a:rdfs}
 
 The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR REC-rdf-schema:2014}) with DOL is established in \cite{OntoGraph}.
