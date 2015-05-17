@@ -8216,9 +8216,34 @@ $C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (
 
 	The satisfaction condition holds as well.
 
+\sclause{$FOL \rightarrow \CL$}
+
+This comorphism  maps classical first-order logic (FOL) to Common Logic.
+
+%It maps constants to
+%  discourse names and function and predicate symbols to non-discourse
+%  names, with a straightforward sentence and model translation;
+
+A FOL signature is translated to \Clogic.Fol by turning all constants
+into discourse names, and all other function symbols and all predicate
+symbols into non-discourse names. A FOL sentence is translated
+to \Clogic.Fol by a straightforward recursion, the base being translations
+of predications:
+$$\alpha_\Sigma(P(t_1,\ldots,t_n)) = (P\ \alpha_\Sigma(t_1)\ \ldots\ \alpha_\Sigma(t_n))$$
+Within terms, function applications are translated similarly:
+$$\alpha_\Sigma(f(t_1,\ldots,t_n)) = (f\ \alpha_\Sigma(t_1)\ \ldots\ \alpha_\Sigma(t_n))$$
+A \Clogic.Fol model is translated to a FOL model by using the universe of
+discourse as FOL universe. The interpretation of constants is
+directly given by the interpretation of the corresponding names
+in \Clogic.Fol. The interpretation of a predicate symbol $P$ is given
+by using $rel^M(int^M(P))$ and restricting to the arity of $P$;
+similarly for function symbols (using $fun^M$). Both the satisfaction condition
+and model-expansiveness of the comorphism are straightforward.
+
 \sclause{$\OWL \rightarrow \CL$}
 
-
+This comorphism is the composition of the comorphisms described in the previous
+two sections.
 
 \infannex{Extended Logic Graph}\label{a:ext-graph}
 
