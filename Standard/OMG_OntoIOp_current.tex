@@ -1443,17 +1443,18 @@ We define four levels of conformance of a serialization of an OMS language with 
 \begin{description}
 \item[XMI conformance]
 An XMI serialization has been automatically derived from the SMOF specification
-of the abstract syntax, using MOF 2 XMI Mapping.\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there.}
+of the abstract syntax, using MOF 2 XMI Mapping.
+%\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there. TM: XMI is an XML-based format.}
 \item[XML conformance]
 The given serialization has to be specified as an XML schema, which satisfies
  all of the following conditions:
 \begin{itemize}
 \item The elements of the schema belong to one or more non-empty XML
-namespaces.\todonote[author=Christoph
-Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous
-OMS we can recognize that a sentence is, \eg, stated in OWL, without
-explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
-of  a serialization that is merely text conforming).}
+namespaces.%\todonote[author=Christoph
+%Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous
+%OMS we can recognize that a sentence is, \eg, stated in OWL, without
+%explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
+%of  a serialization that is merely text conforming).}
 \item The serialization shall use XML elements to represent all structural elements of an OMS.
 \item The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
  DOL namespace \url{http://www.omg.org/spec/DOL/0.8/xml}) on any elements.\footnote{This is because either an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
@@ -1465,14 +1466,13 @@ The given serialization has to be specified as an RDF vocabulary, which
 \begin{itemize}
 \item The elements of the vocabulary belong to one or more RDF namespaces
  identified by absolute URIs.
-\item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS.
-\ednote{Christoph (2014-03-26): The rationale is that RDF in principle allows for identifying everything, so an RDF-based serialization of an OMS language should not forbid making use of such RDF constructs that do allow for identifying arbitrary things.}
+\item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS.\footnote{The rationale is that RDF in principle allows for identifying any kinds of items, so an RDF-based serialization of an OMS language should not forbid making use of such RDF constructs that do allow for identifying arbitrary items.}
 \footnote{The OWL RDF serialization, for example, does not satisfy the RDF conformance level, for the following reason. There is an \texttt{owl:imports} property but no class representing imports. 
  Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as a resource, which could have an identifier.  RDF reification would allow for giving the statement $O_1$ \texttt{owl:imports} $O_2$ an identifier. 
  However, the RDF triples resulting from this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification 
  \url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/\#Mapping_from_RDF_Graphs_to_the_Structural_Specification}). 
  They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty.}  
- \todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{Update on 2014-10-09: Is it OK to have this footnote here?  Or if not, where should it go?  I believe it answers the following question:\\ And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
+% \todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{Update on 2014-10-09: Is it OK to have this footnote here?  Or if not, where should it go?  I believe it answers the following question:\\ And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
 \item There shall be no additional rules (stated in writing in the specification of the serialization, or formalized in its implementation in, e.g., OWL) that forbid properties from foreign vocabulary namespaces to be stated about arbitrary subjects for the purpose of annotation.
 \end{itemize}
 
@@ -1494,7 +1494,7 @@ section 4.1.3.  Note that conformance with \mimetype{text/plain} is a prerequisi
 example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying text ranges.
 \end{description}
 
-~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
+%~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
 
 Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs (grammar specified in \cref{c:curies}), listed from highest to lowest:
 \begin{description}
@@ -1516,7 +1516,7 @@ Any conforming serialization of an OMS language shall have a machine-processable
 \textbf{Rationale}: When a parser processes a DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further DOL-supporting software needs to know, e.g., what other DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with DOL describe themselves in a machine-comprehensible way.
 \end{fminipage}
 
-For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:lola}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
+For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:lola}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.%\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
 
 
 \sclause{Conformance of a Document With DOL}\label{c:conform:document}
@@ -1554,9 +1554,9 @@ syntaxes of OWL and Common Logic can be distinguished by examining the different
 However, for DOL conformance, that application has to be capable of exporting documents with 
 explicit references to the logics used.
 
-~\CLnote{applications need to strip DOL annotations from embedded fragments in other OMS languages}
-
-~\CLnote{applications need to be able to expand CURIEs into IRIs when requested}
+DOL-aware applications also should be able to strip DOL annotations
+from embedded fragments in other OMS languages. Moreover, they shoud
+be able to expand CURIEs into IRIs when requested.
 
 \index{conformance|)}
 
@@ -1604,8 +1604,8 @@ explicit references to the logics used.
 
 
 \chapter{Terms and Definitions}\label{terms-and-defs}
-\ednote{OMG specifications shall not contain glossaries, hence always
-refer to this section if definitions of terms are needed.}
+%\ednote{OMG specifications shall not contain glossaries, hence always
+%refer to this section if definitions of terms are needed.}
 
 For the purposes of this document, the following terms and definitions apply.
 
@@ -1724,7 +1724,7 @@ plus non-logical annotations\index{annotation}.}
 
 \termdefinitionLight{\termref{signature}\synonym vocabulary}\index{vocabulary|see {signature}}
 {set (or otherwise
-  structured entity)\ednote{\color{red}{What about `collection`? Structure is not important here.}} 
+  structured collection) 
 of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
    \begin{note}
      The signature of a term is the set of all non-logical symbols occurring
@@ -1754,7 +1754,7 @@ of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
   \end{note}
 
   
-\termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.\CLnote[type=fyi]{From Common Logic, I changed ``unit of logical text'' to ``term''.}}
+\termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.}
   \begin{note}
 In a \termref{model}, on the one hand, a sentence is always true or false. In an \termref{OMS}, on the
 other hand, a sentence can have several logical statuses: it can be an axiom, if postulated to be true;
@@ -1833,7 +1833,6 @@ There are also general purpose OMS languages, which can express both \termref{OM
 \termdefinition{answer substitution}{\termref{substitution} that, when applied to
    a given \termref{query}, turns the latter into a logical consequence of a
    given \termref{OMS}.}
-\ednote{we have to revisit this once we design the abstract syntax of queries etc.}
 \end{definitions}  
 
 
@@ -2082,7 +2081,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
 The conservative extension can be either model-theoretic or consequence-theoretic; without
  qualification, the consequence-theoretic version is used.
   \end{note}
-\ednote{this is about coverage only. Should we also care about safety?}
+%\ednote{this is about coverage only. Should we also care about safety? No, see \url{https://github.com/tillmo/DOL/issues/23}.}
 
 
 \termdefinition{module extraction}{activity of obtaining from an \termref{OMS} concrete 
@@ -2213,8 +2212,9 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
 
  
 \termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology} graph with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked.
-\ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
-``heterogeneous OMS''?}
+%\ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
+%``heterogeneous OMS''? For the former. ``Hyperontologies. introduce a notion of heterogeneously structured ontology, which also affords distributed networks of ontologies written in
+%different formalisms, which we call hyperontologies.'' (from ``Carnap, Goguen, and the Hyperontologies'')}
 \begin{note}
  In \cite{MossakowskiTarlecki09}, a distinction between focused and distributed heterogeneous specifications is made. In the terminology of this standard, this is the distinction between \termref{OMS} and OMS networks.
 \end{note}
@@ -2265,16 +2265,14 @@ OMS language translations\index{language translation}, typically used in a \term
 \red{
 \termdefinition{heterogeneous environment}{environment for the
   expression of homogeneous and \termref{heterogeneous OMS}, comprising
-a \termref{logic graph}, an \termref{OMS language graph} and a
-\termref{supports relation}.}
+a \termref{logic graph}, an \termref{OMS language graph} and 
+\termref{supports relations}.}
 \begin{note}
   Although in principle, there can be many heterogeneous environments,
   for ensuring \termref{interoperability}, there will be a global
   heterogeneous environment (maintained in some registry), with
   subenvironments for specific purposes.
 \end{note}
-\ednote{In the semantics, there also is a binary supports relation between 
-OMS languages and serializations.}
 }
 
 
@@ -2353,6 +2351,9 @@ models \index{model}, and a \termref{satisfaction relation} between models\index
       language aspect} of the former, namely that the constructs of
     the former lead to a \termref{logical theory} in the latter.} 
 }
+\begin{note}
+There is also a supports relation between OMS languages and serializations.
+\end{note}
 
  \termdefinition{institution}{metaframework mathematically formalizing
 the notion of a \termref{logic}.}
@@ -2387,8 +2388,8 @@ translations\index{logic translation} and logic reductions\index{logic reduction
 \begin{note}
   In a logic graph, some of the logic translations and reductions can be
   marked to be {default translations}\index{default translation}.
-  \ednote{Hopefully it is OK to subsume the notion of logic reduction
-  under the term ``translation'' here.}
+%  \ednote{Hopefully it is OK to subsume the notion of logic reduction
+%  under the term ``translation'' here.}
 \end{note}
 
 }
@@ -2404,7 +2405,7 @@ Opposite of \termref{heterogeneous OMS}.
 Opposite of \termref{homogeneous OMS}.
 \end{note}
 \begin{example}
-\ednote{See section~\ref{dist-het-onto}.}
+See section~\ref{dist-het-onto}.
 \end{example}
 }
 
@@ -2423,21 +2424,21 @@ expressive) target \termref{logic} that tries to approximate the OMS expressed i
   
 \sclause{Interoperability}
 
-~\todonote[author=Christoph Lange,type=todo]{possibly define some notion of ``interoperability''
-that is tailored to this \IS.  At least we need to be able to speak about overall consistency, 
-alignments, etc.}\\
-~\todonote[author=Christoph Lange,type=fyi]{Definitions in earlier drafts were not quite helpful:\textLF
-{\textbullet} OMS integration := ``combination of different OMS into a coherent whole, via alignments''\textLF
-{\textbullet}OMS interoperability := ``relation among OMS (via OMS alignments) with the goal of using them jointly in an application scenario''\textLF
-AENOR commented on the latter: ``The definition of this term needs some revision and more precision 
-in the document as for the real criteria that shall be applied to evaluate the degree of 
-interoperability between OMS.''}\\
+%~\todonote[author=Christoph Lange,type=todo]{possibly define some notion of ``interoperability''
+%that is tailored to this \IS.  At least we need to be able to speak about overall consistency, 
+%alignments, etc.}\\
+%~\todonote[author=Christoph Lange,type=fyi]{Definitions in earlier drafts were not quite helpful:\textLF
+%{\textbullet} OMS integration := ``combination of different OMS into a coherent whole, via alignments''\textLF
+%{\textbullet}OMS interoperability := ``relation among OMS (via OMS alignments) with the goal of using them jointly in an application scenario''\textLF
+%AENOR commented on the latter: ``The definition of this term needs some revision and more precision 
+%in the document as for the real criteria that shall be applied to evaluate the degree of 
+%interoperability between OMS.''}\\
 
 \begin{definitions}
 
 \termdefinition{OMS integration} {the union of OMS which preserves the satisfaction and entailment relations among constituent OMS.}
 
-  \termdefinition{logically interoperable}{property of \termref{structured OMS}, which may be written in different OMS languages\index{OMS language} \markupcomment[author=Christoph Lange,type=todo]{based on different logics\index{logic}}{phrase this more precisely, based on the previously introduced terms}, of being usable jointly in a coherent way (via suitable OMS language translations), such that the notions of their overall consistency and logical entailment have a precise logical semantics.}
+  \termdefinition{logically interoperable}{property of \termref{structured OMS}, which may be written in different OMS languages\index{OMS language} supporting different logics\index{logic}, of being usable jointly in a coherent way (via suitable OMS language translations), such that the notions of their overall consistency and logical entailment have a precise logical semantics.}
 \end{definitions}
 \begin{note}
 Within ISO 19763 and ISO 20943, metamodel interoperability is
@@ -8167,7 +8168,7 @@ as well as further translations that are considered useful for
 logical interoperability.
 
 The translations are specified in \cite{OntoGraph,MossakowskiEtAl14b}.
-~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper)}
+%~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper)}
 Properties of translations have been introduced in section~\ref{s:foundations}.
 All translations are marked as default translations.
 
@@ -8267,7 +8268,7 @@ Sentences are translated as follows:
 
 \begin{itemize}
  \item $\alpha_\Sigma (C \sqsubseteq D) = \forall x.\, (\alpha_x(C) \rightarrow \alpha_x(D))$
- \item $\alpha_\Sigma (a:C) = \alpha_x(C)[a/x]$\footnote{Replace $x$ by $a$.}
+ \item $\alpha_\Sigma (a:C) = \alpha_x(C)[a/x]$\footnote{$t[a/x]$ means ``in $t$, replace $x$ by $a$''.}
  \item $\alpha_\Sigma (R(a,b)) = R(a,b)$
  \item $\alpha_\Sigma (R \sqsubseteq S) = \forall x, y. R(x,y) \rightarrow S(x,y) $
  \item $\alpha_\Sigma (R_1; \ldots; R_n \sqsubseteq R) =$\\
@@ -8364,8 +8365,8 @@ mentioned in \aref{a:graph}):
 \item Datalog
 \item ORM (object role modeling)
 \item the meta model of schema.org
-\item UML (Unified Modeling Language), with possibly different logics according to different
-UML semantics\ednote{This should probably distinguish between class diagrams and others, since UML class diagrams are already covered in another annex.}
+\item different diagram types of the UML (Unified Modeling Language), with possibly different logics according to different
+UML semantics
 \item SKOS (Simple Knowledge Organization System )
 \item FOL\textsuperscript{=} (untyped first-order logic, as used for the
 TPTP format)
@@ -8375,7 +8376,7 @@ TPTP format)
 
 The actual translations are specified in \cite{OntoGraph}.
 
-~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper). TM: what do you mean by this?}
+%~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper). TM: what do you mean by this?}
 
 
 
