@@ -3545,7 +3545,7 @@ The major functions of \DOL are the following:
 \begin{itemize}
 		\item \DOL allows the use of OMS in other OMS languages (e.g., UML class diagrams, \CASL, 
 		OWL, Common Logic) without requiring any changes. These are called \emph{native OMS}.  
-		\item \DOL provides for defining new, \emph{structured OMS} based on existing OMS. \ednote{note that this may be read as implying that no native OMS are structured} \DOL provides a number of operations for this purpose; e.g.,
+		\item \DOL provides for defining new, \emph{structured OMS} based on existing OMS.\footnote{Also native OMS can use the structuring constructs from their OMS language. However, these structuring constructs are often quite limited, and moreover, they differ from OMS language to OMS language.} \DOL provides a number of operations for this purpose; e.g.,
 		it is possible to define a structured OMS $C$ as the union of an OWL
 		ontology $A$ and a Common Logic ontology $B$.
 		\item \DOL provides for defining connections between two OMS by using 
@@ -3630,8 +3630,8 @@ Since \DOL is a meta-language,  it \textit{inherits} the logical language aspect
 \end{description}
 Whereas the first feature determines the expressivity of the language and the possibilities for automated reasoning (decidability, tractability, etc.), the latter two facilitate OMS engineering as well as the engineering of OMS-based software.
 
-Acknowledging the wide tool support that conforming established languages such as OWL, Common Logic, MOF, or \CASL\ednote{review language list when annexes are finished} enjoy, existing OMS in these languages remain as they are within the DOL framework. DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. 
-DOL's modularity and annotation constructs can either be embedded into existing OMS as non-disruptive annotations, or they can be provided as standoff markup, pointing to the OMS they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported OMS languages.\ednote{Till, is this standoff markup remark up to date?}
+Acknowledging the wide tool support that conforming established languages such as OWL, RDF, Common Logic, UML, MOF, or \CASL enjoy, existing OMS in these (and any other) conforming languages remain as they are within the DOL framework. DOL enhances their modularity and annotation facilities to a superset of the modularity and annotation facilities they provide themselves. 
+DOL's modularity and annotation constructs can either be embedded into existing OMS as non-disruptive annotations, or they can be provided as standoff markup, pointing to the OMS they talk about; DOL specifies a syntax and semantics for both variants. DOL's modularity constructs are semantically well-founded within a library of formal relationships between the logics underlying the different supported OMS languages.\ednote{Till, is this standoff markup remark up to date? TM: we promise standoff markup ar various places, but we never are specific how this can be written in DOL.}
 
 \section{DOL in the Metamodelling Hierarchy}
 
@@ -3700,12 +3700,7 @@ on top of institutions.
 DOL is a mechanism for expressing logically heterogeneous OMS. It can be used to combine sentences and structured OMS expressed in different conforming OMS languages
 and logics into single documents or modules. With DOL, sentences or structured OMS of previously existing OMS in
 conforming languages can be reused by literally including them into a DOL OMS. A minimum of wrapping constructs and other annotations (e.g., for identifying the language of a sentence) are provided. 
-\todonote[author=Christoph
-Lange,date=D:201109201457+02'00',type=todo]{Figure out what this
-  feedback item from Michael Grüninger (?) means: say that there
-  should be a syntax for relationships btw. OMS as well as a
-  syntax for heterogeneous OMS. (If you write down an OMS,
-  it might involve constructs that only exist in OWL)} See the
+ See the
 abstract syntax category \syntax{OMS} in
 clause~\ref{c:abstract-syntax}.
 
@@ -3748,8 +3743,6 @@ clause~\ref{c:abstract-syntax}.
 DOL need not be able to fully represent logical translations but is
 capable of referring to them.
 
-\todonote[author=Christoph Lange,date=D:201111231324+01'00',type=q-aut]{We had this comment here; what does it mean?  ``DOL only maps symbols to expressions''}
-
 DOL can also be used to combine or merge OMS along such OMS mappings, see
 the rule for \syntax{combination} for the abstract syntax category
 \syntax{OMS} in clause~\ref{c:abstract-syntax}.
@@ -3762,7 +3755,6 @@ the rule for \syntax{combination} for the abstract syntax category
 \end{figure}
 
 
-~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{ask Michael Gr{\"u}ninger for his mereology example in CL}
 
 \section{DOL Provides a Mechanism for Rich Annotation and Documentation of OMS}\label{c:req:annotation}
 
@@ -3841,12 +3833,12 @@ SeparatorString  = SeparatorChar , { SeparatorChar } ;
 SeparatorChar    = ipchar | gen-delims , - , '#' ;
                    ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
-~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
-  • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
-  • download-items (encourage linked data best practices instead)\textLF
-  • item-name-map (to be replaced by namespaces??)\textLF
-  • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
-  • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
+%% ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
+%%   • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
+%%   • download-items (encourage linked data best practices instead)\textLF
+%%   • item-name-map (to be replaced by namespaces??)\textLF
+%%   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
+%%   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
 
 At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for further details.
 
@@ -3987,11 +3979,14 @@ OMS (e.g.\ returned by model finders) that are used to describe single models.}.
 list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
 denotes a logic reduction to a
 less expressive OMS language. A \syntax{SymbolMapItems}, used in
-OMS \syntax{Translation}s,  maps symbols to symbols,\CLnote[type=fyi]{On 2012-07-18 we decided 
-not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics 
-in an OMS language independent way would require additional institution infrastructure – and the same effect can be 
-achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?) TM: Alternatively, we could use a recent notion of institutional monad. This builds an extended signature with all terms. Then one can use ordinary signature morphisms into such extended signatures.} or a logic
-translation. An OMS language translation \syntax{OMSLangTrans} 
+OMS \syntax{Translation}s,  maps symbols to symbols,
+%% \CLnote[type=fyi]{On 2012-07-18 we decided 
+%% not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics 
+%% in an OMS language independent way would require additional institution infrastructure – and the same effect can be 
+%% achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?) TM: Alternatively, we could use a recent notion of institutional monad. This builds an extended signature with all terms. Then one can use ordinary signature morphisms into such extended signatures.} 
+%or a logic
+%translation. 
+An OMS language translation \syntax{OMSLangTrans} 
 can be either specified by its name, or be inferred as the \termref{default
 translation} to a given target (the source will be inferred as the 
 OMS language of the current OMS).
@@ -4222,7 +4217,7 @@ not offer a mechanism for defining a base IRI, against which relative IRIs could
 Concerning these languages, note that they allow arbitrary IRIs in principle, but in practice they 
 strongly recommend using IRIs consisting of two components \cite{W3C:NOTE-swbp-vocab-pub-20080828}:
 \begin{description}
-\item[namespace] an IRI that identifies an OMS,\ednote{Check against annex M}
+\item[namespace] an IRI that identifies an OMS,\footnote{See annex~\ref{a:loc/id} for a specific linked-data compliante URL scheme for DOL.}
 usually ending with \syntax{\#} or \syntax{/}
 \item[local name] a name that identifies a non-logical symbol within an OMS
 \end{description}
