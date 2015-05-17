@@ -309,8 +309,9 @@ author=,date=,id=,replyto=,type=}{}%
 %\newcommand{\sen}{\mathbf {Sen}}
 \newcommand{\ModFunctor}{\mathbf{Mod}}
 \newcommand{\SenFunctor}{\mathbf{Sen}}
-\newcommand{\Sig}{\mathbf{Sig}}
-\newcommand{\Mor}{\mathbf{Mor}}
+\newcommand{\Sig}{\mathsf{Sig}}
+\renewcommand{\Th}{\mathsf{Th}}
+\newcommand{\Mor}{\mathsf{Mor}}
 \newcommand{\PF}{\mathit{PF}}
 \newcommand{\TF}{\mathit{TF}}
 
@@ -4913,7 +4914,7 @@ A triple $\cR=(Sen,{\cM,\models)}$  is called a  \defsty{satisfaction system}, o
 $\cM$ of \defsty{models}, and
 \item a binary relation
 ${\models}\subseteq \cM \times Sen$, called the \defsty{satisfaction relation}.
-\end{itemize}
+\end{itemize}\qed
 \end{definition}
 
 \eat{
@@ -4939,19 +4940,19 @@ signatures, and linked coherently by signature morphisms.
 
 
 \begin{definition}\label{def:inst} An
-\defsty{institution} \cite{GoguenBurstall92} is a quadruple $I=(\Sign,\sen,\IMod,{\models})$
+\defsty{institution} \cite{GoguenBurstall92} is a quadruple $I=(\Sig,\sen,\IMod,{\models})$
 consisting of the following:
 %
 \begin{itemize}
-\item a category\ednote{provide introductory references} $\Sign$ of \emph{signatures} and \emph{signature morphisms},
-\item a functor $\sen\map{\Sign}{\Set}$\footnote{$\Set$ is the
+\item a category\footnote{See \cite{AHS,MacLane} for an introduction into category theory.} $\Sig$ of \emph{signatures} and \emph{signature morphisms},
+\item a functor $\sen\map{\Sig}{\Set}$\footnote{$\Set$ is the
 category having all small \textsc{}sets as objects and functions as
 arrows.}  giving, for each signature $\Sigma$, the set of
 \emph{sentences} $\sen(\Sigma)$, and for each signature morphism
 $\sigma:{\Sigma}\to{\Sigma'}$, the \emph{sentence translation map}
 $\sen(\sigma):{\sen(\Sigma)}\to{\sen(\Sigma')}$, where often
 $\sen(\sigma)(\varphi)$ is written as $\sigma(\varphi)$, \item a
-functor $\IMod:{\Sign^{op}}\to{\Cat}$\footnote {$\Cat$ is the category
+functor $\IMod:{\Sig^{op}}\to{\Cat}$\footnote {$\Cat$ is the category
 of categories and functors. Strictly speaking, $\Cat$ is not a
 category but only a so-called quasicategory, which is a category that
 lives in a higher set-theoretic universe.} giving, for each signature
@@ -4964,10 +4965,10 @@ while $M'$ is called a \emph{$\sigma$-expansion} of
 $M'\forget{\sigma}$,
 \item a satisfaction relation
 ${\models_{\Sigma}}\subseteq|{\IMod(\Sigma)|\times\sen(\Sigma)}$ for
-each $\Sigma\in |\Sign|$,
+each $\Sigma\in |\Sig|$,
 \end{itemize}
 %
-such that for each $\sigma\map{\Sigma}{\Sigma'}$ in $\Sign$ the following \defsty{satisfaction 
+such that for each $\sigma\map{\Sigma}{\Sigma'}$ in $\Sig$ the following \defsty{satisfaction 
 condition} holds:
 $$
 (\star) \qquad M'\models_{\Sigma'}\sigma(\varphi) \mbox{ iff }
@@ -4987,8 +4988,8 @@ the $\Sigma_1$-model given by the composition of $\sigma$ with $M_2$. $\Sigma$-s
 propositional symbols with the usual connectives, and sentence translation is replacing the propositional
 symbols in $\Sigma$ along the morphism. Finally, the satisfaction relation is defined by the standard truth-tables
 semantics. It is straightforward to see that the satisfaction condition holds.
-\end{definition}
-\ednote{be uniform with using or not using $\backslash$qed}
+\qed\end{definition}
+
 
 \begin{definition}[Common Logic - \Clogic]\label{CommonLogic}
 A common logic signature
@@ -5031,7 +5032,7 @@ name if and only if its image under the signature morphism is.}
   Model reducts leave $\UR$, $\UD$, 
 $\rel$ and $\fun$ untouched, while $\intCL$ and $\seq$ are composed with the appropriate
 signature morphism component.
-\end{definition}
+\qed\end{definition}
 %
 
 Further examples of institutions are: $\mathcal{SROIQ}(D)$, unsorted first-order logic, 
@@ -5055,7 +5056,7 @@ $\Delta$ also satisfy $\varphi$. A \defsty{theory morphism} $\phi: (\Sigma, \Del
 
 Institution comorphisms capture the intuition of encoding or embedding a logic into a more expressive one.
 
-\begin{definition}[Institution Comorphism] An \defsty{institution comorphism} from an institution $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ to an institution $J=(\Sign^J, \Mod^J,\Sen^J, \models^J)$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and
+\begin{definition}[Institution Comorphism] An \defsty{institution comorphism} from an institution $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ to an institution $J=(\Sig^J, \Mod^J,\Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and
 two natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
 and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
 for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^I(\Sigma)$ and each model $M'\in\Mod^J(\Phi(\Sigma))$
@@ -5063,7 +5064,7 @@ $$ M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi) \Leftrightarrow
 \beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
 $$
 holds, called the \defsty{satisfaction condition}.
-\end{definition}
+\qed\end{definition}
 
 \noindent
 Here, $\Phi(\Sigma)$ is the translation of the signature $\Sigma$ from
@@ -5136,40 +5137,40 @@ as renaming and hiding.
 
 
 \begin{definition}
-  Given an institution  $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$, we can define the
+  Given an institution  $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$, we can define the
    institution of its theories, denoted $I^{th}$, as follows. The category of signatures of $I^{th}$ is the category
    of $I$-theories and $I$-theory morphisms, that  we denote $\Th^I$.
    For each theory $(\Sigma, \Delta)$, its sentences are just $\Sigma$-sentences in $I$, and
    its models are just $\Sigma$-models in $I$ that satisfy the sentences in $\Delta$, while the
    $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in models of $I$.
- \end{definition}
+\qed \end{definition}
 
 Using this notion, we can now capture logic translations that include axiomatization of parts of the
 syntax of the source logic into the target logic.
 
 \begin{definition}
 
- Let $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sign^J, \Mod^J,
+ Let $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sig^J, \Mod^J,
 \Sen^J, \models^J)$ be two institutions. An \defsty{theoroidal institution comorphism} from $I$ to
 $J$ is a institution comorphism from $I$ to $J^{th}$.
 
-\end{definition}
+\qed\end{definition}
 
 \medskip
 
 Institution morphisms capture the intuition of projecting from a more expressive logic to a less expressive one.
 
 \begin{definition}[Institution Morphism] 
-An \defsty{institution morphism} from an institution $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$ to
-an institution $J = (\Sign^J, \Mod^J,
-\Sen^J, \models^J)$ consists of a functor $\Phi : \Sign^I \longrightarrow \Sign^J$, and two
+An \defsty{institution morphism} from an institution $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ to
+an institution $J = (\Sig^J, \Mod^J,
+\Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and two
 natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi$
 and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^J(\Phi(\Sigma))$ and each model $M\in\Mod^I(\Sigma)$
 $$ M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi) \Leftrightarrow
 \beta_{\Sigma}(M)\models^J_{\Phi(\Sigma)}\varphi.
 $$
 holds, called the \defsty{satisfaction condition}.
-\end{definition}
+\qed\end{definition}
 
 Colimits are a categorical concept providing means of
 combining objects interconnected by morphisms, where the colimit
@@ -5197,7 +5198,7 @@ When $G$ is the category $\xymatrix{\bullet & \bullet \ar[l] \ar[r]
 & \bullet }$ with 3 objects and 2 non-identity arrows, $G$-colimits are
 called  \emph{pushouts}.  
 
-A major property of colimits of specifications is \emph{amalgamation} (called `exactness' in \cite{DGS91}).\ednote{I think that amalgamation is the property for models only, whereas exactness is the property for models and morphisms.} It can be intuitively explained as 
+A major property of colimits of specifications is \emph{amalgamation} (also related to `exactness' \cite{DGS91}). It can be intuitively explained as 
 stating that models of given
 specifications can be combined to yield a uniquely determined model of
 a colimit specification, provided that the original models coincide on
@@ -5206,16 +5207,16 @@ study of specification semantics
 \cite{STbook}.
 
 In the sequel, fix an arbitrary institution
-$I=(\Sign,\Sen,\Mod,\models)$.  
+$I=(\Sig,\Sen,\Mod,\models)$.  
 
 \begin{definition}
-Given a network $D\map{J}{\Sign^I}$, 
+Given a network $D\map{J}{\Sig^I}$, 
 a family of models $\mathcal{M} = \{M_p\}_{j\in |J|}$ is
 \emph{consistent with} $D$ (or sometimes compatible with $D$) 
 if for each node $p$ of $D$, $M_p \in Mod(D(p))$ and
 for each edge $e:p\rightarrow q$, $M_p = M_q\forget{D(e)}$.
   A cocone
-$(\Sigma,(\mu_j)_{j\in|J|})$ over the network $D\map{J}{\Sign^I}$ is
+$(\Sigma,(\mu_j)_{j\in|J|})$ over the network $D\map{J}{\Sig^I}$ is
 called \emph{weakly amalgamable} if it is mapped to a weak limit by $\Mod$.
 For models, this means that for each $D$-compatible family of
 models $(M_j)_{j\in|J|}$, there is a $\Sigma$-model $M$, called an amalgamation of 
@@ -5226,9 +5227,9 @@ $M\forget{\mu_j}=M_j$ ($j\in|J|$), and similarly for model morphisms.
 is called \emph{amalgamable}. 
 $I$ (or $\Mod$) admits \emph{(finite) (weak)
 amalgamation} if (finite) colimit cocones are (weakly) amalgamable.
-Finally, $I$ is called \emph{(weakly) semi-exact} if 
+Finally, $I$ is called \emph{(weakly) semi-amalgamable} if 
 it has pushouts and admits (weak) amalgamation for these.
-\end{definition}
+\qed\end{definition}
 
 \cite{weakcol} studies conditions for existence of weakly amalgamable cocones
 in a heterogeneous setting, where the network consists of signatures (or theories)
@@ -5276,7 +5277,7 @@ However, inclusion systems are too strong for our purposes and therefore we will
  is a category having a broad subcategory\footnote{That is, with the same objects as the original category.}
 which is a partially ordered class with finite products and coproducts, called intersection (denoted $\cap$) and union
 (denoted $\cup$) such that for each pair of objects $A, B$, $A \cup B$ is a pushout of $A \cap B$ in the category.
- \end{definition}
+\qed \end{definition}
 
 \noindent
 A category \emph{has pushouts which preserve inclusions} iff 
@@ -5293,11 +5294,11 @@ A functor between two inclusive categories is inclusive if it takes inclusions i
 \begin{definition}
  An institution is \emph{weakly inclusive} if
    \begin{itemize}
-     \item $\Sign$ is inclusive and has pushouts which preserve inclusions,
+     \item $\Sig$ is inclusive and has pushouts which preserve inclusions,
      \item $\Sen$ is inclusive, and
      \item each model category have a broad subcategory of inclusions.
    \end{itemize}
-\end{definition}
+\qed\end{definition}
 
 Let $I$ be a weakly inclusive institution. We say that $I$  \emph{has differences}, if there is a binary operation $\setminus$ on signatures, 
 such that for each pair of signatures 
@@ -5323,17 +5324,16 @@ related by the fact that, when both the model-level and the theory-level semanti
 sense that the class of models given by the model-level semantics is exactly the model class of the theory given by the
 theory-level semantics. 
 
-We will use the following unifying notation for the two semantics of an OMS $O$:\ednote{Both $\Sig$ and $\Sign$ are used. This should be made uniform. Why is $\Mod$ not in boldface like the others?} 
-\begin{itemize}
+We will use the following unifying notation for the two semantics of an OMS $O$:\begin{itemize}
  \item the institution of $O$ is denoted $\Inst(O)$,
   \item the signature of $O$ is denoted $\Sig(O)$ (which is a signature in $\Inst(O)$),
-  \item the class of models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sign(O)$),
-  \item the set of axioms of $O$ is denoted $\Th(O)$ (which is a set of sentences over $\Sign(O)$).
+  \item the class of models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sig(O)$),
+  \item the set of axioms of $O$ is denoted $\Th(O)$ (which is a set of sentences over $\Sig(O)$).
 \end{itemize}
 \noindent Moreover, we may denote the semantics of $O$ as a tuple $sem(O) = (I, \Sigma, \cM,\Delta)$
-when $\Inst(O) = I$, $\Sign(O) = \Sigma$, $\Mod(O) = \cM$ and $\Th(O) = \Delta$.
+when $\Inst(O) = I$, $\Sig(O) = \Sigma$, $\Mod(O) = \cM$ and $\Th(O) = \Delta$.
 
-The theory-level semantics of $O$ can be undefined, and then so is $\Th(O)$. When $\Th(O)$ is defined, $\Mod(O)$ can be obtained as $\Mod(O)=\{M\in\Mod(\Sign(O)) \,|\, M\models\Th(O)\}$.
+The theory-level semantics of $O$ can be undefined, and then so is $\Th(O)$. When $\Th(O)$ is defined, $\Mod(O)$ can be obtained as $\Mod(O)=\{M\in\Mod(\Sig(O)) \,|\, M\models\Th(O)\}$.
 
 We assume a \emph{language-specific semantics} of basic 
 OMS, inherited from the OMS language. For a basic OMS $O$ in a
@@ -5347,9 +5347,9 @@ The semantics of OMS mappings can be captured uniformly as a graph whose nodes $
 \begin{itemize}
  \item $\Name(N)$, the name of the node
  \item $\Inst(N)$, the institution of the node
- \item $\Sign(N)$, the signature of the node
- \item $\Mod(N)$, the class of $\Sign(N)$-models of the node
- \item $\Th(N)$, the set of $\Sign(N)$-sentences of the node
+ \item $\Sig(N)$, the signature of the node
+ \item $\Mod(N)$, the class of $\Sig(N)$-models of the node
+ \item $\Th(N)$, the set of $\Sig(N)$-sentences of the node
 \end{itemize}
 and 
 which has two kinds of edges:
@@ -5369,7 +5369,7 @@ are like in the semantics of OMS mappings. What differs is the labels of
 edges: in the first case, edges are labeled with heterogeneous signature morphisms (i.e.~ 
 an edge from the node $S$ to the node $T$ is labeled with a pair 
 $(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
-$\sigma:\Phi(\Sign(S))\to\Sign(T)$ is a signature morphism in $\Inst(T)$), 
+$\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$), 
 while in the second case, an edge is labeled with a mapping\ednote{what
 kind of mapping? Actually, I do not understand this ``second case''. TM.}
 relating the OMS of the nodes connected by it. 
@@ -5804,7 +5804,7 @@ where
 $sem(\Gamma, (\Sig(\syntax{OMS}), \Th(\syntax{OMS})), \syntax{Extraction})) = 
 (\Sigma',\Delta')$.
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
-%of a $\Mod(\Sign(O))$-model can be expanded to a $\Mod(\Sign(O))$-model
+%of a $\Mod(\Sig(O))$-model can be expanded to a $\Mod(\Sig(O))$-model
 %satisfying $\Th(O) \setminus \Delta'$.
 
 %Approximation
@@ -5867,7 +5867,7 @@ If $c = 'reject'$, the semantics of $O =$
 \syntax{'filtering', OMS, 'reject', BasicOMS} is
 \begin{itemize}
   \item $\Inst(O) = \cI$
-  \item $\Sig(O) = \Sign(\syntax{OMS})\setminus \Sigma$ 
+  \item $\Sig(O) = \Sig(\syntax{OMS})\setminus \Sigma$ 
   \item $\Th(O) = \Th(\syntax{OMS})\cap\Sen(\Sig(O))\setminus\Delta$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
     \item $Env(\Gamma, O')$ is obtained from 
@@ -6629,14 +6629,14 @@ $G$ is the graph
 $N_1 \stackrel{\iota_1}{\rightarrow} N_3 \stackrel{\iota_2}{\leftarrow} 
 N_3$ and
 $N_1$ is labelled with $(\Name(O_1), \Inst(O_1), \Sig(O_1),\Mod(O_1), \Th(O_1))$,\\
-$N_2$ with $(\Name(O_2), \Inst(O_2),\Sign(O_2), \Mod(O_2), \Th(O_2))$
+$N_2$ with $(\Name(O_2), \Inst(O_2),\Sig(O_2), \Mod(O_2), \Th(O_2))$
 and \\
 $N_3$ with $(\Name(O_3), \Inst(O_3), \Sig_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3), \Mod_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3),\allowbreak  \Th_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3))$\ednote{TM: I do not understand the notation}\\
 such that
 $\iota_i$ are inclusions and we have that 
 $\Inst(O_1) = \Inst(O_2) = \Inst(O_3)$ and 
-for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \Mod_{(\Sign(O_1)\cup\Sign(O_2),\emptyset)}(O_3)$
-such that $M\forget{\Sign(O_i)} = M_i$. 
+for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \Mod_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3)$
+such that $M\forget{\Sig(O_i)} = M_i$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \semdom{sem(\Gamma,  \syntax{ModuleRelDefn}) = \Gamma'}
@@ -6650,11 +6650,11 @@ $$sem(\Gamma, \syntax{module-defn, ModuleName, Conservative, ModuleType, Interfa
 $\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (G,\iota, N_2,N_1)]$
 and $G$ is the graph 
 $N_1 \stackrel{\iota}{\rightarrow} N_2$
-where $N_1$ is labeled with $(O_1, \Inst(O_1),\Sign(O_1), \Mod(O_1), \Th(O_1)$
+where $N_1$ is labeled with $(O_1, \Inst(O_1),\Sig(O_1), \Mod(O_1), \Th(O_1)$
 $N_2$ with 
- $(O_2, \Inst(O_2),\Sign(O_2),  \Mod(O_2), \Th(O_2))$, 
+ $(O_2, \Inst(O_2),\Sig(O_2),  \Mod(O_2), \Th(O_2))$, 
 and $\iota$ is an inclusion, 
-when $\Sigma \subseteq \Sign(O_2) \subseteq \Sign(O_1)$
+when $\Sigma \subseteq \Sig(O_2) \subseteq \Sig(O_1)$
 and if $c=$\%mcons and for each $M\in\Mod(O_2)$ there is a model $M'\in \Mod(O_1)$ such that
 $M'\forget{\Sigma} = M\forget{\Sigma}$,
 or if $c=$\%ccons and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
@@ -6911,7 +6911,7 @@ _:property rdf:type     rdf:Property ;
            rdfs:comment "documentation" .
 \end{lstlisting}
 
-\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''}
+%\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''. TM: has been defined in section 4}
 \newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
 \ctable[
 caption={LoLa Properties},
@@ -6944,7 +6944,7 @@ The OWL/XML serialization satisfies the criteria for XML conformance.  The mappi
 graphs satisfies the criteria for RDF conformance\CLnote{This is not exactly true, as some things,
 e.g. imports, cannot be identified.}.  The OWL 2 Manchester syntax satisfies the criteria for text
  conformance.
-~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
+%~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 
 OWL can be formalized as an institution as follows:
 \begin{definition}\label{DL} \defsty{OWL 2 DL.} 
@@ -6960,7 +6960,8 @@ that interpret concepts as unary and roles as binary predicates
 (using $.^I$). $I_1\leq I_2$ if $\Delta^{I_1}=\Delta^{I_2}$ and all
 concepts and roles of $I_1$ are subconcepts and subroles of those in $I_2$.
 Sentences are subsumption relations $C_1\sqsubseteq C_2$ between
-concepts, where concepts follow the grammar\CLnote[type=q-aut]{This grammar should also be adapted to ISO EBNF.}
+concepts, where concepts follow the grammar
+%\CLnote[type=q-aut]{This grammar should also be adapted to ISO EBNF.}
 $$C ::= {\mathcal A} \,|\, \top\,|\, \bot \,|\, C_1 \sqcup C_2 \,|\, C_1 \sqcap C_2 \,|\, \neg C 
     \,|\, \forall R . C \,|\, \exists R . C$$
 These kind of sentences are also called TBox sentences.
@@ -6994,7 +6995,7 @@ intersection, and the top concept:
 %\ednote{Text entfernt: ``I.e.\ its concepts follow the following grammar'' -- versteht sich IMHO von selbst, nachdem man das obige \ALC-Beispiel gelesen hat}
 $$C ::= {\mathcal A} \,|\, \top \,|\,  C_1 \sqcap C_2 \,|\, \exists R . C$$
 Note that \ELDL does not have disjunction or negation, and is therefore a sub-Boolean logic.
-\end{definition}
+\qed\end{definition}
 
 Remark: strictly speaking, the institution defined above is
 \emph{{OWL} 2 DL without restrictions} in the sense of
@@ -7054,24 +7055,8 @@ Note that sequences are essentially a non-first-order feature that
 can be expressed in second-order logic.
 
 Model reducts are defined in the following way: 
-Given a signature inclusion\ednote{generalize to morphisms} $\Sigma'\leq\Sigma$ and a $\Sigma$-model
-$I=(\UR,\UD,\rel,\fun,\intCL,\seq)$, $I\forget{\Sigma'}=(\UR',\UD,\rel',\fun',\intCL',\seq')$ is defined by
-\begin{itemize}
-\item $UR'$ is the restriction of $\UR$ to those elements satisfying the
-following conditions:
-\begin{enumerate}
-\item they are not in the universe of discourse $\UD$;
-\item they are the interpretation (according to $\intCL$) of a non-discourse name in $\Sigma$;
-\item they are not the interpretation (according to $\intCL$) of a non-discourse name in $\Sigma'$.
-\end{enumerate}
-\item $\rel'$ is $\rel$ restricted to $\UR'$;
-\item $\fun'$ is $\fun$ restricted to $\UR'$;
-\item $\intCL'$ is $\intCL$ restricted to $\Sigma'$.
-\end{itemize}
-
-Note that with this notion of reduct, extensions commonly understood
-as definitions in segregated dialects of Common Logic are indeed both
-definitional and conservative extensions.
+Given a signature morphism $\sigma:\Sigma_1\to\Sigma_2$ and a $\Sigma_2$-model
+$I_2=(\UR,\UD,\rel,\fun,\intCL,\seq)$, $I\forget{\sigma}=(\UR,\UD,\rel,\fun,\intCL\circ\sigma,\seq\circ\sigma)$. 
 
 Given two \CL models $I_1=(\UR_1,\UD_1,\rel_1,\fun_1,\intCL_1,\seq_1)$
 and  $I_2=(\UR_2,\UD_2,\rel_2,\fun_2,\intCL_2,\seq_2)$, a homomorphism
@@ -7087,7 +7072,7 @@ $h:I_1\to I_2$ is a function $h:\UR_1\to\UR_2$ such that
 %For details, see \cite{CommonLogic:oldfashioned}.
 We call the restriction of \CL to sentence
 without sequence markers \CLminus.
-\end{definition}
+\qed\end{definition}
 
 Note that Common Logic also includes sentence formation constructs like
 \texttt{cl:import}s that in DOL terms belong to the structuring
@@ -7153,7 +7138,7 @@ There is also \OWL Full, an extension of \RDFS with resources
 such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the representation of
 \OWL~\cite{W3C:REC-owl2-rdf-based-semantics-20091027}.
 
-\end{definition}
+\qed\end{definition}
 
 
 \infannex{Conformance of UML class and object diagrams with DOL}\label{a:uml-class}
@@ -7480,12 +7465,13 @@ $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
 $\mathsf{String}$, i.e.,
 $\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
 \mathsf{Integer}, \mathsf{Real}, \mathsf{String} \} \subseteq
-C$;\ednote{what
-  about enumeration types? Should we assume that some classifiers are
-  marked as enumeration types and equipped with their set of constants?
-  AK: In UML, \uml{Enumeration} is a specialisation of \uml{DataType}.
-  The set of constants are \uml{EnumerationLiteral}s.  These could be
-  added like \uml{Property}.}
+C$;
+%\ednote{what
+%  about enumeration types? Should we assume that some classifiers are
+%  marked as enumeration types and equipped with their set of constants?
+%  AK: In UML, \uml{Enumeration} is a specialisation of \uml{DataType}.
+%  The set of constants are \uml{EnumerationLiteral}s.  These could be
+%  added like \uml{Property}.}
 and the partial ordering relation $\leq_C$ represents a
 \emph{generalisation relation} on $C$, where we say that $c_1$ is a
 \emph{sub-class/data type} of $c_2$ if $c_1 \leq_C c_2$.
@@ -7758,7 +7744,8 @@ $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
 $CL(\Sigma)$ consisting of:
 %
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
-\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that\ednote{class predicates should be restricted to be unary} 
+\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that
+%\ednote{class predicates should be restricted to be unary} 
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
 \item 
   $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$, 
@@ -7773,8 +7760,9 @@ $CL(\Sigma)$ consisting of:
 \item 
   $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. In this case, additionally, the Common Logic theory is augmented by
 \texttt{(not (= $k_i$ $\cdots$ $k_j$))} for $i\neq j$ and
-\texttt{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))},\ednote{Ed Seidewitz:
-enumerations are specializable, but this is type-unsafe, so maybe omit it}
+\texttt{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))},
+%\ednote{Ed Seidewitz:
+%enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \item 
   $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$,
 \item 
@@ -8363,9 +8351,8 @@ The actual translations are specified in \cite{OntoGraph}.
 
 \infannex{Example Uses of all DOL Constructs}\label{a:uses}
 
-\ednote{the uses cases in the RFP should be reused and worked into DOL examples}
 
-\CLnote[type=q-aut]{Should we have another column here that refers to the \emph{abstract} syntax?}%
+%\CLnote[type=q-aut]{Should we have another column here that refers to the \emph{abstract} syntax?}%
 \begin{tabular}{|l|l|}\hline
 \multicolumn{2}{|c|}{\textbf{Top-level declarations in libraries}}\\\hline
 \textbf{Top-level declaration} & \textbf{Examples} \\\hline
@@ -8594,7 +8581,6 @@ interpretation repair3 : Repair to MyRepair = %cons
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
 \label{dist-het-onto}
-\CLnote[type=q-aut]{In the TKE paper we made the name of the propositional logic ontology syntax explicit.  The propositional logic listing now leaves us with a problem: neither is propositional logic specified as DOL-conformant, nor is Hets' CASL-like syntax, nor is anything of this intended to ever be normative. TM: hence either leave it out, or make propositional logic normative. What about the examples in OWL+CL develop during the Ontology Summit Hackathon?}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
@@ -9169,8 +9155,8 @@ The OWL Time ontology\footnote{\url{http://www.w3.org/TR/2006/WD-owl-time-200609
 A separate first-order axiomatization of OWL Time exists
 [\cite{OWLTime},\cite{OWLSTime}].  DOL would instead provide the mechanism of modeling
 OWL Time as one coherent heterogeneous ontology, using OWL and, \eg,
-Common Logic.\CLnote{This is also a use case for multiple namespaces:
-  OWL supports namespaces, CL doesn't.}  For the temporal description
+Common Logic.\footnote{This is also a use case for multiple namespaces:
+  OWL supports namespaces, CL does not.}  For the temporal description
 logic $\mathcal{DLR_{US}}$ for knowledge bases and logic-based
 temporal conceptual data modeling [\cite{Artale02},\cite{Artale07a}];
 $\mathcal{DLR_{US}}$ combines the propositional temporal logic with
