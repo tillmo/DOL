@@ -4889,6 +4889,7 @@ presented, mapping abstract syntax trees to some suitable semantic
 domain.
 
 \sclause{Theoretical Foundations of the DOL Semantics}
+\label{s:foundations}
 
 We now specify the theoretical foundations of the semantics of DOL.
 The notions of \emph{institution} and institution 
@@ -4969,10 +4970,10 @@ lives in a higher set-theoretic universe.} giving, for each signature
 $\Sigma$, the category of \emph{models} $\IMod(\Sigma)$, and for each
 signature morphism $\sigma\map{\Sigma}{\Sigma'}$, the \emph{reduct
 functor\/} $\IMod(\sigma):{\IMod(\Sigma')}\to {\IMod(\Sigma)}$, where
-often $\IMod(\sigma)(M')$ is written as $M'\restrict_{\sigma}$, and
-$M'\restrict_{\sigma}$ is called the \emph{$\sigma$-reduct} of $M'$,
+often $\IMod(\sigma)(M')$ is written as $M'\forget{\sigma}$, and
+$M'\forget{\sigma}$ is called the \emph{$\sigma$-reduct} of $M'$,
 while $M'$ is called a \emph{$\sigma$-expansion} of
-$M'\restrict_{\sigma}$,
+$M'\forget{\sigma}$,
 \item a satisfaction relation
 ${\models_{\Sigma}}\subseteq|{\IMod(\Sigma)|\times\sen(\Sigma)}$ for
 each $\Sigma\in |\Sign|$,
@@ -4982,7 +4983,7 @@ such that for each $\sigma\map{\Sigma}{\Sigma'}$ in $\Sign$ the following \defst
 condition} holds:
 $$
 (\star) \qquad M'\models_{\Sigma'}\sigma(\varphi) \mbox{ iff }
-M'\restrict_{\sigma} \models_{\Sigma} \varphi
+M'\forget{\sigma} \models_{\Sigma} \varphi
 $$
 for each $M'\in |\IMod(\Sigma')|$ and $\varphi\in \sen(\Sigma)$,
 expressing that truth is invariant under change of notation and
@@ -5083,17 +5084,68 @@ translation of the $\Sigma$-sentence $\varphi$ to a
 $\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
 (or perhaps better: reduction) of the $\Phi(\Sigma)$-model $M'$ to a
 $\Sigma$-model. Naturality of $\alpha$ and $\beta$ means that for each
-signature morphism $\sigma:\Sigma\rightarrow\Sigma'$ in $I$ the following 
+signature morphism $\sigma:\Sigma_1\rightarrow\Sigma_2$ in $I$ the following 
 squares commute:
 
 $$
 \xymatrix{
-Sen^I(\Sigma) \ar[d]_{Sen^I(\sigma)} \ar[r]^{\alpha_\Sigma}& Sen^J(\Phi(\Sigma)) \ar[d]^{Sen^J(\Phi(\sigma))} 
-& Mod^J(\Phi(\Sigma')) \ar[r]^{\beta_{\Sigma'}}  \ar[d]^{Mod^J(\Phi(\sigma))}&Mod^I(\Sigma') \ar[d]^{Mod^I(\sigma)}\\ 
-Sen^I(\Sigma') \ar[r]_{\alpha_{\Sigma'}}& Sen^J(\Phi(\Sigma')) 
-& Mod^J(\Phi(\Sigma)) \ar[r]_{\beta_\Sigma} & Mod^I(\Sigma)
+\Sen^I(\Sigma_1) \ar[d]_{\Sen^I(\sigma)} \ar[r]^{\alpha_{\Sigma_1}}& \Sen^J(\Phi(\Sigma_1)) \ar[d]^{\Sen^J(\Phi(\sigma))} 
+& \Mod^J(\Phi(\Sigma_2)) \ar[r]^{\beta_{\Sigma_2}}  \ar[d]^{\Mod^J(\Phi(\sigma))}&\Mod^I(\Sigma_2) \ar[d]^{\Mod^I(\sigma)}\\ 
+\Sen^I(\Sigma_2) \ar[r]_{\alpha_{\Sigma_2}}& \Sen^J(\Phi(\Sigma_2)) 
+& \Mod^J(\Phi(\Sigma_1)) \ar[r]_{\beta_{\Sigma_1}} & \Mod^I(\Sigma_1)
 }
 $$
+
+A comorphism is:
+\begin{itemize}
+
+  \item \emph{faithful} if logical consequence is preserved and reflected along the
+comorphism:
+$$\Gamma\models^I\varphi\mbox{\ iff\ }\alpha(\Gamma)\models^J\alpha(\varphi)$$
+
+ \item \emph{model-expansive} if each $\beta_\Sigma$ is
+surjective;
+
+\item \emph{(weakly) exact} 
+if
+for each signature morphism $\sigma\map{\Sigma_1}{\Sigma_2}$,
+the naturality diagram
+$$
+\xymatrix{
+ \Mod^J(\Phi(\Sigma_2)) \ar[r]^{\beta_{\Sigma_2}}  \ar[d]^{\Mod^J(\Phi(\sigma))}&\Mod^I(\Sigma_2) \ar[d]^{\Mod^I(\sigma)}\\ 
+ \Mod^J(\Phi(\Sigma_1)) \ar[r]_{\beta_\Sigma_1} & \Mod^I(\Sigma_1)
+}
+$$
+admits (weak) amalgamation, i.e.\
+any for any two models $M_2\in\Mod^I(\Sigma_2)$
+and $M'_1\in\Mod^J(\Phi(\Sigma_1))$
+with $M_2\forget{\sigma}=\beta_{\Sigma_1}(M'_1)$,
+there is a unique (not necessarily unique) 
+$M'_2\in\Mod^J(\Phi(\Sigma_2))$
+with $\beta_{\Sigma_2}(M'_2)=M_2$
+and $M'_2\forget{\Phi(\sigma)}=M'_1$;
+
+ \item a \emph{subinstitution comorphism} if $\Phi$ is
+an embedding, each $\alpha_\Sigma$ is injective and each $\beta_\Sigma$
+is bijective\footnote{An isomorphism if model morphisms are taken into
+account.};
+
+\item an \emph{inclusion comorphism} if 
+        $\Phi$ and each $\alpha_\Sigma$ are inclusions, and each
+        $\beta_\Sigma$ is the identity.
+  
+\end{itemize}
+
+It is known that each subinstitution comorphism is model-expansive and 
+each model-expansive comorphism
+is also faithful.
+Faithfulness means that a proof goal $\Gamma\models^I\varphi$
+in $I$ can be solved by a theorem prover for $J$ by just feeding the
+theorem prover with $\alpha(\Gamma)\models^J\alpha(\varphi)$.
+Subinstitution comorphism preserve
+the semantics of more advanced DOL structuring constructs such
+as renaming and hiding. 
+
 
 \begin{definition}
   Given an institution  $I = (\Sign^I,$ $ \Mod^I, \Sen^I, \models^I)$, we can define the
@@ -7680,7 +7732,7 @@ Here all member ends are owned by class/data types.
 \label{fig:bjoerners_dsl}
 \end{figure}
 
-\section{Models}
+\section{Models}\label{a:UML-CD-models}
 
 As stated above, models (in the sense of the term \termref{model} defined in
 clause~\ref{terms-and-defs}) of UML class diagrams are obtained 
@@ -7926,7 +7978,7 @@ abbreviations for two inequations using ``$\leq$''.
 \end{example}
 
 
-\section{Satisfaction Relation}
+\section{Satisfaction Relation}\label{a:UML-CD-sat}
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object diagram $\Sigma$, a
@@ -8069,11 +8121,9 @@ This annex provides a core graph of logics and translations, covering those OMS 
 \item EL, QL, RL (all being profiles of OWL) \nisref{W3C/TR REC-owl2-profiles:2009}
 \item OWL \nisref{W3C/TR REC-owl2-syntax:2009}
 \item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
+\item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.4.1}
+\item \CASL \cite{CASL-RM} and its sublanguage classical first-order logic (FOL)
 \end{itemize}
-The translations are specified in \cite{OntoGraph}.
-~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper)}
-
-~\todonote[author=Christoph Lange,type=fyi]{We need this in order to be able to say something about default translations, and about establishing conformance by translation to a language that already conforms.}
 
 The list of chosen logics includes those ones required as mandatory
 ones in the RFP. Since these are only ontology and modeling
@@ -8083,6 +8133,10 @@ translations comprises standard translations from the literature,
 as well as further translations that are considered useful for
 logical interoperability.
 
+The translations are specified in \cite{OntoGraph,MossakowskiEtAl14b}.
+~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper)}
+Properties of translations have been introduced in section~\ref{s:foundations}.
+All translations are marked as default translations.
 
 \sclause{\EL $\to$ $\OWL$ and $\ELDL++$ $\to$ $\SROIQ(D)$}
 
@@ -8245,6 +8299,15 @@ and model-expansiveness of the comorphism are straightforward.
 This comorphism is the composition of the comorphisms described in the previous
 two sections.
 
+\sclause{UML class diagrams $\to \CL$}
+This translation has been described in annex~\ref{a:uml-class}. 
+Translation of signatures is detailed in section~\ref{a:UML-CD-models},
+translation of sentences in section~\ref{a:UML-CD-sat}.
+Models are translated identically.
+
+\sclause{$FOL \to \CASL}
+This is an obvious sublogic.
+ 
 \infannex{Extended Logic Graph}\label{a:ext-graph}
 
 \begin{figure}
