@@ -6911,7 +6911,7 @@ _:property rdf:type     rdf:Property ;
            rdfs:comment "documentation" .
 \end{lstlisting}
 
-\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''}
+%\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''. TM: has been defined in section 4}
 \newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
 \ctable[
 caption={LoLa Properties},
@@ -6944,7 +6944,7 @@ The OWL/XML serialization satisfies the criteria for XML conformance.  The mappi
 graphs satisfies the criteria for RDF conformance\CLnote{This is not exactly true, as some things,
 e.g. imports, cannot be identified.}.  The OWL 2 Manchester syntax satisfies the criteria for text
  conformance.
-~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
+%~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 
 OWL can be formalized as an institution as follows:
 \begin{definition}\label{DL} \defsty{OWL 2 DL.} 
@@ -6960,7 +6960,8 @@ that interpret concepts as unary and roles as binary predicates
 (using $.^I$). $I_1\leq I_2$ if $\Delta^{I_1}=\Delta^{I_2}$ and all
 concepts and roles of $I_1$ are subconcepts and subroles of those in $I_2$.
 Sentences are subsumption relations $C_1\sqsubseteq C_2$ between
-concepts, where concepts follow the grammar\CLnote[type=q-aut]{This grammar should also be adapted to ISO EBNF.}
+concepts, where concepts follow the grammar
+%\CLnote[type=q-aut]{This grammar should also be adapted to ISO EBNF.}
 $$C ::= {\mathcal A} \,|\, \top\,|\, \bot \,|\, C_1 \sqcup C_2 \,|\, C_1 \sqcap C_2 \,|\, \neg C 
     \,|\, \forall R . C \,|\, \exists R . C$$
 These kind of sentences are also called TBox sentences.
@@ -7054,24 +7055,8 @@ Note that sequences are essentially a non-first-order feature that
 can be expressed in second-order logic.
 
 Model reducts are defined in the following way: 
-Given a signature inclusion\ednote{generalize to morphisms} $\Sigma'\leq\Sigma$ and a $\Sigma$-model
-$I=(\UR,\UD,\rel,\fun,\intCL,\seq)$, $I\forget{\Sigma'}=(\UR',\UD,\rel',\fun',\intCL',\seq')$ is defined by
-\begin{itemize}
-\item $UR'$ is the restriction of $\UR$ to those elements satisfying the
-following conditions:
-\begin{enumerate}
-\item they are not in the universe of discourse $\UD$;
-\item they are the interpretation (according to $\intCL$) of a non-discourse name in $\Sigma$;
-\item they are not the interpretation (according to $\intCL$) of a non-discourse name in $\Sigma'$.
-\end{enumerate}
-\item $\rel'$ is $\rel$ restricted to $\UR'$;
-\item $\fun'$ is $\fun$ restricted to $\UR'$;
-\item $\intCL'$ is $\intCL$ restricted to $\Sigma'$.
-\end{itemize}
-
-Note that with this notion of reduct, extensions commonly understood
-as definitions in segregated dialects of Common Logic are indeed both
-definitional and conservative extensions.
+Given a signature morphism $\sigma:\Sigma_1\to\Sigma_2$ and a $\Sigma_2$-model
+$I_2=(\UR,\UD,\rel,\fun,\intCL,\seq)$, $I\forget{\sigma}=(\UR,\UD,\rel,\fun,\intCL\circ\sigma,\seq\circ\sigma)$. 
 
 Given two \CL models $I_1=(\UR_1,\UD_1,\rel_1,\fun_1,\intCL_1,\seq_1)$
 and  $I_2=(\UR_2,\UD_2,\rel_2,\fun_2,\intCL_2,\seq_2)$, a homomorphism
@@ -7480,12 +7465,13 @@ $\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
 $\mathsf{String}$, i.e.,
 $\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
 \mathsf{Integer}, \mathsf{Real}, \mathsf{String} \} \subseteq
-C$;\ednote{what
-  about enumeration types? Should we assume that some classifiers are
-  marked as enumeration types and equipped with their set of constants?
-  AK: In UML, \uml{Enumeration} is a specialisation of \uml{DataType}.
-  The set of constants are \uml{EnumerationLiteral}s.  These could be
-  added like \uml{Property}.}
+C$;
+%\ednote{what
+%  about enumeration types? Should we assume that some classifiers are
+%  marked as enumeration types and equipped with their set of constants?
+%  AK: In UML, \uml{Enumeration} is a specialisation of \uml{DataType}.
+%  The set of constants are \uml{EnumerationLiteral}s.  These could be
+%  added like \uml{Property}.}
 and the partial ordering relation $\leq_C$ represents a
 \emph{generalisation relation} on $C$, where we say that $c_1$ is a
 \emph{sub-class/data type} of $c_2$ if $c_1 \leq_C c_2$.
@@ -7758,7 +7744,8 @@ $\Sigma = ((C, {\leq_C}), K, P, M, A)$, we define a Common Logic theory
 $CL(\Sigma)$ consisting of:
 %
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
-\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that\ednote{class predicates should be restricted to be unary} 
+\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that
+%\ednote{class predicates should be restricted to be unary} 
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
 \item 
   $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$, 
@@ -7773,8 +7760,9 @@ $CL(\Sigma)$ consisting of:
 \item 
   $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. In this case, additionally, the Common Logic theory is augmented by
 \texttt{(not (= $k_i$ $\cdots$ $k_j$))} for $i\neq j$ and
-\texttt{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))},\ednote{Ed Seidewitz:
-enumerations are specializable, but this is type-unsafe, so maybe omit it}
+\texttt{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))},
+%\ednote{Ed Seidewitz:
+%enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \item 
   $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$,
 \item 
@@ -8363,9 +8351,8 @@ The actual translations are specified in \cite{OntoGraph}.
 
 \infannex{Example Uses of all DOL Constructs}\label{a:uses}
 
-\ednote{the uses cases in the RFP should be reused and worked into DOL examples}
 
-\CLnote[type=q-aut]{Should we have another column here that refers to the \emph{abstract} syntax?}%
+%\CLnote[type=q-aut]{Should we have another column here that refers to the \emph{abstract} syntax?}%
 \begin{tabular}{|l|l|}\hline
 \multicolumn{2}{|c|}{\textbf{Top-level declarations in libraries}}\\\hline
 \textbf{Top-level declaration} & \textbf{Examples} \\\hline
@@ -8594,7 +8581,6 @@ interpretation repair3 : Repair to MyRepair = %cons
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
 \label{dist-het-onto}
-\CLnote[type=q-aut]{In the TKE paper we made the name of the propositional logic ontology syntax explicit.  The propositional logic listing now leaves us with a problem: neither is propositional logic specified as DOL-conformant, nor is Hets' CASL-like syntax, nor is anything of this intended to ever be normative. TM: hence either leave it out, or make propositional logic normative. What about the examples in OWL+CL develop during the Ontology Summit Hackathon?}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
@@ -9169,8 +9155,8 @@ The OWL Time ontology\footnote{\url{http://www.w3.org/TR/2006/WD-owl-time-200609
 A separate first-order axiomatization of OWL Time exists
 [\cite{OWLTime},\cite{OWLSTime}].  DOL would instead provide the mechanism of modeling
 OWL Time as one coherent heterogeneous ontology, using OWL and, \eg,
-Common Logic.\CLnote{This is also a use case for multiple namespaces:
-  OWL supports namespaces, CL doesn't.}  For the temporal description
+Common Logic.\footnote{This is also a use case for multiple namespaces:
+  OWL supports namespaces, CL does not.}  For the temporal description
 logic $\mathcal{DLR_{US}}$ for knowledge bases and logic-based
 temporal conceptual data modeling [\cite{Artale02},\cite{Artale07a}];
 $\mathcal{DLR_{US}}$ combines the propositional temporal logic with
