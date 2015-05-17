@@ -1958,6 +1958,36 @@ More precisely, an OMS is flattenable if and only if it is either a basic OMS or
 \termdefinition{subOMS}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are subsets of those present in a given larger \termref{OMS}.}
 
 
+  \termdefinition{import}{reference to an \termref{OMS}  
+   behaving as if it were verbatimly included; 
+   also import of \termref{libraries}.}
+  \begin{note}
+Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration.
+  \end{note}
+  \begin{note}
+    The purpose of $O_2$ importing $O_1$ is to make non-logical symbols and sentences of $O_1$ available in $O_2$.
+  \end{note}
+  \begin{note}
+    Importing $O_1$ into $O_2$ turns $O_2$ into an extension of $O_1$.
+  \end{note}
+  \begin{note}
+    An owl:import in OWL is an import.
+  \end{note}
+  \begin{note}
+    The import of a whole library into another library is also called import.
+  \end{note}
+ 
+  \termdefinition{union}{aggregation of several \termref{OMS}
+    to a new \termref{OMS}, without any renaming.}
+ 
+  \termdefinition{renaming}{assignment of new names
+   to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
+\begin{note}
+A renaming results in an \termref{OMS mapping} between the
+original and the renamed OMS.
+\end{note}
+
+  \termdefinition{reduction}{restriction of an \termref{OMS} to a smaller \termref{signature}.}
 
 \termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in a given smaller \termref{OMS}.}
 
@@ -2089,6 +2119,24 @@ best possible (in the sense of a maximum set of logical consequences)
     See \cite{circ1}, \cite{circ2}.
   \end{note}
 
+  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.}
+\begin{example}
+Consider an ontology involving a concept \texttt{Person},
+and another one involving \texttt{Human being}, and an \termref{alignment}
+that relates these to concepts. In the combination of the ontologies
+along the alignment, there is only one concept, representing both
+\texttt{Person} and \texttt{Human being}.
+\end{example}
+
+ 
+  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of an \termref{OMS network}.}
+ \begin{note}
+  Sharing is always relative to a given OMS network that
+  relates different OMS. That is, two given OMS symbols
+  can share with respect to one OMS network, and not share with respect to some
+  other OMS network.
+ \end{note}
+
 \sclause{Mappings Between OMS}
 
    \termdefinitionLight{\termref{OMS mapping}\synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}.}
@@ -2130,32 +2178,6 @@ specialization relation
 
   \termdefinition{module relation}{\termref{OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
 
-  \termdefinition{import}{\termref{OMS mapping} between two
-    \termref{OMS} such that one OMS behaves as if it were
-    included into the other; also import of \termref{libraries}.}
-  \begin{note}
-Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration.
-  \end{note}
-  \begin{note}
-    The purpose of $O_2$ importing $O_1$ is to make non-logical symbols and sentences of $O_1$ available in $O_2$.
-  \end{note}
-  \begin{note}
-    Importing $O_1$ into $O_2$ turns $O_2$ into an extension of $O_1$.
-  \end{note}
-  \begin{note}
-    An owl:import in OWL is an import.
-  \end{note}
-  \begin{note}
-    The import of a whole library into another library is also called import.
-  \end{note}
-  
-  \termdefinition{renaming}{assignment of new names
-   to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
-\begin{note}
-A renaming results in an \termref{OMS mapping} between the
-original and the renamed OMS.
-\end{note}
-  \termdefinition{reduction}{\termref{OMS mapping} reducing an \termref{OMS} to a smaller \termref{signature}.}
 
 \termdefinition{alignment}{an \termref{OMS mapping} expressing a collection of semantic
 relations between entities of the two OMS.}
@@ -2185,9 +2207,6 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
     For both matching and alignment, see \cite{DBLP:books/daglib/0032976,KhanKeet13}.
   \end{note}
 
-  \termdefinition{union}{aggregation of several \termref{OMS}
-    to a new \termref{OMS}, without any renaming.}
-\ednote{\red{why is this here?}}
  
 \termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology} graph with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked.
 \ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
@@ -2211,23 +2230,6 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
 
 
 
-  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.}
-\begin{example}
-Consider an ontology involving a concept \texttt{Person},
-and another one involving \texttt{Human being}, and an \termref{alignment}
-that relates these to concepts. In the combination of the ontologies
-along the alignment, there is only one concept, representing both
-\texttt{Person} and \texttt{Human being}.
-\end{example}
-
- 
-  \termdefinition{sharing}{property of \termref{OMS symbols} being mapped to the same symbol when computing a \termref{combination} of an \termref{OMS network}.}
- \begin{note}
-  Sharing is always relative to a given OMS network that
-  relates different OMS. That is, two given OMS symbols
-  can share with respect to one OMS network, and not share with respect to some
-  other OMS network.
- \end{note}
 
 \end{definitions}
 
