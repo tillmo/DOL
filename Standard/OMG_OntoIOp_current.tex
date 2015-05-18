@@ -3209,7 +3209,7 @@ bank). After three unsuccessful trials the card is kept.
 \end{figure}
 
 Figure~\ref{fig:interaction} shows a possible \emph{interaction}
-between an \uml{atm} and a \uml{bank} object, which consists out of
+between an \uml{atm} and a \uml{bank} object, which consists of
 four messages: the \uml{atm} requests the \uml{bank} to \uml{verify}
 if a card and PIN number combination is valid, in the first case the
 \uml{bank} requests to reenter the PIN, in the second case the
@@ -6906,7 +6906,7 @@ elided, and left for a later version of DOL.
 
 \appendix
 
-\chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL}\label{a:lola}
+\chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary that implements the DOL terminology}\label{a:lola}
 
 % a landscape figure which scales and rotates the file cat.eps or cat.pdf
 \begin{sidewaysfigure}
@@ -6923,19 +6923,20 @@ elided, and left for a later version of DOL.
 %\label{f:DOL-threelayers}
 %\end{figure}
 
-This annex specifies LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL, as well as serializations and translations, when they are entered into the \termref{registry} stipulated by chapter~\ref{c:conformance}.
-The normative subset of LoLa is given as an RDF Schema vocabulary (\nisref{W3C/TR REC-rdf-schema:2014}) having the namespace IRI \url{http://www.omg.org/spec/DOL/1.0/rdf\#}.\footnote{The full version of LoLa is currently maintained as an OWL ontology and, prospectively, as an OMS library implemented in DOL, at
-\url{https://ontohub.org/meta/lola/ontology}; a subset serialized in RDF will be available from the namespace IRI (temporarily from \url{http://purl.net/dol/1.0/rdf\#}). The preferred location for LoLa snapshots being part of this OMG standard is \url{http://www.omg.org/spec/DOL/LoLa/Current}.}.\ednote{Shouldn't we change the LoLa namespace IRI to \url{http://www.omg.org/spec/DOL/LoLa/Current}?}
+This annex specifies LoLa, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
+Applications of LoLa include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} stipulated by chapter~\ref{c:conformance}.
+LoLa is currently maintained as an OWL ontology and, prospectively, as an OMS library implemented in DOL, at \url{https://ontohub.org/meta/lola/ontology}.\footnote{The preferred location for LoLa snapshots being part of this OMG standard is \url{http://www.omg.org/spec/DOL/Current/lola}.}.
 For a full treatment of the background and design considerations of LoLa please see~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
 
-The tables in this annex list the classes and properties of LoLa.  All classes and properties are assumed to be in the LoLa namespace unless stated otherwise.
+The tables in this annex list the classes and object properties of LoLa and thus the essential parts of its implementation.  All classes and object properties are assumed to be in the LoLa namespace unless stated otherwise.
 
-\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following RDF triples (given in Turtle serialization~\cite{W3C:REC-turtle-20140225}):
+\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027}):
 
-\begin{lstlisting}[language=N3]
-_:class rdf:type        rdfs:Class ;
-        rdfs:subClassOf _:superclass ;
-        rdfs:comment    "documentation" .
+\begin{lstlisting}[language=owl2Manchester]
+Class: ...
+  SubClassOf: ...
+  Annotations:
+    skos:definition "..."
 \end{lstlisting}
 
 \newcommand*{\ClassDocumentation}[1]{\textit{#1}}
@@ -6966,13 +6967,15 @@ pos=h,
   SimpleTheoroidalMapping & \ClassDocumentation{a default mapping} & Mapping \LL
 }
 
-\tref{tab:logic-vocab-prop} lists the properties of the RDF vocabulary for describing OMS languages.  Each row of the table translates into the following RDF triples (given in Turtle serialization):
+\tref{tab:logic-vocab-prop} lists the object properties of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax):
 
-\begin{lstlisting}[language=N3]
-_:property rdf:type     rdf:Property ;
-           rdfs:domain  _:domain ;
-           rdfs:range   _:range ;
-           rdfs:comment "documentation" .
+\begin{lstlisting}[language=owl2Manchester]
+ObjectProperty: ...
+  Domain: ...
+  Range: ...
+  SubPropertyOf: ...
+  Annotations:
+    skos:definition "..."
 \end{lstlisting}
 
 %\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''. TM: has been defined in section 4}
@@ -9428,7 +9431,7 @@ to the term \termref{structured OMS} in this \IS}
 
 \sclause{OMS}
 
-\toleft\includegraphics[scale=0.4]{mof/dia/dia2.png}
+\includegraphics[scale=0.4]{mof/dia/dia2.png}
 
 \sclause{OMS Definitions}
 
@@ -9442,7 +9445,7 @@ to the term \termref{structured OMS} in this \IS}
 
 \sclause{Queries}
 
-\includegraphics[scale=0.6]{mof/dia/dia6.png}
+\includegraphics[scale=0.5]{mof/dia/dia6.png}
 
 \sclause{IRIs and Prefixes}
 
