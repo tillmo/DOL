@@ -5257,6 +5257,15 @@ returning the selected weakly amalgamable cocone for the network and
 a function $\oplus$ taking as argument a family of models compatible with a network
 and returning its selected amalgamation.
 
+We also want to be able to talk about the symbols of a signature in a formal way.
+For this reason, we assume that the category of signatures of an institution is 
+an inclusive category with symbols, as defined below:
+\begin{definition}
+An \emph{inclusive category with symbols} is an inclusive category
+$\C$ equipped with a faithful functor $|\_|:\C\to\Set$\footnote{That is,
+$(\C,|\_|)$ is a concrete category.} that preserves
+inclusions.
+\end{definition}
 
 \sclause{Semantics of DOL Language Constructs}\label{c:direct-sematics}
 
@@ -6079,15 +6088,15 @@ defined – in detail:
 
 \begin{algorithmic}
   \REQUIRE $O_s, O_t$ are OMS
-  \REQUIRE $M\subseteq\Sigma(O_s)\times\Sigma(O_t)$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
-  \FORALL{$e_s\in\Sigma(O_s)$ not covered by $M$}
+  \REQUIRE $M\subseteq |\Sig(O_s)|\times|\Sig(O_t)|$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
+  \FORALL{$e_s\in|\Sigma(O_s)|$ not covered by $M$}
     \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
-    \STATE $N_t\leftarrow\{\operatorname{localname}(e)|e\in\Sigma(O_t)\}$
+    \STATE $N_t\leftarrow\{\operatorname{localname}(e)|e\in|\Sigma(O_t)|\}$
     \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
       \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
     \ENDIF
   \ENDFOR
-  \ENSURE $M$ completely covers $\Sigma(O_s)$
+  \ENSURE $M$ completely covers $|\Sigma(O_s)|$
 \end{algorithmic}
 \ednote{We need institutions with a symbol functor, otherwise signatures
 do not have symbols. The ``unique target'' method does not cover cases
@@ -6240,7 +6249,7 @@ $$sem(\Gamma, \syntax{OMSRef})= \Gamma(\syntax{OMSRef})$$
 \semdom{sem(\Gamma, \Sigma,\syntax{Symbol}) = s}
 
 $$sem(\Gamma,\Sigma, \syntax{Symbol}) = s$$
-where $s$ is a logic-specific symbol with the name $\syntax{Symbol}$ from $\Sigma$.\ednote{Again, we seem to need a symbol functor.}\ednote{Is there some conversion going on here? Then this should be added to the heterogenous logical env.} If such symbol does not exist, 
+where $s$ is a logic-specific symbol with the name $\syntax{Symbol}$ from $|\Sigma|$.\ednote{Is there some conversion going on here? Then this should be added to the heterogenous logical env.} If such symbol does not exist, 
 the semantics is undefined.
 
 \semdom{sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMap})}
