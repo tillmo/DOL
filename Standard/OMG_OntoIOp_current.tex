@@ -88,6 +88,7 @@ draft%
 \usepackage{standalone}
 \usepackage[final]{graphicx}
 \usepackage{tikz}
+\usepackage{rotating}
 \usetikzlibrary{matrix,shapes,arrows,calc}
 \usepackage{tikz-uml}
 \input{illustrations/DOL-tikz-preamble}
@@ -5509,7 +5510,7 @@ the extension of the library, $sem(\syntax{NativeOMS})$ will be undefined.
 
 \semdom{sem(\Gamma, \syntax{LibraryDefn})= \Gamma'}
 
-$sem(\Gamma, \syntax{library LibraryName Qualification LibraryItem}_1,\ldots \syntax{LibraryItem}_n)= \Gamma'$\\
+$sem(\Gamma, \syntax{library LibraryName Qualification LibraryItem}_1 \ldots \syntax{LibraryItem}_n)= \Gamma'$\\
 \noindent where  $sem(\Gamma, \syntax{Qualification}) = \Gamma'$, $sem(\Gamma', \syntax{LibraryItem}_1) = \Gamma_1$,\\
   $sem(\Gamma_1,  \syntax{LibraryItem}_2) = \Gamma_2$, $\ldots$,  $sem(\Gamma_{n-1}, \syntax{LibraryItem}_n) = \Gamma'$.
 \footnote{Note that \syntax{LibraryName} is just discarded here.
@@ -5661,7 +5662,7 @@ $$sem(\Gamma, \syntax{network NetworkElements  ExcludeExtensions})= G'$$
 
 \semdom{sem(\Gamma, \syntax{NetworkElements}) = G'}
 
-$$sem(\Gamma, \syntax{network-elements}\ \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
+$$sem(\Gamma, \syntax{network-elements}\ \syntax{NetworkElement}_1 \ldots \syntax{NetworkElement}_n) = G'$$
 
 \noindent where \\
  $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
@@ -5710,13 +5711,13 @@ $sem(\Gamma, \syntax{OMS}) = \Gamma'$.
 
 The semantics of a \syntax{BasicOMS} $O$ has been defined above.
 
-The semantics of $O = \syntax{oms-ref O', ImportName}$
+The semantics of $O = \syntax{oms-ref O' ImportName}$
 is given by
  \begin{itemize}
-   \item $\Inst(\syntax{oms-ref O', ImportName}) = \Inst(\Gamma(O'))$
-   \item $\Sig(\syntax{oms-ref O', ImportName}) = \Sig(\Gamma(O'))$
-   \item $\Mod(\syntax{oms-ref O', ImportName}) = \Mod(\Gamma(O'))$
-   \item $\Th(\syntax{oms-ref O', ImportName}) = \Th(\Gamma(O'))$
+   \item $\Inst(\syntax{oms-ref O' ImportName}) = \Inst(\Gamma(O'))$
+   \item $\Sig(\syntax{oms-ref O' ImportName}) = \Sig(\Gamma(O'))$
+   \item $\Mod(\syntax{oms-ref O' ImportName}) = \Mod(\Gamma(O'))$
+   \item $\Th(\syntax{oms-ref O' ImportName}) = \Th(\Gamma(O'))$
    \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
          with a new node for $O$ labeled as defined in the items above
          and with a new edge from $O'$ to $O$ named \syntax{ImportName} 
@@ -6072,7 +6073,7 @@ is
 
 \semdom{sem(\Gamma, L, \syntax{LogicReduction}) = (\Phi, \alpha,\beta)}
 
-$sem(\Gamma, \syntax{logic-reduction IRI}=(\Phi,\alpha,\beta)$,
+$sem(\Gamma, \syntax{logic-reduction IRI})=(\Phi,\alpha,\beta)$,
 where $(\Phi,\alpha,\beta)$ is the institution morphism
 named by \syntax{IRI} in the heterogeneous logical environment.
 
@@ -6092,7 +6093,7 @@ sem(\Gamma,\Sigma,\syntax{Symbol}_n)$, if such a sub-signature exists and is oth
 
 \semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMapItems})= \sigma:\Sigma\to\Sigma'}
 
- $$sem(\Gamma,\Sigma,\Sigma',\syntax{symbol-map-items SymbolOrMap}_1, \ldots, \syntax{SymbolOrMap}_n) = \sigma$$
+ $$sem(\Gamma,\Sigma,\Sigma',\syntax{symbol-map-items SymbolOrMap}_1 \ldots \syntax{SymbolOrMap}_n) = \sigma$$
 
 where 
 $\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n)))$\\
@@ -6582,7 +6583,7 @@ $logic'$ .
 
 \semdom{sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G_2}
 
-$$sem(\Gamma, G_1, G_2, \syntax{refmap-network}, \syntax{NodeMap}_1,\ldots, \syntax{NodeMap}_n)
+$$sem(\Gamma, G_1, G_2, \syntax{refmap-network} \syntax{NodeMap}_1 \ldots \syntax{NodeMap}_n)
 = \sigma$$
 where \\
 $sem(\Gamma, G_1, G_2,\syntax{NodeMap}_1)= (\syntax{OMSName}^1_1, \syntax{OMSName}^1_2,\rho_1,\sigma_1)$, $\ldots$\\
@@ -6646,7 +6647,7 @@ components given by $sem(\Gamma,\syntax{OMS})$ and with
 a new theorem link from this new node to the node $\Name(\syntax{OMSName})$, labeled with
 the identity morphism on $\Sigma$.
 
-$$sem(\Gamma,\syntax{network-network-entailment Network$_1$ ,Network$_2$}) = G$$
+$$sem(\Gamma,\syntax{network-network-entailment Network$_1$ Network$_2$}) = G$$
 
 \noindent where $sem(\Gamma, \syntax{Network}_1) = G_1$,
 $sem(\Gamma, \syntax{Network}_2) = G_2$, 
@@ -6767,7 +6768,7 @@ $$sem(\Gamma, L_1,\syntax{AlignSem})=\begin{cases}
                                                                                                                    logic-specific.                                                                                                
                                                                                                                   
 
-\semdom{sem(\Gamma, L_1, L_2, \syntax{AlignCard AlignSem},C_1,\ldots,C_n)=G}
+\semdom{sem(\Gamma, L_1, L_2, \syntax{AlignCard AlignSem}\ C_1 \ldots C_n)=G}
 
 $sem(\Gamma, L_1, L_2, \syntax{AlignCard AlignSem},C_1,\ldots,C_n)=G$
 
@@ -6907,12 +6908,20 @@ elided, and left for a later version of DOL.
 
 \chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL}\label{a:lola}
 
-\begin{figure}
-  \centering
+% a landscape figure which scales and rotates the file cat.eps or cat.pdf
+\begin{sidewaysfigure}
+\centering
    \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG} 
   \caption{Subset of the OntoIOp registry, shown as an RDF graph}
 \label{f:DOL-threelayers}
-\end{figure}
+\end{sidewaysfigure}
+
+%\begin{figure}
+%  \centering
+%   \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG} 
+%  \caption{Subset of the OntoIOp registry, shown as an RDF graph}
+%\label{f:DOL-threelayers}
+%\end{figure}
 
 This annex specifies LoLa, an RDF vocabulary for describing Logics and OMS Languages conforming with DOL, as well as serializations and translations, when they are entered into the \termref{registry} stipulated by chapter~\ref{c:conformance}.
 The normative subset of LoLa is given as an RDF Schema vocabulary (\nisref{W3C/TR REC-rdf-schema:2014}) having the namespace IRI \url{http://www.omg.org/spec/DOL/1.0/rdf\#}.\footnote{The full version of LoLa is currently maintained as an OWL ontology and, prospectively, as an OMS library implemented in DOL, at
