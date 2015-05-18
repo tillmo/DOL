@@ -3256,8 +3256,19 @@ models, which naturally form a network. Coherence of this network
 is expressed as its consistency.
 We assume that XMI representations of the
 relevant UML models have been stored at
-\url{http://www.example.org/uml/},
-e.g.\ \url{http://www.example.org/uml/cd.xmi}:
+\url{http://www.example.org/uml/}, that is under URL
+\url{http://www.example.org/uml/xxx.xmi}, where \url{xxx} is
+determined as follows:\medskip
+
+\begin{tabular}{|l|l|l|}\hline
+\textbf{Figure} & \textbf{\texttt{xxx}} & \textbf{diagram type}\\\hline
+Fig.~\ref{fig:interaction} & sd & sequence diagram\\\hline
+Fig.~\ref{fig:system} & cmp & composite structure diagram\\\hline
+Fig.~\ref{fig:psm} & psm & protocol state machine\\\hline
+Fig.~\ref{fig:class} & cd & class diagram\\\hline
+Fig.~\ref{fig:state-machine} & stm & state machine\\\hline
+\end{tabular}
+
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via,network,entailment,entails,refined,consistent},escapechar=@,mathescape]
 %prefix( :     <http://www.example.org/uml/>
          uml:   <http://www.uml.org/spec/UML/>
@@ -3265,17 +3276,20 @@ e.g.\ \url{http://www.example.org/uml/cd.xmi}:
          log:   <http://www.omg.org/spec/DOL/logics/>
 library ATM
 
-view cd2atm = cd to { atm hide along atm2cd} end
+view cd2stm = cd to { atm hide along stm2cd} end
 view cd2psm = cd to { psm hide along psm2cd} end
-view cd2int = cd to { interaction hide along sqd2cd} end
 network ATM_network = %consistent
-                      cd, atm, psm, csd,
-                      cd2atm, cd2psm, abstract_to_concrete_atm
-entailment atm in ATM_network entails interaction
+                      cd, stm, psm, cmp,
+                      cd2stm, cd2psm, abstract_to_concrete_atm
+entailment atm in ATM_network entails sd
 network Some_refined_ATM_network = ...
 refinement r = ATM_network refined to Some_refined_ATM_network
 entailment e = Some_refined_ATM_network entails ATM_network
 \end{lstlisting}
+Here, \texttt{abstract\_to\_concrete\_atm} is defined in the next
+section, and \texttt{stm2cd} and \texttt{psm2cd} are suitable logic
+projections extracting the classes, attributes and operations from a
+(protocol) state machine, delivering a class diagram.
 
 \section{Use Case Model-2: Refinements Between UML Diagrams of Different Types, and Their Reuse}
 \label{model-2}
