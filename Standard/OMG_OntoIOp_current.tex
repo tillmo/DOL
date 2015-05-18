@@ -37,7 +37,7 @@ draft%
 \usepackage{pdflscape}
 
 %\usepackage[show]{ed}
-\usepackage[show]{ed}
+\usepackage[hide]{ed}
 
 %color highlight, for editing
 \usepackage{color}
@@ -1634,7 +1634,7 @@ For the purposes of this document, the following terms and definitions apply.
 \end{definitions}
 
 
-\sclause{Native OMS, OMS, and OMS Languages}
+\sclause{Native OMS, OMS, and OMS Languages}\label{c:native-oms}
 
 \begin{definitions}
 
@@ -2146,7 +2146,7 @@ along the alignment, there is only one concept, representing both
   other OMS network.
  \end{note}
 
-\sclause{Mappings Between OMS}
+\sclause{Mappings Between OMS}\label{c:mappings}
 
    \termdefinitionLight{\termref{OMS mapping}\synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}.}
   
@@ -2243,7 +2243,7 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
 
 \end{definitions}
 
-\sclause{Features of OMS Languages}
+\sclause{Features of OMS Languages}\label{c:terms-features}
  
 \begin{definitions}
   \termdefinition{OMS language translation}{mapping from constructs in the source \termref{OMS language} to their equivalents in the target \termref{OMS language}.}
@@ -2314,7 +2314,7 @@ that targets specific applications or reasoning methods.}
   
 \end{definitions}
 
-\sclause{OMS Language Serializations}
+\sclause{OMS Language Serializations}\label{c:term-serializations}
 
 \begin{definitions}
   \termdefinition{serialization}{specific syntactic encoding of a given \termref{OMS language}.}
@@ -2335,7 +2335,7 @@ Common Logic uses the term ``dialect''; the following are standard Common Logic 
   \termdefinition{standoff markup}{way of providing {annotations}\index{annotation} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS}).}
 \end{definitions}
 
-\sclause{Logic}
+\sclause{Logic}\label{c:term-logic}
 
 \begin{definitions}
   \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}, sentences\index{sentence},
@@ -3959,7 +3959,8 @@ Approximation        = 'approx' , [ QualInterfaceSignature ] , [ LogicRef ] ;
 Filtering            = 'select' , BasicOMS 
                      | 'reject' , BasicOMS ;
 
-ExtensionOMS         = extension-oms , [ ExtConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
+ExtensionOMS         = extension-oms , [ ExtConsStrength ] , [ ExtensionName ] , 
+                                       ExtendingOMS ;
 
 ConsStrength         = Conservative 
 		     | 'monomorphic'  
@@ -4100,7 +4101,8 @@ Refinement           = 'ref-oms' , OMS
                      | 'simple-network-ref' , Network , RefMap , Refinement ;
 RefMap               = 'refmap-oms' , [ LogicTranslation ] , [ SymbolMapItems ] 
                      | 'refmap-network' , { NodeMap } ;
-NodeMap              = 'node-map', OMSName , OMSName , { LogicTranslation } , [ SymbolMapItems ] ;
+NodeMap              = 'node-map', OMSName , OMSName , 
+                                   { LogicTranslation } , [ SymbolMapItems ] ;
 
 
 Entailment           = 'entailment' , EntailmentName , EntailmentType ;
@@ -4533,7 +4535,8 @@ ExtensionName        = '%(' , IRI , ')%' ;
 
 OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model' | 'oms' ;
 
-OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , 'end'  ; 
+OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , 
+                                   OMS , 'end'  ; 
 
 Symbol               = IRI ;
 SymbolMap            = Symbol , '|->' , Symbol ;
@@ -6932,13 +6935,11 @@ For a full treatment of the background and design considerations of LoLa please 
 
 The tables in this annex list the classes and object properties of LoLa and thus the essential parts of its implementation.  All classes and object properties are assumed to be in the LoLa namespace unless stated otherwise.
 
-\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027}):
+\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027}).  The definitions of the classes can be found in \cref{terms-and-defs}, sometimes under different names if stated so in the table.  Classes rendered in italics are abstract superclasses that have no direct correspondence in the terminology.
 
 \begin{lstlisting}[language=owl2Manchester]
 Class: ...
   SubClassOf: ...
-  Annotations:
-    skos:definition "..."
 \end{lstlisting}
 
 \newcommand*{\ClassDocumentation}[1]{\textit{#1}}
@@ -6947,61 +6948,59 @@ caption={LoLa Classes},
 mincapwidth=\textwidth,
 label={tab:logic-vocab-classes},
 pos=h,
-]{p{.25\textwidth}p{.45\textwidth}p{.25\textwidth}}{% table footnotes
+]{p{.27\textwidth}p{.45\textwidth}p{.22\textwidth}}{% table footnotes
 }{\FL
-  Class & \ClassDocumentation{documentation} & Superclass \ML
-  Language & \ClassDocumentation{an OMS language} & \NN
-  Logic & \ClassDocumentation{a logic that defines the semantics of an OMS language} & \NN
-  Serialization & \ClassDocumentation{a serialization of an OMS language} & \NN
-  Mapping & \ClassDocumentation{a generic mapping between logics or languages} & \NN
-  LanguageMapping & \ClassDocumentation{a mapping between two languages} & Mapping \NN
-  LogicMapping & \ClassDocumentation{a mapping between two logics} & Mapping \NN
-  Translation & \ClassDocumentation{a translation between logics or, induced, between languages} & Mapping \NN
-  Reduction & \ClassDocumentation{a reduction between logics or, induced, between languages} & Mapping \NN
-  DefaultMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  WeaklyExactMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  ExactMapping & \ClassDocumentation{a default mapping} & WeaklyExactMapping \NN
-  FaithfulMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  ModelExpansiveMapping & \ClassDocumentation{a default mapping} & FaithfulMapping \NN
-  ModelBijectiveMapping & \ClassDocumentation{a default mapping} & ModelExpansiveMapping \NN
-  Embedding & \ClassDocumentation{a default mapping} & ModelBijectiveMapping, LogicMapping, Translation \NN
-  PlainMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  SimpleTheoroidalMapping & \ClassDocumentation{a default mapping} & Mapping \LL
+  Class & Superclass & Section \ML
+  \textit{Language} & & \NN
+  OMSLanguage & \textit{Language} & \ref{c:native-oms} \NN
+  Logic & & \ref{c:term-logic} \NN
+  Serialization & & \ref{c:term-serializations} \NN
+  Mapping & & \ref{c:mappings} (OMS mapping) \NN
+  LanguageMapping & Mapping & \NN
+  LogicMapping & Mapping & \NN
+  Translation & Mapping & \NN
+  Reduction & Mapping & \NN
+  DefaultMapping & Mapping & \ref{c:terms-features} \NN
+  WeaklyExactMapping & Mapping & \ref{s:foundations} \NN
+  ExactMapping & WeaklyExactMapping & \ref{s:foundations} \NN
+  FaithfulMapping & Mapping & \ref{c:terms-features} \NN
+  ModelExpansiveMapping & FaithfulMapping & \ref{c:terms-features} \NN
+  ModelBijectiveMapping & ModelExpansiveMapping & \NN
+  Embedding & ModelBijectiveMapping, LogicMapping, Translation & \ref{s:foundations} \NN
+  PlainMapping & Mapping & \NN
+  SimpleTheoroidalMapping & Mapping & \ref{c:term-logic} \LL
 }
 
-\tref{tab:logic-vocab-prop} lists the object properties of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax):
+\tref{tab:logic-vocab-prop} lists the object properties of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax).  The definitions of the properties can be found in \cref{terms-and-defs}, sometimes under different names if stated so in the table.
 
 \begin{lstlisting}[language=owl2Manchester]
 ObjectProperty: ...
   Domain: ...
   Range: ...
   SubPropertyOf: ...
-  Annotations:
-    skos:definition "..."
 \end{lstlisting}
 
 %\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''. TM: has been defined in section 4}
-\newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
+% \newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
 \ctable[
 caption={LoLa Properties},
 width=\linewidth,
 mincapwidth=\textwidth,
 label={tab:logic-vocab-prop},
 pos=h,
-]{lll}{% table footnotes
+]{lllX}{% table footnotes
 }{\FL
-  Property & domain & range
-  \PropertyDocumentation{documentation}\ML
-  subLogicOf & Logic & Logic
-  \PropertyDocumentation{The subject is a sublogic of the object}\ML
-  supportsLogic & Language & Logic
-  \PropertyDocumentation{The subject OMS language has a semantics specified in terms of the object logic.}\ML
-  specifiesSemanticsOf & Logic & Language
-  \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsLogic.}\ML
-  supportsSerialization & Language & Serialization
-  \PropertyDocumentation{OMS in the subject OMS language can be serialized in the object serialization.  Note that the serialization should be as specific as possible, \ie one should not say that ``OWL can be serialized in XML'' and ``Common Logic can be serialized in XML'', but instead ``OWL can be serialized in OWL/XML'' and ``Common Logic can be serialized in XCL'', taking into account that OWL/XML and XCL are two different XML languages.}\ML
-  serializes & Serialization & Language
-  \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsSerialization.}\LL
+  Property & Domain & Range & Section \ML
+  isSubLogicOf & Logic & Logic & \ref{c:term-logic} \NN
+  % \PropertyDocumentation{The subject is a sublogic of the object}\ML
+  supportsLogic & Language & Logic & \ref{c:term-logic} \NN
+  % \PropertyDocumentation{The subject OMS language has a semantics specified in terms of the object logic.}\ML
+  specifiesSemanticsOf & Logic & Language & inverse of supportsLogic \NN
+  % \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsLogic.}\ML
+  supportsSerialization & Language & Serialization & \ref{c:term-serializations} \NN
+  % \PropertyDocumentation{OMS in the subject OMS language can be serialized in the object serialization.  Note that the serialization should be as specific as possible, \ie one should not say that ``OWL can be serialized in XML'' and ``Common Logic can be serialized in XML'', but instead ``OWL can be serialized in OWL/XML'' and ``Common Logic can be serialized in XCL'', taking into account that OWL/XML and XCL are two different XML languages.}\ML
+  serializes & Serialization & Language & \ref{c:term-serializations} \NN
+  % \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsSerialization.}\LL
 }
 
 \infannex{Conformance of OWL 2 DL With DOL}\label{a:owl}
@@ -7922,7 +7921,9 @@ When one or more ends of the Association are ordered, links carry ordering infor
 \texttt{(forall (t) (if (form:sequence-member t a)\\
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
 \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
-\ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert $x_r$ form:empty-sequence)))))))))}
+\ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert\\
+\qqquad\qqquad\qqquad\ \  $x_r$ form:empty-sequence)))))))))}
+
 In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
 $\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:\\
 \texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}
@@ -8100,9 +8101,18 @@ $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}
 \qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
 \qqquad\qqquad\qqquad\qqquad\qquad(m x $y_{\sem{\ell}}$) ))))}
 \item
-$\CL(\ell \leq \mathsf{\#}c.q(f_1 : \tau_1[c_1], \ldots, f_k : \tau_k[c_k]) : \tau[c'].f_i)=$\\
+$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c'])=$\\
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-\qqquad  (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (form:$\tau$-size $x_i$ n)) \\
+\qqquad  (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) \\
+\qqquad\qqquad\qquad (form:$\tau$-size $x_1$ $n_1$) \\
+\qqquad\qqquad\qquad\ldots\\
+\qqquad\qqquad\qquad (form:$\tau$-size $x_k$ $n_k$) \\
+\qqquad\qqquad\qquad (form:$\tau$-size $y$ $n$) \\
+\qqquad\qqquad\qquad (buml:leq $\sem{\ell_1}$ $n_1$)\\
+\qqquad\qqquad\qquad (buml:leq $n_1$ $\sem{\ell'_1}$)\\
+\qqquad\qqquad\qquad\ldots\\
+\qqquad\qqquad\qquad (buml:leq $\sem{\ell_k}$ $n_k$)\\
+\qqquad\qqquad\qquad (buml:leq $n_k$ $\sem{\ell'_k}$) )\\
 \qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
 %\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
 %\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
@@ -8204,7 +8214,7 @@ semantics of DOL as defined in Sec.~\ref{c:semantics}.
  
  The OMS languages that we selected
 are those whose conformance with DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, RDFS in \aref{a:rdfs},
-\CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The graph is shown in \fref{fig:ontograph-standards}.  Its nodes refer to the following OMS languages and profiles:
+\CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The logic graph is shown in \fref{fig:ontograph-standards}; the language graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes refer to the following OMS languages and profiles:
 \begin{itemize}
 \item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
 \item RDF Schema \nisref{W3C/TR REC-rdf11-schema:2014}
@@ -9818,7 +9828,7 @@ be ambiguous in a normal request.
 \bibliographystyle{plain} 
 \renewcommand{\bibname}{References}
 \label{a:bibliography}
-\bibliography{dol,rfc,tptp}
+\bibliography{dol,rfc,tptp,dol-papers}
 \addcontentsline{toc}{chapter}{References}
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
