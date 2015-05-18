@@ -6451,7 +6451,7 @@ we store the mapping along which the refinement is done.
 Given two networks $G_1$ and $G_2$, a \emph{network morphism} 
 $\sigma : G_1\to G_2$ is a 
 functor $\sigma^G: Shape(G_1)\to Shape(G_2)$ 
-together with a natural transformation $\sigma^M : G_1 \to sigma^G;G_2$
+together with a natural transformation $\sigma^M : G_1 \to \sigma^G;G_2$
  such that
 for each node $N_1$ in $G_1$ labeled with $(\cI_1, \Sigma_1, \cM_1)$
 such that $\sigma^G(N_1)$ is a node $N_2$ labeled with $(\cI_2,\Sigma_2,\cM_2)$ in $G_2$,
@@ -6600,39 +6600,41 @@ $\Name(L_2) = \Name(\syntax{OMS}_2)$,\\
 $(\Inst(L_i),\Sig(L_i),\Mod(L_i),\Th(L_i)) = 
 sem(\Gamma, \syntax{OMS}_i)$ for $i=1, 2$ 
 such that $\Sig(L_1) = \Sig(L_2)$
-and $\Mod(O_1)\subseteq \Mod(O_2)$\ednote{have generalized it}
-and $id$ is the identity morphism on $\Sig(L_1)$.\ednote{probably
-$O_i$ is the same as $L_i$?}
+and $\Mod(L_1)\subseteq \Mod(L_2)$
+and $id$ is the identity morphism on $\Sig(L_1)$.
 
 \medskip
 $sem(\Gamma,\syntax{network-oms-entailment, Network , OMSName, OMS}) = G$
 
-\noindent where $sem(\Gamma, \syntax{Network}) = G'$ such that $G'$ contains a node labeled with 
-$(\Name(\syntax{OMSName}), \cI, \Sigma,\cM_1,\Delta_1)$,
-$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and $\cM_1 \subseteq \cM_2$.\ednote{have reversed the inclusion, please double-check.}\ednote{this is not correct, we need to consider all models of the network, which are compatible families, and then pick the model labeled with \syntax{OMSName} and check
-whether it is in $\cM_2$} Then 
+\noindent where $sem(\Gamma, \syntax{Network}) = G'$ such that $G'$ contains a node $n$ labeled with 
+$(\Name(\syntax{OMSName})$,
+$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and 
+$\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. Then 
 $G$ extends G' with a new node whose label has 
 the name $\Name(\syntax{OMS})$ and the other 
 components given by $sem(\Gamma,\syntax{OMS})$ and with
 a new theorem link from this new node to the node $\Name(\syntax{OMSName})$, labeled with
 the identity morphism on $\Sigma$.
 
-$$sem(\Gamma,\syntax{network-network-entailment, Network$_1$ ,Network$_2$, NodeMap}) = G$$
-\ednote{remove \syntax{NodeMap}}
+$$sem(\Gamma,\syntax{network-network-entailment, Network$_1$ ,Network$_2$}) = G$$
 
 \noindent where $sem(\Gamma, \syntax{Network}_1) = G_1$,
 $sem(\Gamma, \syntax{Network}_2) = G_2$, 
-$sem(\Gamma, \syntax{NodeMap}) = \sigma$ 
-such that $\sigma$ is a bijective map
-between the nodes
-of $G_1$ and $G_2$ and moreover the nodes related by 
-$\sigma$ have the same signatures and
-for each such pair of nodes $(N_1, N_2 = \sigma(N_1))$
- we have that $\Mod(N_1)\subseteq \Mod(N_2)$\ednote{have generalized it}.
+such that $Shape(G_1) = Shape(G_2)$ and for each node $i\in |Shape(G_1)|$
+we have that its names in the networks $G_1$ and $G_2$ are the same,
+its signatures are the same
+and the class of models obtained by projecting each family of models
+compatible with $G_1$ to the component $i$
+is included in the
+class of models obtained by projecting each family of models
+compatible with $G_2$ to the component $i$.
 Then $G$ extends the union of $G_1$ and $G_2$ for each 
-pair $(N_1, \sigma(N_1))$ with a theorem link 
-from $\sigma(N_1)$ to $N_1$ labelled with the identity
-on $\Sig(N_1)$. 
+pair of nodes $(i_1, i_2)$,
+where $i_1$ and $i_2$ identify the occurences of the same node $i$
+in $G_1$ and $G_2$ respectively,
+with a theorem link 
+from $i_1$ to $i_2$ labeled with the identity
+on $\Sig(i_1)$. 
 
 
 %%%%%%%%%%%%%%%%%%%%
