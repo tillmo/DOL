@@ -5289,10 +5289,13 @@ following:
   \item a function that turns a symbol map into a signature morphism,
   \item a function giving semantics of sentences
   \item a relativization procedure taking as argument a theory and giving as 
-  result a theory
-  \item
- 
+  result a theory, and three procedures for translating correspondences of alignments
+  into sentences in the logic, as needed in Section \ref{sec:oms-mappings}.
+  \item a default language and serialization.
 \end{itemize}
+
+For each language, we assume a default logic and serialization, and for 
+each serialization we assume a default logic and language.
 
 We assume that for each institution, there exist (possibly partial) union and difference operations on signatures.
 These concepts can be captured in a categorical setting using \emph{inclusion systems} \cite{DGS91}.
@@ -5377,7 +5380,7 @@ which has two kinds of edges:
   \item theorem links (written using double arrows, $S\Rightarrow T$)
 \end{itemize}
 both labeled with 
-heterogeneous signature morphisms between the signatures of the source and target nodes.\ednote{Below, also comorphisms come into play. MC: added the word heterogeneous, should be fine} 
+heterogeneous signature morphisms between the signatures of the source and target nodes.
 The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
 the class of models of that node is the class of models of $\Th(N)$. 
 For brevity, we may write the label of a node as a tuple. We make the simplifying 
@@ -5460,13 +5463,13 @@ $(lang, logic, ser)$.
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
 
-We assume a \emph{language-specific semantics} of basic 
-OMS, inherited from the OMS language. For a basic OMS $O$ in a
-language $L$ based on an institution $\I$ we denote 
-by $sem_L(O)$ the language-specific semantics of $O$.
+We assume a \emph{language-specific semantics} of native structured
+OMS, inherited from the OMS language. For a native structured OMS $O$ 
+in a language $L$, logic $L'$ and serialization $S$, we denote 
+by $sem_{(L,L',S)}(O)$ the language-specific semantics of $O$.
 We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
-the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.
-\ednote{ Logic, language and serialization should all be parameters of this basic OMS semantics. Finally, we also need a semantic for structured native OMS (new terminology).}
+the context of previous declarations, denoted 
+$sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.
 
 \ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
@@ -5487,8 +5490,7 @@ $$sem(\syntax{NativeOMS}) = \Gamma''$$
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library
 and 
-$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{\Gamma'}(\syntax{NativeOMS})]$
-\ednote{Should be structured syntax}.
+$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(\syntax{NativeOMS})]$.
 
 Note that if the OMS in the library does not conform with the logic determined by
 the extension of the library, $sem(\syntax{NativeOMS})$ will be undefined.
@@ -5524,19 +5526,22 @@ $$sem(\Gamma,\syntax{lang-select, LanguageRef})=\Gamma'$$
 
 \noindent where $\Gamma' = \Gamma.\{\current = (\syntax{LanguageRef},logic',ser')\}$ and \\
 $logic = logic(\Gamma.\current)$,\\
- $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\ednote{what is this default? should be added to the notion of heterogeneous logical env}\\
-$ser = ser(\Gamma.\current)$\ednote{this is not used}\\
- $ser'=\twocase{ser(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } ser}{\textrm{default serialization for }\syntax{LanguageRef}}$\ednote{what is this default? should be added to the notion of heterogeneous logical env}
+ $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\\
+ $ser'=\twocase{ser(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } ser(\Gamma.\current)}{\textrm{default serialization for }\syntax{LanguageRef}}$
 
  $$sem(\Gamma,\syntax{logic-select, LogicRef})=\Gamma'$$
 
  \noindent where 
- $\Gamma' = \Gamma.\{\current = (lang',\syntax{LogicRef},ser)\}$\\
+ $\Gamma' = \Gamma.\{\current = (lang',\syntax{LogicRef},ser')\}$\\
 $lang = lang(\Gamma.\current)$, $ser=ser(\Gamma.\current)$\\
 $lang'=\twocase{lang}{lang \textrm{ supports }
    \syntax{LogicRef}} {\textrm{the unique language supporting
    }\syntax{LogicRef}}
- $\ednote{if this unique language is used, also the serialization needs to be changed.}\\
+ $\\
+$ser' = \twocase{ser}{ser \textrm{ supports }
+   \syntax{LogicRef}} {\textrm{the default serialization of
+   }\syntax{LogicRef}}$ 
+ \\
  Note that ``the unique language supporting \syntax{LogicRef}'' may
  be undefined; in this case, the semantics of the whole
  \syntax{'logic-select', LogicRef}\ednote{Please do not use quotes and commas in the abstract syntax. See the EBNF'd version of this document at the github home page, or the CASL reference manual.} construct is undefined.
@@ -5619,7 +5624,8 @@ $$sem(\Gamma, \syntax{network-defn, NetworkName , ConsStrength , Network}) = \Ga
 If \syntax{ConsStrength} is \syntax{model-conservative}, the semantics is only
 defined if $sem(\Gamma,\syntax{Network})\not=\emptyset$.
 
-If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is not defined.\todonote{Is this the best way?}
+If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is 
+ defined only if all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
 
 If \syntax{ConsStrength} is \syntax{monomorphic}, the semantics is only
 defined if $sem(\Gamma,\syntax{Network})$ consist of exactly one isomorphism
@@ -5634,7 +5640,8 @@ defined if $sem(\Gamma,\syntax{Network})$ is a singleton.
 If \syntax{ConsStrength} is \syntax{not-model-conservative}, the semantics is only
 defined if $sem(\Gamma,\syntax{Network})=\emptyset$.
 
-If \syntax{ConsStrength} is \syntax{not-consequence-conservative}, the semantics is not defined.\todonote{Change!}
+If \syntax{ConsStrength} is \syntax{not-consequence-conservative}, the semantics is 
+ defined only if not all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
 
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 
@@ -5674,11 +5681,11 @@ $$sem(\Gamma, G, \syntax{exclude-imports, R$_1, \ldots,$ R$_n$}) = G'$$
 For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
 
 $$sem(\Gamma, \syntax{BasicOMS})= (\Gamma', 
-sem_{logic(\Gamma.\current)}(\syntax{BasicOMS}))$$
+sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\syntax{BasicOMS}))$$
 \noindent where 
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with the name of \syntax{BasicOMS} and the other components as
-given by $sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$.
+given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\syntax{BasicOMS})$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5693,7 +5700,7 @@ $sem(\Gamma, \syntax{OMS}) = \Gamma'$.
 
 The semantics of a \syntax{BasicOMS} $O$ has been defined above.
 
-The semantics of $O = \syntax{'oms-ref', O', ImportName}$ \ednote{ImportName?}
+The semantics of $O = \syntax{'oms-ref', O', ImportName}$
 is given by
  \begin{itemize}
    \item $\Inst(\syntax{'oms-ref', O', ImportName}) = \Inst(\Gamma(O'))$
@@ -5701,7 +5708,9 @@ is given by
    \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \Mod(\Gamma(O'))$
    \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Th(\Gamma(O'))$
    \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
-         with a new node for $O$ labeled as defined in the items above.
+         with a new node for $O$ labeled as defined in the items above
+         and with a new edge from $O'$ to $O$ named \syntax{ImportName} 
+         and labeled with the identity on $\Sig(\Gamma(O'))$.  
  \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5822,12 +5831,10 @@ $sem(\Gamma, (\Sig(\syntax{OMS}), \Th(\syntax{OMS})), \syntax{Extraction})) =
 %satisfying $\Th(O) \setminus \Delta'$.
 
 %Approximation
-The semantics of $O' = \syntax{'approximation', OMS, 
-(approx ('keep-signature', InterfaceSignature), LogicRef)}$ is
+The semantics of $O' = \syntax{'approximation', OMS, Approximation}$ is
 \begin{itemize}
-  \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \Inst(\syntax{LogicRef})$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
-  \item $\Sig(O) =
-   \Phi(\Sig(\syntax{InterfaceSignature}))$
+  \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \cI)$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
+  \item $\Sig(O) = \Phi(\Sigma)$
   \item $\Th(O) = \alpha^{-1}_{\Sig(\syntax{OMS})}(\Th(\syntax{OMS})^\bullet)\cap\Sen^I(\Sig(\syntax{OMS}))$
   \footnote{In practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(\syntax{OMS})$ that can be expressed in the smaller signature and logic 
   \item $\Mod(O)$ is the class of $\Th(O)$-models
@@ -5836,19 +5843,10 @@ The semantics of $O' = \syntax{'approximation', OMS,
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $\syntax{OMS}$ to the node of $O'$ 
-        labeled with $((\Phi,\alpha,\beta),\iota: \Phi(\Sig(\syntax{InterfaceSignature})) \to \Sig(\syntax{OMS}))$ 
-
+        labeled with $((\Phi,\alpha,\beta),\iota: \Phi(\Sigma) \to \Sig(\syntax{OMS}))$ 
 \end{itemize}
 
-%\smallskip
-%\noindent
-The semantics of 
-\syntax{'approximation', OMS, 
-(approx ('remove-signature', InterfaceSignature), LogicRef) }
-is the same as the semantics of
-\syntax{'approximation', OMS, 
-(approx ('keep-signature', $\Sig(OMS)\setminus \Sig(\syntax{InterfaceSignature})$) , LogicRef) }.
-
+\noindent where $(\cI,\Sigma) = sem(\Gamma, (\Inst(\syntax{OMS}, \Sig(\syntax{OMS})), \syntax{Approximation})$.
 
 %Filtering
 
@@ -5990,9 +5988,10 @@ $O=$ \syntax{renaming, LogicTranslation, SymbolMapItems}
 is given by
 \begin{itemize}
  \item $\Inst(O) = sem(\syntax{LogicTranslation}) : \Gamma.logic \to logic'$
- \item $\Mor(O) = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolMapItems})$
+ \item $\Mor(O) = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), \syntax{SymbolMapItems})$
 \end{itemize}
-\ednote{what is $lang$ and $ser$?}
+\noindent where
+$lang'$ and $ser'$ are the default language and serialization for logic $logic'$.
 If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6023,9 +6022,9 @@ is given by
  \item 
 $\Mor(O) = 
 \iota: \Sigma' \to \Phi(\Sigma)$, where 
-$\Sigma' = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sigma), \syntax{SymbolItems})$
+$\Sigma' = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), \syntax{SymbolItems})$,
+$lang'$ and $ser'$ are the default language and serialization for logic $logic'$
 and $\iota$ is the inclusion morphism.
-\ednote{what is $lang$ and $ser$?}
 \end{itemize}
 
 If \syntax{LogicReduction} is missing, 
@@ -6147,8 +6146,14 @@ $$\begin{array}{ll}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\syntax{Approximation})}
+\semdom{sem(\Gamma, (\cI, \Sigma), \syntax{Approximation}) = (\cI,\Sigma')}
 
+$sem(\Gamma,\Sigma, \syntax{approx, QualInterfaceSignature, LogicRef}) = 
+  (\cI,\Sigma')$
+  
+  \noindent
+  where $\Sigma' = sem(\Gamma, \Sigma, \syntax{QualInterfaceSignature})$
+  and $sem(\syntax{LogicRef}) = \cI$.
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (c,\cI,\Sigma', \Delta')}
@@ -6229,8 +6234,6 @@ defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
 
 $$sem(\Gamma, \syntax{OMSRef})= \Gamma(\syntax{OMSRef})$$
 
-\todonote{what about \syntax{ImportName}? TM: see \syntax{ExtensionName} above: ``If \syntax{ExtensionName} is present, the inclusion link is labeled with this name.''}
-
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, \Sigma,\syntax{Symbol}) = s}
@@ -6307,7 +6310,7 @@ semantics is undefined.
 
 
 
-\ssclause{Semantics of OMS Mappings}
+\ssclause{Semantics of OMS Mappings}\label{sec:oms-mappings}
 
 %\CLnote[type=todo]{specify semantics of module extraction}
 % YI 13.10.14
@@ -6543,8 +6546,11 @@ where\\
  $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
 such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
 and 
-$sem(\Gamma.\current=(lang, logic',ser), \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
-where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.\ednote{Generally, if $logic$ is changed, $ser$ and
+$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
+where $\Gamma.\current=(lang, logic,ser)$, $logic'$ is the target logic of $(\Phi,\alpha,\beta)$, and $lang'$ and 
+$ser'$ are the default language and serializations for 
+$logic'$ .
+\ednote{Generally, if $logic$ is changed, $ser$ and
 $lang$ need to be changed, too. Maybe we should always require a language
 translation, so that we can use its target? Plus the default serialization
 (the existence of which needs to be added to the definition of
@@ -6575,8 +6581,11 @@ where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
 $sem(\Gamma, \syntax{LogicTranslation*}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
-$sem(\Gamma.\current=(lang, logic',ser), \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
-where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.\ednote{same as in previous note}
+$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+where $\Gamma.\current=(lang, logic,ser)$,
+$logic'$ is the target logic of $(\Phi,\alpha,\beta)$
+and $lang'$ and $ser'$ are the default language and serialization for $logic'$.
+.\ednote{same as in previous note}
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -6634,7 +6643,7 @@ where $i_1$ and $i_2$ identify the occurences of the same node $i$
 in $G_1$ and $G_2$ respectively,
 with a theorem link 
 from $i_1$ to $i_2$ labeled with the identity
-on $\Sig(i_1)$. 
+on $\Sig(i_1)$. \ednote{check formulation}
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -6652,11 +6661,15 @@ N_3$ and
 $N_1$ is labelled with $(\Name(O_1), \Inst(O_1), \Sig(O_1),\Mod(O_1), \Th(O_1))$,\\
 $N_2$ with $(\Name(O_2), \Inst(O_2),\Sig(O_2), \Mod(O_2), \Th(O_2))$
 and \\
-$N_3$ with $(\Name(O_3), \Inst(O_3), \Sig_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3), \Mod_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3),\allowbreak  \Th_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3))$\ednote{TM: I do not understand the notation}\\
+$N_3$ with 
+$(\Name(O_3), \cI, \Sigma, \cM, \Delta)$
+where
+$sem^{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}_{\Gamma.lang,\Gamma.logic,\Gamma.ser}(O_3)
+= (\cI, \Sigma, \cM,\Delta)$\\
 such that
-$\iota_i$ are inclusions and we have that 
+$\iota_i : \Sig(O_i) \to \Sigma$ are signature inclusions and we have that 
 $\Inst(O_1) = \Inst(O_2) = \Inst(O_3)$ and 
-for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \Mod_{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}(O_3)$
+for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \cM$
 such that $M\forget{\Sig(O_i)} = M_i$. 
 
 $$sem(\Gamma,\syntax{'equiv-defn' , EquivName , ( 'network-equiv' }N_1\ N_2\ N_3\syntax{ )})=\Gamma'$$
@@ -6765,22 +6778,22 @@ that after some experience with DOL, a choice will crystallize. This
 means that in the current version, the semantics of queries is
 elided, and left for a later version of DOL.
 
- \semdom{sem(\syntax{QueryRelatedDefn})}
-
+% \semdom{sem(\syntax{QueryRelatedDefn})}
+%
+%%%%%%%%%%%%%%%%%%%%%%
+% \semdom{sem(\syntax{QueryDefn})}
 %%%%%%%%%%%%%%%%%%%%%
- \semdom{sem(\syntax{QueryDefn})}
-%%%%%%%%%%%%%%%%%%%%
- \semdom{sem(\syntax{SubstDefn})}
-%%%%%%%%%%%%%%%%%%%%%
- \semdom{sem(\syntax{ResultDefn})}
-%%%%%%%%%%%%%%%%%%%%%%%
-
-%Application
-\semdom{sem^T(\syntax{'application', OMS, Substname})}
-\semdom{sem^M(\syntax{'application', OMS, Substname})}
-
-
-\semdom{sem(\Gamma,\Sigma,\syntax{Term}) = t}
+% \semdom{sem(\syntax{SubstDefn})}
+%%%%%%%%%%%%%%%%%%%%%%
+% \semdom{sem(\syntax{ResultDefn})}
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%Application
+%\semdom{sem^T(\syntax{'application', OMS, Substname})}
+%\semdom{sem^M(\syntax{'application', OMS, Substname})}
+%
+%
+%\semdom{sem(\Gamma,\Sigma,\syntax{Term}) = t}
 
 %$$sem(\Gamma, \Sigma, \syntax{Term}) = t$$
 %\noindent where $t$ is a $\Sigma$-term and the analysis is done in a logic-specific way.\ednote{This should be added to the heterogeneous logical env. We here need derived siganture morphisms.}
