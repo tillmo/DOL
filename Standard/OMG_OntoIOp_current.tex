@@ -3950,7 +3950,7 @@ SymbolMapItems       = 'symbol-map-items' , SymbolOrMap , { SymbolOrMap } ;
 
 Extraction           = 'extraction', QualInterfaceSignature ;
 
-Approximation        = 'approximation' , [ QualInterfaceSignature ] , [ LogicRef ] ;
+Approximation        = 'approx' , [ QualInterfaceSignature ] , [ LogicRef ] ;
 
 Filtering            = 'select' , BasicOMS 
                      | 'reject' , BasicOMS ;
@@ -5513,8 +5513,8 @@ the extension of the library, $sem_I(\syntax{NativeOMS})$ will be undefined.
 
 \semdom{sem(\Gamma, \syntax{LibraryItem})= \Gamma'}
 
-$$sem(\Gamma, \syntax{lib-import, LibName}) = \Gamma\cup\Gamma'$$
-\noindent where $sem(\Gamma, \syntax{LibName}) = \syntax{IRI}$ and $sem(\syntax{IRI}) = \Gamma'$.
+$$sem(\Gamma, \syntax{lib-import, LibraryName}) = \Gamma\cup\Gamma'$$
+\noindent where $sem(\Gamma, \syntax{LibraryName}) = \syntax{IRI}$ and $sem(\syntax{IRI}) = \Gamma'$.
 
 Equations for \syntax{OMSDefn}, \syntax{NetworkDefn}, \syntax{MappingDefn} and \syntax{QueryRelatedDefn} 
 are given in the next sections.
@@ -5645,7 +5645,7 @@ $$sem(\Gamma, \syntax{network, NetworkElements , ExcludeExtensions})= G'$$
 
 \semdom{sem(\Gamma, \syntax{NetworkElements}) = G'}
 
-$$sem(\Gamma, \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
+$$sem(\Gamma, \syntax{network-elements}\ \syntax{NetworkElement}_1,\ldots,\syntax{NetworkElement}_n) = G'$$
 
 \noindent where \\
  $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
@@ -5713,6 +5713,8 @@ is given by\ednote{doesn't $\Gamma$ play a role here? I would expect to see $\Ga
 \semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
 (\Gamma',(\cI,\Sigma',\cM', \Delta))}
 
+The semantics for \syntax{MinimizableOMS} has been defined above.
+
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
@@ -5737,7 +5739,7 @@ $Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O')))$ and
 an edge from the node of $O$ to the node of $O'$ labeled with the identity
 morphism on $\Sig(O')$.
-\ednote{missing: maximize, free, cofree (see the slightly changed AS)}
+\ednote{missing: maximize, free, cofree (see the slightly changed AS, where \syntax{MinType} has been added).}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5747,8 +5749,10 @@ morphism on $\Sig(O')$.
 \syntax{MinimizableOMS}, the difference being that there is
 no local environment.
 
-$$sem(\syntax{'minimize-symbol' , OMS , CircMin , CircVars}) = (I,\Sigma,\cM')$$
-where \todonote{didn't look at this} \todonote{free, cofree, maximize are missing} \ednote{what is $sem(\syntax{CircVars},\Sigma)$?}
+The semantics for \syntax{ExtendingOMS} has been defined above.
+
+$$sem(\syntax{'minimize-symbols' , OMS , (MinType CircMin , CircVars)}) = (I,\Sigma,\cM')$$
+where \todonote{didn't look at this} \todonote{free, cofree, maximize are missing, see \syntax{MinType}} \ednote{what is $sem(\syntax{CircVars},\Sigma)$?}
 \begin{align*}
 (I,\Sigma,\cM) &= sem^M(\syntax{OMS}),  & \Sigma_{\mathit{min}} &=sem(\syntax{CircMin},\Sigma), \\
 \Sigma_{\mathit{var}} & = sem(\syntax{CircVars},\Sigma),
@@ -5799,7 +5803,7 @@ is
 
 %Module Extract 
 
-The semantics of $O' = \syntax{'module extract', OMS, 
+The semantics of $O' = \syntax{'module-extract', OMS, 
 Extraction}$ is
 \begin{itemize}
   \item $\Inst(O') = \Inst(\syntax{OMS})$
@@ -5823,7 +5827,7 @@ $sem(\Gamma, (\Sig(\syntax{OMS}), \Th(\syntax{OMS})), \syntax{Extraction})) =
 
 %Approximation
 The semantics of $O' = \syntax{'approximation', OMS, 
-'keep-signature', InterfaceSignature, LogicRef }$ is
+(approx ('keep-signature', InterfaceSignature), LogicRef)}$ is
 \begin{itemize}
   \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \Inst(\syntax{LogicRef})$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
   \item $\Sig(O) =
@@ -5844,10 +5848,10 @@ The semantics of $O' = \syntax{'approximation', OMS,
 %\noindent
 The semantics of 
 \syntax{'approximation', OMS, 
-'remove-signature', InterfaceSignature, LogicRef }
+(approx ('remove-signature', InterfaceSignature), LogicRef) }
 is the same as the semantics of
 \syntax{'approximation', OMS, 
-'keep-signature', $\Sig(OMS)\setminus \Sig(\syntax{InterfaceSignature})$ , LogicRef }.
+(approx ('keep-signature', $\Sig(OMS)\setminus \Sig(\syntax{InterfaceSignature})$) , LogicRef) }.
 
 
 %Filtering
@@ -5976,14 +5980,13 @@ $O=$ \syntax{combination, Network} is
   $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
 \end{itemize}
 
+For the semantics of \syntax{application} \syntax{OMS}
+\syntax{SubstName}, see section~\ref{s:sem-queries}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
-\ednote{generally, I think it would increase readability to group things
-in a depth-first manner, and not breadth-first. I.e. the semantics of
-\syntax{Translation} should be placed next to that of \syntax{translation},
-where it is used.}
 The semantics of a translation
 $O=$ \syntax{renaming, LogicTranslation, SymbolMapItems}
 is given by
@@ -5998,8 +6001,9 @@ If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism 
 
 \semdom{sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)}
 
-$(\Phi,\alpha,\beta)$ is the institution comorphism
-named by \syntax{LogicTranslation} in the heterogeneous logical environment.
+$sem(\Gamma, \syntax{logic-translation IRI}=(\Phi,\alpha,\beta)$,
+where $(\Phi,\alpha,\beta)$ is the institution comorphism
+named by \syntax{IRI} in the heterogeneous logical environment.
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6036,8 +6040,9 @@ is
 
 \semdom{sem(\Gamma, L, \syntax{LogicReduction}) = (\Phi, \alpha,\beta)}
 
-$(\Phi,\alpha,\beta)$ is the institution morphism
-named by \syntax{LogicReduction} in the heterogeneous logical environment.
+$sem(\Gamma, \syntax{logic-reduction IRI}=(\Phi,\alpha,\beta)$,
+where $(\Phi,\alpha,\beta)$ is the institution morphism
+named by \syntax{IRI} in the heterogeneous logical environment.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -6167,7 +6172,7 @@ where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta')
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{ExtensionOMS})=(\cI,\Sigma',\cM',\Delta')}
-$sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{ ConsStrength, ExtensionName, ExtendingOMS})=
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{extension-oms ConsStrength, ExtensionName, ExtendingOMS})=
 (\cI,\Sigma',\cM',\Delta')$\\
 where $(\cI,\Sigma',\cM',\Delta')=sem(\Gamma,(\Sigma,\cM),\syntax{ExtendingOMS})$.
 
@@ -6239,19 +6244,20 @@ the semantics is undefined.
 
 \semdom{sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMap})}
 
-$$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$$
+$$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{symbol-map}\ \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$$
 \noindent where $sem(\Gamma,\Sigma_1,\syntax{Symbol}_1) = s_1$
 and $sem(\Gamma,\Sigma_2,\syntax{Symbol}_2) = s_2$.
 
 \semdom{sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{SymbolOrMap}) = (s,t)}
 
-$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$
+$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{symbol-map}\ \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$
 
 and
 
 $sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{Symbol}) = (s,s)$ 
 where $sem(\Gamma,\Sigma_1, \syntax{Symbol}) = s$.
 
+For the semantics of \syntax{Term}, see section~\ref{s:sem-queries}.
 
 \semdom{sem(\Gamma, \Sigma, \syntax{Sentence}) = \varphi}
 
@@ -6496,7 +6502,7 @@ $\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that }
 (F_1, F_2) \in \cM_1  \text{ and }
 (F_2, F_3) \in \cM_2  \}$
 
-$$sem(\Gamma, \syntax{simple-ref, OMS, RefMap, Refinement}) = 
+$$sem(\Gamma, \syntax{simple-oms-ref, OMS, RefMap, Refinement}) = 
 ((G_1, G_2), \sigma, \cM)$$
 \ednote{shouldn't $G_1$ be $G$ here, where $G$ is obtained as 
 $sem^M(\Gamma,  \syntax{OMS})$?}
@@ -6518,7 +6524,7 @@ why in the case of networks below, it is defined. But if it is
 defined, then there is a name clash with the $\cM$ in the semantics
 of \syntax{OMS}.}
 
-$$sem(\Gamma, \syntax{simple-ref, Network, RefMap, Refinement}) = 
+$$sem(\Gamma, \syntax{simple-network-ref, Network, RefMap, Refinement}) = 
 ((G_1,G_2),\sigma, \cM)$$
 where\\
  $sem^M(\Gamma,  \syntax{Network}) = G_1$,\\
@@ -6567,7 +6573,7 @@ The map is required to be total on the nodes of $G_1$.
 
 $sem(\Gamma, G_1, G_2,
 \syntax{node-map, OMSName$_1$, OMSName$_2$ , LogicTranslation ,  SymbolMapItems}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
-
+\endote{note that the AS allows for serveral \syntax{LogicTranslation}s.}
 where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
@@ -6606,7 +6612,8 @@ $sem(\Gamma,\syntax{network-oms-entailment, Network , OMSName, OMS}) = G$
 
 \noindent where $sem(\Gamma, \syntax{Network}) = G'$ such that $G'$ contains a node labeled with 
 $(\Name(\syntax{OMSName}), \cI, \Sigma,\cM_1,\Delta_1)$,
-$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and $\cM_1 \subseteq \cM_2$.\ednote{have reversed the inclusion, please double-check.} Then 
+$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and $\cM_1 \subseteq \cM_2$.\ednote{have reversed the inclusion, please double-check.}\ednote{this is not correct, we need to consider all models of the network, which are compatible families, and then pick the model labeled with \syntax{OMSName} and check
+whether it is in $\cM_2$} Then 
 $G$ extends G' with a new node whose label has 
 the name $\Name(\syntax{OMS})$ and the other 
 components given by $sem(\Gamma,\syntax{OMS})$ and with
@@ -6746,7 +6753,7 @@ logic-specific way from the correspondences
 $C_1,\ldots, C_n$ taking into account \syntax{AlignSem}.
 \cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
-\ssclause{Semantics of Queries}
+\ssclause{Semantics of Queries}\label{s:sem-queries}
 
 While queries are very important from a practical point of view, their
 semantics so far has been developed only for individual institutions.
@@ -6769,8 +6776,8 @@ elided, and left for a later version of DOL.
 %%%%%%%%%%%%%%%%%%%%%%%
 
 %Application
-\semdom{sem^T(\syntax{'application', Substname, OMS})}
-\semdom{sem^M(\syntax{'application', Substname, OMS})}
+\semdom{sem^T(\syntax{'application', OMS, Substname})}
+\semdom{sem^M(\syntax{'application', OMS, Substname})}
 
 
 \semdom{sem(\Gamma,\Sigma,\syntax{Term}) = t}
