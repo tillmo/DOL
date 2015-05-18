@@ -569,7 +569,7 @@ Version \version
 
 OMG Document Number: ad/2015-05-03 \\
 Normative reference: \\
-Machine readable files(s): \\
+Machine readable files(s): ad/2015-05-05, ad/2015-05-05, ..., ad/2015-05-12, \\ \qquad \qquad \qquad ad/2015-05-14 \\
 Normative: \\
 Non-normative: \\
  
@@ -1634,7 +1634,7 @@ For the purposes of this document, the following terms and definitions apply.
 \end{definitions}
 
 
-\sclause{Native OMS, OMS, and OMS Languages}
+\sclause{Native OMS, OMS, and OMS Languages}\label{c:native-oms}
 
 \begin{definitions}
 
@@ -2146,7 +2146,7 @@ along the alignment, there is only one concept, representing both
   other OMS network.
  \end{note}
 
-\sclause{Mappings Between OMS}
+\sclause{Mappings Between OMS}\label{c:mappings}
 
    \termdefinitionLight{\termref{OMS mapping}\synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}.}
   
@@ -2314,7 +2314,7 @@ that targets specific applications or reasoning methods.}
   
 \end{definitions}
 
-\sclause{OMS Language Serializations}
+\sclause{OMS Language Serializations}\label{c:term-serializations}
 
 \begin{definitions}
   \termdefinition{serialization}{specific syntactic encoding of a given \termref{OMS language}.}
@@ -2335,7 +2335,7 @@ Common Logic uses the term ``dialect''; the following are standard Common Logic 
   \termdefinition{standoff markup}{way of providing {annotations}\index{annotation} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS}).}
 \end{definitions}
 
-\sclause{Logic}
+\sclause{Logic}\label{c:term-logic}
 
 \begin{definitions}
   \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}, sentences\index{sentence},
@@ -6932,13 +6932,11 @@ For a full treatment of the background and design considerations of LoLa please 
 
 The tables in this annex list the classes and object properties of LoLa and thus the essential parts of its implementation.  All classes and object properties are assumed to be in the LoLa namespace unless stated otherwise.
 
-\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027}):
+\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027}).  The definitions of the classes can be found in \cref{terms-and-defs}, sometimes under different names if stated so in the table.  Classes rendered in italics are abstract superclasses that have no direct correspondence in the terminology.
 
 \begin{lstlisting}[language=owl2Manchester]
 Class: ...
   SubClassOf: ...
-  Annotations:
-    skos:definition "..."
 \end{lstlisting}
 
 \newcommand*{\ClassDocumentation}[1]{\textit{#1}}
@@ -6947,37 +6945,36 @@ caption={LoLa Classes},
 mincapwidth=\textwidth,
 label={tab:logic-vocab-classes},
 pos=h,
-]{p{.25\textwidth}p{.45\textwidth}p{.25\textwidth}}{% table footnotes
+]{p{.27\textwidth}p{.45\textwidth}p{.22\textwidth}}{% table footnotes
 }{\FL
-  Class & \ClassDocumentation{documentation} & Superclass \ML
-  Language & \ClassDocumentation{an OMS language} & \NN
-  Logic & \ClassDocumentation{a logic that defines the semantics of an OMS language} & \NN
-  Serialization & \ClassDocumentation{a serialization of an OMS language} & \NN
-  Mapping & \ClassDocumentation{a generic mapping between logics or languages} & \NN
-  LanguageMapping & \ClassDocumentation{a mapping between two languages} & Mapping \NN
-  LogicMapping & \ClassDocumentation{a mapping between two logics} & Mapping \NN
-  Translation & \ClassDocumentation{a translation between logics or, induced, between languages} & Mapping \NN
-  Reduction & \ClassDocumentation{a reduction between logics or, induced, between languages} & Mapping \NN
-  DefaultMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  WeaklyExactMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  ExactMapping & \ClassDocumentation{a default mapping} & WeaklyExactMapping \NN
-  FaithfulMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  ModelExpansiveMapping & \ClassDocumentation{a default mapping} & FaithfulMapping \NN
-  ModelBijectiveMapping & \ClassDocumentation{a default mapping} & ModelExpansiveMapping \NN
-  Embedding & \ClassDocumentation{a default mapping} & ModelBijectiveMapping, LogicMapping, Translation \NN
-  PlainMapping & \ClassDocumentation{a default mapping} & Mapping \NN
-  SimpleTheoroidalMapping & \ClassDocumentation{a default mapping} & Mapping \LL
+  Class & Superclass & Section \ML
+  \textit{Language} & & \NN
+  OMSLanguage & \textit{Language} & \ref{c:native-oms} \NN
+  Logic & & \ref{c:term-logic} \NN
+  Serialization & & \ref{c:term-serializations} \NN
+  Mapping & & \ref{c:mappings} (OMS mapping) \NN
+  LanguageMapping & Mapping & \NN
+  LogicMapping & Mapping & \NN
+  Translation & Mapping & \NN
+  Reduction & Mapping & \NN
+  DefaultMapping & Mapping & \NN
+  WeaklyExactMapping & Mapping & \NN
+  ExactMapping & WeaklyExactMapping & \NN
+  FaithfulMapping & Mapping & \NN
+  ModelExpansiveMapping & FaithfulMapping & \NN
+  ModelBijectiveMapping & ModelExpansiveMapping & \NN
+  Embedding & ModelBijectiveMapping, LogicMapping, Translation & \NN
+  PlainMapping & Mapping & \NN
+  SimpleTheoroidalMapping & Mapping & \LL
 }
 
-\tref{tab:logic-vocab-prop} lists the object properties of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax):
+\tref{tab:logic-vocab-prop} lists the object properties of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax).  The definitions of the properties can be found in \cref{terms-and-defs}, sometimes under different names if stated so in the table.
 
 \begin{lstlisting}[language=owl2Manchester]
 ObjectProperty: ...
   Domain: ...
   Range: ...
   SubPropertyOf: ...
-  Annotations:
-    skos:definition "..."
 \end{lstlisting}
 
 %\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''. TM: has been defined in section 4}
