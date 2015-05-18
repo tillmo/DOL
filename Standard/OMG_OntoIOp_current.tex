@@ -8167,7 +8167,8 @@ semantics of DOL as defined in Sec.~\ref{c:semantics}.
 \sclause{Languages}
  
  The OMS languages that we selected
-are those whose conformance with DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, and RDFS in \aref{a:rdfs}).  The graph is shown in \fref{fig:ontograph-standards}.  Its nodes refer to the following OMS languages and profiles:
+are those whose conformance with DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, RDFS in \aref{a:rdfs},
+\CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The graph is shown in \fref{fig:ontograph-standards}.  Its nodes refer to the following OMS languages and profiles:
 \begin{itemize}
 \item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
 \item RDF Schema \nisref{W3C/TR REC-rdf11-schema:2014}
@@ -8176,7 +8177,7 @@ are those whose conformance with DOL is established in the preceding, normative 
 \item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
 \item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.4.1}
 \item \CASL \cite{CASL-RM} and its sublanguage classical first-order logic (FOL)
-\item TPTP \ednote{insert reference here}
+\item TPTP
 \end{itemize}
 
 The list of chosen languages includes those ones required as mandatory
@@ -8233,17 +8234,37 @@ The institution comorphisms between these logics are
   \item $UML-CD \to \CL$.
 \end{itemize}
 
-All of them are selected as default logic translations. There are no institution morphisms. 
+All of them are selected as default logic translations. There are no institution morphisms. The partial union operation between logics is given in the table below, where
+$\bot$ denotes undefinedness:
 
-For each institution, empty signature with its models, union and difference of signatures.
-Union of logics
-Symbol map to morphism
-Semantics of sentences
-Relativization
-Default language and serialization
+\begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l |}
+\hline
+Union & $\ELDL++$ & \DLLiteR & \RL & \RDF & \RDFS & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & UML-CD & \CL\\
+\hline
+$\ELDL++$ & $\ELDL++$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+\hline
+\DLLiteR & $\SROIQ(D)$ & \DLLiteR & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+\hline
+\RL & $\SROIQ(D)$ &  $\SROIQ(D)$ & \RL & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+\hline
+\RDF & $\SROIQ(D)$ &  $\SROIQ(D)$ &$\SROIQ(D)$ & \RDF & \RDFS & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+\hline
+\RDFS & $\SROIQ(D)$ &  $\SROIQ(D)$ &$\SROIQ(D)$ & \RDFS & \RDFS & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+\hline
+$\SROIQ(D)$& $\SROIQ(D)$ &  $\SROIQ(D)$ &$\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+\hline
+\FOL &  \FOL & \FOL & \FOL & \FOL & \FOL & \FOL & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+\hline
+$SubPCFOL^=_{ms}$ &  $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & \CL & $\bot$\\
+\hline
+UML-CD & \CL & \CL & \CL & \CL & \CL & \CL & \CL & \CL & UML-CD & \CL\\
+\hline
+\CL &  \CL & \CL & \CL & \CL & \CL & \CL & \CL & $\bot$ & \CL & \CL\\
+\hline
+\end{tabular}
 
-Semantics of structured native OMS
-Semantics of basic OMS fragments
+The other assumptions on the logics in the heterogeneous logical environment hold in
+the expected way.\ednote{@Till: rephrase if need be}
 
 \sclause{Serializations}
 
