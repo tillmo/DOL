@@ -3920,7 +3920,7 @@ BasicOMS = ($<$)language specific($>$) ;
 MinimizableOMS       = BasicOMS
                      | 'oms-ref' , OMSRef , [ ImportName ] ;
 ExtendingOMS         = MinimizableOMS
-                     | 'minimize' , MinType , MinimizableOMS ;
+                     | MinType , MinimizableOMS ;
 OMS                  = ExtendingOMS
                      | 'minimize-symbols' , OMS , Minimization
                      | 'translation' , OMS , Translation
@@ -5745,7 +5745,24 @@ $Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O')))$ and
 an edge from the node of $O$ to the node of $O'$ labeled with the identity
 morphism on $\Sig(O')$.
-\ednote{missing: maximize, free, cofree (see the slightly changed AS, where \syntax{MinType} has been added).}
+
+
+The semantics of \syntax{maximize}, \syntax{free}, and \syntax{cofree}
+is defined similarly, only the model class differs:
+\begin{itemize}
+\item
+$\Mod( \syntax{maximize}\ O) = 
+        \{ M \in  \Mod(O) \mid  M \text{ is maximal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+\item
+$\Mod( \syntax{minimize}\ O) = 
+        \{ M \in  \Mod(O) \mid  M \text{ is initial in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+\item
+$\Mod( \syntax{minimize}\ O) = 
+        \{ M \in  \Mod(O) \mid  M \text{ is terminal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+\end{itemize}
+Here, initial and terminal models are defined as in
+category theory: $M$ is initial (terminal) in $\cM$ if for each 
+$N\in\cM$, there is exactly one morphism $h:M\to N$ ($h:N\to M$).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
