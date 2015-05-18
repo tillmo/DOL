@@ -5277,10 +5277,22 @@ serializations.
 
 We assume that for each institution in the heterogeneous logical environment there is a trivial signature
 $\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
-from $\emptyset$ to any signature of the institution. Moreover we assume the existence of a designated 
-error logic\ednote{why? what would be this error logic in our logic graph in the annex?} in the graph, and a partial union operation on logics, denoted $\bigcup$: 
+from $\emptyset$ to any signature of the institution. Moreover we assume the existence of a partial union operation on logics, denoted $\bigcup$: 
 $L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism 
 and at most one morphism is marked as default.
+
+For each logic in the heterogeneous logical environment, we further assume the 
+following:
+
+\begin{itemize}
+ 
+  \item a function that turns a symbol map into a signature morphism,
+  \item a function giving semantics of sentences
+  \item a relativization procedure taking as argument a theory and giving as 
+  result a theory
+  \item
+ 
+\end{itemize}
 
 We assume that for each institution, there exist (possibly partial) union and difference operations on signatures.
 These concepts can be captured in a categorical setting using \emph{inclusion systems} \cite{DGS91}.
@@ -5453,7 +5465,8 @@ OMS, inherited from the OMS language. For a basic OMS $O$ in a
 language $L$ based on an institution $\I$ we denote 
 by $sem_L(O)$ the language-specific semantics of $O$.
 We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
-the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.\ednote{This should be moved to the definition of heterogeneous logical environment. Moreover, logic, language and serialization should all be parameters of this basic OMS semantics. Finally, we also need a semantic for structured native OMS (new terminology).}
+the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.
+\ednote{ Logic, language and serialization should all be parameters of this basic OMS semantics. Finally, we also need a semantic for structured native OMS (new terminology).}
 
 \ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
@@ -5472,10 +5485,13 @@ $sem(\Gamma'', \syntax{LibraryDefn}) = \Gamma'$.
 $$sem(\syntax{NativeOMS}) = \Gamma''$$
 
 \noindent where 
-$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library,
-$sem(\Gamma', \syntax{NativeOMS}) = (I,  \Sigma, \cM, \Delta)$,\ednote{Why is the semantics of \syntax{NativeOMS} mentioned twice, here and below?}
-\syntax{IRI} is the IRI of the library and 
-$\Gamma'' = \Gamma'[\syntax{IRI} \mapsto (I, \Sigma, \cM,\Delta)]$.
+$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library
+and 
+$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{\Gamma'}(\syntax{NativeOMS})]$
+\ednote{Should be structured syntax}.
+
+Note that if the OMS in the library does not conform with the logic determined by
+the extension of the library, $sem(\syntax{NativeOMS})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -5489,20 +5505,6 @@ $sem(\Gamma, \syntax{library, LibraryName, Qualification, LibraryItem}_1,\ldots 
   containing the \syntax{Library}.  This is known as ``linked data
   compliance''. Tools can issue a warning (not an error), if a
   \syntax{Library} does not follow this practice.}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\semdom{sem(\Gamma, \syntax{NativeOMS})= (\cI, \Sigma, \cM, \Delta)}
-
-$$sem(\Gamma, \syntax{NativeOMS}) = (\cI, \Sigma, \cM, \Delta) $$
-\noindent where 
-$\cI = logic(\Gamma.\current)$ and
-$sem_\cI(\syntax{NativeOMS}) = (\cI,  \Sigma, \cM,\Delta)$.\ednote{This is
-misplaced here. Note that a \syntax{LibraryDefn} cannot be a \syntax{NativeOMS},
-only a \syntax{Library} can be.} 
-
-Note that if the OMS in the library does not conform with the logic determined by
-the extension of the library, $sem_I(\syntax{NativeOMS})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5560,7 +5562,7 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
 and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings, or OMS networks. Intuitively, the graph of a
 network consists of the union of all graphs of the network elements it
-contains, where an OMS\ednote{basic OMS? MC: no, every OMS, imports are added by the next sentence.} yields a graph with one isolated node. We make the convention that
+contains, where an OMS yields a graph with one isolated node. We make the convention that
 all imports in the graph $\Gamma.imports$ of the current context between nodes that are
 specified in the list of \syntax{NetworkElements} are also included in the graph of 
 the network. 
@@ -5632,7 +5634,7 @@ defined if $sem(\Gamma,\syntax{Network})$ is a singleton.
 If \syntax{ConsStrength} is \syntax{not-model-conservative}, the semantics is only
 defined if $sem(\Gamma,\syntax{Network})=\emptyset$.
 
-If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is not defined.\todonote{Change!}
+If \syntax{ConsStrength} is \syntax{not-consequence-conservative}, the semantics is not defined.\todonote{Change!}
 
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 
@@ -5925,7 +5927,9 @@ The semantics of $O=$
   (which means that
   the instutions of \syntax{OMS} and 
   \syntax{ExtensionOMS} must be the same)
-  \item $\Sig(O) = \Sig(\syntax{OMS}) \cup \Sig(\syntax{ExtensionOMS})$\ednote{$\Sig(\syntax{ExtensionOMS})$ is not type-correct. The semantics of an $\syntax{ExtensionOMS}$ requires a local environment.}
+  \item $\Sig(O) = \Sig(\syntax{OMS}) \cup 
+  \Sig((\Inst(\syntax{OMS}), \Sig(\syntax{OMS}, \Mod(\syntax{OMS}), \Th(\syntax{OMS}))),
+  \syntax{ExtensionOMS})$
   \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(\syntax{OMS})} \in \Mod(\syntax{OMS})
   \text{ and }
   M \forget{\Sig(\syntax{ExtensionOMS})} \in \Mod(\syntax{ExtensionOMS})\}$
@@ -5995,9 +5999,17 @@ If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism 
 
 \semdom{sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)}
 
-$sem(\Gamma, \syntax{logic-translation IRI}=(\Phi,\alpha,\beta)$,
+$sem(\Gamma, \syntax{logic-translation IRI})=(\Phi,\alpha,\beta)$,
 where $(\Phi,\alpha,\beta)$ is the institution comorphism
 named by \syntax{IRI} in the heterogeneous logical environment.
+
+\semdom{sem(\Gamma, \syntax{LogicTranslation*}) = (\Phi, \alpha,\beta)}
+
+$sem(\Gamma, \syntax{logic-translation IRI}_1, \ldots,\syntax{logic-translation IRI}_n) =(\Phi,\alpha,\beta)$,
+where
+$sem(\Gamma, \syntax{logic-translation IRI}_i) = (\Phi_i,\alpha_i,\beta_i)$ for 
+$i=1,\ldots, n$ and\\
+ $(\Phi,\alpha,\beta) = (\Phi_1,\alpha_1,\beta_1); \ldots ; (\Phi_n,\alpha_n,\beta_n)$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6099,11 +6111,6 @@ OMS.}:\hspace{-2cm}
     \RETURN $n$
   \ENDIF
 \end{algorithmic}
-
-
-
-\todonote{We need a logic-specific function that turns a symbol map into a signature morphism. Add it in the list of assumptions about 
-the heterogeneous logic env? TM: yes!}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6385,8 +6392,6 @@ $$\begin{array}{ll}
 sem(\Gamma,& \syntax{intrp-defn, IntprName, Conservative, IntrpType,}\\
 & \syntax{LogicTranslation*, SymbolMapItems}) = \Gamma'
 \end{array}$$
-\ednote{why not use $O_i$ instead to $L_i$? This would be more uniform
-with the rest of the chapter.}
 where
  $\Gamma' = \Gamma[\syntax{IntprName} \to (G, (\rho,\sigma), L_1, L_2)]$\\
  and $G$ is the graph $L_1\stackrel{(\rho,\sigma)}{\longrightarrow} L_2$
@@ -6395,7 +6400,7 @@ where
   
    \item $(L_1, L_2) = sem(\Gamma, \syntax{IntrpType})$
    \item $\rho = (\Phi,\alpha,\beta):
-             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, \syntax{LogicTranslation*})$.\ednote{add semantics for \syntax{LogicTranslation*}. It is given by composition.} If \syntax{LogicTranslation*} is missing, the default translations between the logics is selected. 
+             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, \syntax{LogicTranslation*})$. If \syntax{LogicTranslation*} is missing, the default translations between the logics is selected. 
    \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), \syntax{SymbolMapItems}) = \sigma,$
 where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$. 
   \end{itemize}
@@ -6405,7 +6410,14 @@ If the optional argument $\syntax{Conservative}$ is \syntax{model-conservative},
 each model  $M_1\in\Mod(L_1)$ there must exist a model $M_2\in\Mod(L_2)$ such that
 $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. If the optional argument $\syntax{Conservative}$ is \syntax{consequence-conservative}, 
 for each $\Sig(L_1)$-sentence $\varphi$, if $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ then
-$\cM_1\models \varphi$.\ednote{not-model-conservative and not-consequence-conservative are missing}
+$\cM_1\models \varphi$.
+If the optional argument $\syntax{Conservative}$ is \syntax{not-model-conservative}, 
+there must exist a model  $M_1\in\Mod(L_1)$ such that there is no 
+model $M_2\in\Mod(L_2)$ such that
+$\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$.
+If the optional argument $\syntax{Conservative}$ is \syntax{not-consequence-conservative}, 
+there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ and
+$\cM_1\not\models \varphi$.
 
 $$sem(\Gamma, \syntax{refinement, IntprName, Refinement}) = \Gamma'$$
 
@@ -6436,15 +6448,15 @@ The signature of a refinement is a pair consisting of the graph of the
 OMS or network of OMS being refined and the 
 graph of the OMS or network of OMS after refinement. Together with this pair
 we store the mapping along which the refinement is done. 
-Given two networks $G_1$ and $G_2$, a \emph{network morphisms} 
+Given two networks $G_1$ and $G_2$, a \emph{network morphism} 
 $\sigma : G_1\to G_2$ is a 
 functor $\sigma^G: Shape(G_1)\to Shape(G_2)$ 
-together with a natural transformation $\sigma^M$\ednote{of type?} such that
+together with a natural transformation $\sigma^M : G_1 \to sigma^G;G_2$
+ such that
 for each node $N_1$ in $G_1$ labeled with $(\cI_1, \Sigma_1, \cM_1)$
 such that $\sigma^G(N_1)$ is a node $N_2$ labeled with $(\cI_2,\Sigma_2,\cM_2)$ in $G_2$,
-we have a signature morphism $(\rho,\sigma^M_{N_1}) : (\cI_1, \Sigma_1) \to (\cI_2, \Sigma_2)$,\ednote{$\rho$ probably is part of the natural transformation?
-Then it should be named accordingly, e.g. $\rho^M_{N_1}$.}
-where $\rho = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorphism between the logics of the two nodes and
+we have a signature morphism $(\rho^M_{N_1},\sigma^M_{N_1}) : (\cI_1, \Sigma_1) \to (\cI_2, \Sigma_2)$,
+where $\rho^M_{N_1} = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorphism between the logics of the two nodes and
 $\sigma^M_{N_1} : \Phi(\Sigma_1) \to \Sigma_2$ is a signature morphism,
 such that $\beta_{\Sigma_1}(M_2\forget{\sigma^M_{N_1}}) \in \cM_1$ for each $M_2 \in  \cM_2$.
 
@@ -6453,7 +6465,7 @@ of pairs of families of models compatible with the two networks.
 Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$, 
 we define $F\forget\sigma$ as the family of models 
 $\{M_i\}_{i\in Nodes(G_1)}$ such that
-$M_i = F_{G(i)}\forget{\sigma^M_{N_i}}$,\ednote{TM: I think it should be $M_i = F_{\sigma^G(i)}\forget{\sigma^M_{i}}$.} for each $i\in Nodes(G_1)$.
+$M_i = F_{\sigma^G(i)}\forget{\sigma^M_{i}}$ for each $i\in Nodes(G_1)$.
 
 $$sem(\Gamma, \syntax{ref-oms, OMS}) = 
    ((G, G), \sigma, \cM) $$
@@ -6465,7 +6477,8 @@ $$sem(\Gamma, \syntax{ref-oms, OMS}) =
   $L$ are given by $sem(\Gamma,\syntax{OMS})$,
   \item $\sigma$ is the identity morphism on 
   $\Sig(\syntax{OMS})$,  
-  \item $\cM = \{(M, M) \mid M \in \Mod(\syntax{OMS})\}$\ednote{it should be $((M),(M))$, where $(M)$ is the singleton family consisting of $M$.}
+  \item $\cM = \{((M), (M)) \mid M \in \Mod(\syntax{OMS})\}$,
+   where $(M)$ is the singleton family consisting of $M$.
   \end{itemize}
 
 $$sem(\Gamma, \syntax{ref-network, Network}) = ((G, G), \sigma, \cM)$$
@@ -6493,26 +6506,21 @@ $\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that }
 (F_2, F_3) \in \cM_2  \}$
 
 $$sem(\Gamma, \syntax{simple-oms-ref, OMS, RefMap, Refinement}) = 
-((G_1, G_2), \sigma, \cM)$$
-\ednote{shouldn't $G_1$ be $G$ here, where $G$ is obtained as 
-$sem^M(\Gamma,  \syntax{OMS})$?}
+((G, G_2), \sigma, \cM)$$
 where\\
- $sem^M(\Gamma,  \syntax{OMS}) = (\cI,\Sigma, \cM, \Delta)$,\\
+ $sem^M(\Gamma,  \syntax{OMS}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
  $sem(\Gamma,  \syntax{Refinement}) = 
- ((G_1, G_2), \sigma_2, \cM')$ 
+ ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
  such that $G_1$ consists of an isolated node labeled with 
- $(\cI_1, \Sigma_1, \cM_1, \Delta_1)$\\
- $sem(\Gamma,  (\cI,\Sigma), (\cI_1,\Sigma_1), \syntax{RefMap}) = (\rho = (\Phi, \alpha,\beta):\cI\to\cI_1, \sigma_1:\Phi(\Sigma)\to\Sigma_1)$,\\
+ $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$\\
+ $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), \syntax{RefMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
  for each $(M_1, M_2) \in \cM'$
  we have that 
-$\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM$,
-$\sigma = \sigma_1;\sigma_2$ and
+$\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM_1$,\\
+G consists of an isolated node labeled with $sem^M(\Gamma,  \syntax{OMS})$\\
+$\sigma = (\rho_1,\sigma_1);(\rho_2,\sigma_2)$ and
 $\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
-(M_1, M_2) \in \cM' \}$.\ednote{is this last equation required, or 
-is it a definition? If it is required, then I do not understand
-why in the case of networks below, it is defined. But if it is 
-defined, then there is a name clash with the $\cM$ in the semantics
-of \syntax{OMS}.}
+(M_1, M_2) \in \cM' \}$.
 
 $$sem(\Gamma, \syntax{simple-network-ref, Network, RefMap, Refinement}) = 
 ((G_1,G_2),\sigma, \cM)$$
@@ -6562,12 +6570,11 @@ The map is required to be total on the nodes of $G_1$.
 (\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma)}
 
 $sem(\Gamma, G_1, G_2,
-\syntax{node-map, OMSName$_1$, OMSName$_2$ , LogicTranslation ,  SymbolMapItems}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
-\ednote{note that the AS allows for several \syntax{LogicTranslation}s.}
+\syntax{node-map, OMSName$_1$, OMSName$_2$ , LogicTranslation* ,  SymbolMapItems}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
 where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
-$sem(\Gamma, \syntax{LogicTranslation}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
+$sem(\Gamma, \syntax{LogicTranslation*}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
 $sem(\Gamma.\current=(lang, logic',ser), \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
 where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $(\Phi,\alpha,\beta)$.\ednote{same as in previous note}
 
@@ -6670,8 +6677,6 @@ and if $c=$\%mcons and for each $M\in\Mod(O_2)$ there is a model $M'\in \Mod(O_1
 $M'\forget{\Sigma} = M\forget{\Sigma}$,
 or if $c=$\%ccons and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
 implies $O_2\models\varphi$.
-\ednote{This should be checked. TM: OK}
-
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -6719,8 +6724,7 @@ $$sem(\Gamma, L_1,\syntax{AlignSem})=\begin{cases}
                                                                                                                    \end{cases}$$
                                                                                                                    
                                                                                                                    \noindent where the relativisation procedure is
-                                                                                                                   logic-specific.\ednote{add to het. log. env.}
-                                                                                                  
+                                                                                                                   logic-specific.                                                                                                
                                                                                                                   
 
 \semdom{sem(\Gamma, L_1, L_2, \syntax{AlignCard, AlignSem},C_1,\ldots,C_n)=G}
