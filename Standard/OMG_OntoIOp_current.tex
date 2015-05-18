@@ -3986,7 +3986,7 @@ optionally marked as inconsistent, consistent, monomorphic or having a unique mo
 \syntax{ConsStrength}.\footnote{More precisely, \syntax{'consequence-conservative'}
 here requires the OMS to have only tautologies as signature-free logical consequences, while \syntax{'not-consequence-conservative'} expresses that this is not the case. 
 \syntax{'model-conservative'}
-requires satisfiability of the OMS, \syntax{'model-conservative'} its
+requires satisfiability of the OMS, \syntax{'not-model-conservative'} its
 unsatisfiability.
 \syntax{'definitional'} expresses the unique model property; this may be interesting for characterizing
 OMS (e.g.\ returned by model finders) that are used to describe single models.}. An
@@ -5349,13 +5349,6 @@ when $\Inst(O) = I$, $\Sig(O) = \Sigma$, $\Mod(O) = \cM$ and $\Th(O) = \Delta$.
 
 The theory-level semantics of $O$ can be undefined, and then so is $\Th(O)$. When $\Th(O)$ is defined, $\Mod(O)$ can be obtained as $\Mod(O)=\{M\in\Mod(\Sig(O)) \,|\, M\models\Th(O)\}$.
 
-We assume a \emph{language-specific semantics} of basic 
-OMS, inherited from the OMS language. For a basic OMS $O$ in a
-language $L$ based on an institution $\I$ we denote 
-by $sem_L(O)$ the language-specific semantics of $O$.
-We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
-the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.\ednote{This should be moved to the definition of heterogeneous logical environment. Moreover, logic, language and serialization should all be parameters of this basic OMS semantics. Finally, we also need a semantic for structured native OMS (new terminology).}
-
 Intuitively, OMS mappings denote various types of links between two or more OMS. 
 The semantics of OMS mappings can be captured uniformly as a graph whose nodes $N$ are labeled with 
 \begin{itemize}
@@ -5371,33 +5364,28 @@ which has two kinds of edges:
   \item import links (written using single arrows, $S\rightarrow T$)
   \item theorem links (written using double arrows, $S\Rightarrow T$)
 \end{itemize}
-both labeled with signature morphisms between the signatures of the source and target nodes.\ednote{Below, also comorphisms come into play.} 
+both labeled with 
+heterogeneous signature morphisms between the signatures of the source and target nodes.\ednote{Below, also comorphisms come into play. MC: added the word heterogeneous, should be fine} 
 The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
 the class of models of that node is the class of models of $\Th(N)$. 
 For brevity, we may write the label of a node as a tuple. We make the simplifying 
 assumption that any OMS can be assigned a unique name.
 
-We can give the semantics of networks of OMS in two alternative ways.
-In both cases, the semantics of a network is a graph and the labels
-are like in the semantics of OMS mappings. What differs is the labels of
-edges: in the first case, edges are labeled with heterogeneous signature morphisms (i.e.~ 
+The semantics of a network of OMS is a graph
+whose nodes are labeled like in the semantics of OMS mappings and 
+edges are labeled with heterogeneous signature morphisms (i.e.~ 
 an edge from the node $S$ to the node $T$ is labeled with a pair 
 $(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
 $\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$), 
-while in the second case, an edge is labeled with a mapping\ednote{what
-kind of mapping? Actually, I do not understand this ``second case''. TM.}
-relating the OMS of the nodes connected by it. 
 The intuition is that
 network provide means of putting together graphs of OMS and OMS mappings
-and of removing sub-graphs of existing networks. In the first 
-variant, the graph of a mapping is added explicitly to the network, and
-thus the network may contain more nodes than just those of the OMS
-related by the mapping. The second variant provides a more compact
-representation of the graph of the network but has the drawback that
-one cannot operate on the subgraph of a mapping, e.g. eliminating just a 
-node of it. Also, creating a combination of the 
-network requires that the graphs of the mappings 
-should be unfolded.\ednote{TM: this is a bit unclear}
+and of removing sub-graphs of existing networks 
+\footnote{Alternatively we could label the edges of the graph of a network with
+OMS mappings between the OMS labeling the nodes connected by the edge. This gives a more
+compact representation of the graph of the network, but it has the drawback that
+the subgraph giving the semantics of the mapping is not explicitly available and thus
+one cannot operate on it,~e.g. eliminate just a node of it. Also, creating a combination
+of the network becomes more complicated.}
 
 The semantics of OMS generally depends on a global environment
 $\Gamma$ containing:
@@ -5459,6 +5447,13 @@ $(lang, logic, ser)$.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
+
+We assume a \emph{language-specific semantics} of basic 
+OMS, inherited from the OMS language. For a basic OMS $O$ in a
+language $L$ based on an institution $\I$ we denote 
+by $sem_L(O)$ the language-specific semantics of $O$.
+We moreover assume similar language-specific semantics of a basic OMS fragment $O$ in
+the context of previous declarations, denoted $sem^{(\Sigma,\cM,\Delta)}_L(O)$.\ednote{This should be moved to the definition of heterogeneous logical environment. Moreover, logic, language and serialization should all be parameters of this basic OMS semantics. Finally, we also need a semantic for structured native OMS (new terminology).}
 
 \ssclause{Semantics of Libraries}
 We define the semantics of DOL constructs regarding libraries. 
@@ -5565,7 +5560,7 @@ The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
 and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS mappings, or OMS networks. Intuitively, the graph of a
 network consists of the union of all graphs of the network elements it
-contains, where an OMS\ednote{basic OMS?} yields a graph with one isolated node. We make the convention that
+contains, where an OMS\ednote{basic OMS? MC: no, every OMS, imports are added by the next sentence.} yields a graph with one isolated node. We make the convention that
 all imports in the graph $\Gamma.imports$ of the current context between nodes that are
 specified in the list of \syntax{NetworkElements} are also included in the graph of 
 the network. 
@@ -5576,10 +5571,10 @@ prefix in the colimit of a network for the symbols with the origin in that node 
 
 We are going to make use of the following notations. If $G$ is a graph, let $insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$ be defined as follows:
  \begin{itemize}
-    \item if \syntax{IRI} is\ednote{better: ``denotes'', also in the sequel)} an OMS in $\Gamma$, then
+    \item if \syntax{IRI} denotes an OMS in $\Gamma$, then
                  a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
-   \item if \syntax{IRI} is an OMS mapping 
+   \item if \syntax{IRI} denotes an OMS mapping 
       or a network in $\Gamma$, it denotes a graph $G'$. Then
       the result is the union of $G$ with $G'$.
  \end{itemize}
@@ -5592,9 +5587,9 @@ Similarly, the operation $remove(\Gamma, G, \syntax{OMSOrMappingorPathorNetworkR
 \item if \syntax{OMSOrMappingorPathorNetworkRef} is an \syntax{IRI}, then
 
  \begin{itemize}
-    \item if \syntax{IRI} is an OMS in $\Gamma$, then the node labeled with \syntax{IRI} and all its incoming and outgoing
+    \item if \syntax{IRI} denotes an OMS in $\Gamma$, then the node labeled with \syntax{IRI} and all its incoming and outgoing
                 edges are removed from $G$,
-   \item  if \syntax{IRI} is an OMS mapping in $\Gamma$, then  
+   \item  if \syntax{IRI} denotes an OMS mapping in $\Gamma$, then  
    $\Gamma(\syntax{IRI})$ gives a graph $G'$ and two nodes 
    $N_1$ and $N_2$. Then all nodes of $G'$ other than $N_1$ and
    $N_2$ and all the edges of $G'$ are removed from $G$.
@@ -5625,17 +5620,19 @@ defined if $sem(\Gamma,\syntax{Network})\not=\emptyset$.
 If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is not defined.\todonote{Is this the best way?}
 
 If \syntax{ConsStrength} is \syntax{monomorphic}, the semantics is only
-defined if $sem(\Gamma,\syntax{OMS})$ consist of exactly one isomorphism
+defined if $sem(\Gamma,\syntax{Network})$ consist of exactly one isomorphism
 class of families of models.
 
 If \syntax{ConsStrength} is \syntax{weak-definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{OMS})$ is at most a singleton.
-\ednote{@Till: is this right? When is this needed? TM: yes, this is correct.}
+defined if $sem(\Gamma,\syntax{Network})$ is at most a singleton.
 
 If \syntax{ConsStrength} is \syntax{definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{OMS})$ is a singleton.
+defined if $sem(\Gamma,\syntax{Network})$ is a singleton.
 
-\ednote{Please also cover the new case of \syntax{ConsStrength} being \syntax{not-model-conservative} resp.\ \syntax{not-consequence-conservative}.}
+If \syntax{ConsStrength} is \syntax{not-model-conservative}, the semantics is only
+defined if $sem(\Gamma,\syntax{Network})=\emptyset$.
+
+If \syntax{ConsStrength} is \syntax{consequence-conservative}, the semantics is not defined.\todonote{Change!}
 
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 
@@ -5674,13 +5671,12 @@ $$sem(\Gamma, G, \syntax{exclude-imports, R$_1, \ldots,$ R$_n$}) = G'$$
 \semdom{sem(\Gamma, \syntax{BasicOMS}) = (\Gamma',(I, \Sigma, \cM, \Delta))}
 For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
 
-$$sem(\Gamma, \syntax{BasicOMS})= sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$$
-\ednote{This equation is not type-correct.}
-
+$$sem(\Gamma, \syntax{BasicOMS})= (\Gamma', 
+sem_{logic(\Gamma.\current)}(\syntax{BasicOMS}))$$
+\noindent where 
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
-node labeled with $(Name(\syntax{BasicOMS}),I, \Sigma', \cM',\Delta')$.\ednote{what is $\Sigma', \cM',\Delta'$?}
-\ednote{names of OMS?}
-
+node labeled with the name of \syntax{BasicOMS} and the other components as
+given by $sem_{logic(\Gamma.\current)}(\syntax{BasicOMS})$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5695,15 +5691,13 @@ $sem(\Gamma, \syntax{OMS}) = \Gamma'$.
 
 The semantics of a \syntax{BasicOMS} $O$ has been defined above.
 
-The semantics of $O = \syntax{'oms-ref', O', ImportName}$
-\ednote{remove importname? TM: no, see below.}
-is given by\ednote{doesn't $\Gamma$ play a role here? I would expect to see $\Gamma(O')$ is use...}
+The semantics of $O = \syntax{'oms-ref', O', ImportName}$ \ednote{ImportName?}
+is given by
  \begin{itemize}
-   \item $\Inst(\syntax{'oms-ref', O', ImportName}) = \Inst(O')$ which must be the same
-   with the current logic of $\Gamma$\ednote{TM: can't we remove this condition?}
-   \item $\Sig(\syntax{'oms-ref', O', ImportName}) = \Sig(O')$
-   \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \Mod(O')$
-   \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Th(O')$
+   \item $\Inst(\syntax{'oms-ref', O', ImportName}) = \Inst(\Gamma(O'))$
+   \item $\Sig(\syntax{'oms-ref', O', ImportName}) = \Sig(\Gamma(O'))$
+   \item $\Mod(\syntax{'oms-ref', O', ImportName}) = \Mod(\Gamma(O'))$
+   \item $\Th(\syntax{'oms-ref', O', ImportName}) = \Th(\Gamma(O'))$
    \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
          with a new node for $O$ labeled as defined in the items above.
  \end{itemize}
@@ -5776,7 +5770,7 @@ The semantics of a translation $O'= \syntax{translation, OMS, Translation}$ is g
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $O$ to the node of $O'$ labeled with
-        $\sigma$.\ednote{what about the comorphism?}
+        $((\Phi, \alpha, \beta), \sigma)$.
 \end{itemize}
 %Reduction
 
@@ -5797,7 +5791,7 @@ is
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $O'$ to the node of $O$ labeled with
-        $\sigma$.\ednote{what about the institution morphism?}
+        $((\Phi, \alpha, \beta),\sigma)$.
 
 \end{itemize}
 
@@ -5840,7 +5834,7 @@ The semantics of $O' = \syntax{'approximation', OMS,
        by extending $\Gamma''.imports$
         with a new node for $O'$ labeled as in the items above
         and with a new edge from the node of $\syntax{OMS}$ to the node of $O'$ 
-        labeled with $((\Phi,\alpha,\beta),id)$ \ednote{check}\ednote{shouldn't $id$ be replaced with the inclusion?}
+        labeled with $((\Phi,\alpha,\beta),\iota: \Phi(\Sig(\syntax{InterfaceSignature})) \to \Sig(\syntax{OMS}))$ 
 
 \end{itemize}
 
@@ -5914,8 +5908,8 @@ The semantics of $O =$
        with a new node for $O$ labeled as in the items above and
        with edges from the nodes of $\syntax{OMS}_1$ and $\syntax{OMS}_2$,
        respectively, to the node of $O$,
-        labeled with the inclusion of $\Sig(\syntax{OMS}_i)$ in $\Sig(O)$,
-        for $i=1,2$.\ednote{what about the comorphism?}
+        labeled for each $i=1,2$ with
+        $((\Phi_i, \alpha_i,\beta_i, \iota_i: \Phi_i(\syntax{OMS}_i) \to \Sig(O))$.
 \end{itemize}
 
 If \syntax{ConsStrength} is present, then $O$ must be a conservative extension
@@ -5945,14 +5939,14 @@ The semantics of $O=$
         $\Sig(O)$.
 \end{itemize}
 
-If \syntax{ExtConsStrength} is a \syntax{ConsStrength}, then $O$ must be a conservative extension
-of the appropriate strength of \syntax{OMS}$_1$.
-If \syntax{ExtConsStrength} is \syntax{'\%implied'}, then
-we must have that $M\models \delta$
-for each $M\in \Mod(\syntax{OMS})$ and each
-$\delta \in \Delta$.\ednote{I think the whole paragraph is not needed,
-because this is already handled in the semantics of $\syntax{ExtensionOMS}$.
-Moreover, \syntax{ExtConsStrength} and $\Delta$ have not been defined.}
+%If \syntax{ExtConsStrength} is a \syntax{ConsStrength}, then $O$ must be a conservative extension
+%of the appropriate strength of \syntax{OMS}$_1$.
+%If \syntax{ExtConsStrength} is \syntax{'\%implied'}, then
+%we must have that $M\models \delta$
+%for each $M\in \Mod(\syntax{OMS})$ and each
+%$\delta \in \Delta$.\ednote{I think the whole paragraph is not needed,
+%because this is already handled in the semantics of $\syntax{ExtensionOMS}$.
+%Moreover, \syntax{ExtConsStrength} and $\Delta$ have not been defined.}
 
 %Qualification
  
@@ -6143,10 +6137,6 @@ $$\begin{array}{ll}
 &\{M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
 = &\{ M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
 \end{array}$$
-
-\ednote{@Till: check that the signature of \syntax{QualInterfaceSigature} appears
-in the right place. TM: checked.}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6573,7 +6563,7 @@ The map is required to be total on the nodes of $G_1$.
 
 $sem(\Gamma, G_1, G_2,
 \syntax{node-map, OMSName$_1$, OMSName$_2$ , LogicTranslation ,  SymbolMapItems}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
-\endote{note that the AS allows for serveral \syntax{LogicTranslation}s.}
+\ednote{note that the AS allows for several \syntax{LogicTranslation}s.}
 where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
