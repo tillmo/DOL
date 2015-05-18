@@ -8160,7 +8160,14 @@ logic, unions, etc.}
   \caption{Translations between conforming OMS languages (normative)}
   \label{fig:ontograph-standards}
 \end{figure}
-This annex provides a core graph of logics and translations, covering those OMS languages whose conformance with DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, and RDF Schema in \aref{a:rdfs}).  The graph is shown in \fref{fig:ontograph-standards}.  Its nodes refer to the following OMS languages and profiles:
+
+This annex provides a core heterogeneous environment that could be used as a basis for 
+semantics of DOL as defined in Sec.~\ref{c:semantics}.
+
+\sclause{Languages}
+ 
+ The OMS languages that we selected
+are those whose conformance with DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, and RDFS in \aref{a:rdfs}).  The graph is shown in \fref{fig:ontograph-standards}.  Its nodes refer to the following OMS languages and profiles:
 \begin{itemize}
 \item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
 \item RDF Schema \nisref{W3C/TR REC-rdf11-schema:2014}
@@ -8169,22 +8176,92 @@ This annex provides a core graph of logics and translations, covering those OMS 
 \item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
 \item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.4.1}
 \item \CASL \cite{CASL-RM} and its sublanguage classical first-order logic (FOL)
+\item TPTP \ednote{insert reference here}
 \end{itemize}
 
-The list of chosen logics includes those ones required as mandatory
+The list of chosen languages includes those ones required as mandatory
 ones in the RFP. Since these are only ontology and modeling
 languages, also a specification language is included, namely the
-Common Algebraic Specification Language (CASL).  The list of
-translations comprises standard translations from the literature,
+Common Algebraic Specification Language (CASL). The list of
+language translations, given below, comprises standard translations from the literature,
 as well as further translations that are considered useful for
-logical interoperability.
+logical interoperability:
+\begin{itemize}
+  \item \EL $\to$ $\OWL$ 
+  \item \QL $\to$ $\OWL$
+  \item \RL $\to$ $\OWL$
+  \item $\RDF \to \RDFS$
+  \item $\RDFS \to \OWL$
+  \item $\OWL  \to \CASL.\FOL$
+  \item $\CASL.\FOL \to TPTP$
+  \item $TPTP \to \CASL.\FOL$
+  \item $\CASL.FOL \to \CL$
+  \item $\CASL.FOL \to \CASL$
+  \item $UML-CD \to \CL$.
+\end{itemize}
 
 The translations are specified in \cite{OntoGraph,MossakowskiEtAl14b}.
 %~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper)}
 Properties of translations have been introduced in section~\ref{s:foundations}.
-All translations are marked as default translations.
+All translations are marked as default translations. 
 
-\sclause{\EL $\to$ $\OWL$ and $\ELDL++$ $\to$ $\SROIQ(D)$}
+\sclause{Logics}
+
+The logics giving the semantics of these languages are listed below:
+\begin{itemize}
+ \item \RDF and \RDFS, supported respectively by \RDF and \RDFS
+ \item $\ELDL++$, supported by the language \EL
+ \item \DLLiteR, supported by \QL
+ \item \RL, supported by \RL
+ \item $\SROIQ(D)$, supported by $\OWL$
+ \item \CL, supported by \CL
+ \item $SubPCFOL^=_{ms}$, supported by \CASL
+ \item \FOL, supported by $\CASL.FOL$ and $TPTP$
+ \item $UML-CD$, supported by $UML-CD$.
+\end{itemize}
+
+The institution comorphisms between these logics are
+\begin{itemize}
+  \item $\ELDL++$ $\to$ $\SROIQ(D)$ 
+  \item \DLLiteR $\to$ $\SROIQ(D)$ 
+  \item \RL $\to$ $\SROIQ(D)$ 
+  \item $\RDF \to \RDFS$
+  \item $\RDFS \to \SROIQ(D)$ 
+  \item $\SROIQ(D)  \to \CASL.\FOL$
+  \item $\FOL \to \CL$
+  \item $\FOL \to SubPCFOL^=_{ms}$
+  \item $UML-CD \to \CL$.
+\end{itemize}
+
+All of them are selected as default logic translations. There are no institution morphisms. 
+
+For each institution, empty signature with its models, union and difference of signatures.
+Union of logics
+Symbol map to morphism
+Semantics of sentences
+Relativization
+Default language and serialization
+
+Semantics of structured native OMS
+Semantics of basic OMS fragments
+
+\sclause{Serializations}
+
+The following syntaxes are part of the heterogeneous logical environments:
+\begin{itemize}
+ \item Turtle, supported by $\OWL$, \EL, \QL, \RL , \RDF, \RDFS
+ \item RDF-XML, supported by $\OWL$, \EL, \QL, \RL , \RDF, \RDFS
+ \item OWL 2 XML, supported by $\OWL$, \EL, \QL, \RL 
+ \item Manchester Syntax, supported by $\OWL$, \EL, \QL, \RL
+ \item CASL, supported by \CASL
+ \item XMI, supported by UML-CD
+ \item XCL, supported by \CL
+ \item CLIF, supported by \CL 
+\end{itemize}
+
+\sclause{Language and Logic Translations}
+
+\ssclause{\EL $\to$ $\OWL$ and $\ELDL++$ $\to$ $\SROIQ(D)$}
 
 \EL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
 syntactic restriction according to the definition of \EL, see
@@ -8192,7 +8269,7 @@ syntactic restriction according to the definition of \EL, see
 is a syntactic restriction of $\SROIQ(D)$, $\ELDL++$ $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
-\sclause{\QL $\to$ $\OWL$ and \DLLiteR $\to$ $\SROIQ(D)$}
+\ssclause{\QL $\to$ $\OWL$ and \DLLiteR $\to$ $\SROIQ(D)$}
 
 \QL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
 syntactic restriction according to the definition of \QL, see
@@ -8200,7 +8277,7 @@ syntactic restriction according to the definition of \QL, see
 is a syntactic restriction of $\SROIQ(D)$, \DLLiteR $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
-\sclause{\RL $\to$ $\OWL$ and $\RL$ $\to$ $\SROIQ(D)$}
+\ssclause{\RL $\to$ $\OWL$ and $\RL$ $\to$ $\SROIQ(D)$}
 
 \RL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
 syntactic restriction according to the definition of \RL, see
@@ -8208,7 +8285,7 @@ syntactic restriction according to the definition of \RL, see
 is a syntactic restriction of $\SROIQ(D)$, $\RL$ $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
-\sclause{$\SimpleRDF \rightarrow \RDF$}
+\ssclause{$\SimpleRDF \rightarrow \RDF$}
 
 $\SimpleRDF \rightarrow \RDF$ is an obvious inclusion, except that
 \SimpleRDF resources need to be renamed if they happen to have a predefined
@@ -8216,11 +8293,11 @@ meaning in \RDF. The model translation needs to forget the fixed parts
 of \RDF models, since this part can always reconstructed in a unique
 way, we get an isomorphic model translation. 
 
-\sclause{$\RDF \rightarrow \RDFS$}
+\ssclause{$\RDF \rightarrow \RDFS$}
 
 This is entirely analogous to $\SimpleRDF \rightarrow \RDF$.
 
-\sclause{$\SimpleRDF \rightarrow \SROIQ(D)$}
+\ssclause{$\SimpleRDF \rightarrow \SROIQ(D)$}
 
 \todonote{This translation is not really useful. Consider the
   RDF-OWL-reduct construction instead.}
@@ -8242,9 +8319,9 @@ $(s,p,o)$ is translated to the \SROIQ(D) sentence
   This ensures that the model translation can add the built-ins.
 %\Til{What if the OWL model satisfies more triples than the built-ins?}
 
-\sclause{$\OWL \rightarrow FOL$}
+\ssclause{$\OWL \rightarrow FOL$}
 
-\ssclause{Translation of signatures}
+\sssclause{Translation of signatures}
 
  $\Phi((\Concepts, \Roles, \Individuals)) =  (F, P)$ with
 \begin{itemize}
@@ -8253,7 +8330,7 @@ $(s,p,o)$ is translated to the \SROIQ(D) sentence
 \end{itemize}
 
 
-\ssclause{Translation of sentences}
+\sssclause{Translation of sentences}
 
 Concepts are translated as follows:
 \begin{itemize}
@@ -8296,7 +8373,7 @@ $ \forall x,y . (\exists z_1,\ldots z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \we
 
 
 
-\ssclause{Translation of models}
+\sssclause{Translation of models}
 
 \begin{itemize}
 	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define $\beta_\Sigma(M') := (\Delta, \cdot^I)$
@@ -8316,7 +8393,7 @@ $C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (
 
 	The satisfaction condition holds as well.
 
-\sclause{$FOL \rightarrow \CL$}
+\ssclause{$FOL \rightarrow \CL$}
 
 This comorphism  maps classical first-order logic (FOL) to Common Logic.
 
@@ -8340,18 +8417,18 @@ by using $rel^M(int^M(P))$ and restricting to the arity of $P$;
 similarly for function symbols (using $fun^M$). Both the satisfaction condition
 and model-expansiveness of the comorphism are straightforward.
 
-\sclause{$\OWL \rightarrow \CL$}
+\ssclause{$\OWL \rightarrow \CL$}
 
 This comorphism is the composition of the comorphisms described in the previous
 two sections.
 
-\sclause{UML class diagrams $\to \CL$}
+\ssclause{UML class diagrams $\to \CL$}
 This translation has been described in annex~\ref{a:uml-class}. 
 Translation of signatures is detailed in section~\ref{a:UML-CD-models},
 translation of sentences in section~\ref{a:UML-CD-sat}.
 Models are translated identically.
 
-\sclause{$FOL \to \CASL$}
+\ssclause{$FOL \to \CASL$}
 This is an obvious sublogic.
  
 \infannex{Extended Logic Graph}\label{a:ext-graph}
