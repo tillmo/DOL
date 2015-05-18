@@ -2245,7 +2245,7 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
 
 \end{definitions}
 
-\sclause{Features of OMS Languages}
+\sclause{Features of OMS Languages}\label{c:terms-features}
  
 \begin{definitions}
   \termdefinition{OMS language translation}{mapping from constructs in the source \termref{OMS language} to their equivalents in the target \termref{OMS language}.}
@@ -6949,15 +6949,15 @@ pos=h,
   LogicMapping & Mapping & \NN
   Translation & Mapping & \NN
   Reduction & Mapping & \NN
-  DefaultMapping & Mapping & \NN
-  WeaklyExactMapping & Mapping & \NN
-  ExactMapping & WeaklyExactMapping & \NN
-  FaithfulMapping & Mapping & \NN
-  ModelExpansiveMapping & FaithfulMapping & \NN
+  DefaultMapping & Mapping & \ref{c:terms-features} \NN
+  WeaklyExactMapping & Mapping & \ref{s:foundations} \NN
+  ExactMapping & WeaklyExactMapping & \ref{s:foundations} \NN
+  FaithfulMapping & Mapping & \ref{c:terms-features} \NN
+  ModelExpansiveMapping & FaithfulMapping & \ref{c:terms-features} \NN
   ModelBijectiveMapping & ModelExpansiveMapping & \NN
-  Embedding & ModelBijectiveMapping, LogicMapping, Translation & \NN
+  Embedding & ModelBijectiveMapping, LogicMapping, Translation & \ref{s:foundations} \NN
   PlainMapping & Mapping & \NN
-  SimpleTheoroidalMapping & Mapping & \LL
+  SimpleTheoroidalMapping & Mapping & \ref{c:term-logic} \LL
 }
 
 \tref{tab:logic-vocab-prop} lists the object properties of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax).  The definitions of the properties can be found in \cref{terms-and-defs}, sometimes under different names if stated so in the table.
@@ -7911,7 +7911,9 @@ When one or more ends of the Association are ordered, links carry ordering infor
 \texttt{(forall (t) (if (form:sequence-member t a)\\
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
 \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
-\ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert $x_r$ form:empty-sequence)))))))))}
+\ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert\\
+\qqquad\qqquad\qqquad\ \  $x_r$ form:empty-sequence)))))))))}
+
 In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
 $\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:\\
 \texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}
@@ -8202,7 +8204,7 @@ semantics of DOL as defined in Sec.~\ref{c:semantics}.
  
  The OMS languages that we selected
 are those whose conformance with DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, RDFS in \aref{a:rdfs},
-\CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The graph is shown in \fref{fig:ontograph-standards}.  Its nodes refer to the following OMS languages and profiles:
+\CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The logic graph is shown in \fref{fig:ontograph-standards}; the language graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes refer to the following OMS languages and profiles:
 \begin{itemize}
 \item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
 \item RDF Schema \nisref{W3C/TR REC-rdf11-schema:2014}
