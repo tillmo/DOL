@@ -37,7 +37,7 @@ draft%
 \usepackage{pdflscape}
 
 %\usepackage[show]{ed}
-\usepackage[show]{ed}
+\usepackage[hide]{ed}
 
 %color highlight, for editing
 \usepackage{color}
@@ -3959,7 +3959,8 @@ Approximation        = 'approx' , [ QualInterfaceSignature ] , [ LogicRef ] ;
 Filtering            = 'select' , BasicOMS 
                      | 'reject' , BasicOMS ;
 
-ExtensionOMS         = extension-oms , [ ExtConsStrength ] , [ ExtensionName ] , ExtendingOMS ;
+ExtensionOMS         = extension-oms , [ ExtConsStrength ] , [ ExtensionName ] , 
+                                       ExtendingOMS ;
 
 ConsStrength         = Conservative 
 		     | 'monomorphic'  
@@ -4100,7 +4101,8 @@ Refinement           = 'ref-oms' , OMS
                      | 'simple-network-ref' , Network , RefMap , Refinement ;
 RefMap               = 'refmap-oms' , [ LogicTranslation ] , [ SymbolMapItems ] 
                      | 'refmap-network' , { NodeMap } ;
-NodeMap              = 'node-map', OMSName , OMSName , { LogicTranslation } , [ SymbolMapItems ] ;
+NodeMap              = 'node-map', OMSName , OMSName , 
+                                   { LogicTranslation } , [ SymbolMapItems ] ;
 
 
 Entailment           = 'entailment' , EntailmentName , EntailmentType ;
@@ -4533,7 +4535,8 @@ ExtensionName        = '%(' , IRI , ')%' ;
 
 OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model' | 'oms' ;
 
-OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , OMS , 'end'  ; 
+OMSDefn             = OMSkeyword , OMSName , '=' , [ ConsStrength ] , 
+                                   OMS , 'end'  ; 
 
 Symbol               = IRI ;
 SymbolMap            = Symbol , '|->' , Symbol ;
@@ -8097,9 +8100,18 @@ $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}
 \qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
 \qqquad\qqquad\qqquad\qqquad\qquad(m x $y_{\sem{\ell}}$) ))))}
 \item
-$\CL(\ell \leq \mathsf{\#}c.q(f_1 : \tau_1[c_1], \ldots, f_k : \tau_k[c_k]) : \tau[c'].f_i)=$\\
+$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c'])=$\\
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-\qqquad  (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (form:$\tau$-size $x_i$ n)) \\
+\qqquad  (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) \\
+\qqquad\qqquad\qquad (form:$\tau$-size $x_1$ $n_1$) \\
+\qqquad\qqquad\qquad\ldots\\
+\qqquad\qqquad\qquad (form:$\tau$-size $x_k$ $n_k$) \\
+\qqquad\qqquad\qquad (form:$\tau$-size $y$ $n$) \\
+\qqquad\qqquad\qquad (buml:leq $\sem{\ell_1}$ $n_1$)\\
+\qqquad\qqquad\qquad (buml:leq $n_1$ $\sem{\ell'_1}$)\\
+\qqquad\qqquad\qquad\ldots\\
+\qqquad\qqquad\qquad (buml:leq $\sem{\ell_k}$ $n_k$)\\
+\qqquad\qqquad\qquad (buml:leq $n_k$ $\sem{\ell'_k}$) )\\
 \qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
 %\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
 %\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
