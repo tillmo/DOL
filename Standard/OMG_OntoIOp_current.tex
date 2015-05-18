@@ -6928,14 +6928,15 @@ Applications of LoLa include modeling statements about OMS in RDF, e.g., when an
 LoLa is currently maintained as an OWL ontology and, prospectively, as an OMS library implemented in DOL, at \url{https://ontohub.org/meta/lola/ontology}.\footnote{The preferred location for LoLa snapshots being part of this OMG standard is \url{http://www.omg.org/spec/DOL/Current/lola}.}.
 For a full treatment of the background and design considerations of LoLa please see~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
 
-The tables in this annex list the classes and properties of LoLa.  All classes and properties are assumed to be in the LoLa namespace unless stated otherwise.
+The tables in this annex list the classes and object properties of LoLa and thus the essential parts of its implementation.  All classes and object properties are assumed to be in the LoLa namespace unless stated otherwise.
 
-\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following RDF triples (given in Turtle serialization~\cite{W3C:REC-turtle-20140225}):
+\tref{tab:logic-vocab-classes} lists the classes of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027}):
 
-\begin{lstlisting}[language=N3]
-_:class rdf:type        rdfs:Class ;
-        rdfs:subClassOf _:superclass ;
-        rdfs:comment    "documentation" .
+\begin{lstlisting}[language=owl2Manchester]
+Class: ...
+  SubClassOf: ...
+  Annotations:
+    skos:definition "..."
 \end{lstlisting}
 
 \newcommand*{\ClassDocumentation}[1]{\textit{#1}}
@@ -6966,13 +6967,15 @@ pos=h,
   SimpleTheoroidalMapping & \ClassDocumentation{a default mapping} & Mapping \LL
 }
 
-\tref{tab:logic-vocab-prop} lists the properties of the RDF vocabulary for describing OMS languages.  Each row of the table translates into the following RDF triples (given in Turtle serialization):
+\tref{tab:logic-vocab-prop} lists the object properties of LoLa.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax):
 
-\begin{lstlisting}[language=N3]
-_:property rdf:type     rdf:Property ;
-           rdfs:domain  _:domain ;
-           rdfs:range   _:range ;
-           rdfs:comment "documentation" .
+\begin{lstlisting}[language=owl2Manchester]
+ObjectProperty: ...
+  Domain: ...
+  Range: ...
+  SubPropertyOf: ...
+  Annotations:
+    skos:definition "..."
 \end{lstlisting}
 
 %\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''. TM: has been defined in section 4}
