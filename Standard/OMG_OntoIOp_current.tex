@@ -47,6 +47,8 @@ draft%
 %% Hacks
 %\usepackage{savesym}
 
+%\usepackge{enumitem}
+
 %% Font and language
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -529,6 +531,12 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\qqquad}{\white{x}\qquad}
 
 \allowdisplaybreaks
+
+
+\usepackage{changebar}
+
+\newcommand{\cbs}[0]{\cbstart \color{red}}
+\newcommand{\cbe}[0]{\cbend \color{black}}
 
 
 \begin{document}
@@ -1567,7 +1575,7 @@ be able to expand CURIEs into IRIs when requested.
 \index{conformance|)}
 
 \chapter{Normative References}
-\begin{enumerate}
+\begin{enumerate}[label=\bfseries NR\arabic*:]
 % OLD text
 % The following referenced documents are indispensable for the application of this document. For dated references, only
 % the edition cited applies. For undated references, the latest edition of the referenced document (including any
@@ -2363,6 +2371,14 @@ There is also a supports relation between OMS languages and serializations.
 
  \termdefinition{institution}{metaframework mathematically formalizing
 the notion of a \termref{logic}.}
+\cbs \begin{note}
+In order to support a broad range of 
+OMS languages and enable interoperability between them, 
+the semantics of \DOL needs to be defined in a way that abstracts from 
+the differences of the logic language aspects of  OMS languages. 
+Institutions provide such a framework. 
+\end{note} 
+\cbe
 \begin{note}
  See clause~\ref{c:semantics} for a formal definition.
 \end{note}
@@ -4704,97 +4720,81 @@ The lexical symbols of the DOL text serialization include various key words and 
 \sssclause{Key words}
 
 Key words are always written lowercase. The following key words are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  None of these rewritings changes the semantics.}, although they can be used as parts of tokens. 
-
-{\ttfamily %
+\cbs
+%{\ttfamily %
+\begin{lstlisting}
+alignment 
+along 
+assuming 
 and
+closed-world
+cofree
+combine
 end
-hide
-interpretation
-library
-logic
-minimize
-network\\
-model
-onto
-ontology
-spec
-specification
-reveal
-then
-to
-vars
-view
-with
-keep
-forget
-select
-reject
-%
-for
-result
-substitution
-% #
-% ?
-% :
-% >
-% <
-% ,
-% =
-along
-where
-query
-ni
-in
-% \%(
-% )\%
-% }
-% {
-% *
-relation
-% +
-% 1
-assuming
-alignment
-of
-module
-% < - >
-equivalence
 entails
 entailment
-using 
-% |->
-via
+equivalence
+excluding
+extract
+free
+hide
+import
+in
+for
+forget
+interpretation
+keep
+language
+library
+logic
+maximize
+model
+module
+minimize
+network
+ni
+of
+oms
+onto
+ontology
+query
 refined
 refinement
-% - >
-oms
-\%complete
-\%inconsistent
-\%consistent
-\%notmcons
-\%notccons
-\%mcons
-\%ccons
-\%implied
-\%def
-\%wdef
-\%mono
+reject
+relation
 remove
-extract
-translation
-cofree
-free
-maximize
-closed-world
-combine
-excluding
+result
+reveal
+select
 separators
-\%prefix(
 serialization
-language
-import
-}
-
+spec
+specification
+substitution
+then
+to
+translation
+using 
+vars
+via
+view
+where
+with
+%ccons
+%complete
+%consistent
+%def
+%implied
+%inconsistent
+%mcons
+%mono
+%notccons
+%notmcons
+%prefix
+%wdef
+\end{lstlisting}
+%}
+\cbe
 \sssclause{Key signs}
 
 Table~\ref{tab:key-signs} following key signs are reserved, and are not available for use as complete identifiers.  Key signs that are outside of the Basic Latin subset of Unicode may alternatively be encoded as a sequence of Basic Latin characters.
@@ -9470,7 +9470,7 @@ to the term \termref{structured OMS} in this \IS}
 \infannex{Tools for DOL}\label{a:tools}
 
 \sclause{The Heterogeneous Tool Set (Hets)}\label{a:hets} The
-Heterogeneous Tool Set (Hets) is the reference implementation of
+Heterogeneous Tool Set (Hets) is \cbs an implementation \cbe of
 DOL. Hets a parsing, analysis and proof tool
 for OMS, OMS networks and OMS mappings written in DOL and
 DOL-conforming languages.  It supports a wide range of OMS languages
@@ -9494,7 +9494,7 @@ available at the following URL \url{https://github.com/spechub/hets}.
 
 \sclause{Ontohub, Modelhub, Spechub}\label{a:ontohub}
 
-Ontohub/Modelhub/Spechub is the second reference implementation of
+Ontohub/Modelhub/Spechub is \cbs another implementation \cbe of
 DOL. It is a repository engine for managing OMS, OMS networks and OMS
 mappings written in DOL and DOL-conforming languages.  It supports the
 same range of OMS languages and language translations as Hets (indeed,
@@ -9626,7 +9626,7 @@ effort API4KB.
 This annex describes the way how Ontohub assigns IRIs to DOL
 libraries, OMS, symbols etc. Ontohub\footnote{In this annex,
   ``Ontohub'' could equally well be substituted by ``Modelhub'' and
-  ``Spechub''.} is a reference implementation for DOL, and it is
+  ``Spechub''.} is \cbs an implementation \cbe for DOL, and it is
 suggested that other tools supporting DOL should adopt the same or a
 similar scheme for IRIs.
 
