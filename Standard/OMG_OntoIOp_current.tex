@@ -1109,7 +1109,7 @@ Tools for \DOL are discussed in annex \ref{a:tools}.
 %	
 6.7.(h)	& 
 Proposals should discuss a registry of logical languages.	&
-A registry is discussed in clause \ref{c:conformance}.
+A registry is discussed in \cbs annex \ref{a:registry}\cbe.
    \\ \hline
 %	
 \end{longtable}
@@ -1293,16 +1293,6 @@ serializations, translations and applications. The conformance of a
 number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, UML Class Diagrams, CASL) as well as translations among
 these is discussed in informative annexes of this \IS.
 
-It is expected that \DOL will be used for other languages than the  set of \DOL-conforming
-languages that are discussed in this \IS. There is a  \textbf{\termref{registry} for \DOL-conforming languages and translations} hosted
-at \url{http://logichub.org}.  The registry  also includes descriptions of
-DOL-conforming languages and translations (as well as other information needed by implementors
-and users) in both human-readable and machine-processable form.  
-
-There will be Maintenance Authority (MA)\footnote{or, depending on advisability, a Registration
-Authority} established to maintain the registry as an informative resource governed by the
-standard.  The registry contents itself will not be normative; however, it is 
-expected to become the basis for normative activities.
 
 
 \sclause{Conformance of an OMS Language/a Logic with \DOL}\label{c:conform:logic}
@@ -1566,8 +1556,45 @@ A \emph{parser} is \DOL-conformant if it can parse the \DOL textual syntax and p
 A \emph{printer} is \DOL-conformant if it can read \DOL abstract syntax and produce \DOL textual syntax.
 \item
 Software that is used to \emph{edit, format or manage} \DOL libraries complies with this specification if and only if it is capable to process \DOL abstract syntax. Moreover, it needs to meets the requirements for a \DOL-conformant parser if it is able to process \DOL textual input. It needs to meet the requirements of a \DOL-conformant printer, if it is able to generare \DOL textual output. However, it is also possible that a software for \DOL management will work on the abstract syntax only, and delegates the processing of \DOL text to external parsers and/or printers.
+\item a \emph{static analyser} is \DOL-conformant if it can compute
+  the logic and the signature of an OMS according to the semantics
+  defined in section~\ref{c:semantics}. In more detail, a static analyser
+  can have the following capabilites:
+\begin{itemize}
+\item \emph{simple analysis}: static analysis of DOL excluding networks and alignments;
+\item \emph{full analysis}: static analysis of full DOL.
+\end{itemize}
 \item
-Software that implements machine reasoning about OMS (e.g., theorem proving, approximation)  complies with this specification if and only if it interprets  OMS libraries according to the semantics defined in section~\ref{c:semantics}.
+Software that implements machine \emph{reasoning} about OMS (e.g., theorem proving, approximation)  complies with this specification if and only if it interprets  OMS libraries according to the semantics defined in section~\ref{c:semantics}. In more detail, a reasoning tool can have the following capabilities:
+\begin{itemize}
+\item \emph{simple logical consequence}, i.e.\ the check whether all
+sentences marked as \syntax{\%implied} within basic OMS
+and extensions are logical consequences
+of the enclosing OMS;
+\item \emph{structured logical consequence}, i.e.\ the check whether
+  all sentences marked as \syntax{\%implied} are logical consequences
+  of the enclosing OMS and whether all entailments in an OMS library
+  have a defined semantics;
+\item \emph{interpretation}, i.e.\ the check whether all
+  interpretations in an OMS library have a defined semantics;
+\item \emph{simple refinement}, i.e.\ the check whether all
+  refinements of OMS in an OMS library have a defined semantics;
+\item \emph{full refinement}, i.e.\ the check whether all refinements
+  (both of OMS and networks) in an OMS library have a defined
+  semantics;
+\item \emph{simple conservativity}, i.e.\ the check whether all conservativity
+  statements in an OMS library have a defined semantics;
+\item \emph{full conservativity}, i.e.\ the check whether all
+  statements about conservative, monomorphic, definitional and weakly
+  definitional extensions in an OMS library have a defined semantics;
+\item \emph{module extraction}, i.e.\ the ability to compute modules
+(typically, a given tool will provide this only for some logics);
+\item \emph{approximation}, i.e.\ the ability to compute approximations
+(typically, a given tool will provide this only for some logics
+and logic projections);
+\item \emph{full DOL reasoning}, i.e.\ the check whether an OMS
+  library has a defined semantics.
+\end{itemize}
 \end{itemize}
 \cbe
 
@@ -1587,7 +1614,7 @@ syntaxes of OWL and Common Logic can be distinguished by examining the different
 However, for \DOL conformance, that application has to be capable of exporting documents with 
 explicit references to the logics used.
 
-DOL-aware applications also \cbs \shall \cbs be able to strip \DOL annotations
+DOL-aware applications also \cbs \shall \cbe be able to strip \DOL annotations
 from embedded fragments in other OMS languages. Moreover, they \cbs \shall \cbe
 be able to expand CURIEs into IRIs when requested.
 
@@ -7027,6 +7054,22 @@ pos=h,
   serializes & Serialization & Language & \ref{c:term-serializations} \NN
   % \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsSerialization.}\LL
 }
+
+
+\section{DOL Registry}\label{a:registry}
+
+\cbs  \ednote{This paragraph has merely been moved.}
+It is expected that \DOL will be used for other languages than the  set of \DOL-conforming
+languages that are discussed in this \IS. There is a  \textbf{\termref{registry} for \DOL-conforming languages and translations} hosted
+at \url{http://logichub.org}.  The registry  also includes descriptions of
+DOL-conforming languages and translations (as well as other information needed by implementors
+and users) in both human-readable and machine-processable form.  
+
+There will be Maintenance Authority (MA)\footnote{or, depending on advisability, a Registration
+Authority} established to maintain the registry as an informative resource governed by the
+standard.  The registry contents itself will not be normative; however, it is 
+expected to become the basis for normative activities.
+\cbe
 
 \infannex{Conformance of OWL 2 DL With \DOL}\label{a:owl}
 
