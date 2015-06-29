@@ -1871,48 +1871,6 @@ The converse is generalization.
 \end{note}
 }
 
-\red{
-  \termdefinition{query language}{\termref{OMS language} specifically dedicated to queries\index{query}.}
-\begin{example}
-SPARQL, Prolog
-\end{example}
-\begin{note}
-There are also general purpose OMS languages, which can express both \termref{OMS} and queries.
-\end{note}
-}
-
-
-\termdefinition{query}{\termref{sentence} containing query variables\index{query variable}
-   that can be instantiated by a \termref{substitution}.}
-
-
-\termdefinition{query variable}{\termref{symbol} that will be used in a \termref{query} and a
-\termref{substitution}.}
-  \begin{note}
-   From an abstract point of view, query variables are just symbols; 
-   they are used in a way
-   that they will be substituted using a substitution.
-   Many OMS languages have special notations for (query) variables.
-  \end{note}
-  \begin{note}
-   Usually, query variables are the free variables of a sentence; there
-   can be other (bound) variables.
-  \end{note}
-  \begin{note}
-  If there are no variables in an OMS language, constants can be used as query
-  variables.
-  \end{note}
-
-
-\termdefinition{substitution}{\termref{OMS mapping} that maps query variables\index{query variable} of one \termref{OMS} to complex terms\index{term} of another OMS.}
-
-
-
-\termdefinition{answer substitution}{\termref{substitution} that, when applied to
-   a given \termref{query}, turns the latter into a logical consequence of a
-   given \termref{OMS}.}
-\end{definitions}  
-
 
 
 
@@ -3695,7 +3653,7 @@ The major functions of \DOL are the following:
 \end{itemize}
  
 The syntax of \DOL roughly follows these functions; native OMS, the various kind of structured OMS, OMS mappings, and OMS networks are the most important \cbs metaclasses \cbe  of \DOL. 
-They (together with queries and importation) form the items in a \emph{DOL library}.
+They (together with importations) form the items in a \emph{DOL library}.
  
 
 
@@ -3918,8 +3876,8 @@ DOL provides \cbs MOF metaclasses \cbe  for
 \item \red{OMS} (which can be native OMS in some OMS language, or unions, translations, minimizations, combinations, approximations of OMS, among others)
 \item OMS mappings 
 \item OMS networks
-\item \red{queries}
-\item libraries (items in libraries are: definitions of OMS, OMS mappings, OMS networks and queries, as well as qualifications choosing the logic,
+%\item \red{queries}
+\item libraries (items in libraries are: definitions of OMS, OMS mappings, and OMS networks, as well as qualifications choosing the logic,
 OMS language and/or serialization)
 \item identifiers
 \item annotations
@@ -3943,9 +3901,9 @@ library consists of a name, followed by a list of
 definition of an OMS  (\syntax{OMSDefn}), 
 a mapping between OMS
 (\syntax{MappingDefn}), 
-\red{a definition of an OMS network  (\syntax{NetworkDefn}),}
-a definition related to queries 
-(\syntax{QueryRelatedDefn})
+\red{a definition of an OMS network  (\syntax{NetworkDefn})}
+%a definition related to queries 
+%(\syntax{QueryRelatedDefn})
 or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verbatim inclusion of an OMS written in
@@ -4087,16 +4045,6 @@ non-logical symbol is legal, this then is a non-injective OMS mapping.}.
 
 %Alignments 
 
-\sclause{Queries}
-\red{
-Queries are a means to extract information from an OMS.  \DOL's \syntax{QueryDefn}s cover 
-``select''-type queries that deliver an answer substitution for the query variables. (Answer) 
-substitutions can be stored separately, using a \syntax{SubstDefn}. A
-\syntax{ResultDefn} expresses that certain answer substitutions are
-the result of a query. Optionally, a result can be expressed to be
-complete, meaning that it comprises all answer substitutions to the query.
-}
-\includegraphics[scale=0.5]{mof/dia/dia6.png}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4321,7 +4269,7 @@ Library                 = [ PrefixMap ] , LibraryDefn
 LibraryDefn             = 'library' , LibraryName , Qualification , { LibraryItem } ;
 NativeOMS = ($<$) language and serialization specific ($>$) ;
 LibraryItem             = LibImport | OMSDefn | NetworkDefn | MappingDefn 
-                          | QueryRelatedDefn | Qualification ;
+                          | Qualification ;
 LibImport                = 'import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
@@ -4564,22 +4512,6 @@ Confidence           = Double ;
 Double               = ($<$ a number $\in [0,1]$ $>$) ;
 \end{lstlisting}
 
-\ssclause{Queries}
-
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
-QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
-QueryDefn            = 'query' , QueryName , '=' , 'select' , Vars , 
-                                'where' , Sentence , 'in' , GroupOMS , 
-                                ['along' , OMSLangTrans] , 'end' ;
-SubstDefn            = 'substitution' , SubstName , ':' , GroupOMS , 'to' , GroupOMS , 
-                                       '=' , SymbolMapItems , 'end' ;
-ResultDefn           = 'result' , ResultName , '=' , SubstName , { ',' , SubstName } ,
-                                 'for' , QueryName , [ '%complete' ] , 'end' ;
-QueryName            = IRI ;
-SubstName            = IRI ;
-ResultName           = IRI ;
-Vars                 = Symbol , { ',' , Symbol } ;
-\end{lstlisting}
 
 \sclause{Identifiers}
 
@@ -4649,7 +4581,6 @@ of
 oms
 onto
 ontology
-query
 refined
 refinement
 reject
@@ -4783,7 +4714,7 @@ Hence, the most important need is to capture precisely what a
 heterogeneous logical environment is.
 
 The \DOL semantics itself gives a formal meaning to libraries, OMS
-networks, OMS, OMS mappings, and queries. For each synactic construct
+networks, OMS, and OMS mappings. For each synactic construct
 in the abstract syntax,
 a \emph{semantic domain} is given. It specifies the range of possible
 values for the semantics. Additionally, \emph{semantic rules} are
@@ -5315,7 +5246,7 @@ $\Gamma$ containing:
  \begin{itemize}
     \item a graph of imports between OMS, as in the semantics of OMS mappings but
           only with import links between nodes, denoted $\Gamma.imports$
-    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, OMS networks and OMS queries, that 
+    \item a mapping from \syntax{IRI}s to semantics of OMS, OMS mappings, and OMS networks, that 
                we also denote by $\Gamma$, providing access to previous definitions,
     \item a prefix map, denoted $\Gamma.\prefix$, that stores the declared prefixes,
     \item a triple $\Gamma.\current$ that stores the current language, logic and serialization. 
@@ -5423,7 +5354,7 @@ $sem(\Gamma, \syntax{library LibraryName Qualification LibraryItem}_1 \ldots \sy
 $$sem(\Gamma, \syntax{lib-import LibraryName}) = \Gamma\cup\Gamma'$$
 \noindent where $sem(\Gamma, \syntax{LibraryName}) = \syntax{IRI}$ and $sem(\syntax{IRI}) = \Gamma'$.
 
-Equations for \syntax{OMSDefn}, \syntax{NetworkDefn}, \syntax{MappingDefn} and \syntax{QueryRelatedDefn} 
+Equations for \syntax{OMSDefn}, \syntax{NetworkDefn}, and \syntax{MappingDefn} 
 are given in the next sections.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5901,8 +5832,6 @@ $O=$ \syntax{combination Network} is
   $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
 \end{itemize}
 
-For the semantics of \syntax{application} \syntax{OMS}
-\syntax{SubstName}, see section~\ref{s:sem-queries}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -6182,7 +6111,6 @@ and
 $sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{Symbol}) = (s,s)$ 
 where $sem(\Gamma,\Sigma_1, \syntax{Symbol}) = s$.
 
-For the semantics of \syntax{Term}, see section~\ref{s:sem-queries}.
 
 \semdom{sem(\Gamma, \Sigma, \syntax{Sentence}) = \varphi}
 
@@ -6685,37 +6613,6 @@ logic-specific way from the correspondences
 $C_1,\ldots, C_n$ taking into account \syntax{AlignSem}.
 \cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
-\ssclause{Semantics of Queries}\label{s:sem-queries}
-
-While queries are very important from a practical point of view, their
-semantics so far has been developed only for individual institutions.
-In \cite{MossakowskiEtAl15a}, three options for an
-institution-independent semantics of queries and derived signature
-morphisms (which can map symbols to terms) are discussed. Currently,
-it is not clear which one would be the best choice. It is expected
-that after some experience with \DOL, a choice will crystallize. This
-means that in the current version, the semantics of queries is
-elided, and left for a later version of \DOL.
-
-% \semdom{sem(\syntax{QueryRelatedDefn})}
-%
-%%%%%%%%%%%%%%%%%%%%%%
-% \semdom{sem(\syntax{QueryDefn})}
-%%%%%%%%%%%%%%%%%%%%%
-% \semdom{sem(\syntax{SubstDefn})}
-%%%%%%%%%%%%%%%%%%%%%%
-% \semdom{sem(\syntax{ResultDefn})}
-%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%%Application
-%\semdom{sem^T(\syntax{application OMS Substname})}
-%\semdom{sem^M(\syntax{application OMS Substname})}
-%
-%
-%\semdom{sem(\Gamma,\Sigma,\syntax{Term}) = t}
-
-%$$sem(\Gamma, \Sigma, \syntax{Term}) = t$$
-%\noindent where $t$ is a $\Sigma$-term and the analysis is done in a logic-specific way.\ednote{This should be added to the heterogeneous logical env. We here need derived siganture morphisms.}
 
 %\sclause{Translational semantics of \DOL language constructs}
 %
@@ -8864,7 +8761,98 @@ Double               = ($<$ a number $\in [0,1]$ $>$) ;
 
 %\includegraphics[scale=0.6]{mof/dia/dia5.png}
 
-\sclause{Queries}
+
+\sclause{IRIs and Prefixes}
+
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
+IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{specified below in \cref{c:curies}}) 
+FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
+\end{lstlisting}
+
+
+\infannex{Extension of DOL with Queries}
+
+\cbs
+
+This annex describes the syntax of queries. A semantics still needs to
+be developed.  DOL's metaclass \syntax{LibraryItem} is extended with a
+new subclass \syntax{QueryRelatedDefn} for definitions related to
+queries.
+\cbe
+
+\sclause{Terms and Definitions}
+  \termdefinition{query language}{\termref{OMS language} specifically dedicated to queries\index{query}.}
+\begin{example}
+SPARQL, Prolog
+\end{example}
+\begin{note}
+There are also general purpose OMS languages, which can express both \termref{OMS} and queries.
+\end{note}
+
+
+
+\termdefinition{query}{\termref{sentence} containing query variables\index{query variable}
+   that can be instantiated by a \termref{substitution}.}
+
+
+\termdefinition{query variable}{\termref{symbol} that will be used in a \termref{query} and a
+\termref{substitution}.}
+  \begin{note}
+   From an abstract point of view, query variables are just symbols; 
+   they are used in a way
+   that they will be substituted using a substitution.
+   Many OMS languages have special notations for (query) variables.
+  \end{note}
+  \begin{note}
+   Usually, query variables are the free variables of a sentence; there
+   can be other (bound) variables.
+  \end{note}
+  \begin{note}
+  If there are no variables in an OMS language, constants can be used as query
+  variables.
+  \end{note}
+
+
+\termdefinition{substitution}{\termref{OMS mapping} that maps query variables\index{query variable} of one \termref{OMS} to complex terms\index{term} of another OMS.}
+
+
+
+\termdefinition{answer substitution}{\termref{substitution} that, when applied to
+   a given \termref{query}, turns the latter into a logical consequence of a
+   given \termref{OMS}.}
+\end{definitions}  
+
+\sclause{MOF Abstract Syntax}
+\red{
+Queries are a means to extract information from an OMS.  \DOL's \syntax{QueryDefn}s cover 
+``select''-type queries that deliver an answer substitution for the query variables. (Answer) 
+substitutions can be stored separately, using a \syntax{SubstDefn}. A
+\syntax{ResultDefn} expresses that certain answer substitutions are
+the result of a query. Optionally, a result can be expressed to be
+complete, meaning that it comprises all answer substitutions to the query.
+}
+\includegraphics[scale=0.5]{mof/dia/dia6.png}
+
+\sclause{EBNF Concrete Syntax}
+
+\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
+QueryDefn            = 'query' , QueryName , '=' , 'select' , Vars , 
+                                'where' , Sentence , 'in' , GroupOMS , 
+                                ['along' , OMSLangTrans] , 'end' ;
+SubstDefn            = 'substitution' , SubstName , ':' , GroupOMS , 'to' , GroupOMS , 
+                                       '=' , SymbolMapItems , 'end' ;
+ResultDefn           = 'result' , ResultName , '=' , SubstName , { ',' , SubstName } ,
+                                 'for' , QueryName , [ '%complete' ] , 'end' ;
+QueryName            = IRI ;
+SubstName            = IRI ;
+ResultName           = IRI ;
+Vars                 = Symbol , { ',' , Symbol } ;
+\end{lstlisting}
+
+\sclause{EBNF Abstract Syntax}
+
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
 
@@ -8881,14 +8869,37 @@ Vars                 = { Symbol } ;
 Complete             = 'complete' ;
 \end{lstlisting}
 
+\sclause{Semantics of Queries}\label{s:sem-queries}
 
-\sclause{IRIs and Prefixes}
+While queries are very important from a practical point of view, their
+semantics so far has been developed only for individual institutions.
+In \cite{MossakowskiEtAl15a}, three options for an
+institution-independent semantics of queries and derived signature
+morphisms (which can map symbols to terms) are discussed. Currently,
+it is not clear which one would be the best choice. It is expected
+that after some experience with \DOL, a choice will crystallize. This
+means that in the current version, the semantics of queries is
+elided, and left for a later version of \DOL.
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+% \semdom{sem(\syntax{QueryRelatedDefn})}
+%
+%%%%%%%%%%%%%%%%%%%%%%
+% \semdom{sem(\syntax{QueryDefn})}
+%%%%%%%%%%%%%%%%%%%%%
+% \semdom{sem(\syntax{SubstDefn})}
+%%%%%%%%%%%%%%%%%%%%%%
+% \semdom{sem(\syntax{ResultDefn})}
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%Application
+%\semdom{sem^T(\syntax{application OMS Substname})}
+%\semdom{sem^M(\syntax{application OMS Substname})}
+%
+%
+%\semdom{sem(\Gamma,\Sigma,\syntax{Term}) = t}
 
-IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{specified below in \cref{c:curies}}) 
-FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
-\end{lstlisting}
+%$$sem(\Gamma, \Sigma, \syntax{Term}) = t$$
+%\noindent where $t$ is a $\Sigma$-term and the analysis is done in a logic-specific way.\ednote{This should be added to the heterogeneous logical env. We here need derived siganture morphisms.}
 
 
 \infannex{Example Uses of all \DOL Constructs}\label{a:uses}
