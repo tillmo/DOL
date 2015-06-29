@@ -264,6 +264,8 @@ author=,date=,id=,replyto=,type=}{}%
 \todonote[author=Christoph Lange,#1]{#2} 
 }
 
+\newcommand{\toleft}{\noindent$x\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$}
+
 
 
 
@@ -3636,7 +3638,7 @@ The purpose of this clause is to briefly describe the
 %~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{meet the requirements of people who combine OWL reasoners with Prolog. Some additional research needed on combining logics that have a model theory with those that don't}
 %\item OMS language translations between their structuring language aspects and the structuring language aspect of \DOL.
 %\end{itemize}
-%DOL can express the application $T(O)$ of an OMS language translation $T\colon L_1\to L_2$ to an OMS $O$ written in langauge $L_1$\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{T shall be identified by a IRI. There might be multiple different possible translations between two languages, \eg two ways of expressing OWL roles in CL (binary predicate vs.\ boolean function).  But in order to free the user from always writing down such IRIs, we shall specify some defaults in our translation graph.}, see the abstract syntax category
+%DOL can express the application $T(O)$ of an OMS language translation $T\colon L_1\to L_2$ to an OMS $O$ written in langauge $L_1$\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{T shall be identified by a IRI. There might be multiple different possible translations between two languages, \eg two ways of expressing OWL roles in CL (binary predicate vs.\ boolean function).  But in order to free the user from always writing down such IRIs, we shall specify some defaults in our translation graph.}, see the \cbs MOF metaclass \cbe 
 %\syntax{Translation} in clause~\ref{c:abstract-syntax}.  \DOL need not be capable of expressing OMS language translations.
 %
 %\begin{figure}
@@ -3692,7 +3694,7 @@ The major functions of \DOL are the following:
 		 defined in \cref{c:semantics}.  
 \end{itemize}
  
-The syntax of \DOL roughly follows these functions; native OMS, the various kind of structured OMS, OMS mappings, and OMS networks are the most important syntactic categories of \DOL. 
+The syntax of \DOL roughly follows these functions; native OMS, the various kind of structured OMS, OMS mappings, and OMS networks are the most important \cbs metaclasses \cbe  of \DOL. 
 They (together with queries and importation) form the items in a \emph{DOL library}.
  
 
@@ -3838,7 +3840,7 @@ DOL is a mechanism for expressing logically heterogeneous OMS. It can be used to
 and logics into single documents or modules. With \DOL, sentences or structured OMS of previously existing OMS in
 conforming languages can be reused by literally including them into a \DOL OMS. A minimum of wrapping constructs and other annotations (e.g., for identifying the language of a sentence) are provided. 
  See the
-abstract syntax category \syntax{OMS} in
+\cbs MOF metaclass \cbe  \syntax{OMS} in
 clause~\ref{c:abstract-syntax}.
 
 A heterogeneous OMS can import several OMS expressed in different
@@ -3861,27 +3863,27 @@ from the default.
 DOL provides a syntax for expressing mappings between OMS.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}.  OMS mappings supported by \DOL include:
 \begin{itemize}
 \item imports (particularly including imports that lead to conservative extensions), see the
-abstract syntax categories \syntax{OMSRef} and \syntax{ExtensionOMS} in
+\cbs MOF metaclasses \cbe  \syntax{OMSRef} and \syntax{ExtensionOMS} in
 clause~\ref{c:abstract-syntax}.
 \item interpretations (both between OMS and OMS networks), see the
-abstract syntax category \syntax{IntprDefn} in
+\cbs MOF metaclass \cbe  \syntax{IntprDefn} in
 clause~\ref{c:abstract-syntax}.
 \item alignments between OMS, see the
-abstract syntax category \syntax{AlignDefn} in
+\cbs MOF metaclass \cbe  \syntax{AlignDefn} in
 clause~\ref{c:abstract-syntax}.
 \item mappings between OMS and their modules, see the
-abstract syntax category \syntax{ModuleRelDefn} in
+\cbs MOF metaclass \cbe  \syntax{ModuleRelDefn} in
 clause~\ref{c:abstract-syntax}.
 \end{itemize}
 DOL uses symbol maps to express signature translations in such OMS mappings; see the
-abstract syntax category \syntax{SymbolMapItems} in
+\cbs MOF metaclass \cbe  \syntax{SymbolMapItems} in
 clause~\ref{c:abstract-syntax}.
 
 DOL need not be able to fully represent logical translations but is
 capable of referring to them.
 
 DOL can also be used to combine or merge OMS along such OMS mappings, see
-the rule for \syntax{combination} for the abstract syntax category
+the rule for \syntax{combination} for the \cbs MOF metaclass \cbe 
 \syntax{OMS} in clause~\ref{c:abstract-syntax}.
 
 \begin{figure}
@@ -3901,9 +3903,17 @@ DOL provides a mechanism for identifying anything of relevance in OMS by assigni
 
 \clause{DOL Abstract Syntax}\label{c:abstract-syntax}
 
-\sclause{Abstract Syntax Categories}
+\cbs
+The clause specifies the DOL abstract syntax as a MOF metamodel.
+In annex~\ref{a:EBNF}, the same abstract syntax is specified using EBNF.
+Clause~\ref{a:text-syntax} provides the DOL concrete syntax, which
+uses the metaclasses of the abstract syntax as non-terminals of
+an EBNF grammar.
+\cbe
 
-DOL provides abstract syntax categories for
+\sclause{MOF Metaclasses}
+
+DOL provides \cbs MOF metaclasses \cbe  for
 \begin{itemize}
 \item \red{OMS} (which can be native OMS in some OMS language, or unions, translations, minimizations, combinations, approximations of OMS, among others)
 \item OMS mappings 
@@ -3915,16 +3925,15 @@ OMS language and/or serialization)
 \item annotations
 \end{itemize}
  
-Additionally, the categories of the abstract syntaxes of any conforming OMS languages (\cf \cref{c:conform:logic}) are also \DOL abstract syntax categories.
+Additionally, the \cbs MOF metaclasses \cbe of the abstract syntaxes
+of any conforming OMS languages (\cf \cref{c:conform:logic}) \cbs are
+subclasses of the \DOL metaclass \syntax{NativeOMS}.
+If a conforming OMS language has a metaclass for basic OMS,
+this is a subclass of the metaclass \syntax{BasicOMS}.\cbe
 
-The following subclauses, one per abstract syntax category, specify the abstract syntax of \DOL in EBNF. Note that we deviate from the EBNF specification in
- \nisref{ISO/IEC 14977:1996} in favor of a more modern and concise
-EBNF syntax.\footnote{\red{More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand side, which we omit 
-for the sake of better readability. Also, we replace the separator \syntax{=}
-between left and right hand-side of a rule with \syntax{::=}, and 
-use the notation \syntax{N+}
-for one or more repetitions of \syntax{N}.}}  
-%Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
+\cbs The following subclauses, one per MOF metaclass , specify the abstract syntax of \DOL in MOF. Additionally, an informative EBNF specification
+is given in appendix~ref\cbe{a:EBNF}.\cbe
+
 
 \sclause{Libraries}\label{c:libraries}
 
@@ -3942,40 +3951,10 @@ OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{LibraryItem}s.  Alternatively, a library can also be the verbatim inclusion of an OMS written in
 an OMS language that conforms with \DOL (\syntax{NativeOMS}; \cf \ref{c:conform:logic}).
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
-Library                  = [ PrefixMap ] , LibraryDefn
-                         | NativeOMS ;
-LibraryDefn              = 'library' , LibraryName , Qualification , { LibraryItem } ;
-NativeOMS  = ($<$)language specific($>$) ;
-LibraryItem              = LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification ;
-LibImport                = 'lib-import' , LibraryName ;
-Qualification            = LanguageQual | LogicQual | SyntaxQual ;
-LanguageQual             = 'lang-select' , LanguageRef ;
-LogicQual                = 'logic-select' , LogicRef ;
-SyntaxQual               = 'syntax-select' , SyntaxRef ;
-LibraryName              = IRI ;
-
-PrefixMap        = 'prefix-map' , { PrefixBinding } ;
-PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
-                   [ Separators ] ;
-BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
-IRIBoundToPrefix = 'full-iri' , FullIRI ;
-Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
-LibraryOMSSeparator = SeparatorString ;
-OMSSymbolSeparator  = SeparatorString ;
-SeparatorString  = SeparatorChar , { SeparatorChar } ;
-SeparatorChar    = ipchar | gen-delims , - , '#' ;
-                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-\end{lstlisting}
-%% ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
-%%   • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
-%%   • download-items (encourage linked data best practices instead)\textLF
-%%   • item-name-map (to be replaced by namespaces??)\textLF
-%%   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
-%%   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
 
 At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for further details.
+
+\includegraphics[scale=0.6]{mof/dia/dia0.png}
 
 \sclause{OMS Networks}\label{c:networks}
 \red{
@@ -3984,22 +3963,12 @@ A \syntax{NetworkDefn} names an
 OMS network consisting of  OMS and OMS mappings. OMS networks may build on previously-defined
 OMS networks, and they can be used in \syntax{combination}s.  
 }
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
-NetworkDefn            = 'network-defn', NetworkName , [ ConsStrength ] , Network ;
-NetworkName            = IRI ;
-Network                = 'network', NetworkElements , ExcludeExtensions ;
-NetworkElements        = 'network-elements' , { NetworkElement } ;
-NetworkElement         = 'network-element' , [ Id ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions    = 'exclude-imports' , { ElementRef } ; 
-ElementRef   = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef 
-               | OMSOrMappingorNetworkRef ;
-OMSOrMappingorNetworkRef  = IRI ;
-\end{lstlisting}
 
 An OMS network by default also includes all inclusions (generated by
 \syntax{ExtensionOMS}) between the involved OMS---unless these are
 explicitly excluded.
+
+\includegraphics[scale=0.6]{mof/dia/dia1.png}
 
 \sclause{OMS}\label{c:focused-OMS}
 
@@ -4033,72 +4002,7 @@ maximization, freeness (minimizing also data sets and equalities on these), and 
 % derived from CASL (see CASL reference manual)
 % and HetCASL (see HetCASL summary)
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
-BasicOMS = ($<$)language specific($>$) ;
-MinimizableOMS       = BasicOMS
-                     | 'oms-ref' , OMSRef , [ ImportName ] ;
-ExtendingOMS         = MinimizableOMS
-                     | MinType , MinimizableOMS ;
-OMS                  = ExtendingOMS
-                     | 'minimize-symbols' , OMS , Minimization
-                     | 'translation' , OMS , Translation
-                     | 'reduction' , OMS , Reduction
-                     | 'module-extract' , OMS , Extraction 
-                     | 'approximation' , OMS , Approximation
-                     | 'filtering', OMS, Filtering
-                     | 'union' , OMS , [ ConsStrength ] , OMS 
-                     | 'extension' , OMS , ExtensionOMS 
-                     | 'qual-oms' , { Qualification } , OMS
-                     | 'combination' , Network
-                     | 'application', OMS, SubstName ;
-
-Minimization         = MinType, CircMin , CircVars ;
-MinType              = 'minimize' | 'maximize' | 'free' | 'cofree' ;
-CircMin              = Symbol , { Symbol } ;
-CircVars             = { Symbol } ;
-
-Translation          = 'renaming' , { LogicTranslation } , [ SymbolMapItems ] ;
-LogicTranslation     = 'logic-translation' , OMSLangTrans ;
-
-Reduction            = 'hidden' , { LogicReduction } , [ SymbolItems ]
-                     | 'revealed' , SymbolItems  ;
-LogicReduction       = 'logic-reduction' , OMSLangTrans ;
-
-SymbolItems          = 'symbol-items' , Symbol , { Symbol } ;
-SymbolMapItems       = 'symbol-map-items' , SymbolOrMap , { SymbolOrMap } ;
-
-Extraction           = 'extraction', QualInterfaceSignature ;
-
-Approximation        = 'approx' , [ QualInterfaceSignature ] , [ LogicRef ] ;
-
-Filtering            = 'select' , BasicOMS 
-                     | 'reject' , BasicOMS ;
-
-ExtensionOMS         = extension-oms , [ ExtConsStrength ] , [ ExtensionName ] , 
-                                       ExtendingOMS ;
-
-ConsStrength         = Conservative 
-		     | 'monomorphic'  
-		     | 'weak-definitional' 
-		     | 'definitional' ;
-
-ExtConsStrength      = ConsStrength | 'implied' ;
-
-Conservative         = 'consequence-conservative' | 'model-conservative' 
-                     | 'not-consequence-conservative' | 'not-model-conservative' ;
-
-QualInterfaceSignature   = 'keep-signature' , InterfaceSignature 
-                         | 'remove-signature' , InterfaceSignature ;
-
-InterfaceSignature   = SymbolItems ;
-ImportName           = IRI ;
-ExtensionName        = IRI ;
-\end{lstlisting}
-%% \ednote{Alternatively, we could use one type of \syntax{InterfaceSignature}
-%% only, and instead use different constructors for \syntax{Extraction}
-%% and \syntax{Approximation}. This would be a bit more verbose, but a bit
-%% more coherent with position of non-terminals in the concrete syntax.}
+\includegraphics[scale=0.4]{mof/dia/dia2.png}
 
 An OMS definition \syntax{OMSDefn} names an  OMS.  
 
@@ -4127,33 +4031,7 @@ can be either specified by its name, or be inferred as the \termref{default
 translation} to a given target (the source will be inferred as the 
 OMS language of the current OMS).
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
-OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
-Symbol           = IRI ;
-SymbolMap        = 'symbol-map' , Symbol , Symbol ;
-SymbolOrMap      = Symbol | SymbolMap ;
-Term             = ($<$)an expression specific to an OMS language($>$) ;
-Sentence         = ($<$)an expression specific to an OMS language($>$) ;
-                 
-OMSName          = IRI ;
-                 
-OMSRef           = IRI ;
-ExtensionRef     = IRI ;
-                 
-LoLaRef          = LanguageRef | LogicRef ;
-                 
-LanguageRef      = IRI ;
-LogicRef         = IRI ;
-SyntaxRef        = IRI ;
-                 
-OMSLangTrans     = 'named-trans' , OMSLangTransRef
-                 | 'default-trans' , LoLaRef ; 
-                 
-OMSLangTransRef  = IRI ;
-                 
-\end{lstlisting}
-
+\toleft\includegraphics[scale=0.6]{mof/dia/dia3.png}
 
 \sclause{OMS Mappings}\label{c:oms-mappings}
 
@@ -4199,79 +4077,8 @@ A \syntax{ModuleRelDefn} declares that a certain OMS
 actually is a module of some other OMS with respect
 to the \syntax{InterfaceSignature}.
 
+\toleft\includegraphics[scale=0.4]{mof/dia/dia4.png}
 
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
-
-MappingDefn          = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn;
-
-IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , 
-                        IntprType , { LogicTranslation } , [ SymbolMapItems ]                     
-                     | 'refinement' , IntprName , Refinement ;
-IntprName            = IRI ;
-IntprType            = 'intpr-type' , OMS , OMS ;
-
-Refinement           = 'ref-oms' , OMS 
-                     | 'ref-network' , Network
-                     | 'ref-composition' , Refinement , Refinement
-                     | 'simple-oms-ref' , OMS , RefMap , Refinement 
-                     | 'simple-network-ref' , Network , RefMap , Refinement ;
-RefMap               = 'refmap-oms' , [ LogicTranslation ] , [ SymbolMapItems ] 
-                     | 'refmap-network' , { NodeMap } ;
-NodeMap              = 'node-map', OMSName , OMSName , 
-                                   { LogicTranslation } , [ SymbolMapItems ] ;
-
-
-Entailment           = 'entailment' , EntailmentName , EntailmentType ;
-EntailmentType       = 'oms-oms-entailment', OMS , OMS 
-                     | 'network-oms-entailment', Network , OMSName , OMS 
-                     | 'network-network-entailment', Network, Network ;
-EntailmentName       = IRI ;
-
-EquivDefn            = 'equiv-defn' , EquivName , EquivType ;
-EquivName            = IRI ;
-EquivType            = 'oms-equiv' , OMS , OMS , OMS
-                     | 'network-equiv' , Network , Network , Network ;
-
-ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
-                                       InterfaceSignature ;
-ModuleName           = IRI ;
-ModuleType           = 'module-type' , OMS , OMS ;
-
-AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType, 
-                                    AlignSem,   { Correspondence } ; <\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for
-	 the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}>
-AlignName            = IRI ;
-AlignCards           = AlignCardForward , AlignCardBackward ; 
-AlignCardForward     = 'align-card-forward' , AlignCard ;
-AlignCardBackward    = 'align-card-backward' , AlignCard ;
-AlignCard            = 'injective-and-total'
-                     | 'injective'
-                     | 'total'
-                     | 'neither-injective-nor-total' ;
-AlignType            = 'align-type' , OMS , OMS ;
-AlignSem            = 'single-domain' 
-                    | 'global-domain' 
-                    | 'contextualized-domain' ; 
-
-Correspondence       = CorrespondenceBlock
-                     | SingleCorrespondence
-                     | 'default-correspondence' ; 
-
-CorrespondenceBlock  = 'correspondence-block' , [ RelationRef ] , [ Confidence ],
-                                                Correspondence, { Correspondence } ; 
-SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationRef ] , [ Confidence ] ,
-                                          TermOrSymbolRef , [ CorrespondenceID ] ;
-CorrespondenceID     = IRI ;
-SymbolRef            = IRI ;
-TermOrSymbolRef      = Term | SymbolRef ;
-RelationRef          = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' 
-                     | 'has-instance' | 'instance-of' | 'default-relation' | IRI ; 
-Confidence           = Double ;
-\end{lstlisting}
-\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
-
-Double               = ($<$ a number $\in [0,1]$ $>$) ;
-\end{lstlisting}
 
 A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; 
 the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a 
@@ -4289,20 +4096,7 @@ substitutions can be stored separately, using a \syntax{SubstDefn}. A
 the result of a query. Optionally, a result can be expressed to be
 complete, meaning that it comprises all answer substitutions to the query.
 }
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
-
-QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
-QueryDefn            = 'select-query-defn', QueryName, Vars, Sentence, 
-                                            OMS, [OMSLangTrans] ;
-SubstDefn            = 'subst-defn', SubstName, OMS, OMS, SymbolMap ;
-ResultDefn           = 'result-def', ResultName, SubstName, { SubstName }, 
-                                     QueryName, [ Complete ] ;
-QueryName            = IRI ;
-SubstName            = IRI ;
-ResultName           = IRI ;
-Vars                 = { Symbol } ;
-Complete             = 'complete' ;
-\end{lstlisting}
+\includegraphics[scale=0.5]{mof/dia/dia6.png}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4359,11 +4153,9 @@ usually ending with \syntax{\#} or \syntax{/}
 \item[local name] a name that identifies a non-logical symbol within an OMS
 \end{description}
 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\includegraphics[scale=0.6]{mof/dia/dia7.png}
 
-IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{specified below in \cref{c:curies}}) 
-FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
-\end{lstlisting}
+\includegraphics[scale=0.6]{mof/dia/dia8.png}
 
 \ssclause{Abbreviating IRIs using CURIEs}\label{c:curies}
 
@@ -6943,7 +6735,7 @@ elided, and left for a later version of \DOL.
 %
 %We define the syntactic translation $CL_\rho$ of \DOL OMS,
 %depending on a logic translation $\rho:L\to\CL$, to Common Logic below. (The
-%translations of the other syntactic categories are straightforward.)
+%translations of the other metaclasses are straightforward.)
 %
 %\todonote{Extend this to all \DOL constructs}
 %\smallskip
@@ -8826,6 +8618,279 @@ The actual translations are specified in \cite{OntoGraph}.
 
 
 
+
+
+\infannex{DOL Abstract Syntax in EBNF}
+\label{a:EBNF}
+
+\cbs
+The following subclauses, one per \cbs MOF metaclass \cbe, specify the abstract syntax of \DOL in EBNF. Note that we deviate from the EBNF specification in
+ \nisref{ISO/IEC 14977:1996} in favor of a more modern and concise
+EBNF syntax.\footnote{\red{More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand side, which we omit 
+for the sake of better readability. Also, we replace the separator \syntax{=}
+between left and right hand-side of a rule with \syntax{::=}, and 
+use the notation \syntax{N+}
+for one or more repetitions of \syntax{N}.}}  
+%Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
+\cbe
+
+\sclause{Libraries}\label{c:libraries}
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
+Library                  = [ PrefixMap ] , LibraryDefn
+                         | NativeOMS ;
+LibraryDefn              = 'library' , LibraryName , Qualification , { LibraryItem } ;
+NativeOMS  = ($<$)language specific($>$) ;
+LibraryItem              = LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification ;
+LibImport                = 'lib-import' , LibraryName ;
+Qualification            = LanguageQual | LogicQual | SyntaxQual ;
+LanguageQual             = 'lang-select' , LanguageRef ;
+LogicQual                = 'logic-select' , LogicRef ;
+SyntaxQual               = 'syntax-select' , SyntaxRef ;
+LibraryName              = IRI ;
+
+PrefixMap        = 'prefix-map' , { PrefixBinding } ;
+PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
+                   [ Separators ] ;
+BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
+IRIBoundToPrefix = 'full-iri' , FullIRI ;
+Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
+LibraryOMSSeparator = SeparatorString ;
+OMSSymbolSeparator  = SeparatorString ;
+SeparatorString  = SeparatorChar , { SeparatorChar } ;
+SeparatorChar    = ipchar | gen-delims , - , '#' ;
+                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+\end{lstlisting}
+%% ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
+%%   • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
+%%   • download-items (encourage linked data best practices instead)\textLF
+%%   • item-name-map (to be replaced by namespaces??)\textLF
+%%   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
+%%   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
+
+
+\sclause{OMS Networks}\label{a:networks}
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
+NetworkDefn            = 'network-defn', NetworkName , [ ConsStrength ] , Network ;
+NetworkName            = IRI ;
+Network                = 'network', NetworkElements , ExcludeExtensions ;
+NetworkElements        = 'network-elements' , { NetworkElement } ;
+NetworkElement         = 'network-element' , [ Id ] , OMSOrMappingorNetworkRef ;
+ExcludeExtensions    = 'exclude-imports' , { ElementRef } ; 
+ElementRef   = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef 
+               | OMSOrMappingorNetworkRef ;
+OMSOrMappingorNetworkRef  = IRI ;
+\end{lstlisting}
+
+
+\sclause{OMS}
+
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
+BasicOMS = ($<$)language specific($>$) ;
+MinimizableOMS       = BasicOMS
+                     | 'oms-ref' , OMSRef , [ ImportName ] ;
+ExtendingOMS         = MinimizableOMS
+                     | MinType , MinimizableOMS ;
+OMS                  = ExtendingOMS
+                     | 'minimize-symbols' , OMS , Minimization
+                     | 'translation' , OMS , Translation
+                     | 'reduction' , OMS , Reduction
+                     | 'module-extract' , OMS , Extraction 
+                     | 'approximation' , OMS , Approximation
+                     | 'filtering', OMS, Filtering
+                     | 'union' , OMS , [ ConsStrength ] , OMS 
+                     | 'extension' , OMS , ExtensionOMS 
+                     | 'qual-oms' , { Qualification } , OMS
+                     | 'combination' , Network
+                     | 'application', OMS, SubstName ;
+
+Minimization         = MinType, CircMin , CircVars ;
+MinType              = 'minimize' | 'maximize' | 'free' | 'cofree' ;
+CircMin              = Symbol , { Symbol } ;
+CircVars             = { Symbol } ;
+
+Translation          = 'renaming' , { LogicTranslation } , [ SymbolMapItems ] ;
+LogicTranslation     = 'logic-translation' , OMSLangTrans ;
+
+Reduction            = 'hidden' , { LogicReduction } , [ SymbolItems ]
+                     | 'revealed' , SymbolItems  ;
+LogicReduction       = 'logic-reduction' , OMSLangTrans ;
+
+SymbolItems          = 'symbol-items' , Symbol , { Symbol } ;
+SymbolMapItems       = 'symbol-map-items' , SymbolOrMap , { SymbolOrMap } ;
+
+Extraction           = 'extraction', QualInterfaceSignature ;
+
+Approximation        = 'approx' , [ QualInterfaceSignature ] , [ LogicRef ] ;
+
+Filtering            = 'select' , BasicOMS 
+                     | 'reject' , BasicOMS ;
+
+ExtensionOMS         = extension-oms , [ ExtConsStrength ] , [ ExtensionName ] , 
+                                       ExtendingOMS ;
+
+ConsStrength         = Conservative 
+		     | 'monomorphic'  
+		     | 'weak-definitional' 
+		     | 'definitional' ;
+
+ExtConsStrength      = ConsStrength | 'implied' ;
+
+Conservative         = 'consequence-conservative' | 'model-conservative' 
+                     | 'not-consequence-conservative' | 'not-model-conservative' ;
+
+QualInterfaceSignature   = 'keep-signature' , InterfaceSignature 
+                         | 'remove-signature' , InterfaceSignature ;
+
+InterfaceSignature   = SymbolItems ;
+ImportName           = IRI ;
+ExtensionName        = IRI ;
+\end{lstlisting}
+%% \ednote{Alternatively, we could use one type of \syntax{InterfaceSignature}
+%% only, and instead use different constructors for \syntax{Extraction}
+%% and \syntax{Approximation}. This would be a bit more verbose, but a bit
+%% more coherent with position of non-terminals in the concrete syntax.}
+
+
+\sclause{OMS Definitions}
+
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
+OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
+Symbol           = IRI ;
+SymbolMap        = 'symbol-map' , Symbol , Symbol ;
+SymbolOrMap      = Symbol | SymbolMap ;
+Term             = ($<$)an expression specific to an OMS language($>$) ;
+Sentence         = ($<$)an expression specific to an OMS language($>$) ;
+                 
+OMSName          = IRI ;
+                 
+OMSRef           = IRI ;
+ExtensionRef     = IRI ;
+                 
+LoLaRef          = LanguageRef | LogicRef ;
+                 
+LanguageRef      = IRI ;
+LogicRef         = IRI ;
+SyntaxRef        = IRI ;
+                 
+OMSLangTrans     = 'named-trans' , OMSLangTransRef
+                 | 'default-trans' , LoLaRef ; 
+                 
+OMSLangTransRef  = IRI ;
+                 
+\end{lstlisting}
+
+
+
+\sclause{OMS Mappings}
+
+
+\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+
+MappingDefn          = IntprDefn | Entailment | EquivDefn | ModuleRelDefn | AlignDefn;
+
+IntprDefn            = 'intpr-defn' , IntprName , [ Conservative ] , 
+                        IntprType , { LogicTranslation } , [ SymbolMapItems ]                     
+                     | 'refinement' , IntprName , Refinement ;
+IntprName            = IRI ;
+IntprType            = 'intpr-type' , OMS , OMS ;
+
+Refinement           = 'ref-oms' , OMS 
+                     | 'ref-network' , Network
+                     | 'ref-composition' , Refinement , Refinement
+                     | 'simple-oms-ref' , OMS , RefMap , Refinement 
+                     | 'simple-network-ref' , Network , RefMap , Refinement ;
+RefMap               = 'refmap-oms' , [ LogicTranslation ] , [ SymbolMapItems ] 
+                     | 'refmap-network' , { NodeMap } ;
+NodeMap              = 'node-map', OMSName , OMSName , 
+                                   { LogicTranslation } , [ SymbolMapItems ] ;
+
+
+Entailment           = 'entailment' , EntailmentName , EntailmentType ;
+EntailmentType       = 'oms-oms-entailment', OMS , OMS 
+                     | 'network-oms-entailment', Network , OMSName , OMS 
+                     | 'network-network-entailment', Network, Network ;
+EntailmentName       = IRI ;
+
+EquivDefn            = 'equiv-defn' , EquivName , EquivType ;
+EquivName            = IRI ;
+EquivType            = 'oms-equiv' , OMS , OMS , OMS
+                     | 'network-equiv' , Network , Network , Network ;
+
+ModuleRelDefn        = 'module-defn' , ModuleName , [ Conservative ] , ModuleType ,
+                                       InterfaceSignature ;
+ModuleName           = IRI ;
+ModuleType           = 'module-type' , OMS , OMS ;
+
+AlignDefn            = 'align-defn' , AlignName , [ AlignCard ] , AlignType, 
+                                    AlignSem,   { Correspondence } ; <\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API uses ``type'' for
+	 the totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}>
+AlignName            = IRI ;
+AlignCards           = AlignCardForward , AlignCardBackward ; 
+AlignCardForward     = 'align-card-forward' , AlignCard ;
+AlignCardBackward    = 'align-card-backward' , AlignCard ;
+AlignCard            = 'injective-and-total'
+                     | 'injective'
+                     | 'total'
+                     | 'neither-injective-nor-total' ;
+AlignType            = 'align-type' , OMS , OMS ;
+AlignSem            = 'single-domain' 
+                    | 'global-domain' 
+                    | 'contextualized-domain' ; 
+
+Correspondence       = CorrespondenceBlock
+                     | SingleCorrespondence
+                     | 'default-correspondence' ; 
+
+CorrespondenceBlock  = 'correspondence-block' , [ RelationRef ] , [ Confidence ],
+                                                Correspondence, { Correspondence } ; 
+SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationRef ] , [ Confidence ] ,
+                                          TermOrSymbolRef , [ CorrespondenceID ] ;
+CorrespondenceID     = IRI ;
+SymbolRef            = IRI ;
+TermOrSymbolRef      = Term | SymbolRef ;
+RelationRef          = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' 
+                     | 'has-instance' | 'instance-of' | 'default-relation' | IRI ; 
+Confidence           = Double ;
+\end{lstlisting}
+\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
+
+Double               = ($<$ a number $\in [0,1]$ $>$) ;
+\end{lstlisting}
+
+
+%\includegraphics[scale=0.6]{mof/dia/dia5.png}
+
+\sclause{Queries}
+
+\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+
+QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
+QueryDefn            = 'select-query-defn', QueryName, Vars, Sentence, 
+                                            OMS, [OMSLangTrans] ;
+SubstDefn            = 'subst-defn', SubstName, OMS, OMS, SymbolMap ;
+ResultDefn           = 'result-def', ResultName, SubstName, { SubstName }, 
+                                     QueryName, [ Complete ] ;
+QueryName            = IRI ;
+SubstName            = IRI ;
+ResultName           = IRI ;
+Vars                 = { Symbol } ;
+Complete             = 'complete' ;
+\end{lstlisting}
+
+
+\sclause{IRIs and Prefixes}
+
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+
+IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{specified below in \cref{c:curies}}) 
+FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
+\end{lstlisting}
+
+
 \infannex{Example Uses of all \DOL Constructs}\label{a:uses}
 \cbs
 This annex provides example uses of \DOL constructs.  Jointly with
@@ -9702,42 +9767,6 @@ to the term \termref{structured OMS} in this \IS}
 %% ~\todonote[author=Christoph Lange,date=D:201108212129+02'00',type=todo]{Maybe have an(other?) appendix that refers to the usage of \DOL within ontology engineering methodologies, or at least to some good practices of using \DOL}
 
 
-
-\infannex{Abstract syntax specified as an SMOF meta model}\label{a:MOF}
-
-\newcommand{\toleft}{\noindent$x\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$}
-
-\sclause{Libraries}
-
-\includegraphics[scale=0.6]{mof/dia/dia0.png}
-
-\sclause{Networks}
-
-\includegraphics[scale=0.6]{mof/dia/dia1.png}
-
-\sclause{OMS}
-
-\includegraphics[scale=0.4]{mof/dia/dia2.png}
-
-\sclause{OMS Definitions}
-
-\toleft\includegraphics[scale=0.6]{mof/dia/dia3.png}
-
-\sclause{OMS Mappings}
-
-\toleft\includegraphics[scale=0.4]{mof/dia/dia4.png}
-
-%\includegraphics[scale=0.6]{mof/dia/dia5.png}
-
-\sclause{Queries}
-
-\includegraphics[scale=0.5]{mof/dia/dia6.png}
-
-\sclause{IRIs and Prefixes}
-
-\includegraphics[scale=0.6]{mof/dia/dia7.png}
-
-\includegraphics[scale=0.6]{mof/dia/dia8.png}
 
 
 
