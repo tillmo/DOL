@@ -193,6 +193,8 @@ author=,date=,id=,replyto=,type=}{}%
 \usepackage[final]{pdfcomment}
 \fi
 
+
+
 \newcommand*{\todonote}[2][]{%
 \initComment{#1}%
 \pdfcomment[author=\CommentAuthor,color=CommentColor,date=\CommentDate,id=\CommentId]{%
@@ -473,8 +475,11 @@ author=,date=,id=,replyto=,type=}{}%
 
 \usepackage{longtable}
 
-\newcommand{\sectionWN}[1]{ \section*{#1}   \addcontentsline{toc}{section}{#1}  } 
 
+\newcommand{\normative}[0]{{\begin{center}{\Large{(Normative})}\end{center}} \bigskip}
+\newcommand{\informative}[0]{{\begin{center}{\Large{(Informative})}\end{center}} \bigskip}
+
+\newcommand{\sectionWN}[1]{ \section*{#1}   \addcontentsline{toc}{section}{#1}  } 
 
 %semantics
 \newcommand{\prefix}{\mathit{prefix}}
@@ -483,6 +488,10 @@ author=,date=,id=,replyto=,type=}{}%
 
 % Temporary Hacks (to be removed later or cleaned up) 
 \newcommand{\clause}[1]{\chapter{#1}}
+\newcommand{\clauseN}[1]{\chapter{#1} \normative}
+
+\newcommand{\clauseI}[1]{\chapter{#1} \informative }
+
 \newcommand{\sclause}[1]{\section{#1}}
 \newcommand{\ssclause}[1]{\subsection{#1}}
 \newcommand{\sssclause}[1]{\subsubsection{#1}}
@@ -494,8 +503,8 @@ author=,date=,id=,replyto=,type=}{}%
 \renewcommand{\subjectfield}[1]{} % {#1}
 %\renewcommand{\bref}[1]{#1}
 
-\newcommand{\normannex}[1]{ \chapter{Annex (normative): #1} }
-\newcommand{\infannex}[1]{ \chapter{Annex (informative): #1} }
+\newcommand{\normannex}[1]{ \chapter{Annex: #1} \normative}
+\newcommand{\infannex}[1]{ \chapter{Annex: #1}  \informative }
 \newenvironment{definitions}[0]{\medskip }{}
 \newenvironment{note}[0]{\ \\ \textsc{Note} \quad}{}
 \newenvironment{example}[0]{\ \newline \textsc{Example}\quad }{}
@@ -1172,7 +1181,7 @@ This specification proposes no changes to adopted OMG specifications.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\chapter{Scope}
+\clause{Scope}
 \pagenumbering{arabic} 
 This \IS specifies the Distributed Ontology, Model and Specification
  Language (DOL)\index{\dolindex ! definition}.  \DOL is designed to achieve integration  
@@ -1287,7 +1296,7 @@ Specification Language (DOL) by defining an abstract syntax and an associated mo
 semantics for \DOL. 
 
 
-\chapter{Conformance}\label{c:conformance}
+\clause{Conformance}\label{c:conformance}
 \index{conformance|(}
 This clause defines conformance criteria for languages and logics that can be used with \DOL, as well as conformance criteria for
 serializations, translations and applications. The conformance of a
@@ -1626,7 +1635,7 @@ be able to expand CURIEs into IRIs when requested.
 
 \index{conformance|)}
 
-\chapter{Normative References}
+\clause{Normative References}
 \begin{enumerate}[label=\bfseries NR\arabic*:]
 % OLD text
 % The following referenced documents are indispensable for the application of this document. For dated references, only
@@ -1670,7 +1679,7 @@ be able to expand CURIEs into IRIs when requested.
 
 
 
-\chapter{Terms and Definitions}\label{terms-and-defs}
+\clause{Terms and Definitions}\label{terms-and-defs}
 %\ednote{OMG specifications shall not contain glossaries, hence always
 %refer to this section if definitions of terms are needed.}
 
@@ -2562,7 +2571,7 @@ unique characteristics of those entities.
 \termdefinition{OMS interoperability} {relation among OMS (via OMS alignments)
 which are logically interoperable.}
 
-\chapter{Symbols}
+\clause{Symbols}
 
 As listed below, these symbols and abbreviations are generally for the main clauses of the \IS. Some annexes may introduce their own symbols and abbreviations which will be grouped together within that annex.
 
@@ -2606,7 +2615,8 @@ using the OWL 2 RDF-Based Semantics \cite{W3C:REC-owl2-rdf-based-semantics-20091
 \end{symbols}
 
 
-\chapter{Additional Information}
+\clauseI{Additional Information}
+
 \section{Changes to Adopted OMG Specifications}
 This specification does not require or request any change to any other OMG specification. 
 
@@ -2780,7 +2790,7 @@ The following people contributed directly to the development of this specificati
 %%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%% 
 
-\chapter{Goals and Usage Scenarios} \label{c:goal}
+\clauseI{Goals and Usage Scenarios} \label{c:goal}
 
 
 Often, engineering tasks require the use of several different OMS, which represent knowledge about 
@@ -3525,14 +3535,14 @@ specification, and model-driven development. It provides the ability to specify 
 allow  a better exchange and reuse of OMS. Eventually, this will also lead to better, easier developed and maintained systems based on these OMS.
 
 
-\chapter{Design Overview} \label{c:design}
-%
+\clauseI{Design Overview} \label{c:design}
+
 %\ednote{replace this section by saying how we respond to the RFP}
 %
 %\CLnote[type=todo]{Get rid of formal \should/\shall language (e.g.\ in clause headers: \should/\shall applies to conforming implementations anyway, rather than to this standard itself!) – not necessary in an informative clause. TM: I did this in the clause headings, and for the design part also in the clause texts.}
 %
 %
-This clause is informative. Its purpose is to briefly describe the 
+The purpose of this clause is to briefly describe the 
 %purposes of the Distributed Ontology, Modeling and Specification Language (DOL) and 
  overall guiding principles and constraints of \DOL's syntax and semantics.
 %
@@ -3637,7 +3647,7 @@ This clause is informative. Its purpose is to briefly describe the
 %\section{DOL design}
 \label{c:design:overview}
 %
-
+%
 We give an overview of the most important and innovative language
 constructs of \DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
@@ -6990,7 +7000,9 @@ elided, and left for a later version of \DOL.
 
 \appendix
 
-\chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary that implements the \DOL terminology}\label{a:lola}
+%\chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary that implements the \DOL terminology}
+\normannex{\DOL Ontology}
+\label{a:lola}\ednote{Change title when Ontology has been named}
 
 % a landscape figure which scales and rotates the file cat.eps or cat.pdf
 \begin{sidewaysfigure}
