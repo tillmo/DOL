@@ -8340,125 +8340,75 @@ This is an obvious sublogic.
 \cbs
 \ssclause{UML class diagrams $to \OWL$}
 Let $\Sigma = ((C, {\leq_C}), P, O, A, M)$ be a \emph{class/data type net} representing a UML class diagram as described in annex~\ref{a:uml-class}. This net can be translated to OWL2 using the approach described in \cite{zedlitz2012uml}.
-The resulting OWL ontology in RDF fromat uses the following namespaces: 
-\begin{lstlisting}
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-  	xmlns:owl="http://www.w3.org/2002/07/owl#"
-\end{lstlisting}
 The ontology is extended by translating parts of this net and its multiplicity constraints $\mathit{Mult}(\Sigma)$:
 \begin{itemize}
 \item For each class $c \in C$ with superclasses $c_1,c_2,...,c_n \in C$ (i.e. $c \leq_C c_i$ for $i=1,...,n$):
 \begin{lstlisting} 
-	<owl:Class rdf:about="c">
-		<rdfs:subClassOf rdf:resource="c1"/>
-		<rdfs:subClassOf rdf:resource="c2"/>
+	Class: c
+		SubClassOf: c1
 		...
-		<rdfs:subClassOf rdf:resource="cn"/>
-	</owl:Class>
+		SubClassOf: cn
 \end{lstlisting}
 \item For each attribute declaration $c.p:c'$ in $P$
 \begin{lstlisting}
-	<owl:ObjectProperty rdf:about="p">
-		<rdfs:range rdf:resource="c'"/>
-		<rdfs:domain rdf:resource="c"/>
-	</owl:ObjectProperty>
+	ObjectProperty: p
+		Domain: c
+		Range: c'
 \end{lstlisting}
 
-\item For each attribute multiplicity $n\ \mathsf{\leq}\ c.p:\tau[c']$ in $\mathit{Mult}(\Sigma)$:
+\item For each attribute multiplicity $n\ \mathsf{\leq}\ c.p:\tau[c']$ in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
 \begin{lstlisting}
-	<owl:SubClassOf>
-		<owl:Class about="c"/>
-		<owl:ObjectMinCardinality cardinality="n">
-			<owl:ObjectProperty about="p"/>
-			<owl:Class about="c'"/>
-		</owl:ObjectMinCardinality>
-	</owl:SubClassOf>
+	SubClassOf: p min n c'
 \end{lstlisting}
 
-\item For each attribute multiplicity $ c.p:\tau[c'] \ \mathsf{\leq}\ n$  in $\mathit{Mult}(\Sigma)$:
+\item For each attribute multiplicity $ c.p:\tau[c'] \ \mathsf{\leq}\ n$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
 \begin{lstlisting}
-	<owl:SubClassOf>
-		<owl:Class about="c"/>
-		<owl:ObjectMaxCardinality cardinality="n">
-			<owl:ObjectProperty about="p"/>
-			<owl:Class about="c'"/>
-		</owl:ObjectMaxCardinality>
-	</owl:SubClassOf>
+	SubClassOf: p max n c'
 \end{lstlisting}
 
 \item For each unidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
 \begin{lstlisting}
-	<owl:ObjectProperty rdf:about="p1">
-		<rdfs:range rdf:resource="c1"/>
-		<rdfs:domain rdf:resource="c2"/>
-	</owl:ObjectProperty>
+	ObjectProperty: p
+		Domain: c1
+		Range: c2
 \end{lstlisting}
 \item For each bidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
 \begin{lstlisting}
-	<owl:ObjectProperty rdf:about="p1">
-		<rdf:type rdf:resource="&owl;FunctionalProperty"/>
-		<rdfs:range rdf:resource="c1"/>
-		<rdfs:domain rdf:resource="c2"/>
-	</owl:ObjectProperty>
-	<owl:ObjectProperty rdf:about="p2">
-		<rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
-		<rdfs:range rdf:resource="c2"/>
-		<rdfs:domain rdf:resource="c1"/>
-		<owl:inverseOf rdf:resource="p1"/>
-	</owl:ObjectProperty>
+	ObjectProperty: p1
+		Domain: c
+		Range: c'
+
+	ObjectProperty: p2
+		Characteristics: InverseFunctional
+		Domain: c
+		Range: c'
+		InverseOf: p1
 \end{lstlisting}
-\item For each binary association $n \leq a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$ in $\mathit{Mult}(\Sigma)$:
+\item For each binary association $n \leq a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$ in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
 \begin{lstlisting}
-	<owl:SubClassOf>
-		<owl:Class about="cj"/>
-		<owl:ObjectMinCardinality cardinality="n">
-			<owl:ObjectProperty about="pi"/>
-			<owl:Class about="ci"/>
-		</owl:ObjectMinCardinality>
-	</owl:SubClassOf>
+	SubClassOf: pi min n ci
 \end{lstlisting}
-\item For each binary association $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$:
+\item For each binary association $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
 \begin{lstlisting}
-	<owl:SubClassOf>
-		<owl:Class about="cj"/>
-		<owl:ObjectMaxCardinality cardinality="n">
-			<owl:ObjectProperty about="pi"/>
-			<owl:Class about="ci"/>
-		</owl:ObjectMaxCardinality>
-	</owl:SubClassOf>
+	SubClassOf: pi max n ci
 \end{lstlisting}
 \item For each composition declaration $m(\mathsf{Set}[c_1], \composition p_2 :
 \tau_2[c_2])$ in $M$:
 \begin{lstlisting}
-	<owl:ObjectProperty rdf:about="p">
-		<rdf:type rdf:resource="&owl;FunctionalProperty"/>
-		<rdfs:range rdf:resource="c1"/>
-		<rdfs:domain rdf:resource="c2"/>
-	</owl:ObjectProperty>
-	<IrreflexiveObjectProperty>
-		<ObjectProperty rfd:about="p"/>
-	</IrreflexiveObjectProperty>
+	ObjectProperty: p
+		Characteristics:
+			Functional, 
+			Irreflexive
+		Domain: c1
+		Range: c2
 \end{lstlisting}
-\item For each binary association $n \leq a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$:
+\item For each binary association $n \leq a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$  extend the description of class $c_j$ by:
 \begin{lstlisting}
-	<owl:SubClassOf>
-		<owl:Class about="cj"/>
-		<owl:ObjectMinCardinality cardinality="n">
-			<owl:ObjectProperty about="pi"/>
-			<owl:Class about="ci"/>
-		</owl:ObjectMinCardinality>
-	</owl:SubClassOf>
+	SubClassOf: pi min n ci
 \end{lstlisting}
-\item For each binary association $a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$:
+\item For each binary association $a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
 \begin{lstlisting}
-	<owl:SubClassOf>
-		<owl:Class about="cj"/>
-		<owl:ObjectMaxCardinality cardinality="n">
-			<owl:ObjectProperty about="pi"/>
-			<owl:Class about="ci"/>
-		</owl:ObjectMaxCardinality>
-	</owl:SubClassOf>
+	SubClassOf: pi max n ci
 \end{lstlisting}
 \end{itemize}
 \cbe 
