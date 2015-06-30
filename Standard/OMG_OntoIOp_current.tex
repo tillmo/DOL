@@ -4398,7 +4398,6 @@ Symbol               = IRI ;
 SymbolMap            = Symbol , '|->' , Symbol ;
 SymbolOrMap          = Symbol
                      | SymbolMap ;
-Term                 = ($<$)an expression specific to an OMS language($>$) ;
 Sentence             = ($<$)an expression specific to an OMS language($>$) ;
 
 OMSName             = IRI ;
@@ -4504,7 +4503,7 @@ SingleCorrespondence = SymbolRef , [ RelationRef ] ,
                        [ Confidence ] , TermOrSymbolRef , [ CorrespondenceId ] ;
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
-TermOrSymbolRef      = Term | SymbolRef ;
+TermOrSymbolRef      = SymbolRef ;
 RelationRef          = '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI ;
 Confidence           = Double ; 
 \end{lstlisting}
@@ -8659,7 +8658,6 @@ OMSDefn          = 'oms-defn' , OMSName , [ ConsStrength ] , OMS ;
 Symbol           = IRI ;
 SymbolMap        = 'symbol-map' , Symbol , Symbol ;
 SymbolOrMap      = Symbol | SymbolMap ;
-Term             = ($<$)an expression specific to an OMS language($>$) ;
 Sentence         = ($<$)an expression specific to an OMS language($>$) ;
                  
 OMSName          = IRI ;
@@ -8748,7 +8746,7 @@ SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationRef ] , [ Confid
                                           TermOrSymbolRef , [ CorrespondenceID ] ;
 CorrespondenceID     = IRI ;
 SymbolRef            = IRI ;
-TermOrSymbolRef      = Term | SymbolRef ;
+TermOrSymbolRef      = SymbolRef ;
 RelationRef          = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' 
                      | 'has-instance' | 'instance-of' | 'default-relation' | IRI ; 
 Confidence           = Double ;
@@ -8837,6 +8835,8 @@ complete, meaning that it comprises all answer substitutions to the query.
 \sclause{EBNF Concrete Syntax}
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+Term                 = ($<$)an expression specific to an OMS language($>$) ;
+TermOrSymbolRef      = Term | SymbolRef ;
 QueryRelatedDefn     = QueryDefn | SubstDefn | ResultDefn ;
 QueryDefn            = 'query' , QueryName , '=' , 'select' , Vars , 
                                 'where' , Sentence , 'in' , GroupOMS , 
