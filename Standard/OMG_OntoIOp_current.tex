@@ -548,8 +548,8 @@ author=,date=,id=,replyto=,type=}{}%
 
 \usepackage{changebar}
 
-\newcommand{\cbs}[0]{\cbstart \color{red}}
-\newcommand{\cbe}[0]{\cbend \color{black}}
+\newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace}
+\newcommand{\cbe}[0]{\cbend{}\color{black}\xspace}
 
 
 \begin{document}
@@ -2911,7 +2911,7 @@ integration and validation purposes.
 
 The foundational ontology (FO) repository Repository of Ontologies for MULtiple USes (ROMULUS)\footnote{See \url{http://www.thezfiles.co.za/ROMULUS/home.html}}
 contains alignments\index{alignment} between a number of foundational ontologies, expressing semantic relations between the aligned
-entities. We select three such ontologies, containing spatial and temporal concepts: DOLCE\footnote{See \url{http://www.loa.istc.cnr.it/DOLCE.html}}, GFO\footnote{See \url{http://www.onto-med.de/ontologies/gfo/}} and BFO\footnote{See \url{http://www.ifomis.org/bfo/}}, and present alignments between them 
+entities. \cbs For this use-case three such ontologies are considered,\cbe containing spatial and temporal concepts: DOLCE\footnote{See \url{http://www.loa.istc.cnr.it/DOLCE.html}}, GFO\footnote{See \url{http://www.onto-med.de/ontologies/gfo/}} and BFO\footnote{See \url{http://www.ifomis.org/bfo/}}, and present alignments between them 
 using \DOL syntax:
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
@@ -2952,8 +2952,8 @@ alignment BFO2GFO :
  	SpatialRegion 	= Spatial_region, TemporalRegion = Temporal_region 	
 \end{lstlisting}
 
-We can then combine the ontologies while taking into account the semantic dependencies given by the alignments using
-\DOL combinations:
+
+\cbs \DOL combinations allows to combine ontologies, while taking into account the semantic dependencies given by the alignments.\cbe
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
 ontology Space =
@@ -3106,8 +3106,8 @@ end
 \end{lstlisting}
 
 In the last step, the structuring operation of hiding is used to
-restrict the specification to an export interface: we hide the
-predicates \texttt{is\_ordered} and \texttt{permutation}, because they
+restrict the specification to an export interface:\cbs 
+ predicates \texttt{is\_ordered} and \texttt{permutation} are hidden,\cbe because they
 are only auxiliary and need not be implemented.
 
 
@@ -3138,7 +3138,7 @@ industrial use cases of specification refinement.
 
 A simple example is the refinement of the (purely declarative) sorting
 specification from use case in section \ref{spec-1} into a specification of a particular sorting
-algorithm (for simplicity, we choose insert sort):
+algorithm (for simplicity,\cbs insert sort is used for demonstration):\cbe
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
 spec InsertSort = 
@@ -3159,9 +3159,9 @@ refinement InsertSortCorrectness =
 end
 \end{lstlisting}
 Note that hiding is essential here to make the signatures of
-both specifications compatible. If we had not hidden the
+both specifications compatible.\cbs If  the
 predicates \texttt{is\_ordered} and \texttt{permutation}
-in the \texttt{Sorting} specification, a refinement would
+had not been hidden\cbe in the \texttt{Sorting} specification, a refinement would
 not have been possible, since \texttt{InsertSort} does not
 implement these predicates (and it would be rather artificial
 to add an implementation for them).
@@ -3252,10 +3252,10 @@ sense the diagrams need to be consistent, and check this by suitable tools.
 \ssclause{The ATM Example}
 \label{sec:atm-example}
 
-We present as a small example in model-driven development using UML,
+\cbs The ATM example is about \cbe model-driven development using UML,
 taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
 the design of a traditional automatic teller machine (ATM) connected
-to a bank. For simplicity, we only describe the handling of entering a
+to a bank. For simplicity, \cbs it focusses  only \cbe the handling of entering a
 card and a PIN with the ATM. After entering the card, one has three
 trials for entering the correct PIN (which is checked by the
 bank). After three unsuccessful trials the card is kept.
@@ -3336,8 +3336,8 @@ the bank results in \uml{reenterPIN}, and the \emph{guard}
 
 The ATM example in Fig.~\ref{fig:atm-example} consists of five different
 models, which naturally form a network. Coherence of this network
-is expressed as its consistency.
-We assume that XMI representations of the
+is expressed as its consistency.\cbs 
+It is assumed that XMI representations\cbe of the
 relevant UML models have been stored at
 \url{http://www.example.org/uml/}, that is under URL
 \url{http://www.example.org/uml/xxx.xmi}, where \url{xxx} is
@@ -3385,13 +3385,13 @@ reuse of such refinements in different contexts, as well as the interoperability
 addresses these problems by providing a standardized notation with formal semantics for such refinements. Refinements expressed in this language could, e.g., be 
 parameterized and reused in different contexts.
 
-Coming to a \DOL example, we want to state the fact that the state
-machine of the \uml{atm}, shown in Fig.~\ref{fig:state-machine}, is a
-refinement of the protocol state machine in Fig.~\ref{fig:psm} as
-follows in \DOL.  We continue the library \uml{ATM} above, again
-assuming that XMI representations of the relevant UML models have been
+\cbs This can be illustrated based on the state
+machine of the \uml{atm}, shown in Fig.~\ref{fig:state-machine}, which is a  
+refinement of the protocol state machine in Fig.~\ref{fig:psm}. This can be stated as follows in \DOL.\cbe 
+\footnote{\cbs  It is assumed that XMI representations of the relevant UML models have been 
 stored at \url{http://www.example.org/uml/},
-e.g.\ \url{http://www.example.org/uml/atm.xmi}:
+e.g.\ \url{http://www.example.org/uml/atm.xmi} \cbe} 
+
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
 refinement abstract_to_concrete_atm =
@@ -3458,10 +3458,10 @@ ontology myTaxonomy =
 end
 \end{lstlisting}
 
-When we want to relate this ontology with the ATM model, 
-we need to take care of various aspects:
+\cbs To relate this ontology with the ATM model, 
+various aspects need to be taken care of:\cbe
 \begin{itemize}
-  \item Translating into shared language (here, we choose Common Logic)
+  \item Translating into shared language \cbs (in this case, Common Logic)\cbe
   \item Unifying terminology (Bank vs. FinancialIntermediary)
   \item Connecting related concepts (bank.owns.ATM vs. owns)
   \item Removing irrelevant parts (livestock) 
@@ -3504,9 +3504,12 @@ end
 
 \section{Conclusion}
 
-In the next sections, we discuss  the metalanguage \DOL, its features that enable the support of a variety of formalisms, with syntax, well-defined semantics and model theory. \DOL 
-distills best practices of modularity and metarelations (such as refinement and alignment) across the three areas of ontology design, formal 
-specification, and model-driven development. It provides the ability to specify the basis for formal interoperability even among heterogeneous OMS and OMS networks. \DOL enables the solutions of the problems described in the use cases above. It also enables the development of OMS libraries, tools and workflows that 
+\cbs The next sections present the metalanguage \DOL{}; in particular, the syntax and the model-theoretic semantics. Further, various features of \DOL will be discussed, which  are based on  best practices of modularity  across
+ the three areas of ontology design, formal 
+specification, and model-driven development. \DOL 
+is designed to support of a wide range of formalisms and
+\cbe
+provides the ability to specify the basis for formal interoperability even among heterogeneous OMS and OMS networks. \DOL enables the solutions of the problems described in the use cases above. It also enables the development of OMS libraries, tools and workflows that 
 allow  a better exchange and reuse of OMS. Eventually, this will also lead to better, easier developed and maintained systems based on these OMS.
 
 
@@ -3623,7 +3626,7 @@ The purpose of this clause is to briefly describe the
 \label{c:design:overview}
 %
 %
-We give an overview of the most important and innovative language
+\cbs It provides an overview of \cbe the most important and innovative language
 constructs of \DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
 \section{DOL in a Nutshell}
@@ -3633,9 +3636,9 @@ As the usage scenarios in clause \ref{c:goal} illustrate, the use of multiple OM
 structured OMS and the relations between OMS as part of an OMS network in a semantically well-defined way. One particular challenge that needs to be
 addressed is that OMS are written in a wide variety of OMS languages, which differ in style, 
 expressivity and logical properties. 
-We face this diversity not by proposing a
-``universal'' language that is intended to subsume all the others, but by accepting
-this pluralism in OMS languages and by formulating means (on a sound and formal semantic basis) to
+\cbs To address this diversity this specification does \textbf{not} propose a 
+``universal'' language that is intended to subsume all the others. Quite the opposite, the authors of this specification embrace
+the pluralism of OMS languages, and the purpose of \DOL is to provide means (on a sound and formal semantic basis) to\cbe 
  compare and integrate OMS written in different formalisms. Thus, \DOL is not `yet-another-modeling
 language', but a meta-language that is used on top of existing OMS languages. 
 
@@ -3773,7 +3776,7 @@ This allows the development of results independently of the particularities of a
 %We first introduce the concept of \emph{logic syntax}.
 The main idea is to collect the non-logical
 symbols of the language in signatures and to assign to each signature the set of sentences that can be formed with its symbols. 
-For each signature, we provide means for extracting the symbols it consists of, together with their kind.
+For each signature,\cbs \DOL provides means\cbe for extracting the symbols it consists of, together with their kind.
 Institutions also provide a model theory, which introduces semantics for
 the language and gives a satisfaction relation between the models and
 the sentences of a signature.   
@@ -4142,8 +4145,8 @@ RDF/XML or Turtle, support a subset of the CURIE syntax, whereas some machine-or
 serializations, including N-Triples, only support full IRIs.}
 \end{itemize}
 
-CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
-we can restate the CURIE grammar supported by \DOL as follows:
+CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively,\cbs 
+the CURIE grammar supported by \DOL can be restated\cbe as follows:
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
 CURIE     = MaybeEmptyCURIE , - ;
 MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
@@ -4260,8 +4263,8 @@ prefix maps, even if the serialization does not support prefix maps otherwise.
 
 At several places, the concrete syntax uses the non-terminal
 \syntax{'end'} to mark the end of a definition or declaration. Tools
-may make this \syntax{'end'} optional. However, in this standard,
-we insist on the \syntax{'end'}, because it may be needed to effectively
+may make this \syntax{'end'} optional. However, in this standard,\cbs
+the \syntax{'end'} is not marked as optional,\cbe because it may be needed to effectively
 disambiguate heterogeneous texts.
 
  
@@ -4291,7 +4294,7 @@ Separators               = 'separators' , String , String ;
                            +$<$\rm see definition in \cref{c:curies}$>$+
 \end{lstlisting}
 
-Note that we denote the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2013, Section 6}) by a colon inside the prefix map, but completely omit it in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+\cbs Note that the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2013, Section 6}) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.\cbe  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
 
 \vspace{1em}
 
@@ -4315,7 +4318,7 @@ Id                     = Letter , { LetterOrDigit } ;
 \ssclause{OMS}\label{a:dol-text:OMS}
 
 While in most cases the translation from concrete to abstract syntax
-is obvious (the structure is largely the same), we note that both
+is obvious (the structure is largely the same),  both
 \syntax{\%consistent} and \syntax{\%mcons} are translated to
 \syntax{model-conservative}, while both \syntax{\%inconsistent} and
 \syntax{\%notmcons} are translated to
@@ -4653,7 +4656,7 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
-Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{We intend to utilise the extensibility of the XPointer framework by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.}
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{\cbs The extensibility of the XPointer framework may be utilised by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.\cbe}
 
 \clause{DOL Semantics}\label{c:semantics}
 
@@ -4725,7 +4728,7 @@ domain.
 \sclause{Theoretical Foundations of the \DOL Semantics}
 \label{s:foundations}
 
-We now specify the theoretical foundations of the semantics of \DOL.
+\cbs In the following the theoretical foundations of the semantics of \DOL is specified.\cbe
 The notions of \emph{institution} and institution 
 \emph{comorphism} and \emph{morphism} are introduced, which provide formalizations of the terms 
 \termref{logic}, resp.\ \termref{logic translation}, resp.\  \termref{logic reduction}. 
@@ -4736,7 +4739,7 @@ system. Traditionally, logicians have studied abstract logical systems
 as sets of sentences equipped with an entailment relation
 $\vdash$. Such an entailment relation can be generated in two ways:
 either via a proof system, or as the logical consequence relation for
-some model theory.  We here follow the model-theoretic approach, since
+some model theory.\cbs  This specification follows\cbe the model-theoretic approach, since
 this is needed for many of the \DOL constructs, and moreover, ontology,
 modeling and specification languages like OWL, Common Logic, or \CASL
 come with a model-theoretic semantics, or (like UML class diagrams)
@@ -4888,12 +4891,12 @@ parts of the model.
 %moreover each propositional (and predicate) symbol true in $M_1$ is also true in $M_2$ (for a
 %given tuple of arguments).
 
-For the rest of the section, we work in an arbitrary institution. 
+For the rest of the section,\cbs an arbitrary institution is considered. \cbe
 A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
  A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
 $M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
 for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
-$\varphi\in \sen(\Sigma)$, we write $\Delta\models\varphi$, if all models satisfying all sentences in
+$\varphi\in \sen(\Sigma)$,\cbs $\Delta$ entails $\varphi$,\cbe $\Delta\models\varphi$, if all models satisfying all sentences in
 $\Delta$ also satisfy $\varphi$. A \defsty{theory morphism} $\phi: (\Sigma, \Delta) \rightarrow (\Sigma',  \Delta')$ is 
    a signature morphism $\phi:\Sigma\rightarrow \Sigma'$ such that $\Delta'\models \phi(\Delta)$.
 
@@ -4982,15 +4985,15 @@ as renaming and hiding.
 
 
 \begin{definition}
-  Given an institution  $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$, we can define the
-   institution of its theories, denoted $I^{th}$, as follows. The category of signatures of $I^{th}$ is the category
-   of $I$-theories and $I$-theory morphisms, that  we denote $\Th^I$.
+  Given an institution  $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$,\cbs the
+   institution of its theories can be defined,\cbe denoted $I^{th}$, as follows. The category of signatures of $I^{th}$ is the category
+   of $I$-theories and $I$-theory morphisms, that\cbs  is denoted\cbe $\Th^I$.
    For each theory $(\Sigma, \Delta)$, its sentences are just $\Sigma$-sentences in $I$, and
    its models are just $\Sigma$-models in $I$ that satisfy the sentences in $\Delta$, while the
    $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in models of $I$.
 \qed \end{definition}
 
-Using this notion, we can now capture logic translations that include axiomatization of parts of the
+Using this notion,\cbs logic translations can be defined\cbe that include axiomatization of parts of the
 syntax of the source logic into the target logic.
 
 \begin{definition}
@@ -5023,7 +5026,7 @@ glues together objects along the morphisms.
 They can be employed for constructing larger theories from already available 
 smaller ones, see \cite{GoguenBurstall92}. 
 
-A \emph{network}\footnote{A network is called a diagram in category theory texts. We prefer this terminology to disambiguate 
+A \emph{network}\footnote{A network is called a diagram in category theory texts.\cbs This terminology is introduced to disambiguate OMS networks\cbe
 from UML diagrams.} in a category $C$ is 
 a functor $D:G\to C$, where $G$ is a small category\footnote{That is, it has a set of objects and sets of morphisms between them
 instead of classes.}, and can be thought of as the shape of the graph of
@@ -5036,8 +5039,8 @@ A \emph{colimiting cocone} (or colimit) $(c, \{\alpha_i\}_{i\in|G|})$ can be
 intuitively understood as a minimal cocone, i.e. has the property that for any 
 cocone $(d, \{\beta_i\}_{i\in |G|})$ there exists a unique morphism 
 $\gamma\map{c}{d}$ such that $\alpha_i;\gamma = \beta_i$. By dropping the 
-uniqueness condition and requiring only that a morphism $\gamma$ should exist,
-we obtain a \emph{weak} colimit. 
+uniqueness condition and requiring only that a morphism $\gamma$ should exist,\cbs
+ a \emph{weak} colimit is obtained.\cbe 
 
 When $G$ is the category $\xymatrix{\bullet & \bullet \ar[l] \ar[r]
 & \bullet }$ with 3 objects and 2 non-identity arrows, $G$-colimits are
@@ -5078,8 +5081,8 @@ it has pushouts and admits (weak) amalgamation for these.
 
 \cite{weakcol} studies conditions for existence of weakly amalgamable cocones
 in a heterogeneous setting, where the network consists of signatures (or theories)
-in different logics. Since a network may admit more than one weakly amalgamable cocone,
-we assume selection operations both for the weakly amalgamable cocone of a network 
+in different logics. Since a network may admit more than one weakly amalgamable cocone,\cbs
+a selection operations is assumed\cbe both for the weakly amalgamable cocone of a network 
 and for the (potentially non-unique) amalgamation of a family of models compatible with the
 network. This allows us to define a function
 $colimit$ taking as argument a network of heterogeneous signatures and
@@ -5087,8 +5090,7 @@ returning the selected weakly amalgamable cocone for the network and
 a function $\oplus$ taking as argument a family of models compatible with a network
 and returning its selected amalgamation.
 
-We also want to be able to talk about the symbols of a signature in a formal way.
-For this reason, we assume that the category of signatures of an institution is 
+\cbs To be able to talk about the symbols of a signature in a formal way, it is assumed that the\cbe category of signatures of an institution is 
 an inclusive category with symbols, as defined below:
 \begin{definition}
 An \emph{inclusive category with symbols} is an inclusive category
@@ -5115,31 +5117,28 @@ a binary supports relation between OMS languages and institutions,
 and a binary supports relation between OMS languages and
 serializations. 
 
-We assume that for each institution in the heterogeneous logical environment there is a trivial signature
+\cbs It is assumed that\cbe for each institution in the heterogeneous logical environment there is a trivial signature
 $\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
-from $\emptyset$ to any signature of the institution. Moreover we assume the existence of a partial union operation on logics, denoted $\bigcup$: 
+from $\emptyset$ to any signature of the institution.\cbs Moreover,the existence of a partial union operation on logics is assumed; denoted $\bigcup$:\cbe 
 $L_1 \bigcup L_2 = (L, \rho_1:L1 \to L, \rho_2 : L_2 \to L)$, when defined. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism 
 and at most one morphism is marked as default.
 
-For each logic in the heterogeneous logical environment, we further assume the 
-following:
+For each logic in the heterogeneous logical environment,\cbs it is further assumed that there is :\cbe
 
 \begin{itemize}
- 
   \item a function that turns a symbol map into a signature morphism,
   \item a function giving semantics of sentences
   \item a relativization procedure taking as argument a theory and giving as 
   result a theory, and three procedures for translating correspondences of alignments
   into sentences in the logic, as needed in Section \ref{sec:oms-mappings}.
-  \item a default language and serialization.
+  \item a default language and\cbs a default language serialization.\cbe
 \end{itemize}
 
-For each language, we assume a default logic and serialization, and for 
-each serialization we assume a default logic and language.
+\cbs Each language is assumed to have a default logic and serialization; and  each serialization is assumed to have a default logic and language.\cbe
 
-We assume that for each institution, there exist (possibly partial) union and difference operations on signatures.
-These concepts can be captured in a categorical setting using \emph{inclusion systems} \cite{DGS91}.
-However, inclusion systems are too strong for our purposes and therefore we will work under weaker assumptions.
+Further,  for each institution, it is assumed that there exist (possibly partial) union and difference operations on signatures.
+These concepts could be captured in a categorical setting using \emph{inclusion systems} \cite{DGS91}.
+\cbs However, inclusion systems are too strong for the purposes of this specification.\cbe  %therefore, we will work under weaker assumptions.
 
 \begin{definition}  
  An \emph{inclusive category} \cite{DBLP:conf/birthday/GoguenR04} 
@@ -5169,9 +5168,9 @@ A functor between two inclusive categories is inclusive if it takes inclusions i
    \end{itemize}
 \qed\end{definition}
 
-Let $I$ be a weakly inclusive institution. We say that $I$  \emph{has differences}, if there is a binary operation $\setminus$ on signatures, 
+Let $I$ be a weakly inclusive institution.  $I$  \emph{has differences}, if there is a binary operation $\setminus$ on signatures, 
 such that for each pair of signatures 
-$\Sigma_1, \Sigma_2$, we have:
+$\Sigma_1, \Sigma_2$:
 \begin{enumerate}
   \item $\Sigma_1\setminus \Sigma_2 \subseteq \Sigma_1$
   \item $(\Sigma_1\setminus \Sigma_2) \cap \Sigma_2 = \emptyset$
