@@ -1434,7 +1434,7 @@ expressing the translation, to at least one of them).
 \begin{fminipage}{\textwidth}
 \textbf{Rationale}: The main reason for the following specifications is identifier injection. \DOL is capable
 of assigning identifiers to entities (symbols, axioms, modules, etc.) inside fragments of OMS
-languages that occur in a \DOL document, even if that OMS language doesn't support such identifiers
+languages that occur in a \DOL document, even if that OMS language does not support such identifiers
 by its own means. 
 Such identifiers will be visible to a \DOL tool, but not to a tool that only supports the OMS
 language.  To achieve this without breaking the formal semantics of that OMS language,
@@ -1442,24 +1442,25 @@ language.  To achieve this without breaking the formal semantics of that OMS lan
  in order to place such
 identifiers inside annotations/ comments.  
 Depending on the nature of the concrete given
-serialization of the OMS language, be it plain text, some serialization of RDF, XML, or some other 
-structured text format, we can be more specific about what the annotation/commenting facilities of
+serialization of the OMS language (be it plain text, some serialization of RDF, XML, or some other 
+structured text format), one can be more specific about what the annotation/commenting facilities of
 that serialization must look like in order to support this identifier injection.  
 Well-behaved XML and RDF schemas support identifier injection in a `nice' way (rather than using
-text-level comments). In the worst case we cannot 
-inject anything into an OMS language fragment, because the OMS language serialization simply
-would not allow us to write suitable comments, but we would have to point into it from the enclosing context
+text-level comments). \cbs In the worst case it is not possible to
+inject something into an OMS language fragment, because the OMS language serialization simply
+does not allow  to write suitable comments. In this case the solution is to point into the OMS language fragment from the enclosing context \cbe
 by using \termref{standoff markup}.
 
 
 Further conformance criteria in this section are introduced to facilitate the convenient reuse of
 verbatim fragments of OMS language inside a \DOL document.
 
-Independently from these criteria, we distinguish different levels of conformance of a
-serialization with respect to its means of conveniently abbreviating long IRI identifiers.
+Independently from these criteria,  \cbs several levels of conformance of a
+serialization are distinguished. They differ with respect to its means of conveniently abbreviating long IRI identifiers. \cbe
 \end{fminipage}
 
-We define seven levels of conformance of a serialization of an OMS language with \DOL.
+\cbs There are seven levels of conformance of a serialization of an OMS language with \DOL{}.
+\cbe
 
 \begin{description}
 \item[XMI conformance]
@@ -1467,7 +1468,7 @@ An XMI serialization \cbs for OMS written in the OMS language \cbe\ has been aut
 of the abstract syntax, using MOF 2 XMI Mapping.
 %\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there. TM: XMI is an XML-based format.}
 \item[XML conformance]
-The given serialization has to be specified as an XML schema\footnote{Here, we refer to the general \emph{concept} of a schema, not of the W3C XML Schema language as one way of implementing it.  It is not even required that a machine-readable implementation of the schema serialization exists.}, which satisfies
+The given serialization has to be specified as an XML schema\footnote{\cbs This refers \cbe to the general \emph{concept} of a schema, not of the W3C XML Schema language as one way of implementing it.  It is not even required that a machine-readable implementation of the schema serialization exists.}, which satisfies
  all of the following conditions:
 \begin{itemize}
 \item The elements of the schema belong to one or more non-empty XML
@@ -1534,7 +1535,8 @@ Any conforming serialization of an OMS language shall have a machine-processable
 \sclause{Machine-Processable Description of Conforming Languages, Logics, and Serializations}\label{c:conform:description}
 
 \begin{fminipage}{\textwidth}
-\textbf{Rationale}: When a parser processes a \DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore we require that all languages/logics/serializations that conform with \DOL describe themselves in a machine-comprehensible way.
+\textbf{Rationale}: When a parser processes a \DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore,  \cbs all languages/logics/serializations that conform with \DOL are required to describe themselves in a machine-comprehensible way.
+\cbe
 \end{fminipage}
 
 For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization be retrievable by dereferencing this IRI, according to the linked data principles \nisref{W3C/TR REC-ldp-20150226:2015}.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:lola}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.%\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
@@ -1732,7 +1734,7 @@ plus non-logical annotations\index{annotation}.}
   An OMS language is used for the formal specification of \termref{native OMS}.
   \end{note}
   \begin{note}
-  We distinguish between the {logical language aspect}, the {structuring language aspect}, and the {annotation language aspect} of an OMS language. 
+\cbs An OMS language has a  {logical language aspect}, a {structuring language aspect}, and an {annotation language aspect}. \cbe
   \end{note}
 
 
@@ -2134,8 +2136,9 @@ The goal of module extraction is ``decomposing an OMS into smaller, more managea
 appropriate dependencies'' \cite{DBLP:series/lncs/5445}.
   \end{note}
   \begin{example}
-Consider an OWL DL ontology about wines, from which we would like to extract a module about white 
-wines. That module would contain the declaration of the non-logical symbol ``white wine'', all 
+\cbs Assume one extracts a module about white 
+wines from an OWL DL ontology about wines of any kind. \cbe
+That module would contain the declaration of the non-logical symbol ``white wine'', all 
 declarations of non-logical symbols related to ``white wine'', and all sentences about all of these 
 non-logical symbols.
   \end{example}
