@@ -7689,7 +7689,7 @@ be represented in a simplified way?}
 \texttt{(forall (x y) (if (c.p x y) (c x))) }
 \item 
 \texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote
-{With \texttt{($\tau[c]$ x)}, we abbreviate either (if $\tau$ is present)\\
+{\cbs \texttt{($\tau[c]$ x)} is an abbreviation of either\cbe (if $\tau$ is present)\\
 \texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.\\
 or (if $\tau$ is omitted) just \texttt{(c x)}.}
 %% \item 
@@ -7749,7 +7749,7 @@ In case \texttt{m} is represented in the simplified way, \texttt{(form:sequence-
   \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(a)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
 being represented as sequences)\footnote{Ignoring the annotations $\tau_i$ in the interpretation of an association is intentional, see OMG UML version 2.5 (ptc/2013-09-05) in section 11.5.3: ``When one or more ends of the Association have isUnique =false, it is possible to have several links associating the same set of
 instances. In such a case, links carry an additional identifier apart from their end values.
-When one or more ends of the Association are ordered, links carry ordering information in addition to their end values.'' Similarly in UML Superstructure Specification 2.4.1, p.~37. We cover the additional information required for links by using sequences of tuples.}:\\
+When one or more ends of the Association are ordered, links carry ordering information in addition to their end values.'' Similarly in UML Superstructure Specification 2.4.1, p.~37. \cbs The additional information required for links is covered by using sequences of tuples.}:\cbe\\
 \texttt{(from:Sequence a)}\\
 \texttt{(forall (t) (if (form:sequence-member t a)\\
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
@@ -7767,7 +7767,7 @@ $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
 $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
 \texttt{(forall (o s)\\
 \qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))}\\
-If $\mathbf{a}$ is represented in simplified form, then instead we use\\
+If $\mathbf{a}$ is represented in simplified form, then instead\cbs the following is used\cbe \\
 \texttt{(forall (o s)\\
 \qqquad (if (c.p o s) (forall (x) (iff (member x s) (a o x)))))}
 \item the interpretation of a member end of a composition declaration
@@ -7776,7 +7776,7 @@ attribute: if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(
 by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
 \texttt{(forall (o s)\\
 \qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))}\\
-Again, if $\mathbf{m}$ is represented in simplified form, then instead we use\\
+Again, if $\mathbf{m}$ is represented in simplified form, then\cbs the following is used\cbe\\
 \texttt{(forall (o s)\\
 \qqquad (if (c.p o s) (forall (x) (iff (member x s) (m o x)))))}
 %% \footnote{
@@ -7854,7 +7854,7 @@ names.
 
 
 \begin{example}
-For the example in Fig. \ref{fig:bjoerners_dsl} we have
+\cbs For the example in Fig. \ref{fig:bjoerners_dsl} there are the following multiplicity formulas:\cbe
 \begin{gather*}
   \mathsf{2 \leq \#n2s(net : Set[Net], \composition station : Set[Station]).station}
 \\
@@ -7879,8 +7879,8 @@ For the example in Fig. \ref{fig:bjoerners_dsl} we have
   \mathsf{\#l2l(line : Set[Line], linear : Set[Linear]).linear = 1}
 \end{gather*}
 %
-where we write ``$=$'' and ``${-} \leq {-} \leq {-}$'' as respective
-abbreviations for two inequations using ``$\leq$''.
+\cbs ``$=$'' and ``${-} \leq {-} \leq {-}$'' are 
+abbreviations for two inequations using ``$\leq$''.\cbe
 \end{example}
 
 
@@ -7889,7 +7889,7 @@ The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object diagram $\Sigma$, a
 multiplicity formula $\varphi$ and a $\Sigma$-model $M$ (the
-latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic), we define
+latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic): 
 $$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
 
 The translation of multiplicity formulas to Common Logic is as follows:
@@ -7903,7 +7903,7 @@ The translation of multiplicity formulas to Common Logic is as follows:
 \qqquad\qqquad\qqquad  (form:sequence-size \\
 \qqquad\qqquad\qqquad\qqquad(form:n-select a $i$ [$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$]) n))\\
 \qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}\\
-If $a$ is represented in simplified form, we use instead:\\
+If $a$ is represented in simplified form,\cbs the following is used instead:\cbe\\
 $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
 \texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)\\
 \qqquad(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$))\\
@@ -7916,7 +7916,7 @@ $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \do
 \texttt{(forall (x)}\\
 \qqquad\texttt{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))\\
 \qqquad\qqquad (buml:leq $\sem{\ell}$ n))}\\
-If $m$ is represented in simplified form, we use instead:\\
+If $m$ is represented in simplified form,\cbs the following is used instead:\cbe\\
 $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1)=$\\
 \texttt{(forall (x)\\
 \qqquad(if ($c_2$ $x$) \\
@@ -7955,8 +7955,10 @@ $\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots,
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer, and $[x_1\cdots x_n]$ abbreviates \texttt{(form:sequence-insert $x_1$ $\cdots$ (form:sequence-insert $x_n$ form:empty-sequence))}.
 The translation for  $\mathit{FunExpr} \leq \mathit{NumLiteral}$
-is analogous. In case of simplified representation, we need to replace
-the existence of $\sem{\ell}$ distinct individuals with a statement
+is analogous. In case of simplified representation,\cbs
+the existence of $\sem{\ell}$ distinct individuals 
+needs  to replaced\cbe
+with a statement
 expressing that if $\sem{\ell}+1$ individuals have the specified property,
 at least two of them must be equal.
 
@@ -7984,8 +7986,8 @@ set of sorts $\{s\}$ is isomorphic to unsorted first-order logic.
 \CASL \cite{CASL-RM} extends many-sorted first-order logic with
 partial functions and subsorting.  It also provides induction
 sentences, expressing the (free) generation of datatypes.  \CASL has
-been presented as an institution in \cite{Mossakowski02,CASL-RM}. We
-here only sketch this institution.
+been presented as an institution in \cite{Mossakowski02,CASL-RM}.\cbs This annex presents
+ only a sketch of this institution.\cbe
 
 \CASL signatures consist of a set $S$ of sorts with a subsort relation $\leq$ between them
 together with
@@ -8045,8 +8047,8 @@ semantics of \DOL as defined in Sec.~\ref{c:semantics}.
 
 \sclause{Languages}
  
- The OMS languages that we selected
-are those whose conformance with \DOL is established in the preceding, normative annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, RDFS in \aref{a:rdfs},
+\cbs The selected OMS languages\cbe
+are those whose conformance with \DOL is established in the preceding annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, RDFS in \aref{a:rdfs},
 \CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The logic graph is shown in \fref{fig:ontograph-standards}; the language graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes refer to the following OMS languages and profiles:
 \begin{itemize}
 \item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
@@ -8221,8 +8223,8 @@ is the corresponding sublogic inclusion.
 $\SimpleRDF \rightarrow \RDF$ is an obvious inclusion, except that
 \SimpleRDF resources need to be renamed if they happen to have a predefined
 meaning in \RDF. The model translation needs to forget the fixed parts
-of \RDF models, since this part can always reconstructed in a unique
-way, we get an isomorphic model translation. 
+of \RDF models.\cbs Since this part can always reconstructed in a unique
+way, the result is\cbe  an isomorphic model translation. 
 
 \ssclause{$\RDF \rightarrow \RDFS$}
 
@@ -8496,12 +8498,12 @@ The actual translations are specified in \cite{OntoGraph}.
 \label{a:EBNF}
 
 \cbs
-The following subclauses specify the abstract syntax of \DOL in EBNF. Note that we deviate from the EBNF specification in
+The following subclauses specify the abstract syntax of \DOL in EBNF. Note that it deviates from the EBNF specification in
  \nisref{ISO/IEC 14977:1996} in favor of a more modern and concise
-EBNF syntax. More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand side, which we omit 
-for the sake of better readability. Also, we replace the separator \syntax{=}
-between left and right hand-side of a rule with \syntax{::=}, and 
-use the notation \syntax{N+}
+EBNF syntax. More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand side, which are omitted 
+for the sake of better readability. Also, the separator \syntax{=}
+between left and right hand-side of a rule is replaced with \syntax{::=}, and 
+ the notation \syntax{N+} is used 
 for one or more repetitions of \syntax{N}.
 %Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 \cbe
@@ -9659,7 +9661,7 @@ end
 
 \infannex{Use cases}\label{a:use-cases}
 
-This annex sketches scenarios that outline how \DOL is intended to be applied.  For each scenario, we list its status of implementation, the \DOL features it makes use of, and provide a brief description.
+This annex sketches scenarios that outline how \DOL is intended to be applied.  For each scenario,\cbs  the status of its implementation is described, the \DOL features it makes use of are listed, and a brief description is provided.\cbe
 
 \newenvironment{usecase}[3]{\sclause{#1}%
 \begin{description}
@@ -9939,16 +9941,16 @@ similar scheme for IRIs.
 
 Generally an Ontohub loc/id (locator/identifier) is just an IRI of a
 library, an OMS
-or one of its members (symbols, sentences, mappings). However
+or one of its members (symbols, sentences, mappings). However,
 Ontohub loc/ids are generated by the Ontohub application and assigned to an
-OMS.  We try to infer them from the path of the repository, the path of
-the OMS and the specific name. Additionally we ensure that this specific
+OMS.\cbs Ontohub tries to\cbe infer them from the path of the repository, the path of
+the OMS and the specific name. Additionally,\cbs Ontohub ensures\cbe that this specific
 IRI is actually a locator and not \emph{just} an identifier.
 
 This is quite important as the IRI of an OMS is the general starting
 interface a user has with the given OMS. When she evaluates the OMS
 in her tool of choice she'll use the IRI to reference the given OMS. When
-she wants to work on ontohub with the given OMS she'll point her browser
+she wants to work on Ontohub with the given OMS she'll point her browser
 at the given IRI. As one familiarity with the Ontohub application increases one
 will more often want to use the IRI instead of just searching or even browsing
 for something.  This is further intensified if the IRI-schema follows a schema
@@ -9959,14 +9961,14 @@ that is easily understood by a user.
 Identifying OMS and their members in Ontohub is a hierarchical
 task. An OMS library belongs to a repository. An OMS may belong
 directly to a repository, or indirectly through a library. Mappings,
-symbols and sentences in turn belong to an OMS. So we could use the
+symbols and sentences in turn belong to an OMS. So\cbs one\cbe could use the
 hierarchical portion of an IRI instead of the query string.  This
 would mean using a forward slash (\emph{/}) as separator.
 
-Ontohub loc/ids are specific to an instance of the Ontohub application. However
+Ontohub loc/ids are specific to an instance of the Ontohub application. However,
 such an instance might be reachable via multiple multiple FQDNs (fully
-qualified domain name) and ports. So instead we should expect a
-\emph{qualified loc/id} to be a tuple consisting of the specific application
+qualified domain name) and ports. So instead\cbs a
+\emph{qualified loc/id} is expected\cbe to be a tuple consisting of the specific application
 instance, represented by the set of their schema-fqdn-port tuples, and the
 actual identifying portion beginning with the hierarchical forward slash
 (\emph{/}).
@@ -10019,11 +10021,11 @@ but will be supported.
 
 \section{Specification}
 
-We can specify qualified loc/id IRIs as a special case of RFC 3987 (IRI,
+\cbs A qualified loc/id IRIs can be specified\cbe as a special case of RFC 3987 (IRI,
 \cite{rfc3987}). Code-excerpt \ref{lst:loc-id-spec} on page
 \pageref{lst:loc-id-spec} contains this specification of qualified loc/ids in
-Augmented Backus-Naur Form (ABNF, \cite{rfc5234}). We use ABNF here, because
-RFC 3987 itself specifies IRIs using ABNF and we wanted to be able to reference
+Augmented Backus-Naur Form (ABNF, \cite{rfc5234}).\cbs ABNF is used,\cbe because
+RFC 3987 itself specifies IRIs using ABNF and\cbs it is desirable to\cbe be able to reference
 rules from the RFC in our specification. Such rules can be easily identified by
 the \texttt{i}-prefix that was used when writing the IRI-rules.
 
@@ -10055,10 +10057,10 @@ RFC 3986\cite{rfc3986}, which defines the URI.
 \clearpage
 \section{ref/ special form loc/ids}
 
-There is one additional syntax-element that we haven't covered yet. One of the
+There is one additional syntax-element\cbs that has not been covered yet.\cbe One of the
 main features that Ontohub provides in its role as an \emph{Open OMS Repository}
-is versioning of OMS by backing the repositories with git. It is quite
-important that we can access such versions and other related files inside of a
+is versioning of OMS by backing the repositories with git.\cbs For many use cases it is 
+important to access such\cbe versions and other related files inside of a
 repository, which can be basically viewed as a directory in a file system.
 \texttt{ref/}-style IRIs accomplish this task.
 
@@ -10086,10 +10088,10 @@ unqualified loc/id, or in short: loc/id.
 
 \subsection{References inside of the tree}
 
-Additionally we need to provide a way to reference files inside a repository,
+\cbs It is important to\cbe provide a way to reference files inside a repository,
 This especially applies to files that do not represent OMS. This
-will be accomplished by the \texttt{tree/} special form. Additionally
-we will support a \texttt{treeref} special form which allows to reference
+will be accomplished by the \texttt{tree/} special form. Additionally,
+\cbs Ontohub\cbe will support a \texttt{treeref} special form which allows to reference
 a specific version of a files using the \emph{Commit}, \emph{Branch} and
 \emph{Date} references. MMT is for obvious reasons not supported.
 
@@ -10115,12 +10117,12 @@ This page will contain a link to the tree for the directory, e.g.\
 \url{/tree/default/pizza}, and a link to a \texttt{ref/} special form
 version of the OMS, e.g.\ \url{/ref/master/default/pizza}.
 
-If however the loc/id is requested with a \emph{text/plain} content type we
-will always serve the OMS. This is in part because there is no reasonable
+If however the loc/id is requested with a \emph{text/plain} content type\cbs Ontohub
+serves the OMS.\cbe This is in part because there is no reasonable
 representation of a directory that we would want to support. Another reason is
 that Ontohub serves OMS as its main objects. And as \emph{text/plain} is
 the MIME-type that was chosen to always return the textual content of an
-OMS (the raw file), we will need to serve that, even if the loc/id would
+OMS (the raw file),\cbs one needs  to serve that,\cbe even if the loc/id would
 be ambiguous in a normal request.
 
 
