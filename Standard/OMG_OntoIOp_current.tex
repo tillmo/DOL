@@ -2047,7 +2047,12 @@ original and the renamed OMS.
 
   \termdefinition{reduction}{restriction of an \termref{OMS} to a smaller \termref{signature}.}
 
-\termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in a given smaller \termref{OMS}.}
+\cbs
+\termdefinition{local environment}{OMS built from all previously-declared 
+symbols and axioms}
+\cbe
+
+\termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in \cbs the \termref{local environment}.\cbe}
 
 
 
@@ -2194,10 +2199,35 @@ best possible (in the sense of a maximum set of \termref{logical consequences})
 \termdefinition{closed world assumption}{presumption that what is not known to be true, is false.}
 
 \termdefinitionLight{\termref{minimization}\synonym circumscription\index{circumscription|see {minimization}}}
-{way of implementing the \termref{closed world assumption} by restricting the models\index{model} to those that are minimal.}
+{way of implementing the \termref{closed world assumption} by restricting the \termref{models}\index{model} to those that are minimal (with respect to the local environment).}
+\cbs
+  \begin{note}
+    \termref{Symbols} from the \termref{local environment} are assumed
+    to have a fixed interpretation. Only the symbols newly declared in
+    the minimization are forced to have minimal interpretation.
+  \end{note}
+\cbe
   \begin{note}
     See \cite{circ1}, \cite{circ2}.
   \end{note}
+\cbs
+\termdefinition{maximization}{restriction to \termref{models} to those that are maximal  (with respect to the local environment).}
+\termdefinition{freeness}{restriction to \termref{models} to those that are free (with respect to the local environment).}
+  \begin{note}
+    In first-order-like logics, freeness means minimal interpretation
+    of predicates and minimal equality among data values. Freeness can
+    be used for the specification of inductive datatypes like numbers,
+    lists, trees, bags etc. In order to specify e.g.\ lists over some elements,
+    the specification of the elements should be in the local environment.
+  \end{note}
+\termdefinition{cofreeness}{restriction to \termref{models} to those that are cofree (with respect to the local environment).}
+  \begin{note}
+    In first-order-like logics, cofreeness means maximal
+    interpretation of predicates and equality being observable
+    equivalence. Coreeness can be used for the specification of
+    coinductive datatypes like infinite lists and streams.
+  \end{note}
+\cbe
 
   \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.}
 \begin{example}
@@ -3987,14 +4017,19 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item a combination of an OMS network (technically, this is a colimit, see \cite{ZimmermanEtAl06}),
 \item a minimization of an OMS, forcing the subsequently declared
   non-logical symbols to be interpreted in a minimal way, while the non-logical symbols declared so far are fixed (alternatively, the non-logical symbols to be minimized and to be varied can be explicitly declared). Variants are
-maximization, freeness (minimizing also data sets and equalities on these), and cofreeness
-(maximizing also data sets and equalities on these),
-\item the application of a substitution to an OMS.
-
-
+maximization, freeness (minimizing also data sets and equalities on these, \cbs which enables the inductive definition of relations and datatpyes), and cofreeness
+(enabling the coinductive definition of relations and datatpyes).\cbe
+%\item the application of a substitution to an OMS.
 \end{itemize}
 % derived from CASL (see CASL reference manual)
 % and HetCASL (see HetCASL summary)
+
+\cbs
+Some OMS, namely extensions and minimization, maximization, freeness
+and cofreeness, are interpreted relative to a \emph{local enviroment}.
+Rouhgly spekaing, the local environment is the OMS built from all
+previously-declared symbols and axioms.
+\cbe
 
 \includegraphics[scale=0.4]{mof/dia/dia2.png}
 
