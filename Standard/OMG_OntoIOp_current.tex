@@ -1289,7 +1289,7 @@ stating sentences about them;
 %% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
 % \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
 \item mappings between services and devices, and definitions of service and device interoperability;
-\item non-monotonic logics\footnote{Logics (formalized as institutions) are necessarily monotonic; conformance criteria for non-monotonic logics are still under development. However, minimization provides non-monotonic reasoning in \DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.}. 
+\item non-monotonic logics\footnote{Only monotonic logics are within scope of this specification. Conformance criteria for non-monotonic logics are still under development. However, minimization provides non-monotonic reasoning in \DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.}. 
 
 \end{enumerate}
 
@@ -1339,7 +1339,7 @@ or as an EBNF grammar;
 %\item complete round-trip mappings from the human-readable serialization
 %to the abstract syntax and vice versa;
 \item either there exists a translation of it into a conforming
-  language\footnote {For example, consider the translation of OBO1.4
+  language\footnote{For  example, consider the translation of OBO1.4
     to OWL, giving a formal semantics to OBO1.4.}, or:
 \begin{enumerate}
 \item the logical language aspect\index{language aspect ! logical} (for expressing basic OMS) is conforming, and in particular has a semantics (see below),
@@ -1478,7 +1478,7 @@ namespaces.%\todonote[author=Christoph
 %of  a serialization that is merely text conforming).}
 \item The serialization shall use XML \emph{elements} to represent all structural elements of an OMS.
 \item The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
- \DOL namespace \url{http://www.omg.org/spec/DOL/1.0/xml}) on any elements.\footnote{This is because either an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.}
+ \DOL namespace \url{http://www.omg.org/spec/DOL/1.0/xml}) on any elements. (This  is because either an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.)
 \end{itemize}
 
 \item[RDF conformance]
@@ -1487,15 +1487,16 @@ The given serialization has to be specified as an RDF vocabulary, which
 \begin{itemize}
 \item The elements of the vocabulary belong to one or more RDF namespaces
  identified by absolute URIs.
-\item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS.\footnote{The rationale is that RDF in principle allows for identifying any kinds of items, so an RDF-based serialization of an OMS language should not forbid making use of such RDF constructs that do allow for identifying arbitrary items.}
-\footnote{The OWL RDF serialization, for example, does not satisfy the RDF conformance level, for the following reason. There is an \texttt{owl:imports} property but no class representing imports. 
- Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as a resource, which could have an identifier.  RDF reification would allow for giving the statement $O_1$ \texttt{owl:imports} $O_2$ an identifier. 
- However, the RDF triples resulting from this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification 
- \url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/\#Mapping_from_RDF_Graphs_to_the_Structural_Specification}). 
- They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty.}  
+\item The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS. (The  rationale is that RDF in principle allows for identifying any kinds of items, so an RDF-based serialization of an OMS language should not forbid making use of such RDF constructs that do allow for identifying arbitrary items.)
 % \todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{Update on 2014-10-09: Is it OK to have this footnote here?  Or if not, where should it go?  I believe it answers the following question:\\ And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
 \item There shall be no additional rules (stated in writing in the specification of the serialization, or formalized in its implementation in, e.g., OWL) that forbid properties from foreign vocabulary namespaces to be stated about arbitrary subjects for the purpose of annotation.
 \end{itemize}
+{The OWL RDF serialization, for example, does not satisfy the RDF conformance level, for the following reason. There is an \texttt{owl:imports} property but no class representing imports. 
+ Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as a resource, which could have an identifier.  RDF reification would allow for giving the statement $O_1$ \texttt{owl:imports} $O_2$ an identifier. 
+ However, the RDF triples resulting from this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/\#Mapping_from_RDF_Graphs_to_the_Structural_Specification}}. 
+ They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty.}  
+
+
 
 \item[Text conformance]
 The given serialization has to satisfy all of the following conditions:
@@ -1916,13 +1917,13 @@ values (\eg, zero, one, and infinity). \nisref{IETF/RFC 3986:2005, Section 1.1}
 \termdefinition{element (of an OMS)}{any \termref{resource} in an \termref{OMS} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{OMS} itself, \dots) or a named set of such \termref{resources}.}
   
 
-\termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \nisref{W3C/TR REC-ldp-20150226:2015}\footnote{The original source is widely accepted but not formally a standard~\cite{BernersLee:LinkedData2006}}.}
+\termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \nisref{W3C/TR REC-ldp-20150226:2015}\footnote{The original source is widely accepted but not formally a standard~\cite{BernersLee:LinkedData2006}.}.}
   \begin{note}
     The linked data principles (adapted from \nisref{W3C/TR REC-ldp-20150226:2015} and its paraphrase at \cite{Wikipedia:LinkedData2011}) are the following:
     \begin{enumerate}
     \item Use IRIs as names for things.
     \item Use HTTP IRIs so that these things can be referred to and looked up (``dereferenced'') 
-    by people and user agents.\footnote{I.e., the IRI is treated as a URL (uniform resource locator).}
+    by people and user agents. (I.e., the IRI is treated as a URL (uniform resource locator).)
     \item Provide useful machine-processable (plus optionally human-readable) information about the thing when its IRI is dereferenced, using standard formats.
     \item Include links to other, related IRIs in the exposed data to improve discovery of other related information on the Web.
     \end{enumerate}
@@ -3672,7 +3673,7 @@ The major functions of \DOL are the following:
 \begin{itemize}
 		\item \DOL allows the use of OMS in other OMS languages (e.g., UML class diagrams, \CASL, 
 		OWL, Common Logic) without requiring any changes. These are called \emph{native OMS}.  
-		\item \DOL provides for defining new, \emph{structured OMS} based on existing OMS.\footnote{Also native OMS can use the structuring constructs from their OMS language. However, these structuring constructs are often quite limited, and moreover, they differ from OMS language to OMS language.} \DOL provides a number of operations for this purpose; e.g.,
+		\item \DOL provides for defining new, \emph{structured OMS} based on existing OMS.\footnote{Native OMS can also use the structuring constructs from their OMS language. However, these structuring constructs are often quite limited, and moreover, they differ from OMS language to OMS language.} \DOL provides a number of operations for this purpose; e.g.,
 		it is possible to define a structured OMS $C$ as the union of an OWL
 		ontology $A$ and a Common Logic ontology $B$.
 		\item \DOL provides for defining connections between two OMS by using 
@@ -3788,7 +3789,9 @@ The syntax of a \DOL conformant language can be written in MOF or EBNF,
 which are self-describing.  The semantics of a \DOL conformant language
 is its presentation as an institution. Institutions themselves are
 specified in the language of set theory and category
-theory.\footnote{In the future, it may be possible to specify the
+theory.
+
+{In the future, it may be possible to specify the
   semantics of a \DOL conformant language using a semantics-based
   logical framework such as MMT. This would close the loop already at
   M3 also for the semantics.}
@@ -4072,9 +4075,9 @@ to the \syntax{InterfaceSignature}.
 
 
 A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; 
-the semantics specification in \cref{c:semantics} makes this assumption\footnote{Mapping a 
+the semantics specification in \cref{c:semantics} makes this assumption. ({Mapping a 
 non-logical symbol twice is an error. Mapping two source non-logical symbols to the same target 
-non-logical symbol is legal, this then is a non-injective OMS mapping.}. 
+non-logical symbol is legal, this is a non-injective OMS mapping.})
 
 %Alignments 
 
@@ -4129,8 +4132,8 @@ not offer a mechanism for defining a base IRI, against which relative IRIs could
 Concerning these languages, note that they allow arbitrary IRIs in principle, but in practice they 
 strongly recommend using IRIs consisting of two components \cite{W3C:NOTE-swbp-vocab-pub-20080828}:
 \begin{description}
-\item[namespace] an IRI that identifies an OMS,\footnote{See annex~\ref{a:loc/id} for a specific linked-data compliant URL scheme for \DOL.}
-usually ending with \syntax{\#} or \syntax{/}
+\item[namespace] an IRI that identifies an OMS,
+usually ending with \syntax{\#} or \syntax{/}. ({See annex~\ref{a:loc/id} for a specific linked-data compliant URL scheme for \DOL.})
 \item[local name] a name that identifies a non-logical symbol within an OMS
 \end{description}
 
@@ -4164,12 +4167,14 @@ OMS name and the symbol name can be declared (using the keyword \syntax{separato
 
 \item \DOL does not make use of the \syntax{safe\_curie} production.
 \item \DOL does not allow binding a relative IRI to a prefix.
-\item Concrete syntaxes of \DOL are encouraged but \notrequired to support CURIEs.\footnote{This is 
+\item Concrete syntaxes of \DOL are encouraged but \notrequired to support CURIEs.
+\end{itemize}
+
+{CURIES are not required as 
 a concession to having an RDF-based concrete syntax among the normative concrete syntaxes.  RDFa is 
 the only standardized RDF serialization to support CURIEs so far.  Other serializations, such as 
 RDF/XML or Turtle, support a subset of the CURIE syntax, whereas some machine-oriented 
 serializations, including N-Triples, only support full IRIs.}
-\end{itemize}
 
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively,\cbs 
 the CURIE grammar supported by \DOL can be restated\cbe as follows:
@@ -4682,7 +4687,7 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
-Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI.\footnote{\cbs The extensibility of the XPointer framework may be utilised by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.\cbe}
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI. {\cbs (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.)\cbe}
 
 \clause{DOL Semantics}\label{c:semantics}
 
@@ -4813,23 +4818,24 @@ is nothing more than a family of satisfaction systems, indexed by
 signatures, and linked coherently by signature morphisms.
 
 
-\begin{definition}\label{def:inst} An
+\begin{definition}\label{def:inst} \cbs Let $\Set$ be the
+category having all small \textsc{}sets as objects and functions as
+arrows, and let $\Cat$ be the category
+of categories and functors.\footnote {Strictly speaking, $\Cat$ is not a
+category but only a so-called quasicategory, which is a category that
+lives in a higher set-theoretic universe.}\cbe
+An
 \defsty{institution} \cite{GoguenBurstall92} is a quadruple $I=(\Sig,\sen,\IMod,{\models})$
 consisting of the following:
 %
 \begin{itemize}
 \item a category\footnote{See \cite{AHS,MacLane} for an introduction into category theory.} $\Sig$ of \emph{signatures} and \emph{signature morphisms},
-\item a functor $\sen\map{\Sig}{\Set}$\footnote{$\Set$ is the
-category having all small \textsc{}sets as objects and functions as
-arrows.}  giving, for each signature $\Sigma$, the set of
+\item a functor $\sen\map{\Sig}{\Set}$  giving, for each signature $\Sigma$, the set of
 \emph{sentences} $\sen(\Sigma)$, and for each signature morphism
 $\sigma:{\Sigma}\to{\Sigma'}$, the \emph{sentence translation map}
 $\sen(\sigma):{\sen(\Sigma)}\to{\sen(\Sigma')}$, where often
 $\sen(\sigma)(\varphi)$ is written as $\sigma(\varphi)$, \item a
-functor $\IMod:{\Sig^{op}}\to{\Cat}$\footnote {$\Cat$ is the category
-of categories and functors. Strictly speaking, $\Cat$ is not a
-category but only a so-called quasicategory, which is a category that
-lives in a higher set-theoretic universe.} giving, for each signature
+functor $\IMod:{\Sig^{op}}\to{\Cat}$ giving, for each signature
 $\Sigma$, the category of \emph{models} $\IMod(\Sigma)$, and for each
 signature morphism $\sigma\map{\Sigma}{\Sigma'}$, the \emph{reduct
 functor\/} $\IMod(\sigma):{\IMod(\Sigma')}\to {\IMod(\Sigma)}$, where
@@ -4901,7 +4907,7 @@ For details, see \cite{CommonLogic:oldfashioned}.
 
 A \Clogic signature morphism 
 consists of two maps between the sets of names and of sequence markers, such that the property of 
-being a discourse name is preserved and reflected.\footnote{That is, a name is a discourse
+being a discourse name is preserved and reflected.\footnote{That  is, a name is a discourse
 name if and only if its image under the signature morphism is.}
   Model reducts leave $\UR$, $\UD$, 
 $\rel$ and $\fun$ untouched, while $\intCL$ and $\seq$ are composed with the appropriate
@@ -5255,17 +5261,16 @@ whose nodes are labeled like in the semantics of OMS mappings and
 edges are labeled with heterogeneous signature morphisms (i.e.~ 
 an edge from the node $S$ to the node $T$ is labeled with a pair 
 $(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
-$\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$), 
+$\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$). 
 The intuition is that
 network provide means of putting together graphs of OMS and OMS mappings
-and of removing sub-graphs of existing networks 
-\footnote{Alternatively\cbs 
- the edges of the graph of a network could be labeled with\cbe
-OMS mappings between the OMS labeling the nodes connected by the edge. This gives a more
-compact representation of the graph of the network, but it has the drawback that
-the subgraph giving the semantics of the mapping is not explicitly available and thus
-one cannot operate on it,~e.g. eliminate just a node of it. Also, creating a combination
-of the network becomes more complicated.}
+and of removing sub-graphs of existing networks. 
+% %{(Alternatively,\cbs  the edges of the graph of a network could be labeled with\cbe
+% OMS mappings between the OMS labeling the nodes connected by the edge. This gives a more
+% compact representation of the graph of the network, but it has the drawback that
+% the subgraph giving the semantics of the mapping is not explicitly available and thus
+% one cannot operate on it,~e.g. eliminate just a node of it. Also, creating a combination
+% of the network becomes more complicated.)}
 
 The semantics of OMS generally depends on a global environment
 $\Gamma$ containing:
@@ -5367,11 +5372,12 @@ the extension of the library, $sem(\syntax{NativeOMS})$ will be undefined.
 $sem(\Gamma, \syntax{library LibraryName Qualification LibraryItem}_1 \ldots \syntax{LibraryItem}_n)= \Gamma'$\\
 \noindent where  $sem(\Gamma, \syntax{Qualification}) = \Gamma'$, $sem(\Gamma', \syntax{LibraryItem}_1) = \Gamma_1$,\\
   $sem(\Gamma_1,  \syntax{LibraryItem}_2) = \Gamma_2$, $\ldots$,  $sem(\Gamma_{n-1}, \syntax{LibraryItem}_n) = \Gamma'$.
-\footnote{Note that \syntax{LibraryName} is just discarded here.
+
+({Note  that \syntax{LibraryName} is just discarded here.
   However, \syntax{LibraryName} should be the IRI of the document
   containing the \syntax{Library}.  This is known as ``linked data
   compliance''. Tools can issue a warning (not an error), if a
-  \syntax{Library} does not follow this practice.}
+  \syntax{Library} does not follow this practice.})
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5717,8 +5723,8 @@ The semantics of $O' = \syntax{approximation OMS Approximation}$ is
 \begin{itemize}
   \item $\Inst(O) = I$ when $(\Phi,\alpha,\beta) : \Inst(\syntax{OMS}) \to \cI)$ is the default projection (in case \syntax{LogicRef} is missing, it is the identity on $\Inst(\syntax{OMS})$)
   \item $\Sig(O) = \Phi(\Sigma)$
-  \item $\Th(O) = \alpha^{-1}_{\Sig(\syntax{OMS})}(\Th(\syntax{OMS})^\bullet)\cap\Sen^I(\Sig(\syntax{OMS}))$
-  \footnote{In practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(\syntax{OMS})$ that can be expressed in the smaller signature and logic 
+  \item $\Th(O) = \alpha^{-1}_{\Sig(\syntax{OMS})}(\Th(\syntax{OMS})^\bullet)\cap\Sen^I(\Sig(\syntax{OMS}))$%
+\footnote{In  practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(\syntax{OMS})$ that can be expressed in the smaller signature and logic 
   \item $\Mod(O)$ is the class of $\Th(O)$-models
   \item $Env(\Gamma, O')$ is obtained from 
        $\Gamma'' = Env(\Gamma, \syntax{OMS})$
@@ -5744,8 +5750,7 @@ the semantics of $O$ is given by
 \begin{itemize}
   \item $\Inst(O) = \cI$
   \item $\Sig(O) = \Sigma'$ where $\Sigma'$ is the smallest signature
-with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$\footnote
-{If this smallest signature does not exist, the semantics is undefined.}
+with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$. ({If this smallest signature does not exist, the semantics is undefined.})
   \item $\Th(O) = (\Th(\syntax{OMS})\cap\Sen(\Sig(O)))\cup\Delta$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
   \item $Env(\Gamma, O')$ is obtained from 
@@ -6010,13 +6015,15 @@ where $sem(\Gamma, \Sigma, \syntax{QualInterfaceSignature}) =
 $\Sigma''$-module (see \cite{DBLP:journals/ai/KontchakovWZ10} for the
 definition in a description logic context and \cite{IbanezEtAl15} for a
 generalization to an arbitrary institution), i.e.\ the
-smallest\footnote{In \cite{DBLP:journals/ai/KontchakovWZ10}, it is
-  shown that the smallest depleting $\Sigma''$-module exists in
-  description logics, and in \cite{IbanezEtAl15} this is generalized to arbitrary
-  institutions.}  sub-theory $\langle\Sigma',\Delta'\rangle$ of
+smallest sub-theory $\langle\Sigma',\Delta'\rangle$ of
 $(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$ such that the following
 model-theoretic inseparability holds
   $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma''}  \emptyset.$$
+({In \cite{DBLP:journals/ai/KontchakovWZ10}, it is
+  shown that the smallest depleting $\Sigma''$-module exists in
+  description logics, and in \cite{IbanezEtAl15} this is generalized to arbitrary
+  institutions.})
+
 This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
 cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma''$ concerns) and formally that 
 $$\begin{array}{ll}
@@ -6055,7 +6062,7 @@ where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta')
 
 \semdom{sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{ExtensionOMS})=(\cI,\Sigma',\cM',\Delta')}
 $sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{extension-oms ConsStrength ExtensionName ExtendingOMS})=
-(\cI,\Sigma',\cM',\Delta')$\\
+(\cI,\Sigma',\cM',\Delta')$,
 where $(\cI,\Sigma',\cM',\Delta')=sem(\Gamma,(\Sigma,\cM),\syntax{ExtendingOMS})$.
 
 If \syntax{ConsStrength} is \syntax{model-conservative} or
@@ -6829,7 +6836,7 @@ at \url{http://logichub.org}.  The registry  also includes descriptions of
 DOL-conforming languages and translations (as well as other information needed by implementors
 and users) in both human-readable and machine-processable form.  
 
-There will be Maintenance Authority (MA)\footnote{or, depending on advisability, a Registration
+There will be Maintenance Authority (MA) {or, depending on advisability, a Registration
 Authority} established to maintain the registry as an informative resource governed by the
 standard.  The registry contents itself will not be normative; however, it is 
 expected to become the basis for normative activities.
@@ -7416,11 +7423,11 @@ $\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
 Let $(C, {\leq_C})$ be a class/data type hierarchy.
 %
 \begin{itemize}[label={--}, leftmargin=*]
-  \item An \emph{attribute declaration}\footnote{\cbs Attributes
-  and association member ends are distinguished\cbe due to their different uses.  In UML,
-  both are of class \uml{Property}.} over $(C, {\leq_C})$ is of the form
+  \item An \emph{attribute declaration} over $(C, {\leq_C})$ is of the form
 $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
-constructor, and $p$ an \emph{attribute name}.
+constructor, and $p$ an \emph{attribute name}.\cbs ({Attributes
+  and association member ends are distinguished due to their different uses.  In UML,
+  both are of class \uml{Property}.})\cbe 
 
   \item A \emph{query operation declaration} over $(C, {\leq_C})$ is of
 the form $c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_r[c_r]) : \tau[c']$
@@ -7448,7 +7455,14 @@ declaration is \emph{binary} if $r = 2$.\footnote{Only binary
 form $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$ with
 $c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
 \emph{composition name}, and $p_1, p_2$ \emph{member end
-  names}.\footnote{In UML, each \uml{Property} may have
+  names}. A
+composition declaration
+$\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
+\tau_2[c_2])$
+\emph{yields} the property declarations
+$\mathbf{m}.p_1 : \mathsf{Set}[c_1]$ and $\mathbf{m}.p_2 : \tau_2[c_2]$.
+\end{itemize}
+{In UML, each \uml{Property} may have
   \uml{AggregationKind} \uml{composite}.  However, such an aggregation
   kind has no semantic meaning when the property is not a member end of
   an association: the UML Superstructure Specification 2.4.1 does not
@@ -7461,13 +7475,8 @@ $c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
   associations (UML Superstructure Specification 2.4.1, p.~37; UML 2.5,
   p.~228) and their multiplicity must not exceed one (UML Superstructure
   Specification 2.4.1, p.~126; UML 2.5, p.~155).\cbs  Thus, 
-  composition declarations are  distinguhished from\cbe general association declarations.}  A
-composition declaration
-$\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
-\tau_2[c_2])$
-\emph{yields} the property declarations
-$\mathbf{m}.p_1 : \mathsf{Set}[c_1]$ and $\mathbf{m}.p_2 : \tau_2[c_2]$.
-\end{itemize}
+  composition declarations are  distinguhished from\cbe general association declarations.}
+
 
 \medskip\noindent\textbf{Class/data type nets (Signatures).}
 A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A, M)$
@@ -7706,15 +7715,13 @@ or (if $\tau$ is omitted) just \texttt{(c x)}.}
   \item $\CL$ maps each query operation declaration $c.q(x_1 :
     \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
     predicate $\CL(c.q)$ and axioms stating type-correctness and
-    functionality:\footnote{Query operations are modeled as partial
-functions: they may be undefined for certain arguments due to
-violation of multiplicity constraints.}
+    functionality:
 \begin{itemize}
 \item
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau_i[c_i]$ $x_i$))) }
-for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker!}
+for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker.}
 \item 
 \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
 %% \item 
@@ -7725,6 +7732,9 @@ for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, n
 \qqquad \texttt{(if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
 \qqquad\qqquad\texttt{(= y z)))}
 \end{itemize}
+{Query operations are modeled as partial
+functions: they may be undefined for certain arguments due to
+violation of multiplicity constraints.}
   \item \CL maps each composition declaration $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ to
 a constant $\CL(m)$ and axioms stating that $\CL(m)$ is a finite
 binary relation represented as a sequence of pairs of the
@@ -8742,7 +8752,7 @@ Double               = ($<$ a number $\in [0,1]$ $>$) ;
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{specified below in \cref{c:curies}}) 
+IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{Specified below in \cref{c:curies}.}) 
 FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
 \end{lstlisting}
 
@@ -9750,8 +9760,8 @@ he is a boxer [\cite{AGK08}].
   COLORE, the Common Logic Repository\footnote{\url{http://stl.mie.utoronto.ca/colore/}} is an open repository of more than 150 ontologies as of December 2011, all formalized in Common Logic.  COLORE stores metadata about its ontologies, which are represented using a custom XML schema that covers the following aspects\footnote{\url{http://stl.mie.utoronto.ca/colore/metadata.html}}, without specifying a formal semantics for them:
   \begin{description}
   \item[module provenance] author, date, version, description, keyword, parent ontology\footnote{Note that this use of the term ``module'' in COLORE corresponds
-to the term \termref{structured OMS} in this \IS}
-  \item[axiom source provenance] name, author, year\footnote{Note that this may cover any sentences\index{sentence} in the sense of this \IS}
+to the term \termref{structured OMS} in this \IS{}.}
+  \item[axiom source provenance] name, author, year\footnote{Note that this may cover any sentences\index{sentence} in the sense of this \IS{}.}
   \item[direct relations] maps (signature morphisms), definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
   \end{description}
 
@@ -9788,13 +9798,13 @@ test the examples. Hets has been connected to considerable number of
 proof tools like theorem provers, supporting various logics. Logics
 that are not directly supported by any proof tool can be supported
 indirectly, through a logic mapping into a tool-supported logic.
-\footnote {While the Hets parser should support the
-  current version of \DOL as presented in this standard, it can happen
-  that the most recent changes to the \DOL syntax are not fully
-  supported by the Hets static analysis and proof support yet. This
-  will be fixed in the future. }
+% \footnote {While the Hets parser should support the
+%   current version of \DOL as presented in this standard, it can happen
+%   that the most recent changes to the \DOL syntax are not fully
+%   supported by the Hets static analysis and proof support yet. This
+%   will be fixed in the future. }
 
-Hets is open source, licensed under GPLv2 or higher. The sources are
+Hets  is open source, licensed under GPLv2 or higher. The sources are
 available at the following URL \url{https://github.com/spechub/hets}.
 
 
