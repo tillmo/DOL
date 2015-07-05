@@ -8894,7 +8894,7 @@ complete, meaning that it comprises all answer substitutions to the query.
 
 \sclause{EBNF Concrete Syntax}
 
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]
+\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 
 Term           ::= ($<$)an expression specific to an OMS language($>$) 
 TermOrSymbolRef ::= Term | SymbolRef
@@ -8906,8 +8906,7 @@ SubstDefn      ::= 'substitution' SubstName ':' GroupOMS 'to'
 ResultDefn     ::= 'result' ResultName '=' SubstName
                    ( ',' SubstName )* 'for' QueryName ['%complete']
                    'end'
-OMS            ::= ($...$)
-                       | OMS , 'with' , SubstName 
+OMS            ::= ($...$) | OMS 'with' SubstName 
 QueryName      ::= IRI
 SubstName      ::= IRI
 ResultName     ::= IRI
@@ -8918,7 +8917,7 @@ Vars           ::= Symbol ( ',' Symbol )*
 \sclause{EBNF Abstract Syntax}
 
 
-\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
 
 QueryRelatedDefn ::= QueryDefn | SubstDefn | ResultDefn
 QueryDefn      ::= select-query-defn QueryName Vars Sentence
@@ -8926,8 +8925,7 @@ QueryDefn      ::= select-query-defn QueryName Vars Sentence
 SubstDefn      ::= subst-defn SubstName OMS OMS SymbolMap
 ResultDefn     ::= result-def ResultName SubstName SubstName*
                               QueryName [Complete]
-OMS            ::= ($...$)
-                     | 'application', OMS, SubstName 
+OMS            ::= ($...$) | application OMS SubstName 
 QueryName      ::= IRI
 SubstName      ::= IRI
 ResultName     ::= IRI
