@@ -1492,10 +1492,11 @@ The given serialization has to be specified as an RDF vocabulary, which
 % \todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{Update on 2014-10-09: Is it OK to have this footnote here?  Or if not, where should it go?  I believe it answers the following question:\\ And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
 \item There shall be no additional rules (stated in writing in the specification of the serialization, or formalized in its implementation in, e.g., OWL) that forbid properties from foreign vocabulary namespaces to be stated about arbitrary subjects for the purpose of annotation.
 \end{itemize}
-{The OWL RDF serialization, for example, does not satisfy the RDF conformance level, for the following reason. There is an \texttt{owl:imports} property but no class representing imports. 
+
+The serialization of OWL in RDF, for example, does not satisfy the RDF conformance level, for the following reason. There is an \texttt{owl:imports} property but no class representing imports. 
  Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as a resource, which could have an identifier.  RDF reification would allow for giving the statement $O_1$ \texttt{owl:imports} $O_2$ an identifier. 
  However, the RDF triples resulting from this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/\#Mapping_from_RDF_Graphs_to_the_Structural_Specification}}. 
- They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty.}  
+ They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of \url{http://www.w3.org/TR/owl2-mapping-to-rdf/\#Parsing_of_Axioms}}.
 
 
 
@@ -2750,7 +2751,7 @@ The following people contributed directly to the development of this specificati
 	\item Oliver Kutz, Free University of Bolzano, Italy
 	\item Christoph Lange, University of Bonn and Fraunhofer IAIS, Germany
 	\item Terry Longstreth, Independent Consultant, USA 	
-        \item Christian Maeder, Jacobs-University Bremen, Germany
+        \item Christian Maeder, Jacobs University Bremen, Germany
 	\item Till Mossakowski, Otto-von-Guericke University Magdeburg, Germany  	
 	\item Fabian Neuhaus, Otto-von-Guericke University Magdeburg, Germany  	  
 	\item Leo Obrst, MITRE, USA
@@ -6788,9 +6789,14 @@ $C_1,\ldots, C_n$ taking into account \syntax{AlignSem}.
 %\end{figure}
 
 This annex specifies the \DOL Ontology, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
-Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} stipulated by clause~\ref{c:conformance}.
 The \DOL Ontology is currently maintained as an OWL ontology and, prospectively, as an OMS library implemented in \DOL, at \url{https://ontohub.org/meta/dol/ontology}.\footnote{The preferred location for the \DOL Ontology snapshots being part of this OMG standard is \url{http://www.omg.org/spec/DOL/Current/ontology}.}.
 For a full treatment of the background and design considerations of the \DOL Ontology please see~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
+
+\section{Applications of the \DOL Ontology}\label{a:dol-onto-app}
+
+Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} of \DOL-conforming languages and translations detailed below in clause~\ref{a:registry}.
+
+\section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
 
 The tables in this annex list the classes and object properties of the \DOL Ontology and thus the essential parts of its implementation.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise.
 
