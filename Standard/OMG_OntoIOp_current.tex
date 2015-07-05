@@ -6382,16 +6382,25 @@ OMS or network of OMS being refined and the
 graph of the OMS or network of OMS after refinement. Together with this pair
 \cbs the mapping is stored\cbe along which the refinement is done. 
 Given two networks $G_1$ and $G_2$, a \emph{network morphism} 
-$\sigma : G_1\to G_2$ is a 
-functor $\sigma^G: Shape(G_1)\to Shape(G_2)$ 
-together with a natural transformation $\sigma^M : G_1 \to \sigma^G;G_2$
+$\sigma : G_1\to G_2$ is
+\cbs
+\begin{enumerate}
+\item a 
+functor $\sigma^G: Shape(G_1)\to Shape(G_2)$, 
+together with 
+\item a natural transformation $\sigma^M : G_1 \to \sigma^G;G_2$
+\end{enumerate}
  such that
-for each node $N_1$ in $G_1$ labeled with $(\cI_1, \Sigma_1, \cM_1)$
+\begin{enumerate}
+\item for each node $N_1$ in $G_1$ labeled with $(\cI_1, \Sigma_1, \cM_1)$
 such that $\sigma^G(N_1)$ is a node $N_2$ labeled with $(\cI_2,\Sigma_2,\cM_2)$ in $G_2$,
 we have a signature morphism $(\rho^M_{N_1},\sigma^M_{N_1}) : (\cI_1, \Sigma_1) \to (\cI_2, \Sigma_2)$,
-where $\rho^M_{N_1} = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorphism between the logics of the two nodes and
+where 
+\item $\rho^M_{N_1} = (\Phi, \alpha, \beta) : \cI_1 \to \cI_2$ is an institution comorphism between the logics of the two nodes and
 $\sigma^M_{N_1} : \Phi(\Sigma_1) \to \Sigma_2$ is a signature morphism,
 such that $\beta_{\Sigma_1}(M_2\forget{\sigma^M_{N_1}}) \in \cM_1$ for each $M_2 \in  \cM_2$.
+\end{enumerate}
+\cbe
 
 A refinement model is a class $\cM$ 
 of pairs of families of models compatible with the two networks. 
@@ -6575,25 +6584,39 @@ on $\Sig(i_1)$. \ednote{check formulation}
 
 $$sem(\Gamma,\syntax{equiv-defn  EquivName  ( oms-equiv }O_1\ O_2\ O_3\syntax{ )})=\Gamma'$$
 
+\cbs
 \noindent where 
-$\Gamma' = \Gamma[\syntax{EquivName} \mapsto (G, id, N_1, N_2)]$
-where 
+\begin{enumerate}
+\item $\Gamma' = \Gamma[\syntax{EquivName} \mapsto (G, id, N_1, N_2)]$,
+\item
+$sem^{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}_{\Gamma.lang,\Gamma.logic,\Gamma.ser}(O_3)
+= (\cI, \Sigma, \cM,\Delta)$
+and 
+\item
 $G$ is the graph
 $N_1 \stackrel{\iota_1}{\rightarrow} N_3 \stackrel{\iota_2}{\leftarrow} 
-N_3$ and
-$N_1$ is labelled with $(\Name(O_1), \Inst(O_1), \Sig(O_1),\Mod(O_1), \Th(O_1))$,\\
-$N_2$ with $(\Name(O_2), \Inst(O_2),\Sig(O_2), \Mod(O_2), \Th(O_2))$
-and \\
-$N_3$ with 
+N_3$ where
+\begin{enumerate}
+\item
+$N_1$ is labelled with $(\Name(O_1), \Inst(O_1), \Sig(O_1),\Mod(O_1), \Th(O_1))$,
+\item
+$N_2$ is labelled with $(\Name(O_2), \Inst(O_2),\Sig(O_2), \Mod(O_2), \Th(O_2))$
+and \
+\item
+$N_3$ is labelled with 
 $(\Name(O_3), \cI, \Sigma, \cM, \Delta)$
-where
-$sem^{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}_{\Gamma.lang,\Gamma.logic,\Gamma.ser}(O_3)
-= (\cI, \Sigma, \cM,\Delta)$\\
+\end{enumerate}
+\end{enumerate}
 such that
-$\iota_i : \Sig(O_i) \to \Sigma$ are signature inclusions and we have that 
+\begin{enumerate}
+\item $\iota_i : \Sig(O_i) \to \Sigma$ are signature inclusions,
+\item 
 $\Inst(O_1) = \Inst(O_2) = \Inst(O_3)$ and 
+\item
 for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \cM$
 such that $M\forget{\Sig(O_i)} = M_i$. 
+\end{enumerate}
+\cbe
 
 $$sem(\Gamma,\syntax{equiv-defn  EquivName  ( network-equiv }N_1\ N_2\ N_3\syntax{ )})=\Gamma'$$
 \ednote{todo}
