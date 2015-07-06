@@ -1731,7 +1731,7 @@ collection of expressions (like non-logical symbols\index{non-logical symbol}, s
     An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASL are three different native OMS. 
   \end{example}
 	\begin{note}
-	An \termref{OMS} can be written in different \termref{OMS language} 	serializations\index{serialization}.
+	An \termref{OMS} can be written in different \termref{OMS language} 	\termref{serializations}\index{serialization}.
 	\end{note}	
 
 
@@ -2406,6 +2406,11 @@ OMS language translations\index{language translation}, typically used in a \term
   expression of homogeneous and \termref{heterogeneous OMS}, comprising
 a \termref{logic graph}, an \termref{OMS language graph} and 
 \termref{supports relations}.}
+\begin{note}
+  \cbs The support relations specifies which language supports which
+   logics and which serializations.  
+   Moreover, each language has a default \termref{logic} and a default \termref{serialization}.\cbe
+\end{note}
 \begin{note}
   Although in principle, there can be many heterogeneous environments,
   for ensuring \termref{interoperability}, there will be a global
@@ -5196,6 +5201,8 @@ translations), and a collection of serializations. Moreover, some of the institu
 a binary supports relation between OMS languages and institutions,
 and a binary supports relation between OMS languages and
 serializations. 
+\cbs Each language is assumed to have a default logic and serialization.\cbe
+
 
 \cbs It is assumed that\cbe for each institution in the heterogeneous logical environment there is a trivial signature
 $\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
@@ -5214,7 +5221,6 @@ For each logic in the heterogeneous logical environment,\cbs it is further assum
   \item a default language and\cbs a default language serialization.\cbe
 \end{itemize}
 
-\cbs Each language is assumed to have a default logic and serialization; and  each serialization is assumed to have a default logic and language.\cbe
 
 Further,  for each institution, it is assumed that there exist (possibly partial) union and difference operations on signatures.
 These concepts could be captured in a categorical setting using \emph{inclusion systems} \cite{DGS91}.
@@ -5444,8 +5450,7 @@ are given in the next sections.
 $$sem(\Gamma,\syntax{lang-select LanguageRef})=\Gamma'$$
 
 \noindent where $\Gamma' = \Gamma.\{\current = (\syntax{LanguageRef},logic',ser')\}$ and \\
-$logic = logic(\Gamma.\current)$,\\
- $logic'=\twocase{logic}{\syntax{LanguageRef} \textrm{ supports } logic}{\textrm{default logic for }\syntax{LanguageRef}}$\\
+ $logic'=\twocase{logic(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } logic(\Gamma.\current)}{\textrm{default logic for }\syntax{LanguageRef}}$\\
  $ser'=\twocase{ser(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } ser(\Gamma.\current)}{\textrm{default serialization for }\syntax{LanguageRef}}$
 
  $$sem(\Gamma,\syntax{logic-select LogicRef})=\Gamma'$$
@@ -5457,9 +5462,9 @@ $lang'=\twocase{lang}{lang \textrm{ supports }
    \syntax{LogicRef}} {\textrm{the unique language supporting
    }\syntax{LogicRef}}
  $\\
-$ser' = \twocase{ser}{ser \textrm{ supports }
-   \syntax{LogicRef}} {\textrm{the default serialization of
-   }\syntax{LogicRef}}$ 
+\cbs$ser' = \twocase{ser}{lang' \textrm{ supports }
+   ser} {\textrm{the default serialization for
+   }lang'}$\cbe 
  \\
  Note that ``the unique language supporting \syntax{LogicRef}'' may
  be undefined; in this case, the semantics of the whole
