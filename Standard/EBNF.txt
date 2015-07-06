@@ -1,0 +1,158 @@
+Library ::= LibraryDefn | NativeOMS
+LibraryDefn ::= 'library' [ PrefixMap ] LibraryName Qualification LibraryItem*
+NativeOMS ::= ($<$)language specific($>$) 
+LibraryItem ::= LibImport | OMSDefn | NetworkDefn | MappingDefn | QueryRelatedDefn | Qualification
+LibImport ::= 'lib-import' LibraryName
+Qualification ::= LanguageQual | LogicQual | SyntaxQual
+LanguageQual ::= 'lang-select' LanguageRef
+LogicQual ::= 'logic-select' LogicRef
+SyntaxQual ::= 'syntax-select' SyntaxRef
+LibraryName ::= IRI
+PrefixMap ::= 'prefix-map' PrefixBinding*
+PrefixBinding ::= 'prefix-binding' BoundPrefix IRIBoundToPrefix [ Separators ]
+BoundPrefix ::= 'bound-prefix' [ Prefix ]
+IRIBoundToPrefix ::= 'full-iri' FullIRI
+Separators ::= 'separators' LibraryOMSSeparator OMSSymbolSeparator
+LibraryOMSSeparator ::= SeparatorString
+OMSSymbolSeparator ::= SeparatorString
+SeparatorString ::= SeparatorChar SeparatorChar*
+SeparatorChar ::= ipchar | gen-delims '-' '#'
+
+
+NetworkDefn ::= 'network-defn' NetworkName [ ConsStrength ] Network
+NetworkName ::= IRI
+Network ::= 'network' NetworkElements ExcludeExtensions
+NetworkElements ::= 'network-elements' NetworkElement*
+NetworkElement ::= 'network-element' [ Id ] OMSOrMappingorNetworkRef
+ExcludeExtensions ::= 'exclude-imports' ElementRef*
+ElementRef ::= <2> | OMSOrMappingorNetworkRef
+<2> ::= 'path' OMSOrMappingorNetworkRef OMSOrMappingorNetworkRef
+OMSOrMappingorNetworkRef ::= IRI
+
+
+BasicOMS ::= ($<$)language specific($>$) 
+MinimizableOMS ::= BasicOMS | 'oms-ref' OMSRef [ ImportName ]
+ExtendingOMS ::= MinimizableOMS | MinType MinimizableOMS
+OMS ::= ExtendingOMS | MinizationOMS | TranslationOMS | ReductionOMS | ExtractionOMS | ApproximationOMS | FilteringOMS | UnionOMS | ExtOMS | QualOMS | CombinationOMS | <13>
+MinizationOMS ::= 'minimize-symbols' OMS Minimization 
+TranslationOMS ::= 'translation' OMS Translation 
+ReductionOMS ::= 'reduction' OMS Reduction 
+ExtractionOMS ::= 'module-extract' OMS Extraction 
+ApproximationOMS ::= 'approximation' OMS Approximation 
+FilteringOMS ::= 'filtering' OMS Filtering 
+UnionOMS ::= 'union' OMS [ ConsStrength ] OMS 
+ExtOMS ::= 'extension' OMS ExtensionOMS 
+QualOMS ::= 'qual-oms' Qualification* OMS 
+CombinationOMS ::= 'combination' Network 
+Minimization ::= MinType CircMin CircVars
+MinType ::= 'minimize' | 'maximize' | 'free' | 'cofree'
+CircMin ::= Symbol Symbol*
+CircVars ::= Symbol*
+Translation ::= 'renaming' LogicTranslation* [ SymbolMapItems ]
+LogicTranslation ::= 'logic-translation' OMSLangTrans
+Reduction ::= HomogeneousReduction | HeterogeneousReduction 
+HomogeneousReduction ::= 'hidden' LogicReduction* [ SymbolItems ] 
+HeterogeneousReduction ::= 'revealed' SymbolItems
+LogicReduction ::= 'logic-reduction' OMSLangTrans
+SymbolItems ::= 'symbol-items' Symbol Symbol*
+SymbolMapItems ::= 'symbol-map-items' SymbolOrMap SymbolOrMap*
+Extraction ::= 'extraction' QualInterfaceSignature
+Approximation ::= 'approx' [ QualInterfaceSignature ] [ LogicRef ]
+Filtering ::= 'filtering' FilterKind BasicOMS
+FilterKind ::= 'select' | 'reject'
+ExtensionOMS ::= extension-oms [ ConsStrength ] [ ExtensionName ] ExtendingOMS
+ConsStrength ::= 'consequence-conservative' | 'model-conservative' | 'not-consequence-conservative' | 'not-model-conservative' | 'implied' | 'monomorphic' | 'weak-definitional' | 'definitional'
+QualInterfaceSignature ::= 'qualinterfacesig' ExtractKind InterfaceSignature
+ExtractKind ::= 'keep-signature' | 'remove-signature'
+InterfaceSignature ::= SymbolItems
+ImportName ::= IRI
+ExtensionName ::= IRI
+
+
+OMSDefn ::= 'oms-defn' OMSName [ ConsStrength ] OMS
+Symbol ::= IRI
+SymbolMap ::= 'symbol-map' Symbol Symbol
+SymbolOrMap ::= Symbol | SymbolMap
+Term ::= ($<$)an expression specific to an OMS language($>$) 
+Sentence ::= ($<$)an expression specific to an OMS language($>$) 
+OMSName ::= IRI
+OMSRef ::= IRI
+ExtensionRef ::= IRI
+LoLaRef ::= LanguageRef | LogicRef
+LanguageRef ::= IRI
+LogicRef ::= IRI
+SyntaxRef ::= IRI
+OMSLangTrans ::= NamedTrans | DefaultTrans 
+NamedTrans ::= 'named-trans' OMSLangTransRef 
+DefaultTrans ::= 'default-trans' LoLaRef
+OMSLangTransRef ::= IRI
+
+
+MappingDefn ::= IntprDefnOrRef | Entailment | EquivDefn | ModuleRelDefn | AlignDefn
+IntprDefnOrRef ::= IntprDefn | Refinement
+IntprDefn ::= 'intpr-defn' IntprName [ ConsStrength ] IntprType LogicTranslation* [ SymbolMapItems ] 
+Refinement ::= 'refinement' IntprName Refinement
+IntprName ::= IRI
+IntprType ::= 'intpr-type' OMS OMS
+Refinement ::= RefOMS | RefNetwork | RefComposition | SimpleOMSRef | SimpleNetworkRef  
+RefOMS ::= 'ref-oms' OMS 
+RefNetwork ::= 'ref-network' Network 
+RefComposition ::= 'ref-composition' Refinement Refinement 
+SimpleOMSRef ::= 'simple-oms-ref' OMS RefMap Refinement 
+SimpleNetworkRef ::= 'simple-network-ref' Network RefMap Refinement
+RefMap ::= RefMapOMS | RefMapNetwork 
+RefMapOMS ::= 'refmap-oms' [ LogicTranslation ] [ SymbolMapItems ] 
+RefMapNetwork ::= 'refmap-network' NodeMap*
+NodeMap ::= 'node-map' OMSName OMSName LogicTranslation* [ SymbolMapItems ]
+Entailment ::= 'entailment' EntailmentName EntailmentType
+EntailmentType ::= OMSOMSEntailment | NetworkOMSEntailment | NetworkNetworkEntailment 
+OMSOMSEntailment ::= 'oms-oms-entailment' OMS OMS 
+NetworkOMSEntailment ::= 'network-oms-entailment' Network OMSName OMS 
+NetworkNetworkEntailment ::= 'network-network-entailment' Network Network
+EntailmentName ::= IRI
+EquivDefn ::= 'equiv-defn' EquivName EquivType
+EquivName ::= IRI
+EquivType ::= OMSEquiv | NetworkEquiv
+OMSEquiv ::= 'oms-equiv' OMS OMS OMS 
+NetworkEquiv ::= 'network-equiv' Network Network Network
+ModuleRelDefn ::= 'module-defn' ModuleName [ ConsStrength ] ModuleType InterfaceSignature
+ModuleName ::= IRI
+ModuleType ::= 'module-type' OMS OMS
+AlignDefn ::= 'align-defn' AlignName [ AlignCard ] AlignType AlignSem Correspondence*
+AlignName ::= IRI
+AlignCards ::= AlignCardForward AlignCardBackward
+AlignCardForward ::= 'align-card-forward' AlignCard
+AlignCardBackward ::= 'align-card-backward' AlignCard
+AlignCard ::= 'injective-and-total' | 'injective' | 'total' | 'neither-injective-nor-total'
+AlignType ::= 'align-type' OMS OMS
+AlignSem ::= 'single-domain' | 'global-domain' | 'contextualized-domain'
+Correspondence ::= CorrespondenceBlock | SingleCorrespondence | 'default-correspondence'
+CorrespondenceBlock ::= 'correspondence-block' [ RelationRef ] [ Confidence ] Correspondence Correspondence*
+SingleCorrespondence ::= 'correspondence' SymbolRef [ RelationRef ] [ Confidence ] TermOrSymbolRef [ CorrespondenceID ]
+CorrespondenceID ::= IRI
+SymbolRef ::= IRI
+TermOrSymbolRef ::= Term | SymbolRef
+RelationRef ::= 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' | 'has-instance' | 'instance-of' | 'default-relation' | IRI
+Confidence ::= Double
+
+
+Double ::= ($<$ a number $\in [0,1]$ $>$) 
+
+
+QueryRelatedDefn ::= QueryDefn | SubstDefn | ResultDefn
+QueryDefn ::= 'select-query-defn' QueryName Vars Sentence OMS [ OMSLangTrans ]
+SubstDefn ::= 'subst-defn' SubstName OMS OMS SymbolMap
+ResultDefn ::= 'result-def' ResultName SubstName SubstName* QueryName [ Complete ]
+QueryName ::= IRI
+SubstName ::= IRI
+ResultName ::= IRI
+Vars ::= Symbol*
+Complete ::= 'complete'
+
+
+IRI ::= FullIRI | CurieIRI 
+FullIRI ::= 'full-iri' FullIRI 
+CurieIRI ::= 'curie' CURIE
+FullIRI ::= ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) 
+
+
