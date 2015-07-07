@@ -298,7 +298,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand*{\shouldnot}{\textbf{should not}\xspace}
 \newcommand*{\should}{\textbf{should}\xspace}
 \newcommand*{\may}{\textbf{may}\xspace}
-\newcommand*{\hasto}{\textbf{has to}\xspace}
+\newcommand*{\hasto}{\textbf{must}\xspace}
 
 % abbreviations
 \newcommand*{\IS}{OMG Specification\xspace}
@@ -548,6 +548,8 @@ author=,date=,id=,replyto=,type=}{}%
 
 \usepackage{changebar}
 
+% \newcommand{\cbs}[0]{\xspace}
+% \newcommand{\cbe}[0]{\xspace}
 \newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace}
 \newcommand{\cbe}[0]{\cbend{}\color{black}\xspace}
 
@@ -1522,7 +1524,7 @@ example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying te
 
 Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs (grammar specified in \cref{c:curies}), listed from highest to lowest:
 \begin{description}
-\item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}, where a declaration of \DOL-conformance of a serialization \may redefine the separator character to a character different from \syntax{:}).  A serialization that conforms \wrt prefixed CURIE  is \notrequired to support CURIEs with no prefix: its declaration of \DOL-conformance \may forbid the use of prefixed CURIEs.\\
+\item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}, where a declaration of \DOL-conformance of a serialization \may redefine the separator character to a character different from \syntax{:}).  A serialization that conforms \wrt\cbs a\cbe prefixed CURIE  is \notrequired to support CURIEs with no prefix: its declaration of \DOL-conformance \may forbid the use of prefixed CURIEs.\\
   Informative comments:
   \begin{itemize}
   \item In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a native OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
@@ -1537,11 +1539,12 @@ Any conforming serialization of an OMS language shall have a machine-processable
 \sclause{Machine-Processable Description of Conforming Languages, Logics, and Serializations}\label{c:conform:description}
 
 \begin{fminipage}{\textwidth}
-\textbf{Rationale}: When a parser processes a \DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore,  \cbs all languages/logics/serializations that conform with \DOL are required to describe themselves in a machine-comprehensible way.
+\textbf{Rationale}: When a parser processes a \DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore,  \cbs all languages/logics/serializations that conform with \DOL are required to describe themselves in a machine-processable way.
 \cbe
 \end{fminipage}
 
-For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization\cbs is\cbe retrievable by dereferencing this IRI;\cbs this requirement follows\cbe the linked data principles \nisref{W3C/TR REC-ldp-20150226:2015}.  At least there has to be an RDF description in terms of the vocabulary specified in \aref{a:dol-onto}, which has to be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.%\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
+For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization\cbs is\cbe retrievable by dereferencing this IRI;\cbs this requirement follows\cbe the linked data principles \nisref{W3C/TR REC-ldp-20150226:2015}. 
+\cbs As a minimal requirement, there must be a RDF description conforming to the vocabulary specified in \aref{a:dol-onto}. That description\cbs must\cbe be made available in the RDF/XML serialization\cbe when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.%\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
 
 
 \sclause{Conformance of a Document With \DOL}\label{c:conform:document}
@@ -1554,7 +1557,7 @@ the reason for having the following section about the conformance of an \emph{ap
 \end{fminipage}
 
 A document conforms with \DOL if it contains a \DOL text that is well-formed according to the
-grammar.  That means, in particular, that any information related to logics has to be made explicit
+grammar.  That means, in particular, that any information related to logics\cbs must\cbe be made explicit
 (as foreseen by the \DOL abstract syntax specified in \cref{c:abstract-syntax}), such as:
 \begin{itemize}
 \item the logic of each OMS that is part of the \DOL document,
@@ -1576,7 +1579,7 @@ A \emph{parser} is \DOL-conformant if it can parse the \DOL textual syntax and p
 \item
 A \emph{printer} is \DOL-conformant if it can read \DOL abstract syntax and produce \DOL textual syntax.
 \item
-{\DOL}-conformant software that is used to \emph{edit, format or manage} \DOL libraries \hasto be capable of reading and writing \DOL abstract syntax. Moreover, it \hasto meet the requirements for a \DOL-conformant parser if it is able to read in \DOL textual input. It \hasto to meet the requirements of a \DOL-conformant printer if it is able to generate \DOL textual output. However, it is also possible that a software for \DOL management will work on the abstract syntax only, and delegates the reading and generation of \DOL text to external parsers and/or printers.
+{\DOL}-conformant software that is used to \emph{edit, format or manage} \DOL libraries \hasto be capable of reading and writing \DOL abstract syntax. Moreover, it \hasto meet the requirements for a \DOL-conformant parser if it is able to read in \DOL textual input. It \hasto meet the requirements of a \DOL-conformant printer if it is able to generate \DOL textual output. However, it is also possible that a software for \DOL management will work on the abstract syntax only,\cbs delegating\cbe the reading and generation of \DOL text to external parsers and/or printers.
 \item a \emph{static analyzer} is \DOL-conformant if it can compute
   the logic and the signature of an OMS according to the semantics
   defined in section~\ref{c:semantics}. In more detail, a static analyzer
@@ -1591,32 +1594,29 @@ projections and/or logic projections.
 \item
 Software that implements machine \emph{reasoning} about OMS (e.g., theorem proving, approximation)  complies with this specification if and only if it interprets  OMS libraries according to the semantics defined in section~\ref{c:semantics}. In more detail, a reasoning tool can have the following capabilities:
 \begin{itemize}
-\item \emph{simple logical consequence}, i.e.\ the check whether all
-sentences marked as \syntax{\%implied} within basic OMS
+\item \emph{simple logical consequence}, i.e.\cbs checking whether all sentences are\cbe marked as \syntax{\%implied} within basic OMS
 and extensions are logical consequences
 of the enclosing OMS;
-\item \emph{structured logical consequence}, i.e.\ the check whether
-  all sentences marked as \syntax{\%implied} are logical consequences
+\item \emph{structured logical consequence}, i.e.\cbs checking whether all sentences are\cbe marked as \syntax{\%implied} are logical consequences
   of the enclosing OMS and whether all entailments in an OMS library
   have a defined semantics;
-\item \emph{interpretation}, i.e.\ the check whether all
-  interpretations in an OMS library have a defined semantics;
-\item \emph{simple refinement}, i.e.\ the check whether all
+\item \emph{interpretation}, i.e.\cbs checking whether\cbe all interpretations in an OMS library have a defined semantics;
+\item \emph{simple refinement}, i.e.\cbs checking whether\cbe all
   refinements of OMS in an OMS library have a defined semantics;
-\item \emph{full refinement}, i.e.\ the check whether all refinements
+\item \emph{full refinement}, i.e.\cbs checking whether\cbe all refinements
   (both of OMS and networks) in an OMS library have a defined
   semantics;
-\item \emph{simple conservativity}, i.e.\ the check whether all conservativity
+\item \emph{simple conservativity}, i.e.\cbs checking whether\cbe all conservativity
   statements in an OMS library have a defined semantics;
-\item \emph{full conservativity}, i.e.\ the check whether all
+\item \emph{full conservativity}, i.e.\cbs checking whether\cbe all
   statements about conservative, monomorphic, definitional and weakly
   definitional extensions in an OMS library have a defined semantics;
-\item \emph{module extraction}, i.e.\ the ability to compute modules
+\item \emph{module extraction}, i.e. the ability to compute modules
 (typically, a given tool will provide this only for some logics);
-\item \emph{approximation}, i.e.\ the ability to compute approximations
+\item \emph{approximation}, i.e. the ability to compute approximations
 (typically, a given tool will provide this only for some logics
 and logic projections);
-\item \emph{full \DOL reasoning}, i.e.\ the check whether an OMS
+\item \emph{full \DOL reasoning}, i.e.\cbs checking whether\cbe an OMS
   library has a defined semantics.
 \end{itemize}
 \end{itemize}
