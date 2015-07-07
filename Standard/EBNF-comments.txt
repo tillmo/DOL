@@ -8,59 +8,56 @@ Qualification - A Qualification selects a specific OMS language, logic and/or sy
 LanguageQual - A LanguageQual selects a specific OMS language that is used to interpret the subsequent LibraryItems. If no logic has been selected previously or the previously selected logic is not supported by the newly selected language, the language's default logic is used. An analogous rule holds for the serialization.
 LogicQual - A LogicQual selects a specific logic that is used to interpret the subsequent LibraryItems.
 SyntaxQual - A SyntaxQual selects a specific serialization (syntax) that is used to interpret the subsequent LibraryItems.
-PrefixMap - 
-PrefixBinding - 
-BoundPrefix - 
-Separators - 
+PrefixMap - At the beginning of a library, one can declare a PrefixMap for abbreviating long IRIs using CURIEs.
+PrefixBinding - A binding of a prefix to an IRI. The prefix will be used as shorthand for the IRI in CURIEs.
+Separators - Both the separator between the library and the OMS name and that between the OMS name and the symbol name can be declared (using Separator), and both default to "//".
 
 
-NetworkDefn - 
-Network - 
-NetworkElement - 
-ElementRef - 
-PathRef - 
+NetworkDefn - A NetworkDefn names an OMS network.
+Network - An OMS network consists of OMS and OMS mappings. OMS networks may build on previously-defined OMS networks, and they can be used in combinations. By convention, all OMS mappings between the involved OMS will be included in the network. However, it is also possible to explicitly exclude OMS mappings from a network.
+NetworkElement - One element of a network, which can be an OMS, an OMS mapping, or a network again.
+ExcludedElement - Reference to a network element, either given by an IRI, or by a pair of IRIs (source and target), that shall be excluded from a network.
+PathRef - Path in a network, to be excluded from the network.
 
 
-BasicOMS - 
-MinimizableOMS - 
-OMSReference :: = 'oms-ref' OMSRef [ ImportName ]
-RelativeMinimizationOMS - 
-ExtendingOMS - 
-OMS - 
-MinimizationOMS - 
-TranslationOMS - 
-ReductionOMS - 
-ExtractionOMS - 
-ApproximationOMS - 
-FilteringOMS - 
-UnionOMS - 
-ExtensionOMS - 
-QualOMS - 
-CombinationOMS - 
-ApplicationOMS - 
-Minimization - 
-MinType - 
-Translation - 
-LogicTranslation - 
-Reduction - 
-HomogeneousReduction - 
-HeterogeneousReduction - 
-LogicReduction - 
-SymbolItems - 
-SymbolMapItems - 
-Extraction - 
-Approximation - 
-Filtering - 
-FilterKind - 
-Extension - 
-ConsStrength - 
+BasicOMS - A native OMS that does not utilize any elements from the structuring language aspects of its language.
+MinimizableOMS - OMS that can occur in a minimization.
+OMSReference - Reference to a named OMS, using an IRI or CURIE.
+RelativeMinimizationOMS - Minimization (or maximization, or freeness or cofreeness) of an OMS relative to the local environment.
+ExtendingOMS - OMS that is used to extend another OMS within an ExtensionOMS.
+OMS - ontology, specification or model. An OMS can be a native OMS or a \DOL structured OMS.
+MinimizationOMS - Absolute minimization (or maximization, or freeness or cofreeness).
+TranslationOMS - Assignment of new names
+   to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}.
+ReductionOMS - Restriction of an \termref{OMS} to a smaller \termref{signature}.
+ExtractionOMS - Extraction of a \termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}.
+ApproximationOMS - Approximation (in the sense of a logically implied theory, possibly after suitable translation)  of an OMS in a smaller \termref{signature} or a \termref{sublanguage}.
+FilteringOMS - verbatim removal of \termref{symbols} or \termref{axioms} from an OMS.
+UnionOMS - aggregation of several \termref{OMS} to a new \termref{OMS}, without any renaming.
+ExtensionOMS - \termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in \cbs the \termref{local environment}.
+QualOMS - OMS qualified with the OMS language that is used to express it.
+CombinationOMS - aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.
+ApplicationOMS - application of a substitution to an OMS.
+Minimization - The minimizing part of a MinimizationOMS.
+MinType - The type of the minimization, can be minimize, maximize, free or cofree.
+Translation - Specifies the way how an OMS shall be translated. Is part of a TranslationOMS.
+Reduction - Specifies the way how an OMS shall be reduced. Is part of a ReductionOMS.
+HomogeneousReduction - Homogeneous reduction along a signature morphisms within one logic.
+HeterogeneousReduction - Heterogeneous reduction across logics; projection to a sublogic.
+SymbolMap - Map between symbols that is shorthand for a signature morphisms.
+Extraction - Specifies the way how a module shall be extracted from an OMS. Is part of an ExtractionOMS.
+Approximation - Specifies the way how an OMS shall be approximated. Is part of an ApproximationOMS.
+Filtering - Specifies the way how an OMS shall be filtered. Is part of a FilteringOMS.
+FilterKind - Specifies the kind of filtering, whether the specified symbols and axioms that shall be kept ('select') or removed ('reject').
+Extension - Specifies the way how an OMS shall be extended. Is part of an ExtensionOMS.
+ConsStrength - Specifies additional relations that may hold between an OMS and its extension, like conservative or definitional extension. The rationale is that the extension should not have impact on the original OMS that is being extended. A ConsStrength might also be applied to a single OMS, which is then implicitly regarded as an extension of the empty OMS. In this case, satisfiability (or a similar property) of the OMS is expressed.
 QualInterfaceSignature - 
 ExtractKind - 
 InterfaceSignature - 
 
 
 OMSDefn - 
-SymbolMap - 
+SymbolMapElem - 
 SymbolOrMap - 
 Sentence - 
 LoLaRef - 
