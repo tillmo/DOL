@@ -5213,12 +5213,15 @@ and at most one morphism is marked as default.
 For each logic in the heterogeneous logical environment,\cbs it is further required that there is:\cbe
 
 \begin{itemize}
+  \item \cbs a function giving the semantics of basic OMS. It has format 
+$$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,\syntax{BasicOMS}),$$ where $\Sigma$ is a
+signature giving the local environment,  $\Sigma'\supseteq\Sigma$ is
+the resulting signature, and $\Delta'$ the resulting set of sentences,\cbe
   \item a function that turns a symbol map into a signature morphism,
-  \item a function giving semantics of sentences
   \item a relativization procedure taking as argument a theory and giving as 
   result a theory, and three procedures for translating correspondences of alignments
   into sentences in the logic, as needed in Section \ref{sec:oms-mappings}.
-  \item a default language and\cbs a default language serialization.\cbe
+%not needed!  \item a default language and\cbs a default language serialization.\cbe
 \end{itemize}
 
 
@@ -5601,20 +5604,32 @@ $$sem(\Gamma, G, \syntax{exclude-imports R$_1 \ldots $ R$_n$}) = G'$$
 
 \ssclause{Semantics of OMS}
 
-\semdom{sem(\Gamma, \syntax{BasicOMS}) = (\Gamma',(I, \Sigma, \cM, \Delta))}
-For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
+\cbs
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{BasicOMS})=
+(\Gamma',(\cI,\Sigma',\cM', \Delta'))}
+\cbe
 
-$$sem(\Gamma, \syntax{BasicOMS})= (\Gamma', 
-sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\syntax{BasicOMS}))$$
+For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
+\cbs
+$$sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{BasicOMS})= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
+\cbe
 \noindent where 
+\begin{itemize}
+\item \cbs $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma,\syntax{BasicOMS})$ \cbe
+\item \cbs $\cM'=\{M\in \cM \mid M\models\Delta'\}$ \cbe
+\item
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with the name of \syntax{BasicOMS} and the other components as
 given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\syntax{BasicOMS})$.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{MinimizableOMS}) = 
-(\Gamma', (\cI', \Sigma', \cM',\Delta'))}
+
+\cbs
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{MinimizableOMS})=
+(\Gamma',(\cI,\Sigma',\cM', \Delta'))}
+\cbe
 
 
 In the rest of this section,\cbs the notation 
@@ -5640,7 +5655,7 @@ is given by
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
 \semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
-(\Gamma',(\cI,\Sigma',\cM', \Delta))}
+(\Gamma',(\cI,\Sigma',\cM', \Delta'))}
 
 The semantics for \syntax{MinimizableOMS} has been defined above.
 
