@@ -24,8 +24,10 @@ OMSOrMappingorNetworkRef ::= IRI
 
 
 BasicOMS ::= ($<$)language specific($>$) 
-MinimizableOMS ::= BasicOMS | 'oms-ref' OMSRef [ ImportName ]
-ExtendingOMS ::= MinimizableOMS | MinType MinimizableOMS
+MinimizableOMS ::= BasicOMS | OMSReference
+OMSReference :: = 'oms-ref' OMSRef [ ImportName ]
+RelativeMinimizationOMS ::= 'relative-minimize' MinType MinimizableOMS
+ExtendingOMS ::= MinimizableOMS | RelativeMinimizationOMS
 OMS ::= ExtendingOMS | MinimizationOMS | TranslationOMS | ReductionOMS | ExtractionOMS | ApproximationOMS | FilteringOMS | UnionOMS | ExtensionOMS | QualOMS | CombinationOMS 
 MinimizationOMS ::= 'minimize-symbols' OMS Minimization 
 TranslationOMS ::= 'translation' OMS Translation 
