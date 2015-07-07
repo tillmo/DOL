@@ -28,7 +28,7 @@ MinimizableOMS ::= BasicOMS | OMSReference
 OMSReference :: = 'oms-ref' OMSRef [ ImportName ]
 RelativeMinimizationOMS ::= 'relative-minimize' MinType MinimizableOMS
 ExtendingOMS ::= MinimizableOMS | RelativeMinimizationOMS
-OMS ::= ExtendingOMS | MinimizationOMS | TranslationOMS | ReductionOMS | ExtractionOMS | ApproximationOMS | FilteringOMS | UnionOMS | ExtensionOMS | QualOMS | CombinationOMS 
+OMS ::= ExtendingOMS | MinimizationOMS | TranslationOMS | ReductionOMS | ExtractionOMS | ApproximationOMS | FilteringOMS | UnionOMS | ExtensionOMS | QualOMS | CombinationOMS | ApplicationOMS
 MinimizationOMS ::= 'minimize-symbols' OMS Minimization 
 TranslationOMS ::= 'translation' OMS Translation 
 ReductionOMS ::= 'reduction' OMS Reduction 
@@ -39,6 +39,7 @@ UnionOMS ::= 'union' OMS [ ConsStrength ] OMS
 ExtensionOMS ::= 'extension' OMS Extension 
 QualOMS ::= 'qual-oms' Qualification* OMS 
 CombinationOMS ::= 'combination' Network 
+ApplicationOMS ::= 'application' OMS SubstName
 Minimization ::= MinType CircMin CircVars
 MinType ::= 'minimize' | 'maximize' | 'free' | 'cofree'
 CircMin ::= Symbol+
@@ -120,18 +121,18 @@ AlignCardBackward ::= 'align-card-backward' AlignCard
 AlignCard ::= 'injective-and-total' | 'injective' | 'total' | 'neither-injective-nor-total'
 AlignType ::= 'align-type' OMS OMS
 AlignSem ::= 'single-domain' | 'global-domain' | 'contextualized-domain'
-Correspondence ::= CorrespondenceBlock | SingleCorrespondence | 'default-correspondence'
-CorrespondenceBlock ::= 'correspondence-block' [ RelationRef ] [ Confidence ] Correspondence Correspondence*
-SingleCorrespondence ::= 'correspondence' SymbolRef [ RelationRef ] [ Confidence ] TermOrSymbolRef [ CorrespondenceID ]
+Correspondence ::= CorrespondenceBlock | SingleCorrespondence | DefaultCorrespondence
+DefaultCorrespondence ::= 'default-correspondence'
+CorrespondenceBlock ::= 'correspondence-block' [ Relation ] [ Confidence ] Correspondence Correspondence*
+SingleCorrespondence ::= 'correspondence' SymbolRef [ Relation ] [ Confidence ] TermOrSymbolRef [ CorrespondenceID ]
 CorrespondenceID ::= IRI
 SymbolRef ::= IRI
-TermOrSymbolRef ::= SymbolRef
-RelationRef ::= 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' | 'has-instance' | 'instance-of' | 'default-relation' | IRI
-Confidence ::= Double
-
-
-Double ::= ($<$ a number $\in [0,1]$ $>$) 
-
+TermOrSymbolRef ::= Term | SymbolRef
+Term ::= ($<$)an expression specific to an OMS language($>$) 
+Relation ::= RelationRef | StandardRelation
+RelationRef ::= 'relation-ref' IRI
+StandardRelation ::= 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' | 'has-instance' | 'instance-of' | 'default-relation' 
+Confidence ::= Float
 
 QueryRelatedDefn ::= QueryDefn | SubstDefn | ResultDefn
 QueryDefn ::= 'select-query-defn' QueryName Vars Sentence OMS [ OMSLangTrans ]
