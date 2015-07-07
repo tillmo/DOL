@@ -9,16 +9,15 @@ LogicQual ::= 'logic-select' LogicRef
 SyntaxQual ::= 'syntax-select' SyntaxRef
 LibraryName ::= IRI
 PrefixMap ::= 'prefix-map' PrefixBinding*
-PrefixBinding ::= 'prefix-binding' BoundPrefix FullIRI [ Separators ]
-BoundPrefix ::= 'bound-prefix' [ Prefix ]
+PrefixBinding ::= 'prefix-binding' String FullIRI [ Separators ]
 Separators ::= 'separators' String String
 
 
 NetworkDefn ::= 'network-defn' NetworkName [ ConsStrength ] Network
 NetworkName ::= IRI
-Network ::= 'network' NetworkElement* ElementRef*
+Network ::= 'network' NetworkElement* ExcludedElement*
 NetworkElement ::= 'network-element' [ Id ] OMSOrMappingorNetworkRef
-ElementRef ::= PathRef | OMSOrMappingorNetworkRef
+ExcludedElement ::= PathRef | OMSOrMappingorNetworkRef
 PathRef ::= 'path' OMSOrMappingorNetworkRef OMSOrMappingorNetworkRef
 OMSOrMappingorNetworkRef ::= IRI
 
@@ -44,14 +43,11 @@ Minimization ::= MinType CircMin CircVars
 MinType ::= 'minimize' | 'maximize' | 'free' | 'cofree'
 CircMin ::= Symbol+
 CircVars ::= Symbol*
-Translation ::= 'renaming' LogicTranslation* [ SymbolMapItems ]
-LogicTranslation ::= 'logic-translation' OMSLangTrans
+Translation ::= 'renaming' OMSLangTrans* [ SymbolMap ]
 Reduction ::= HomogeneousReduction | HeterogeneousReduction 
-HomogeneousReduction ::= 'hidden' LogicReduction* [ SymbolItems ] 
-HeterogeneousReduction ::= 'revealed' SymbolItems
-LogicReduction ::= 'logic-reduction' OMSLangTrans
-SymbolItems ::= 'symbol-items' Symbol+
-SymbolMapItems ::= 'symbol-map-items' SymbolOrMap SymbolOrMap*
+HomogeneousReduction ::= 'hidden' OMSLangTrans* [ Symbol+ ] 
+HeterogeneousReduction ::= 'revealed' Symbol+
+SymbolMap ::= 'symbol-map-items' SymbolOrMap+
 Extraction ::= 'extraction' QualInterfaceSignature
 Approximation ::= 'approx' [ QualInterfaceSignature ] [ LogicRef ]
 Filtering ::= 'filtering' FilterKind BasicOMS
@@ -60,15 +56,15 @@ Extension ::= extension-oms [ ConsStrength ] [ ExtensionName ] ExtendingOMS
 ConsStrength ::= 'consequence-conservative' | 'model-conservative' | 'not-consequence-conservative' | 'not-model-conservative' | 'implied' | 'monomorphic' | 'weak-definitional' | 'definitional'
 QualInterfaceSignature ::= 'qualinterfacesig' ExtractKind InterfaceSignature
 ExtractKind ::= 'keep-signature' | 'remove-signature'
-InterfaceSignature ::= SymbolItems
+InterfaceSignature ::= Symbol+
 ImportName ::= IRI
 ExtensionName ::= IRI
 
 
 OMSDefn ::= 'oms-defn' OMSName [ ConsStrength ] OMS
 Symbol ::= IRI
-SymbolMap ::= 'symbol-map' Symbol Symbol
-SymbolOrMap ::= Symbol | SymbolMap
+SymbolMapElem ::= 'symbol-map' Symbol Symbol
+SymbolOrMap ::= Symbol | SymbolMapElem
 Sentence ::= ($<$)an expression specific to an OMS language($>$) 
 OMSName ::= IRI
 OMSRef ::= IRI
@@ -85,7 +81,7 @@ OMSLangTransRef ::= IRI
 
 MappingDefn ::= IntprDefnOrRef | Entailment | EquivDefn | ModuleRelDefn | AlignDefn
 IntprDefnOrRef ::= IntprDefn | Refinement
-IntprDefn ::= 'intpr-defn' IntprName [ ConsStrength ] IntprType LogicTranslation* [ SymbolMapItems ] 
+IntprDefn ::= 'intpr-defn' IntprName [ ConsStrength ] IntprType OMSLangTrans* [ SymbolMap ] 
 Refinement ::= 'refinement' IntprName Refinement
 IntprName ::= IRI
 IntprType ::= 'intpr-type' OMS OMS
@@ -96,9 +92,9 @@ RefComposition ::= 'ref-composition' Refinement Refinement
 SimpleOMSRef ::= 'simple-oms-ref' OMS RefMap Refinement 
 SimpleNetworkRef ::= 'simple-network-ref' Network RefMap Refinement
 RefMap ::= RefMapOMS | RefMapNetwork 
-RefMapOMS ::= 'refmap-oms' [ LogicTranslation ] [ SymbolMapItems ] 
+RefMapOMS ::= 'refmap-oms' [ OMSLangTrans ] [ SymbolMap ] 
 RefMapNetwork ::= 'refmap-network' NodeMap*
-NodeMap ::= 'node-map' OMSName OMSName LogicTranslation* [ SymbolMapItems ]
+NodeMap ::= 'node-map' OMSName OMSName OMSLangTrans* [ SymbolMap ]
 Entailment ::= 'entailment' EntailmentName EntailmentType
 EntailmentType ::= OMSOMSEntailment | NetworkOMSEntailment | NetworkNetworkEntailment 
 OMSOMSEntailment ::= 'oms-oms-entailment' OMS OMS 
@@ -136,7 +132,7 @@ Confidence ::= Float
 
 QueryRelatedDefn ::= QueryDefn | SubstDefn | ResultDefn
 QueryDefn ::= 'select-query-defn' QueryName Vars Sentence OMS [ OMSLangTrans ]
-SubstDefn ::= 'subst-defn' SubstName OMS OMS SymbolMap
+SubstDefn ::= 'subst-defn' SubstName OMS OMS SymbolMapElem
 ResultDefn ::= 'result-def' ResultName SubstName SubstName* QueryName [ Complete ]
 QueryName ::= IRI
 SubstName ::= IRI
@@ -149,5 +145,3 @@ IRI ::= FullIRI | CurieIRI
 FullIRI ::= 'full-iri' FullIRI 
 CurieIRI ::= 'curie' CURIE
 FullIRI ::= ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) 
-
-

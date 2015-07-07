@@ -2205,6 +2205,11 @@ best possible (in the sense of a maximum set of \termref{logical consequences})
  Technically, a maximum approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
 \end{note}
 
+\cbs\termdefinition{filtering}{verbatim removal of \termref{symbols} or \termref{axioms} from an OMS.}
+\begin{note}
+If a symbol is removed, all axioms containing that symbols are removed, too.
+\end{note}
+\cbe
 
 \termdefinition{closed world assumption}{presumption that what is not known to be true, is false.}
 
@@ -3995,7 +4000,7 @@ Alternatively, a library can also be the verbatim inclusion of an OMS written in
 an OMS language that conforms with \DOL (\syntax{NativeOMS}; \cf \ref{c:conform:logic}).
 
 
-At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs; see \cref{c:identifiers} for further details.
+At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs \cbs using CURIEs\cbe; see \cref{c:identifiers} for further details.
 
 \includegraphics[scale=0.6]{mof/dia/dia0.png}
 
@@ -4028,7 +4033,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item a module extracted from an OMS, using a restriction signature,
 \item an approximation of an OMS, in a subsignature or sublogic, with the effect that sentences not expressible in the subsignature respectively sublogic are replaced with a suitable approximation,
 \item a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,
-\item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied,
+\item an extension of an OMS with a basic or a minimizable OMS, optionally named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{ConsStrength}),
 \item a union of several OMS (the major difference between a union and extension is that the members of the unions need to be self-contained OMS, while the extensions may reuse the signature of the extended OMS), 
 \item a reference to an OMS existing on the Web,
 \item an OMS qualified with the OMS language that is used to express it,
@@ -4047,6 +4052,14 @@ Some OMS, namely extensions and minimization, maximization, freeness
 and cofreeness, are interpreted relative to a \emph{local environment}.
 Roughly speaking, the local environment is the OMS built from all
 previously-declared symbols and axioms.
+
+A \syntax{ConsStrength} specifies additional relations that may hold
+between an OMS and its extension, like conservative or definitional
+extension. The rationale is that the extension should not have impact
+on the original OMS that is being extended. A \syntax{ConsStrength}
+might also be applied to a single OMS, which is then implicitly
+regarded as an extension of the empty OMS. In this case,
+satisfiability (or a similar property) of the OMS is expressed.
 \cbe
 
 \includegraphics[scale=0.4]{mof/dia/dia2.png}
