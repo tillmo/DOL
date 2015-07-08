@@ -3927,7 +3927,7 @@ clause~\ref{c:abstract-syntax}.
 clause~\ref{c:abstract-syntax}.
 \end{itemize}
 \DOL uses symbol maps to express signature translations in such OMS mappings; see the
-\cbs MOF metaclass \cbe  \syntax{SymbolMapItems} in
+\cbs MOF metaclass \cbe  \syntax{SymbolMap} in
 clause~\ref{c:abstract-syntax}.
 
 \DOL need not be able to fully represent logical translations but is
@@ -4092,9 +4092,10 @@ OMS (e.g.\ returned by model finders) that are used to describe single models.
 
 A
 \syntax{SymbolItems}, used in an OMS \syntax{Reduction}, is a
-list of non-logical symbols that are to be hidden. A \syntax{LogicReduction}
-denotes a logic reduction to a
-less expressive OMS language. A \syntax{SymbolMapItems}, used in
+list of non-logical symbols that are to be hidden. Also,
+an \syntax{OMSLanguageTranslation} denoting a logic projection
+can be used a logic reduction to a
+less expressive OMS language. A \syntax{SymbolMap}, used in
 OMS \syntax{Translation}s,  maps symbols to symbols,
 %% \CLnote[type=fyi]{On 2012-07-18 we decided 
 %% not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics 
@@ -4116,7 +4117,7 @@ either a named interpretation (\syntax{InterpretationDefinition}, \syntax{Entail
 \syntax{EquivalenceDefinition}), a named declaration of the  relation between a module of an OMS and the whole 
 OMS (\syntax{ModuleRelDefinition}), or a named \termref{alignment} (\syntax{AlignmentDefinition}).
 
-The \syntax{SymbolMapItems} in an interpretation always must lead to a signature morphism; a proof 
+The \syntax{SymbolMap} in an interpretation always must lead to a signature morphism; a proof 
 obligation expressing that the (translated) source OMS logically follows from the target OMS is 
 generated.  An entailment is a variant where all symbols are mapped identically, while an 
 equivalence states that the model classes of two OMS are in bijective correspondence.
@@ -4469,7 +4470,7 @@ CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
 GroupOMS            = '{' , OMS , '}'
                      | OMSRef ;
 
-Translation          = 'with' , { LogicTranslation } , SymbolMapItems
+Translation          = 'with' , { LogicTranslation } , SymbolMap
                      | 'with' , LogicTranslation , { LogicTranslation } ;
 LogicTranslation     = 'translation' , OMSLanguageTranslation ;
                       
@@ -4479,7 +4480,7 @@ Reduction            = 'hide' , { LogicReduction } , SymbolItems
 LogicReduction       = 'along' , OMSLanguageTranslation ;
 
 SymbolItems          = Symbol , { ',' , Symbol } ;
-SymbolMapItems       = SymbolOrMap , { ',' , SymbolOrMap } ;
+SymbolMap       = GeneralSymbolMapItem , { ',' , GeneralSymbolMapItem } ;
 
 Extraction           = 'extract' , InterfaceSignature
                      | 'remove' , InterfaceSignature ;
@@ -4516,9 +4517,9 @@ OMSDefinition             = OMSkeyword , OMSName , '=' , [ ConservativityStrengt
                                    OMS , 'end'  ; 
 
 Symbol               = IRI ;
-SymbolMap            = Symbol , '|->' , Symbol ;
-SymbolOrMap          = Symbol
-                     | SymbolMap ;
+SymbolMapItem            = Symbol , '|->' , Symbol ;
+GeneralSymbolMapItem          = Symbol
+                     | SymbolMapItem ;
 Sentence             = ($<$)an expression specific to an OMS language($>$) ;
 
 OMSName             = IRI ;
@@ -4567,7 +4568,7 @@ MappingDefinition             = InterpretationDefinition | Entailment | Equivale
 
 InterpretationDefinition            = InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType ,  'end'
                      | InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType , '=' ,
-                       { LogicTranslation } , [ SymbolMapItems ] ,  'end' 
+                       { LogicTranslation } , [ SymbolMap ] ,  'end' 
                      | InterpretationKeyword , InterpretationName , '=' , Refinement ,  'end' ;
 
 InterpretationKeyword         = 'interpretation' | 'view' | 'refinement' ;
@@ -4579,10 +4580,10 @@ Refinement           = GroupOMS
                      | Refinement , 'then' , Refinement
                      | GroupOMS , 'refined' , [RefMap] , 'to' , Refinement 
                      | NetworkName , 'refined' , [RefMap] , 'to' , Refinement ;
-RefMap               = 'via' , LogicTranslation , [ SymbolMapItems ]
-                     | 'via' , [ LogicTranslation ] , SymbolMapItems
+RefMap               = 'via' , LogicTranslation , [ SymbolMap ]
+                     | 'via' , [ LogicTranslation ] , SymbolMap
                      | 'via' , NodeMap , { ',' , NodeMap } ;
-NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LogicTranslation } , [ SymbolMapItems ] ] ;
+NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LogicTranslation } , [ SymbolMap ] ] ;
 
 Entailment           = 'entailment' , EntailmentName , '=' , EntailmentType , 'end' ;
 EntailmentName       = IRI ;
@@ -4600,13 +4601,13 @@ ModuleRelDefinition        = 'module' , ModuleName , [ Conservative ] , ':' , Mo
 ModuleName           = IRI ;
 ModuleType           = GroupOMS , 'of' , GroupOMS ;
 
-AlignmentDefinition            = 'alignment' , AlignmentName , [ AlignmentCardinalitys ] , ':' , AlignmentType ,  'end'
-                     | 'alignment' , AlignmentName , [ AlignmentCardinalitys ] , ':' , AlignmentType , '=' ,
+AlignmentDefinition            = 'alignment' , AlignmentName , [ AlignmentCardinalityPair ] , ':' , AlignmentType ,  'end'
+                     | 'alignment' , AlignmentName , [ AlignmentCardinalityPair ] , ':' , AlignmentType , '=' ,
                        Correspondence , { ',' , Correspondence } ,  
                        'assuming' , AlignmentSemantics , 'end' ;
 
 AlignmentName            = IRI ;
-AlignmentCardinalitys           = AlignmentCardinalityForward , AlignmentCardinalityBackward ;
+AlignmentCardinalityPair           = AlignmentCardinalityForward , AlignmentCardinalityBackward ;
 AlignmentCardinalityForward     = AlignmentCardinality ;
 AlignmentCardinalityBackward    = AlignmentCardinality ;
 AlignmentCardinality            = '1' | '?' | '+' | '*' ;
@@ -4616,14 +4617,14 @@ AlignmentSemantics            = 'SingleDomain' | 'GlobalDomain'  | 'Contextualiz
 Correspondence       = CorrespondenceBlock
                      | SingleCorrespondence
                      | '*' ;
-CorrespondenceBlock  = 'relation' , [ RelationReference ] , [ Confidence ] , 
+CorrespondenceBlock  = 'relation' , [ Relation ] , [ Confidence ] , 
                        '{' , Correspondence , { ',' , Correspondence } , '}' ;
-SingleCorrespondence = SymbolRef , [ RelationReference ] ,
+SingleCorrespondence = SymbolRef , [ Relation ] ,
                        [ Confidence ] , GeneralizedTerm , [ CorrespondenceId ] ;
 CorrespondenceId     = '%(' , IRI , ')%' ;
 SymbolRef            = IRI ;
 GeneralizedTerm      = SymbolRef ;
-RelationReference          = '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI ;
+Relation          = '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI ;
 Confidence           = Double ; 
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
@@ -5846,7 +5847,7 @@ defined only if  $\Sig(\syntax{Filtering})\subseteq\Sig(\syntax{OMS})$ and $\Th(
 \cbs Two cases are distinguished based\cbe on the value of $c$, 
 where $sem(\Gamma, (\Sig(\syntax{OMS}), \Th(\syntax{OMS}), \syntax{Filtering})
 = (c, \cI, \Sigma, \Delta)$ 
-If $c = select$, 
+If $c = keep$, 
 the semantics of $O$ is given by
 \begin{itemize}
   \item $\Inst(O) = \cI$
@@ -5863,8 +5864,8 @@ with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$. ({If this smal
 \end{itemize}
 
 \noindent
-If $c = reject$, the semantics of $O =$
-\syntax{filtering OMS reject BasicOMS} is
+If $c = remove$, the semantics of $O =$
+\syntax{filtering OMS (filter remove BasicOMS)} is
 \begin{itemize}
   \item $\Inst(O) = \cI$
   \item $\Sig(O) = \Sig(\syntax{OMS})\setminus \Sigma$ 
@@ -5940,7 +5941,7 @@ The semantics of $O=$
 
 %Qualification
  
-The semantics of \syntax{qual-oms Qualification OMS}
+The semantics of \syntax{qualified-oms Qualification OMS}
 in the context $\Gamma$ is the same as the
 semantics of \syntax{OMS} in the context
 $\Gamma'$ given by the semantics of
@@ -5970,29 +5971,29 @@ $O=$ \syntax{combination Network} is
 
 \semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
 The semantics of a translation
-$O=$ \syntax{renaming LogicTranslation SymbolMapItems}
+$O=$ \syntax{renaming OMSLanguageTranslation SymbolMap}
 is given by
 \begin{itemize}
- \item $\Inst(O) = sem(\syntax{LogicTranslation}) : \Gamma.logic \to logic'$
- \item $\Mor(O) = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), \syntax{SymbolMapItems})$
+ \item $\Inst(O) = sem(\syntax{OMSLanguageTranslation}) : \Gamma.logic \to logic'$
+ \item $\Mor(O) = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), \syntax{SymbolMap})$
 \end{itemize}
 \noindent where
 $lang'$ and $ser'$ are the default language and serialization for logic $logic'$.
-If \syntax{LogicTranslation} is missing, it defaults to the identity comorphism of the current logic.
+If \syntax{OMSLanguageTranslation} is missing, it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{LogicTranslation}) = (\Phi, \alpha,\beta)}
+\semdom{sem(\Gamma, \syntax{OMSLanguageTranslation}) = (\Phi, \alpha,\beta)}
 
-$sem(\Gamma, \syntax{logic-translation IRI})=(\Phi,\alpha,\beta)$,
+$sem(\Gamma, \syntax{IRI})=(\Phi,\alpha,\beta)$,
 where $(\Phi,\alpha,\beta)$ is the institution comorphism
 named by \syntax{IRI} in the heterogeneous logical environment.
 
-\semdom{sem(\Gamma, \syntax{LogicTranslation*}) = (\Phi, \alpha,\beta)}
+\semdom{sem(\Gamma, \syntax{OMSLanguageTranslation*}) = (\Phi, \alpha,\beta)}
 
-$sem(\Gamma, \syntax{logic-translation IRI}_1, \ldots,\syntax{logic-translation IRI}_n) =(\Phi,\alpha,\beta)$,
+$sem(\Gamma, \syntax{IRI}_1, \ldots,\syntax{IRI}_n) =(\Phi,\alpha,\beta)$,
 where
-$sem(\Gamma, \syntax{logic-translation IRI}_i) = (\Phi_i,\alpha_i,\beta_i)$ for 
+$sem(\Gamma, \syntax{IRI}_i) = (\Phi_i,\alpha_i,\beta_i)$ for 
 $i=1,\ldots, n$ and\\
  $(\Phi,\alpha,\beta) = (\Phi_1,\alpha_1,\beta_1); \ldots ; (\Phi_n,\alpha_n,\beta_n)$. 
 
@@ -6001,14 +6002,14 @@ $i=1,\ldots, n$ and\\
 \semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta), \sigma)}
 
 The semantics of a reduction
-$O=$ \syntax{hidden LogicReduction SymbolItems}
+$O=$ \syntax{reduction remove LogicReduction Symbol+}
 is given by
 \begin{itemize}
  \item $\Inst(O) = sem(\syntax{LogicReduction}) : \Gamma.logic \to logic'$
  \item 
 $\Mor(O) = 
 \iota: \Sigma' \to \Phi(\Sigma)$, where 
-$\Sigma' = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), \syntax{SymbolItems})$,
+$\Sigma' = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), \syntax{Symbol+})$,
 $lang'$ and $ser'$ are the default language and serialization for logic $logic'$
 and $\iota$ is the inclusion morphism.
 \end{itemize}
@@ -6018,12 +6019,12 @@ it defaults to the identity morphism of the current logic of $\Gamma$.
 
 
 The semantics of a reduction
-$O=$ \syntax{revealed SymbolItems}
+$O=$ \syntax{reduction keep Symbol+}
 is 
  \begin{itemize}
   \item $\Inst(O)$ is the identity morphism on the current logic of $\Gamma$
   \item $\Mor(O)$ is the inclusion of
-  $sem(\Gamma, \Sigma, \syntax{SymbolItems})$ in
+  $sem(\Gamma, \Sigma, \syntax{Symbol+})$ in
    $\Sigma$.
  \end{itemize}
 
@@ -6031,16 +6032,16 @@ is
 
 \semdom{sem(\Gamma, L, \syntax{LogicReduction}) = (\Phi, \alpha,\beta)}
 
-$sem(\Gamma, \syntax{logic-reduction IRI})=(\Phi,\alpha,\beta)$,
+$sem(\Gamma, \syntax{IRI})=(\Phi,\alpha,\beta)$,
 where $(\Phi,\alpha,\beta)$ is the institution morphism
 named by \syntax{IRI} in the heterogeneous logical environment.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \Sigma, \syntax{SymbolItems}) = \Sigma'}
+\semdom{sem(\Gamma, \Sigma, \syntax{Symbol+}) = \Sigma'}
 
-$$sem(\Gamma, \Sigma, \syntax{symbol-items Symbol$_1$ $\ldots$ Symbol$_n$}) = \Sigma'$$
+$$sem(\Gamma, \Sigma, \syntax{Symbol$_1$ $\ldots$ Symbol$_n$}) = \Sigma'$$
 where $\Sigma'$ is the smallest sub-signature of $\Sigma$ containing
 $sem(\Gamma, \Sigma,\syntax{Symbol}_1), \ldots, 
 sem(\Gamma,\Sigma,\syntax{Symbol}_n)$, if such a sub-signature exists and is otherwise undefined.
@@ -6049,13 +6050,13 @@ sem(\Gamma,\Sigma,\syntax{Symbol}_n)$, if such a sub-signature exists and is oth
 
 \todonote{I need equations for one signature and for two signatures... TM: what do you want to say here?}
 
-\semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMapItems})= \sigma:\Sigma\to\Sigma'}
+\semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMap})= \sigma:\Sigma\to\Sigma'}
 
- $$sem(\Gamma,\Sigma,\Sigma',\syntax{symbol-map-items SymbolOrMap}_1 \ldots \syntax{SymbolOrMap}_n) = \sigma$$
+ $$sem(\Gamma,\Sigma,\Sigma',\syntax{symbol-map GeneralSymbolMapItem}_1 \ldots \syntax{GeneralSymbolMapItem}_n) = \sigma$$
 
 where 
 $\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n)))$\\
-and $(s_i,t_i) = sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolOrMap}_i)$ for $i=1,\ldots,n$.
+and $(s_i,t_i) = sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{GeneralSymbolMapItem}_i)$ for $i=1,\ldots,n$.
 
 Applications \shall 
 implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
@@ -6102,7 +6103,7 @@ OMS.}:\hspace{-2cm}
 \semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction}) = 
         (\Sigma', \Delta')}
 
-$sem(\Gamma, (\Sigma, \Delta), \syntax{extraction  QualInterfaceSignature}) =
+$sem(\Gamma, (\Sigma, \Delta), \syntax{extraction RemovalKind InterfaceSignature}) =
 (\Sigma',\Delta')$
  
 %
@@ -6111,7 +6112,7 @@ $sem(\Gamma, (\Sigma, \Delta), \syntax{extraction  QualInterfaceSignature}) =
 %  $$(\Sigma' \cup \Sigma'', \Delta \setminus \Delta')  \equiv_{\Sigma' \cup \Sigma''} (\Sigma' \cup \Sigma'' , \emptyset).$$
 %The latter can also be formulated as $\{M\forget{\Sigma'\cup \Sigma''} \mid M  \models \Delta \setminus \Delta' \} = \{ M\forget{\Sigma'\cup \Sigma''} \mid M \models \emptyset \}$. %The empty set of sentences (?) 
 
-where $sem(\Gamma, \Sigma, \syntax{QualInterfaceSignature}) =
+where $sem(\Gamma, \Sigma, \syntax{RemovalKind InterfaceSignature}) =
 \Sigma''$, $\langle\Sigma',\Delta'\rangle$ is the smallest depleting
 $\Sigma''$-module (see \cite{DBLP:journals/ai/KontchakovWZ10} for the
 definition in a description logic context and \cite{IbanezEtAl15} for a
@@ -6136,25 +6137,25 @@ $$\begin{array}{ll}
 
 \semdom{sem(\Gamma, (\cI, \Sigma), \syntax{Approximation}) = (\cI,\Sigma')}
 
-$sem(\Gamma,\Sigma, \syntax{approx QualInterfaceSignature LogicRef}) = 
+$sem(\Gamma,\Sigma, \syntax{approx RemovalKind InterfaceSignature LogicRef}) = 
   (\cI,\Sigma')$
   
   \noindent
-  where $\Sigma' = sem(\Gamma, \Sigma, \syntax{QualInterfaceSignature})$
+  where $\Sigma' = sem(\Gamma, \Sigma, \syntax{RemovalKind InterfaceSignature})$
   and $sem(\syntax{LogicRef}) = \cI$.
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (c,\cI,\Sigma', \Delta')}
 
-$$sem(\Gamma, (\Sigma, \Delta), \syntax{select BasicOMS}) = 
-(select, \cI,\Sigma', \Delta')$$
+$$sem(\Gamma, (\Sigma, \Delta), \syntax{filter keep BasicOMS}) = 
+(keep, \cI,\Sigma', \Delta')$$
 
 where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta')$.
 %and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
 %includes $(\Sigma'',\Delta'')$. \ednote{TODO: update}
 
-$$sem(\Gamma, (\Sigma, \Delta), \syntax{reject BasicOMS}) = 
-(reject,\cI,\Sigma', \Delta')$$
+$$sem(\Gamma, (\Sigma, \Delta), \syntax{filter remove BasicOMS}) = 
+(remove,\cI,\Sigma', \Delta')$$
 where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta')$.
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
@@ -6186,14 +6187,14 @@ If \syntax{ExtensionName} is present, the inclusion link is labeled with this na
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem( \Gamma, \Sigma, \syntax{QualInterfaceSignature}) = 
+\semdom{sem( \Gamma, \Sigma, \syntax{RemovalKind InterfaceSignature}) = 
 \Sigma'}
 
-$sem(\Gamma, \Sigma, \syntax{ Qual SymbolItems}) = \Sigma'$, 
+$sem(\Gamma, \Sigma, \syntax{ Qual Symbol+}) = \Sigma'$, 
 where 
 %
-$$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, \syntax{SymbolItems}) &\text{ if } \quad \syntax{Qual = keep-signature}\\
-\Sigma \setminus   sem(\Gamma, \Sigma, \syntax{SymbolItems})  & \text{ if } \quad \syntax{Qual = remove-signature}
+$$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, \syntax{Symbol+}) &\text{ if } \quad \syntax{Qual = keep}\\
+\Sigma \setminus   sem(\Gamma, \Sigma, \syntax{Symbol+})  & \text{ if } \quad \syntax{Qual = remove}
 \end{cases}$$
 %$sem(\Sigma, \syntax{`remove-signature', InterfaceSignature})$
 
@@ -6230,15 +6231,15 @@ $$sem(\Gamma,\Sigma, \syntax{Symbol}) = s$$
 where $s$ is a logic-specific symbol with the name $\syntax{Symbol}$ from $|\Sigma|$.\ednote{Is there some conversion going on here? Then this should be added to the heterogeneous logical env.} If such symbol does not exist, 
 the semantics is undefined.
 
-\semdom{sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMap})}
+\semdom{sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMapItem})}
 
-$$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{symbol-map}\ \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$$
+$$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{symbol-map-item}\ \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$$
 \noindent where $sem(\Gamma,\Sigma_1,\syntax{Symbol}_1) = s_1$
 and $sem(\Gamma,\Sigma_2,\syntax{Symbol}_2) = s_2$.
 
-\semdom{sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{SymbolOrMap}) = (s,t)}
+\semdom{sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{GeneralSymbolMapItem}) = (s,t)}
 
-$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{symbol-map}\ \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$
+$sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{symbol-map-item}\ \syntax{Symbol}_1, \syntax{Symbol}_2) = (s_1,s_2)$
 
 and
 
@@ -6335,7 +6336,7 @@ semantics is undefined.
 
 %\syntax{extension  OMS  ExtensionOMS} & $sem(\Gamma,L,(\Sigma,\cM),\syntax{ExtensionOMS})$ \\\hline
 %\syntax{module-extract  OMSRef  Conservative ExtractionMethod }$\Sigma$  & TODO \\\hline
-%\syntax{qual-oms  \{ Qualification \} , OMS} & $sem(\Gamma,sem(L,\syntax{\{ Qualification \}}),\syntax{OMS})$  \\\hline
+%\syntax{qualified-oms  \{ Qualification \} , OMS} & $sem(\Gamma,sem(L,\syntax{\{ Qualification \}}),\syntax{OMS})$  \\\hline
 %\end{tabular}
 %%%%%
 % 13.10.14 YI
@@ -6361,7 +6362,7 @@ semantics is undefined.
 %(The semantics
 %is undefined, if such a subsignature does not exist.)
 %
-%\semdom{sem(L,\Sigma,\syntax{SymbolItems})=\Sigma'\mbox{ where } \Sigma'\leq\Sigma}
+%\semdom{sem(L,\Sigma,\syntax{Symbol+})=\Sigma'\mbox{ where } \Sigma'\leq\Sigma}
 %$sem(L,\Sigma,\syntax{symbol-items }EI_1\ldots EI_n)=
 %\bigvee\{\Sigma'\leq\Sigma\mbox{ in }L\,|\, $ the non-logical symbols in $EI_1\ldots EI_n$
 % do not occur in $ent(\Sigma')\}$
@@ -6379,8 +6380,8 @@ See equations for \syntax{InterpretationDefinition},  \syntax{Entailment}, \synt
 \semdom{sem(\Gamma,\syntax{InterpretationDefinition}) = \Gamma'}
 
 $$\begin{array}{ll}
-sem(\Gamma,& \syntax{intrp-definition InterpretationName Conservative IntrpType,}\\
-& \syntax{LogicTranslation*, SymbolMapItems}) = \Gamma'
+sem(\Gamma,& \syntax{intrp-definition InterpretationName ConservativityStrength IntrpType,}\\
+& \syntax{OMSLanguageTranslation*, SymbolMap}) = \Gamma'
 \end{array}$$
 where
  $\Gamma' = \Gamma[\syntax{InterpretationName} \to (G, (\rho,\sigma), L_1, L_2)]$\\
@@ -6390,22 +6391,22 @@ where
   
    \item $(L_1, L_2) = sem(\Gamma, \syntax{IntrpType})$
    \item $\rho = (\Phi,\alpha,\beta):
-             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, \syntax{LogicTranslation*})$. If \syntax{LogicTranslation*} is missing, the default translations between the logics is selected. 
-   \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), \syntax{SymbolMapItems}) = \sigma,$
+             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, \syntax{OMSLanguageTranslation*})$. If \syntax{OMSLanguageTranslation*} is missing, the default translations between the logics is selected. 
+   \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), \syntax{SymbolMap}) = \sigma,$
 where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$. 
   \end{itemize}
 
 The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L_1)$ for each $M_2\in\Mod(L_2)$.
-If the optional argument $\syntax{Conservative}$ is \syntax{model-conservative}, for
+If the optional argument $\syntax{ConservativityStrength}$ is \syntax{model-conservative}, for
 each model  $M_1\in\Mod(L_1)$ there must exist a model $M_2\in\Mod(L_2)$ such that
-$\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. If the optional argument $\syntax{Conservative}$ is \syntax{consequence-conservative}, 
+$\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. If the optional argument $\syntax{ConservativityStrength}$ is \syntax{consequence-conservative}, 
 for each $\Sig(L_1)$-sentence $\varphi$, if $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ then
 $\cM_1\models \varphi$.
-If the optional argument $\syntax{Conservative}$ is \syntax{not-model-conservative}, 
+If the optional argument $\syntax{ConservativityStrength}$ is \syntax{not-model-conservative}, 
 there must exist a model  $M_1\in\Mod(L_1)$ such that there is no 
 model $M_2\in\Mod(L_2)$ such that
 $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$.
-If the optional argument $\syntax{Conservative}$ is \syntax{not-consequence-conservative}, 
+If the optional argument $\syntax{ConservativityStrength}$ is \syntax{not-consequence-conservative}, 
 there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ and
 $\cM_1\not\models \varphi$.
 
@@ -6466,7 +6467,7 @@ Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$,\cbs
 $\{M_i\}_{i\in Nodes(G_1)}$ such that
 $M_i = F_{\sigma^G(i)}\forget{\sigma^M_{i}}$ for each $i\in Nodes(G_1)$.
 
-$$sem(\Gamma, \syntax{ref-oms OMS}) = 
+$$sem(\Gamma, \syntax{refinement-oms OMS}) = 
    ((G, G), \sigma, \cM) $$
   \noindent where 
   \begin{itemize}
@@ -6480,7 +6481,7 @@ $$sem(\Gamma, \syntax{ref-oms OMS}) =
    where $(M)$ is the singleton family consisting of $M$.
   \end{itemize}
 
-$$sem(\Gamma, \syntax{ref-network Network}) = ((G, G), \sigma, \cM)$$
+$$sem(\Gamma, \syntax{refinement-network Network}) = ((G, G), \sigma, \cM)$$
 
 \noindent 
 where $sem(\Gamma, \syntax{Network}) = G$,
@@ -6488,7 +6489,7 @@ $\sigma$ is the identity network morphism on $G$
 and 
 $\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 
-$$sem(\Gamma, \syntax{ref-composition Refinement$_1$ Refinement$_2$}) = 
+$$sem(\Gamma, \syntax{refinement-composition Refinement$_1$ Refinement$_2$}) = 
 ((G_1, G'_2), \sigma, \cM)$$
 
 \noindent where\\ 
@@ -6504,7 +6505,7 @@ $\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that }
 (F_1, F_2) \in \cM_1  \text{ and }
 (F_2, F_3) \in \cM_2  \}$
 
-$$sem(\Gamma, \syntax{simple-oms-ref OMS RefMap Refinement}) = 
+$$sem(\Gamma, \syntax{simple-oms-ref OMS OMSRefinementMap Refinement}) = 
 ((G, G_2), \sigma, \cM)$$
 where\\
  $sem^M(\Gamma,  \syntax{OMS}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
@@ -6512,7 +6513,7 @@ where\\
  ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
  such that $G_1$ consists of an isolated node labeled with 
  $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$\\
- $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), \syntax{RefMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
+ $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), \syntax{OMSRefinementMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
  for each $(M_1, M_2) \in \cM'$,
 $\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM_1$,\\
 G consists of an isolated node labeled with $sem^M(\Gamma,  \syntax{OMS})$\\
@@ -6520,12 +6521,12 @@ $\sigma = (\rho_1,\sigma_1);(\rho_2,\sigma_2)$ and
 $\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
 (M_1, M_2) \in \cM' \}$.
 
-$$sem(\Gamma, \syntax{simple-network-ref Network RefMap Refinement}) = 
+$$sem(\Gamma, \syntax{simple-network-ref Network NetworkRefinementMap Refinement}) = 
 ((G_1,G_2),\sigma, \cM)$$
 where\\
  $sem^M(\Gamma,  \syntax{Network}) = G_1$,\\
  $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\sigma_2, \cM')$,\\ 
- $sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma_1:G_1\to G'_1$,\\
+ $sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap}) = \sigma_1:G_1\to G'_1$,\\
  $\sigma = \sigma_1;\sigma_2$ is a network morphism
  and 
  $\cM = \{( F_2\forget{\sigma} , F_2) \mid (F_1, F_2) \in \cM' \}$.
@@ -6533,24 +6534,24 @@ where\\
 
 %%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{RefMap}) = (\rho, \sigma)}
+\semdom{sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{OMSRefinementMap}) = (\rho, \sigma)}
 
-$$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{refmap-oms LogicTranslation SymbolMapItems}) = ((\Phi,\alpha,\beta), \sigma) $$
+$$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{oms-refmap OMSLanguageTranslation SymbolMap}) = ((\Phi,\alpha,\beta), \sigma) $$
 
 where\\
- $sem(\Gamma, \syntax{LogicTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
+ $sem(\Gamma, \syntax{OMSLanguageTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
 such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
 and 
-$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMapItems}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
+$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMap}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
 where $\Gamma.\current=(lang, logic,ser)$, $logic'$ is the target logic of $(\Phi,\alpha,\beta)$, and $lang'$ and 
 $ser'$ are the default language and serializations for 
 $logic'$ .
 
 
 
-\semdom{sem(\Gamma, G_1, G_2, \syntax{RefMap}) = \sigma:G_1\to G_2}
+\semdom{sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap}) = \sigma:G_1\to G_2}
 
-$$sem(\Gamma, G_1, G_2, \syntax{refmap-network}\ \syntax{NodeMap}_1 \ldots \syntax{NodeMap}_n)
+$$sem(\Gamma, G_1, G_2, \syntax{network-refmap}\ \syntax{NodeMap}_1 \ldots \syntax{NodeMap}_n)
 = \sigma$$
 where \\
 $sem(\Gamma, G_1, G_2,\syntax{NodeMap}_1)= (\syntax{OMSName}^1_1, \syntax{OMSName}^1_2,\rho_1,\sigma_1)$, $\ldots$\\
@@ -6563,15 +6564,15 @@ The map is required to be total on the nodes of $G_1$.
 
 \semdom{sem(\Gamma, G_1, G_2,
 \syntax{NodeMap}) = 
-(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma)}
+(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma})
 
 $sem(\Gamma, G_1, G_2,
-\syntax{node-map OMSName$_1$ OMSName$_2$ LogicTranslation* SymbolMapItems}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
+\syntax{node-map OMSName$_1$ OMSName$_2$ OMSLanguageTranslation* SymbolMap}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
 where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
-$sem(\Gamma, \syntax{LogicTranslation*}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
-$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMapItems}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+$sem(\Gamma, \syntax{OMSLanguageTranslation*}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
+$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
 where $\Gamma.\current=(lang, logic,ser)$,
 $logic'$ is the target logic of $(\Phi,\alpha,\beta)$
 and $lang'$ and $ser'$ are the default language and serialization for $logic'$.
@@ -6684,7 +6685,7 @@ $$sem(\Gamma,\syntax{equivalence-definition  EquivalenceName  ( network-equivale
 \ednote{in the manifesto this is called a conservative extension. TM: so we have once decided to change this into conservative extension? I vaguely can
 remember...}
 
-$$sem(\Gamma, \syntax{module-definition ModuleName Conservative ModuleType InterfaceSignature}) = \Gamma'$$
+$$sem(\Gamma, \syntax{module-definition ModuleName ConservativityStrength ModuleType InterfaceSignature}) = \Gamma'$$
 
 \noindent where 
 $\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (G,\iota, N_2,N_1)]$
@@ -8721,57 +8722,44 @@ OMSReference   = 'oms-reference' , OMSRef , [ ImportName ] ;
 ExtendingOMS         = ClosableOMS
                      | RelativeClosureOMS ;
 RelativeClosureOMS = 'relative-closure' , ClosureType , ClosableOMS ;
-OMS                  = ExtendingOMS
-                     | 'minimize-symbols' , OMS , Minimization
-                     | 'translation' , OMS , Translation
-                     | 'reduction' , OMS , Reduction
-                     | 'module-extract' , OMS , Extraction 
-                     | 'approximation' , OMS , Approximation
-                     | 'filtering', OMS, Filtering
-                     | 'union' , OMS , [ ConservativityStrength ] , OMS 
-                     | 'extension' , OMS , ExtensionOMS 
-                     | 'qual-oms' , { Qualification } , OMS
-                     | 'combination' , Network ;
+OMS                  = ExtendingOMS | ClosureOMS | TranslationOMS | ReductionOMS | ExtractionOMS | ApproximationOMS | FilteringOMS | UnionOMS | ExtensionOMS | QualOMS | CombinationOMS | ApplicationOMS ;
+ClosureOMS = 'closure-symbols' , OMS , Closure ;
+TranslationOMS = 'translation' , OMS , Translation ;
+ReductionOMS = 'reduction' , OMS , Reduction ;
+ExtractionOMS = 'module-extract' , OMS , Extraction ;
+ApproximationOMS = 'approximation' , OMS , Approximation ;
+FilteringOMS = 'filtering' , OMS , Filtering ;
+UnionOMS = 'union' , OMS , [ ConservativityStrength ] , OMS ;
+ExtensionOMS = 'extension' , OMS , Extension ;
+QualifiedOMS = 'qualified-oms' , { Qualification } , OMS ;
+CombinationOMS = 'combination' , Network ;
+ApplicationOMS = 'application' , OMS , SubstName ;
 
-Minimization         = MinType, CircMin , CircVars ;
-MinType              = 'minimize' | 'maximize' | 'free' | 'cofree' ;
-CircMin              = Symbol , { Symbol } ;
+Closure = ClosureType , CircClosure , CircVars ;
+ClosureType = 'minimize' | 'maximize' | 'free' | 'cofree' ;
+CircClosure          = Symbol , { Symbol } ;
 CircVars             = { Symbol } ;
 
-Translation          = 'renaming' , { LogicTranslation } , [ SymbolMapItems ] ;
-LogicTranslation     = 'logic-translation' , OMSLanguageTranslation ;
+Translation          = 'renaming' , { OMSLanguageTranslation } , [ SymbolMap ] ;
 
-Reduction            = 'hidden' , { LogicReduction } , [ SymbolItems ]
-                     | 'revealed' , SymbolItems  ;
-LogicReduction       = 'logic-reduction' , OMSLanguageTranslation ;
+Reduction = 'reduction' , RemovalKind , { OMSLanguageTranslation } , [ SymbolList ] ;
 
-SymbolItems          = 'symbol-items' , Symbol , { Symbol } ;
-SymbolMapItems       = 'symbol-map-items' , SymbolOrMap , { SymbolOrMap } ;
+SymbolList = Symbol , { Symbol } ;
+SymbolMap       = 'symbol-map' , GeneralSymbolMapItem , { GeneralSymbolMapItem } ;
 
-Extraction           = 'extraction', QualInterfaceSignature ;
+Extraction           = 'extraction', RemovalKind, InterfaceSignature ;
 
-Approximation        = 'approx' , [ QualInterfaceSignature ] , [ LogicRef ] ;
+Approximation        = 'approx' , RemovalKind , [ InterfaceSignature ] , [ LogicRef ] ;
 
-Filtering            = 'select' , BasicOMS 
-                     | 'reject' , BasicOMS ;
+Filtering            = 'filter' , RemovalKind , BasicOMS ;
 
-ExtensionOMS         = extension-oms , [ ExtConservativityStrength ] , [ ExtensionName ] , 
+ExtensionOMS         = extension-oms , [ ConservativityStrength ] , [ ExtensionName ] , 
                                        ExtendingOMS ;
 
-ConservativityStrength         = Conservative 
-		     | 'monomorphic'  
-		     | 'weak-definitional' 
-		     | 'definitional' ;
+ConservativityStrength         = 'consequence-conservative' | 'model-conservative' | 'not-consequence-conservative' | 'not-model-conservative' | 'implied' | 'monomorphic' | 'weak-definitional' | 'definitional' ;
 
-ExtConservativityStrength      = ConservativityStrength | 'implied' ;
 
-Conservative         = 'consequence-conservative' | 'model-conservative' 
-                     | 'not-consequence-conservative' | 'not-model-conservative' ;
-
-QualInterfaceSignature   = 'keep-signature' , InterfaceSignature 
-                         | 'remove-signature' , InterfaceSignature ;
-
-InterfaceSignature   = SymbolItems ;
+InterfaceSignature   = SymbolList ;
 ImportName           = IRI ;
 ExtensionName        = IRI ;
 \end{lstlisting}
@@ -8787,8 +8775,8 @@ ExtensionName        = IRI ;
 
 OMSDefinition          = 'oms-definition' , OMSName , [ ConservativityStrength ] , OMS ;
 Symbol           = IRI ;
-SymbolMap        = 'symbol-map' , Symbol , Symbol ;
-SymbolOrMap      = Symbol | SymbolMap ;
+SymbolMapItem        = 'symbol-map-item' , Symbol , Symbol ;
+GeneralSymbolMapItem      = Symbol | SymbolMapItem ;
 Sentence         = ($<$)an expression specific to an OMS language($>$) ;
                  
 OMSName          = IRI ;
@@ -8802,8 +8790,9 @@ LanguageRef      = IRI ;
 LogicRef         = IRI ;
 SyntaxRef        = IRI ;
                  
-OMSLanguageTranslation     = 'named-trans' , OMSLanguageTranslationRef
-                 | 'default-trans' , LoLaRef ; 
+OMSLanguageTranslation     = NamedTranslation | DefaultTranslation ;
+NamedTranslation = 'named-trans' , OMSLanguageTranslationRef ;
+DefaultTranslation = 'default-trans' , LoLaRef ;
                  
 OMSLanguageTranslationRef  = IRI ;
                  
@@ -8816,37 +8805,40 @@ OMSLanguageTranslationRef  = IRI ;
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
 
-MappingDefinition          = InterpretationDefinition | Entailment | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition;
+MappingDefinition          = InterpretationDefinition | RefinementDefinition | Entailment | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition;
 
-InterpretationDefinition            = 'interpretation-definition' , InterpretationName , [ Conservative ] , 
-                        InterpretationType , { LogicTranslation } , [ SymbolMapItems ]                     
-                     | 'refinement' , InterpretationName , Refinement ;
+InterpretationDefinition            = 'interpretation-definition' , InterpretationName , [ ConservativityStrength ] , 
+                        InterpretationType , { OMSLanguageTranslation } , [ SymbolMap ] ;  
+RefinementDefinition =      'refinement' , InterpretationName , Refinement ;
 InterpretationName            = IRI ;
 InterpretationType            = 'interpretation-type' , OMS , OMS ;
 
-Refinement           = 'ref-oms' , OMS 
-                     | 'ref-network' , Network
-                     | 'ref-composition' , Refinement , Refinement
-                     | 'simple-oms-ref' , OMS , RefMap , Refinement 
-                     | 'simple-network-ref' , Network , RefMap , Refinement ;
-RefMap               = 'refmap-oms' , [ LogicTranslation ] , [ SymbolMapItems ] 
-                     | 'refmap-network' , { NodeMap } ;
+Refinement           = RefinementOMS | RefinementNetwork | RefinementComposition | SimpleOMSRefinement | SimpleNetworkRefinement ;
+RefinementOMS = 'refinement-oms' , OMS ;
+RefinementNetwork = 'refinement-network' , Network ;
+RefinementComposition =  'refinement-composition' , Refinement , Refinement ;
+SimpleOMSRefinement = 'simple-oms-ref' , OMS , OMSRefinementMap , Refinement 
+                     | 'simple-network-ref' , Network , NetworkRefinementMap , Refinement ;
+OMSRefinementMap               = 'oms-refmap' , [ OMSLanguageTranslation ] , [ SymbolMap ] ;
+NetworkRefinementMap =  'network-refmap' , { NodeMap } ;
 NodeMap              = 'node-map', OMSName , OMSName , 
-                                   { LogicTranslation } , [ SymbolMapItems ] ;
+                                   { OMSLanguageTranslation } , [ SymbolMap ] ;
 
 
 Entailment           = 'entailment' , EntailmentName , EntailmentType ;
-EntailmentType       = 'oms-oms-entailment', OMS , OMS 
-                     | 'network-oms-entailment', Network , OMSName , OMS 
-                     | 'network-network-entailment', Network, Network ;
+OMSOMSEntailment = 'oms-oms-entailment' , OMS , OMS ;
+NetworkOMSEntailment = 'network-oms-entailment' , Network , OMSName , OMS ;
+NetworkNetworkEntailment = 'network-network-entailment' , Network , Network;
+EntailmentType = OMSOMSEntailment | NetworkOMSEntailment | NetworkNetworkEntailment ;
 EntailmentName       = IRI ;
 
 EquivalenceDefinition            = 'equivalence-definition' , EquivalenceName , EquivalenceType ;
 EquivalenceName            = IRI ;
-EquivalenceType            = 'oms-equivalence' , OMS , OMS , OMS
-                     | 'network-equivalence' , Network , Network , Network ;
+EquivalenceType = OMSEquivalence | NetworkEquivalence ;
+OMSEquivalence = 'oms-equivalence' , OMS , OMS , OMS ;
+NetworkEquivalence = 'network-equivalence' , Network , Network , Network ;
 
-ModuleRelDefinition        = 'module-definition' , ModuleName , [ Conservative ] , ModuleType ,
+ModuleRelDefinition        = 'module-definition' , ModuleName , [ ConservativityStrength ] , ModuleType ,
                                        InterfaceSignature ;
 ModuleName           = IRI ;
 ModuleType           = 'module-type' , OMS , OMS ;
@@ -8854,7 +8846,7 @@ ModuleType           = 'module-type' , OMS , OMS ;
 AlignmentDefinition            = 'alignment-definition' , AlignmentName , [ AlignmentCardinality ] , AlignmentType, 
                                     AlignmentSemantics,   { Correspondence } ; <\footnote{Note that this grammar uses ``type'' as in ``the type of a function'', whereas the Alignment API \cite{AlignmentAPI} uses ``type'' \cbs for\:  the\cbe totality/injectivity of the relation/function.  For the latter, this grammar uses ``cardinality''.}>
 AlignmentName            = IRI ;
-AlignmentCardinalitys           = AlignmentCardinalityForward , AlignmentCardinalityBackward ; 
+AlignmentCardinalityPair           = AlignmentCardinalityForward , AlignmentCardinalityBackward ; 
 AlignmentCardinalityForward     = 'alignment-cardinality-forward' , AlignmentCardinality ;
 AlignmentCardinalityBackward    = 'alignment-cardinality-backward' , AlignmentCardinality ;
 AlignmentCardinality            = 'injective-and-total'
@@ -8868,17 +8860,20 @@ AlignmentSemantics            = 'single-domain'
 
 Correspondence       = CorrespondenceBlock
                      | SingleCorrespondence
-                     | 'default-correspondence' ; 
+                     | DefaultCorrespondence ;
+DefaultCorrespondence = 'default-correspondence' ;
 
-CorrespondenceBlock  = 'correspondence-block' , [ RelationReference ] , [ Confidence ],
+CorrespondenceBlock  = 'correspondence-block' , [ Relation ] , [ Confidence ],
                                                 Correspondence, { Correspondence } ; 
-SingleCorrespondence = 'correspondence' , SymbolRef , [ RelationReference ] , [ Confidence ] ,
+SingleCorrespondence = 'correspondence' , SymbolRef , [ Relation ] , [ Confidence ] ,
                                           GeneralizedTerm , [ CorrespondenceID ] ;
 CorrespondenceID     = IRI ;
 SymbolRef            = IRI ;
 GeneralizedTerm      = SymbolRef ;
-RelationReference          = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' 
+Relation          = RelationReference | StandardRelation ;
+StandardRelation = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' 
                      | 'has-instance' | 'instance-of' | 'default-relation' | IRI ; 
+RelationReference = 'relation-ref' , IRI ;
 Confidence           = Double ;
 \end{lstlisting}
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
@@ -8894,7 +8889,8 @@ Double               = ($<$ a number $\in [0,1]$ $>$) ;
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-IRI     = 'full-iri' , FullIRI | 'curie' , CURIE ; (\footnote{Specified below in \cref{c:curies}.}) 
+IRI     =  FullIRI | CurieIRI ; (\footnote{Specified below in \cref{c:curies}.})
+CurieIRI = 'curie' , CURIE ;
 FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
 \end{lstlisting}
 
@@ -8974,7 +8970,7 @@ QueryDefinition            = 'query' , QueryName , '=' , 'select' , Vars ,
                                 'where' , Sentence , 'in' , GroupOMS , 
                                 ['along' , OMSLanguageTranslation] , 'end' ;
 SubstitutionDefinition            = 'substitution' , SubstitutionName , ':' , GroupOMS , 'to' , GroupOMS , 
-                                       '=' , SymbolMapItems , 'end' ;
+                                       '=' , SymbolMap , 'end' ;
 ResultDefinition           = 'result' , ResultName , '=' , SubstitutionName , { ',' , SubstitutionName } ,
                                  'for' , QueryName , [ '%complete' ] , 'end' ;
 OMS                  = ($...$) | OMS 'with' SubstitutionName ;
@@ -8993,7 +8989,7 @@ QueryRelatedDefinition     = QueryDefinition | SubstitutionDefinition | ResultDe
 QueryDefinition            = 'select-query-definition', QueryName, Vars, Sentence, 
                                             OMS, [OMSLanguageTranslation] ;
 SubstitutionDefinition            = 'substitution-definition', SubstitutionName, OMS, OMS, SymbolMap ;
-ResultDefinition           = 'result-def', ResultName, SubstitutionName, { SubstitutionName }, 
+ResultDefinition           = 'result-definition', ResultName, SubstitutionName, { SubstitutionName }, 
                                      QueryName, [ Complete ] ;
 OMS                 = ($...$) | application OMS SubstitutionName ;
 QueryName            = IRI ;
