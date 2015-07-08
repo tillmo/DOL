@@ -1616,8 +1616,8 @@ of the enclosing OMS;
 \item \emph{approximation}, i.e. the ability to compute approximations
 (typically, a given tool will provide this only for some logics
 and logic projections);
-\item \emph{full \DOL reasoning}, i.e.\cbs checking whether\cbe an OMS
-  library has a defined semantics.
+\item \emph{full \DOL reasoning}, i.e.\cbs checking whether\cbe an DOL
+  document has a defined semantics.
 \end{itemize}
 \end{itemize}
 \cbe
@@ -1715,7 +1715,7 @@ For the purposes of this document, the following terms and definitions apply.
 % non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mapping} as its sentences\index{sentence}.
 % \end{note}
 
-  \termdefinition{library}{collection of named \termref{OMS} and OMS networks\index{OMS network}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}.}
+  \termdefinition{DOL library}{collection of named \termref{OMS} and OMS networks\index{OMS network}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}.}
 
 
 \end{definitions}
@@ -1750,9 +1750,9 @@ plus non-logical annotations\index{annotation}.}
 
 
 %\begin{definitions}
-\termdefinition{\DOL structured OMS}{A syntactically valid \DOL library (as defined in this \IS) that contains a library definition (see section \ref{c:keywords}).}
+\termdefinition{\DOL structured OMS}{\termref{OMS} that is built from smaller OMS using structuring operations.}
   \begin{note}
-   \DOL structured OMS, typically, use native OMS as building blocks for defining structured OMS, OMS mappings or OMS networks.  
+   \DOL structured OMS, typically, use native OMS as building blocks for defining other structured OMS, OMS mappings or OMS networks.  
   \end{note}
   \begin{note}
    All \DOL structured OMS are structured OMS. 
@@ -2031,7 +2031,7 @@ More precisely, an OMS is flattenable if and only if it is either a basic OMS or
 
   \termdefinition{import}{reference to an \termref{OMS}  
    behaving as if it were verbatim included; 
-   also import of \termref{libraries}.}
+   also import of \termref{\DOL libraries}.}
   \begin{note}
 Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclusion of $O_2$ in place of the import declaration.
   \end{note}
@@ -2045,7 +2045,7 @@ Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclus
     An owl:import in OWL is an import.
   \end{note}
   \begin{note}
-    The import of a whole library into another library is also called import.
+    The import of a whole \DOL library into another \DOL library is also called import.
   \end{note}
  
   \termdefinition{union}{aggregation of several \termref{OMS}
@@ -2880,7 +2880,7 @@ standardized representation language, which can be used to represent structured 
 between OMS as part of OMS networks in a semantically well-defined way. Thus, tools that implement \DOL are able to integrate different OMS into a coherent whole, thereby enabling users of \DOL to overcome the different kind of interoperability issues that\cbs are\cbe illustrated by the usage scenarios in this clause.  
 
 \cbs
-Most of the following subsections are illustrated with sample OMS
+Most of the following subsections are illustrated with sample \DOL
 libraries. These are always written in \DOL, see the \DOL Text
 Serialization in clause ~\ref{a:text-syntax}. Naturally, they also
 contain parts written in different OMS languages (e.g.\ \OWL), the
@@ -3970,7 +3970,7 @@ an EBNF grammar.
 \item OMS mappings 
 \item OMS networks
 %\item \red{queries}
-\item libraries (items in libraries are: definitions of OMS, OMS mappings, and OMS networks, as well as qualifications choosing\cbs (i) the logic,
+\item \DOL libraries (items in libraries are: definitions of OMS, OMS mappings, and OMS networks, as well as qualifications choosing\cbs (i) the logic,
 (2) the OMS language and/or (3) the serialization)\cbe
 \item identifiers
 \item annotations
@@ -3988,31 +3988,39 @@ is given in appendix~ref\cbe{a:EBNF}.\cbe
 
 \sclause{Documents}\label{c:libraries}
 
-A \termref{library} (\syntax{Document}) consists of a collection of (named)  OMS, \cbs OMS networks,\cbe{} and mappings between these.  More specifically, a
+\cbs
+A \termref{document} (\syntax{Document}) can be a 
+\begin{itemize}
+\item a \DOL library, or
+\item a \syntax{NativeDocument}, which is the verbatim inclusion of an
+  OMS written in an OMS language that conforms with \DOL; \cf
+  \ref{c:conform:logic}).
+\end{itemize}
+A \DOL library 
+\cbe
+ consists of a collection of (named)  OMS, \cbs OMS networks,\cbe{} and mappings between these.  More specifically, a \DOL
 library consists of a name, followed by a list of
 \syntax{LibraryItem}s.  A \syntax{LibraryItem} is either a
 definition of an OMS  (\syntax{OMSDefinition}), 
 a mapping between OMS
 (\syntax{MappingDefinition}), 
 a definition of an OMS network  (\syntax{NetworkDefinition}),
-an import of another library (\syntax{LibImport}),
+an import of another \DOL library (\syntax{LibraryImport}),
 %a definition related to queries 
 %(\syntax{QueryRelatedDefinition})
 or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{LibraryItem}s.  
-\cbs A \syntax{LibImport} leads to the inclusion of all \syntax{LibraryItem}s of the imported library into the importing one.\cbe
-
-Alternatively, a library can also be the verbatim inclusion of an OMS written in
-an OMS language that conforms with \DOL (\syntax{NativeDocument}; \cf \ref{c:conform:logic}).
+\cbs A \syntax{LibraryImport} leads to the inclusion of all \syntax{LibraryItem}s of the imported \DOL library into the importing one.\cbe
 
 
-At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs \cbs using CURIEs\cbe; see \cref{c:identifiers} for further details.
+
+At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs \cbs using CURIEs\cbe; see \cref{c:identifiers} for further details.
 
 \includegraphics[scale=0.6]{mof/dia/dia0.png}
 
 \sclause{OMS Networks}\label{c:networks}
-Inside a library, one can define OMS networks (\syntax{NetworkDefinition}).
+Inside a \DOL library, one can define OMS networks (\syntax{NetworkDefinition}).
 A \syntax{NetworkDefinition} names an
 OMS network consisting of  OMS and OMS mappings. OMS networks may build on previously-defined
 OMS networks, and they can be used in \syntax{combination}s.  
@@ -4178,9 +4186,9 @@ as linked data.
 %you? --- Yes.}
 Therefore, in order to impose fewer conformance requirements on applications, \DOL requires the use of
  IRIs for identification per \nisref{IETF/RFC 3987:2005}.
-  It is \recommended that libraries use 
+  It is \recommended that \DOL libraries use 
 IRIs that translate to URLs when applying the algorithm for mapping IRIs to URIs specified in 
-\nisref{IETF/RFC 3987:2005, Section 3.1}.  \DOL descriptions of any element of a library that is 
+\nisref{IETF/RFC 3987:2005, Section 3.1}.  \DOL descriptions of any element of a \DOL library that is 
 identified by a certain IRI \should be \emph{located} at the corresponding URL, so that agents can 
 locate them.  As IRIs are specified with a concrete syntax only in \nisref{IETF/RFC 3987:2005}, \DOL 
 adopts the latter into its abstract syntax as well as all of its concrete syntaxes 
@@ -4233,9 +4241,9 @@ bound to the prefix and the reference.
 (covering CURIEs such as \syntax{:name}).
 \item \DOL does support the declaration  of a ``no prefix'' mapping (covering CURIEs such as 
 \syntax{name}). If there is no explicit declaration for the ``no prefix'', it defaults to a 
-context-sensitive expansion mechanism, which always prepends the library IRI (in the context of a 
+context-sensitive expansion mechanism, which always prepends the \DOL library IRI (in the context of a 
 structured OMS where named OMS are referenced) respectively the current OMS IRI (in the context of a basic
-OMS) to a symbol name. Both the separator between the library and the OMS name and that between the 
+OMS) to a symbol name. Both the separator between the \DOL library and the OMS name and that between the 
 OMS name and the symbol name can be declared (using the keyword \syntax{separators}), and both default to ``//''.
 
 \item \DOL does not make use of the \syntax{safe\_curie} production.
@@ -4269,8 +4277,8 @@ Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 
 Note that outside the context of a basic OMS the prefix/reference separator of a CURIE is always the colon (\syntax{:}); only for serializations of OMS languages other than \DOL it may be redefined as stated in \cref{c:conform:serialization}.
 
-Prefix mappings can be defined at the beginning of a library (specified in \cref{c:libraries}; 
-these apply to all parts of the library, including basic OMS as clarified in \cref{c:map-ids}).  
+Prefix mappings can be defined at the beginning of a \DOL library (specified in \cref{c:libraries}; 
+these apply to all parts of the \DOL library, including basic OMS as clarified in \cref{c:map-ids}).  
 %Their syntax is:
 
 Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot bind the same prefix twice, but if they do, the later binding wins.
@@ -4289,7 +4297,7 @@ certain operations on OMS require making unambiguous references to non-logical s
 
 The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by the following function:
 \begin{algorithmic}
-  \REQUIRE $D$ is a library
+  \REQUIRE $D$ is a \DOL library
   \REQUIRE $O$ is a basic OMS in serialization $S$
   \REQUIRE $\mathit{id}$ is the identifier in question, identifying a symbol in $O$ according to the specification of $S$
   \ENSURE $i$ is an IRI
@@ -4337,11 +4345,11 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
   \RETURN $i$
 \end{algorithmic}
 
-This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{NativeDocument}); the latter \shall be self-contained.
+This mechanism applies to basic OMS given inline in a \DOL library (\syntax{BasicOMS}), not to OMS in external documents (\syntax{NativeDocument}); the latter \shall be self-contained.
 
-While CURIEs used for identifying parts of a library (\cf \cref{c:curies}) are merely syntactic 
+While CURIEs used for identifying parts of a \DOL library (\cf \cref{c:curies}) are merely syntactic 
 sugar, the prefix map for a basic OMS is essential to determining the semantics of the basic OMS 
-within the library.  Therefore, any \DOL serialization \shall provide constructs for expressing such 
+within the \DOL library.  Therefore, any \DOL serialization \shall provide constructs for expressing such 
 prefix maps, even if the serialization does not support prefix maps otherwise.
 
 %% ~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
@@ -4379,9 +4387,9 @@ Document                 = [ PrefixMap ] , DOLLibrary
                          | NativeDocument ;
 DOLLibrary             = 'library' , LibraryName , Qualification , { LibraryItem } ;
 NativeDocument = ($<$) language and serialization specific ($>$) ;
-LibraryItem             = LibImport | OMSDefinition | NetworkDefinition | MappingDefinition 
+LibraryItem             = LibraryImport | OMSDefinition | NetworkDefinition | MappingDefinition 
                           | Qualification ;
-LibImport                = 'import' , LibraryName ;
+LibraryImport                = 'import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'language' , LanguageRef ;
 LogicQual                = 'logic' , LogicRef ;
@@ -4759,7 +4767,7 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
-Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a library may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI. {\cbs (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.)\cbe}
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a document may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI. {\cbs (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.)\cbe}
 
 \clause{\DOL Semantics}\label{c:semantics}
 
@@ -5422,8 +5430,11 @@ $sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.\cbe
 
 \semdom{ sem(\syntax{Document}) = \Gamma}
 
-A library is either a list of definitions of OMS, OMS mappings and OMS networks, possibly starting with a prefix map, or
-an OMS in one of the languages supported by the heterogeneous logical environment.
+\cbs A document is either a \DOL library, or a native document written
+in one of the languages supported by the heterogeneous logical
+environment.  A \DOL library is list of definitions of OMS, OMS
+mappings and OMS networks, possibly starting with a prefix map.
+\cbe
 
 $$sem(\syntax{PrefixMap DOLLibrary}) = \Gamma'$$
  
@@ -5434,12 +5445,12 @@ $sem(\Gamma'', \syntax{DOLLibrary}) = \Gamma'$.
 $$sem(\syntax{NativeDocument}) = \Gamma''$$
 
 \noindent where 
-$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library
+$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the \DOL library
 and 
 $\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(\syntax{NativeDocument})]$.
 
-Note that if the OMS in the library does not conform with the logic determined by
-the extension of the library, $sem(\syntax{NativeDocument})$ will be undefined.
+Note that if the OMS in the \DOL library does not conform with the logic determined by
+the extension of the \DOL library, $sem(\syntax{NativeDocument})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -8657,8 +8668,8 @@ Document                  = [ PrefixMap ] , DOLLibrary
                          | NativeDocument ;
 DOLLibrary              = 'library' , LibraryName , Qualification , { LibraryItem } ;
 NativeDocument  = ($<$)language specific($>$) ;
-LibraryItem              = LibImport | OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition | Qualification ;
-LibImport                = 'lib-import' , LibraryName ;
+LibraryItem              = LibraryImport | OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition | Qualification ;
+LibraryImport                = 'lib-import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
 LanguageQual             = 'lang-select' , LanguageRef ;
 LogicQual                = 'logic-select' , LogicRef ;
@@ -9839,7 +9850,7 @@ This annex sketches scenarios that outline how \DOL is intended to be applied.  
 &\veebar \mathrm{part\_of}(a_1, a_2) \veebar \mathrm{part\_of}(a_2, a_1).\end{array}$$
   \end{description}
   
-  \DOL would be capable of expressing all that within one library of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
+  \DOL would be capable of expressing all that within one \DOL library of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
 \end{usecase}
 
 \begin{usecase}{Interpreting the OWL formalization of the DOLCE foundational ontology in First-order logic}{potential use case}{Logical OMS mappings}
@@ -9900,7 +9911,7 @@ to the term \termref{structured OMS} in this \IS{}.}
   \item[direct relations] maps (signature morphisms), definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
   \end{description}
 
-  \DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV, and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent library.
+  \DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV, and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent \DOL library.
 \end{usecase}
 
 %% \begin{usecase}{Extending OWL with datatypes defined in CASL}{potential use case}{...}
@@ -10085,7 +10096,7 @@ similar scheme for IRIs.
 \section{Concept}
 
 Generally an Ontohub loc/id (locator/identifier) is just an IRI of a
-library, an OMS
+\DOL library (contained in a document), an OMS
 or one of its members (symbols, sentences, mappings). However,
 Ontohub loc/ids are generated by the Ontohub application and assigned to an
 OMS.\cbs Ontohub tries to\cbe infer them from the path of the repository, the path of
@@ -10104,8 +10115,8 @@ that is easily understood by a user.
 \section{Ontohub-Style}
 
 Identifying OMS and their members in Ontohub is a hierarchical
-task. A DOL document belongs to a repository. An OMS may belong
-directly to a repository, or indirectly through a library. Mappings,
+task. A \DOL document belongs to a repository. An OMS may belong
+directly to a repository, or indirectly through a \DOL library. Mappings,
 symbols and sentences in turn belong to an OMS. So\cbs one\cbe could use the
 hierarchical portion of an IRI instead of the query string.  This
 would mean using a forward slash (\emph{/}) as separator.
@@ -10144,9 +10155,9 @@ actual identifying portion beginning with the hierarchical forward slash
 \subsection{Examples}
 
 \begin{tabularx}{\textwidth}{p{.2\textwidth}p{.8\textwidth}}
-  \multicolumn{2}{c}{\emph{DOL document}} \\
+  \multicolumn{2}{c}{\emph{\DOL document}} \\
   \hline
-  DOL document & \url{/dol-testing/double_mapped_blendoid}\\
+  \DOL document & \url{/dol-testing/double_mapped_blendoid}\\
   OMS & \url{/dol-testing/double_mapped_blendoid//DMB-CommonSource}\\
   Mapping & \url{/dol-testing/double_mapped_blendoid//SomeMapping}\\
   Symbol & \url{/dol-testing/double_mapped_blendoid//DMB-CommonSource//KitchenTable}\\
@@ -10154,7 +10165,7 @@ actual identifying portion beginning with the hierarchical forward slash
   & \\
   \multicolumn{2}{c}{\emph{OMS}} \\
   \hline
-  DOL document & \url{/dol-testing/double_mapped_blendoid}\\
+  \DOL document & \url{/dol-testing/double_mapped_blendoid}\\
   OMS & \url{/default/pizza}\\
   Mapping & \url{/default/pizza//SomeMapping}\\
   Symbol & \url{/default/pizza//Veneziana}\\
