@@ -1,7 +1,8 @@
 Document ::= DOLLibrary | NativeDocument
 DOLLibrary ::= 'library' [ PrefixMap ] LibraryName Qualification LibraryItem*
 NativeOMS ::= ($<$)language specific($>$) 
-LibraryItem ::= LibraryImport | OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition | Qualification
+LibraryItem ::= LibraryImport | Definition | Qualification
+Definition ::= OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition
 LibraryImport ::= 'lib-import' LibraryName
 Qualification ::= LanguageQualification | LogicQualification | SyntaxQualification
 LanguageQualification ::= 'lang-select' LanguageRef
@@ -12,10 +13,6 @@ PrefixMap ::= 'prefix-map' PrefixBinding*
 PrefixBinding ::= 'prefix-binding' String FullIRI [ Separators ]
 Separators ::= 'separators' String String
 
-
-
-
-
 NetworkDefinition ::= 'network-definition' NetworkName [ ConservativityStrength ] Network
 NetworkName ::= IRI
 Network ::= 'network' NetworkElement* ExcludedElement*
@@ -23,7 +20,6 @@ NetworkElement ::= 'network-element' [ Id ] OMSOrMappingorNetworkRef
 ExcludedElement ::= PathReference | OMSOrMappingorNetworkRef
 PathReference ::= 'path' OMSOrMappingorNetworkRef OMSOrMappingorNetworkRef
 OMSOrMappingorNetworkRef ::= IRI
-
 
 BasicOMS ::= ($<$)language specific($>$) 
 ClosableOMS ::= BasicOMS | OMSReference
@@ -61,7 +57,6 @@ InterfaceSignature ::= Symbol+
 ImportName ::= IRI
 ExtensionName ::= IRI
 
-
 OMSDefinition ::= 'oms-definition' OMSName [ ConservativityStrength ] OMS
 Symbol ::= IRI
 SymbolMapItem ::= 'symbol-map' Symbol Symbol
@@ -78,7 +73,6 @@ OMSLanguageTranslation ::= NamedTrans | DefaultTrans
 NamedTrans ::= 'named-trans' OMSLanguageTranslationRef 
 DefaultTrans ::= 'default-trans' LoLaRef
 OMSLanguageTranslationRef ::= IRI
-
 
 MappingDefinition ::= InterpretationDefinition | RefinementDefinition | Entailment | EquivalenceDefinition | ModuleRelDefinition | AlignDefinition
 InterpretationDefinition ::= 'interpretation-definition' InterpretationName [ ConservativityStrength ] InterpretationType OMSLanguageTranslation* [ SymbolMap ] 
@@ -138,7 +132,6 @@ SubstitutionName ::= IRI
 ResultName ::= IRI
 Vars ::= Symbol*
 Complete ::= 'complete'
-
 
 IRI ::= FullIRI | CurieIRI 
 FullIRI ::= 'full-iri' FullIRI 
