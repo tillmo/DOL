@@ -24,15 +24,28 @@
 \newif\ifpdfcomment
 %\pdfcommenttrue
 \pdfcommentfalse
+%
+% \documentclass[10pt,fleqn,%
+% \ifpretendfinal
+% final%
+% \else
+% draft%
+% \fi,
+% %final,
+% ]{scrreprt}
 
-\documentclass[10pt,fleqn,%
-\ifpretendfinal
-final%
-\else
-draft%
-\fi,
-%final,
-]{scrreprt}
+
+\documentclass[10pt,fleqn,final]{scrreprt}
+% \documentclass[10pt,fleqn,draft]{scrreprt}
+
+
+\usepackage{changebar}
+ %
+ % \newcommand{\cbs}[0]{\xspace}
+ % \newcommand{\cbe}[0]{\xspace}
+ \newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace}
+ \newcommand{\cbe}[0]{\cbend{}\color{black}\xspace}
+
 
 \usepackage{pdflscape}
 
@@ -544,14 +557,6 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\qqquad}{\white{x}\qquad}
 
 \allowdisplaybreaks
-
-
-\usepackage{changebar}
-
-% \newcommand{\cbs}[0]{\xspace}
-% \newcommand{\cbe}[0]{\xspace}
-\newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace}
-\newcommand{\cbe}[0]{\cbend{}\color{black}\xspace}
 
 
 \begin{document}
@@ -1725,10 +1730,10 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
 
-\termdefinition{native OMS}{A
+\termdefinition{native OMS}{
 collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) from a given \termref{OMS language}.}
   \begin{example}
-    An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASL are three different native OMS. 
+    \cbs A UML\cbe class diagram, an ontology written in OWL 2 EL, and  a specification written in CASL are three different native OMS. 
   \end{example}
 	\begin{note}
 	An \termref{OMS} can be written in different \termref{OMS language} 	\termref{serializations}\index{serialization}.
@@ -1750,7 +1755,7 @@ plus non-logical annotations\index{annotation}.}
 
 
 %\begin{definitions}
-\termdefinition{\DOL structured OMS}{\termref{OMS} that is built from smaller OMS using structuring operations.}
+\termdefinition{\DOL structured OMS}{syntactically valid \DOL library (as defined in this \IS) that contains a library definition (see section \ref{c:keywords}).}
   \begin{note}
    \DOL structured OMS, typically, use native OMS as building blocks for defining other structured OMS, OMS mappings or OMS networks.  
   \end{note}
@@ -1761,7 +1766,7 @@ plus non-logical annotations\index{annotation}.}
 
 
 \termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
-{A native OMS or a \DOL structured OMS.}
+{native OMS or a \DOL structured OMS.}
 \begin{note}
 	An OMS is either a basic or a structured OMS.
 \end{note}
@@ -1772,9 +1777,9 @@ plus non-logical annotations\index{annotation}.}
 
 
 \begin{definitions}
-\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{A native OMS that does not utilize any elements from the structuring language aspects of its language.}
+\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{native OMS that does not utilize any elements from the structuring language aspects of its language.}
   \begin{note}
-    Basic OMS are self-contained in the sense that it semantics does not depend on some other OMS.  In particular, the OMS does not involve any importations.
+    Basic OMS are self-contained in the sense that\cbs their\cbe semantics does not depend on some other OMS.  In particular,\cbs a basic\cbe OMS does not involve any importations.
   \end{note}
   \begin{note}
     Since a basic OMS has no structuring elements, it consists just of a \termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}.
@@ -1832,7 +1837,7 @@ of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
 \termdefinition{model}{semantic interpretation of all non-logical symbols\index{non-logical symbol} of a \termref{signature}.}
   \begin{note}
     A model of an OMS is a model of the signature of the OMS
-    that moreover satisfies all the axioms\index{axiom} of the OMS.
+    that\cbs also\cbe satisfies all the axioms\index{axiom} of the OMS.
   \end{note}
   \begin{note}
   This term refers to \emph{model} in the sense of model theory (a
@@ -1850,9 +1855,10 @@ of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
 \termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.}
   \begin{note}
 In a \termref{model}, on the one hand, a sentence is always true or false. In an \termref{OMS}, on the
-other hand, a sentence can have several logical statuses: it can be an axiom, if postulated to be true;
-a theorem, if proven from other axioms and theorems; a conjecture, if expecting to be proven from 
-other axioms and theorems; or have another of many possible statuses.
+other hand, a sentence can have several logical statuses.\cbs For example, a sentence can be:  an
+axiom, if postulated to be true;
+a theorem, if proven from other axioms and theorems; or a conjecture, if expecting to be proven 
+from  other axioms and theorems.\cbe
   \end{note}
   \begin{note}
   A sentence can conform to one or more signatures (namely those signatures
@@ -1899,7 +1905,8 @@ The converse is generalization.
 demonstrated to be a \termref{logical consequence} of the axioms.}
 
 \cbs
-  \termdefinition{theorem prover}{tool that can prove \termref{theorems}.}
+  \termdefinition{theorem prover}{tool that\cbs attempts to prove that a given sentence is the logical consequence of some given set of axioms\cbe
+  \cbe\termref{theorems}.}
 \cbe
 
 
@@ -2164,7 +2171,7 @@ Any satisfiable OMS is \termref{consistent}, but there are some
 \termref{logics} where the converse does not hold.
 \end{note}
 
-  \termdefinition{model finder}{tool that finds a \termref{models} of an
+  \termdefinition{model finder}{tool that finds  \termref{models} of an
 \termref{OMS} and thus proves it to be \termref{satisfiable}.}
 \cbe
 
@@ -2234,15 +2241,15 @@ If a symbol is removed, all axioms containing that symbols are removed, too.
     See \cite{circ1}, \cite{circ2}.
   \end{note}
 \cbs
-\termdefinition{freeness}{special type of closure, restriction to \termref{models} to those that are free (with respect to the local environment).}
+\termdefinition{freeness}{special type of closure, restriction of \termref{models} to those that are free (with respect to the local environment).}
   \begin{note}
-    In first-order-like logics, freeness means minimal interpretation
+    In first-order logic (and similar logics), freeness means minimal interpretation
     of predicates and minimal equality among data values. Freeness can
     be used for the specification of inductive datatypes like numbers,
     lists, trees, bags etc. In order to specify e.g.\ lists over some elements,
     the specification of the elements should be in the local environment.
   \end{note}
-\termdefinition{cofreeness}{special type of closure, restriction to \termref{models} to those that are cofree (with respect to the local environment).}
+\termdefinition{cofreeness}{special type of closure, restriction of \termref{models} to those that are cofree (with respect to the local environment).}
   \begin{note}
     In first-order-like logics, cofreeness means maximal
     interpretation of predicates and equality being observable
@@ -2251,11 +2258,11 @@ If a symbol is removed, all axioms containing that symbols are removed, too.
   \end{note}
 \cbe
 
-  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.}
+  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where non-logical symbols are shared according to the OMS mappings in the OMS network.}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
 and another one involving \texttt{Human being}, and an \termref{alignment}
-that relates these to concepts. In the combination of the ontologies
+that relates these\cbs two\cbe concepts. In the combination of the ontologies
 along the alignment, there is only one concept, representing both
 \texttt{Person} and \texttt{Human being}.
 \end{example}
