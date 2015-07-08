@@ -911,7 +911,7 @@ environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
 6.5.2(c)& 
 The metalanguage shall not replace the object language constructs of the conforming logical
 languages.	&
-The syntax of a \syntax{NativeOMS} is left unspecified in this standard. Rather, here this standard relies on other
+The syntax of a \syntax{NativeDocument} is left unspecified in this standard. Rather, here this standard relies on other
 standards and language definitions.
 See \ref{c:focused-OMS} and \ref{a:dol-text:OMS}.
    \\ \hline
@@ -1592,25 +1592,25 @@ A \emph{printer} is \DOL-conformant if it can read \DOL abstract syntax and prod
 one (or more) language translations, logic translations, language
 projections and/or logic projections.
 \item
-Software that implements machine \emph{reasoning} about OMS (e.g., theorem proving, approximation)  complies with this specification if and only if it interprets  OMS libraries according to the semantics defined in section~\ref{c:semantics}. In more detail, a reasoning tool can have the following capabilities:
+Software that implements machine \emph{reasoning} about OMS (e.g., theorem proving, approximation)  complies with this specification if and only if it interprets  DOL documents according to the semantics defined in section~\ref{c:semantics}. In more detail, a reasoning tool can have the following capabilities:
 \begin{itemize}
 \item \emph{simple logical consequence}, i.e.\cbs checking whether all sentences are\cbe marked as \syntax{\%implied} within basic OMS
 and extensions are logical consequences
 of the enclosing OMS;
 \item \emph{structured logical consequence}, i.e.\cbs checking whether all sentences are\cbe marked as \syntax{\%implied} are logical consequences
-  of the enclosing OMS and whether all entailments in an OMS library
+  of the enclosing OMS and whether all entailments in a DOL document
   have a defined semantics;
-\item \emph{interpretation}, i.e.\cbs checking whether\cbe all interpretations in an OMS library have a defined semantics;
+\item \emph{interpretation}, i.e.\cbs checking whether\cbe all interpretations in a DOL document have a defined semantics;
 \item \emph{simple refinement}, i.e.\cbs checking whether\cbe all
-  refinements of OMS in an OMS library have a defined semantics;
+  refinements of OMS in a DOL document have a defined semantics;
 \item \emph{full refinement}, i.e.\cbs checking whether\cbe all refinements
-  (both of OMS and networks) in an OMS library have a defined
+  (both of OMS and networks) in a DOL document have a defined
   semantics;
 \item \emph{simple conservativity}, i.e.\cbs checking whether\cbe all conservativity
-  statements in an OMS library have a defined semantics;
+  statements in a DOL document have a defined semantics;
 \item \emph{full conservativity}, i.e.\cbs checking whether\cbe all
   statements about conservative, monomorphic, definitional and weakly
-  definitional extensions in an OMS library have a defined semantics;
+  definitional extensions in a DOL document have a defined semantics;
 \item \emph{module extraction}, i.e. the ability to compute modules
 (typically, a given tool will provide this only for some logics);
 \item \emph{approximation}, i.e. the ability to compute approximations
@@ -3594,7 +3594,7 @@ end
 specification, and model-driven development. \DOL 
 is designed to support of a wide range of formalisms and
 \cbe
-provides the ability to specify the basis for formal interoperability even among heterogeneous OMS and OMS networks. \DOL enables the solutions of the problems described in the use cases above. It also enables the development of OMS libraries, tools and workflows that 
+provides the ability to specify the basis for formal interoperability even among heterogeneous OMS and OMS networks. \DOL enables the solutions of the problems described in the use cases above. It also enables the development of DOL documents, tools and workflows that 
 allow  a better exchange and reuse of OMS. Eventually, this will also lead to better, easier developed and maintained systems based on these OMS.
 
 
@@ -3978,7 +3978,7 @@ an EBNF grammar.
  
 Additionally, the \cbs MOF metaclasses \cbe of the abstract syntaxes
 of any conforming OMS languages (\cf \cref{c:conform:logic}) \cbs are
-subclasses of the \DOL metaclass \syntax{NativeOMS}.
+subclasses of the \DOL metaclass \syntax{NativeDocument}.
 If a conforming OMS language has a metaclass for basic OMS,
 this is a subclass of the metaclass \syntax{BasicOMS}.\cbe
 
@@ -3986,9 +3986,9 @@ this is a subclass of the metaclass \syntax{BasicOMS}.\cbe
 is given in appendix~ref\cbe{a:EBNF}.\cbe
 
 
-\sclause{Libraries}\label{c:libraries}
+\sclause{Documents}\label{c:libraries}
 
-A \termref{library} (\syntax{Library}) consists of a collection of (named)  OMS, \cbs OMS networks,\cbe{} and mappings between these.  More specifically, a
+A \termref{library} (\syntax{Document}) consists of a collection of (named)  OMS, \cbs OMS networks,\cbe{} and mappings between these.  More specifically, a
 library consists of a name, followed by a list of
 \syntax{LibraryItem}s.  A \syntax{LibraryItem} is either a
 definition of an OMS  (\syntax{OMSDefinition}), 
@@ -4004,7 +4004,7 @@ subsequent \syntax{LibraryItem}s.
 \cbs A \syntax{LibImport} leads to the inclusion of all \syntax{LibraryItem}s of the imported library into the importing one.\cbe
 
 Alternatively, a library can also be the verbatim inclusion of an OMS written in
-an OMS language that conforms with \DOL (\syntax{NativeOMS}; \cf \ref{c:conform:logic}).
+an OMS language that conforms with \DOL (\syntax{NativeDocument}; \cf \ref{c:conform:logic}).
 
 
 At the beginning of a library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs \cbs using CURIEs\cbe; see \cref{c:identifiers} for further details.
@@ -4337,7 +4337,7 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
   \RETURN $i$
 \end{algorithmic}
 
-This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{NativeOMS}); the latter \shall be self-contained.
+This mechanism applies to basic OMS given inline in a library document (\syntax{BasicOMS}), not to OMS in external documents (\syntax{NativeDocument}); the latter \shall be self-contained.
 
 While CURIEs used for identifying parts of a library (\cf \cref{c:curies}) are merely syntactic 
 sugar, the prefix map for a basic OMS is essential to determining the semantics of the basic OMS 
@@ -4372,13 +4372,13 @@ the \syntax{'end'} is not marked as optional,\cbe because it may be needed to ef
 disambiguate heterogeneous texts.
 
  
-\ssclause{Libraries}
+\ssclause{Documents}
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
-Library                 = [ PrefixMap ] , LibraryDefinition
-                         | NativeOMS ;
-LibraryDefinition             = 'library' , LibraryName , Qualification , { LibraryItem } ;
-NativeOMS = ($<$) language and serialization specific ($>$) ;
+Document                 = [ PrefixMap ] , DOLLibrary
+                         | NativeDocument ;
+DOLLibrary             = 'library' , LibraryName , Qualification , { LibraryItem } ;
+NativeDocument = ($<$) language and serialization specific ($>$) ;
 LibraryItem             = LibImport | OMSDefinition | NetworkDefinition | MappingDefinition 
                           | Qualification ;
 LibImport                = 'import' , LibraryName ;
@@ -5403,7 +5403,7 @@ $(lang, logic, ser)$.
 %We further assume a language-specific semantics of complete (basic,
 %but possibly also
 %structured) OMS
-%$sem(L,\syntax{NativeOMS})=(\Sigma,\cM)$, where
+%$sem(L,\syntax{NativeDocument})=(\Sigma,\cM)$, where
 %$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
@@ -5417,33 +5417,33 @@ Further, \DOL assumes similar language-specific semantics of a basic OMS fragmen
 the context of previous declarations, which is denoted 
 $sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.\cbe
 
-\ssclause{Semantics of Libraries}
+\ssclause{Semantics of Documents}
 \cbs In this section the semantics of \DOL constructs regarding libraries is defined.\cbe 
 
-\semdom{ sem(\syntax{Library}) = \Gamma}
+\semdom{ sem(\syntax{Document}) = \Gamma}
 
 A library is either a list of definitions of OMS, OMS mappings and OMS networks, possibly starting with a prefix map, or
 an OMS in one of the languages supported by the heterogeneous logical environment.
 
-$$sem(\syntax{PrefixMap LibraryDefinition}) = \Gamma'$$
+$$sem(\syntax{PrefixMap DOLLibrary}) = \Gamma'$$
  
 \noindent where 
  $sem(\syntax{PrefixMap}) = \PMap$, $\Gamma'' = \Gamma_\emptyset.\{\prefix = \PMap\}$ and 
-$sem(\Gamma'', \syntax{LibraryDefinition}) = \Gamma'$. 
+$sem(\Gamma'', \syntax{DOLLibrary}) = \Gamma'$. 
 
-$$sem(\syntax{NativeOMS}) = \Gamma''$$
+$$sem(\syntax{NativeDocument}) = \Gamma''$$
 
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the library
 and 
-$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(\syntax{NativeOMS})]$.
+$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(\syntax{NativeDocument})]$.
 
 Note that if the OMS in the library does not conform with the logic determined by
-the extension of the library, $sem(\syntax{NativeOMS})$ will be undefined.
+the extension of the library, $sem(\syntax{NativeDocument})$ will be undefined.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\semdom{sem(\Gamma, \syntax{LibraryDefinition})= \Gamma'}
+\semdom{sem(\Gamma, \syntax{DOLLibrary})= \Gamma'}
 
 $sem(\Gamma, \syntax{library LibraryName Qualification LibraryItem}_1 \ldots \syntax{LibraryItem}_n)= \Gamma'$\\
 \noindent where  $sem(\Gamma, \syntax{Qualification}) = \Gamma'$, $sem(\Gamma', \syntax{LibraryItem}_1) = \Gamma_1$,\\
@@ -5451,9 +5451,9 @@ $sem(\Gamma, \syntax{library LibraryName Qualification LibraryItem}_1 \ldots \sy
 
 ({Note  that \syntax{LibraryName} is just discarded here.
   However, \syntax{LibraryName} should be the IRI of the document
-  containing the \syntax{Library}.  This is known as ``linked data
+  containing the \syntax{Document}.  This is known as ``linked data
   compliance''. Tools can issue a warning (not an error), if a
-  \syntax{Library} does not follow this practice.})
+  \syntax{Document} does not follow this practice.})
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6879,7 +6879,7 @@ The ontology makes use of the following standard ontologies and vocabularies:
 
 The sources of the \DOL ontology are being maintained in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at \url{https://ontohub.org/meta/dol/ontology}.
 
-It is intended to implement future versions of the \DOL ontology as an OMS library in \DOL.
+It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
 
 \section{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
 
@@ -8650,13 +8650,13 @@ for one or more repetitions of \syntax{N}.
 %Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 \cbe
 
-\sclause{Libraries}\label{c:libraries}
+\sclause{Documents}\label{c:libraries}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-Library                  = [ PrefixMap ] , LibraryDefinition
-                         | NativeOMS ;
-LibraryDefinition              = 'library' , LibraryName , Qualification , { LibraryItem } ;
-NativeOMS  = ($<$)language specific($>$) ;
+Document                  = [ PrefixMap ] , DOLLibrary
+                         | NativeDocument ;
+DOLLibrary              = 'library' , LibraryName , Qualification , { LibraryItem } ;
+NativeDocument  = ($<$)language specific($>$) ;
 LibraryItem              = LibImport | OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition | Qualification ;
 LibImport                = 'lib-import' , LibraryName ;
 Qualification            = LanguageQual | LogicQual | SyntaxQual ;
@@ -10104,7 +10104,7 @@ that is easily understood by a user.
 \section{Ontohub-Style}
 
 Identifying OMS and their members in Ontohub is a hierarchical
-task. An OMS library belongs to a repository. An OMS may belong
+task. A DOL document belongs to a repository. An OMS may belong
 directly to a repository, or indirectly through a library. Mappings,
 symbols and sentences in turn belong to an OMS. So\cbs one\cbe could use the
 hierarchical portion of an IRI instead of the query string.  This
@@ -10144,9 +10144,9 @@ actual identifying portion beginning with the hierarchical forward slash
 \subsection{Examples}
 
 \begin{tabularx}{\textwidth}{p{.2\textwidth}p{.8\textwidth}}
-  \multicolumn{2}{c}{\emph{OMS library}} \\
+  \multicolumn{2}{c}{\emph{DOL document}} \\
   \hline
-  OMS library & \url{/dol-testing/double_mapped_blendoid}\\
+  DOL document & \url{/dol-testing/double_mapped_blendoid}\\
   OMS & \url{/dol-testing/double_mapped_blendoid//DMB-CommonSource}\\
   Mapping & \url{/dol-testing/double_mapped_blendoid//SomeMapping}\\
   Symbol & \url{/dol-testing/double_mapped_blendoid//DMB-CommonSource//KitchenTable}\\
@@ -10154,7 +10154,7 @@ actual identifying portion beginning with the hierarchical forward slash
   & \\
   \multicolumn{2}{c}{\emph{OMS}} \\
   \hline
-  OMS library & \url{/dol-testing/double_mapped_blendoid}\\
+  DOL document & \url{/dol-testing/double_mapped_blendoid}\\
   OMS & \url{/default/pizza}\\
   Mapping & \url{/default/pizza//SomeMapping}\\
   Symbol & \url{/default/pizza//Veneziana}\\
