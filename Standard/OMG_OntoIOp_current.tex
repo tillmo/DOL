@@ -4390,10 +4390,10 @@ NativeDocument = ($<$) language and serialization specific ($>$) ;
 LibraryItem             = LibraryImport | OMSDefinition | NetworkDefinition | MappingDefinition 
                           | Qualification ;
 LibraryImport                = 'import' , LibraryName ;
-Qualification            = LanguageQual | LogicQual | SyntaxQual ;
-LanguageQual             = 'language' , LanguageRef ;
-LogicQual                = 'logic' , LogicRef ;
-SyntaxQual               = 'serialization' , SyntaxRef ;
+Qualification            = LanguageQualification | LogicQualification | SyntaxQualification ;
+LanguageQualification             = 'language' , LanguageRef ;
+LogicQualification                = 'logic' , LogicRef ;
+SyntaxQualification               = 'serialization' , SyntaxRef ;
 LibraryName             = IRI ;
 \end{lstlisting}
 
@@ -4402,8 +4402,11 @@ PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
 PrefixBinding            = BoundPrefix , IRIBoundToPrefix , [ Separators ] ;
 BoundPrefix              = ':' | Prefix ; +$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the \DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+ 
 IRIBoundToPrefix         = '<' , FullIRI , '>' ;
-Separators               = 'separators' , String , String ;
-                           +$<$\rm see definition in \cref{c:curies}$>$+
+Separators               = 'separators' , SeparatorString , SeparatorString ;
+SeparatorString  = SeparatorChar , { SeparatorChar } ;
+SeparatorChar    = ipchar | gen-delims , - , '#' ;
+                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+
 \end{lstlisting}
 
 \cbs Note that the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2013, Section 6}) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.\cbe  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
@@ -4420,8 +4423,8 @@ NetworkName            = IRI ;
 Network                = NetworkElements , [ ExcludeExtensions ] ;
 NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
 NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions      = 'excluding' , ElementRef , { ',' , ElementRef } ;
-ElementRef             = IRI , '->' , IRI 
+ExcludeExtensions      = 'excluding' , ExcludedElement , { ',' , ExcludedElement } ;
+ExcludedElement             = IRI , '->' , IRI 
                          | OMSOrMappingorNetworkRef;
 OMSOrMappingorNetworkRef        = IRI ;
 Id                     = Letter , { LetterOrDigit } ;
@@ -4440,11 +4443,11 @@ and \syntax{minimize} are translated to \syntax{minimize}.
                        
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 BasicOMS = ($<$)language and serialization specific($>$) ;
-MinimizableOMS      = BasicOMS
+ClosableOMS      = BasicOMS
                      | OMSRef , [ ImportName ] ; 
                      
-ExtendingOMS        = MinimizableOMS
-                     | MinimizeKeyword , '{' , MinimizableOMS , '}' ;
+ExtendingOMS        = ClosableOMS
+                     | MinimizeKeyword , '{' , ClosableOMS , '}' ;
                      
 OMS                 = ExtendingOMS
                      | OMS , Minimization 
@@ -5657,7 +5660,7 @@ given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\syntax{BasicOMS})$.
 
 
 \cbs
-\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{MinimizableOMS})=
+\semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ClosableOMS})=
 (\Gamma',(\cI,\Sigma',\cM', \Delta'))}
 \cbe
 
@@ -5669,13 +5672,13 @@ $sem(\Gamma, \syntax{OMS}) = \Gamma'$.
 
 The semantics of a \syntax{BasicOMS} $O$ has been defined above.
 
-The semantics of $O = \syntax{oms-ref O' ImportName}$
+The semantics of $O = \syntax{oms-reference O' ImportName}$
 is given by
  \begin{itemize}
-   \item $\Inst(\syntax{oms-ref O' ImportName}) = \Inst(\Gamma(O'))$
-   \item $\Sig(\syntax{oms-ref O' ImportName}) = \Sig(\Gamma(O'))$
-   \item $\Mod(\syntax{oms-ref O' ImportName}) = \Mod(\Gamma(O'))$
-   \item $\Th(\syntax{oms-ref O' ImportName}) = \Th(\Gamma(O'))$
+   \item $\Inst(\syntax{oms-reference O' ImportName}) = \Inst(\Gamma(O'))$
+   \item $\Sig(\syntax{oms-reference O' ImportName}) = \Sig(\Gamma(O'))$
+   \item $\Mod(\syntax{oms-reference O' ImportName}) = \Mod(\Gamma(O'))$
+   \item $\Th(\syntax{oms-reference O' ImportName}) = \Th(\Gamma(O'))$
    \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
          with a new node for $O$ labeled as defined in the items above
          and with a new edge from $O'$ to $O$ named \syntax{ImportName} 
@@ -5687,7 +5690,7 @@ is given by
 \semdom{sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
 (\Gamma',(\cI,\Sigma',\cM', \Delta'))}
 
-The semantics for \syntax{MinimizableOMS} has been defined above.
+The semantics for \syntax{ClosableOMS} has been defined above.
 
 The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
@@ -5701,7 +5704,7 @@ Formally, if $O' = \syntax{minimize}\ O$,
         \{ M \in  \Mod(O) \mid  M \text{ is minimal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
  \item $\Th( \syntax{minimize}\ O) = \bot$ 
 \end{itemize}
-\noindent where the semantics of the \syntax{MinimizableOMS} $O$ is given relative to 
+\noindent where the semantics of the \syntax{ClosableOMS} $O$ is given relative to 
 the environment
 $\Gamma$ and the context $(\Sigma, \cM, \Delta)$, and ``minimal''
 is interpreted in the pre-order defined by $\Sigma_1\leq\Sigma_2$
@@ -5737,7 +5740,7 @@ $N\in\cM$, there is exactly one morphism $h:M\to N$ ($h:N\to M$).
 \semdom{sem(\Gamma,\syntax{OMS})=(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
 \syntax{OMS} is interpreted in a context similar to that for
-\syntax{MinimizableOMS}, the difference being that there is
+\syntax{ClosableOMS}, the difference being that there is
 no local environment.
 
 The semantics for \syntax{ExtendingOMS} has been defined above.
@@ -8664,29 +8667,26 @@ for one or more repetitions of \syntax{N}.
 \sclause{Documents}\label{c:libraries}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-Document                  = [ PrefixMap ] , DOLLibrary
+Document                  = DOLLibrary
                          | NativeDocument ;
-DOLLibrary              = 'library' , LibraryName , Qualification , { LibraryItem } ;
+DOLLibrary              = 'library' , [ PrefixMap ] , LibraryName , Qualification , { LibraryItem } ;
 NativeDocument  = ($<$)language specific($>$) ;
-LibraryItem              = LibraryImport | OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition | Qualification ;
+LibraryItem              = LibraryImport | Definition | Qualification ;
+Definition = OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition ;
 LibraryImport                = 'lib-import' , LibraryName ;
-Qualification            = LanguageQual | LogicQual | SyntaxQual ;
-LanguageQual             = 'lang-select' , LanguageRef ;
-LogicQual                = 'logic-select' , LogicRef ;
-SyntaxQual               = 'syntax-select' , SyntaxRef ;
+Qualification            = LanguageQualification | LogicQualification | SyntaxQualification ;
+LanguageQualification             = 'lang-select' , LanguageRef ;
+LogicQualification                = 'logic-select' , LogicRef ;
+SyntaxQualification               = 'syntax-select' , SyntaxRef ;
 LibraryName              = IRI ;
 
 PrefixMap        = 'prefix-map' , { PrefixBinding } ;
-PrefixBinding    = 'prefix-binding' , BoundPrefix , IRIBoundToPrefix ,
+PrefixBinding    = 'prefix-binding' , Prefix , FullIRI ,
                    [ Separators ] ;
-BoundPrefix      = 'bound-prefix' , [ Prefix ] ;
-IRIBoundToPrefix = 'full-iri' , FullIRI ;
+Prefix           = String ;
 Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
-LibraryOMSSeparator = SeparatorString ;
-OMSSymbolSeparator  = SeparatorString ;
-SeparatorString  = SeparatorChar , { SeparatorChar } ;
-SeparatorChar    = ipchar | gen-delims , - , '#' ;
-                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+LibraryOMSSeparator = String ;
+OMSSymbolSeparator  = String ;
 \end{lstlisting}
 %% ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
 %%   • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
@@ -8701,12 +8701,11 @@ SeparatorChar    = ipchar | gen-delims , - , '#' ;
 
 NetworkDefinition            = 'network-definition', NetworkName , [ ConservativityStrength ] , Network ;
 NetworkName            = IRI ;
-Network                = 'network', NetworkElements , ExcludeExtensions ;
-NetworkElements        = 'network-elements' , { NetworkElement } ;
+Network                = 'network', { NetworkElement } ,  { ExcludedElement };
 NetworkElement         = 'network-element' , [ Id ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions    = 'exclude-imports' , { ElementRef } ; 
-ElementRef   = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef 
+ExcludedElement   = PathReference
                | OMSOrMappingorNetworkRef ;
+PathReference = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef ;
 OMSOrMappingorNetworkRef  = IRI ;
 \end{lstlisting}
 
@@ -8716,10 +8715,12 @@ OMSOrMappingorNetworkRef  = IRI ;
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 BasicOMS = ($<$)language specific($>$) ;
-MinimizableOMS       = BasicOMS
-                     | 'oms-ref' , OMSRef , [ ImportName ] ;
-ExtendingOMS         = MinimizableOMS
-                     | MinType , MinimizableOMS ;
+ClosableOMS       = BasicOMS
+                     | OMSReference ;
+OMSReference   = 'oms-reference' , OMSRef , [ ImportName ] ;
+ExtendingOMS         = ClosableOMS
+                     | RelativeClosureOMS ;
+RelativeClosureOMS = 'relative-closure' , ClosureType , ClosableOMS ;
 OMS                  = ExtendingOMS
                      | 'minimize-symbols' , OMS , Minimization
                      | 'translation' , OMS , Translation
