@@ -26,15 +26,28 @@
 \newif\ifpdfcomment
 %\pdfcommenttrue
 \pdfcommentfalse
+%
+% \documentclass[10pt,fleqn,%
+% \ifpretendfinal
+% final%
+% \else
+% draft%
+% \fi,
+% %final,
+% ]{scrreprt}
 
-\documentclass[10pt,fleqn,%
-\ifpretendfinal
-final%
-\else
-draft%
-\fi,
-%final,
-]{scrreprt}
+
+ \documentclass[10pt,fleqn,final]{scrreprt}
+%\documentclass[10pt,fleqn,draft]{scrreprt}
+
+
+\usepackage{changebar}
+ %
+ % \newcommand{\cbs}[0]{\xspace}
+ % \newcommand{\cbe}[0]{\xspace}
+  \newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace}
+  \newcommand{\cbe}[0]{\cbend{}\color{black}\xspace}
+
 
 \usepackage{pdflscape}
 
@@ -546,14 +559,6 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\qqquad}{\white{x}\qquad}
 
 \allowdisplaybreaks
-
-
-\usepackage{changebar}
-
-% \newcommand{\cbs}[0]{\xspace}
-% \newcommand{\cbe}[0]{\xspace}
-\newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace}
-\newcommand{\cbe}[0]{\cbend{}\color{black}\xspace}
 
 
 \begin{document}
@@ -1727,10 +1732,10 @@ For the purposes of this document, the following terms and definitions apply.
 
 \begin{definitions}
 
-\termdefinition{native OMS}{A
+\termdefinition{native OMS}{
 collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) from a given \termref{OMS language}.}
   \begin{example}
-    An UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASL are three different native OMS. 
+    \cbs A UML\cbe class diagram, an ontology written in OWL 2 EL, and  a specification written in CASL are three different native OMS. 
   \end{example}
 	\begin{note}
 	An \termref{OMS} can be written in different \termref{OMS language} 	\termref{serializations}\index{serialization}.
@@ -1752,7 +1757,7 @@ plus non-logical annotations\index{annotation}.}
 
 
 %\begin{definitions}
-\termdefinition{\DOL structured OMS}{\termref{OMS} that is built from smaller OMS using structuring operations.}
+\termdefinition{\DOL structured OMS}{syntactically valid \DOL library (as defined in this \IS) that contains a library definition (see section \ref{c:keywords}).}
   \begin{note}
    \DOL structured OMS, typically, use native OMS as building blocks for defining other structured OMS, OMS mappings or OMS networks.  
   \end{note}
@@ -1763,7 +1768,7 @@ plus non-logical annotations\index{annotation}.}
 
 
 \termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
-{A native OMS or a \DOL structured OMS.}
+{native OMS or a \DOL structured OMS.}
 \begin{note}
 	An OMS is either a basic or a structured OMS.
 \end{note}
@@ -1774,9 +1779,9 @@ plus non-logical annotations\index{annotation}.}
 
 
 \begin{definitions}
-\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{A native OMS that does not utilize any elements from the structuring language aspects of its language.}
+\termdefinitionLight{basic OMS\index{basic OMS}\synonym flat OMS}{native OMS that does not utilize any elements from the structuring language aspects of its language.}
   \begin{note}
-    Basic OMS are self-contained in the sense that it semantics does not depend on some other OMS.  In particular, the OMS does not involve any importations.
+    Basic OMS are self-contained in the sense that\cbs their\cbe semantics does not depend on some other OMS.  In particular,\cbs a basic\cbe OMS does not involve any importations.
   \end{note}
   \begin{note}
     Since a basic OMS has no structuring elements, it consists just of a \termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}.
@@ -1834,7 +1839,7 @@ of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
 \termdefinition{model}{semantic interpretation of all non-logical symbols\index{non-logical symbol} of a \termref{signature}.}
   \begin{note}
     A model of an OMS is a model of the signature of the OMS
-    that moreover satisfies all the axioms\index{axiom} of the OMS.
+    that\cbs also\cbe satisfies all the axioms\index{axiom} of the OMS.
   \end{note}
   \begin{note}
   This term refers to \emph{model} in the sense of model theory (a
@@ -1852,9 +1857,10 @@ of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
 \termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.}
   \begin{note}
 In a \termref{model}, on the one hand, a sentence is always true or false. In an \termref{OMS}, on the
-other hand, a sentence can have several logical statuses: it can be an axiom, if postulated to be true;
-a theorem, if proven from other axioms and theorems; a conjecture, if expecting to be proven from 
-other axioms and theorems; or have another of many possible statuses.
+other hand, a sentence can have several logical statuses.\cbs For example, a sentence can be:  an
+axiom, if postulated to be true;
+a theorem, if proven from other axioms and theorems; or a conjecture, if expecting to be proven 
+from  other axioms and theorems.\cbe
   \end{note}
   \begin{note}
   A sentence can conform to one or more signatures (namely those signatures
@@ -1901,7 +1907,8 @@ The converse is generalization.
 demonstrated to be a \termref{logical consequence} of the axioms.}
 
 \cbs
-  \termdefinition{theorem prover}{tool that can prove \termref{theorems}.}
+  \termdefinition{theorem prover}{tool that\cbs attempts to prove that a given sentence is the logical consequence of some given set of axioms\cbe
+  \cbe\termref{theorems}.}
 \cbe
 
 
@@ -2166,7 +2173,7 @@ Any satisfiable OMS is \termref{consistent}, but there are some
 \termref{logics} where the converse does not hold.
 \end{note}
 
-  \termdefinition{model finder}{tool that finds a \termref{models} of an
+  \termdefinition{model finder}{tool that finds  \termref{models} of an
 \termref{OMS} and thus proves it to be \termref{satisfiable}.}
 \cbe
 
@@ -2228,7 +2235,7 @@ If a symbol is removed, all axioms containing that symbols are removed, too.
   \end{note}
   \begin{note}
     DOL supports four different forms of closure: minimization and
-    maximation (as explained above) as well as freeness and cofreeness
+    maximization as well as freeness and cofreeness
     (explained below).
   \end{note}
 \cbe
@@ -2236,15 +2243,22 @@ If a symbol is removed, all axioms containing that symbols are removed, too.
     See \cite{circ1}, \cite{circ2}.
   \end{note}
 \cbs
-\termdefinition{freeness}{special type of closure, restriction to \termref{models} to those that are free (with respect to the local environment).}
+
+\termdefinitionLight{\termref{minimization}} {form of closure that restricts the models to those that are minimal (with respect to the local environment).}
+\termdefinitionLight{\termref{minimization}} {form of closure that restricts the models to those that are maximal (with respect to the local environment).}
+
+
+
+
+\termdefinition{freeness}{special type of closure, restriction of \termref{models} to those that are free (with respect to the local environment).}
   \begin{note}
-    In first-order-like logics, freeness means minimal interpretation
+    In first-order logic (and similar logics), freeness means minimal interpretation
     of predicates and minimal equality among data values. Freeness can
     be used for the specification of inductive datatypes like numbers,
     lists, trees, bags etc. In order to specify e.g.\ lists over some elements,
     the specification of the elements should be in the local environment.
   \end{note}
-\termdefinition{cofreeness}{special type of closure, restriction to \termref{models} to those that are cofree (with respect to the local environment).}
+\termdefinition{cofreeness}{special type of closure, restriction of \termref{models} to those that are cofree (with respect to the local environment).}
   \begin{note}
     In first-order-like logics, cofreeness means maximal
     interpretation of predicates and equality being observable
@@ -2253,11 +2267,11 @@ If a symbol is removed, all axioms containing that symbols are removed, too.
   \end{note}
 \cbe
 
-  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.}
+  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where non-logical symbols are shared according to the OMS mappings in the OMS network.}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
 and another one involving \texttt{Human being}, and an \termref{alignment}
-that relates these to concepts. In the combination of the ontologies
+that relates these\cbs two\cbe concepts. In the combination of the ontologies
 along the alignment, there is only one concept, representing both
 \texttt{Person} and \texttt{Human being}.
 \end{example}
@@ -2474,7 +2488,10 @@ that targets specific applications or reasoning methods.}
     Serializations serve as standard formats for exchanging OMS between tools.
   \end{note}
   \begin{example}
-    OWL uses the term ``serialization''; the following are standard OWL serializations: OWL functional-style syntax, OWL/XML, OWL Manchester syntax, plus any standard serialization of RDF (\eg RDF/XML, Turtle, \dots).  However, RDF/XML is the only one tools are required to implement.
+    OWL uses the term ``serialization''; the following are standard OWL serializations: OWL
+	 functional-style syntax, OWL/XML, OWL Manchester syntax, plus any standard serialization of
+	 RDF (\eg RDF/XML, Turtle, \dots).\cbs  However, 
+	W3C specifications only require an RDF/XML implementation for OWL2 tools.\cbe  
   \end{example}
   \begin{example}
 Common Logic uses the term ``dialect''; the following are standard Common Logic dialects: Common Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (CGIF), eXtended Common Logic Markup Language (XCL).
@@ -2520,10 +2537,11 @@ for the notions of
 and \termref{satisfaction}.\cbe}
 \cbs \begin{note}
 In order to support a broad range of 
-OMS languages and enable interoperability between them, 
-the semantics of \DOL needs to be defined in a way that abstracts from 
+OMS languages and enable interoperability between them,\cbs 
+the DOL semantics has to abstract from 
 the differences of the logic language aspects of  OMS languages. 
-Institutions provide such a framework. 
+Institutions provide a formal framework that enables this abstraction. 
+\cbe 
 \end{note} 
  \begin{note}
 The notion of institution uses \termref{category} theory for
@@ -2864,15 +2882,15 @@ The use of different OMS within the same context leads to  several
 challenges in the design and deployment of OMS, which have been addressed by current research in 
 ontological engineering, formal software specification and formal modeling:
 \begin{itemize}
-\item How \cbs is it possible \cbe to support shareability and reusability of OMS within the same domain?
-\item How \cbs is it possible \cbe to merge OMS in different domains, particularly in the cases 
+\item How\cbs is it possible\cbe to support shareability and reusability of OMS within the same domain?
+\item How\cbs is it possible\cbe to merge OMS in different domains, particularly in the cases 
 in which the OMS are axiomatized in different logical languages?
 \item What notions of modularity play a role when only part of an OMS is being shared or reused?
 \item What are the relationships between versions of an OMS axiomatized in different logical languages?
 \end{itemize}
 
 
-To illustrate these challenges, \cbs this clause presents \cbe a set of usage scenarios that involve the use of more than one OMS. These scenarios address the areas of ontology design, formal specification, and model-driven development. In spite of their many differences, they  all highlight one common theme:  
+To illustrate these challenges,\cbs this clause presents\cbe a set of usage scenarios that involve the use of more than one OMS. These scenarios address the areas of ontology design, formal specification, and model-driven development. In spite of their many differences, they  all highlight one common theme:  
  the use of multiple OMS leads to interoperability challenges. 
  %There  are ad-hoc solutions to these challenges, and specialized languages and tools are used in practice. 
 
@@ -3040,7 +3058,7 @@ alignment BFO2GFO :
 \end{lstlisting}
 
 
-\cbs \DOL combinations allows to combine ontologies, while taking into account the semantic dependencies given by the alignments.\cbe
+\cbs \DOL combinations allow to combine ontologies, while taking into account the semantic dependencies given by the alignments. In the following example the ontology \lstinline{Space} is defined as a combination of three different ontologies (BFO, GFO, DolceLite) along three alignments. \cbe
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
 ontology Space =
@@ -3339,11 +3357,12 @@ sense the diagrams need to be consistent, and check this by suitable tools.
 \ssclause{The ATM Example}
 \label{sec:atm-example}
 
-\cbs The ATM example is about \cbe model-driven development using UML,
-taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  It involves
+\cbs The ATM example, which illustrates model-driven development using UML,
+is taken from \cite{knapp-mossakowski-roggenbach:corr:2014}.  The example involves\cbe
 the design of a traditional automatic teller machine (ATM) connected
-to a bank. For simplicity, \cbs it focuses  only \cbe the handling of entering a
-card and a PIN with the ATM. After entering the card, one has three
+to a bank. For simplicity, \cbs the example focuses
+ on the ATM's processing of card and PIN entry actions.\cbe  
+After entering the card, one has three
 trials for entering the correct PIN (which is checked by the
 bank). After three unsuccessful trials the card is kept.
 
@@ -3590,14 +3609,18 @@ end
 
 
 \section{Conclusion}
+\cbs
+In this section, the use cases have been used to illustrate many aspects of DOL and how it can be useful in many situations in which different OMS artifacts might be leveraged and augmented to produce broader or more tractable models, ontologies, and specifications.
 
-\cbs The next sections present the metalanguage \DOL{}; in particular, the syntax and the model-theoretic semantics. Further, various features of \DOL will be discussed, which  are based on  best practices of modularity  across
- the three areas of ontology design, formal 
-specification, and model-driven development. \DOL 
-is designed to support of a wide range of formalisms and
-\cbe
+ \DOL is designed to support of a wide range of formalisms and
 provides the ability to specify the basis for formal interoperability even among heterogeneous OMS and OMS networks. \DOL enables the solutions of the problems described in the use cases above. It also enables the development of DOL documents, tools and workflows that 
 allow  a better exchange and reuse of OMS. Eventually, this will also lead to better, easier developed and maintained systems based on these OMS.
+
+The next sections present the metalanguage \DOL{}; in particular, the syntax and the model-theoretic semantics. Further, various features of \DOL will be discussed, which  are based on  best practices of modularity  across
+ the three areas of ontology design, formal 
+specification, and model-driven development.
+\cbe
+
 
 
 \clauseI{Design Overview} \label{c:design}
@@ -4575,26 +4598,4 @@ InterpretationDefinition ::= InterpretationKeyword
                              LogicTranslation*
                              [SymbolMap] 'end'
                      | InterpretationKeyword
-                             InterpretationName '='
-                             Refinement 'end'
-InterpretationKeyword ::= 'interpretation' | 'view' | 'refinement'
-InterpretationName ::= IRI
-InterpretationType ::= GroupOMS 'to' GroupOMS
-Refinement         ::= GroupOMS
-                     | NetworkName
-                     | Refinement 'then' Refinement
-                     | GroupOMS 'refined' [RefMap] 'to' Refinement
-                     | NetworkName 'refined' [RefMap] 'to' Refinement
-RefMap             ::= 'via' LogicTranslation [SymbolMap]
-                     | 'via' [LogicTranslation] SymbolMap
-                     | 'via' NodeMap ( ',' NodeMap )*
-NodeMap            ::= OMSName '|->' OMSName
-                       ['using' LogicTranslation* [SymbolMap]]
-Entailment         ::= 'entailment' EntailmentName '='
-                       EntailmentType 'end'
-EntailmentName     ::= IRI
-EntailmentType     ::= GroupOMS 'entails' GroupOMS
-                     | OMSName 'in' Network 'entails' GroupOMS
-                     | Network 'entails' Network
-EquivalenceDefinition ::= 'equivalence' EquivalenceName ':'
-     
+                             InterpretationName
