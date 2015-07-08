@@ -1,123 +1,112 @@
-Library - A Library consists of a collection of (named) OMS, OMS networks, and mappings between these. Alternatively, a Library can be a (possibly structured) NativeOMS.
-LibraryDefn - A LibraryDefn consists of a name, followed by a list of LibraryItems. The latter are (named) OMS, OMS networks, and mappings between these.
-NativeOMS - The syntax of a NativeOMS is left unspecified. A NativeOMS is a verbatim inclusion of an OMS written in an OMS language that conforms with DOL. The  MOF metaclasses of the abstract syntaxes of any conforming OMS languages are
-subclasses of the DOL metaclass NativeOMS.
-LibraryItem - A LibraryItem is either a definition of an OMS (OMSDefn), a mapping between OMS (MappingDefn), a definition of an OMS network (NetworkDefn), an import of another library (LibImport), or a Qualification selecting a specific OMS language, logic and/or syntax that is used to interpret the subsequent LibraryItems.
-LibImport - Import of another library. All LibraryItems of the imported library are included into the importing one.
+Document - A document consists of a collection of (named) OMS, OMS networks, and mappings between these. Alternatively, a Library can be a (possibly structured) NativeDocument.
+DOLLibrary - A DOLLibrary consists of a name, followed by a list of LibraryItems. The latter are (named) OMS, OMS networks, and mappings between these.
+NativeDocument - The syntax of a NativeDocument is left unspecified. A NativeDocument is a verbatim inclusion of an OMS written in an OMS language that conforms with DOL. The  MOF metaclasses of the abstract syntaxes of any conforming OMS languages are subclasses of the DOL metaclass NativeDocument.
+LibraryItem - A LibraryItem is either a definition of an OMS (OMSDefinition), a mapping between OMS (MappingDefinition), a definition of an OMS network (NetworkDefinition), an import of another library (LibraryImport), or a Qualification selecting a specific OMS language, logic and/or syntax that is used to interpret the subsequent LibraryItems.
+LibraryImport - Import of another library. All LibraryItems of the imported library are included into the importing one.
 Qualification - A Qualification selects a specific OMS language, logic and/or syntax that is used to interpret the subsequent LibraryItems.
-LanguageQual - A LanguageQual selects a specific OMS language that is used to interpret the subsequent LibraryItems. If no logic has been selected previously or the previously selected logic is not supported by the newly selected language, the language's default logic is used. An analogous rule holds for the serialization.
-LogicQual - A LogicQual selects a specific logic that is used to interpret the subsequent LibraryItems.
-SyntaxQual - A SyntaxQual selects a specific serialization (syntax) that is used to interpret the subsequent LibraryItems.
+LanguageQualification - A LanguageQualification selects a specific OMS language that is used to interpret the subsequent LibraryItems. If no logic has been selected previously or the previously selected logic is not supported by the newly selected language, the language's default logic is used. An analogous rule holds for the serialization.
+LogicQualification - A LogicQualification selects a specific logic that is used to interpret the subsequent LibraryItems.
+SyntaxQualification - A SyntaxQualification selects a specific serialization (syntax) that is used to interpret the subsequent LibraryItems.
 PrefixMap - At the beginning of a library, one can declare a PrefixMap for abbreviating long IRIs using CURIEs.
 PrefixBinding - A binding of a prefix to an IRI. The prefix will be used as shorthand for the IRI in CURIEs.
 Separators - Both the separator between the library and the OMS name and that between the OMS name and the symbol name can be declared (using Separator), and both default to "//".
 
 
-NetworkDefn - A NetworkDefn names an OMS network.
+NetworkDefinition - A NetworkDefinition names an OMS network.
 Network - An OMS network consists of OMS and OMS mappings. OMS networks may build on previously-defined OMS networks, and they can be used in combinations. By convention, all OMS mappings between the involved OMS will be included in the network. However, it is also possible to explicitly exclude OMS mappings from a network.
 NetworkElement - One element of a network, which can be an OMS, an OMS mapping, or a network again.
 ExcludedElement - Reference to a network element, either given by an IRI, or by a pair of IRIs (source and target), that shall be excluded from a network.
-PathRef - Path in a network, to be excluded from the network.
+PathReference - Path in a network, to be excluded from the network.
 
 
 BasicOMS - A native OMS that does not utilize any elements from the structuring language aspects of its language.
-MinimizableOMS - OMS that can occur in a minimization.
+ClosableOMS - OMS that can occur in a closure.
 OMSReference - Reference to a named OMS, using an IRI or CURIE.
-RelativeMinimizationOMS - Minimization (or maximization, or freeness or cofreeness) of an OMS relative to the local environment.
+RelativeClosureOMS - Closure (or maximization, or freeness or cofreeness) of an OMS relative to the local environment.
 ExtendingOMS - OMS that is used to extend another OMS within an ExtensionOMS.
-OMS - ontology, specification or model. An OMS can be a native OMS or a \DOL structured OMS.
-MinimizationOMS - Absolute minimization (or maximization, or freeness or cofreeness).
-TranslationOMS - Assignment of new names
-   to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}.
-ReductionOMS - Restriction of an \termref{OMS} to a smaller \termref{signature}.
-ExtractionOMS - Extraction of a \termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}.
-ApproximationOMS - Approximation (in the sense of a logically implied theory, possibly after suitable translation)  of an OMS in a smaller \termref{signature} or a \termref{sublanguage}.
-FilteringOMS - verbatim removal of \termref{symbols} or \termref{axioms} from an OMS.
-UnionOMS - aggregation of several \termref{OMS} to a new \termref{OMS}, without any renaming.
-ExtensionOMS - \termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in \cbs the \termref{local environment}.
-QualOMS - OMS qualified with the OMS language that is used to express it.
-CombinationOMS - aggregation of all the OMS in an \termref{OMS network}, where \termref{non-logical symbol}s are shared according to the \termref{OMS mapping}s in the OMS network.
+OMS - ontology, specification or model. An OMS can be a native OMS or a DOL structured OMS.
+ClosureOMS - Absolute closure on OMS, by applying a closed-world assumption. The type of closed-world assumption can vary between minimization, maximization, or freeness and cofreeness.
+TranslationOMS - Assignment of new names to some non-logical symbols non-logical symbol of an OMS.
+ReductionOMS - Restriction of an OMS to a smaller signature.
+ExtractionOMS - Extraction of a subOMS that conservatively extends to conservative extension  the whole OMS.
+ApproximationOMS - Approximation (in the sense of a logically implied theory, possibly after suitable translation)  of an OMS in a smaller signature or a sublanguage.
+FilteringOMS - verbatim removal of symbols or axioms from an OMS.
+UnionOMS - aggregation of several OMS to a new OMS, without any renaming.
+ExtensionOMS - OMS whose sets of non-logical symbols non-logical symbol and sentences sentence are supersets of those present in the local environment.
+QualifiedOMS - OMS qualified with the OMS language that is used to express it.
+CombinationOMS - aggregation of all the OMS in an OMS network, where non-logical symbols are shared according to the OMS mappings in the OMS network.
 ApplicationOMS - application of a substitution to an OMS.
-Minimization - The minimizing part of a MinimizationOMS.
-MinType - The type of the minimization, can be minimize, maximize, free or cofree.
+Closure - The part of a ClosureOMS on which the closed-world assumption is being applied.
+ClosureType - The type of the closure can be minimize, maximize, free or cofree.
 Translation - Specifies the way how an OMS shall be translated. Is part of a TranslationOMS.
 Reduction - Specifies the way how an OMS shall be reduced. Is part of a ReductionOMS.
-HomogeneousReduction - Homogeneous reduction along a signature morphisms within one logic.
-HeterogeneousReduction - Heterogeneous reduction across logics; projection to a sublogic.
 SymbolMap - Map between symbols that is shorthand for a signature morphisms.
 Extraction - Specifies the way how a module shall be extracted from an OMS. Is part of an ExtractionOMS.
 Approximation - Specifies the way how an OMS shall be approximated. Is part of an ApproximationOMS.
 Filtering - Specifies the way how an OMS shall be filtered. Is part of a FilteringOMS.
-FilterKind - Specifies the kind of filtering, whether the specified symbols and axioms that shall be kept ('select') or removed ('reject').
 Extension - Specifies the way how an OMS shall be extended. Is part of an ExtensionOMS.
-ConsStrength - Specifies additional relations that may hold between an OMS and its extension, like conservative or definitional extension. The rationale is that the extension should not have impact on the original OMS that is being extended. A ConsStrength might also be applied to a single OMS, which is then implicitly regarded as an extension of the empty OMS. In this case, satisfiability (or a similar property) of the OMS is expressed.
-QualInterfaceSignature - 
-ExtractKind - 
-InterfaceSignature - 
+ConservativityStrength - Specifies additional relations that may hold between an OMS and its extension, like conservative or definitional extension. The rationale is that the extension should not have impact on the original OMS that is being extended. A ConservativityStrength might also be applied to a single OMS, which is then implicitly regarded as an extension of the empty OMS. In this case, satisfiability (or a similar property) of the OMS is expressed.
+RemovalKind - Specifies the kind of extraction, approximation or filtering, namely whether the specified symbols shall be kept ('keep') or removed ('remove').
+InterfaceSignature - Signature of symbols that are relevant for the module extraction. (Note: this should become an association.)
 
 
-OMSDefn - 
-SymbolMapElem - 
-SymbolOrMap - 
-Sentence - 
-LoLaRef - 
-OMSLangTrans - 
-NamedTrans - 
-DefaultTrans - 
+OMSDefinition - An OMS definition names an OMS. 
+SymbolMapItem - A pair of symbols of two OMS, indicating how a symbol from the first OMS is mapped by a signature morphism to a symbol of the second OMS.
+GeneralSymbolMapItem - Either a symbol (which is meant to be mapped identically), or a SymbolMapItem.
+Sentence - term that is either true or false in a given model, i.e. which is assigned a truth value in this model.
+OMSLanguageTranslation - OMS language translation, either given explicity or implicitly by a default mechanism.
+NamedTranslation - OMS language translation given explicitly by an IRI.
+DefaultTranslation - Default OMS language translation given implicitly by its target language or logic. 
 
 
-MappingDefn - 
-IntprDefnOrRef - 
-IntprDefn - 
-Refinement - 
-IntprType - 
-Refinement - 
-RefOMS - 
-RefNetwork - 
-RefComposition - 
-SimpleOMSRef - 
-SimpleNetworkRef - 
-RefMap - 
-RefMapOMS - 
-RefMapNetwork - 
-NodeMap - 
-Entailment - 
+MappingDefinition - An OMS mapping definition names an OMS mapping. It can be a definition of an interpretation, refinement, an entailment, an equivalent, a module relation or an alignment.
+InterpretationDefinition - Definition of a named interpretation. An interpretation is an OMS mapping that postulates a specialization relation between two OMS along a morphism between their signatures.
+RefinementDefinition - Definition of a named refinement.
+InterpretationType - Type of an interpretation, consisting of source and target OMS.
+Refinement - OMS mapping that postulates a specialization relation between two OMS along a morphism between their signatures. Unlike interpretations, refinements can be composed.
+RefinmentOMS - OMS that is used as a starting point of a refinement chain.
+RefinmentNetwork - Network that is used as a starting point of a refinement chain.
+RefinmentComposition - Composition of two refinements.
+SimpleOMSRefinment - Refinement of a given OMS or refinement to another OMS.
+SimpleNetworkRefinment - Refinement of a given network or refinement to another network.
+OMSRefinementMap - Refinement map for a refinement of OMS, consisting of a symbol map.
+NetworkRefinementMap - Refinement map for a refinement of networks, consisting of a node map and an optional symbol map.
+NodeMap - Map between the nodes of two given networks.
+Entailment - relation between two OMS expressing that the second one is logically implied by the first one. Entailments can also be stated between networks, or networks and OMS, or OMS and sentences.
 EntailmentType - 
-OMSOMSEntailment - 
-NetworkOMSEntailment - 
-NetworkNetworkEntailment - 
-EquivDefn - 
-EquivType - 
-OMSEquiv - 
-NetworkEquiv - 
-ModuleRelDefn - 
-ModuleType - 
-AlignDefn - 
-AlignCards - 
-AlignCardForward - 
-AlignCardBackward - 
-AlignCard - 
-AlignType - 
-AlignSem - 
-Correspondence - 
-DefaultCorrespondence - 
-CorrespondenceBlock - 
-SingleCorrespondence - 
-TermOrSymbolRef - 
-Term - 
-Relation - 
-RelationRef - 
-StandardRelation - 
-Confidence - 
+OMSOMSEntailment - Entailment between two OMS.
+NetworkOMSEntailment - Entailment stating that a network entails an OMS.
+NetworkNetworkEntailment - Entailment between two networks.
+EquivalenceDefinition - Definition of an equivalence between OMS or networks
+EquivalenceType - Type of an equivalence. The first two OMS are the OMS that are declared to be equivalent; the thired one is a common definitional extension proving the equivalence. Also works for networks in place of OMS.
+OMSEquivalence - Equivalence between OMS
+NetworkEquivalence - Equivalence between networks
+ModuleRelDefinition - Definition of a module relation, which is an OMS mapping stating that one OMS is a module of the other one.
+ModuleType - Type of a module relation. 
+AlignmentDefinition - Definition of an alignment, which is an OMS mapping expressing a collection of semantic relations between entities of the two OMS.
+AlignmentCardinalityPair - Cardinality of an alignment, consisting of a pair specifying both the forward and backward cardinality.
+AlignmentCardinalityForward - Cardinality of the forward side (that at the source OMS) of an alignment.
+AlignmentCardinalityBackward - Cardinality of the backward side (that at the target OMS) of an alignment.
+AlignmentCardinality - Cardinality of one side of an alignment. It can be injective, total, both of them, or none of them.
+AlignmentType - Type of an alignment, consisting of source and target OMS.
+AlignmentSemantics - Type of the alignment semantics that is used. Different styles of networks of aligned ontologies (to be interpreted in a logic-specific way) of alignments can be specified: whether a single domain is assumed, all domains are embedded into a global domain, or whether several local domains are linked ("contextualized") by relations.
+Correspondence - Part of an alignment, specifying how symbols of the source OMS are aligned to symbols of the target OMS.
+DefaultCorrespondence - A default correspondence can be used; it is applied to all pairs of non-logical symbols with the same local names. The default relation in a correspondence is equivalence, unless a different relation is specified in a surrounding CorrespondenceBlock.
+CorrespondenceBlock - Block assigning a certaion confidence and a certain relation to a set of correspondences.
+SingleCorrespondence - Part of an alignment, specifying that one symbol of the source OMS is aligned to one symbol of the target OMS with a certain confidence and a certain relation.
+GeneralizedTerm - Symbol given by an IRI, or a term.
+Term - Syntactic expression either consisting of a single non-logical symbol or recursively composed of other terms (a.k.a. its subterms).
+Relation - Relation between symbols in an alignment. Examples are equality (meaning that two symbols in the different OMS represent the same concept), or subsumption (meaning that the concept expressed by the first symbol is subsumed by that of the second symbol).
+RelationReference - Reference to a user-defined relation, given by an IRI.
+StandardRelation - Collection of standard relations from the alignment API.
+Confidence - Confidence of a correspondence; a value between 0 and 1. (Note: this should become an association.)
 
-QueryRelatedDefn - 
-QueryDefn - 
-SubstDefn - 
-ResultDefn - 
-Complete - 
+QueryRelatedDefinition - Definition of a query or of an item (substitution, result) related to a query.
+QueryDefinition - Definition of query. A query is a sentence containing query variables that can be instantiated by a substitution.
+SubstitutionDefinition - Definition of a substitution. A substitution is an OMS mapping that maps query variables of one OMS to symbols or complex terms another OMS.
+ResultDefinition - Definition of a set of results of a query. Each result will be an answer substitution, i.e. a substitution that, when applied to a given query, turns the latter into a logical consequence of a given OMS.
+Complete - Flag indicating whether a given result set will be the complete sets of results for a given query.
 
-
-IRI - 
-FullIRI - 
-CurieIRI - 
-FullIRI - 
+IRI - Internationalized Resource Identifier, as defined in IETF/RFC 3987, possibly abbreviated through the CURIE mechanism.
+FullIRI - Internationalized Resource Identifier, as defined in IETF/RFC 3987.
+CurieIRI - Compact URI expression.
