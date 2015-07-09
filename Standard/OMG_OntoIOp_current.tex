@@ -4076,7 +4076,7 @@ some non-logical symbols are hidden, but the semantic effect of sentences involv
 \item an OMS qualified with the OMS language that is used to express it,
 \item a combination of (the OMS contained in) an OMS network (technically, this is a colimit, see \cite{ZimmermanEtAl06}),
 \item a \cbs closure\cbe of an OMS, forcing the subsequently declared
-  non-logical symbols to be interpreted in a minimal \cbs or maximal\cbe{} way, while the non-logical symbols declared so far are fixed (alternatively, the non-logical symbols to be \cbs minimized/maximized\cbe{} and to be varied can be explicitly declared). Variants of \cbs closure are minimization, \cbe{}
+  non-logical symbols to be interpreted in a minimal \cbs or maximal\cbe{} way, while the non-logical symbols declared \cbs in the local environment\cbe{} are fixed (alternatively, the non-logical symbols to be \cbs minimized/maximized\cbe{} and to be varied can be explicitly declared). Variants of \cbs closure are minimization, \cbe{}
 maximization, freeness (minimizing also data sets and equalities on these, \cbs which enables the inductive definition of relations and datatypes), and cofreeness
 (enabling the coinductive definition of relations and datatypes).\cbe
 %\item the application of a substitution to an OMS.
@@ -4256,7 +4256,29 @@ abbreviation mechanism, as it is the most flexible one that has been standardize
 The CURIE abbreviation mechanism works by binding prefixes to IRIs.  A CURIE consists of a 
 \emph{prefix}, which may be empty, and a \emph{reference}.  If there is an in-scope binding for the 
 prefix, the CURIE is valid and expands into a full IRI, which is created by concatenating the IRI 
-bound to the prefix and the reference.
+bound to the prefix and the reference. \cbs In the following example that uses \DOL prefix map mechanism, one the prefix \url{lang} is bound to \url{http://purl.net/DOL/languages/}, which
+means that the CURIE \url{lang:OWL2} will be expanded to the IRI
+\url{http://purl.net/DOL/languages/OWL2}.
+
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+%prefix( :      <http://www.example.org/mereology#>
+         owl:   <http://www.w3.org/2002/07/owl#>
+         lang:  <http://purl.net/DOL/languages/>
+                %% definitions of conforming languages ...
+         ser:   <http://purl.net/DOL/serializations/>
+                %% ... and their serializations
+         log:   <http://purl.net/DOL/logics/>
+                %% descriptions of logics ...
+         trans: <http://purl.net/DOL/translations/> )%
+                %% ... and translations
+
+library Mereology
+
+%% OWL Manchester syntax declaration: 
+language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
+[...]
+\end{lstlisting}
+\cbe
 
 \DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core:2013, Section 6} with the following changes:
 \begin{itemize}
@@ -4372,8 +4394,7 @@ This mechanism applies to basic OMS given inline in a \DOL library (\syntax{Basi
 
 While CURIEs used for identifying parts of a \DOL library (\cf \cref{c:curies}) are merely syntactic 
 sugar, the prefix map for a basic OMS is essential to determining the semantics of the basic OMS 
-within the \DOL library.  Therefore, any \DOL serialization \shall provide constructs for expressing such 
-prefix maps, even if the serialization does not support prefix maps otherwise.
+within the \DOL library. 
 
 %% ~\todonote[author=Christoph Lange,date=D:201111081514+01'00',type=todo]{somewhere we need to mention semantic annotations to embedded fragments in conforming OMS languages, \eg \%implied}
 
