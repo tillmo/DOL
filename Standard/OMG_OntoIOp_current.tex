@@ -2477,12 +2477,13 @@ that targets specific applications or reasoning methods.}
   
 \end{definitions}
 
-\sclause{OMS Language Serializations}\label{c:term-serializations}
+\sclause{Abstract and Concrete Syntax}\label{c:term-serializations}
 
 \begin{definitions}
-  \termdefinition{serialization}{specific syntactic encoding of a given \termref{OMS language}.}
+\cbs
+  \termdefinition{concrete syntax \synonym serialization}{specific syntactic encoding of a given \termref{OMS language}  or of \DOL.}\cbe
   \begin{note}
-    Serializations serve as standard formats for exchanging OMS between tools.
+    Serializations serve as standard formats for exchanging \cbs \DOL documents and\cbe OMS between \cbs human beings and\cbe tools.
   \end{note}
   \begin{example}
     OWL uses the term ``serialization''; the following are standard OWL serializations: OWL
@@ -2495,10 +2496,40 @@ Common Logic uses the term ``dialect''; the following are standard Common Logic 
   \end{example}
 
 
-   \termdefinition{document}{result of serializing an OMS using a given serialization.}
+   \termdefinition{document}{result of serializing an \termref{OMS} \cbs or \termref{\DOL library} \cbe{} using a given \termref{serialization}.}
 
 
   \termdefinition{standoff markup}{way of providing {annotations}\index{annotation} to subjects in external resources, without embedding them into the original resource (here: \termref{OMS}).}
+
+\cbs
+\termdefinition{abstract syntax\synonym parse tree}{term language for representing documents in a machine-processable way}
+\begin{note}
+An abstract syntax can be specified as a MOF metamodel. Then abstract abstract syntax documents can be represented as  XMI documents.
+\end{note}
+\cbe
+
+\end{definitions}
+
+
+\sclause{Semantics}
+
+\begin{definitions}
+\cbs
+
+\termdefinition{formal semantics}{assignment of a mathematical meaning
+to a language by mapping \termref{abstract syntax} to suitable
+\termref{semantic domains}.}
+
+\termdefinition{semantic domain}{mathematically-defined set of values that
+can represent the intended meanings of language constructs.}
+
+\termdefinition{semantic rule}{specification of a mapping from
+\termref{abstract syntax} to a \termred{semantic domain}.}
+
+\termdefinition{global environment}{mapping from identifiers (IRIs)
+to values in \termref{semantics domains} representing the
+global knowledge about OMS.}
+\cbe
 \end{definitions}
 
 \sclause{Logic}\label{c:term-logic}
@@ -2534,11 +2565,10 @@ for the notions of
 and \termref{satisfaction}.\cbe}
 \cbs \begin{note}
 In order to support a broad range of 
-OMS languages and enable interoperability between them,\cbs 
+OMS languages and enable interoperability between them, 
 the DOL semantics has to abstract from 
 the differences of the logic language aspects of  OMS languages. 
 Institutions provide a formal framework that enables this abstraction. 
-\cbe 
 \end{note} 
  \begin{note}
 The notion of institution uses \termref{category} theory for
@@ -2647,6 +2677,8 @@ unique characteristics of those entities.
 
 \termdefinition{OMS interoperability} {relation among OMS (via OMS alignments)
 which are logically interoperable.}
+
+
 
 \clause{Symbols}
 
@@ -4698,7 +4730,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 
 \sclause{Lexical Symbols}
 
-The character set for the \DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nisref{IETF/RFC 3987:2005}.}  For enhanced readability of OMS, the \DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical operators.%\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
+The character set for the \DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nisref{IETF/RFC 3987:2005}.}  For enhanced readability of OMS, the \DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical symbols (e.g.\ Greek letters)  or operators (e.g.\ $\partial$ for partial derivatives). %\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
 \ssclause{Key words and signs}\label{c:keywords}
 
@@ -4811,7 +4843,7 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 \item[XML conformance] Identifiers are added to XML elements by using the IRI-valued \textit{dol:id} XML attribute from the \url{http://www.omg.org/spec/DOL/1.0/xml} namespace, or, if the serialization does not support this attribute, by adding a \textit{dol:id} XML element as the first child, containing exactly one text node with the IRI.
 \item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
 \item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
-\item[Standoff markup conformance] Standard mechanisms such as XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) or \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of XML or text in the given OMS serialization.
+\item[Standoff markup conformance] Standard mechanisms like XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) or \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of XML or text in the given OMS serialization.
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
@@ -4864,8 +4896,7 @@ well as for the meaningful use of logic-based tools for \DOL, such as
 theorem provers, model-checkers,\cbs satisfiability modulo theories (SMT)\cbe solvers etc.  Last but not least,
 the semantics has provided valuable feedback on the language design,
 and has led to some corrections on the abstract syntax.  These
-reasons, plus the requirement in the OntoIOp RFP to provide a
-semantics, have lead to inclusion of the semantics in the standard
+reasons have lead to inclusion of the semantics in the standard
 document proper, even though the semantics is quite technical and
 therefore has a more limited readership than the other clauses of
 this standard.
