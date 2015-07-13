@@ -7144,7 +7144,7 @@ Following the direct model-theoretic semantics of OWL \cite{w3c:owl2-direct-sema
 A datatype map, formalizing datatype maps from the OWL 2 Specification \cite{w3c:owl2-spec}, is a 6-tuple $D = ( N_{DT} , N_{LS} , N_{FS} , \cdot^{DT} , \cdot^{LS} , \cdot^{FS} )$ with the following components:
 \begin{itemize}
 \item
-    $N_{DT}$ is a set of datatypes (more precisely, names of datatypes) that does not contain the datatype rdfs:Literal.
+    $N_{DT}$ is a set of datatypes (more precisely, names of datatypes) that does not contain the datatype \textit{rdfs:Literal}.
 \item
     $N_{LS}$ is a function that assigns to each datatype $DT \in N_{DT}$ a set $N_{LS}(DT)$ of strings called lexical forms. The set $N_{LS}(DT)$ is called the lexical space of $DT$.
 \item
@@ -7160,6 +7160,9 @@ A datatype map, formalizing datatype maps from the OWL 2 Specification \cite{w3c
 The set of datatypes $N_{DT}$ of a datatype map $D$ is not required to contain all datatypes from the OWL 2 datatype map; this allows one to talk about subsets of the OWL 2 datatype map, which may be necessary for the various profiles of OWL 2. If, however, $D$ contains a datatype $DT$ from the OWL 2 datatype map, then $N_{LS}(DT)$, $N_{FS}(DT)$, $(DT)^{DT}$, $( LV , DT )^{LS}$ for each $LV \in N_{LS}(DT)$, and $( F , v )^{FS}$ for each $( F , v ) \in N_{FS}(DT)$ are required to coincide with the definitions for $DT$ in the OWL 2 datatype map.
 \qed\end{definition}
 
+Given two datatype maps $D = ( N_{DT} , N_{LS} , N_{FS} , \cdot^{DT} , \cdot^{LS} , \cdot^{FS} )$ and $D' = ( N'_{DT} , N'_{LS} , N'_{FS} , \cdot^{DT'} , \cdot^{LS'} , \cdot^{FS'} )$, we write $D\subseteq D'$ if $N_{DT}\subseteq N'_{DT}$, and
+the other components of $D$ are restrictions (as functions) of those of $D'$.
+
 \begin{definition}
 A vocabulary $V = ( V_{C} , V_{OP} , V_{DP} , V_{I} , V_{DT} , V_{LT} , V_{FA} )$ over a datatype map $D$ is a 7-tuple consisting of the following elements:
 \begin{itemize}
@@ -7172,7 +7175,7 @@ A vocabulary $V = ( V_{C} , V_{OP} , V_{DP} , V_{I} , V_{DT} , V_{LT} , V_{FA} )
 \item
     $V_{I}$ is a set of individuals (named and anonymous) as defined in the OWL 2 Specification \cite{w3c:owl2-spec}.
 \item
-    $V_{DT}$ is a set containing all datatypes of D, the datatype rdfs:Literal, and possibly other datatypes; that is, $N_{DT} \cup \{ \textit{rdfs:Literal} \} \subseteq V_{DT}$.
+    $V_{DT}$ is a set containing all datatypes of D, the datatype \textit{rdfs:Literal}, and possibly other datatypes; that is, $N_{DT} \cup \{ \textit{rdfs:Literal} \} \subseteq V_{DT}$.
 \item
     $V_{LT}$ is a set of literals $LV^{DT}$ for each datatype $DT \in N_{DT}$ and each lexical form $LV \in N_{LS}(DT)$.
 \item
@@ -7231,15 +7234,24 @@ Given a datatype map $D$ and a vocabulary $V$ over $D$, an interpretation $I = (
 \end{itemize}
 \qed\end{definition}
 
-The institution OWL is now defined as follows:
+The institution $\SROIQ(D)$ underlying OWL is now defined as follows:
 \begin{definition}
 \begin{itemize}
-\item An OWL signature is a pair $(D,V)$, where $D$ is a  datatype map and
-$V$ a vocabulary over $D$.
-\item Given OWL signatures $(D,V)$ and $(D',V')$, an OWL signature morphism
-$\sigma\colon (D,V)\to(D',V')$ consists of
+\item An $\SROIQ(D)$ signature is a pair $(D,V)$, where $D$ is a
+  datatype map and $V$ a vocabulary over $D$.
+\item Given $\SROIQ(D)$ signatures $(D,V)$ and $(D',V')$, a
+  $\SROIQ(D)$ signature morphism $\sigma\colon (D,V)\to(D',V')$ only
+  exists if $D\subseteq D'$. In this case, such a signature morphism
+  consists of
 \begin{itemize}
-\item
+\item a map $\sigma_C\colon V_{C}\to V'_{C}$,
+\item a map $\sigma_{OP}\colon V_{OP}\to V'_{OP}$,
+\item a map $\sigma_{DP}\colon V_{DP}\to V'_{DP}$,
+\item a map $\sigma_I\colon V_{I}\to V'_{I}$,
+\item a map $\sigma_{DT}\colon V_{DT}\to V'_{DT}$ that is the identity
+on $N_{DT} \cup \{ \textit{rdfs:Literal} \}$,
+\item a map $\sigma_{LT}\colon V_{LT}\to V'_{LT}$ 
+
 \end{itemize}
 \item
 \item
@@ -8906,11 +8918,11 @@ OMSSymbolSeparator  = String ;
 NetworkDefinition            = 'network-definition', NetworkName , [ ConservativityStrength ] , Network ;
 NetworkName            = IRI ;
 Network                = 'network', { NetworkElement } ,  { ExcludedElement };
-NetworkElement         = 'network-element' , [ Id ] , OMSOrMappingorNetworkRef ;
+NetworkElement         = 'network-element' , [ Id ] , ElementRef ;
 ExcludedElement   = PathReference
                | OMSOrMappingorNetworkRef ;
 PathReference = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef ;
-OMSOrMappingorNetworkRef  = IRI ;
+ElementRef  = IRI ;
 \end{lstlisting}
 
 
@@ -8988,15 +9000,13 @@ OMSName          = IRI ;
 OMSRef           = IRI ;
 ExtensionRef     = IRI ;
                  
-LoLaRef          = LanguageRef | LogicRef ;
-                 
 LanguageRef      = IRI ;
 LogicRef         = IRI ;
 SyntaxRef        = IRI ;
                  
 OMSLanguageTranslation     = NamedTranslation | DefaultTranslation ;
 NamedTranslation = 'named-trans' , OMSLanguageTranslationRef ;
-DefaultTranslation = 'default-trans' , LoLaRef ;
+DefaultTranslation = 'default-trans' , LanguageRef ;
                  
 OMSLanguageTranslationRef  = IRI ;
                  
