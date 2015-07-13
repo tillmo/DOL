@@ -2524,7 +2524,7 @@ to a language by mapping \termref{abstract syntax} to suitable
 can represent the intended meanings of language constructs.}
 
 \termdefinition{semantic rule}{specification of a mapping from
-\termref{abstract syntax} to a \termred{semantic domain}.}
+\termref{abstract syntax} to a \termref{semantic domain}.}
 
 \termdefinition{global environment}{mapping from identifiers (IRIs)
 to values in \termref{semantics domains} representing the
@@ -7074,6 +7074,7 @@ e.g. imports, cannot be identified.}.  The OWL 2 Manchester syntax satisfies the
  conformance.
 %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 
+\cbs The logic \SROIQ underlying\cbe{} 
 OWL can be formalized as an institution as follows:
 \begin{definition}\label{DL} \defsty{OWL 2 DL.} 
 \OWL~2~DL is the description logic (DL) based fragment of the web ontology language \OWL. 
@@ -7123,6 +7124,123 @@ intersection, and the top concept:
 $$C ::= {\mathcal A} \,|\, \top \,|\,  C_1 \sqcap C_2 \,|\, \exists R . C$$
 Note that \ELDL does not have disjunction or negation, and is therefore a sub-Boolean logic.\cbe
 \qed\end{definition}
+
+
+\cbs
+OWL itself is more complicated than \SROIQ due to the presence of datatypes.
+Following the direct model-theoretic semantics of OWL \cite{w3c:owl2-direct-semantics}:
+
+\begin{definition}
+A datatype map, formalizing datatype maps from the OWL 2 Specification \cite{w3c:owl2-spec}, is a 6-tuple $D = ( N_{DT} , N_{LS} , N_{FS} , \cdot^{DT} , \cdot^{LS} , \cdot^{FS} )$ with the following components:
+\begin{itemize}
+\item
+    $N_{DT}$ is a set of datatypes (more precisely, names of datatypes) that does not contain the datatype rdfs:Literal.
+\item
+    $N_{LS}$ is a function that assigns to each datatype $DT \in N_{DT}$ a set $N_{LS}(DT)$ of strings called lexical forms. The set $N_{LS}(DT)$ is called the lexical space of $DT$.
+\item
+    $N_{FS}$ is a function that assigns to each datatype $DT \in N_{DT}$ a set $N_{FS}(DT)$ of pairs $( F , v )$, where $F$ is a constraining facet and $v$ is an arbitrary data value called the constraining value. The set $N_{FS}(DT)$ is called the facet space of $DT$.
+\item
+    For each datatype $DT \in N_{DT}$, the interpretation function $\cdot^{DT}$ assigns to $DT$ a set $(DT)^{DT}$ called the value space of DT.
+\item
+    For each datatype $DT \in N_{DT}$ and each lexical form $LV \in N_{LS}(DT)$, the interpretation function $\cdot^{LS}$ assigns to the pair $( LV , DT )$ a data value $( LV , DT )^{LS} \in (DT)^{DT}$.
+\item
+    For each datatype $DT \in N_{DT}$ and each pair $( F , v ) \in N_{FS}(DT)$, the interpretation function $\cdot^{FS}$ assigns to $( F , v )$ the set $( F , v )^{FS}\subseteq(DT)^{DT}$. 
+\end{itemize}
+
+The set of datatypes $N_{DT}$ of a datatype map $D$ is not required to contain all datatypes from the OWL 2 datatype map; this allows one to talk about subsets of the OWL 2 datatype map, which may be necessary for the various profiles of OWL 2. If, however, $D$ contains a datatype $DT$ from the OWL 2 datatype map, then $N_{LS}(DT)$, $N_{FS}(DT)$, $(DT)^{DT}$, $( LV , DT )^{LS}$ for each $LV \in N_{LS}(DT)$, and $( F , v )^{FS}$ for each $( F , v ) \in N_{FS}(DT)$ are required to coincide with the definitions for $DT$ in the OWL 2 datatype map.
+\qed\end{definition}
+
+\begin{definition}
+A vocabulary $V = ( V_{C} , V_{OP} , V_{DP} , V_{I} , V_{DT} , V_{LT} , V_{FA} )$ over a datatype map $D$ is a 7-tuple consisting of the following elements:
+\begin{itemize}
+\item
+    $V_{C}$ is a set of classes as defined in the OWL 2 Specification \cite{w3c:owl2-spec}, containing at least the classes \textit{owl:Thing} and \textit{owl:Nothing}.
+\item
+    $V_{OP}$ is a set of object properties as defined in the OWL 2 Specification \cite{w3c:owl2-spec}, containing at least the object properties \textit{owl:topObjectProperty} and \textit{owl:bottomObjectProperty}.
+\item
+    $V_{DP}$ is a set of data properties as defined in the OWL 2 Specification \cite{w3c:owl2-spec}, containing at least the data properties \textit{owl:topDataProperty} and \textit{owl:bottomDataProperty}.
+\item
+    $V_{I}$ is a set of individuals (named and anonymous) as defined in the OWL 2 Specification \cite{w3c:owl2-spec}.
+\item
+    $V_{DT}$ is a set containing all datatypes of D, the datatype rdfs:Literal, and possibly other datatypes; that is, $N_{DT} \cup \{ \textit{rdfs:Literal} \} \subseteq V_{DT}$.
+\item
+    $V_{LT}$ is a set of literals $LV^{DT}$ for each datatype $DT \in N_{DT}$ and each lexical form $LV \in N_{LS}(DT)$.
+\item
+    $V_{FA}$ is the set of pairs $( F , lt )$ for each constraining facet $F$, datatype $DT \in N_{DT}$, and literal $lt \in V_{LT}$ such that $( F , ( LV , DT_1 )^{LS} ) \in N_{FS}(DT)$, where $LV$ is the lexical form of $lt$ and $DT_1$ is the datatype of $lt$. 
+\end{itemize}
+\qed\end{definition}
+
+
+\begin{definition}
+Given a datatype map $D$ and a vocabulary $V$ over $D$, an interpretation $I = ( \Delta_I , \Delta_D , \cdot^{C} , \cdot^{OP} , \cdot^{DP} , \cdot^{I} , \cdot^{DT} , \cdot^{LT} , \cdot^{FA} , \mathit{NAMED} )$ for $D$ and $V$ is a 10-tuple with the following structure:
+\begin{itemize}
+\item
+    $\Delta_I$ is a nonempty set called the object domain.
+\item
+    $\Delta_D$ is a nonempty set disjoint with $\Delta_I$ called the data domain such that $(DT)^{DT} \subseteq \Delta_D$ for each datatype $DT \in V_{DT}$.
+\item
+    $\cdot^{C}$ is the class interpretation function that assigns to each class $C \in V_{C}$ a subset $(C)^C \subseteq \Delta_I$ such that
+\begin{itemize}
+\item
+        $(\textit{owl:Thing})^C = \Delta_I$ and
+\item
+        $(\textit{owl:Nothing})^C = \emptyset$. 
+\end{itemize}
+\item
+    $\cdot^{OP}$ is the object property interpretation function that assigns to each object property $OP \in V_{OP}$ a subset $(OP)^{OP} \subseteq \Delta_I \times \Delta_I$ such that
+\begin{itemize}
+\item
+        $(\textit{owl:topObjectProperty})^{OP} = \Delta_I \times \Delta_I$ and
+\item
+        $(\textit{owl:bottomObjectProperty})^{OP} = \emptyset$. 
+\end{itemize}
+\item
+    $\cdot^{DP}$ is the data property interpretation function that assigns to each data property $DP \in V_{DP}$ a subset $(DP)^{DP} \subseteq \Delta_I \times \Delta_D$ such that
+\begin{itemize}
+\item
+        $(\textit{owl:topDataProperty})^{DP} = \Delta_I \times \Delta_D$ and
+\item
+        $(\textit{owl:bottomDataProperty})^{DP} = \emptyset$. 
+\end{itemize}
+\item
+    $\cdot^{I}$ is the individual interpretation function that assigns to each individual $a \in V_{I}$ an element $(a)^{I} \in \Delta_I$.
+\item
+    $\cdot^{DT}$ is the datatype interpretation function that assigns to each datatype $DT \in V_{DT}$ a subset $(DT)^{DT} \subseteq \Delta_D$ such that
+\begin{itemize}
+\item
+        $\cdot^{DT}$ is the same as in $D$ for each datatype $DT \in N_{DT}$, and
+\item
+        $(\textit{rdfs:Literal})^{DT} = \Delta_D$. 
+\end{itemize}
+\item
+    $\cdot^{LT}$ is the literal interpretation function that is defined as $(lt)^{LT} = ( LV , DT )^{LS}$ for each $lt \in V_{LT}$, where $LV$ is the lexical form of $lt$ and $DT$ is the datatype of $lt$.
+\item
+    $\cdot^{FA}$ is the facet interpretation function that is defined as $( F , lt )^{FA} = ( F , (lt)^{LT} )^{FS}$ for each $( F , lt ) \in V_{FA}$.
+\item
+    $\mathit{NAMED}$ is a subset of $\Delta_I$ such that $(a)^{I} \in \mathit{NAMED}$ for each named individual $a \in V_{I}$. 
+\end{itemize}
+\qed\end{definition}
+
+The institution OWL is now defined as follows:
+\begin{definition}
+\begin{itemize}
+\item An OWL signature is a pair $(D,V)$, where $D$ is a  datatype map and
+$V$ a vocabulary over $D$.
+\item Given OWL signatures $(D,V)$ and $(D',V')$, an OWL signature morphism
+$\sigma\colon (D,V)\to(D',V')$ consists of
+\begin{itemize}
+\item
+\end{itemize}
+\item
+\item
+\item
+\item
+\end{itemize}
+\qed\end{definition}
+
+\cbe
+
+
 
 Remark: strictly speaking, the institution defined above is
 \emph{{OWL} 2 DL without restrictions} in the sense of
