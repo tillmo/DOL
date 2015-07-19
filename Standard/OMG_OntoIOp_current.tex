@@ -1385,7 +1385,7 @@ provide the facility to express comments.
 \cbs
 Concerning item 1.\ in the definition of \DOL conformance of OMS
 languages above, the following levels of conformance of the abstract
-syntax of a OMS language with \DOL are defined,\cbe\ 
+syntax of an OMS language with \DOL are defined,\cbe\ 
 listed from highest to lowest:
 
 \begin{description}
@@ -2077,7 +2077,7 @@ original and the renamed OMS.
 symbols and axioms.}
 \cbe
 
-\termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in \cbs the \termref{local environment}.\cbe}
+\termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in \cbs the  OMS given by the \termref{local environment}.\cbe}
 
 
 
@@ -2090,6 +2090,12 @@ The second OMS is said to extend the first, and is an extension of the
 first OMS.
 \end{note} 
 
+\cbs
+\termdefinitionLight{conservative extension\index{conservative extension ! (general)}}{extension that does not add new logical properties with respect to the signature of the extended OMS.}
+  \begin{note}
+   An extension is a consequence-theoretic or model-theoretic conservative extension\index{conservative extension ! model-theoretic}. If used without qualification, the consequence-theoretic version is meant.
+  \end{note}
+\cbe
 
 
 \termdefinitionLight{consequence-theoretic conservative extension\index{conservative extension ! consequence-theoretic}}{extension that does
@@ -2108,11 +2114,6 @@ first OMS.
    Any model-theoretic conservative extension is also a consequence-theoretic one.
   \end{note}
 
-
-\termdefinitionLight{conservative extension\index{conservative extension ! (general)}}{consequence-theoretic or model-theoretic conservative extension\index{conservative extension ! model-theoretic}.}
-  \begin{note}
-   If used without qualification, the consequence-theoretic version is meant.
-  \end{note}
 
 
 \termdefinition{monomorphic extension}{\termref{extension} whose newly introduced
@@ -2219,6 +2220,8 @@ best possible (in the sense of a maximum set of \termref{logical consequences})
 \begin{note}
  Technically, a maximum approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
 \end{note}
+
+\termdefinition{approximation}{\termref{structured OMS} that delivers an \termref{approximation}.}
 
 \cbs\termdefinition{filtering}{verbatim removal of \termref{symbols} or \termref{axioms} from an OMS.}
 \begin{note}
@@ -4293,7 +4296,7 @@ ExtendingOMS        = ClosableOMS
                      | MinimizeKeyword , '{' , ClosableOMS , '}' ;
                      
 OMS                 = ExtendingOMS
-                     | OMS , Minimization 
+                     | OMS , Closure 
                      | OMS , Translation
                      | OMS , Reduction
                      | OMS , Approximation
@@ -4304,8 +4307,8 @@ OMS                 = ExtendingOMS
                      | 'combine' , NetworkElements , [ ExcludeExtensions ]  
                      | GroupOMS ;
 
-Minimization         = MinimizeKeyword , CircMin , [ CircVars ] ;
-MinimizeKeyword      = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
+Closure         = ClosureKeyword , CircMin , [ CircVars ] ;
+ClosureKeyword      = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
 CircMin = Symbol , {  Symbol } ;
 CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
 
