@@ -7380,13 +7380,6 @@ $C_1,\ldots, C_n$ taking into account \syntax{AlignmentSemantics}.
 \normannex{\DOL Ontology}
 \label{a:dol-onto}
 
-% a landscape figure which scales and rotates the file cat.eps or cat.pdf
-\begin{sidewaysfigure}
-\centering
-   \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG} 
-  \caption{Subset of the OntoIOp registry, shown as an RDF graph}
-\label{f:DOL-threelayers}
-\end{sidewaysfigure}
 
 %\begin{figure}
 %  \centering
@@ -7396,7 +7389,7 @@ $C_1,\ldots, C_n$ taking into account \syntax{AlignmentSemantics}.
 %\end{figure}
 
 This annex specifies the \DOL Ontology, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
-For a full treatment of the background and design considerations of the \DOL Ontology please see~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
+Part of the background and design considerations of the \DOL Ontology can be found in~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
 
 \section{Normative State and Normative References}\label{a:dol-onto-norm}
 
@@ -7411,7 +7404,7 @@ The ontology makes use of the following standard ontologies and vocabularies:
 \item SKOS (\nisref{W3C/TR REC-skos-reference:2009})
 \end{itemize}
 
-The sources of the \DOL ontology are being maintained in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at \url{https://ontohub.org/meta/dol/ontology}.
+The sources of the \DOL ontology are being maintained in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at \url{https://ontohub.org/meta/dol-ontology.omn}.
 
 It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
 
@@ -7421,75 +7414,9 @@ Applications of the \DOL Ontology include modeling statements about OMS in RDF, 
 
 \section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
 
-The tables in this annex list the classes and object properties of the \DOL Ontology and thus the essential parts of its implementation.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise.
+\cbs
+The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. Classes that are reifications of relations also have been introduced as object properties.\cbe{}  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise.
 
-\tref{tab:logic-vocab-classes} lists the classes of the \DOL Ontology.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027}).  The definitions of the classes can be found in \cref{terms-and-defs}, sometimes under different names if stated so in the table.  Classes rendered in italics are abstract superclasses that have no direct correspondence in the terminology.
-
-\begin{lstlisting}[language=owl2Manchester]
-Class: ...
-  SubClassOf: ...
-\end{lstlisting}
-
-\newcommand*{\ClassDocumentation}[1]{\textit{#1}}
-\ctable[
-caption={\DOL Ontology Classes},
-mincapwidth=\textwidth,
-label={tab:logic-vocab-classes},
-pos=h,
-]{p{.27\textwidth}p{.45\textwidth}p{.22\textwidth}}{% table footnotes
-}{\FL
-  Class & Superclass & Section \ML
-  \textit{Language} & & \NN
-  OMSLanguage & \textit{Language} & \ref{c:native-oms} \NN
-  Logic & & \ref{c:term-logic} \NN
-  Serialization & & \ref{c:term-serializations} \NN
-  Mapping & & \ref{c:mappings} (OMS mapping) \NN
-  LanguageMapping & Mapping & \NN
-  LogicMapping & Mapping & \NN
-  Translation & Mapping & \NN
-  Reduction & Mapping & \NN
-  DefaultMapping & Mapping & \ref{c:terms-features} \NN
-  WeaklyExactMapping & Mapping & \ref{s:foundations} \NN
-  ExactMapping & WeaklyExactMapping & \ref{s:foundations} \NN
-  FaithfulMapping & Mapping & \ref{c:terms-features} \NN
-  ModelExpansiveMapping & FaithfulMapping & \ref{c:terms-features} \NN
-  ModelBijectiveMapping & ModelExpansiveMapping & \NN
-  Embedding & ModelBijectiveMapping, LogicMapping, Translation & \ref{s:foundations} \NN
-  PlainMapping & Mapping & \NN
-  SimpleTheoroidalMapping & Mapping & \ref{c:term-logic} \LL
-}
-
-\tref{tab:logic-vocab-prop} lists the object properties of the \DOL Ontology.  Each row of the table translates into the following OWL declarations (given in OWL Manchester syntax).  The definitions of the properties can be found in \cref{terms-and-defs}, sometimes under different names if stated so in the table.
-
-\begin{lstlisting}[language=owl2Manchester]
-ObjectProperty: ...
-  Domain: ...
-  Range: ...
-  SubPropertyOf: ...
-\end{lstlisting}
-
-%\todonote[type=q-aut,author=Christoph Lange]{we need to define ``sublogic'' as a term – how?  I guess that would include the notion of an ``OWL profile''. TM: has been defined in section 4}
-% \newcommand*{\PropertyDocumentation}[1]{\NN\multicolumn{3}{p{\linewidth}}{\textit{#1}}}
-\ctable[
-caption={\DOL Ontology Properties},
-width=\linewidth,
-mincapwidth=\textwidth,
-label={tab:logic-vocab-prop},
-pos=h,
-]{lllX}{% table footnotes
-}{\FL
-  Property & Domain & Range & Section \ML
-  isSubLogicOf & Logic & Logic & \ref{c:term-logic} \NN
-  % \PropertyDocumentation{The subject is a sublogic of the object}\ML
-  supportsLogic & Language & Logic & \ref{c:term-logic} \NN
-  % \PropertyDocumentation{The subject OMS language has a semantics specified in terms of the object logic.}\ML
-  specifiesSemanticsOf & Logic & Language & inverse of supportsLogic \NN
-  % \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsLogic.}\ML
-  supportsSerialization & Language & Serialization & \ref{c:term-serializations} \NN
-  % \PropertyDocumentation{OMS in the subject OMS language can be serialized in the object serialization.  Note that the serialization should be as specific as possible, \ie one should not say that ``OWL can be serialized in XML'' and ``Common Logic can be serialized in XML'', but instead ``OWL can be serialized in OWL/XML'' and ``Common Logic can be serialized in XCL'', taking into account that OWL/XML and XCL are two different XML languages.}\ML
-  serializes & Serialization & Language & \ref{c:term-serializations} \NN
-  % \PropertyDocumentation{The subject logic is used to specify the semantics of the object OMS language; inverse of supportsSerialization.}\LL
-}
 
 
 \section{\DOL Registry}\label{a:registry}
@@ -8846,6 +8773,15 @@ of the sorts in $S'$ are generated by function symbols in $F'$.
 
 \ednote{Instantiate the whole heterogeneous environment, that is, error
 logic, unions, etc.}
+
+% a landscape figure which scales and rotates the file cat.eps or cat.pdf
+\begin{sidewaysfigure}
+\centering
+   \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG} 
+  \caption{Subset of the OntoIOp registry, shown as an RDF graph}
+\label{f:DOL-threelayers}
+\end{sidewaysfigure}
+
 
 \begin{figure}
   \centering
