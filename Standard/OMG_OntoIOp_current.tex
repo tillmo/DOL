@@ -1741,7 +1741,11 @@ collection of expressions (like non-logical symbols\index{non-logical symbol}, s
 	\end{note}	
 
 \cbs
-\termdefinition{native document}{document containing a \termref{native OMS}.}
+\termdefinition{native document}{\termref{document} containing a \termref{native OMS}.}
+\cbe
+
+\cbs
+\termdefinition{\DOL document}{\termref{document} containing a \termref{DOL library}.}
 \cbe
 
 \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
@@ -1769,9 +1773,21 @@ plus non-logical annotations\index{annotation}.}
    All \DOL structured OMS are structured OMS. 
   \end{note}
 	
+\cbs 
+\termdefinition{ontology}{\termref{logical theory} that is used as a
+  shard conceptualization}
+    
+\termdefinition{MDE model}{logical theory that is used as a model in
+  the sense of model-driven engineering (MDE)}
+\begin{note}
+Not to be confused with the term \termref{model} in the sense
+of logic (model theory).
+\end{note}
 
-
-\termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
+\termdefinition{specification}{logical theory that is used as a formal
+  specification}
+\cbe
+\termdefinitionLight{OMS (ontology, specification or MDE model)\index{OMS}}
 {basic OMS or structured OMS.}
 \begin{note}
 \cbs
@@ -1849,10 +1865,13 @@ of non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
   \end{note}
   \begin{note}
   This term refers to \emph{model} in the sense of model theory (a
-  branch of logic). It is not to be confused with \emph{model} in the
+  branch of logic). It is not to be confused with \termref{MDE model} in the
   sense of modeling (i.e., the ``M'' in OMS).
   \end{note}
 
+\cbs
+\termdefinition{expression}{a finite combination of symbols that are well-formed according to applicable rules (depending on the language)}
+\cbe
   
 \termdefinition{term}{syntactic expression either consisting of a single \termref{non-logical symbol} or recursively composed of other terms (a.k.a. its subterms).}
   \begin{note}
@@ -1898,7 +1917,7 @@ Entailment expresses that each model \termref{satisfying} the first OMS also
 satisfies the second OMS (or the sentence, respectively).
 \end{note}
 \begin{note}
-Entailments can also be stated between \termref{networks}, or networks and OMS.
+Entailments can also be stated between \termref{OMS networks}, or OMS networks and OMS.
 \end{note}
 \cbe
 \begin{note}
@@ -1913,7 +1932,8 @@ The converse is generalization.
 demonstrated to be a \termref{logical consequence} of the axioms.}
 
 \cbs
-  \termdefinition{theorem prover}{software tool that attempts to prove that a given sentence is the logical consequence of some given set of \termref{axioms} and \termref{theorems}.}
+\termdefinition{tool}{software for processing \termref{DOL libraries} and \termref{OMS}.}
+  \termdefinition{theorem prover}{software \termref{tool} that attempts to prove that a given sentence is the logical consequence of some given set of \termref{axioms} and \termref{theorems}.}
 \cbe
 
 
@@ -2018,7 +2038,7 @@ not considered sentences of that OMS.
 \sclause{Structured OMS}
 
 \termdefinition{structured OMS}
-{\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming} or other structuring operations.}
+{\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming}, \termref{OMS reduction} or other structuring operations.}
 \begin{note}
 	  Structured OMS are either \DOL structured OMS or native OMS that utilize elements of their structuring language aspect. 
   \end{note}
@@ -2072,7 +2092,7 @@ A renaming results in an \termref{OMS mapping} between the
 original and the renamed OMS.
 \end{note}
 
-  \termdefinition{reduction}{restriction of an \termref{OMS} to a smaller \termref{signature}.}
+  \termdefinition{OMS reduction}{restriction of an \termref{OMS} to a smaller \termref{signature}.}
 
 \cbs
 \termdefinition{local environment}{OMS built from all previously-declared 
@@ -2179,7 +2199,7 @@ Any satisfiable OMS is \termref{consistent}, but there are some
 \termref{logics} where the converse does not hold.
 \end{note}
 
-  \termdefinition{model finder}{tool that finds  \termref{models} of an
+  \termdefinition{model finder}{\termref{tool} that finds  \termref{models} of an
 \termref{OMS} and thus proves it to be \termref{satisfiable}.}
 \cbe
 
@@ -2310,13 +2330,15 @@ along the alignment, there is only one concept, representing both
    A symbol map item is given as $s_1 \mapsto s_2$, where $s_1$ is a symbol from the \emph{source} OMS 
    and $s_2$ is a symbol from the \emph{target}  of the OMS mapping.
  \end{note}
+ \begin{note}
+   \cbs Similar to \termref{correspondence}.\cbe
+ \end{note}
 
  \termdefinition{signature morphism}{mapping between two signatures,
 preserving the structure of the source signature within the target
 signature}
  \begin{note}
-   A symbol map item is given as $s_1 \mapsto s_2$, where $s_1$ is a symbol from the \emph{source} OMS 
-   and $s_2$ is a symbol from the \emph{target}  of the OMS mapping.
+   \cbs A list of symbol map items induces a signature morphism.\cbe
  \end{note}
 
 
@@ -2373,7 +2395,7 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
   \end{note}
 
  
-\termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology} graph with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked.
+\termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology} \termref{graph} with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked.
 %\ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
 %``heterogeneous OMS''? For the former. ``Hyperontologies. introduce a notion of heterogeneously structured ontology, which also affords distributed networks of ontologies written in
 %different formalisms, which we call hyperontologies.'' (from ``Carnap, Goguen, and the Hyperontologies'')}
@@ -2416,7 +2438,24 @@ way.
 
 \sclause{Features of OMS Languages}\label{c:terms-features}
  
+
 \begin{definitions}
+\cbs
+
+\termdefinition{mapping\synonym function}{relation between a set of
+  inputs and a set of permissible outputs with the property that each
+  input is related to exactly one output.}
+\begin{note}
+In some cases is a morphism, as in \termref{category} theory.
+\end{note}
+
+\termdefinition{language mapping}{\termref{mapping} between languages}
+\begin{note}
+This is a general term, subsuming \termref{OMS language translation},
+\termref{logic translation} and \termref{logic reduction} below.
+\end{note}
+\cbe
+
   \termdefinition{OMS language translation}{mapping from constructs in the source \termref{OMS language} to their equivalents in the target \termref{OMS language}.}
 %
 \begin{note}
@@ -2425,7 +2464,11 @@ way.
   language.
 \end{note}
 
-\termdefinition{OMS language graph}{graph of OMS languages\index{OMS language} and
+\cbs
+\termdefinition{graph}{set of objects (nodes) that are connected by links (edges).}
+\cbe
+
+\termdefinition{OMS language graph}{\termref{graph} of OMS languages\index{OMS language} and
 OMS language translations\index{language translation}, typically used in a \termref{heterogeneous environment}.}
 \begin{note}
   In an OMS language graph, some of the OMS language translations can be
@@ -2444,7 +2487,8 @@ a \termref{logic graph}, an \termref{OMS language graph} and
 \termref{supports relations}.}
 \begin{note}
   \cbs The support relations specifies which language supports which
-   logics and which serializations.  
+   logics and which serializations, and which language translation
+   supports which logic translation or reduction.  
    Moreover, each language has a default \termref{logic} and a default \termref{serialization}.\cbe
 \end{note}
 \begin{note}
@@ -2527,9 +2571,14 @@ An abstract syntax can be specified as a MOF metamodel. Then abstract abstract s
 \begin{definitions}
 \cbs
 
+\termdefinition{formalization}{precise mathematical entity capturing an informal or semi-formal entity.}
+
 \termdefinition{formal semantics}{assignment of a mathematical meaning
 to a language by mapping \termref{abstract syntax} to suitable
 \termref{semantic domains}.}
+\begin{note}
+A formal semantics is a formalization of the meaning of a language.
+\end{note}
 
 \termdefinition{semantic domain}{mathematically-defined set of values that
 can represent the intended meanings of language constructs.}
@@ -2568,7 +2617,11 @@ sentences\index{sentence} \cbs (constraints on models)\cbe,
 \begin{note}
 There is also a supports relation between OMS languages and serializations.
 \end{note}
-
+\cbs
+\termdefinition{exact logical expressivity}{strengthening of the
+supports relation between languages and logics, stating that
+the language has exactly the expressivity of the logic.}
+\cbe
  \termdefinition{institution}{metaframework mathematically formalizing
 the notion of a \termref{logic}, \cbs providing formal interfaces
 for the notions of
@@ -2592,18 +2645,26 @@ and \termref{satisfaction}.
  See \cbs Definition~\ref{def:inst} in \cbe clause~\ref{c:semantics} for a formal definition.
 \end{note}
 
-  \termdefinition{logic translation}{mapping of a source
+\termdefinition{plain mapping}{\termref{logic mapping} that maps signatures to signatures and therefore does not use infrastructure axioms.}
+
+
+\termdefinition{translation}{\termref{mapping} between languages or \termref{logics} representing all structure, in contrast to \termref{reduction}.}
+	
+\termdefinition{reduction}{\termref{mapping} between languages or \termref{logics} forgetting parts of the structure, projection to a smaller language or logic.}
+
+
+  \termdefinition{logic translation}{\termref{translation} of a source
     \termref{logic} into a target \termref{logic} (mapping
     signatures\index{signature}, sentences\index{sentence} and models\index{model})
     that keeps or encodes the logical content of \termref{OMS}.}
 
-  \termdefinition{logic reduction}{mapping of a source \termref{logic}
+  \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
     onto a (usually less expressive) target \termref{logic} (mapping
 	signatures\index{signature}, sentences\index{sentence} and models\index{model})
     that simply forgets those parts of the logical structure not
     fitting the target \termref{logic}.}
 
-\termdefinition{theoroidal logic translation} translation that maps 
+\termdefinition{simple theoroidal logic translation} translation that maps 
 signatures of the source logic to theories (i.e.~signatures and sets of sentences)
 of the target logic. 
 \begin{example}
@@ -2613,7 +2674,7 @@ of the target logic.
 
 \termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semantics.}
 
-\termdefinition{logic graph}{graph of logics\index{logic}, logic 
+\termdefinition{logic graph}{\termref{graph} of logics\index{logic}, logic 
 translations\index{logic translation} and logic reductions\index{logic reduction}, typically used in a \termref{heterogeneous environment}.}
 \begin{note}
   In a logic graph, some of the logic translations and reductions can be
@@ -2635,16 +2696,31 @@ translations\index{logic translation} and logic reductions\index{logic reduction
 See section~\ref{dist-het-onto}.
 \end{example}
 
-\termdefinition{logic approximation}{mapping of a source \termref{logic} onto a (usually less
-expressive) target \termref{logic} that tries to approximate the OMS expressed in the source
-\termref{logic} with means of the expressivity of the target \termref{logic}.}
-\begin{note}
-  A unique maximal approximation need not exist.
-\end{note}
-\begin{note}
- The target logic typically is a \termref{sublogic} of the source logic.
-\end{note}
+\cbs 
+\termdefinition{faithful mapping}{\termref{logic mapping} that
+  preserves and reflects \termref{logical consequence}}
 
+\termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective model translation (ensuring faithfulness of the mapping)}
+
+\termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of models}
+
+\termdefinition{exact mapping}{\termref{logic mapping} that is
+  compatible with certain \DOL structuring constructs}
+
+\termdefinition{weakly exact mapping}{\termref{logic mapping} that is weakly compatible with certain \DOL structuring constructs}
+
+\termdefinition{embedding}{\termref{logic mapping} that embeds the
+  source into the target logic, using components that are embeddings
+  and (in the case of model translations) isomorphism.}
+
+\termdefinition{sublogic}{\termref{logic embedding} that is ``syntactic'' in the sense that \termref{signature} and \termref{sentence} translations are inclusions.}
+
+\termdefinition{adjointness}{relation between a \termref{logic
+    translation} and a \termref{logic reducxtion}, expressing that
+  they share their \termref{sentence} and \termref{model}
+  translations, while the signature translations are adjoint to each
+  other (in the sense of \termref{category} theory).}
+\cbe
 
 \end{definitions}
   
@@ -2661,8 +2737,6 @@ expressive) target \termref{logic} that tries to approximate the OMS expressed i
 %interoperability between OMS.''}\\
 
 \begin{definitions}
-
-\termdefinition{OMS integration} {the union of OMS which preserves the satisfaction and entailment relations among constituent OMS.}
 
   \termdefinition{logically interoperable}{property of \termref{structured OMS}, which may be written in different OMS languages\index{OMS language} supporting different logics\index{logic}, of being usable jointly in a coherent way (via suitable OMS language translations), such that the notions of their overall consistency and logical entailment have a precise logical semantics.}
 \end{definitions}
