@@ -2038,7 +2038,7 @@ not considered sentences of that OMS.
 \sclause{Structured OMS}
 
 \termdefinition{structured OMS}
-{\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{renaming}, \termref{OMS reduction} or other structuring operations.}
+{\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{OMS translation}, \termref{OMS reduction} or other structuring operations.}
 \begin{note}
 	  Structured OMS are either \DOL structured OMS or native OMS that utilize elements of their structuring language aspect. 
   \end{note}
@@ -2049,7 +2049,7 @@ not considered sentences of that OMS.
 {OMS that can be seen, by purely syntactical means, to be logically  equivalent to a flat OMS.}
 \begin{note}
 More precisely, an OMS is flattenable if and only if it is either a basic OMS or it is an \termref{extension},
- \termref{union}, translation, \termref{module extraction}, \termref{approximation}, \termref{filtering},
+ \termref{union}, translation, \termref{module}, \termref{approximation}, \termref{filtering},
   or reference of named OMS involving only flattenable OMS. 
 \end{note}
 
@@ -2085,17 +2085,16 @@ Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclus
   \termdefinition{union}{aggregation of several \termref{OMS}
     to a new \termref{OMS}, without any renaming.}
  
-  \termdefinition{renaming}{assignment of new names
-   to some non-logical symbols\index{non-logical symbol} of an \termref{OMS}.}
+  \termdefinition{OMS translation}{assignment of new names to some \termref{non-logical symbols} of an \termref{OMS}, or translation of an OMS along a language translation.}
 \begin{note}
-A renaming results in an \termref{OMS mapping} between the
+An OMS translation results in an \termref{OMS mapping} between the
 original and the renamed OMS.
 \end{note}
 
   \termdefinition{OMS reduction}{restriction of an \termref{OMS} to a smaller \termref{signature}.}
 
 \cbs
-\termdefinition{local environment}{OMS built from all previously-declared 
+\termdefinition{local environment}{signature built from all previously-declared 
 symbols and axioms.}
 \cbe
 
@@ -2395,7 +2394,7 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
   \end{note}
 
  
-\termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology} \termref{graph} with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked.
+\termdefinitionLight{\termref{OMS network}\synonym distributed OMS\synonym hyperontology}{\termref{graph} with \termref{OMS} as nodes and OMS mappings\index{OMS mapping} as edges, showing how the OMS are interlinked.}
 %\ednote{Is ``hyperontology'' a synonym for ``OMS network'', or rather for
 %``heterogeneous OMS''? For the former. ``Hyperontologies. introduce a notion of heterogeneously structured ontology, which also affords distributed networks of ontologies written in
 %different formalisms, which we call hyperontologies.'' (from ``Carnap, Goguen, and the Hyperontologies'')}
@@ -3090,7 +3089,7 @@ contained in these axioms is lost.
 \DOL allows the user to replace such informal annotations by formal axioms in a suitable ontology 
 language. The relation between the \OWL ontology and the FOL axioms is that of a heterogeneous 
 import. In the result, both the \OWL and the FOL axioms are amenable to, e.g., automated consistency 
-checks and theorem proving. Hence, all available information can be used in the reasoning process.
+checking and theorem proving. Hence, all available information can be used in the reasoning process.
 For example, the ontology below extends the \OWL definition of \texttt{isProperPartOf} as an asymmetric relation
 with a first-order axiom (in Common Logic) asserting that the relation is also transitive.
 \begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,morekeywords={logic,ontology,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
@@ -4336,7 +4335,7 @@ list of non-logical symbols that are to be hidden. Also,
 an \syntax{OMSLanguageTranslation} denoting a logic projection
 can be used a logic reduction to a
 less expressive OMS language. A \syntax{SymbolMap}, used in
-OMS \syntax{Translation}s,  maps symbols to symbols,
+OMS \syntax{OMSTranslation}s,  maps symbols to symbols,
 %% \CLnote[type=fyi]{On 2012-07-18 we decided 
 %% not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics 
 %% in an OMS language independent way would require additional institution infrastructure – and the same effect can be 
@@ -4373,7 +4372,7 @@ ExtendingOMS        = ClosableOMS
                      
 OMS                 = ExtendingOMS
                      | OMS , Closure 
-                     | OMS , Translation
+                     | OMS , OMSTranslation
                      | OMS , Reduction
                      | OMS , Approximation
                      | OMS , Filtering
@@ -4391,9 +4390,9 @@ CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
 GroupOMS            = '{' , OMS , '}'
                      | OMSRef ;
 
-Translation          = 'with' , { LogicTranslation } , SymbolMap
-                     | 'with' , LogicTranslation , { LogicTranslation } ;
-LogicTranslation     = 'translation' , OMSLanguageTranslation ;
+OMSTranslation          = 'with' , { LanguageTranslation } , SymbolMap
+                     | 'with' , LanguageTranslation , { LanguageTranslation } ;
+LanguageTranslation     = 'translation' , OMSLanguageTranslation ;
                       
 Reduction            = 'hide' , { LogicReduction } , SymbolItems 
                      | 'hide' , LogicReduction , { LogicReduction } 
@@ -4559,7 +4558,7 @@ MappingDefinition             = InterpretationDefinition | Entailment | Equivale
 
 InterpretationDefinition            = InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType ,  'end'
                      | InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType , '=' ,
-                       { LogicTranslation } , [ SymbolMap ] ,  'end' 
+                       { LanguageTranslation } , [ SymbolMap ] ,  'end' 
                      | InterpretationKeyword , InterpretationName , '=' , Refinement ,  'end' ;
 
 InterpretationKeyword         = 'interpretation' | 'view' | 'refinement' ;
@@ -4571,10 +4570,10 @@ Refinement           = GroupOMS
                      | Refinement , 'then' , Refinement
                      | GroupOMS , 'refined' , [RefMap] , 'to' , Refinement 
                      | NetworkName , 'refined' , [RefMap] , 'to' , Refinement ;
-RefMap               = 'via' , LogicTranslation , [ SymbolMap ]
-                     | 'via' , [ LogicTranslation ] , SymbolMap
+RefMap               = 'via' , LanguageTranslation , [ SymbolMap ]
+                     | 'via' , [ LanguageTranslation ] , SymbolMap
                      | 'via' , NodeMap , { ',' , NodeMap } ;
-NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LogicTranslation } , [ SymbolMap ] ] ;
+NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LanguageTranslation } , [ SymbolMap ] ] ;
 
 Entailment           = 'entailment' , EntailmentName , '=' , EntailmentType , 'end' ;
 EntailmentName       = IRI ;
@@ -4970,7 +4969,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %
 % OMS                 = ExtendingOMS
 %                      | OMS , Minimization
-%                      | OMS , Translation
+%                      | OMS , OMSTranslation
 %                      | OMS , Reduction
 %                      | OMS , Approximation
 %                      | OMS , Filtering
@@ -4988,9 +4987,9 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 % GroupOMS            = '{' , OMS , '}'
 %                      | OMSRef ;
 %
-% Translation          = 'with' , { LogicTranslation } , SymbolMap
-%                      | 'with' , LogicTranslation , { LogicTranslation } ;
-% LogicTranslation     = 'translation' , OMSLanguageTranslation ;
+% OMSTranslation          = 'with' , { LanguageTranslation } , SymbolMap
+%                      | 'with' , LanguageTranslation , { LanguageTranslation } ;
+% LanguageTranslation     = 'translation' , OMSLanguageTranslation ;
 %
 % Reduction            = 'hide' , { LogicReduction } , SymbolItems
 %                      | 'hide' , LogicReduction , { LogicReduction }
@@ -5086,7 +5085,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %
 % InterpretationDefinition            = InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType ,  'end'
 %                      | InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType , '=' ,
-%                        { LogicTranslation } , [ SymbolMap ] ,  'end'
+%                        { LanguageTranslation } , [ SymbolMap ] ,  'end'
 %                      | InterpretationKeyword , InterpretationName , '=' , Refinement ,  'end' ;
 %
 % InterpretationKeyword         = 'interpretation' | 'view' | 'refinement' ;
@@ -5098,10 +5097,10 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | Refinement , 'then' , Refinement
 %                      | GroupOMS , 'refined' , [RefMap] , 'to' , Refinement
 %                      | NetworkName , 'refined' , [RefMap] , 'to' , Refinement ;
-% RefMap               = 'via' , LogicTranslation , [ SymbolMap ]
-%                      | 'via' , [ LogicTranslation ] , SymbolMap
+% RefMap               = 'via' , LanguageTranslation , [ SymbolMap ]
+%                      | 'via' , [ LanguageTranslation ] , SymbolMap
 %                      | 'via' , NodeMap , { ',' , NodeMap } ;
-% NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LogicTranslation } , [ SymbolMap ] ] ;
+% NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LanguageTranslation } , [ SymbolMap ] ] ;
 %
 % Entailment           = 'entailment' , EntailmentName , '=' , EntailmentType , 'end' ;
 % EntailmentName       = IRI ;
@@ -5616,7 +5615,7 @@ in $I$ can be solved by a theorem prover for $J$ by just feeding the
 theorem prover with $\alpha(\Gamma)\models^J\alpha(\varphi)$.
 Subinstitution comorphism preserve
 the semantics of more advanced \DOL structuring constructs such
-as renaming and hiding. 
+as OMS translation and OMS reduction.
 
 
 \begin{definition}
@@ -5968,7 +5967,7 @@ $sem(\Gamma'', \syntax{DOLLibrary}) = \Gamma'$.
 $$sem(\syntax{NativeDocument}) = \Gamma''$$
 
 \noindent where 
-$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the \DOL library
+$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the native document
 and 
 $\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(\syntax{NativeDocument})]$.
 
@@ -6279,10 +6278,10 @@ $$
 
 %Translation
 
-The semantics of a translation $O'= \syntax{translation OMS Translation}$ is given by
+The semantics of a translation $O'= \syntax{translation OMS OMSTranslation}$ is given by
 \begin{itemize}
- \item $\Inst(O') = J$, when $\Inst_{\Sig(\syntax   {OMS})}(\syntax{Translation}) = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$ 
- \item $\Sig(O') = \Sigma'$, when $\Mor_{\Sig(\syntax   {OMS})}(\syntax{Translation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
+ \item $\Inst(O') = J$, when $\Inst_{\Sig(\syntax   {OMS})}(\syntax{OMSTranslation}) = (\Phi, \alpha, \beta) : \Inst(\syntax{OMS}) \to J$ 
+ \item $\Sig(O') = \Sigma'$, when $\Mor_{\Sig(\syntax   {OMS})}(\syntax{OMSTranslation}) = \sigma:\Phi(\Sig(\syntax   {OMS}))\to \Sigma'$
  \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(\syntax{OMS})\}$
  \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(\syntax{OMS}) \}$. It is defined only if \syntax{OMS} is flattenable.
  \item $Env(\Gamma, O')$ is obtained from 
@@ -6488,9 +6487,9 @@ $O=$ \syntax{combination Network} is
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,\Sigma, \syntax{Translation})=((\Phi,\alpha,\beta),  \sigma)}
+\semdom{sem(\Gamma,\Sigma, \syntax{OMSTranslation})=((\Phi,\alpha,\beta),  \sigma)}
 The semantics of a translation
-$O=$ \syntax{renaming OMSLanguageTranslation SymbolMap}
+$O=$ \syntax{translate OMSLanguageTranslation SymbolMap}
 is given by
 \begin{itemize}
  \item $\Inst(O) = sem(\syntax{OMSLanguageTranslation}) : \Gamma.logic \to logic'$
@@ -6839,7 +6838,7 @@ semantics is undefined.
 %\syntax{translation  OMS  Translation} & 
 %$(J,\Phi(\Sigma),\{M \,|\, \beta(M)\in \cM\})$,\newline where
 % $(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
-%$sem(L,\Sigma,\syntax{Translation})=(\Phi,\alpha,\beta):I\to J$\\\hline
+%$sem(L,\Sigma,\syntax{OMSTranslation})=(\Phi,\alpha,\beta):I\to J$\\\hline
 %\syntax{reduction  OMS  Reduction} &  
 %$(J,\Sigma',\{\beta(M)\forget{\Sigma'} \,|\, M\in \cM\})$, \newline where
 %$(I,\Sigma,\cM)=sem(\Gamma,L,\syntax{OMS})$ \newline and
@@ -9316,7 +9315,7 @@ ExtendingOMS         = ClosableOMS
 RelativeClosureOMS = 'relative-closure' , ClosureType , ClosableOMS ;
 OMS                  = ExtendingOMS | ClosureOMS | TranslationOMS | ReductionOMS | ExtractionOMS | ApproximationOMS | FilteringOMS | UnionOMS | ExtensionOMS | QualifiedOMS | CombinationOMS | ApplicationOMS ;
 ClosureOMS = 'closure-symbols' , OMS , Closure ;
-TranslationOMS = 'translation' , OMS , Translation ;
+TranslationOMS = 'translation' , OMS , OMSTranslation ;
 ReductionOMS = 'reduction' , OMS , Reduction ;
 ExtractionOMS = 'module-extract' , OMS , Extraction ;
 ApproximationOMS = 'approximation' , OMS , Approximation ;
@@ -9332,7 +9331,7 @@ ClosureType = 'minimize' | 'maximize' | 'free' | 'cofree' ;
 CircClosure          = Symbol , { Symbol } ;
 CircVars             = { Symbol } ;
 
-Translation          = 'renaming' , { OMSLanguageTranslation } , [ SymbolMap ] ;
+OMSTranslation          = 'translate' , { OMSLanguageTranslation } , [ SymbolMap ] ;
 
 Reduction = 'reduction' , RemovalKind , { OMSLanguageTranslation } , [ SymbolList ] ;
 
