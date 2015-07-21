@@ -64,7 +64,7 @@ instance Pretty Alt where
      multi_liner :: String -> String -> [String] -> String
      multi_liner acc1 acc2 [] = acc1++acc2
      multi_liner acc1 acc2 (s:rest) = 
-       if length acc2' < width-length si-w+4
+       if length acc2' < width-length si-w+4 || (acc2 == "")
         then multi_liner acc1 acc2' rest
         else multi_liner (acc1++acc2++sep) "" (s:rest)
        where acc2' = acc2++" "++s
@@ -217,4 +217,3 @@ printable ex = single $ satisfy $ \ c -> (notElem c ex)
 single :: Monad m => m a -> m [a]
 single = liftM return
   
-
