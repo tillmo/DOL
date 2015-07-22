@@ -2087,20 +2087,24 @@ Semantically, an import of $O_2$ into $O_1$ is equivalent to the verbatim inclus
   \termdefinition{union}{aggregation of several \termref{OMS}
     to a new \termref{OMS}, without any renaming.}
  
-  \termdefinition{OMS translation}{assignment of new names to some \termref{non-logical symbols} of an \termref{OMS}, or translation of an OMS along a language translation.}
+  \termdefinition{OMS translation}{DOL structured OMS expressing the assignment of new names to some \termref{non-logical symbols} of an \termref{OMS}, or translation of an OMS along a language translation.}
 \begin{note}
 An OMS translation results in an \termref{OMS mapping} between the
 original and the renamed OMS.
 \end{note}
 
-  \termdefinition{OMS reduction}{restriction of an \termref{OMS} to a smaller \termref{signature}.}
+  \termdefinition{OMS reduction}{DOL structured OMS expressing the restriction of an \termref{OMS} to a smaller \termref{signature}.}
 
 \cbs
 \termdefinition{local environment}{signature built from all previously-declared 
 symbols and axioms.}
-\cbe
 
-\termdefinition{extension}{\termref{OMS} whose sets of non-logical symbols\index{non-logical symbol} and sentences\index{sentence} are supersets of those present in \cbs the  OMS given by the \termref{local environment}.\cbe}
+\termdefinition{extension}{\termref{structured OMS} extending a given OMS with new symbols and \termref{sentences}.}
+\begin{note}
+The new symbols and sentences are interpreted relative to the
+\termref{local envorinment}, which is the signature of the ``given OMS''. 
+\end{note}
+\cbe
 
 
 
@@ -2204,7 +2208,7 @@ Any satisfiable OMS is \termref{consistent}, but there are some
 \termref{OMS} and thus proves it to be \termref{satisfiable}.}
 \cbe
 
-\termdefinition{module}{\termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}.}
+\termdefinition{module}{\termref{structured OMS} expressing a \termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}.}
 %\todonote[author=Christoph Lange]{a more formal definition, from \todonoteURL{http://iswc2011.semanticweb.org/fileadmin/iswc/Papers/PostersDemos/iswc11pd_submission_75.pdf}: Modules are subsets of
 %OMS that preserve all entailments over a set of terms $\Sigma$ called seed signature.  Modules based on syntactic locality are defined in Cuenca Grau, B., Horrocks, I., Kazakov, Y., Sattler, U.: Modular reuse of ontologies: Theory and practice. J. of Artif. Intell. Research 31, 273–318 (2008)}}
   \begin{note}
@@ -2244,11 +2248,11 @@ best possible (in the sense of a maximum set of \termref{logical consequences})
  Technically, a maximum approximant is a uniform interpolant, see \cite{DBLP:conf/ijcai/LutzW11}.
 \end{note}
 
-\termdefinition{approximation}{\termref{structured OMS} that delivers an \termref{approximation}.}
+\termdefinition{approximation}{\termref{structured OMS} that expresses a \termref{maximum approximant}.}
 
-\cbs\termdefinition{filtering}{verbatim removal of \termref{symbols} or \termref{axioms} from an OMS.}
+\cbs\termdefinition{filtering}{\termref{structured OMS} expressing the verbatim removal of \termref{symbols} or \termref{axioms} from an OMS.}
 \begin{note}
-If a symbol is removed, all axioms containing that symbols are removed, too.
+If a symbol is removed, all axioms containing that symbol are removed, too.
 \end{note}
 \cbe
 
@@ -2256,7 +2260,7 @@ If a symbol is removed, all axioms containing that symbols are removed, too.
 \termdefinition{closed world assumption}{default assumption about facts whose status in unknown.}
 
 \termdefinitionLight{\termref{closure}\synonym circumscription\index{circumscription|see {closure}}}
-{way of implementing the \termref{closed world assumption} by restricting the \termref{models}\index{model} to those that are minimal or maximal (with respect to the local environment).}
+{structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \termref{models}\index{model} to those that are minimal or maximal (with respect to the local environment).}
   \begin{note}
     \termref{Symbols} from the \termref{local environment} are assumed
     to have a fixed interpretation. Only the symbols newly declared in
@@ -2296,7 +2300,7 @@ If a symbol is removed, all axioms containing that symbols are removed, too.
   \end{note}
 \cbe
 
-  \termdefinition{combination}{aggregation of all the OMS in an \termref{OMS network}, where non-logical symbols are shared according to the OMS mappings in the OMS network.}
+  \termdefinition{combination}{structured OMS expressing the aggregation of all the OMS in an \termref{OMS network}, where non-logical symbols are shared according to the OMS mappings in the OMS network.}
 \begin{example}
 Consider an ontology involving a concept \texttt{Person},
 and another one involving \texttt{Human being}, and an \termref{alignment}
@@ -7089,7 +7093,7 @@ The map is required to be total on the nodes of $G_1$.
 
 \semdom{sem(\Gamma, G_1, G_2,
 \syntax{NodeMap}) = 
-(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma})
+(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma)}
 
 $sem(\Gamma, G_1, G_2,
 \syntax{node-map OMSName$_1$ OMSName$_2$ OMSLanguageTranslation* SymbolMap}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
@@ -7210,7 +7214,10 @@ $$sem(\Gamma,\syntax{equivalence-definition  EquivalenceName  ( network-equivale
 \ednote{in the manifesto this is called a conservative extension. TM: so we have once decided to change this into conservative extension? I vaguely can
 remember...}
 
-$$sem(\Gamma, \syntax{module-definition ModuleName ConservativityStrength ModuleType InterfaceSignature}) = \Gamma'$$
+$$\begin{array}{ll}
+sem(\Gamma, &\syntax{module-definition ModuleName ConservativityStrength ModuleType}\\ 
+&\syntax{InterfaceSignature}) = \Gamma'
+\end{array}$$
 
 \noindent where 
 $\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (G,\iota, N_2,N_1)]$
@@ -7230,15 +7237,18 @@ implies $O_2\models\varphi$.
 
 \semdom{sem(\Gamma,\syntax{AlignmentDefinition})=\Gamma'}
 
-$sem(\Gamma, \syntax{alignment-definition AlignmentName AlignmentCardinality AlignmentType AlignmentSemantics Corresps}) = \Gamma' $
+$\begin{array}{ll}sem(\Gamma, &\syntax{alignment-definition AlignmentName AlignmentCardinality}\\
+& \syntax{AlignmentType AlignmentSemantics Corresps}) = \Gamma' 
+\end{array}$
 
 where
 $sem(\Gamma,\syntax{AlignmentType}) = (L_1, L_2)$
 and\\
-$\Gamma'=\Gamma[\syntax{AlignmentType} \mapsto 
-(sem(\Gamma, (L_1, L_2), \syntax{AlignmentCardinality AlignmentSemantics Corresps}),
+$\begin{array}{ll}\Gamma'=&\Gamma[\syntax{AlignmentType} \mapsto \\
+&(sem(\Gamma, (L_1, L_2), \syntax{AlignmentCardinality AlignmentSemantics Corresps}),
 id,L_1,L_2)
-]$
+]
+\end{array}$
 
 \semdom{sem(\Gamma, \syntax{AlignmentType}) = (L_1, L_2)}
 
@@ -7421,9 +7431,28 @@ Applications of the \DOL Ontology include modeling statements about OMS in RDF, 
 \section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
 
 \cbs
-The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. Classes that are reifications of relations also have been introduced as object properties.\cbe{}  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise.
+The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. Classes that are reifications of relations also have been introduced as object properties.\cbe{}  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise. \cbs
+The \DOL Ontology additionally contains some top-level abstract classes
+as follows:
+
+\includegraphics[width=0.8\textwidth]{dol-onto-classes.png}
+
+This reflects central issues in the structure of \DOL:
+while \DOL, as a language, is a linguistic entity, it is
+related to mathematical entities like logics, signatures and models
+through its semantics. That is, semantic entities provide the
+bridge bewteen linguistic and mathematical entities.
+Moreover, processes (like theorem proving) provide algorithmic
+procedcures for manipulating DOL librares, and tools implement
+these in software.
+
+The top level object properties are structured in a similar way:
+\medskip
+
+\includegraphics[width=0.4\textwidth]{dol-onto-properties.png}
 
 
+\cbe
 
 \section{\DOL Registry}\label{a:registry}
 

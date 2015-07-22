@@ -2206,7 +2206,7 @@ Any satisfiable OMS is \termref{consistent}, but there are some
 \termref{OMS} and thus proves it to be \termref{satisfiable}.}
 \cbe
 
-\termdefinition{module}{structured OMS} expressing a \termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}.}
+\termdefinition{module}{\termref{structured OMS} expressing a \termref{subOMS} that conservatively extends to conservative extension  the whole \termref{OMS}.}
 %\todonote[author=Christoph Lange]{a more formal definition, from \todonoteURL{http://iswc2011.semanticweb.org/fileadmin/iswc/Papers/PostersDemos/iswc11pd_submission_75.pdf}: Modules are subsets of
 %OMS that preserve all entailments over a set of terms $\Sigma$ called seed signature.  Modules based on syntactic locality are defined in Cuenca Grau, B., Horrocks, I., Kazakov, Y., Sattler, U.: Modular reuse of ontologies: Theory and practice. J. of Artif. Intell. Research 31, 273–318 (2008)}}
   \begin{note}
@@ -7086,7 +7086,7 @@ The map is required to be total on the nodes of $G_1$.
 
 \semdom{sem(\Gamma, G_1, G_2,
 \syntax{NodeMap}) = 
-(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma})
+(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma)}
 
 $sem(\Gamma, G_1, G_2,
 \syntax{node-map OMSName$_1$ OMSName$_2$ OMSLanguageTranslation* SymbolMap}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
@@ -7207,7 +7207,10 @@ $$sem(\Gamma,\syntax{equivalence-definition  EquivalenceName  ( network-equivale
 \ednote{in the manifesto this is called a conservative extension. TM: so we have once decided to change this into conservative extension? I vaguely can
 remember...}
 
-$$sem(\Gamma, \syntax{module-definition ModuleName ConservativityStrength ModuleType InterfaceSignature}) = \Gamma'$$
+$$\begin{array}{ll}
+sem(\Gamma, &\syntax{module-definition ModuleName ConservativityStrength ModuleType}\\ 
+&\syntax{InterfaceSignature}) = \Gamma'
+\end{array}$$
 
 \noindent where 
 $\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (G,\iota, N_2,N_1)]$
@@ -7227,15 +7230,18 @@ implies $O_2\models\varphi$.
 
 \semdom{sem(\Gamma,\syntax{AlignmentDefinition})=\Gamma'}
 
-$sem(\Gamma, \syntax{alignment-definition AlignmentName AlignmentCardinality AlignmentType AlignmentSemantics Corresps}) = \Gamma' $
+$\begin{array}{ll}sem(\Gamma, &\syntax{alignment-definition AlignmentName AlignmentCardinality}\\
+& \syntax{AlignmentType AlignmentSemantics Corresps}) = \Gamma' 
+\end{array}$
 
 where
 $sem(\Gamma,\syntax{AlignmentType}) = (L_1, L_2)$
 and\\
-$\Gamma'=\Gamma[\syntax{AlignmentType} \mapsto 
-(sem(\Gamma, (L_1, L_2), \syntax{AlignmentCardinality AlignmentSemantics Corresps}),
+$\begin{array}{ll}\Gamma'=&\Gamma[\syntax{AlignmentType} \mapsto \\
+&(sem(\Gamma, (L_1, L_2), \syntax{AlignmentCardinality AlignmentSemantics Corresps}),
 id,L_1,L_2)
-]$
+]
+\end{array}$
 
 \semdom{sem(\Gamma, \syntax{AlignmentType}) = (L_1, L_2)}
 
