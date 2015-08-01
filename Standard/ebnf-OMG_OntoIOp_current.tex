@@ -43,8 +43,8 @@
  %
   % \newcommand{\cbs}[0]{\xspace}
   % \newcommand{\cbe}[0]{\xspace}
- \newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace} %
- \newcommand{\cbe}[0]{\cbend{}\color{black}\xspace} %
+ \newcommand{\cbs}{} % [0]{\cbstart{}\color{red}\xspace} %
+ \newcommand{\cbe}{} % [0]{\cbend{}\color{black}\xspace} %
 
 
 \usepackage{pdflscape}
@@ -3105,7 +3105,12 @@ checking and theorem proving. Hence, all available information can be used in th
 For example, the ontology below extends the \OWL definition of \texttt{isProperPartOf} as an asymmetric relation
 with a first-order axiom (in Common Logic) asserting that the relation is also transitive.
 \begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,morekeywords={logic,ontology,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
-logic CommonLogic
+%prefix( lang:  <http://purl.net/DOL/languages/>
+                %% descriptions of languages ...
+         trans: <http://purl.net/DOL/translations/> )%
+                %% ... and translations
+
+language lang:CommonLogic
 ontology Parthood =
 ObjectProperty: isProperPartOf  
   Characteristics: Asymmetric  
@@ -3146,12 +3151,14 @@ using \DOL syntax:
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
 %prefix(
-           gfo: <http://www.onto-med.de/ontologies/>
+           gfo:   <http://www.onto-med.de/ontologies/>
            dolce: <http://www.loa-cnr.it/ontologies/>
-           bfo: <http://www.ifomis.org/bfo/>
-           
+           bfo:   <http://www.ifomis.org/bfo/>
+           lang:  <http://purl.net/DOL/languages/>
+
         )%
-logic OWL
+
+language lang:OWL
 
 alignment DolceLite2BFO :
   dolce:DOLCE-Lite.owl
@@ -3216,8 +3223,9 @@ integration.
 
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
+%prefix( lang:  <http://purl.net/DOL/languages/> )%
 library GalenModule
-logic OWL
+language lang:OWL
 ontology myGalen = 
   http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
 end
@@ -3284,11 +3292,13 @@ following way enhances both readability and potential for re-use
 of specifications:
 
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+%prefix( lang:  <http://purl.net/DOL/languages/> )%
+
 library Sorting
 
 %% refinement from abstract sorting to insert sort
 
-logic CASL
+language lang:CASL
 %right_assoc __::__
 spec TotalOrder =
   sort Elem
@@ -9879,9 +9889,11 @@ end
 \sclause{Engine Diagnosis and Repair}\label{engine}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+%prefix( log: <http://purl.net/DOL/logics/> )%
+
 library Engine
 
-logic Propositional
+logic log:Propositional
 
 %% possible symptoms of an engine that is malfunctioning
 spec EngineSymptoms =
@@ -10035,8 +10047,10 @@ then
 
 \sclause{Defined Concepts}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+%prefix( lang:  <http://purl.net/DOL/languages/> )%
+
 library Persons
-logic OWL
+language lang:OWL
 
 ontology Persons =
   Class Person
@@ -10050,8 +10064,10 @@ end
 \sclause{Blocks World: Minimization}
 \CLnote[type=q-aut]{Here we need the prefixes for registry entries (e.g.\ logics) once more; they should be reused across examples.  Or we need to specify a mechanism that gets rid of \emph{these} prefixes altogether.  @TM, could you please comment on my specification enhancement request \texttt{http://trac.informatik.uni-bremen.de:8080/hets/ticket/1020\#comment:33}?}
   \begin{lstlisting}[language=dolText,morekeywords={forall,if,not,Class,Individual,Types,EquivalentTo,SubClassOf,and}]
+%prefix( lang:  <http://purl.net/DOL/languages/>)%
+
 library BlocksWithCircumscription
-logic log:OWL
+language lang:OWL
 
 ontology Blocks = 
   %% FIXED PART 
@@ -10270,8 +10286,8 @@ end
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,equivalence},escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/alignment#>
          owl:   <http://www.w3.org/2002/07/owl#>
-         log:   <http://purl.net/DOL/logics/>
-                %% descriptions of logics ...
+         lang:  <http://purl.net/DOL/languages/>
+                %% descriptions of languages ...
          ser:   <http://purl.net/DOL/serializations/>
                 %% ... serializations ...
          trans: <http://purl.net/DOL/translations/> )%
@@ -10279,7 +10295,7 @@ end
 
 library Algebra
 
-logic log:CommonLogic syntax ser:CommonLogic/CLIF
+language lang:CommonLogic syntax ser:CommonLogic/CLIF
 
 spec implicit_group =
 (forall (x y z)
@@ -10320,7 +10336,7 @@ end
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,forget,entails,entailment,spec},escapechar=@,mathescape]
-logic CASL
+language lang:CASL
 
 spec InterpolatedGroup =
   sort Elem
@@ -10340,8 +10356,12 @@ end
 
 \sssclause{Groups and hiding}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
+%prefix( lang: <http://purl.net/DOL/languages/> )%
+
 library All_kinds_of_group_specifications
-logic CASL
+
+language lang:CASL
+
 spec Group_with_inverse =
   sort Elem
   ops 0:Elem; __+__:Elem*Elem->Elem; inv:Elem->Elem
@@ -10360,7 +10380,7 @@ can be extended with an inverse, i.e.\ class of all groups. The effect
 is second-order quantification:
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
-logic HasCASL
+language lang:HasCASL
 spec Group_in_second_order_logic =
   sort Elem
   ops 0:Elem; __+__:Elem*Elem->Elem; 
@@ -10374,7 +10394,7 @@ end
 \sssclause{Groups and module extraction}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
-logic CASL
+language lang:CASL
 spec Group_via_module_extraction_1 =
   Group_with_inverse remove inv
 end
@@ -10385,7 +10405,7 @@ This is of course unsatisfactory. A better use of module extraction
 is the following:
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
-logic CASL
+language lang:CASL
 spec Group_with_implicit_inverse =
   sort Elem
   ops 0:Elem; __+__:Elem*Elem->Elem; inv:Elem->Elem
@@ -10407,7 +10427,7 @@ is conservative.
 \sssclause{Groups via interpolation}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
-logic CASL
+language lang:CASL
 spec Group_via_interpolation1 =
   Group_with_inverse forget inv
 end
@@ -10422,7 +10442,7 @@ are equivalent to \syntax{Group\_with\_implicit\_inverse}.
 
 \sssclause{Groups and filtering}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
-logic CASL
+language lang:CASL
 spec Group_via_Filtering_1 =
   Group_with_inverse reject inv
 end
@@ -10434,7 +10454,7 @@ Both specifications are equivalent, and they are equivalent
 to the following theory which just omits the inverse
 axioms (and hence does not specify groups):
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
-logic CASL
+language lang:CASL
 spec Group_via_reject =
   sort Elem
   ops 0:Elem; __+__:Elem*Elem->Elem
@@ -10449,8 +10469,9 @@ end
 
 \sclause{Queries}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,query,select,where,in,substitution,result,for,along,library,spec,sort,pred,op},escapechar=@,mathescape]
+%prefix( lang:  <http://purl.net/DOL/languages/> )%
 library MyQuery
-logic CASL
+language lang:CASL
 spec Person =
   sort s
   pred Person:s 
@@ -10466,8 +10487,9 @@ result MyResult = MySubst for MyQuery
 \sclause{Datatypes}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,free,cofree,spec},escapechar=@,mathescape]
+%prefix( lang:  <http://purl.net/DOL/languages/> )%
 library Datatypes
-logic CASL
+language lang:CASL
 
 spec Bag =
   sort Elem
