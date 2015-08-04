@@ -41,10 +41,10 @@
 % \documentclass[10pt,fleqn,draft]{scrreprt}
 \usepackage{changebar}
  %
-  % \newcommand{\cbs}[0]{\xspace}
-  % \newcommand{\cbe}[0]{\xspace}
- \newcommand{\cbs}{} % [0]{\cbstart{}\color{red}\xspace} %
- \newcommand{\cbe}{} % [0]{\cbend{}\color{black}\xspace} %
+   \newcommand{\cbs}[0]{\xspace}
+   \newcommand{\cbe}[0]{\xspace}
+% \newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace} %
+% \newcommand{\cbe}[0]{\cbend{}\color{black}\xspace} %
 
 
 \usepackage{pdflscape}
@@ -4214,8 +4214,9 @@ At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abb
 	\sssclause{Documents}
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
-Document           ::= [PrefixMap] DOLLibrary | NativeDocument
-DOLLibrary         ::= 'library' LibraryName Qualification LibraryItem*
+Document           ::= DOLLibrary | NativeDocument
+DOLLibrary         ::= [PrefixMap] 'library' LibraryName
+                       Qualification LibraryItem*
 NativeDocument     ::= ($<$) language and serialization specific ($>$) 
 LibraryItem        ::= LibraryImport
                      | OMSDefinition
@@ -5981,92 +5982,107 @@ $sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.\cbe
 
 \cbs A document is either a \DOL library, or a native document written
 in one of the languages supported by the heterogeneous logical
-environment.  A \DOL library is list of definitions of OMS, OMS
-mappings and OMS networks, possibly starting with a prefix map.
+environment. 
 \cbe
 
-$$sem(\syntax{PrefixMap DOLLibrary}) = \Gamma'$$
- 
-\noindent where 
- $sem(\syntax{PrefixMap}) = \PMap$, $\Gamma'' = \Gamma_\emptyset.\{\prefix = \PMap\}$ and 
-$sem(\Gamma'', \syntax{DOLLibrary}) = \Gamma'$. 
-
-$$sem(\syntax{NativeDocument}) = \Gamma''$$
+For a \syntax{NativeDocument} $nativeDocument$,
+$$sem(nativeDocument) = \Gamma''$$
 
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the native document
 and 
-$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(\syntax{NativeDocument})]$.
+$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(nativeDocument)]$.
 
 Note that if the OMS in the \DOL library does not conform with the logic determined by
-the extension of the \DOL library, $sem(\syntax{NativeDocument})$ will be undefined.
+the extension of the \DOL library, $sem(nativeDocument)$ will be undefined.
+
+The rule for \syntax{DOLLibrary} is given below.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\semdom{sem(\Gamma, \syntax{DOLLibrary})= \Gamma'}
+\semdom{sem(\syntax{DOLLibrary})= \Gamma}
 
-$sem(\Gamma, \syntax{library LibraryName Qualification LibraryItem}_1 \ldots \syntax{LibraryItem}_n)= \Gamma'$\\
-\noindent where  $sem(\Gamma, \syntax{Qualification}) = \Gamma'$, $sem(\Gamma', \syntax{LibraryItem}_1) = \Gamma_1$,\\
-  $sem(\Gamma_1,  \syntax{LibraryItem}_2) = \Gamma_2$, $\ldots$,  $sem(\Gamma_{n-1}, \syntax{LibraryItem}_n) = \Gamma'$.
+ A \DOL library is list of definitions of OMS, OMS
+mappings and OMS networks, starting with an optional prefix map and a qualification.
 
-({Note  that \syntax{LibraryName} is just discarded here.
-  However, \syntax{LibraryName} should be the IRI of the document
+For a \syntax{DOLLibrary} $dolLibrary$,
+$$sem(dolLibrary) = \Gamma'$$
+\noindent 
+where
+ $sem(dolLibrary.\syntax{prefixMap}) = PMap$,\\
+ $\Gamma_1 = \Gamma_\emptyset.\{\prefix = PMap\}$,\\
+  $sem(\Gamma_1, dolLibrary.\syntax{Qualification}) = \Gamma_2$,\\
+  $sem(\Gamma_2, dolLibrary.\syntax{LibraryItems}) = \Gamma'$.
+
+Note  that $dolLibrary$.\syntax{LibraryName} is just discarded here.
+  However, this name should be the IRI of the document
   containing the \syntax{Document}.  This is known as ``linked data
   compliance''. Tools can issue a warning (not an error), if a
-  \syntax{Document} does not follow this practice.})
+  \syntax{Document} does not follow this practice.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\semdom{sem(\Gamma, \syntax{LibraryItems})= \Gamma'}
+
+If $libItem_1,\ldots,libItem_n$ are all \syntax{LibraryItem}s, 
+
+$$sem(\Gamma, libItem_1, \ldots, libItem_n) = \Gamma'$$
+
+\noindent where \\
+$sem(\Gamma, libItem_1)= \Gamma_1$,\\
+$sem(\Gamma_1, libItem_2)= \Gamma_2$, \ldots\\
+$sem(\Gamma_{n-1}, libItem_n)= \Gamma'$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, \syntax{LibraryItem})= \Gamma'}
 
-$$sem(\Gamma, \syntax{lib-import LibraryName}) = \Gamma\cup\Gamma'$$
-\noindent where $sem(\Gamma, \syntax{LibraryName}) = \syntax{IRI}$ and $sem(\syntax{IRI}) = \Gamma'$.
-
-Equations for \syntax{OMSDefinition}, \syntax{NetworkDefinition}, and \syntax{MappingDefinition} 
+A \syntax{LibraryItem} can be an \syntax{OMSDefinition}, \syntax{NetworkDefinition},  \syntax{MappingDefinition} or \syntax{QueryRelatedDefinition}, and equations for these
 are given in the next sections.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma,\syntax{Qualification})=\Gamma'}
 
-$$sem(\Gamma,\syntax{lang-select LanguageRef})=\Gamma'$$
+For a \syntax{LanguageQualification} $q$,
 
-\noindent where $\Gamma' = \Gamma.\{\current = (\syntax{LanguageRef},logic',ser')\}$ and \\
- $logic'=\twocase{logic(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } logic(\Gamma.\current)}{\textrm{default logic for }\syntax{LanguageRef}}$\\
- $ser'=\twocase{ser(\Gamma.\current)}{\syntax{LanguageRef} \textrm{ supports } ser(\Gamma.\current)}{\textrm{default serialization for }\syntax{LanguageRef}}$
+$$sem(\Gamma,q)=\Gamma'$$
 
- $$sem(\Gamma,\syntax{logic-select LogicRef})=\Gamma'$$
+\noindent where $\Gamma' = \Gamma.\{\current = (q.\syntax{languageRef},logic',ser')\}$ and \\
+ $logic'=\twocase{logic(\Gamma.\current)}{q.\syntax{languageRef} \textrm{ supports } logic(\Gamma.\current)}{\textrm{default logic for }q.\syntax{languageRef}}$\\
+ $ser'=\twocase{ser(\Gamma.\current)}{q.\syntax{languageRef}\textrm{ supports } ser(\Gamma.\current)}{\textrm{default serialization for }q.\syntax{languageRef}}$
+
+For a \syntax{LogicQualification} $q$,
+ $$sem(\Gamma,q)=\Gamma'$$
 
  \noindent where 
- $\Gamma' = \Gamma.\{\current = (lang',\syntax{LogicRef},ser')\}$\\
+ $\Gamma' = \Gamma.\{\current = (lang',q.\syntax{logicRef},ser')\}$\\
 $lang = lang(\Gamma.\current)$, $ser=ser(\Gamma.\current)$\\
 $lang'=\twocase{lang}{lang \textrm{ supports }
-   \syntax{LogicRef}} {\textrm{the unique language supporting
-   }\syntax{LogicRef}}
+   q.\syntax{logicRef}} {\textrm{the unique language supporting
+   }q.\syntax{logicRef}}
  $\\
 \cbs$ser' = \twocase{ser}{lang' \textrm{ supports }
    ser} {\textrm{the default serialization for
    }lang'}$\cbe 
  \\
- Note that ``the unique language supporting \syntax{LogicRef}'' may
- be undefined; in this case, the semantics of the whole
- \syntax{logic-select LogicRef}\ednote{Please do not use quotes and commas in the abstract syntax. See the EBNF'd version of this document at the github home page, or the CASL reference manual.} construct is undefined.
+ Note that ``the unique language supporting q.\syntax{logicRef}'' may
+ be undefined; in this case, the semantics of $q$
+ construct is undefined.
 
-$$sem(\Gamma,\syntax{syntax-select SyntaxRef})=\Gamma'$$
+For a \syntax{SyntaxQualification} $q$,
+$$sem(\Gamma,q)=\Gamma'$$
 
 \noindent where $lang = lang(\Gamma.\current), logic = logic(\Gamma.\current)$ and\\
-$\Gamma'  = \Gamma.\{\current = (lang, logic, \syntax{SyntaxRef})\}$. 
-The semantics is defined only if $\mathit{lang}$ supports \syntax{SyntaxRef}.
+$\Gamma'  = \Gamma.\{\current = (lang, logic, q.\syntax{syntaxRef})\}$. 
+The semantics is defined only if $\mathit{lang}$ supports q.\syntax{syntaxRef}.
 
-%\semdom{sem(L,\syntax{Qualification*})=L'}
-%
-%$sem(L,Q_1\ldots Q_n)=sem(\ldots sem(sem(L,Q_1),Q_2),\ldots,Q_n)$
+For a \syntax{LibraryImport} $q$,
+$$sem(\Gamma, q) = \Gamma \cup \Gamma'$$
 
-%\semdom{sem(\Gamma,L,\syntax{LibraryItem})=(\Gamma',L')}
-%$sem(\Gamma,L,\syntax{Qualification})=(\Gamma,L')$ 
-%where $L'=sem(L,\syntax{Qualification})$.
-%
-%Equations for \syntax{OMSDefinition} and \syntax{MappingDefinition} are given below.
+\noindent where $sem(\Gamma, q.\syntax{libraryName}) = anIRI$ and
+$sem(anIRI) = \Gamma'$.
+
 
 \ssclause{Semantics of Networks}
 
