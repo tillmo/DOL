@@ -4215,8 +4215,8 @@ Document                 = DOLLibrary
                          | NativeDocument ;
 DOLLibrary             = [ PrefixMap ] , 'library' , LibraryName , Qualification , { LibraryItem } ;
 NativeDocument = ($<$) language and serialization specific ($>$) ;
-LibraryItem             = LibraryImport | OMSDefinition | NetworkDefinition | MappingDefinition 
-                          | Qualification ;
+LibraryItem             = LibraryImport | Definition | Qualification ;
+Definition              =  OMSDefinition | NetworkDefinition | MappingDefinition 
 LibraryImport                = 'import' , LibraryName ;
 Qualification            = LanguageQualification | LogicQualification | SyntaxQualification ;
 LanguageQualification             = 'language' , LanguageRef ;
@@ -6003,10 +6003,10 @@ $$sem(dolLibrary) = \Gamma'$$
 where
  $sem(dolLibrary.\syntax{prefixMap}) = PMap$,\\
  $\Gamma_1 = \Gamma_\emptyset.\{\prefix = PMap\}$,\\
-  $sem(\Gamma_1, dolLibrary.\syntax{Qualification}) = \Gamma_2$,\\
-  $sem(\Gamma_2, dolLibrary.\syntax{LibraryItems}) = \Gamma'$.
+  $sem(\Gamma_1, dolLibrary.\syntax{qualification}) = \Gamma_2$,\\
+  $sem(\Gamma_2, dolLibrary.\syntax{libraryItem}) = \Gamma'$.
 
-Note  that $dolLibrary$.\syntax{LibraryName} is just discarded here.
+Note  that $dolLibrary$.\syntax{libraryName} is just discarded here.
   However, this name should be the IRI of the document
   containing the \syntax{Document}.  This is known as ``linked data
   compliance''. Tools can issue a warning (not an error), if a
@@ -6014,7 +6014,7 @@ Note  that $dolLibrary$.\syntax{LibraryName} is just discarded here.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \syntax{LibraryItems})= \Gamma'}
+\semdom{sem(\Gamma, \syntax{LibraryItem}^*)= \Gamma'} 
 
 If $libItem_1,\ldots,libItem_n$ are all \syntax{LibraryItem}s, 
 
@@ -6029,7 +6029,13 @@ $sem(\Gamma_{n-1}, libItem_n)= \Gamma'$.
 
 \semdom{sem(\Gamma, \syntax{LibraryItem})= \Gamma'}
 
-A \syntax{LibraryItem} can be an \syntax{OMSDefinition}, \syntax{NetworkDefinition},  \syntax{MappingDefinition} or \syntax{QueryRelatedDefinition}, and equations for these
+For a \syntax{LibraryImport} $libImport$,
+$$sem(\Gamma, libImport) = \Gamma \cup \Gamma'$$
+
+\noindent where $sem(\Gamma, libImport.\syntax{libraryName}) = anIRI$ and
+$sem(anIRI) = \Gamma'$.
+
+A \syntax{LibraryItem} can also be an \syntax{OMSDefinition}, \syntax{NetworkDefinition},  \syntax{MappingDefinition} or \syntax{QueryRelatedDefinition}, and equations for these
 are given in the next sections.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6068,13 +6074,6 @@ $$sem(\Gamma,q)=\Gamma'$$
 \noindent where $lang = lang(\Gamma.\current), logic = logic(\Gamma.\current)$ and\\
 $\Gamma'  = \Gamma.\{\current = (lang, logic, q.\syntax{syntaxRef})\}$. 
 The semantics is defined only if $\mathit{lang}$ supports q.\syntax{syntaxRef}.
-
-For a \syntax{LibraryImport} $q$,
-$$sem(\Gamma, q) = \Gamma \cup \Gamma'$$
-
-\noindent where $sem(\Gamma, q.\syntax{libraryName}) = anIRI$ and
-$sem(anIRI) = \Gamma'$.
-
 
 \ssclause{Semantics of Networks}
 
