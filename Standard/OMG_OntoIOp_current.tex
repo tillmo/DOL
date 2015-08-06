@@ -4269,16 +4269,16 @@ explicitly excluded.
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
-NetworkDefinition            = 'network' , NetworkName , '=' , 
+NetworkDefinition     = 'network' , NetworkName , '=' , 
                          [ ConservativityStrength ] , Network ;
-NetworkName            = IRI ;
-Network                = NetworkElements , [ ExcludeExtensions ] ;
-NetworkElements        = NetworkElement , { ',' , NetworkElement } ;
-NetworkElement         = [ Id , ':' ] , OMSOrMappingorNetworkRef ;
-ExcludeExtensions      = 'excluding' , ExcludedElement , { ',' , ExcludedElement } ;
-ExcludedElement             = IRI , '->' , IRI 
-                         | OMSOrMappingorNetworkRef;
-OMSOrMappingorNetworkRef        = IRI ;
+NetworkName           = IRI ;
+Network               = NetworkElements, [ ExcludedElements ] ;
+NetworkElements       = NetworkElement , { ',' , NetworkElement } ;
+NetworkElement        = [ Id , ':' ] , ElementRef ;
+ExcludedElements      = 'excluding' , ExcludedElement , { ',' , ExcludedElement } ;
+ExcludedElement       = PathReference | ElementRef
+PathReference         = IRI, '->', IRI
+ElementRef            = IRI ;
 Id                     = Letter , { LetterOrDigit } ;
 \end{lstlisting}
 
@@ -6082,7 +6082,7 @@ and edges are specified by the \syntax{NetworkElement}s, which can be OMS, OMS m
 network consists of the union of all graphs of the network elements it
 contains, where an OMS yields a graph with one isolated node.\cbs By convention,\cbe
 all imports in the graph $\Gamma.imports$ of the current context between nodes that are
-specified in the list of \syntax{NetworkElements} are also included in the graph of 
+specified in the list of \syntax{NetworkElement}s are also included in the graph of 
 the network. 
 The nodes and edges given in the \syntax{ExcludeExtensions} list are then removed from the graph of the network. 
 
@@ -6095,98 +6095,106 @@ prefix in the colimit of a network for the symbols with the origin in that node 
                  a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
                  unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
    \item if \syntax{IRI} denotes an OMS mapping 
-      or a network in $\Gamma$, it denotes a graph $G'$. Then
+      or a network in $\Gamma$, its graph is $G'$. Then
       the result is the union of $G$ with $G'$.
  \end{itemize}
  
  
-Similarly, the operation $remove(\Gamma, G, \syntax{OMSOrMappingorPathorNetworkRef})$ is defined as follows:
+Similarly, the operation $remove(\Gamma, G, excludedElement)$ is defined as follows:
 
 \begin{itemize}
 
-\item if \syntax{OMSOrMappingorPathorNetworkRef} is an \syntax{IRI}, then
+\item if $excludedElement$ is an \syntax{ElementRef} and then
+$anIRI$ is $excludedElement.\syntax{iri}$, we have that
 
  \begin{itemize}
-    \item if \syntax{IRI} denotes an OMS in $\Gamma$, then the node labeled with \syntax{IRI} and all its incoming and outgoing
+    \item if $anIRI$ denotes an OMS in $\Gamma$, 
+          then the node labeled with $anIRI$ and all its incoming and outgoing
                 edges are removed from $G$,
-   \item  if \syntax{IRI} denotes an OMS mapping in $\Gamma$, then  
-   $\Gamma(\syntax{IRI})$ gives a graph $G'$ and two nodes 
+   \item  if $anIRI$ denotes an OMS mapping in $\Gamma$, then  
+   $\Gamma(anIRI)$ gives a graph $G'$ and two nodes 
    $N_1$ and $N_2$. Then all nodes of $G'$ other than $N_1$ and
    $N_2$ and all the edges of $G'$ are removed from $G$.
-   \item if \syntax{IRI} is a network in $\Gamma$, then all the nodes of its graph and all their incoming and outgoing edges are removed 
+   \item if $anIRI$ is a network in $\Gamma$, then all the nodes of its graph and all their incoming and outgoing edges are removed 
                from $G$.
  \end{itemize}
  
- \item if \syntax{OMSOrMappingorPathorNetworkRef} is an \syntax{path,IRI$_1$, IRI$_2$},
+ \item if $excludedElement$ is a \syntax{PathReference} 
+ and $iri1 = excludedElement.\syntax{elementRef}$, $iri2 = excludedElement.\syntax{elementRef2}$,
  then all paths of imports in $G$ between the nodes labeled with 
- \syntax{IRI}$_1$ and \syntax{IRI}$_2$ are removed from $G$.
+ $iri_1$ and $iri_2$ are removed from $G$.
 
 \end{itemize}
 
-Finally, the operation $addImports(\Gamma, G, \syntax{NetworkElements})$ adds to G
+Finally, the operation $addImports(\Gamma, G, \syntax{NetworkElement}^*)$ adds to G
 all import edges in $\Gamma.imports$ between nodes which appear 
-in the list \syntax{NetworkElements}. 
+in the list $\syntax{NetworkElement}^*$. 
 
 
 \semdom{sem(\Gamma, \syntax{NetworkDefinition}) = \Gamma'}
 
-$$sem(\Gamma, \syntax{network-definition NetworkName  ConservativityStrength  Network}) = \Gamma'$$
+If $n$ is a \syntax{NetworkDefinition},
+$$sem(\Gamma, n) = \Gamma'$$
+\noindent where $\Gamma' = \Gamma[n.\syntax{networkName} \mapsto sem(\Gamma, n.\syntax{network})]$.
 
-\noindent where $\Gamma' = \Gamma[\syntax{NetworkName} \mapsto sem(\Gamma, \syntax{Network})]$.
+If $n.$\syntax{ConservativityStrength} is \syntax{model-conservative}, the semantics is only
+defined if $sem(\Gamma,n.\syntax{network})\not=\emptyset$.
 
-If \syntax{ConservativityStrength} is \syntax{model-conservative}, the semantics is only
-defined if $sem(\Gamma,\syntax{Network})\not=\emptyset$.
-
-If \syntax{ConservativityStrength} is \syntax{consequence-conservative}, the semantics is 
+If $n.$\syntax{ConservativityStrength} is \syntax{consequence-conservative}, the semantics is 
  defined only if all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
 
-If \syntax{ConservativityStrength} is \syntax{monomorphic}, the semantics is only
-defined if $sem(\Gamma,\syntax{Network})$ consist of exactly one isomorphism
+If $n.$\syntax{ConservativityStrength} is \syntax{monomorphic}, the semantics is only
+defined if $sem(\Gamma,n.\syntax{network})$ consist of exactly one isomorphism
 class of families of models.
 
-If \syntax{ConservativityStrength} is \syntax{weak-definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{Network})$ is at most a singleton.
+If $n.$\syntax{ConservativityStrength} is \syntax{weak-definitional}, the semantics is only
+defined if $sem(\Gamma,n.\syntax{network})$ is at most a singleton.
 
-If \syntax{ConservativityStrength} is \syntax{definitional}, the semantics is only
-defined if $sem(\Gamma,\syntax{Network})$ is a singleton.
+If $n.$\syntax{ConservativityStrength} is \syntax{definitional}, the semantics is only
+defined if $sem(\Gamma,n.\syntax{network})$ is a singleton.
 
-If \syntax{ConservativityStrength} is \syntax{not-model-conservative}, the semantics is only
-defined if $sem(\Gamma,\syntax{Network})=\emptyset$.
+If $n.$\syntax{ConservativityStrength} is \syntax{not-model-conservative}, the semantics is only
+defined if $sem(\Gamma,n.\syntax{network})=\emptyset$.
 
-If \syntax{ConservativityStrength} is \syntax{not-consequence-conservative}, the semantics is 
+If $n.$\syntax{ConservativityStrength} is \syntax{not-consequence-conservative}, the semantics is 
  defined only if not all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
 
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 
-$$sem(\Gamma, \syntax{network NetworkElements  ExcludeExtensions})= G'$$
+If $n$ is a network, 
+$$sem(\Gamma, n)= G'$$
+\noindent where $sem(\Gamma, n.\syntax{networkElement}) = G$ and 
+$sem(\Gamma, G, n.\syntax{excludedElement}) = G'$.
 
-\noindent where $sem(\Gamma, \syntax{NetworkElements}) = G$ and $sem(\Gamma, G, \syntax{ExcludeExtensions}) = G'$.
+\semdom{sem(\Gamma, \syntax{NetworkElement}^*) = G'}
 
-\semdom{sem(\Gamma, \syntax{NetworkElements}) = G'}
-
-$$sem(\Gamma, \syntax{network-elements}\ \syntax{NetworkElement}_1 \ldots \syntax{NetworkElement}_n) = G'$$
+If $elem_1, \ldots, elem_n$ are all \syntax{NetworkElement}s,
+$$sem(\Gamma, elem_1, \ldots, elem_n) = G'$$
 
 \noindent where \\
- $G_1 = sem(\Gamma, G_\emptyset, \syntax{NetworkElement}_1)$\\
- $G_2 = sem(\Gamma, G_1, \syntax{NetworkElement}_2)$\\
+ $G_1 = sem(\Gamma, G_\emptyset, elem_1)$\\
+ $G_2 = sem(\Gamma, G_1, elem_2)$\\
  $\ldots$\\
- $G_n = sem(\Gamma, G_{n-1}, \syntax{NetworkElement}_n)$,\\
- $G' = addImports(\Gamma, G_n, \syntax{NetworkElements})$.
+ $G_n = sem(\Gamma, G_{n-1}, elem_n)$,\\
+ $G' = addImports(\Gamma, G_n, [elem_1, \ldots, elem_n])$.
 
 \semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
-$$sem(\Gamma, G, \syntax{network-element Id IRI}) = insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$$
+If $networkElement$ is a \syntax{NetworkElement}),
 
-\semdom{sem(\Gamma, G, \syntax{ExcludeExtensions})= G'}
+$$sem(\Gamma, G, networkElement) = insert(G, \Gamma, networkElement.\syntax{elementRef}.\syntax{iri}, networkElement.\syntax{id})$$
 
-$$sem(\Gamma, G, \syntax{exclude-imports R$_1 \ldots $ R$_n$}) = G'$$
+\semdom{sem(\Gamma, G, \syntax{ExcludedElement}^*)= G'}
+
+If $elem_1, \ldots, elem_n$ are all \syntax{ExcludedElement}s,
+
+$$sem(\Gamma, G, elem_1, \ldots, elem_n) = G'$$
 
 \noindent where\\
- $R_i = \syntax{OMSOrMappingorPathorNetworkRef}_i$ for each $i=1,\ldots,n$\\
- $G_1 = remove(\Gamma, G, \syntax{R}_1)$\\
- $G_2 = remove(\Gamma, G_1, \syntax{R}_2)$\\
+ $G_1 = remove(\Gamma, G, elem_1)$\\
+ $G_2 = remove(\Gamma, G_1, elem_2)$\\
   $\ldots$ \\
- $G' = remove(\Gamma, G_{n-1}, \syntax{R}_n)$
+ $G' = remove(\Gamma, G_{n-1}, elem_n)$
 
 \ssclause{Semantics of OMS}
 
