@@ -6089,23 +6089,24 @@ The nodes and edges given in the \syntax{ExcludeExtensions} list are then remove
 An additional \syntax{Id} can be specified for each node, with the purpose of letting the user specify a 
 prefix in the colimit of a network for the symbols with the origin in that node that must be disambiguated.
 
-\cbs The following notations is used: if\cbe $G$ is a graph, let $insert(G, \Gamma, \syntax{IRI}, \syntax{Id})$ be defined as follows:
- \begin{itemize}
-    \item if \syntax{IRI} denotes an OMS in $\Gamma$, then
-                 a new node named \syntax{IRI} and labeled with $\Gamma(\syntax{IRI})$ and with \syntax{Id} is added to $G$,
-                 unless a node named \syntax{IRI} already exists in $G$, and in this case $G$ is left unchanged,
-   \item if \syntax{IRI} denotes an OMS mapping 
-      or a network in $\Gamma$, its graph is $G'$. Then
-      the result is the union of $G$ with $G'$.
- \end{itemize}
- 
- 
-Similarly, the operation $remove(\Gamma, G, excludedElement)$ is defined as follows:
+\cbs The following auxiliary functions are used: 
 
 \begin{itemize}
+\item $insert(G, \Gamma, iri,id)$, where $G$ is a graph, 
+      $\Gamma$ is a global environment, $iri$ is an \syntax{IRI} and 
+      $id$ is an \syntax{Id}, defined as follows:
+ \begin{itemize}
+    \item if $iri$ denotes an OMS in $\Gamma$, then
+                 a new node named $iri$ and labeled with $\Gamma(iri)$ and with $id$ is added to $G$,
+                 unless a node named $iri$ already exists in $G$, and in this case $G$ is left unchanged,
+   \item if $iri$ denotes an OMS mapping 
+      or a network in $\Gamma$, 
+      the result is the union of $G$ with the graph of $\Gamma(iri)$.
+ \end{itemize}
 
-\item if $excludedElement$ is an \syntax{ElementRef} and then
-$anIRI$ is $excludedElement.\syntax{iri}$, we have that
+\item $removeElement(\Gamma, G, anIRI)$, where $G$ is a graph, 
+      $\Gamma$ is a global environment and $anIRI$ is an \syntax{IRI},
+      defined as follows: 
 
  \begin{itemize}
     \item if $anIRI$ denotes an OMS in $\Gamma$, 
@@ -6119,16 +6120,17 @@ $anIRI$ is $excludedElement.\syntax{iri}$, we have that
                from $G$.
  \end{itemize}
  
- \item if $excludedElement$ is a \syntax{PathReference} 
- and $iri1 = excludedElement.\syntax{elementRef}$, $iri2 = excludedElement.\syntax{elementRef2}$,
- then all paths of imports in $G$ between the nodes labeled with 
- $iri_1$ and $iri_2$ are removed from $G$.
+ \item $removePaths(\Gamma, G, iri1, iri2)$, where $G$ is a graph, 
+      $\Gamma$ is a global environment and $iri1, iri2$ are \syntax{IRI}s,
+ whose result is that
+ all paths of imports in $G$ between the nodes labeled with 
+ $iri1$ and $iri2$ are removed from $G$.
 
 \end{itemize}
 
-Finally, the operation $addImports(\Gamma, G, \syntax{NetworkElement}^*)$ adds to G
+Finally, the operation $addImports(\Gamma, G, [iri_1, \ldots, iri_n])$ adds to G
 all import edges in $\Gamma.imports$ between nodes which appear 
-in the list $\syntax{NetworkElement}^*$. 
+in the subgraph determined by  $\Gamma(iri_1), \ldots, \Gamma(iri_n)$. 
 
 
 \semdom{sem(\Gamma, \syntax{NetworkDefinition}) = \Gamma'}
@@ -6180,21 +6182,30 @@ $$sem(\Gamma, elem_1, \ldots, elem_n) = G'$$
 
 \semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
-If $networkElement$ is a \syntax{NetworkElement}),
-
+If $networkElement$ is a \syntax{NetworkElement},
 $$sem(\Gamma, G, networkElement) = insert(G, \Gamma, networkElement.\syntax{elementRef}.\syntax{iri}, networkElement.\syntax{id})$$
 
 \semdom{sem(\Gamma, G, \syntax{ExcludedElement}^*)= G'}
 
 If $elem_1, \ldots, elem_n$ are all \syntax{ExcludedElement}s,
-
 $$sem(\Gamma, G, elem_1, \ldots, elem_n) = G'$$
-
 \noindent where\\
- $G_1 = remove(\Gamma, G, elem_1)$\\
- $G_2 = remove(\Gamma, G_1, elem_2)$\\
+ $G_1 = sem(\Gamma, G, elem_1)$\\
+ $G_2 = sem(\Gamma, G_1, elem_2)$\\
   $\ldots$ \\
- $G' = remove(\Gamma, G_{n-1}, elem_n)$
+ $G' = sem(\Gamma, G_{n-1}, elem_n)$
+
+\semdom{sem(\Gamma, G, \syntax{ExcludedElement})= G'}
+
+If $excludedElem$ is a $\syntax{ElementRef}$,
+$$sem(\Gamma, G, excludedElem) = removeElement(\Gamma, G, excludedElem.\syntax{iri})$$.
+
+If $excludedElem$ is a $\syntax{PathReference}$,
+$$sem(\Gamma, G, excludedElem) = removePaths(\Gamma, G, iri1, iri2)$$
+\noindent 
+where
+$iri1 = excludedElem.\syntax{elementRef}.\syntax{iri}$ 
+and $iri2 = excludedElem.\syntax{elementRef2}.\syntax{iri})$.
 
 \ssclause{Semantics of OMS}
 
