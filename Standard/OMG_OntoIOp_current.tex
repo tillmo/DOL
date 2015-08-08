@@ -4388,7 +4388,9 @@ ClosableOMS      = BasicOMS
                      | OMSRef , [ ImportName ] ; 
                      
 ExtendingOMS        = ClosableOMS
-                     | MinimizeKeyword , '{' , ClosableOMS , '}' ;
+                     | RelativeClosureOMS 
+                     
+RelativeClosureOMS  = ClosureType , '{' , ClosableOMS , '}' ;
                      
 OMS                 = ExtendingOMS
                      | OMS , Closure 
@@ -4402,8 +4404,8 @@ OMS                 = ExtendingOMS
                      | 'combine' , NetworkElements , [ ExcludeExtensions ]  
                      | GroupOMS ;
 
-Closure         = ClosureKeyword , CircMin , [ CircVars ] ;
-ClosureKeyword      = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
+Closure         = ClosureType , CircMin , [ CircVars ] ;
+ClosureType     = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
 CircMin = Symbol , {  Symbol } ;
 CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
 
@@ -6214,18 +6216,19 @@ and $iri2 = excludedElem.\syntax{elementRef2}.\syntax{iri})$.
 (\Gamma',(\cI,\Sigma',\cM', \Delta'))}
 \cbe
 
-For an OMS \syntax{BasicOMS} in a global environment $\Gamma$, the  semantics is defined as follows:  
+For a \syntax{BasicOMS} $basicOMS$ 
+in a global environment $\Gamma$, the  semantics is defined as follows:  
 \cbs
-$$sem(\Gamma, (\Sigma, \cM, \Delta), \syntax{BasicOMS})= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
+$$sem(\Gamma, (\Sigma, \cM, \Delta), basicOMS)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
 \cbe
 \noindent where 
 \begin{itemize}
-\item \cbs $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma,\syntax{BasicOMS})$ \cbe
+\item \cbs $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma,basicOMS)$ \cbe
 \item \cbs $\cM'=\{M\in \cM \mid M\models\Delta'\}$ \cbe
 \item
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
-node labeled with the name of \syntax{BasicOMS} and the other components as
-given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\syntax{BasicOMS})$.
+node labeled with the name of $basicOMS$ and the other components as
+given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(basicOMS)$.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6237,25 +6240,30 @@ given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\syntax{BasicOMS})$.
 \cbe
 
 
-In the rest of this section,\cbs the notation 
-$Env(\Gamma, \syntax{OMS})$ is used for the global environment $\Gamma'$\cbe 
+In the rest of this section,\cbs given a global environment $\Gamma$ and an
+\syntax{OMS} $oms$, the notation 
+$Env(\Gamma, oms)$ is used for the global environment $\Gamma'$\cbe 
 such that
-$sem(\Gamma, \syntax{OMS}) = \Gamma'$.
+$sem(\Gamma, oms) = \Gamma'$.
 
-The semantics of a \syntax{BasicOMS} $O$ has been defined above.
+The semantics of a \syntax{BasicOMS} has been defined above.
 
-The semantics of $O = \syntax{oms-reference O' ImportName}$
+The semantics of an \syntax{OMSReference} $o$
 is given by
  \begin{itemize}
-   \item \cbs $O''$ is the extension of $O'$ with a declaration that the logic is $\Gamma.logic$ (e.g.\ by a suitable extension of the IRI)\cbe
-   \item $\Inst(\syntax{oms-reference O' ImportName}) = \Inst(\Gamma(O''))$
-   \item $\Sig(\syntax{oms-reference O' ImportName}) = \Sig(\Gamma(O''))$
-   \item $\Mod(\syntax{oms-reference O' ImportName}) = \Mod(\Gamma(O''))$
-   \item $\Th(\syntax{oms-reference O' ImportName}) = \Th(\Gamma(O''))$
-   \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
-         with a new node for $O$ labeled as defined in the items above
-         and with a new edge from $O'$ to $O$ named \syntax{ImportName} 
-         and labeled with the identity on $\Sig(\Gamma(O'))$.  
+   \item \cbs $O''$ is the extension of $O'$ with a declaration that the logic is $\Gamma.logic$ (e.g.\ by a suitable extension of the IRI)\cbe \ednote{Here it is unclear to me what the extension of an OMS with a declaration formally means, using the old notation $O = oms-reference O' ImportName$. Should $O''$ be a DOL specification consisting of a qualification that selects the current logic to be 
+   $\Gamma.logic$, followed by a reference to $O'$? This seems to create problems in a specification like 
+   \begin{verbatim}logic OWL ontology O = ... logic CASL ontology O' = O with translation OWL2CASL
+   \end{verbatim} I'm not sure you want to check the current logic at all.}
+   \item $\Inst(o) = \Inst(\Gamma(o.\syntax{omsRef}))$
+   \item $\Sig(o) = \Sig(\Gamma(o.\syntax{omsRef}))$
+   \item $\Mod(o) = \Mod(\Gamma(o.\syntax{omsRef}))$
+   \item $\Th(o) = \Th(\Gamma(o.\syntax{omsRef}))$
+   \item $Env(\Gamma, o)$ extends the graph of imports $\Gamma.imports$
+         with a new node for $o$ labeled as defined in the items above
+         and with a new edge from the node labeled with 
+         $o.\syntax{omsRef}$ to $o$, named $o.\syntax{importName}$ 
+         and labeled with the identity on $\Sig(\Gamma(o.\syntax{omsRef}))$.  
  \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
