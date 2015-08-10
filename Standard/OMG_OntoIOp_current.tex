@@ -7011,56 +7011,67 @@ See equations for \syntax{InterpretationDefinition},  \syntax{Entailment}, \synt
 
 \semdom{sem(\Gamma,\syntax{InterpretationDefinition}) = \Gamma'}
 
-$$\begin{array}{ll}
-sem(\Gamma,& \syntax{intrp-definition InterpretationName ConservativityStrength IntrpType,}\\
-& \syntax{OMSLanguageTranslation*, SymbolMap}) = \Gamma'
-\end{array}$$
-where
- $\Gamma' = \Gamma[\syntax{InterpretationName} \to (G, (\rho,\sigma), L_1, L_2)]$\\
+If $d$ is an \syntax{InterpretationDefinition},
+$$
+sem(\Gamma, d) = \Gamma'
+$$
+\noindent where
+ $\Gamma' = \Gamma[d.\syntax{interpretationName} \to (G, (\rho,\sigma), L_1, L_2)]$\\
  and $G$ is the graph $L_1\stackrel{(\rho,\sigma)}{\longrightarrow} L_2$
  where 
   \begin{itemize}
   
-   \item $(L_1, L_2) = sem(\Gamma, \syntax{IntrpType})$
+   \item $(L_1, L_2) = sem(\Gamma, d.\syntax{interpretationType})$
    \item $\rho = (\Phi,\alpha,\beta):
-             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, \syntax{OMSLanguageTranslation*})$. If \syntax{OMSLanguageTranslation*} is missing, the default translations between the logics is selected. 
-   \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), \syntax{SymbolMap}) = \sigma,$
+             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, d.\syntax{omsLanguageTranslation})$. If $d.\syntax{OMSLanguageTranslation}$ is missing, the default translations between the logics is selected. 
+   \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), d.\syntax{symbolMap}) = \sigma,$
 where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$. 
   \end{itemize}
 
 The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L_1)$ for each $M_2\in\Mod(L_2)$.
-If the optional argument $\syntax{ConservativityStrength}$ is \syntax{model-conservative}, for
+If the optional argument $d.\syntax{conservativityStrength}$ is
+\begin{itemize}
+\item \syntax{model-conservative}, for
 each model  $M_1\in\Mod(L_1)$ there must exist a model $M_2\in\Mod(L_2)$ such that
-$\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. If the optional argument $\syntax{ConservativityStrength}$ is \syntax{consequence-conservative}, 
+$\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. 
+\item \syntax{consequence-conservative}, 
 for each $\Sig(L_1)$-sentence $\varphi$, if $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ then
 $\cM_1\models \varphi$.
-If the optional argument $\syntax{ConservativityStrength}$ is \syntax{not-model-conservative}, 
+\item \syntax{not-model-conservative}, 
 there must exist a model  $M_1\in\Mod(L_1)$ such that there is no 
 model $M_2\in\Mod(L_2)$ such that
 $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$.
-If the optional argument $\syntax{ConservativityStrength}$ is \syntax{not-consequence-conservative}, 
+\item \syntax{not-consequence-conservative}, 
 there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ and
 $\cM_1\not\models \varphi$.
+\end{itemize}
 
-$$sem(\Gamma, \syntax{refinement InterpretationName Refinement}) = \Gamma'$$
+\semdom{sem(\Gamma, \syntax{RefinementDefinition}) = \Gamma'}
 
-where $ \Gamma' =\Gamma[\syntax{InterpretationName} \mapsto (G,\sigma, N_1, N_2)]$
+If $d$ is a \syntax{RefinementDefinition},
+$$sem(\Gamma, d) = \Gamma'$$
+\noindent
+where $ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto (G,\sigma, N_1, N_2)]$
 and 
-$sem(\Gamma, \syntax{Refinement}) = (G,\sigma, N_1, N_2)$.
+$sem(\Gamma, d.\syntax{refinement}) = (G,\sigma, N_1, N_2)$.
 
 
 \semdom{sem(\Gamma, \syntax{InterpretationType}) = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))}
 
-$$sem(\Gamma,  \syntax{interpretation-type OMS$_1$ OMS$_2$}) = (L_1, L_2)$$
+If $t$ is an \syntax{InterpretationType},
+$$sem(\Gamma,  t) = (L_1, L_2)$$
 \noindent where
 \begin{itemize}
- \item $\Name(L_1) = \Name(\syntax{OMS}_1)$ and
-       $\Name(L_2) = \Name(\syntax{OMS}_2)$,
- \item $(\Inst(L_i), 
-         \Sig(L_i),
-         \Mod(L_i),
-         \Th(L_i)) = sem(\Gamma, \syntax{OMS}_i)$, 
-         for $i=1, 2$.
+ \item $\Name(L_1) = \Name(t.\syntax{oms})$ and
+       $\Name(L_2) = \Name(t.\syntax{oms2})$,
+ \item $(\Inst(L_1), 
+         \Sig(L_1),
+         \Mod(L_1),
+         \Th(L_1)) = sem(\Gamma, t.\syntax{oms})$,
+ \item $(\Inst(L_2), 
+         \Sig(L_2),
+         \Mod(L_2),
+         \Th(L_2)) = sem(\Gamma, t.\syntax{oms2})$,
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%
@@ -7098,36 +7109,38 @@ Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$,\cbs
  $F\forget\sigma$ is defined as the family of models \cbe
 $\{M_i\}_{i\in Nodes(G_1)}$ such that
 $M_i = F_{\sigma^G(i)}\forget{\sigma^M_{i}}$ for each $i\in Nodes(G_1)$.
+\medskip
 
-$$sem(\Gamma, \syntax{refinement-oms OMS}) = 
+If $r$ is \syntax{RefinementOMS},
+$$sem(\Gamma, \syntax{r}) = 
    ((G, G), \sigma, \cM) $$
   \noindent where 
   \begin{itemize}
   \item $G$ is a graph with just one isolated node $N$
-  such that $\Name(N) = \Name(\syntax{OMS})$
+  such that $\Name(N) = \Name(r.\syntax{oms})$
   and the other elements of the tuple labeling
-  $L$ are given by $sem(\Gamma,\syntax{OMS})$,
+  $L$ are given by $sem(\Gamma,r.\syntax{oms})$,
   \item $\sigma$ is the identity morphism on 
-  $\Sig(\syntax{OMS})$,  
-  \item $\cM = \{((M), (M)) \mid M \in \Mod(\syntax{OMS})\}$,
+  $\Sig(r.\syntax{oms})$,  
+  \item $\cM = \{((M), (M)) \mid M \in \Mod(r.\syntax{oms})\}$,
    where $(M)$ is the singleton family consisting of $M$.
   \end{itemize}
 
-$$sem(\Gamma, \syntax{refinement-network Network}) = ((G, G), \sigma, \cM)$$
-
+If $r$ is \syntax{RefinementNetwork},
+$$sem(\Gamma, r) = ((G, G), \sigma, \cM)$$
 \noindent 
-where $sem(\Gamma, \syntax{Network}) = G$,
+where $sem(\Gamma, r.\syntax{network}) = G$,
 $\sigma$ is the identity network morphism on $G$
 and 
 $\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 
-$$sem(\Gamma, \syntax{refinement-composition Refinement$_1$ Refinement$_2$}) = 
+If $r$ is \syntax{RefinementComposition},
+$$sem(\Gamma, r) = 
 ((G_1, G'_2), \sigma, \cM)$$
-
 \noindent where\\ 
-$sem(\Gamma, \syntax{Refinement}_1) = 
+$sem(\Gamma, r.\syntax{refinement}) = 
 ((G_1, G'_1), \sigma_1, \cM_1)$,
-$sem(\Gamma, \syntax{Refinement}_2) = 
+$sem(\Gamma, r.\syntax{refinement2}) = 
 ((G_2, G'_2), \sigma_2, \cM_2)$
 such that $G'_1 = G_2$,
 $\sigma = \sigma_1;\sigma_2$
@@ -7137,28 +7150,30 @@ $\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that }
 (F_1, F_2) \in \cM_1  \text{ and }
 (F_2, F_3) \in \cM_2  \}$
 
-$$sem(\Gamma, \syntax{simple-oms-ref OMS OMSRefinementMap Refinement}) = 
+If $r$ is \syntax{SimpleOMSRefinement},
+$$sem(\Gamma, r) = 
 ((G, G_2), \sigma, \cM)$$
 where\\
- $sem^M(\Gamma,  \syntax{OMS}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
- $sem(\Gamma,  \syntax{Refinement}) = 
+ $sem^M(\Gamma,  r.\syntax{oms}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
+ $sem(\Gamma,  r.\syntax{refinement}) = 
  ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
  such that $G_1$ consists of an isolated node labeled with 
  $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$\\
- $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), \syntax{OMSRefinementMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
+ $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), r.\syntax{omsRefinementMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
  for each $(M_1, M_2) \in \cM'$,
 $\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM_1$,\\
-G consists of an isolated node labeled with $sem^M(\Gamma,  \syntax{OMS})$\\
+G consists of an isolated node labeled with $sem^M(\Gamma,  r.\syntax{oms})$\\
 $\sigma = (\rho_1,\sigma_1);(\rho_2,\sigma_2)$ and
 $\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
 (M_1, M_2) \in \cM' \}$.
 
-$$sem(\Gamma, \syntax{simple-network-ref Network NetworkRefinementMap Refinement}) = 
+If $r$ is \syntax{SimpleNetworkRefinement},
+$$sem(\Gamma, r) = 
 ((G_1,G_2),\sigma, \cM)$$
 where\\
- $sem^M(\Gamma,  \syntax{Network}) = G_1$,\\
- $sem(\Gamma,  \syntax{Refinement}) = ((G'_1, G_2),\sigma_2, \cM')$,\\ 
- $sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap}) = \sigma_1:G_1\to G'_1$,\\
+ $sem^M(\Gamma,  r.\syntax{network}) = G_1$,\\
+ $sem(\Gamma,  r.\syntax{refinement}) = ((G'_1, G_2),\sigma_2, \cM')$,\\ 
+ $sem(\Gamma, G_1, G_2, r.\syntax{networkRefinementMap}) = \sigma_1:G_1\to G'_1$,\\
  $\sigma = \sigma_1;\sigma_2$ is a network morphism
  and 
  $\cM = \{( F_2\forget{\sigma} , F_2) \mid (F_1, F_2) \in \cM' \}$.
@@ -7168,89 +7183,100 @@ where\\
 
 \semdom{sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{OMSRefinementMap}) = (\rho, \sigma)}
 
-$$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{oms-refmap OMSLanguageTranslation SymbolMap}) = ((\Phi,\alpha,\beta), \sigma) $$
+If $m$ is an \syntax{OMSRefinementMap},
+$$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), m) = ((\Phi,\alpha,\beta), \sigma) $$
 
 where\\
- $sem(\Gamma, \syntax{OMSLanguageTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
+ $sem(\Gamma, m.\syntax{omsLanguageTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
 such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
 and 
-$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, \syntax{SymbolMap}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
+$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, m.\syntax{symbolMap}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
 where $\Gamma.\current=(lang, logic,ser)$, $logic'$ is the target logic of $(\Phi,\alpha,\beta)$, and $lang'$ and 
 $ser'$ are the default language and serializations for 
 $logic'$ .
 
-
-
 \semdom{sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap}) = \sigma:G_1\to G_2}
 
-$$sem(\Gamma, G_1, G_2, \syntax{network-refmap}\ \syntax{NodeMap}_1 \ldots \syntax{NodeMap}_n)
-= \sigma$$
+If $m$ is a \syntax{NetworkRefinementMap},
+$$sem(\Gamma, G_1, G_2, m)
+= sem(\Gamma, G_1,G_2, m.nodeMap)$$
+
+
+\semdom{sem(\Gamma,G_1,G_2, Set(\syntax{NodeMap})) = \sigma:G_1\to G_2 }
+
+If $m_1,\ldots, m_n$ are all \syntax{NodeMap}s,
+$$sem(\Gamma,G_1,G_2, Set\{m_1,\ldots,m_n\}) = \sigma:$$
 where \\
-$sem(\Gamma, G_1, G_2,\syntax{NodeMap}_1)= (\syntax{OMSName}^1_1, \syntax{OMSName}^1_2,\rho_1,\sigma_1)$, $\ldots$\\
-$sem(\Gamma, G_1, G_2,\syntax{NodeMap}_n) = (\syntax{OMSName}^n_1, \syntax{OMSName}^n_2,\rho_n,\sigma_n)$ and\\
-$\sigma^G (\syntax{OMSName}^i_1) = \syntax{OMSName}^i_2$ and
-$\sigma^M_{\syntax{OMSName}^i_1} = (\rho_i, \sigma_i)$ for each $i= 1,\ldots, n$.
+$sem(\Gamma, G_1, G_2,m_1)= (name^1_1, name^1_2,\rho_1,\sigma_1)$, $\ldots$\\
+$sem(\Gamma, G_1, G_2,m_n) = (name^n_1, name^n_2,\rho_n,\sigma_n)$ and\\
+$\sigma^G (name^i_1) = name^i_2$ and
+$\sigma^M_{name^i_1} = (\rho_i, \sigma_i)$ for each $i= 1,\ldots, n$.
 The map is required to be total on the nodes of $G_1$.
 
 %%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, G_1, G_2,
 \syntax{NodeMap}) = 
-(\syntax{OMSName}_1, \syntax{OMSName}_2,\rho,\sigma)}
+(name_1, name_2,\rho,\sigma)}
 
-$sem(\Gamma, G_1, G_2,
-\syntax{node-map OMSName$_1$ OMSName$_2$ OMSLanguageTranslation* SymbolMap}) = (\syntax{OMSName}_1, \syntax{OMSName}_2, \rho,\sigma)$
+If $m$ is a \syntax{NodeMap},
+$$sem(\Gamma, G_1, G_2,
+n) = (m.\syntax{omsName}, m.\syntax{omsName2}, \rho,\sigma)$$
 where
-$(\cI_1, \Sigma_1,\cM_1)$ is the label of \syntax{OMSName}$_1$ in $G_1$,
-$(\cI_2, \Sigma_2,\cM_2)$ is the label of \syntax{OMSName}$_2$ in $G_2$,
-$sem(\Gamma, \syntax{OMSLanguageTranslation*}) = \rho : \cI_1\to\cI_2$, $\rho = (\Phi,\alpha,\beta)$,\\
-$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2, \syntax{SymbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+$(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{omsName}$ in $G_1$,
+$(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{omsName2}$ in $G_2$,
+$sem(\Gamma, m.\syntax{omsLanguageTranslation}) = \rho = (\Phi,\alpha,\beta) : \cI_1\to\cI_2$, \\
+$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
 where $\Gamma.\current=(lang, logic,ser)$,
 $logic'$ is the target logic of $(\Phi,\alpha,\beta)$
 and $lang'$ and $ser'$ are the default language and serialization for $logic'$.
-
 
 %%%%%%%%%%%%%%%%%%%%
 
 
 \semdom{sem(\Gamma,  \syntax{Entailment}) = \Gamma'}
 
-$$sem(\Gamma, \syntax{entailment EntailmentName EntailmentType}) = \Gamma'$$
+If $e$ is an \syntax{Entailment},
+$$sem(\Gamma, e) = \Gamma'$$
 
-where $\Gamma' = \Gamma[EntailmentName \mapsto sem(\Gamma, \syntax{EntailmentType})]$.
+where $\Gamma' = \Gamma[e.\syntax{entailmentName} \mapsto sem(\Gamma, e.\syntax{entailmentType})]$.
 
 %%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, \syntax{EntailmentType}) = (G, id, L_2,L_1)}
 
-$$sem(\Gamma, \syntax{oms-oms-entailment OMS$_1$ OMS$_2$}) = L_2 \stackrel{\id}{\to} L_1$$
+If $t$ is an \syntax{OMSOMSEntailment},
+$$sem(\Gamma, t) = L_2 \stackrel{\id}{\to} L_1$$
 
 \noindent where 
-$\Name(L_1) = \Name(\syntax{OMS}_1)$,
-$\Name(L_2) = \Name(\syntax{OMS}_2)$,\\
-$(\Inst(L_i),\Sig(L_i),\Mod(L_i),\Th(L_i)) = 
-sem(\Gamma, \syntax{OMS}_i)$ for $i=1, 2$ 
+$\Name(L_1) = \Name(t.\syntax{oms})$,
+$\Name(L_2) = \Name(t.\syntax{oms2})$,\\
+$(\Inst(L_1),\Sig(L_1),\Mod(L_1),\Th(L_1)) = 
+sem(\Gamma, t.\syntax{oms})$,
+$(\Inst(L_2),\Sig(L_2),\Mod(L_2),\Th(L_2)) = 
+sem(\Gamma, t.\syntax{oms2})$ 
 such that $\Sig(L_1) = \Sig(L_2)$
 and $\Mod(L_1)\subseteq \Mod(L_2)$
 and $id$ is the identity morphism on $\Sig(L_1)$.
 
-\medskip
-$sem(\Gamma,\syntax{network-oms-entailment Network  OMSName OMS}) = G$
+If $t$ is a \syntax{NetworkOMSEntailment},
+$sem(\Gamma,t) = G$
 
-\noindent where $sem(\Gamma, \syntax{Network}) = G'$ such that $G'$ contains a node $n$ labeled with 
-$(\Name(\syntax{OMSName})$,
-$sem(\Gamma,\syntax{OMS}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and 
+\noindent where $sem(\Gamma, t.\syntax{network}) = G'$ such that $G'$ contains a node $n$ labeled with 
+$(\Name(t.\syntax{omsName})$,
+$sem(\Gamma,t.\syntax{oms}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and 
 $\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. Then 
 $G$ extends G' with a new node whose label has 
-the name $\Name(\syntax{OMS})$ and the other 
-components given by $sem(\Gamma,\syntax{OMS})$ and with
-a new theorem link from this new node to the node $\Name(\syntax{OMSName})$, labeled with
+the name $\Name(t.\syntax{oms})$ and the other 
+components given by $sem(\Gamma,t.\syntax{oms})$ and with
+a new theorem link from this new node to the node $\Name(t.\syntax{omsName})$, labeled with
 the identity morphism on $\Sigma$.
 
-$$sem(\Gamma,\syntax{network-network-entailment Network$_1$ Network$_2$}) = G$$
+If $t$ is a \syntax{NetworkNetworkEntailment},
+$$sem(\Gamma,t) = G$$
 
-\noindent where $sem(\Gamma, \syntax{Network}_1) = G_1$,
-$sem(\Gamma, \syntax{Network}_2) = G_2$, 
+\noindent where $sem(\Gamma, t.\syntax{network}) = G_1$,
+$sem(\Gamma, t.\syntax{network2}) = G_2$, 
 such that $Shape(G_1) = Shape(G_2)$ and, for each node $i\in |Shape(G_1)|$,
 its names in the networks $G_1$ and $G_2$ are the same,
 its signatures are the same
@@ -7272,17 +7298,22 @@ on $\Sig(i_1)$. \ednote{check formulation}
 
 \semdom{sem(\Gamma,\syntax{EquivalenceDefinition})=\Gamma'}
 
-$$sem(\Gamma,\syntax{equivalence-definition  EquivalenceName  ( oms-equivalence }O_1\ O_2\ O_3\syntax{ )})=\Gamma'$$
+If $d$ is an \syntax{EquivalenceDefinition},
+$$sem(\Gamma,d)=\Gamma'$$
 
-\cbs
 \noindent where 
-\begin{enumerate}
-\item $\Gamma' = \Gamma[\syntax{EquivalenceName} \mapsto (G, id, N_1, N_2)]$,
-\item
+ $\Gamma' = \Gamma[d.\syntax{equivalenceName} \mapsto 
+                  sem(\Gamma, d.\syntax{equivalenceType})$.
+
+\semdom{sem(\Gamma,\syntax{EquivalenceType})=(G, id, N_1, N_2)}
+
+
+If $t$ is an \syntax{OMSEquivalence},
+$$ sem(\Gamma,t) = 
+(G, id, N_1, N_2)]$$
+\noindent where $O_1 = t.\syntax{oms}$, $O_2 = t.\syntax{oms2}$, $O_3 = t.\syntax{oms3}$,\\
 $sem^{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}_{\Gamma.lang,\Gamma.logic,\Gamma.ser}(O_3)
-= (\cI, \Sigma, \cM,\Delta)$
-and 
-\item
+= (\cI, \Sigma, \cM,\Delta)$\\
 $G$ is the graph
 $N_1 \stackrel{\iota_1}{\rightarrow} N_3 \stackrel{\iota_2}{\leftarrow} 
 N_3$ where
@@ -7296,7 +7327,6 @@ and \
 $N_3$ is labeled with 
 $(\Name(O_3), \cI, \Sigma, \cM, \Delta)$
 \end{enumerate}
-\end{enumerate}
 such that
 \begin{enumerate}
 \item $\iota_i : \Sig(O_i) \to \Sigma$ are signature inclusions,
@@ -7306,9 +7336,11 @@ $\Inst(O_1) = \Inst(O_2) = \Inst(O_3)$ and
 for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \cM$
 such that $M\forget{\Sig(O_i)} = M_i$. 
 \end{enumerate}
-\cbe
+%\cbe
 
-$$sem(\Gamma,\syntax{equivalence-definition  EquivalenceName  ( network-equivalence }N_1\ N_2\ N_3\syntax{ )})=\Gamma'$$
+
+If $t$ is  a \syntax{NetworkEquivalence},
+$$sem(\Gamma,t)=\Gamma'$$
 \ednote{todo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -7317,13 +7349,13 @@ $$sem(\Gamma,\syntax{equivalence-definition  EquivalenceName  ( network-equivale
 \ednote{in the manifesto this is called a conservative extension. TM: so we have once decided to change this into conservative extension? I vaguely can
 remember...}
 
-$$\begin{array}{ll}
-sem(\Gamma, &\syntax{module-definition ModuleName ConservativityStrength ModuleType}\\ 
-&\syntax{InterfaceSignature}) = \Gamma'
-\end{array}$$
-
-\noindent where 
-$\Gamma' = \Gamma[\syntax{ModuleName}\mapsto (G,\iota, N_2,N_1)]$
+If $d$ is a \syntax{ModuleRelDefinition},
+$$
+sem(\Gamma, d) = \Gamma'
+$$
+\noindent where $O_1 = d.\syntax{oms}$, $O_2 = d.\syntax{oms2}$,$c = d.\syntax{conservativityType}$, $\Sigma = sem(\Gamma, d.\syntax{interfaceSignature})$,
+$\Gamma' = \Gamma[d.\syntax{moduleName}\mapsto 
+(G,\iota, N_2,N_1)]$
 and $G$ is the graph 
 $N_1 \stackrel{\iota}{\rightarrow} N_2$
 where $N_1$ is labeled with $(O_1, \Inst(O_1),\Sig(O_1), \Mod(O_1), \Th(O_1)$
@@ -7340,62 +7372,42 @@ implies $O_2\models\varphi$.
 
 \semdom{sem(\Gamma,\syntax{AlignmentDefinition})=\Gamma'}
 
-$\begin{array}{ll}sem(\Gamma, &\syntax{alignment-definition AlignmentName AlignmentCardinality}\\
-& \syntax{AlignmentType AlignmentSemantics Corresps}) = \Gamma' 
-\end{array}$
-
+If $d$ is an  \syntax{AlignmentDefinition},
+$$sem(\Gamma, d) = \Gamma' $$
+\noindent
 where
-$sem(\Gamma,\syntax{AlignmentType}) = (L_1, L_2)$
-and\\
-$\begin{array}{ll}\Gamma'=&\Gamma[\syntax{AlignmentType} \mapsto \\
-&(sem(\Gamma, (L_1, L_2), \syntax{AlignmentCardinality AlignmentSemantics Corresps}),
-id,L_1,L_2)
-]
-\end{array}$
+$sem(\Gamma,d.\syntax{alignmentType}) = (L_1, L_2)$
+and 
+$\Gamma'=\Gamma[d.\syntax{AlignmentName} \mapsto (G,id,L_1,L_2)]
+$,
+where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$
+and\\ $G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$
 
 \semdom{sem(\Gamma, \syntax{AlignmentType}) = (L_1, L_2)}
 
-$$sem(\Gamma, \syntax{alignment-type OMS$_1$ OMS$_2$}) = (L_1, L_2)$$
-
-where $L_1$ is a node label whose name is
-$\Name(\syntax{OMS}_1)$ and whose other components are
-given by $sem(\Gamma, \syntax{OMS}_1)$
+If $t$ is an \syntax{AlignmentType}
+$$sem(\Gamma, t) = (L_1, L_2)$$
+\noindent where $L_1$ is a node label whose name is
+$\Name(t.\syntax{oms})$ and whose other components are
+given by $sem(\Gamma, t.\syntax{oms})$
 and similarly, $L_2$ is a node label whose name is
-$\Name(\syntax{OMS}_2)$ and whose other components are
-given by $sem(\Gamma, \syntax{OMS}_2)$.
+$\Name(t.\syntax{oms2})$ and whose other components are
+given by $sem(\Gamma, t.\syntax{oms2})$.
 
-\semdom{sem(\Gamma,  L_1, L_2, \syntax{AlignmentCardinality AlignmentSemantics Corresps})=
+\semdom{sem(\Gamma,  L_1, L_2, Set(\syntax{AlignmentCardinalityPair}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
 G}
 
-$$sem(\Gamma, L_1, L_2, \syntax{AlignmentCardinality AlignmentSemantics}, C_1,\ldots,C_n)=
+If $card$ is a set of \syntax{AlignmentCardinalityPair}s, 
+$sem$ an \syntax{AlignmentSemantics}
+and $C = Set\{c_1, \ldots, c_n\}$ a set of \syntax{Correspondence}s,
+$$sem(\Gamma, L_1, L_2, card, sem, C)=
 G$$
-
+\noindent
 where\\
-$L'_1 = sem(\Gamma,L_1,\syntax{AlignmentSemantics})$,\\
-$L'_2 = sem(\Gamma,  L_2,\syntax{AlignmentSemantics})$,\\
-$G = sem(\Gamma, L'_1,L'_2, \syntax{AlignmentCardinality AlignmentSemantics},C_1,\ldots,C_n)$.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\semdom{sem(\Gamma, L_1,\syntax{AlignmentSemantics})=L'_1}
-
-$$sem(\Gamma, L_1,\syntax{AlignmentSemantics})=\begin{cases}
-                                   L_1 & \mbox{if } \syntax{AlignmentSemantics} = \syntax{global-domain}\\
-                                   relativize_{logic(\Gamma.current)}(L_1)& \mbox{otherwise}
-                                                                                                                   \end{cases}$$
-                                                                                                                   
-                                                                                                                   \noindent where the relativization procedure is
-                                                                                                                   logic-specific.                                                                                                
-                                                                                                                  
-
-\semdom{sem(\Gamma, L_1, L_2, \syntax{AlignmentCardinality AlignmentSemantics}\ C_1 \ldots C_n)=G}
-
-$sem(\Gamma, L_1, L_2, \syntax{AlignmentCardinality AlignmentSemantics},C_1,\ldots,C_n)=G$
-
-where\\
-if at least one of the correspondences $C_1, \ldots,C_n$ has a confidence value different than $1$, then the semantics of the 
-alignment is not defined, and the alignment is ill-formed if the alignment mapping does not have the arities given by
-$\syntax{AlignmentCardinality}$, otherwise
+if at least one of the correspondences $c_1, \ldots,c_n$ has a confidence value different than $1$, then the semantics of the 
+alignment is not defined, 
+and the alignment is ill-formed if the alignment mapping does not have the arities given by
+$card$, otherwise
 $G$ is a W-shaped graph as below
 $$
 \xymatrix{
@@ -7405,10 +7417,25 @@ L_1 & &  L_B &&L_2 \\
 $$
 where $L_B$, $L_s$ and $L_t$ are built in a 
 logic-specific way from the correspondences 
-$C_1,\ldots, C_n$ taking into account \syntax{AlignmentSemantics}.
-\cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
+$C_1,\ldots, C_n$ taking into account $sem$.
+\cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\semdom{sem(\Gamma, L_1,L_2,\syntax{AlignmentSemantics}) = (L'_1, L'_2)}
+
+If $s$ is an \syntax{AlignmentSemantics},
+
+$$sem(\Gamma, L_1, L_2, s) = (rel(L_1), rel(L_2))$$
+\noindent where
+$$ rel(L) =
+ \begin{cases}
+                                   L & \mbox{if } s = \syntax{global-domain}\\
+                                   relativize_{logic(\Gamma.current)}(L)& \mbox{otherwise}
+                                                                                                                   \end{cases}$$
+                                                                                                                  
+                                                                                                                   \noindent where the relativization procedure is logic-specific.
+                                                                                                                   
 %\sclause{Translational semantics of \DOL language constructs}
 %
 %The translational semantics uses Common Logic as a foundational framework for the library, modeling 
