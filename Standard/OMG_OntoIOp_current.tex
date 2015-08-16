@@ -4350,7 +4350,7 @@ OMS (e.g.\ returned by model finders) that are used to describe single models.
 \includegraphics[width=\textwidth]{mof/Class_Diagram__oms-definition.png}
 
 A
-\syntax{SymbolItems}, used in an OMS \syntax{Reduction}, is a
+\syntax{SymbolList}, used in an OMS \syntax{Reduction}, is a
 list of non-logical symbols that are to be hidden. Also,
 an \syntax{OMSLanguageTranslation} denoting a logic projection
 can be used a logic reduction to a
@@ -4416,12 +4416,12 @@ OMSTranslation          = 'with' , { LanguageTranslation } , SymbolMap
                      | 'with' , LanguageTranslation , { LanguageTranslation } ;
 LanguageTranslation     = 'translation' , OMSLanguageTranslation ;
                       
-Reduction            = 'hide' , { LogicReduction } , SymbolItems 
+Reduction            = 'hide' , { LogicReduction } , SymbolList 
                      | 'hide' , LogicReduction , { LogicReduction } 
-                     | 'reveal' ,  SymbolItems ;
+                     | 'reveal' ,  SymbolList ;
 LogicReduction       = 'along' , OMSLanguageTranslation ;
 
-SymbolItems          = Symbol , { ',' , Symbol } ;
+SymbolList          = Symbol , { ',' , Symbol } ;
 SymbolMap       = GeneralSymbolMapItem , { ',' , GeneralSymbolMapItem } ;
 
 Extraction           = 'extract' , InterfaceSignature
@@ -4431,7 +4431,9 @@ Approximation        = 'forget' , InterfaceSignature , [ 'keep' , LogicRef ]
                      | 'keep' , InterfaceSignature , [ 'keep' , LogicRef ] 
                      | 'keep' , LogicRef ;
 
-Filtering            = 'select' , BasicOMS 
+Filtering            = 'select' , SymbolList 
+                     | 'select' , BasicOMS 
+                     | 'reject' , SymbolList
                      | 'reject' , BasicOMS ;
 
 ExtensionOMS         = [ ExtConservativityStrength ] , [ ExtensionName ] , ExtendingOMS ;
@@ -4448,7 +4450,7 @@ Conservative         = '%ccons'
                      | '%consistent'  
                      | '%inconsistent' ; 
 
-InterfaceSignature   = SymbolItems ;
+InterfaceSignature   = SymbolList ;
 
 ImportName           = '%(' , IRI , ')%' ;
 ExtensionName        = '%(' , IRI , ')%' ;
@@ -5013,12 +5015,12 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | 'with' , LanguageTranslation , { LanguageTranslation } ;
 % LanguageTranslation     = 'translation' , OMSLanguageTranslation ;
 %
-% Reduction            = 'hide' , { LogicReduction } , SymbolItems
+% Reduction            = 'hide' , { LogicReduction } , SymbolList
 %                      | 'hide' , LogicReduction , { LogicReduction }
-%                      | 'reveal' ,  SymbolItems ;
+%                      | 'reveal' ,  SymbolList ;
 % LogicReduction       = 'along' , OMSLanguageTranslation ;
 %
-% SymbolItems          = Symbol , { ',' , Symbol } ;
+% SymbolList          = Symbol , { ',' , Symbol } ;
 % SymbolMap       = GeneralSymbolMapItem , { ',' , GeneralSymbolMapItem } ;
 %
 % Extraction           = 'extract' , InterfaceSignature
@@ -5045,7 +5047,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | '%consistent'
 %                      | '%inconsistent' ;
 %
-% InterfaceSignature   = SymbolItems ;
+% InterfaceSignature   = SymbolList ;
 %
 % ImportName           = '%(' , IRI , ')%' ;
 % ExtensionName        = '%(' , IRI , ')%' ;
@@ -9875,7 +9877,7 @@ OMS with translation IRI  & Mereology \\\hline
 %OMS with translation IRI : IRI $\to$ IRI  &  \\\hline
 %OMS with translation IRI $\to$ IRI  &  \\\hline
 %OMS with translation $\to$ IRI  &  \\\hline
-OMS hide SymbolItems  &  Algebra \\\hline
+OMS hide SymbolList  &  Algebra \\\hline
 OMS reveal Symbols  & Datatypes \\\hline
 %OMS reveal Symbol |-> Symbol ...  &  \\\hline
 OMS hide along IRI  & section~\ref{model-1} \\\hline
