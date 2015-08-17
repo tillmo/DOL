@@ -4507,7 +4507,7 @@ grouping results in a parse error.
 
 
 An OMS mapping provides a connection between two OMS. An OMS mapping definition is the definition of 
-either a named interpretation (\syntax{InterpretationDefinition}, \syntax{Entailment} or 
+either a named interpretation (\syntax{InterpretationDefinition}, \syntax{EntailmentDefinition} or 
 \syntax{EquivalenceDefinition}), a named declaration of the  relation between a module of an OMS and the whole 
 OMS (\syntax{ModuleRelDefinition}), or a named \termref{alignment} (\syntax{AlignmentDefinition}).
 
@@ -4572,7 +4572,7 @@ non-logical symbol is legal, this is a non-injective OMS mapping.})
 \begin{lstlisting}[language=ebnf,mathescape]
 
 MappingDefinition  ::= InterpretationDefinition
-                     | Entailment
+                     | EntailmentDefinition
                      | EquivalenceDefinition
                      | ModuleRelDefinition
                      | AlignmentDefinition
@@ -4602,8 +4602,8 @@ RefMap             ::= 'via' LanguageTranslation [SymbolMap]
                      | 'via' NodeMap ( ',' NodeMap )*
 NodeMap            ::= OMSName '|->' OMSName
                        ['using' LanguageTranslation* [SymbolMap]]
-Entailment         ::= 'entailment' EntailmentName '='
-                       EntailmentType 'end'
+EntailmentDefinition ::= 'entailment' EntailmentName '='
+                         EntailmentType 'end'
 EntailmentName     ::= IRI
 EntailmentType     ::= GroupOMS 'entails' GroupOMS
                      | OMSName 'in' Network 'entails' GroupOMS
@@ -5111,7 +5111,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 % \ssclause{OMS Mappings}\label{a:dol-text:mappings}
 % \index{alignment}
 % \begin{lstlisting}[language=ebnf,mathescape]
-% MappingDefinition             = InterpretationDefinition | Entailment | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition ;
+% MappingDefinition             = InterpretationDefinition | EntailmentDefinition | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition ;
 %
 % InterpretationDefinition            = InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType ,  'end'
 %                      | InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType , '=' ,
@@ -5132,7 +5132,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | 'via' , NodeMap , { ',' , NodeMap } ;
 % NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LanguageTranslation } , [ SymbolMap ] ] ;
 %
-% Entailment           = 'entailment' , EntailmentName , '=' , EntailmentType , 'end' ;
+% EntailmentDefinition           = 'entailment' , EntailmentName , '=' , EntailmentType , 'end' ;
 % EntailmentName       = IRI ;
 % EntailmentType       = GroupOMS , 'entails' , GroupOMS
 %                      | OMSName , 'in' , Network , 'entails' , GroupOMS
@@ -7015,7 +7015,7 @@ semantics is undefined. \ednote{@Till: please check this}
 %require $\Phi(\Sigma)\leq\Sigma$ in the Grothendieck institution!}
 
 \semdom{sem(\Gamma,\syntax{MappingDefinition})= \Gamma'}
-See equations for \syntax{InterpretationDefinition},  \syntax{Entailment}, \syntax{EquivalenceDefinition}, \syntax{ModuleRelDefinition} and \syntax{AlignmentDefinition}.
+See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \syntax{ModuleRelDefinition} and \syntax{AlignmentDefinition}.
 
 \semdom{sem(\Gamma,\syntax{InterpretationDefinition}) = \Gamma'}
 
@@ -7242,9 +7242,9 @@ and $lang'$ and $ser'$ are the default language and serialization for $logic'$.
 %%%%%%%%%%%%%%%%%%%%
 
 
-\semdom{sem(\Gamma,  \syntax{Entailment}) = \Gamma'}
+\semdom{sem(\Gamma,  \syntax{EntailmentDefinition}) = \Gamma'}
 
-If $e$ is an \syntax{Entailment},
+If $e$ is an \syntax{EntailmentDefinition},
 $$sem(\Gamma, e) = \Gamma'$$
 
 where $\Gamma' = \Gamma[e.\syntax{entailmentName} \mapsto sem(\Gamma, e.\syntax{entailmentType})]$.
@@ -9579,7 +9579,7 @@ OMSLanguageTranslationRef ::= IRI
 
 MappingDefinition  ::= InterpretationDefinition
                      | RefinementDefinition
-                     | Entailment
+                     | EntailmentDefinition
                      | EquivalenceDefinition
                      | ModuleRelDefinition
                      | AlignmentDefinition
@@ -9607,7 +9607,7 @@ OMSRefinementMap   ::= oms-refmap [OMSLanguageTranslation] [SymbolMap]
 NetworkRefinementMap ::= network-refmap NodeMap*
 NodeMap            ::= node-map OMSName OMSName
                                 OMSLanguageTranslation* [SymbolMap]
-Entailment         ::= entailment EntailmentName EntailmentType
+EntailmentDefinition ::= entailment EntailmentName EntailmentType
 OMSOMSEntailment   ::= oms-oms-entailment OMS OMS
 NetworkOMSEntailment ::= network-oms-entailment Network OMSName OMS
 NetworkNetworkEntailment ::= network-network-entailment Network Network
