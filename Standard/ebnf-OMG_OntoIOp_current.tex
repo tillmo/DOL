@@ -6403,7 +6403,6 @@ $
 
 %Translation
 
-%%%%%%%%%% Mihai: am ramas aici
 The semantics of a \syntax{TranslationOMS} $O'$ is given by
 \begin{itemize}
  \item $\Inst(O') = J$, when $\Inst_{\Sig(O'.\syntax{oms})}(O'.\syntax{omsTranslation}) = (\Phi, \alpha, \beta) : \Inst(O'.\syntax{oms}) \to J$ 
@@ -6480,43 +6479,42 @@ The semantics of an \syntax{ApproximationOMS} $O'$ is
 \noindent where $(\cI,\Sigma) = sem(\Gamma, (\Inst(O'.\syntax{oms}), \Sig(O'.\syntax{oms})), O'.\syntax{approximation})$.
 
 %Filtering
-%%% Mihai: I need RemovalKind for this!
-The semantics of a \syntax{FilteringOMS} $O$
+The semantics of a \syntax{FilteringOMS} $O$, where
+$O' = O.\syntax{filtering}.\syntax{basicOMS}$,
 is
-defined only if  $\Sig(O.\syntax{filtering})\subseteq\Sig(\syntax{OMS})$ and $\Th(\syntax{Filtering})\subseteq\Th(\syntax{OMS})$.
-\cbs Two cases are distinguished based\cbe on the value of $c$, 
-where $sem(\Gamma, (\Sig(\syntax{OMS}), \Th(\syntax{OMS}), \syntax{Filtering})
-= (c, \cI, \Sigma, \Delta)$ 
-If $c = keep$, 
+defined only if  $\Sig(O')\subseteq\Sig(O.\syntax{oms})$ and 
+$\Th(O')\subseteq\Th(O.\syntax{oms})$.
+\cbs Two cases are distinguished based\cbe on the value of $O.\syntax{filtering}.\syntax{removalKind}$.
+If $O.\syntax{filtering}.\syntax{removalKind} = keep$, 
 the semantics of $O$ is given by
 \begin{itemize}
-  \item $\Inst(O) = \cI$
+  \item $\Inst(O) = \Inst(O')$
   \item $\Sig(O) = \Sigma'$ where $\Sigma'$ is the smallest signature
-with $\Sigma\subseteq\Sigma'$ and $\Delta\subseteq\Sen(\Sigma')$. ({If this smallest signature does not exist, the semantics is undefined.})
-  \item $\Th(O) = (\Th(\syntax{OMS})\cap\Sen(\Sig(O)))\cup\Delta$
+with $\Sig(O')\subseteq\Sigma'$ and $\Th(O')\subseteq\Sen(\Sigma')$. ({If this smallest signature does not exist, the semantics is undefined.})
+  \item $\Th(O) = (\Th(O.\syntax{oms})\cap\Sen(\Sig(O)))\cup\Th(O')$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
   \item $Env(\Gamma, O')$ is obtained from 
-       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       $\Gamma'' = Env(\Gamma, O.\syntax{oms})$
        by extending $\Gamma''.imports$
        with a new node for $O$ labeled as in the items above and
-       with a new edge from the node of $O$ to the node of $\syntax{OMS}$
-        labeled with the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$.
+       with a new edge from the node of $O$ to the node of $O.\syntax{oms}$
+        labeled with the inclusion of $\Sigma'$ in $\Sig(O.\syntax{oms})$.
 \end{itemize}
 
 \noindent
-If $c = remove$, the semantics of $O =$
-\syntax{filtering OMS (filter remove BasicOMS)} is
+If $O.\syntax{filtering}.\syntax{removalKind} = remove$, the semantics of $O$  
+is
 \begin{itemize}
-  \item $\Inst(O) = \cI$
-  \item $\Sig(O) = \Sig(\syntax{OMS})\setminus \Sigma$ 
-  \item $\Th(O) = \Th(\syntax{OMS})\cap\Sen(\Sig(O))\setminus\Delta$
+  \item $\Inst(O) = \Inst(O')$
+  \item $\Sig(O) = \Sig(O.\syntax{oms})\setminus \Sig(O')$ 
+  \item $\Th(O) = \Th(O.\syntax{oms})\cap\Sen(\Sig(O))\setminus\Th(O')$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
     \item $Env(\Gamma, O')$ is obtained from 
-       $\Gamma'' = Env(\Gamma, \syntax{OMS})$
+       $\Gamma'' = Env(\Gamma, O.\syntax{oms})$
        by extending $\Gamma''.imports$
        with a new node for $O$ labeled as in the items above and
-       with a new edge from the node of $O$ to the node of $\syntax{OMS}$
-        labeled with the inclusion of $\Sigma'$ in $\Sig(\syntax{OMS})$.
+       with a new edge from the node of $O$ to the node of $O.\syntax{oms}$
+        labeled with the inclusion of $\Sigma'$ in $\Sig(O.\syntax{oms})$.
 \end{itemize}
 
 %Union
@@ -6635,31 +6633,30 @@ $i=1,\ldots, n$ and
 
 \semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta), \sigma)}
 
-%%%% Mihai: needs RemovalKind
-The semantics of a reduction
-$O=$ \syntax{reduction remove LogicReduction Symbol+}
+The semantics of a \syntax{Reduction}
+$O=$ with $O.\syntax{reduction}.\syntax{removalKind} = remove$
 is given by
 \begin{itemize}
- \item $\Inst(O) = sem(\syntax{LogicReduction}) : \Gamma.logic \to logic'$
+ \item $\Inst(O) = sem(O.\syntax{reduction}.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
  \item 
 $\Mor(O) = 
 \iota: \Sigma' \to \Phi(\Sigma)$, where 
-$\Sigma' = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), \syntax{Symbol+})$,
+$\Sigma' = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{reduction}.\syntax{symbolList})$,
 $lang'$ and $ser'$ are the default language and serialization for logic $logic'$
 and $\iota$ is the inclusion morphism.
 \end{itemize}
 
-If \syntax{LogicReduction} is missing, 
+If $O.\syntax{reduction}.\syntax{omsLanguageTranslation}$ is missing, 
 it defaults to the identity morphism of the current logic of $\Gamma$.
 
 
 The semantics of a reduction
-$O=$ \syntax{reduction keep Symbol+}
+$O=$  with $O.\syntax{reduction}.\syntax{removalKind} = keep$
 is 
  \begin{itemize}
   \item $\Inst(O)$ is the identity morphism on the current logic of $\Gamma$
   \item $\Mor(O)$ is the inclusion of
-  $sem(\Gamma, \Sigma, \syntax{Symbol+})$ in
+  $sem(\Gamma, \Sigma, O.\syntax{reduction}.\syntax{symbolList})$ in
    $\Sigma$.
  \end{itemize}
 
@@ -6743,60 +6740,60 @@ OMS.}:\hspace{-2cm}
 \semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction}) = 
         (\Sigma', \Delta')}
 
-$sem(\Gamma, (\Sigma, \Delta), \syntax{extraction RemovalKind InterfaceSignature}) =
-(\Sigma',\Delta')$
-
-%% Mihai: needs RemovalKind
-
-where $sem(\Gamma, \Sigma, \syntax{RemovalKind InterfaceSignature}) =
+If $e$ is an \syntax{Extraction},
+$$sem(\Gamma, (\Sigma, \Delta), e) =
+(\Sigma',\Delta')$$
+\noindent
+where $sem(\Gamma, \Sigma, e.\syntax{removalKind}, e.\syntax{interfaceSignature}) =
 \Sigma''$, $\langle\Sigma',\Delta'\rangle$ is the smallest depleting
 $\Sigma''$-module (see \cite{DBLP:journals/ai/KontchakovWZ10} for the
 definition in a description logic context and \cite{IbanezEtAl15} for a
 generalization to an arbitrary institution), i.e.\ the
 smallest sub-theory $\langle\Sigma',\Delta'\rangle$ of
-$(\Sig(\syntax{OMS}), \Th(\syntax{OMS}))$ such that the following
+$(\Sigma, \Delta)$ such that the following
 model-theoretic inseparability holds
-  $$\Th(\syntax{OMS}) \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma''}  \emptyset.$$
+  $$\Delta \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma''}  \emptyset.$$
 ({In \cite{DBLP:journals/ai/KontchakovWZ10}, it is
   shown that the smallest depleting $\Sigma''$-module exists in
   description logics, and in \cite{IbanezEtAl15} this is generalized to arbitrary
   institutions.})
 
-This means intuitively that $\Th(\syntax{OMS}) \setminus \Delta'$
+This means intuitively that $\Delta \setminus \Delta'$
 cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma''$ concerns) and formally that 
 $$\begin{array}{ll}
-&\{M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})), M  \models \Th(\syntax{OMS}) \setminus \Delta' \}\\
-= &\{ M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sig(\syntax{OMS})) \}.
+&\{M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sigma), M  \models \Delta \setminus \Delta' \}\\
+= &\{ M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sigma) \}.
 \end{array}$$
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, (\cI, \Sigma), \syntax{Approximation}) = (\cI,\Sigma')}
 
-%% Mihai: needs RemovalKind
-
-$sem(\Gamma,\Sigma, \syntax{approx RemovalKind InterfaceSignature LogicRef}) = 
-  (\cI,\Sigma')$
+If $a$ is an \syntax{Approximation},
+$$sem(\Gamma,\Sigma, a) = 
+  (\cI,\Sigma')$$
   
   \noindent
-  where $\Sigma' = sem(\Gamma, \Sigma, \syntax{RemovalKind InterfaceSignature})$
-  and $sem(\syntax{LogicRef}) = \cI$.
+  where $\Sigma' = sem(\Gamma, \Sigma, a.\syntax{removalKind}, a.\syntax{interfaceSignature})$
+  and $sem(a.\syntax{logicRef}) = \cI$.
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (c,\cI,\Sigma', \Delta')}
 
-%% Mihai: needs RemovalKind
-
-$$sem(\Gamma, (\Sigma, \Delta), \syntax{filter keep BasicOMS}) = 
+If $f$ is a \syntax{Filtering} such that
+$f.\syntax{removalKind} = keep$,
+$$sem(\Gamma, (\Sigma, \Delta), f) = 
 (keep, \cI,\Sigma', \Delta')$$
-
-where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta')$.
+\noindent
+where $sem(\Gamma, (\Sigma,\Delta), f.\syntax{basicOMS}) = (\cI, \Sigma', \Delta')$.
 %and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
 %includes $(\Sigma'',\Delta'')$. \ednote{TODO: update}
 
-$$sem(\Gamma, (\Sigma, \Delta), \syntax{filter remove BasicOMS}) = 
+If $f$ is a \syntax{Filtering} such that
+$f.\syntax{removalKind} = remove$,
+$$sem(\Gamma, (\Sigma, \Delta), f) = 
 (remove,\cI,\Sigma', \Delta')$$
-where $sem(\Gamma, (\Sigma,\Delta), \syntax{BasicOMS}) = (\cI, \Sigma', \Delta')$.
+where $sem(\Gamma, (\Sigma,\Delta), f.\syntax{basicOMS}) = (\cI, \Sigma', \Delta')$.
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
@@ -6830,16 +6827,15 @@ If $e.\syntax{extensionName}$ is present, the inclusion link is labeled with thi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem( \Gamma, \Sigma, \syntax{RemovalKind InterfaceSignature}) = 
+\semdom{sem( \Gamma, \Sigma, \syntax{RemovalKind}, \syntax{InterfaceSignature}) = 
 \Sigma'}
 
-%% Mihai: needs RemovalKind
-
+If $r$ is a \syntax{RemovalKind} and $s$ is an \syntax{InterfaceSignature},
 $sem(\Gamma, \Sigma, \syntax{ Qual Symbol+}) = \Sigma'$, 
 where 
 %
-$$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, \syntax{Symbol+}) &\text{ if } \quad \syntax{Qual = keep}\\
-\Sigma \setminus   sem(\Gamma, \Sigma, \syntax{Symbol+})  & \text{ if } \quad \syntax{Qual = remove}
+$$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, s.\syntax{symbolList}) &\text{ if } \quad r = keep\\
+\Sigma \setminus   sem(\Gamma, \Sigma, s.\syntax{symbolList})  & \text{ if } \quad r = remove
 \end{cases}$$
 %$sem(\Sigma, \syntax{`remove-signature', InterfaceSignature})$
 
