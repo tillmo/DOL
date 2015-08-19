@@ -2,7 +2,7 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.96}
+\newcommand{\version}{0.97}
 
 
 %todo
@@ -4211,31 +4211,37 @@ At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abb
 
 	\sssclause{Documents}
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
-Document                 = DOLLibrary
-                         | NativeDocument ;
-DOLLibrary             = [ PrefixMap ] , 'library' , LibraryName , Qualification , { LibraryItem } ;
-NativeDocument = ($<$) language and serialization specific ($>$) ;
-LibraryItem             = LibraryImport | Definition | Qualification ;
-Definition              =  OMSDefinition | NetworkDefinition | MappingDefinition ;
-LibraryImport                = 'import' , LibraryName ;
-Qualification            = LanguageQualification | LogicQualification | SyntaxQualification ;
-LanguageQualification             = 'language' , LanguageRef ;
-LogicQualification                = 'logic' , LogicRef ;
-SyntaxQualification               = 'serialization' , SyntaxRef ;
-LibraryName             = IRI ;
+
+Document           ::= DOLLibrary | NativeDocument
+DOLLibrary         ::= [PrefixMap] 'library' LibraryName
+                       Qualification LibraryItem*
+NativeDocument     ::= ($<$) language and serialization specific ($>$) 
+LibraryItem        ::= LibraryImport | Definition | Qualification
+Definition         ::= OMSDefinition
+                     | NetworkDefinition
+                     | MappingDefinition
+LibraryImport      ::= 'import' LibraryName
+Qualification      ::= LanguageQualification
+                     | LogicQualification
+                     | SyntaxQualification
+LanguageQualification ::= 'language' LanguageRef
+LogicQualification ::= 'logic' LogicRef
+SyntaxQualification ::= 'serialization' SyntaxRef
+LibraryName        ::= IRI
 \end{lstlisting}
+
 
 \begin{lstlisting}[language=ebnf,escapechar=+,morecomment={[l]{\%\%\ }}]
-PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
-PrefixBinding            = BoundPrefix , IRIBoundToPrefix , [ Separators ] ;
-BoundPrefix              = ':' | Prefix ; +$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the \DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+ 
-IRIBoundToPrefix         = '<' , FullIRI , '>' ;
-Separators               = 'separators' , SeparatorString , SeparatorString ;
-SeparatorString  = SeparatorChar , { SeparatorChar } ;
-SeparatorChar    = ipchar | gen-delims , - , '#' ;
-                   ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 
+PrefixMap      ::= '%prefix(' PrefixBinding* ')%'
+PrefixBinding  ::= BoundPrefix IRIBoundToPrefix [Separators]
+BoundPrefix    ::= ':' | Prefix+$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the \DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+
+IRIBoundToPrefix ::= '<' FullIRI '>'
+Separators     ::= 'separators' SeparatorString SeparatorString
+SeparatorString ::= SeparatorChar SeparatorChar*
+SeparatorChar  ::= ipchar | gen-delims - '#'($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
+
 
 \cbs Note that the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2013, Section 6}) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.\cbe  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
 
@@ -4269,18 +4275,19 @@ explicitly excluded.
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
-NetworkDefinition     = 'network' , NetworkName , '=' , 
-                         [ ConservativityStrength ] , Network ;
-NetworkName           = IRI ;
-Network               = NetworkElements, [ ExcludedElements ] ;
-NetworkElements       = NetworkElement , { ',' , NetworkElement } ;
-NetworkElement        = [ Id , ':' ] , ElementRef ;
-ExcludedElements      = 'excluding' , ExcludedElement , { ',' , ExcludedElement } ;
-ExcludedElement       = PathReference | ElementRef ;
-PathReference         = IRI, '->', IRI ;
-ElementRef            = IRI ;
-Id                     = Letter , { LetterOrDigit } ;
+NetworkDefinition ::= 'network' NetworkName '='
+                      [ConservativityStrength] Network
+NetworkName     ::= IRI
+Network         ::= NetworkElements [ExcludedElements]
+NetworkElements ::= NetworkElement ( ',' NetworkElement )*
+NetworkElement  ::= [Id ':'] ElementRef
+ExcludedElements ::= 'excluding' ExcludedElement ( ',' ExcludedElement )*
+ExcludedElement ::= PathReference | ElementRef
+PathReference   ::= IRI '->' IRI
+ElementRef      ::= IRI
+Id              ::= Letter LetterOrDigit*
 \end{lstlisting}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4385,107 +4392,90 @@ and \syntax{minimize} are translated to \syntax{minimize}.
 
                        
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
-BasicOMS = ($<$)language and serialization specific($>$) ;
-ClosableOMS      = BasicOMS
-                     | OMSRef , [ ImportName ] ; 
-                     
-ExtendingOMS        = ClosableOMS
-                     | RelativeClosureOMS ;
-                     
-RelativeClosureOMS  = ClosureType , '{' , ClosableOMS , '}' ;
-                     
-OMS                 = ExtendingOMS
-                     | OMS , Closure 
-                     | OMS , OMSTranslation
-                     | OMS , Reduction
-                     | OMS , Approximation
-                     | OMS , Filtering
-                     | OMS , 'and' , [ ConservativityStrength ] , OMS 
-                     | OMS , 'then' , ExtensionOMS
-                     | { Qualification } , ':' , GroupOMS
-                     | 'combine' , NetworkElements , [ ExcludeExtensions ]  
-                     | GroupOMS ;
 
-Closure         = ClosureType , CircMin , [ CircVars ] ;
-ClosureType     = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
-CircMin = Symbol , {  Symbol } ;
-CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
-
-GroupOMS            = '{' , OMS , '}'
-                     | OMSRef ;
-
-OMSTranslation          = 'with' , { LanguageTranslation } , SymbolMap
-                     | 'with' , LanguageTranslation , { LanguageTranslation } ;
-LanguageTranslation     = 'translation' , OMSLanguageTranslation ;
-                      
-Reduction            = 'hide' , { LogicReduction } , SymbolList 
-                     | 'hide' , LogicReduction , { LogicReduction } 
-                     | 'reveal' ,  SymbolList ;
-LogicReduction       = 'along' , OMSLanguageTranslation ;
-
-SymbolList          = Symbol , { ',' , Symbol } ;
-SymbolMap       = GeneralSymbolMapItem , { ',' , GeneralSymbolMapItem } ;
-
-Extraction           = 'extract' , InterfaceSignature
-                     | 'remove' , InterfaceSignature ;
-
-Approximation        = 'forget' , InterfaceSignature , [ 'keep' , LogicRef ] 
-                     | 'keep' , InterfaceSignature , [ 'keep' , LogicRef ] 
-                     | 'keep' , LogicRef ;
-
-Filtering            = 'select' , SymbolList 
-                     | 'select' , BasicOMS 
-                     | 'reject' , SymbolList
-                     | 'reject' , BasicOMS ;
-
-ExtensionOMS         = [ ExtConservativityStrength ] , [ ExtensionName ] , ExtendingOMS ;
-
-ConservativityStrength         = Conservative
-                     | '%mono'
-                     | '%wdef'
-                     | '%def' ;
-ExtConservativityStrength      = ConservativityStrength | '%implied' ;
-Conservative         = '%ccons'
-                     | '%mcons'  
-                     | '%notccons'  
-                     | '%notmcons'  
-                     | '%consistent'  
-                     | '%inconsistent' ; 
-
-InterfaceSignature   = SymbolList ;
-
-ImportName           = '%(' , IRI , ')%' ;
-ExtensionName        = '%(' , IRI , ')%' ;
-
-OMSkeyword          = 'ontology' | 'onto' | 'specification' | 'spec' | 'model' | 'oms' ;
-
-OMSDefinition             = OMSkeyword , OMSName , '=' , [ ConservativityStrength ] , 
-                                   OMS , 'end'  ; 
-
-Symbol               = IRI ;
-SymbolMapItem            = Symbol , '|->' , Symbol ;
-GeneralSymbolMapItem          = Symbol
-                     | SymbolMapItem ;
-Sentence             = ($<$)an expression specific to an OMS language($>$) ;
-
-OMSName             = IRI ;
-
-OMSRef              = IRI ;
-
-LanguageRef          = IRI ;
-LogicRef             = IRI ;
-SyntaxRef            = IRI ;
-
-LoLaRef              = LanguageRef
-                     | LogicRef ;
+BasicOMS           ::= ($<$)language and serialization specific($>$) 
+ClosableOMS        ::= BasicOMS | OMSRef [ImportName]
+ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
+RelativeClosureOMS ::= ClosureType '{' ClosableOMS '}'
+OMS                ::= ExtendingOMS
+                     | OMS Closure
+                     | OMS OMSTranslation
+                     | OMS Reduction
+                     | OMS Approximation
+                     | OMS Filtering
+                     | OMS 'and' [ConservativityStrength] OMS
+                     | OMS 'then' ExtensionOMS
+                     | Qualification* ':' GroupOMS
+                     | 'combine' NetworkElements [ExcludeExtensions]
+                     | GroupOMS
+Closure            ::= ClosureType CircMin [CircVars]
+ClosureType        ::= 'minimize'
+                     | 'closed-world'
+                     | 'maximize'
+                     | 'free'
+                     | 'cofree'
+CircMin            ::= Symbol Symbol*
+CircVars           ::= 'vars' (Symbol Symbol*)
+GroupOMS           ::= '{' OMS '}' | OMSRef
+OMSTranslation     ::= 'with' LanguageTranslation* SymbolMap
+                     | 'with' LanguageTranslation LanguageTranslation*
+LanguageTranslation ::= 'translation' OMSLanguageTranslation
+Reduction          ::= 'hide' LogicReduction* SymbolList
+                     | 'hide' LogicReduction LogicReduction*
+                     | 'reveal' SymbolList
+LogicReduction     ::= 'along' OMSLanguageTranslation
+SymbolList         ::= Symbol ( ',' Symbol )*
+SymbolMap          ::= GeneralSymbolMapItem ( ',' GeneralSymbolMapItem )*
+Extraction         ::= 'extract' InterfaceSignature
+                     | 'remove' InterfaceSignature
+Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
+                     | 'keep' InterfaceSignature ['keep' LogicRef]
+                     | 'keep' LogicRef
+Filtering          ::= 'select' SymbolList
+                     | 'select' BasicOMS
+                     | 'reject' SymbolList
+                     | 'reject' BasicOMS
+ExtensionOMS       ::= [ExtConservativityStrength]
+                       [ExtensionName]
+                       ExtendingOMS
+ConservativityStrength ::= Conservative | '%mono' | '%wdef' | '%def'
+ExtConservativityStrength ::= ConservativityStrength | '%implied'
+Conservative       ::= '%ccons'
+                     | '%mcons'
+                     | '%notccons'
+                     | '%notmcons'
+                     | '%consistent'
+                     | '%inconsistent'
+InterfaceSignature ::= SymbolList
+ImportName         ::= '%(' IRI ')%'
+ExtensionName      ::= '%(' IRI ')%'
+OMSkeyword         ::= 'ontology'
+                     | 'onto'
+                     | 'specification'
+                     | 'spec'
+                     | 'model'
+                     | 'oms'
+OMSDefinition      ::= OMSkeyword OMSName '='
+                       [ConservativityStrength] OMS 'end'
+Symbol             ::= IRI
+SymbolMapItem      ::= Symbol '|->' Symbol
+GeneralSymbolMapItem ::= Symbol | SymbolMapItem
+Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
+OMSName            ::= IRI
+OMSRef             ::= IRI
+LanguageRef        ::= IRI
+LogicRef           ::= IRI
+SyntaxRef          ::= IRI
+LoLaRef            ::= LanguageRef | LogicRef
 \end{lstlisting}
+
 
 \begin{lstlisting}[language=ebnf,mathescape]
-OMSLanguageTranslation        = OMSLanguageTranslationRef
-                     | '->' , LoLaRef ;
 
-OMSLanguageTranslationRef     = IRI ;
+OMSLanguageTranslation ::= OMSLanguageTranslationRef | '->' LoLaRef
+OMSLanguageTranslationRef ::= IRI
 \end{lstlisting}
+
 
 %\ednote{\%safe is more a statement about an import of a module, 
 %and hence should be a statement in an OMS network. Recall:
@@ -4582,73 +4572,85 @@ non-logical symbol is legal, this is a non-injective OMS mapping.})
 
 \index{alignment}
 \begin{lstlisting}[language=ebnf,mathescape]
-MappingDefinition             = InterpretationDefinition | EntailmentDefinition | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition ;
 
-InterpretationDefinition            = InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType ,  'end'
-                     | InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType , '=' ,
-                       { LanguageTranslation } , [ SymbolMap ] ,  'end' 
-                     | InterpretationKeyword , InterpretationName , '=' , Refinement ,  'end' ;
-
-InterpretationKeyword         = 'interpretation' | 'view' | 'refinement' ;
-InterpretationName            = IRI ;
-InterpretationType            = GroupOMS , 'to' , GroupOMS ;
-
-Refinement           = GroupOMS 
+MappingDefinition  ::= InterpretationDefinition
+                     | EntailmentDefinition
+                     | EquivalenceDefinition
+                     | ModuleRelDefinition
+                     | AlignmentDefinition
+InterpretationDefinition ::= InterpretationKeyword
+                             InterpretationName
+                             [Conservative] ':'
+                             InterpretationType 'end'
+                     | InterpretationKeyword
+                             InterpretationName
+                             [Conservative] ':'
+                             InterpretationType '='
+                             LanguageTranslation*
+                             [SymbolMap] 'end'
+                     | InterpretationKeyword
+                             InterpretationName '='
+                             Refinement 'end'
+InterpretationKeyword ::= 'interpretation' | 'view' | 'refinement'
+InterpretationName ::= IRI
+InterpretationType ::= GroupOMS 'to' GroupOMS
+Refinement         ::= GroupOMS
                      | NetworkName
-                     | Refinement , 'then' , Refinement
-                     | GroupOMS , 'refined' , [RefMap] , 'to' , Refinement 
-                     | NetworkName , 'refined' , [RefMap] , 'to' , Refinement ;
-RefMap               = 'via' , LanguageTranslation , [ SymbolMap ]
-                     | 'via' , [ LanguageTranslation ] , SymbolMap
-                     | 'via' , NodeMap , { ',' , NodeMap } ;
-NodeMap              = OMSName , '|->' , OMSName , [ 'using' , { LanguageTranslation } , [ SymbolMap ] ] ;
-
-EntailmentDefinition           = 'entailment' , EntailmentName , '=' , EntailmentType , 'end' ;
-EntailmentName       = IRI ;
-EntailmentType       = GroupOMS , 'entails' , GroupOMS
-                     | OMSName , 'in' , Network , 'entails' , GroupOMS
-                     | Network , 'entails' , Network ;
-
-EquivalenceDefinition            = 'equivalence' , EquivalenceName , ':' , EquivalenceType ,  'end' ;
-EquivalenceName            = IRI ;
-EquivalenceType            = GroupOMS , '<->' , GroupOMS  , '=' , OMS 
-                     | Network , '<->' , Network , '=' , Network ;
-
-ModuleRelDefinition        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
-                       'for' , InterfaceSignature ;
-ModuleName           = IRI ;
-ModuleType           = GroupOMS , 'of' , GroupOMS ;
-
-AlignmentDefinition  = 'alignment' , AlignmentName ,
-                       [ AlignmentCardinalityPair ] , ':' , AlignmentType ,
-                       [ '=' , Correspondence , { ',' , Correspondence } ] ,
-                       [ 'assuming' , AlignmentSemantics ] ,
-                       'end' ;
-
-AlignmentName            = IRI ;
-AlignmentCardinalityPair           = AlignmentCardinalityForward , AlignmentCardinalityBackward ;
-AlignmentCardinalityForward     = AlignmentCardinality ;
-AlignmentCardinalityBackward    = AlignmentCardinality ;
-AlignmentCardinality            = '1' | '?' | '+' | '*' ;
-AlignmentType            = GroupOMS , 'to' , GroupOMS ;
-AlignmentSemantics            = 'SingleDomain' | 'GlobalDomain'  | 'ContextualizedDomain' ;
-
-Correspondence       = CorrespondenceBlock
-                     | SingleCorrespondence
-                     | '*' ;
-CorrespondenceBlock  = 'relation' , [ Relation ] , [ Confidence ] , 
-                       '{' , Correspondence , { ',' , Correspondence } , '}' ;
-SingleCorrespondence = SymbolRef , [ Relation ] ,
-                       [ Confidence ] , GeneralizedTerm , [ CorrespondenceId ] ;
-CorrespondenceId     = '%(' , IRI , ')%' ;
-SymbolRef            = IRI ;
-GeneralizedTerm      = SymbolRef ;
-Relation          = '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI ;
-Confidence           = Double ; 
+                     | Refinement 'then' Refinement
+                     | GroupOMS 'refined' [RefMap] 'to' Refinement
+                     | NetworkName 'refined' [RefMap] 'to' Refinement
+RefMap             ::= 'via' LanguageTranslation [SymbolMap]
+                     | 'via' [LanguageTranslation] SymbolMap
+                     | 'via' NodeMap ( ',' NodeMap )*
+NodeMap            ::= OMSName '|->' OMSName
+                       ['using' LanguageTranslation* [SymbolMap]]
+EntailmentDefinition ::= 'entailment' EntailmentName '='
+                         EntailmentType 'end'
+EntailmentName     ::= IRI
+EntailmentType     ::= GroupOMS 'entails' GroupOMS
+                     | OMSName 'in' Network 'entails' GroupOMS
+                     | Network 'entails' Network
+EquivalenceDefinition ::= 'equivalence' EquivalenceName ':'
+                          EquivalenceType 'end'
+EquivalenceName    ::= IRI
+EquivalenceType    ::= GroupOMS '<->' GroupOMS '=' OMS
+                     | Network '<->' Network '=' Network
+ModuleRelDefinition ::= 'module' ModuleName [Conservative] ':'
+                        ModuleType 'for' InterfaceSignature
+ModuleName         ::= IRI
+ModuleType         ::= GroupOMS 'of' GroupOMS
+AlignmentDefinition ::= 'alignment' AlignmentName
+                        [AlignmentCardinalityPair] ':'
+                        AlignmentType
+                        ['=' Correspondence ( ',' Correspondence )*]
+                        ['assuming' AlignmentSemantics] 'end'
+AlignmentName      ::= IRI
+AlignmentCardinalityPair ::= AlignmentCardinalityForward
+                             AlignmentCardinalityBackward
+AlignmentCardinalityForward ::= AlignmentCardinality
+AlignmentCardinalityBackward ::= AlignmentCardinality
+AlignmentCardinality ::= '1' | '?' | '+' | '*'
+AlignmentType      ::= GroupOMS 'to' GroupOMS
+AlignmentSemantics ::= 'SingleDomain'
+                     | 'GlobalDomain'
+                     | 'ContextualizedDomain'
+Correspondence     ::= CorrespondenceBlock | SingleCorrespondence | '*'
+CorrespondenceBlock ::= 'relation' [Relation] [Confidence] '{'
+                        Correspondence ( ',' Correspondence )* '}'
+SingleCorrespondence ::= SymbolRef [Relation] [Confidence]
+                         GeneralizedTerm [CorrespondenceId]
+CorrespondenceId   ::= '%(' IRI ')%'
+SymbolRef          ::= IRI
+GeneralizedTerm    ::= SymbolRef
+Relation           ::= '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI
+Confidence         ::= Double
 \end{lstlisting}
+
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
-Double               = ($<$ a number $\in [0,1]$ $>$) ;
+
+Double ::= ($<$ a number $\in [0,1]$ $>$) 
 \end{lstlisting}
+
 
 
 
@@ -4775,18 +4777,19 @@ serializations, including N-Triples, only support full IRIs.}
 CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively,\cbs 
 the CURIE grammar supported by \DOL can be restated\cbe as follows:
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
-CURIE     = MaybeEmptyCURIE , - ;
-MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
-RefWithoutComma = Reference , - , StringWithComma ;
-StringWithComma = { UChar } , ',' , { UChar } ;
-UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
-Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference = Path , [ Query ] , [ Fragment ] ;
-Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$) 
+
+CURIE         ::= MaybeEmptyCURIE -
+MaybeEmptyCURIE ::= [Prefix] RefWithoutComma
+RefWithoutComma ::= Reference - StringWithComma
+StringWithComma ::= UChar* ',' UChar*
+UChar         ::= ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) 
+Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
+Reference     ::= Path [Query] [Fragment]
+Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query         ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment      ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
+
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
 
@@ -4873,20 +4876,21 @@ within the \DOL library.
 \ssclause{Concrete Syntax}
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
-IRI     = '<' , FullIRI , '>' | CURIE ;
-FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
-CURIE     = MaybeEmptyCURIE , - ;
-MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
-RefWithoutComma = Reference , - , StringWithComma ;
-StringWithComma = { UChar } , ',' , { UChar } ;
-UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
-Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference = Path , [ Query ] , [ Fragment ] ;
-Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-            ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+
+IRI           ::= '<' FullIRI '>' | CURIE
+FullIRI       ::= ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) 
+CURIE         ::= MaybeEmptyCURIE -
+MaybeEmptyCURIE ::= [Prefix] RefWithoutComma
+RefWithoutComma ::= Reference - StringWithComma
+StringWithComma ::= UChar* ',' UChar*
+UChar         ::= ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) 
+Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
+Reference     ::= Path [Query] [Fragment]
+Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Query         ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Fragment      ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
 \end{lstlisting}
+
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the \DOL syntax (cf.\ clause \ref{c:keywords}).
 
@@ -9427,27 +9431,31 @@ for one or more repetitions of \syntax{N}.
 \sclause{Documents}\label{e:libraries}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-Document                  = DOLLibrary
-                         | NativeDocument ;
-DOLLibrary              = 'library' , [ PrefixMap ] , LibraryName , Qualification , { LibraryItem } ;
-NativeDocument  = ($<$)language specific($>$) ;
-LibraryItem              = LibraryImport | Definition | Qualification ;
-Definition = OMSDefinition | NetworkDefinition | MappingDefinition | QueryRelatedDefinition ;
-LibraryImport                = 'lib-import' , LibraryName ;
-Qualification            = LanguageQualification | LogicQualification | SyntaxQualification ;
-LanguageQualification             = 'lang-select' , LanguageRef ;
-LogicQualification                = 'logic-select' , LogicRef ;
-SyntaxQualification               = 'syntax-select' , SyntaxRef ;
-LibraryName              = IRI ;
-
-PrefixMap        = 'prefix-map' , { PrefixBinding } ;
-PrefixBinding    = 'prefix-binding' , Prefix , FullIRI ,
-                   [ Separators ] ;
-Prefix           = String ;
-Separators       = 'separators' , LibraryOMSSeparator , OMSSymbolSeparator ;
-LibraryOMSSeparator = String ;
-OMSSymbolSeparator  = String ;
+Document           ::= DOLLibrary | NativeDocument
+DOLLibrary         ::= library [PrefixMap] LibraryName Qualification
+                               LibraryItem*
+NativeDocument     ::= ($<$)language specific($>$) 
+LibraryItem        ::= LibraryImport | Definition | Qualification
+Definition         ::= OMSDefinition
+                     | NetworkDefinition
+                     | MappingDefinition
+                     | QueryRelatedDefinition
+LibraryImport      ::= lib-import LibraryName
+Qualification      ::= LanguageQualification
+                     | LogicQualification
+                     | SyntaxQualification
+LanguageQualification ::= lang-select LanguageRef
+LogicQualification ::= logic-select LogicRef
+SyntaxQualification ::= syntax-select SyntaxRef
+LibraryName        ::= IRI
+PrefixMap          ::= prefix-map PrefixBinding*
+PrefixBinding      ::= prefix-binding Prefix FullIRI [Separators]
+Prefix             ::= String
+Separators         ::= separators LibraryOMSSeparator OMSSymbolSeparator
+LibraryOMSSeparator ::= String
+OMSSymbolSeparator ::= String
 \end{lstlisting}
+
 %% ~\todonote[type=fyi,author=Christoph Lange]{Things changed from HetCASL:\textLF
 %%   • logic-select now mandatory (no default logic) and tree-scoped MC: what does this mean? To make Hets-lib conform with this, we should have .het files equivalent to .dol files with logic selected to be CASL\textLF
 %%   • download-items (encourage linked data best practices instead)\textLF
@@ -9459,71 +9467,80 @@ OMSSymbolSeparator  = String ;
 \sclause{OMS Networks}\label{a:networks}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-NetworkDefinition            = 'network-definition', NetworkName , [ ConservativityStrength ] , Network ;
-NetworkName            = IRI ;
-Network                = 'network', { NetworkElement } ,  { ExcludedElement };
-NetworkElement         = 'network-element' , [ Id ] , ElementRef ;
-ExcludedElement   = PathReference
-               | OMSOrMappingorNetworkRef ;
-PathReference = 'path', OMSOrMappingorNetworkRef, OMSOrMappingorNetworkRef ;
-ElementRef  = IRI ;
+NetworkDefinition ::= network-definition NetworkName
+                                         [ConservativityStrength] Network
+NetworkName     ::= IRI
+Network         ::= network NetworkElement* ExcludedElement*
+NetworkElement  ::= network-element [Id] ElementRef
+ExcludedElement ::= PathReference | OMSOrMappingorNetworkRef
+PathReference   ::= path OMSOrMappingorNetworkRef OMSOrMappingorNetworkRef
+ElementRef      ::= IRI
 \end{lstlisting}
+
 
 
 \sclause{OMS}
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-BasicOMS = ($<$)language specific($>$) ;
-ClosableOMS       = BasicOMS
-                     | OMSReference ;
-OMSReference   = 'oms-reference' , OMSRef , [ ImportName ] ;
-ExtendingOMS         = ClosableOMS
-                     | RelativeClosureOMS ;
-RelativeClosureOMS = 'relative-closure' , ClosureType , ClosableOMS ;
-OMS                  = ExtendingOMS | ClosureOMS | TranslationOMS | ReductionOMS | ExtractionOMS | ApproximationOMS | FilteringOMS | UnionOMS | ExtensionOMS | QualifiedOMS | CombinationOMS | ApplicationOMS ;
-ClosureOMS = 'closure-symbols' , OMS , Closure ;
-TranslationOMS = 'translation' , OMS , OMSTranslation ;
-ReductionOMS = 'reduction' , OMS , Reduction ;
-ExtractionOMS = 'module-extract' , OMS , Extraction ;
-ApproximationOMS = 'approximation' , OMS , Approximation ;
-FilteringOMS = 'filtering' , OMS , Filtering ;
-UnionOMS = 'union' , OMS , [ ConservativityStrength ] , OMS ;
-ExtensionOMS = 'extension' , OMS , Extension ;
-QualifiedOMS = 'qualified-oms' , { Qualification } , OMS ;
-CombinationOMS = 'combination' , Network ;
-ApplicationOMS = 'application' , OMS , SubstName ;
-
-Closure = ClosureType , CircClosure , CircVars ;
-ClosureType = 'minimize' | 'maximize' | 'free' | 'cofree' ;
-CircClosure          = Symbol , { Symbol } ;
-CircVars             = { Symbol } ;
-
-OMSTranslation          = 'translate' , { OMSLanguageTranslation } , [ SymbolMap ] ;
-
-Reduction = 'reduction' , RemovalKind , { OMSLanguageTranslation } , [ SymbolList ] ;
-
-SymbolList = Symbol , { Symbol } ;
-SymbolMap       = 'symbol-map' , GeneralSymbolMapItem , { GeneralSymbolMapItem } ;
-
-Extraction           = 'extraction', RemovalKind, InterfaceSignature ;
-
-Approximation        = 'approx' , RemovalKind , [ InterfaceSignature ] , [ LogicRef ] ;
-
-Filtering            = 'filter' , RemovalKind , BasicOMS ;
-
-Extension         = 'extension' , [ ConservativityStrength ] , [ ExtensionName ] , 
-                                       ExtendingOMS ;
-
-RemovalKind = keep | remove ;
-ConservativityStrength         = 'consequence-conservative' | 'model-conservative' | 'not-consequence-conservative' | 'not-model-conservative' | 'implied' | 'monomorphic' | 'weak-definitional' | 'definitional' ;
-
-
-InterfaceSignature   = SymbolList ;
-ImportName           = IRI ;
-ExtensionName        = IRI ;
-SubstName = IRI ;
+BasicOMS           ::= ($<$)language specific($>$) 
+ClosableOMS        ::= BasicOMS | OMSReference
+OMSReference       ::= oms-reference OMSRef [ImportName]
+ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
+RelativeClosureOMS ::= relative-closure ClosureType ClosableOMS
+OMS                ::= ExtendingOMS
+                     | ClosureOMS
+                     | TranslationOMS
+                     | ReductionOMS
+                     | ExtractionOMS
+                     | ApproximationOMS
+                     | FilteringOMS
+                     | UnionOMS
+                     | ExtensionOMS
+                     | QualifiedOMS
+                     | CombinationOMS
+                     | ApplicationOMS
+ClosureOMS         ::= closure-symbols OMS Closure
+TranslationOMS     ::= translation OMS OMSTranslation
+ReductionOMS       ::= reduction OMS Reduction
+ExtractionOMS      ::= module-extract OMS Extraction
+ApproximationOMS   ::= approximation OMS Approximation
+FilteringOMS       ::= filtering OMS Filtering
+UnionOMS           ::= union OMS [ConservativityStrength] OMS
+ExtensionOMS       ::= extension OMS Extension
+QualifiedOMS       ::= qualified-oms Qualification* OMS
+CombinationOMS     ::= combination Network
+ApplicationOMS     ::= application OMS SubstName
+Closure            ::= ClosureType CircClosure CircVars
+ClosureType        ::= minimize | maximize | free | cofree
+CircClosure        ::= Symbol Symbol*
+CircVars           ::= Symbol*
+OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
+Reduction          ::= reduction RemovalKind OMSLanguageTranslation*
+                                 [SymbolList]
+SymbolList         ::= Symbol Symbol*
+SymbolMap          ::= symbol-map GeneralSymbolMapItem
+                                  GeneralSymbolMapItem*
+Extraction         ::= extraction RemovalKind InterfaceSignature
+Approximation      ::= approx RemovalKind [InterfaceSignature] [LogicRef]
+Filtering          ::= filter RemovalKind BasicOMS
+Extension          ::= extension [ConservativityStrength]
+                                 [ExtensionName] ExtendingOMS
+RemovalKind        ::= keep | remove
+ConservativityStrength ::= consequence-conservative
+                     | model-conservative
+                     | not-consequence-conservative
+                     | not-model-conservative
+                     | implied
+                     | monomorphic
+                     | weak-definitional
+                     | definitional
+InterfaceSignature ::= SymbolList
+ImportName         ::= IRI
+ExtensionName      ::= IRI
+SubstName          ::= IRI
 \end{lstlisting}
+
 %% \ednote{Alternatively, we could use one type of \syntax{InterfaceSignature}
 %% only, and instead use different constructors for \syntax{Extraction}
 %% and \syntax{Approximation}. This would be a bit more verbose, but a bit
@@ -9534,28 +9551,23 @@ SubstName = IRI ;
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-OMSDefinition          = 'oms-definition' , OMSName , [ ConservativityStrength ] , OMS ;
-Symbol           = IRI ;
-SymbolMapItem        = 'symbol-map-item' , Symbol , Symbol ;
-GeneralSymbolMapItem      = Symbol | SymbolMapItem ;
-Sentence         = ($<$)an expression specific to an OMS language($>$) ;
-                 
-OMSName          = IRI ;
-                 
-OMSRef           = IRI ;
-ExtensionRef     = IRI ;
-                 
-LanguageRef      = IRI ;
-LogicRef         = IRI ;
-SyntaxRef        = IRI ;
-                 
-OMSLanguageTranslation     = NamedTranslation | DefaultTranslation ;
-NamedTranslation = 'named-trans' , OMSLanguageTranslationRef ;
-DefaultTranslation = 'default-trans' , LanguageRef ;
-                 
-OMSLanguageTranslationRef  = IRI ;
-                 
+OMSDefinition      ::= oms-definition OMSName [ConservativityStrength] OMS
+Symbol             ::= IRI
+SymbolMapItem      ::= symbol-map-item Symbol Symbol
+GeneralSymbolMapItem ::= Symbol | SymbolMapItem
+Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
+OMSName            ::= IRI
+OMSRef             ::= IRI
+ExtensionRef       ::= IRI
+LanguageRef        ::= IRI
+LogicRef           ::= IRI
+SyntaxRef          ::= IRI
+OMSLanguageTranslation ::= NamedTranslation | DefaultTranslation
+NamedTranslation   ::= named-trans OMSLanguageTranslationRef
+DefaultTranslation ::= default-trans LanguageRef
+OMSLanguageTranslationRef ::= IRI
 \end{lstlisting}
+
 
 
 
@@ -9564,88 +9576,111 @@ OMSLanguageTranslationRef  = IRI ;
 
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
 
-MappingDefinition          = InterpretationDefinition | RefinementDefinition | EntailmentDefinition | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition ;
-
-InterpretationDefinition            = 'interpretation-definition' , InterpretationName , [ ConservativityStrength ] , 
-                        InterpretationType , { OMSLanguageTranslation } , [ SymbolMap ] ;  
-RefinementDefinition =      'refinement' , InterpretationName , Refinement ;
-InterpretationName            = IRI ;
-InterpretationType            = 'interpretation-type' , OMS , OMS ;
-
-Refinement           = RefinementOMS | RefinementNetwork | RefinementComposition | SimpleOMSRefinement | SimpleNetworkRefinement ;
-RefinementOMS = 'refinement-oms' , OMS ;
-RefinementNetwork = 'refinement-network' , Network ;
-RefinementComposition =  'refinement-composition' , Refinement , Refinement ;
-SimpleOMSRefinement = 'simple-oms-ref' , OMS , OMSRefinementMap , Refinement ;
-SimpleNetworkRefinement = 'simple-network-ref' , Network , NetworkRefinementMap , Refinement ;
-OMSRefinementMap               = 'oms-refmap' , [ OMSLanguageTranslation ] , [ SymbolMap ] ;
-NetworkRefinementMap =  'network-refmap' , { NodeMap } ;
-NodeMap              = 'node-map', OMSName , OMSName , 
-                                   { OMSLanguageTranslation } , [ SymbolMap ] ;
-
-
-EntailmentDefinition           = 'entailment' , EntailmentName , EntailmentType ;
-OMSOMSEntailment = 'oms-oms-entailment' , OMS , OMS ;
-NetworkOMSEntailment = 'network-oms-entailment' , Network , OMSName , OMS ;
-NetworkNetworkEntailment = 'network-network-entailment' , Network , Network;
-EntailmentType = OMSOMSEntailment | NetworkOMSEntailment | NetworkNetworkEntailment ;
-EntailmentName       = IRI ;
-
-EquivalenceDefinition            = 'equivalence-definition' , EquivalenceName , EquivalenceType ;
-EquivalenceName            = IRI ;
-EquivalenceType = OMSEquivalence | NetworkEquivalence ;
-OMSEquivalence = 'oms-equivalence' , OMS , OMS , OMS ;
-NetworkEquivalence = 'network-equivalence' , Network , Network , Network ;
-
-ModuleRelDefinition        = 'module-definition' , ModuleName , [ ConservativityStrength ] , ModuleType ,
-                                       InterfaceSignature ;
-ModuleName           = IRI ;
-ModuleType           = 'module-type' , OMS , OMS ;
-
-AlignmentDefinition  = 'alignment-definition' , AlignmentName ,
-                       [ AlignmentCardinalityPair ] , AlignmentType,
-                       { Correspondence } , [ AlignmentSemantics ] ; <\footnote{%
+MappingDefinition  ::= InterpretationDefinition
+                     | RefinementDefinition
+                     | EntailmentDefinition
+                     | EquivalenceDefinition
+                     | ModuleRelDefinition
+                     | AlignmentDefinition
+InterpretationDefinition ::= interpretation-definition
+                                                       InterpretationName
+                                                       [ConservativityStrength]
+                                                       InterpretationType
+                                                       OMSLanguageTranslation*
+                                                       [SymbolMap]
+RefinementDefinition ::= refinement InterpretationName Refinement
+InterpretationName ::= IRI
+InterpretationType ::= interpretation-type OMS OMS
+Refinement         ::= RefinementOMS
+                     | RefinementNetwork
+                     | RefinementComposition
+                     | SimpleOMSRefinement
+                     | SimpleNetworkRefinement
+RefinementOMS      ::= refinement-oms OMS
+RefinementNetwork  ::= refinement-network Network
+RefinementComposition ::= refinement-composition Refinement Refinement
+SimpleOMSRefinement ::= simple-oms-ref OMS OMSRefinementMap Refinement
+SimpleNetworkRefinement ::= simple-network-ref Network
+                                               NetworkRefinementMap Refinement
+OMSRefinementMap   ::= oms-refmap [OMSLanguageTranslation] [SymbolMap]
+NetworkRefinementMap ::= network-refmap NodeMap*
+NodeMap            ::= node-map OMSName OMSName
+                                OMSLanguageTranslation* [SymbolMap]
+EntailmentDefinition ::= entailment EntailmentName EntailmentType
+OMSOMSEntailment   ::= oms-oms-entailment OMS OMS
+NetworkOMSEntailment ::= network-oms-entailment Network OMSName OMS
+NetworkNetworkEntailment ::= network-network-entailment Network Network
+EntailmentType     ::= OMSOMSEntailment
+                     | NetworkOMSEntailment
+                     | NetworkNetworkEntailment
+EntailmentName     ::= IRI
+EquivalenceDefinition ::= equivalence-definition
+                                                 EquivalenceName
+                                                 EquivalenceType
+EquivalenceName    ::= IRI
+EquivalenceType    ::= OMSEquivalence | NetworkEquivalence
+OMSEquivalence     ::= oms-equivalence OMS OMS OMS
+NetworkEquivalence ::= network-equivalence Network Network Network
+ModuleRelDefinition ::= module-definition ModuleName
+                                          [ConservativityStrength] ModuleType
+                                          InterfaceSignature
+ModuleName         ::= IRI
+ModuleType         ::= module-type OMS OMS
+AlignmentDefinition ::= alignment-definition AlignmentName
+                                             [AlignmentCardinalityPair]
+                                             AlignmentType Correspondence*
+                                             [AlignmentSemantics]<\footnote{%
                         Note that this grammar uses ``type'' as in
                         ``the type of a function'', whereas the Alignment API
                         \cite{AlignmentAPI} uses ``type'' \cbs for\:  the\cbe
                         totality/injectivity of the relation/function.  For the
                         latter, this grammar uses ``cardinality''.}>
-AlignmentName        = IRI ;
-AlignmentCardinalityPair           = AlignmentCardinalityForward , AlignmentCardinalityBackward ; 
-AlignmentCardinalityForward     = 'alignment-cardinality-forward' , AlignmentCardinality ;
-AlignmentCardinalityBackward    = 'alignment-cardinality-backward' , AlignmentCardinality ;
-AlignmentCardinality            = 'injective-and-total'
-                     | 'injective'
-                     | 'total'
-                     | 'neither-injective-nor-total' ;
-AlignmentType            = 'alignment-type' , OMS , OMS ;
-AlignmentSemantics            = 'single-domain' 
-                    | 'global-domain' 
-                    | 'contextualized-domain' ; 
-
-Correspondence       = CorrespondenceBlock
+AlignmentName      ::= IRI
+AlignmentCardinalityPair ::= AlignmentCardinalityForward
+                                                         AlignmentCardinalityBackward
+AlignmentCardinalityForward ::= alignment-cardinality-forward
+                                                              AlignmentCardinality
+AlignmentCardinalityBackward ::= alignment-cardinality-backward
+                                                                AlignmentCardinality
+AlignmentCardinality ::= injective-and-total
+                     | injective
+                     | total
+                     | neither-injective-nor-total
+AlignmentType      ::= alignment-type OMS OMS
+AlignmentSemantics ::= single-domain
+                     | global-domain
+                     | contextualized-domain
+Correspondence     ::= CorrespondenceBlock
                      | SingleCorrespondence
-                     | DefaultCorrespondence ;
-DefaultCorrespondence = 'default-correspondence' ;
-
-CorrespondenceBlock  = 'correspondence-block' , [ Relation ] , [ Confidence ],
-                                                Correspondence, { Correspondence } ; 
-SingleCorrespondence = 'correspondence' , SymbolRef , [ Relation ] , [ Confidence ] ,
-                                          GeneralizedTerm , [ CorrespondenceID ] ;
-CorrespondenceID     = IRI ;
-SymbolRef            = IRI ;
-GeneralizedTerm      = SymbolRef ;
-Relation          = RelationReference | StandardRelation ;
-StandardRelation = StandardRelationValues ;
-StandardRelationValues = 'subsumes' | 'is-subsumed' | 'equivalent' | 'incompatible' 
-                     | 'has-instance' | 'instance-of' | 'default-relation' ; 
-RelationReference = 'relation-ref' , IRI ;
-Confidence           = Double ;
+                     | DefaultCorrespondence
+DefaultCorrespondence ::= default-correspondence
+CorrespondenceBlock ::= correspondence-block [Relation]
+                                             [Confidence] Correspondence
+                                             Correspondence*
+SingleCorrespondence ::= correspondence SymbolRef [Relation]
+                                        [Confidence] GeneralizedTerm
+                                        [CorrespondenceID]
+CorrespondenceID   ::= IRI
+SymbolRef          ::= IRI
+GeneralizedTerm    ::= SymbolRef
+Relation           ::= RelationReference | StandardRelation
+StandardRelation   ::= StandardRelationValues
+StandardRelationValues ::= subsumes
+                     | is-subsumed
+                     | equivalent
+                     | incompatible
+                     | has-instance
+                     | instance-of
+                     | default-relation
+RelationReference  ::= relation-ref IRI
+Confidence         ::= Double
 \end{lstlisting}
+
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
 
-Double               = ($<$ a number $\in [0,1]$ $>$) ;
+Double ::= ($<$ a number $\in [0,1]$ $>$) 
 \end{lstlisting}
+
 
 
 %\includegraphics[scale=0.6]{mof/dia/dia5.png}
@@ -9655,11 +9690,12 @@ Double               = ($<$ a number $\in [0,1]$ $>$) ;
 
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
-IRI     =  FullIRI | CurieIRI ; (\footnote{Specified below in \cref{c:curies}.})
-CurieIRI = 'curie' , CURIE ;
-FullIRI = ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) ;
-CURIE = String ;
+IRI    ::= FullIRI | CurieIRI(\footnote{Specified below in \cref{c:curies}.})
+CurieIRI ::= curie CURIE
+FullIRI ::= ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) 
+CURIE  ::= String
 \end{lstlisting}
+
 
 
 \infannex{Extension of \DOL with Queries}
@@ -9730,41 +9766,54 @@ world semantics.\cbe
 \sclause{EBNF Concrete Syntax}
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
-Term                 = ($<$)an expression specific to an OMS language($>$) ;
-GeneralizedTerm      = Term | SymbolRef ;
-QueryRelatedDefinition     = QueryDefinition | SubstitutionDefinition | ResultDefinition ;
-QueryDefinition            = 'query' , QueryName , '=' , 'select' , Vars , 
-                                'where' , Sentence , 'in' , GroupOMS , 
-                                ['along' , OMSLanguageTranslation] , 'end' ;
-SubstitutionDefinition            = 'substitution' , SubstitutionName , ':' , GroupOMS , 'to' , GroupOMS , 
-                                       '=' , SymbolMap , 'end' ;
-ResultDefinition           = 'result' , ResultName , '=' , SubstitutionName , { ',' , SubstitutionName } ,
-                                 'for' , QueryName , [ '%complete' ] , 'end' ;
-OMS                  = ($...$) | OMS 'with' SubstitutionName ;
-QueryName            = IRI ;
-SubstitutionName            = IRI ;
-ResultName           = IRI ;
-Vars                 = Symbol , { ',' , Symbol} ;
+
+Term               ::= ($<$)an expression specific to an OMS language($>$) 
+GeneralizedTerm    ::= Term | SymbolRef
+QueryRelatedDefinition ::= QueryDefinition
+                     | SubstitutionDefinition
+                     | ResultDefinition
+QueryDefinition    ::= 'query' QueryName '=' 'select' Vars 'where'
+                       Sentence 'in' GroupOMS
+                       ['along' OMSLanguageTranslation] 'end'
+SubstitutionDefinition ::= 'substitution' SubstitutionName ':'
+                           GroupOMS 'to' GroupOMS '=' SymbolMap
+                           'end'
+ResultDefinition   ::= 'result' ResultName '=' SubstitutionName
+                       ( ',' SubstitutionName )* 'for' QueryName
+                       ['%complete'] 'end'
+OMS                ::= ($...$) | OMS 'with' SubstitutionName 
+QueryName          ::= IRI
+SubstitutionName   ::= IRI
+ResultName         ::= IRI
+Vars               ::= Symbol ( ',' Symbol )*
 \end{lstlisting}
+
 
 \sclause{EBNF Abstract Syntax}
 
 
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
 
-QueryRelatedDefinition     = QueryDefinition | SubstitutionDefinition | ResultDefinition ;
-QueryDefinition            = 'select-query-definition', QueryName, Vars, Sentence, 
-                                            OMS, [OMSLanguageTranslation] ;
-SubstitutionDefinition            = 'substitution-definition' , SubstitutionName, OMS , OMS , SymbolMap ;
-ResultDefinition           = 'result-definition' , ResultName , SubstitutionName , { SubstitutionName } , 
-                                     QueryName, [ Complete ] ;
-OMS                 = ($...$) | application  OMS  SubstitutionName ;
-QueryName            = IRI ;
-SubstitutionName            = IRI ;
-ResultName           = IRI ;
-Vars                 = { Symbol } ;
-Complete             = 'complete' ;
+QueryRelatedDefinition ::= QueryDefinition
+                     | SubstitutionDefinition
+                     | ResultDefinition
+QueryDefinition    ::= select-query-definition
+                                               QueryName Vars Sentence OMS
+                                               [OMSLanguageTranslation]
+SubstitutionDefinition ::= substitution-definition
+                                                   SubstitutionName OMS OMS
+                                                   SymbolMap
+ResultDefinition   ::= result-definition ResultName
+                                         SubstitutionName SubstitutionName*
+                                         QueryName [Complete]
+OMS                ::= ($...$) | application  OMS  SubstitutionName 
+QueryName          ::= IRI
+SubstitutionName   ::= IRI
+ResultName         ::= IRI
+Vars               ::= Symbol*
+Complete           ::= complete
 \end{lstlisting}
+
 
 \sclause{Semantics of Queries}\label{s:sem-queries}
 
