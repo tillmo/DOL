@@ -7319,13 +7319,13 @@ $$sem(\Gamma,d)=\Gamma'$$
  $\Gamma' = \Gamma[d.\syntax{equivalenceName} \mapsto 
                   sem(\Gamma, d.\syntax{equivalenceType})$.
 
-\semdom{sem(\Gamma,\syntax{EquivalenceType})=(G, id, N_1, N_2)}
+\semdom{sem(\Gamma,\syntax{OMSEquivalence})=(G, N_1, N_2)}
 
 
 If $t$ is an \syntax{OMSEquivalence},
 $$ sem(\Gamma,t) = 
-(G, id, N_1, N_2)]$$
-\noindent where $O_1 = t.\syntax{oms}$, $O_2 = t.\syntax{oms2}$, $O_3 = t.\syntax{oms3}$,\\
+(G, N_1, N_2)$$
+\noindent where $O_1 = t.\syntax{oms}$, $O_2 = t.\syntax{oms2}$, $O_3 = t.\syntax{oms3}$,
 $sem^{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}_{\Gamma.lang,\Gamma.logic,\Gamma.ser}(O_3)
 = (\cI, \Sigma, \cM,\Delta)$\\
 $G$ is the graph
@@ -7352,9 +7352,22 @@ such that $M\forget{\Sig(O_i)} = M_i$.
 \end{enumerate}
 %\cbe
 
+\semdom{sem(\Gamma,\syntax{NetworkEquivalence})=(G_1,G_2,G_3)}
 
 If $t$ is  a \syntax{NetworkEquivalence},
-$$sem(\Gamma,t)=\Gamma'$$
+$$sem(\Gamma,t)=(G_1,G_2,G_3)$$
+\noindent where 
+$n_1 = t.\syntax{network}$, 
+$n_2 = t.\syntax{network2}$, 
+$n_3 = t.\syntax{network3}$,
+$sem(\Gamma, n_1) = G_1$,
+$sem(\Gamma, n_2) = G_2$,
+$sem(\Gamma, n_3) = G_3$
+such that $G_1$ and $G_2$ are subgraphs of $G_3$
+and for each $i = 1,2$ and each family of models $\cM_i$ compatible with 
+$G_i$ there is a unique family of models $\cM$ compatible with $G_3$ such that
+the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$
+
 \ednote{todo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -7432,7 +7445,7 @@ $$
 where $L_B$, $L_s$ and $L_t$ are built in a 
 logic-specific way from the correspondences 
 $C_1,\ldots, C_n$ taking into account $sem$.
-\cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics
+\cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7448,7 +7461,8 @@ $$ rel(L) =
                                    relativize_{logic(\Gamma.current)}(L)& \mbox{otherwise}
                                                                                                                    \end{cases}$$
                                                                                                                   
-                                                                                                                   \noindent where the relativization procedure is logic-specific.
+                                                                                                                   \noindent where the relativization procedure is logic-specific. An example of this is done for OWL can be found in \cite{OM2014}.
+                                                                                                           
                                                                                                                    
 %\sclause{Translational semantics of \DOL language constructs}
 %
