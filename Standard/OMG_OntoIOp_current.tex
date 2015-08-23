@@ -3494,7 +3494,7 @@ After entering the card, one has three
 trials for entering the correct PIN (which is checked by the
 bank). After three unsuccessful trials the card is kept.
 
-\begin{figure}[!Ht]
+\begin{figure}[!ht]
 \centering
 \subfigure[Interaction\label{fig:interaction}]{%
 \includegraphics[scale=.5]{illustrations/uml/sd-atm2bank.pdf}
@@ -7568,7 +7568,11 @@ Part of the background and design considerations of the \DOL Ontology can be fou
 
 \section{Normative State and Normative References}\label{a:dol-onto-norm}
 
-The normative \DOL Ontology snapshots being part of this OMG standard are published at \url{http://www.omg.org/spec/DOL/Current/ontology}.
+\cbs
+The canonical namespace IRI for the \DOL Ontology is \url{http://www.omg.org/spec/DOL/dol-language/}.
+Normative snapshots of the implementation are published there.
+The IRI for the version of the \DOL Ontology that corresponds to this version of the OMG standard is \url{http://www.omg.org/spec/DOL/20150801/dol-language/}.
+\cbe
 The \DOL Ontology is currently implemented in OWL 2 (\nisref{W3C/TR REC-owl2-syntax:2009}).
 The normative snapshots are encoded in RDF/XML using the OWL 2 mapping to RDF graphs (\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}).
 
@@ -7630,19 +7634,25 @@ expected to become the basis for normative activities.
 
 \infannex{Conformance of OWL 2 DL With \DOL}\label{a:owl}
 
+\CLnote{Is it correct that ``With'' and ``of'' use different capitalizations?}%
+\CLnote{Why refer to this external paper when \SROIQ is actually formalized as an institution below?  Maybe cut this sentence and replace it by a general introduction?  Or at least rephrase ``is established'' into ``has originally been established''.}%
 The semantic conformance of OWL 2 DL (as specified in \nisref{W3C/TR REC-owl2-syntax:2009}) with \DOL
 is established in \cite{OntoGraph}.
+
+\section{Conformance of the OWL Serializations With \DOL}\label{a:owl-serializations}
 
 The OWL/XML serialization satisfies the criteria for XML conformance.    The OWL 2 Manchester syntax satisfies the criteria for text
  conformance.
 %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 
 The serialization of OWL in RDF does not satisfy \cbs{} requirement (\ref{it:ids-for-structure}) for RDF conformance because\cbe{} there is an \texttt{owl:imports} property but no class representing imports. 
- Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as a resource that could have an identifier.  RDF reification would allow for giving the statement $O_1$ \texttt{owl:imports} $O_2$ an identifier. 
- However, the RDF triples resulting from this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}, section 3}. 
- They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}}.\ednote{TM@CL: how to deal with this situation?}
+Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as an RDF resource.
+However, only resources can have identifiers in RDF.
+RDF reification would allow for turning the statement $O_1$ \texttt{owl:imports} $O_2$ into a resource and thus giving it an identifier. 
+However, the RDF triples required for expressing this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}, section 3}. 
+They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}}.\ednote{TM@CL: how to deal with this situation?}
 
-\bigskip
+\section{Conformance of the \SROIQ Logic With \DOL}\label{a:owl-logic}
 
 \cbs The logic \SROIQ underlying\cbe{} 
 OWL can be formalized as an institution as follows:
