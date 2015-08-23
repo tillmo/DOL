@@ -1275,16 +1275,16 @@ and compliance).
 The following are within the scope of this \IS:
 \begin{enumerate}
 \item\label{it:scope-heterogeneous} homogeneous OMS as well as heterogeneous OMS (OMS that consist of\cbs parts written\cbe in different languages);
-\item mappings between OMS (mapping OMS symbols to OMS symbols);
+\item mappings between OMS (which map OMS symbols to OMS symbols);
 \item OMS networks (\cbs{}involving\cbe several OMS and mappings between them);
 \item \label{it:scope-translation} translations between different OMS languages conforming with \DOL (translating\cbs a\cbe whole OMS to another language);
+\item \label{it:scope-non-mon} structuring constructs for modeling non-monotonic behavior; 
 \item\label{it:scope-annotation} annotation and documentation of OMS, mappings between OMS, symbols,
 and sentences;
 \item recommendations of vocabularies for annotating and documenting OMS;
 \item a syntax for embedding the constructs mentioned under (\ref{it:scope-heterogeneous})–(\ref{it:scope-annotation}) as annotations into existing OMS;
-\item a syntax for expressing (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation}) as standoff markup that points into existing OMS;
-\item a formal semantics of (\ref{it:scope-heterogeneous})–(\ref{it:scope-translation});
-\item structuring constructs for modeling non-monotonic behavior; 
+\item a syntax for expressing (\ref{it:scope-heterogeneous})–(\ref{it:scope-non-mon}) as standoff markup that points into existing OMS;
+\item a formal semantics of (\ref{it:scope-heterogeneous})–(\ref{it:scope-non-mon});
 \item criteria for existing or future OMS languages to conform with \DOL.
 \end{enumerate}
 
@@ -1298,7 +1298,7 @@ stating sentences about them;
 %% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
 % \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
 \item mappings between services and devices, and definitions of service and device interoperability;
-\item non-monotonic logics\footnote{Only monotonic logics are within scope of this specification. Conformance criteria for non-monotonic logics are still under development. However, closure (i.e.\ employing a closed-world assumption) provides non-monotonic reasoning in \DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the institution.}. 
+\item non-monotonic logics\footnote{Only monotonic logics are within scope of this specification. Conformance criteria for non-monotonic logics are still under development. However, closure (i.e.\ employing a closed-world assumption) provides non-monotonic reasoning in \DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the logic (formalized as an institution).}. 
 
 \end{enumerate}
 
@@ -1311,7 +1311,7 @@ semantics for \DOL.
 \index{conformance|(}
 This clause defines conformance criteria for languages and logics that can be used with \DOL, as well as conformance criteria for
 serializations, translations and applications. The conformance of a
-number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, UML Class Diagrams, CASL) as well as translations among
+number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, UML Class Diagrams, TPTP, CASL) as well as translations among
 these is discussed in informative annexes of this \IS.
 
 
@@ -1423,11 +1423,11 @@ with \DOL if it is based on a logic translation such\cbs that\cbe the following
 diagram commutes (i.e.\ following both possible paths from 
 $L_1$ to $I_2$ leads to the same result):
 $$\xymatrix{
-L_1 \ar[rrrrr]^{\Text{mapping between abstract syntaxes}} \ar[ddd]_{\Text{abstract syntax to institution}}
-&&&&& L_2 \ar[ddd]^{\Text{abstract syntax to institution}}\\
-&&&&&\\
-&&&&&\\
-I_1\ar[rrrrr]^{\Text{institution (co)morphism}} &&&&& I_2
+L_1 \ar[rrrrrr]^{\Text{\normalsize mapping between abstract syntaxes}} \ar[ddd]_{\Text{\normalsize abstract syntax\\\normalsize  to institution}}
+&&&&&& L_2 \ar[ddd]^{\Text{\normalsize abstract syntax\\\normalsize to institution}}\\
+&&&&&&\\
+&&&&&&\\
+I_1\ar[rrrrrr]^{\Text{\normalsize institution (co)morphism}} &&&&&& I_2
 }$$
 Language
 translations \may also translate the structuring language aspect, in
@@ -1435,8 +1435,10 @@ this case, they \shall preserve the semantics of the structuring
 language aspect.  Furthermore, language translations \should preserve
 comments and annotations.  All comments attached to a sentence (or
 symbol) in the source \should be attached to its translation in the
-target (if there\cbs is\cbe more than one sentences (respectively symbols)
-expressing the translation, to at least one of them).
+target (if there are more than one sentences (respectively symbols)
+expressing the translation, to at least one of them).\ednote{TM: corrected
+from wrong English. ``there is more than one'' needs to be followed
+by a verb in singular form.}
 
 \sclause{Conformance of a Serialization of an OMS Language With \DOL}\label{c:conform:serialization}
 \begin{fminipage}{\textwidth}
@@ -1476,7 +1478,7 @@ An XMI serialization \cbs for OMS written in the OMS language \cbe\ has been aut
 of the abstract syntax, using the canonical MOF 2 XMI Mapping.
 %\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there. TM: XMI is an XML-based format.}
 \item[XML conformance]
-The given serialization has to be specified as an XML schema\footnote{\cbs This refers \cbe to the general \emph{concept} of a schema, not of the W3C XML Schema language as one way of implementing it.  It is not even required that a machine-readable implementation of the schema serialization exists.}, which satisfies
+The given serialization has to be specified as an XML schema that satisfies
  all of the following conditions:
 \begin{itemize}
 \item The elements of the schema belong to one or more non-empty XML
@@ -1491,7 +1493,7 @@ namespaces.%\todonote[author=Christoph
 \end{itemize}
 
 \item[RDF conformance]
-The given serialization has to be specified as an RDF vocabulary, which
+The given serialization has to be specified as an RDF vocabulary that
  satisfies all of the following conditions:
 \begin{enumerate}
 \item The elements of the vocabulary belong to one or more RDF namespaces
@@ -1501,11 +1503,7 @@ The given serialization has to be specified as an RDF vocabulary, which
 \item There shall be no additional rules (stated in writing in the specification of the serialization, or formalized in its implementation in, e.g., OWL) that forbid properties from foreign vocabulary namespaces to be stated about arbitrary subjects for the purpose of annotation.
 \end{enumerate}
 
-The serialization of OWL in RDF, for example, does not satisfy \cbs{} requirement (\ref{it:ids-for-structure}) for RDF conformance because\cbe{} there is an \texttt{owl:imports} property but no class representing imports. 
- Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as a resource that could have an identifier.  RDF reification would allow for giving the statement $O_1$ \texttt{owl:imports} $O_2$ an identifier. 
- However, the RDF triples resulting from this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}, section 3}. 
- They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}}.
-
+See annex~\ref{a:owl} for an example.
 
 
 \item[Text conformance]
@@ -1537,7 +1535,7 @@ Independently from the conformance levels given above, there is the following hi
   \item The reason for allowing redefinitions of the prefix/reference separator character is that certain serializations of OMS languages may not allow the colon (\syntax{:}) in identifiers.
   \end{itemize}
 \item[Non-prefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
-  Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the native OMS to IRIs, which are located in one flat namespace.
+  Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the native OMS to IRIs that are located in one flat namespace.
 \end{description}
 
 Any conforming serialization of an OMS language shall have a machine-processable description as detailed in \cref{c:conform:description}.
@@ -1545,7 +1543,7 @@ Any conforming serialization of an OMS language shall have a machine-processable
 \sclause{Machine-Processable Description of Conforming Languages, Logics, and Serializations}\label{c:conform:description}
 
 \begin{fminipage}{\textwidth}
-\textbf{Rationale}: When a parser processes a \DOL OMS found somewhere, which refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore,  \cbs all languages/logics/serializations that conform with \DOL are required to describe themselves in a machine-processable way.
+\textbf{Rationale}: When a parser processes a \DOL OMS found somewhere that refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore,  \cbs all languages/logics/serializations that conform with \DOL are required to describe themselves in a machine-processable way.
 \cbe
 \end{fminipage}
 
@@ -1567,7 +1565,7 @@ grammar.  That means, in particular, that any information related to logics\cbs 
 (as foreseen by the \DOL abstract syntax specified in \cref{c:abstract-syntax}), such as:
 \begin{itemize}
 \item the logic of each OMS that is part of the \DOL document,
-\item the translation that is employed between two logics (unless it is one of the default translations specified in \aref{a:graph})
+\item any translation that is employed between two logics (unless it is one of the default translations specified in \aref{a:graph})
 \end{itemize}
 However, details about aspects of an OMS that do not have a formal, logic-based semantics, may be
 left implicit.  For example, a conforming document may omit explicit references to matching
@@ -1581,7 +1579,7 @@ conforms to the \DOL metamodel. Optionally, further representations
 (e.g. as JSON) can be supported.
 \begin{itemize}
 \item
-A \emph{parser} is \DOL-conformant if it can parse the \DOL textual syntax and produce the corresponding abstract syntax.
+A \emph{parser} is \DOL-conformant if it can parse the \DOL textual syntax and produce the corresponding \DOL abstract syntax.
 \item
 A \emph{printer} is \DOL-conformant if it can read \DOL abstract syntax and produce \DOL textual syntax.
 \item
@@ -1638,11 +1636,8 @@ its output when requested.
 conforming with \DOL.
 \cbe
   It is, for example, possible that a \DOL-aware application only supports OWL
-and Common Logic.  In that case, the application may process documents that mix OWL and Common 
-Logic ontologies \emph{without} explicitly declaring the respective logics, as the respective 
-syntaxes of OWL and Common Logic can be distinguished by examining the different keywords.  
-However, for \DOL conformance, that application has to be capable of exporting documents with 
-explicit references to the logics used.
+and Common Logic.  In that case, the application may process \DOL documents that mix OWL and Common 
+Logic ontologies, as well as native OWL and Common Logic documents.
 
 \DOL-aware applications also \cbs \shall \cbe be able to strip \DOL annotations
 from embedded fragments in other OMS languages. Moreover, they \cbs \shall \cbe
@@ -7638,11 +7633,16 @@ expected to become the basis for normative activities.
 The semantic conformance of OWL 2 DL (as specified in \nisref{W3C/TR REC-owl2-syntax:2009}) with \DOL
 is established in \cite{OntoGraph}.
 
-The OWL/XML serialization satisfies the criteria for XML conformance.  The mapping of OWL 2 DL to RDF
-graphs satisfies the criteria for RDF conformance\CLnote{This is not exactly true, as some things,
-e.g. imports, cannot be identified.}.  The OWL 2 Manchester syntax satisfies the criteria for text
+The OWL/XML serialization satisfies the criteria for XML conformance.    The OWL 2 Manchester syntax satisfies the criteria for text
  conformance.
 %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
+
+The serialization of OWL in RDF does not satisfy \cbs{} requirement (\ref{it:ids-for-structure}) for RDF conformance because\cbe{} there is an \texttt{owl:imports} property but no class representing imports. 
+ Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as a resource that could have an identifier.  RDF reification would allow for giving the statement $O_1$ \texttt{owl:imports} $O_2$ an identifier. 
+ However, the RDF triples resulting from this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}, section 3}. 
+ They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}}.\ednote{TM@CL: how to deal with this situation?}
+
+\bigskip
 
 \cbs The logic \SROIQ underlying\cbe{} 
 OWL can be formalized as an institution as follows:
