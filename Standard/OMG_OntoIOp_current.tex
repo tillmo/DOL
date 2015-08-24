@@ -7886,7 +7886,7 @@ simple roles) compare \cite{SROIQ}.
 \OWL \emph{profiles} are syntactic restrictions of \OWL~2~DL that support specific modeling and reasoning tasks, %\cite{w3c:owl2-profiles}, 
 and which are accordingly based on DLs with appropriate computational properties. Specifically, \OWL~2~\EL is designed for ontologies containing large numbers of concepts or relations, \OWL~2~\QL to support query answering over large amounts of data, and \OWL~2~\RL to support scalable reasoning using rule languages (\EL, \QL, and \RL for short) .
  
- The logic \ELDL is underlying the \EL profile. (To be exact, \EL adds various `harmless' expressive means and syntactic sugar to \ELDL resulting in the DL \ELDL$++$.) % \cite{BaaderEtAl-OWLED08DC}; for further details see also \cite{w3c:owl2-profiles}. 
+ The logic \ELDL is underlying the \EL profile. (To be exact, \EL adds various `harmless' expressive means and syntactic sugar to \ELDL resulting in the DL \ELDL${+}{+}$.) % \cite{BaaderEtAl-OWLED08DC}; for further details see also \cite{w3c:owl2-profiles}. 
 \ELDL is a syntactic restriction of \ALC to existential restriction, concept
 intersection, and the top concept:
 %\ednote{TM@OK: please be  a bit more precise here, perhaps write some grammar: C ::= ⊤ | A | C ⊓ D | ∃r.C, footnote about added sugar in OWL EL profile} Note that \EL is a very relevant ontology language; large medical ontologies like SNOMED\ednote{CL@TM: FYI, it's SNO not SNOW} CT are epxressed in \EL.\ednote{TM@OK: add RL and QL if there is space}
@@ -9242,7 +9242,7 @@ All translations are marked as default translations.
 The logics giving the semantics of these languages are listed below:
 \begin{itemize}
  \item \RDF and \RDFS, supported respectively by \RDF and \RDFS
- \item $\ELDL++$, supported by the language \EL
+ \item $\ELDL{+}{+}$, supported by the language \EL
  \item \DLLiteR, supported by \QL
  \item \RL, supported by \RL
  \item $\SROIQ(D)$, supported by $\OWL$
@@ -9254,7 +9254,7 @@ The logics giving the semantics of these languages are listed below:
 
 The institution comorphisms between these logics are
 \begin{itemize}
-  \item $\ELDL++$ $\to$ $\SROIQ(D)$ 
+  \item $\ELDL{+}{+}$ $\to$ $\SROIQ(D)$ 
   \item \DLLiteR $\to$ $\SROIQ(D)$ 
   \item \RL $\to$ $\SROIQ(D)$ 
   \item $\RDF \to \RDFS$
@@ -9271,9 +9271,9 @@ $\bot$ denotes undefinedness:
 
 \begin{tabular}{| l | l | l | l | l | l |}
 \hline
-Union & $\ELDL++$ & \DLLiteR & \RL & \RDF & \RDFS \\
+Union & $\ELDL{+}{+}$ & \DLLiteR & \RL & \RDF & \RDFS \\
 \hline
-$\ELDL++$ & $\ELDL++$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ \\
+$\ELDL{+}{+}$ & $\ELDL{+}{+}$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ \\
 \hline
 \DLLiteR & $\SROIQ(D)$ & \DLLiteR & $\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$ \\
 \hline
@@ -9301,7 +9301,7 @@ UML\mbox{-}CD & \CL & \CL & \CL & \CL & \CL \\
 \hline
 Union & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & UML\mbox{-}CD & \CL\\
 \hline
-$\ELDL++$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
+$\ELDL{+}{+}$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
 \hline
 \DLLiteR & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL& \CL\\
 \hline
@@ -9344,12 +9344,12 @@ The following syntaxes are part of the heterogeneous logical environments:
 
 \sclause{Language and Logic Translations}
 
-\ssclause{\EL $\to$ $\OWL$ and $\ELDL++$ $\to$ $\SROIQ(D)$}
+\ssclause{\EL $\to$ $\OWL$ and $\ELDL{+}{+}$ $\to$ $\SROIQ(D)$}
 
 \EL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
 syntactic restriction according to the definition of \EL, see
-\nisref{W3C/TR REC-owl2-profiles:2009}. Since by definition, $\ELDL++$
-is a syntactic restriction of $\SROIQ(D)$, $\ELDL++$ $\to$ $\SROIQ(D)$
+\nisref{W3C/TR REC-owl2-profiles:2009}. Since by definition, $\ELDL{+}{+}$
+is a syntactic restriction of $\SROIQ(D)$, $\ELDL{+}{+}$ $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
 \ssclause{\QL $\to$ $\OWL$ and \DLLiteR $\to$ $\SROIQ(D)$}
@@ -9389,16 +9389,16 @@ This is entirely analogous to $\SimpleRDF \rightarrow \RDF$.
 A $\SimpleRDF$ signature is translated to $\SROIQ(D)$ by providing a class
 $P$ and three roles $sub$, $pred$ and $obj$ (these reify the extension
 relation), and one individual per $\SimpleRDF$ resource. A $\SimpleRDF$ triple
-$(s,p,o)$ is translated to the \SROIQ(D) sentence
+$(s,p,o)$ is translated to the $\SROIQ(D)$ sentence
    $$\top \sqsubseteq \exists U. (\exists sub. \{s\} \sqcap \exists pred. \{p\} \sqcap  \exists obj. \{o\} ).$$
-  From an \SROIQ(D) model ${\cal I}$, obtain a \SimpleRDF model by inheriting the universe
+  From an $\SROIQ(D)$ model ${\cal I}$, obtain a \SimpleRDF model by inheriting the universe
   and the interpretation of individuals (then turned into resources).
   The interpretation $P^{\cal I}$ of $P$ gives $P_m$, and $EXT_m$ is obtained
   by de-reifying,
- i.e.\ $$EXT_{m}(x):=\{(y,z) | \exists u . (u,x)\in pred^{\cal I},
+ i.e.\ $$EXT_{m}(x):=\{(y,z) \mid \exists u . (u,x)\in pred^{\cal I},
   (u,y)\in sub^{\cal I}, (u,z,)\in obj^{\cal I} \}.$$
   $\RDF \rightarrow \SROIQ(D)$ is defined similarly. The theory of \RDF built-ins 
-  is (after translation to \SROIQ(D)) added to any signature translation.
+  is (after translation to $\SROIQ(D)$) added to any signature translation.
   This ensures that the model translation can add the built-ins.
 %\Til{What if the OWL model satisfies more triples than the built-ins?}
 
