@@ -4181,9 +4181,19 @@ The \DOL document types are as follows
 Additionally, the \cbs MOF metaclasses \cbe of the abstract syntaxes
 of any conforming OMS languages (\cf \cref{c:conform:logic}) \cbs are
 subclasses of the \DOL metaclass \syntax{NativeDocument}.
+
+\medskip
+\begin{center}
+\includegraphics[scale=0.47]{mof/native_document.png}
+\end{center}
+
 If a conforming OMS language has a metaclass for basic OMS,
 this is a subclass of the metaclass \syntax{BasicOMS}.\cbe
 
+\medskip
+\begin{center}
+\includegraphics[scale=0.47]{mof/basic_oms.png}
+\end{center}
 
 
 
@@ -4601,35 +4611,74 @@ grouping results in a parse error.
 \ssclause{Abstract Syntax}
 
 
-An OMS mapping provides a connection between two OMS. An OMS mapping definition is the definition of 
-either a named interpretation (\syntax{InterpretationDefinition}, \syntax{EntailmentDefinition} or 
-\syntax{EquivalenceDefinition}), a named declaration of the  relation between a module of an OMS and the whole 
-OMS (\syntax{ModuleRelDefinition}), or a named \termref{alignment} (\syntax{AlignmentDefinition}).
+An OMS mapping provides a connection between two OMS. An OMS mapping
+definition is the definition of either a named interpretation
+(\syntax{InterpretationDefinition}, entailment (\syntax{EntailmentDefinition}),
+refinement (\syntax{RefinementDefinition}) or equivalence
+(\syntax{EquivalenceDefinition}), a named declaration of the relation
+between a module of an OMS and the whole OMS
+(\syntax{ModuleRelDefinition}), or a named \termref{alignment}
+(\syntax{AlignmentDefinition}).
 
+Both interpretation and refinements specify a logical entailment or
+specialization relation between OMS. An
+\syntax{InterpretationDefinition} specifies source and target OMS
+(forming the \syntax{InterpretationType}), as well as a
+\syntax{SymbolMap} and/or an \syntax{OMSLanguageTranslation}.  The
+\syntax{SymbolMap} in an interpretation always must lead to a
+signature morphism. A proof obligation expressing that the source OMS,
+when translated along the signature morphism and/or the
+\syntax{OMSLanguageTranslation}, logically follows from the target OMS
+is generated.
+
+\syntax{Refinement}s subsume interpretations (via
+\syntax{SimpleRefinement}s), but allow the specification of much more
+complex relation between OMS (and OMS networks).  The style differs
+from interpretation in that even a single OMS is a refinement (via
+\syntax{RefinementOMS}); this corresponds to the source of an
+interpretation. Using \syntax{SimpleOMSRefinement}s, a refinment can
+be further specialized to a (target) OMS via an
+\syntax{OMSRefinementMap}. The latter involves a symbol map and/or OMS
+language translation, analogously to interpretations.  With this style
+of notation, simple refinements can be easily chained up (which cannot
+be done using interpretations).  Refinements can also be composed
+(\syntax{RefinementComposition}), provided that the target of the
+first refinement matches the source of the second one. Furthermore,
+refinements can also be specified between networks
+(\syntax{SimpleNetworkRefinement}).  A refinement between OMS networks
+has to specify both a mapping (\syntax{NodeMap}) between the nodes of
+the OMS network, as well as, for each node, a symbol map from the OMS
+of that node to the target OMS to which it is mapped (this is a
+\syntax{NetworkRefinementMap}). 
+
+\medskip
 \begin{center}
 \includegraphics[scale=0.47]{mof/interpretations&refinements.png}
-
-\includegraphics[scale=0.47]{mof/entailment&equivalence.png}
-
-\includegraphics[scale=0.47]{mof/modules.png}
-
 \end{center}
 
-The \syntax{SymbolMap} in an interpretation always must lead to a signature morphism; a proof 
-obligation expressing that the (translated) source OMS logically follows from the target OMS is 
-generated.  An entailment is a variant where all symbols are mapped identically, while an 
-equivalence states that the model classes of two OMS are in bijective correspondence.
 
-Interpretations, entailments and equivalences between OMS networks are also possible. An 
-interpretation between OMS networks has to specify both a mapping between the nodes of the OMS 
-network, as well as, for each node, a symbol map from the OMS of that node to the target OMS to 
-which it is mapped.
-%\ednote{In equivalences between OMS networks, should we allow for node mappings 
-%as well? In  \cite{MossakowskiTarlecki09}, this is allowed.
-%--- No, since we do not allow for signature morphisms either.}
+An entailment is a variant of an interpretation where all symbols are
+mapped identically, while an equivalence states that the model classes
+of two OMS are in bijective correspondence. As for refinements,
+entailments and equivalences are also possible between networks
+(\syntax{NetworkNetworkEntailment} and \syntax{NetworkEquivalence}).
+An entailment between a network as premise and an OMS as conclusion
+(\syntax{NetworkOMSEntailment}) specifies that all models of the
+network, when restricted to a given node (given by an IRI), are
+models of the OMS.
+
+\begin{center}
+\includegraphics[scale=0.47]{mof/entailment&equivalence.png}
+\end{center}
 
 
-In contrast to this functional style of mapping symbols, an alignment provides a relational 
+
+
+
+
+Signature morphisms used in interpretations and refinements use
+a functional style of mapping symbols of OMS.
+In contrast to this style, an alignment provides a relational 
 connection between two OMS,  using a set of \syntax{Correspondence}s. Each correspondence may relate 
 some OMS non-logical symbol to another one (possibly given by a term) with an optional confidence 
 value. Moreover, the relation between the two non-logical symbols can be explicitly
@@ -4651,11 +4700,14 @@ or whether several local domains are linked (``contextualized'') by relations.
 \includegraphics[scale=0.47]{mof/alignment.png}
 \end{center}
 
-A \syntax{ModuleRelDefinition} declares that a certain OMS
-actually is a module of some other OMS with respect
+A \syntax{ModuleRelDefinition} declares that a certain (``module'') OMS
+actually is a module of some other (``whole'') OMS with respect
 to the \syntax{InterfaceSignature}.
 
 
+\begin{center}
+\includegraphics[scale=0.47]{mof/modules.png}
+\end{center}
 
 
 A symbol map in an interpretation is \required to cover all non-logical symbols of the source OMS; 
