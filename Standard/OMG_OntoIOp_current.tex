@@ -1952,7 +1952,7 @@ demonstrated to be a \termref{logical consequence} of the axioms.}
 
 
 
-\sclause{Structured OMS}
+\sclause{Structured OMS}\label{s:structuredOMS}
 
 \termdefinition{structured OMS}
 {\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{OMS translation}, \termref{OMS reduction} or other structuring operations.}
@@ -4333,48 +4333,59 @@ Id              ::= Letter LetterOrDigit*
 \sclause{OMS}\label{c:OMS}
 \ssclause{Abstract Syntax}
 
-An OMS (\syntax{OMS}) can be one of the following:
+\DOL provides a rich structuring language for OMS, providing
+extension, translation, unions of OMS and many more.  For each of
+these alternatives, a subclass is introduced. An OMS can be
 \begin{itemize}
-\item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
-language (which is defined outside this standard)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
-However, \DOL's module sublanguage should be given preference over the module sublanguage of 
-the respective conforming OMS language; \eg \DOL's extension construct should be preferred over OWL's import construct.},
-\item a translation of an OMS into a different signature or OMS
-language,
-\item a reduction of an OMS to a smaller signature and/or less
-expressive logic (that is,
-some non-logical symbols are hidden, but the semantic effect of sentences involving these is kept),
-\item a module extracted from an OMS, using a restriction signature,
-\item an approximation of an OMS, in a subsignature or sublogic, with the effect that sentences not expressible in the subsignature respectively sublogic are replaced with a suitable approximation,
-\item a filtering of an OMS, with the effect that some signature symbols and axioms are removed from the OMS,
-\item an extension of an OMS with a basic or a closable OMS, optionally named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{ConservativityStrength}),
-\item a union of several OMS (the major difference between a union and extension is that the members of the unions need to be self-contained OMS, while the extensions may reuse the signature of the extended OMS), 
-\item a reference to an OMS existing on the Web,
-\item an OMS qualified with the OMS language that is used to express it,
-\item a combination of (the OMS contained in) an OMS network (technically, this is a colimit, see \cite{ZimmermanEtAl06}),
-\item a \cbs closure\cbe of an OMS, forcing the subsequently declared
-  non-logical symbols to be interpreted in a minimal \cbs or maximal\cbe{} way, while the non-logical symbols declared \cbs in the local environment\cbe{} are fixed (alternatively, the non-logical symbols to be \cbs minimized/maximized\cbe{} and to be varied can be explicitly declared). Variants of\cbs closure are minimization,\cbe{}
-maximization, freeness (minimizing also data sets and equalities on these, \cbs which enables the inductive definition of relations and datatypes), and cofreeness
-(enabling the coinductive definition of relations and datatypes).\cbe
-%\item the application of a substitution to an OMS.
+\item a \syntax{TranslationOMS} involving both
+an OMS (to be translated), and a specification of the translation,
+which is covered by the class \syntax{OMSTranslation};
+\item a \syntax{UnionsOMS}, uniting two given OMS; 
+\item a \syntax{ClosureOMS}, applying a closure operator
+(given by a \syntax{Closure}) to an OMS; 
+\item an \syntax{ExtensionOMS}, extending a given OMS with another OMS
+  (given by the \syntax{Extension}). The major difference between a
+  union and extension is that the members of the unions need to be
+  self-contained OMS, while the extensions may reuse the signature of
+  the extended OMS;
+\item an \syntax{ExtendingOMS}, which is a very simple form of OMS,
+namely a basic OMS or an OMS reference (see below);
+\item a \syntax{FilteringOMS}, applying a filtering operator
+(given by a \syntax{Filtering}) to an OMS;
+\item an \syntax{ApproximationOMS}, applying an approximation operator
+(given by an \syntax{Approximation}) to an OMS;
+\item a \syntax{CombinationOMS}, giving a combination of (the OMS
+  contained in) an OMS network (technically, this is a colimit, see
+  \cite{ZimmermanEtAl06});
+\item a \syntax{ReductionOMS}, applying a reduction
+(given by an \syntax{Reduction}) to an OMS;
+\item a \syntax{ExtractionOMS}, applying a module extraction operator
+(given by an \syntax{Extraction}) to an OMS;
+\item a \syntax{QualifiedOMS}, which is an OMS qualified with the OMS
+  language that is used to express it.
 \end{itemize}
-% derived from CASL (see CASL reference manual)
-% and HetCASL (see HetCASL summary)
+Moreover, annex~\ref{a:queries}
+informatively introduces \syntax{Application}s, which apply a substition
+to an OMS.
 
-\cbs
-Some OMS, namely extensions and \cbs closures\cbe{}, are interpreted relative to a \emph{local environment}.
-The local environment is the OMS built from all
-previously-declared symbols and axioms.
+A \syntax{ConservativityStrength} specifies additional relations that
+may hold between an OMS and its extension (or union with other OMS),
+like conservative or definitional extension. The rationale is that the
+extension should not have impact on the original OMS that is being
+extended. 
 
-A \syntax{ConservativityStrength} specifies additional relations that may hold
-between an OMS and its extension, like conservative or definitional
-extension. The rationale is that the extension should not have impact
-on the original OMS that is being extended. A \syntax{ConservativityStrength}
-might also be applied to a single OMS, which is then implicitly
-regarded as an extension of the empty OMS. In this case,
-satisfiability (or a similar property) of the OMS is expressed.
-\cbe
-\medskip
+An OMS definition \syntax{OMSDefinition} names an OMS.  It can be
+optionally marked as inconsistent, consistent, monomorphic or having a
+unique model using \syntax{ConservativityStrength}. More precisely,
+\syntax{'consequence-conservative'} here requires the OMS to have only
+tautologies as signature-free logical consequences, while
+\syntax{'not\-consequence-conservative'} expresses that this is not
+the case.  \syntax{'model-conservative'} requires satisfiability of
+the OMS, \syntax{'not-model-conservative'} its unsatisfiability.
+\syntax{'de\-fi\-nitional'} expresses \cbs that the OMS has a unique
+model\cbe; this may be interesting for characterizing OMS
+(e.g.\ returned by model finders) that are used to describe single
+models.
 
 \newpage
 \voffset -2cm
@@ -4383,45 +4394,89 @@ satisfiability (or a similar property) of the OMS is expressed.
 \end{center}
 
 \newpage
+
 \voffset -1cm
 
+\syntax{ExtendingOMS} is a subclass of \syntax{OMS}, containing
+those OMS that may be used to extend a given OMS within an \syntax{ExtensionOMS}.
+An \syntax{ExtendingOMS} can be one of the following:
+\begin{itemize}
+\item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
+language (which is defined outside this standard)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
+However, \DOL's module sublanguage should be given preference over the module sublanguage of 
+the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.};
+\item a reference to an OMS existing on the Web (\syntax{OMSReference}); or
+\item a \syntax{RelativeClosureOMS}, applying a closure operator to a
+  basic OMS or OMS reference (these two are hence joined into
+  \syntax{ClosableOMS}). A closure forces the subsequently declared
+  non-logical symbols to be interpreted in a minimal \cbs or
+  maximal\cbe{} way, while the non-logical symbols declared \cbs in
+  the local environment\cbe{} are fixed. Variants of\cbs closure are
+  minimization,\cbe{} maximization, freeness (minimizing also data
+  sets and equalities on these, \cbs which enables the inductive
+  definition of relations and datatypes), and cofreeness (enabling the
+  coinductive definition of relations and datatypes).\cbe
+\end{itemize}
+Using \syntax{ExtendingOMS}, further OMS can be built:
+\begin{itemize}
+\item extensions of an OMS with an \syntax{Extension}, which is an \syntax{ExtendingOMS} optionally named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{ConservativityStrength}, see clause~\ref{s:structuredOMS} for details),
+\item \cbs closures\cbe of an OMS with a \syntax{Closure}.  This is
+  similar to a \syntax{RelativeClosureOMS}, but the non-logical
+  symbols to be \cbs minimized/maximized\cbe{} and to be varied are
+  explicitly declared here (while a \syntax{RelativeClosureOMS} takes
+  the local environment to be fixed, i.e.\ not varied).
+\end{itemize}
+Recall that the local environment is the OMS built from all
+previously-declared symbols and axioms.
 \medskip
 \begin{center}
 \includegraphics[scale=0.47]{mof/extension&closure.png}
+\end{center}
 
+Furthermore, OMS can be constructed using 
+\begin{itemize}
+\item a translation \syntax{OMSTranslation} of an OMS into a different
+  signature or OMS language. The former is done using a \syntax{SymbolMap},
+  specifying a map of symbols to symbols. The latter is done using an 
+  OMS language
+  translation \syntax{OMSLanguageTranslation} can be either specified
+  by its name, or be inferred as the \termref{default translation} to
+  a given target (the source will be inferred as the OMS language of
+  the current OMS);
+\item a \syntax{Reduction} of an OMS to a smaller signature and/or
+  less expressive logic (that is, some non-logical symbols and/or some
+  parts of the model structure are hidden, but the semantic effect of
+  sentences involving these is kept). The former is done using a
+  \syntax{SymbolList}, which is a list of non-logical symbols that are
+  to be hidden. The latter uses an \syntax{OMSLanguageTranslation}
+  denoting a logic projection that is used as logic reduction to a
+  less expressive OMS language.
+\item an \syntax{Approximation} of an OMS, in a subsignature (\syntax{InterfaceSignature}) or sublogic, with the effect that sentences not expressible in the subsignature respectively sublogic are replaced with a suitable approximation,
+\item a \syntax{Filtering} of an OMS, with the effect that some signature symbols and axioms (specified by a \syntax{BasicOMS}) are removed from the OMS,
+\item a module \syntax{Extraction} of an OMS, using a restriction signature (\syntax{InterfaceSignature}).
+%\item the application of a substitution to an OMS.
+\end{itemize}
+% derived from CASL (see CASL reference manual)
+% and HetCASL (see HetCASL summary)
+
+
+
+
+
+
+
+\medskip
+\begin{center}
 \includegraphics[scale=0.47]{mof/translation&reduction.png}
 \end{center}
 
-An OMS definition \syntax{OMSDefinition} names an  OMS.  
-
-It can be
-optionally marked as inconsistent, consistent, monomorphic or having a unique model using 
-\syntax{ConservativityStrength}. More precisely, \syntax{'consequence-conservative'}
-here requires the OMS to have only tautologies as signature-free logical consequences, while \syntax{'not\-consequence-conservative'} expresses that this is not the case. 
-\syntax{'model-conservative'}
-requires satisfiability of the OMS, \syntax{'not-model-conservative'} its
-unsatisfiability.
-\syntax{'de\-fi\-nitional'} expresses \cbs that the OMS has a unique model\cbe; this may be interesting for characterizing
-OMS (e.g.\ returned by model finders) that are used to describe single models. 
-
-
-A
-\syntax{SymbolList}, used in an OMS \syntax{Reduction}, is a
-list of non-logical symbols that are to be hidden. Also,
-an \syntax{OMSLanguageTranslation} denoting a logic projection
-can be used a logic reduction to a
-less expressive OMS language. A \syntax{SymbolMap}, used in
-OMS \syntax{OMSTranslation}s,  maps symbols to symbols,
 %% \CLnote[type=fyi]{On 2012-07-18 we decided 
 %% not to specify lambda-style symbol-to-term mappings for now.  Would be convenient, but specifying its semantics 
 %% in an OMS language independent way would require additional institution infrastructure – and the same effect can be 
 %% achieved by auxiliary definitional extensions, cf.\ Colore (so promote this, informatively, as a ``best practice''?) TM: Alternatively, we could use a recent notion of institutional monad. This builds an extended signature with all terms. Then one can use ordinary signature morphisms into such extended signatures.} 
 %or a logic
 %translation. 
-An OMS language translation \syntax{OMSLanguageTranslation} 
-can be either specified by its name, or be inferred as the \termref{default
-translation} to a given target (the source will be inferred as the 
-OMS language of the current OMS).
+
 
 
 
