@@ -5676,7 +5676,7 @@ semantics. It is straightforward to see that the satisfaction condition holds.
 A common logic signature
 $\Sigma$ (called vocabulary in Common Logic terminology) consists of a
 set of names, with a subset called the set of discourse names, and a
-set of sequence markers. 
+set of sequence markers.
 A $\Sigma$-model consists of a set $\UR$,
 the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
 the universe of discourse, and four mappings:
@@ -8053,7 +8053,7 @@ name in the smaller signature if and only if it is one in the larger signature. 
 the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
 the universe of discourse, and four mappings:
   \begin{itemize}
-   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{<x_1,\ldots,x_n> |
+   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{<x_1,\ldots,x_n> \mid
 x_1,\ldots,x_n \in \UD\}$ (i.e., the set of finite sequences of
 elements of $\UD$);
    \item $\fun$ from $\UR$ to total functions from $\UD^*$ into $\UD$;
@@ -8163,7 +8163,6 @@ like
 There is also \OWL Full, an extension of \RDFS with resources
 such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the representation of
 \OWL~\cite{W3C:REC-owl2-rdf-based-semantics-20091027}.
-
 \qed\end{definition}
 
 
@@ -8288,10 +8287,10 @@ sequences with
   form:sequence-member |-> form:ordered-set-member,
   form:in-sequence |-> form:in-ordered-set,
   form:before-in-sequence |-> form:before-in-ordered-set,
-  form:position-count |-> form:ordered-set-position-count
+  form:position-count |-> form:ordered-set-position-count,
   form:in-position-count |-> form:in-ordered-set-position-count
 then
-//Different positions contain different elements
+  //Different positions contain different elements
   (forall (s x1 x2 n1 n2)
   	    (if (and (form:in-ordered-set-position-count s n1 x1)
   	  	     (form:in-ordered-set-position-count s n2 x2)
@@ -8887,18 +8886,18 @@ When one or more ends of the Association are ordered, links carry ordering infor
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
 \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
 \ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert\\
-\qqquad\qqquad\qqquad\ \  $x_r$ form:empty-sequence)))))))))}
+\qqquad\qqquad\qqquad\ \  $x_r$ form:empty-sequence))))))))}
 
 In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
 $\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:\\
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$)))))}
+\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$))))}
 \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
 of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
 $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
 $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a))))}\\
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a)))))}\\
 If $\mathbf{a}$ is represented in simplified form, then instead the following is used \\
 \texttt{(forall (o s)\\
 \qqquad (if (c.p o s) (forall (x) (iff (member x s) (a o x)))))}
@@ -8907,7 +8906,7 @@ owned by a class/data type coincides with the interpretation of the
 attribute: if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ is owned
 by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m))))}\\
+\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m)))))}\\
 Again, if $\mathbf{m}$ is represented in simplified form, then the following is used\\
 \texttt{(forall (o s)\\
 \qqquad (if (c.p o s) (forall (x) (iff (member x s) (m o x)))))}
@@ -9224,7 +9223,7 @@ logical interoperability:
   \item $TPTP \to \CASL.\FOL$
   \item $\CASL.FOL \to \CL$
   \item $\CASL.FOL \to \CASL$
-  \item $UML-CD \to \CL$.
+  \item $UML\mbox{-}CD \to \CL$.
 \end{itemize}
 
 The translations are specified in \cite{OntoGraph,MossakowskiEtAl14b}.
@@ -9244,7 +9243,7 @@ The logics giving the semantics of these languages are listed below:
  \item \CL, supported by \CL
  \item $SubPCFOL^=_{ms}$, supported by \CASL
  \item \FOL, supported by $\CASL.FOL$ and $TPTP$
- \item $UML-CD$, supported by $UML-CD$.
+ \item $UML\mbox{-}CD$, supported by $UML\mbox{-}CD$.
 \end{itemize}
 
 The institution comorphisms between these logics are
@@ -9257,7 +9256,7 @@ The institution comorphisms between these logics are
   \item $\SROIQ(D)  \to \CASL.\FOL$
   \item $\FOL \to \CL$
   \item $\FOL \to SubPCFOL^=_{ms}$
-  \item $UML-CD \to \CL$.
+  \item $UML\mbox{-}CD \to \CL$.
 \end{itemize}
 
 All of them are selected as default logic translations. There are no institution morphisms. The partial union operation between logics is given in the tables below, where
@@ -9284,7 +9283,7 @@ $\SROIQ(D)$& $\SROIQ(D)$ &  $\SROIQ(D)$ &$\SROIQ(D)$ & $\SROIQ(D)$ & $\SROIQ(D)$
 \hline
 $SubPCFOL^=_{ms}$ &  $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ & $SubPCFOL^=_{ms}$ \\
 \hline
-UML-CD & \CL & \CL & \CL & \CL & \CL \\
+UML\mbox{-}CD & \CL & \CL & \CL & \CL & \CL \\
 \hline
 \CL &  \CL & \CL & \CL & \CL & \CL \\
 \hline
@@ -9294,7 +9293,7 @@ UML-CD & \CL & \CL & \CL & \CL & \CL \\
 
 \begin{tabular}{| l | l | l | l | l | l |}
 \hline
-Union & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & UML-CD & \CL\\
+Union & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & UML\mbox{-}CD & \CL\\
 \hline
 $\ELDL++$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
 \hline
@@ -9312,7 +9311,7 @@ $\SROIQ(D)$& $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & \CL & \CL\\
 \hline
 $SubPCFOL^=_{ms}$ & $\SROIQ(D)$ & \FOL & $SubPCFOL^=_{ms}$ & $\bot$ & $\bot$\\
 \hline
-UML-CD & \CL & \CL & $\bot$ & UML-CD & \CL\\
+UML\mbox{-}CD & \CL & \CL & $\bot$ & UML\mbox{-}CD & \CL\\
 \hline
 \CL & \CL & \CL & $\bot$ & \CL & \CL\\
 \hline
@@ -9332,7 +9331,7 @@ The following syntaxes are part of the heterogeneous logical environments:
  \item Manchester Syntax, supported by $\OWL$, \EL, \QL, \RL
   \item TPTP, supported by TPTP
   \item CASL, supported by \CASL
- \item XMI, supported by UML-CD
+ \item XMI, supported by UML\mbox{-}CD
  \item XCL, supported by \CL
  \item CLIF, supported by \CL 
 \end{itemize}
