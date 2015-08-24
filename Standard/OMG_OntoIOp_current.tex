@@ -1485,7 +1485,7 @@ of the abstract syntax, using the canonical MOF 2 XMI Mapping.
 \item[XML conformance]
 The given serialization has to be specified as an XML schema that satisfies
  all of the following conditions:
-\begin{itemize}
+\begin{enumerate}
 \item The elements of the schema belong to one or more non-empty XML
 namespaces.%\todonote[author=Christoph
 %Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous
@@ -1493,9 +1493,9 @@ namespaces.%\todonote[author=Christoph
 %explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
 %of  a serialization that is merely text conforming).}
 \item The serialization shall use XML \emph{elements} to represent all structural elements of an OMS.
-\item The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
+\item\label{it:foreign-xml-namespaces} The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
  \DOL namespace \url{http://www.omg.org/spec/DOL/1.0/xml}) on any elements. (This  is because either an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.)
-\end{itemize}
+\end{enumerate}
 
 \item[RDF conformance]
 The given serialization has to be specified as an RDF vocabulary that
@@ -7785,16 +7785,46 @@ is established in \cite{OntoGraph}.
 
 \section{Conformance of the OWL Serializations With \DOL}\label{a:owl-serializations}
 
-The OWL/XML serialization satisfies the criteria for XML conformance.    The OWL 2 Manchester syntax satisfies the criteria for text
- conformance.
-%~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
+\subsection{Text Conformance of the OWL 2 Manchester Syntax With \DOL}
 
-The serialization of OWL in RDF does not satisfy \cbs{} requirement (\ref{it:ids-for-structure}) for RDF conformance because\cbe{} there is an \texttt{owl:imports} property but no class representing imports. 
+The OWL 2 Manchester syntax satisfies the criteria for text conformance established in clause~\ref{c:conform:serialization} in a straightforward way thanks to its line-based comment syntax (comments starting with \texttt{\#}) and its flexible handling of line breaks.
+
+\subsection{Conformance of the XML and RDF Serializations of OWL With \DOL}
+
+\subsubsection{General Issues}
+
+With minor modifications detailed below, the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211} satisfies the criteria for XML conformance and the serialization of OWL in RDF (\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}) satisfies RDF the criteria for RDF conformance.%~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
+Both modifications define a super-language of the respective OWL serialization.
+Any OWL ontology serialization $S'$ in one of these two super-languages can be translated into an OWL ontology serialization $S$ that fully conforms to the original specification OWL/XML or ``OWL serialized in RDF'' and is semantically equivalent to the extended serialization $S'$ with regard to the semantics of OWL.
+Without these modifications, neither OWL/XML nor ``OWL serialized in RDF'' satisfies the XML or RDF conformance requirements, respectively.
+The reason is that with imports there is a structural element supported by OWL that cannot have identifiers, and that these two OWL serializations do not permit the use of XML or RDF constructs that would enable assigning identifiers to imports.
+
+\subsubsection{XML Conformance of a Modified OWL/XML With \DOL}
+
+In the OWL/XML serialization, the \textit{Import} element is only allowed to carry the attributes \textit{xml:base}, \textit{xml:lang} and \textit{xml:space}, but no further attributes or child elements from foreign namespaces (requirement (\ref{it:foreign-xml-namespaces})), and therefore in particularly not a \textit{dol:id} attribute or child elements, as would be required for adding identifiers (cf.\ clause~\ref{sec:existing-serialization}).
+
+An extended specification of OWL/XML that does allow the \textit{dol:id} attribute on \textit{Import} satisfies the XML conformance criteria.
+From an ontology serialized in this super-language of OWL/XML, one can obtain a semantically equivalent ontology (with regard to the semantics of OWL) by stripping all \textit{dol:id} attributes.
+
+\subsubsection{RDF Conformance of a Modified Serialization of OWL in RDF With \DOL}
+
+The serialization of OWL in RDF (regardless of the concrete \emph{RDF} serialization employed to serialize the RDF graph that represents the OWL ontology) does not satisfy \cbs{}requirement (\ref{it:ids-for-structure}) for RDF conformance because\cbe{} there is an \texttt{owl:imports} property but no class representing imports. 
 Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as an RDF resource.
 However, only resources can have identifiers in RDF.
 RDF reification would allow for turning the statement $O_1$ \texttt{owl:imports} $O_2$ into a resource and thus giving it an identifier. 
 However, the RDF triples required for expressing this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}, section 3}. 
-They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}}.\ednote{TM@CL: how to deal with this situation?}
+They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}}.
+
+After extending the specification of the serialization of OWL in RDF in the following way, it satisfies the RDF conformance criteria: if the input RDF graph $G$ considered in section 3 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012} contains the pattern
+
+\begin{lstlisting}[basicstyle=\small\ttfamily,language=N3,mathescape]
+$i$ rdf:subject $s$ .
+$i$ rdf:predicate owl:imports .
+$i$ rdf:object $o$ .
+\end{lstlisting}
+
+and thus introduces a resource $i$ to represent that the ontology $s$ imports the ontology $o$, these three triples are removed from $G$.
+From an ontology serialized in this super-language of the serialization of OWL in RDF, one can obtain semantically equivalent ontologies (with regard to the semantics of OWL) by stripping all triples whose predicate is \textit{rdf:subject}, \textit{rdf:predicate} or \textit{rdf:object}, or by adding triples that declare these three properties to be \emph{annotation properties}.
 
 \section{Conformance of the \SROIQ Logic With \DOL}\label{a:owl-logic}
 
@@ -8684,7 +8714,7 @@ $\mathrm{Cl}$.
 Here all member ends are owned by class/data types.
 
 
-\begin{figure}[!tH]
+\begin{figure}[!th]
 \begin{center}
 \vspace*{1ex}
 \begin{tikzpicture}[transform shape,scale=.8]
