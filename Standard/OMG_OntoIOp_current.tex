@@ -4630,7 +4630,8 @@ between a module of an OMS and the whole OMS
 (\syntax{AlignmentDefinition}).
 
 Both interpretation and refinements specify a logical entailment or
-specialization relation between OMS. An
+specialization relation between OMS.\\
+ An
 \syntax{InterpretationDefinition} specifies source and target OMS
 (forming the \syntax{InterpretationType}), as well as a
 \syntax{SymbolMap} and/or an \syntax{OMSLanguageTranslation}.  The
@@ -6213,8 +6214,9 @@ $$sem(\Gamma, libImport) = \Gamma \cup \Gamma'$$
 \noindent where $sem(\Gamma, libImport.\syntax{libraryName}) = anIRI$ and
 $sem(anIRI) = \Gamma'$.
 
-A \syntax{LibraryItem} can also be an \syntax{OMSDefinition}, \syntax{NetworkDefinition},  \syntax{MappingDefinition} or \syntax{QueryRelatedDefinition}, and equations for these
-are given in the next sections.
+A \syntax{LibraryItem} can also be an \syntax{OMSDefinition}, \syntax{NetworkDefinition} or  \syntax{MappingDefinition}, and equations for these
+are given in the next sections. (Annex~\ref{a:queries} also introduces
+ \syntax{QueryRelatedDefinition}.)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6555,16 +6557,18 @@ where \todonote{didn't look at this} \todonote{free, cofree, maximize are missin
 \end{align*}
 and
 \begin{itemize}
-\item if $o.\syntax{closure}.\syntax{closureType} = \syntax{minimize}$, then
+\item if $o.\syntax{closure}.\syntax{closureType} = \syntax{minimize}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-\item if $o.\syntax{closure}.\syntax{closureType} = \syntax{maximize}$, then
+\item if $o.\syntax{closure}.\syntax{closureType} = \syntax{maximize}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is maximal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-if $o.\syntax{closure}.\syntax{closureType} = \syntax{free}$, then
+\item
+if $o.\syntax{closure}.\syntax{closureType} = \syntax{free}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is initial in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-if $o.\syntax{closure}.\syntax{closureType} = \syntax{cofree}$, then
+\item
+if $o.\syntax{closure}.\syntax{closureType} = \syntax{cofree}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is terminal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \end{itemize}
@@ -6652,7 +6656,7 @@ $O' = O.\syntax{filtering}.\syntax{basicOMS}$,
 is
 defined only if  $\Sig(O')\subseteq\Sig(O.\syntax{oms})$ and 
 $\Th(O')\subseteq\Th(O.\syntax{oms})$.
- Two cases are distinguished based on the value of $O.\syntax{filtering}.\syntax{removalKind}$.
+ Two cases are distinguished based on the value of $O.\syntax{filtering}.\syntax{removalKind}$.\\
 If $O.\syntax{filtering}.\syntax{removalKind} = keep$, 
 the semantics of $O$ is given by
 \begin{itemize}
@@ -7179,7 +7183,7 @@ semantics is undefined. \ednote{@Till: please check this}
 %require $\Phi(\Sigma)\leq\Sigma$ in the Grothendieck institution!}
 
 \semdom{sem(\Gamma,\syntax{MappingDefinition})= \Gamma'}
-See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \syntax{ModuleRelDefinition} and \syntax{AlignmentDefinition}.
+See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \\\syntax{ModuleRelDefinition} and \syntax{AlignmentDefinition}.
 
 \semdom{sem(\Gamma,\syntax{InterpretationDefinition}) = \Gamma'}
 
@@ -7195,12 +7199,12 @@ $$
   
    \item $(L_1, L_2) = sem(\Gamma, d.\syntax{interpretationType})$
    \item $\rho = (\Phi,\alpha,\beta):
-             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, d.\syntax{omsLanguageTranslation})$. If $d.\syntax{OMSLanguageTranslation}$ is missing, the default translations between the logics is selected. 
+             \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, d.\syntax{omsLanguageTranslation})$.\\ If $d.\syntax{OMSLanguageTranslation}$ is missing, the default translations between the logics is selected. 
    \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), d.\syntax{symbolMap}) = \sigma,$
 where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$. 
   \end{itemize}
 
-The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L_1)$ for each $M_2\in\Mod(L_2)$.
+The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L_1)$ for each $M_2\in\Mod(L_2)$.\\
 If the optional argument $d.\syntax{conservativityStrength}$ is
 \begin{itemize}
 \item \syntax{model-conservative}, for
@@ -7394,9 +7398,9 @@ The map is required to be total on the nodes of $G_1$.
 If $m$ is a \syntax{NodeMap},
 $$sem(\Gamma, G_1, G_2,
 n) = (m.\syntax{omsName}, m.\syntax{omsName2}, \rho,\sigma)$$
-where
-$(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{omsName}$ in $G_1$,
-$(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{omsName2}$ in $G_2$,
+where\\
+$(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{omsName}$ in $G_1$,\\
+$(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{omsName2}$ in $G_2$,\\
 $sem(\Gamma, m.\syntax{omsLanguageTranslation}) = \rho = (\Phi,\alpha,\beta) : \cI_1\to\cI_2$, \\
 $sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$,
 where $\Gamma.\current=(lang, logic,ser)$,
@@ -7563,7 +7567,7 @@ where
 $sem(\Gamma,d.\syntax{alignmentType}) = (L_1, L_2)$
 and 
 $\Gamma'=\Gamma[d.\syntax{AlignmentName} \mapsto (G,id,L_1,L_2)]
-$,
+$,\\
 where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$
 and\\ $G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$.
 
@@ -7897,7 +7901,8 @@ OWL itself is more complicated than \SROIQ due to the presence of datatypes.
 Following the direct model-theoretic semantics of OWL \cite{w3c:owl2-direct-semantics}:
 
 \begin{definition}
-A datatype map, formalizing datatype maps from the OWL 2 Specification \cite{w3c:owl2-spec}, is a 6-tuple $D = ( N_{DT} , N_{LS} , N_{FS} , \cdot^{DT} , \cdot^{LS} , \cdot^{FS} )$ with the following components:
+A datatype map, formalizing datatype maps from the OWL 2 Specification \cite{w3c:owl2-spec}, is a 6-tuple 
+$$D = ( N_{DT} , N_{LS} , N_{FS} , \cdot^{DT} , \cdot^{LS} , \cdot^{FS} )$$ with the following components:
 \begin{itemize}
 \item
     $N_{DT}$ is a set of datatypes (more precisely, names of datatypes) that does not contain the datatype \textit{rdfs:Literal}.
@@ -7941,7 +7946,7 @@ A vocabulary $V = ( V_{C} , V_{OP} , V_{DP} , V_{I} , V_{DT} , V_{LT} , V_{FA} )
 
 
 \begin{definition}
-Given a datatype map $D$ and a vocabulary $V$ over $D$, an interpretation $I = ( \Delta_I , \Delta_D , \cdot^{C} , \cdot^{OP} , \cdot^{DP} , \cdot^{I} , \cdot^{DT} , \cdot^{LT} , \cdot^{FA} , \mathit{NAMED} )$ for $D$ and $V$ is a 10-tuple with the following structure:
+Given a datatype map $D$ and a vocabulary $V$ over $D$, an interpretation $$I = ( \Delta_I , \Delta_D , \cdot^{C} , \cdot^{OP} , \cdot^{DP} , \cdot^{I} , \cdot^{DT} , \cdot^{LT} , \cdot^{FA} , \mathit{NAMED} )$$ for $D$ and $V$ is a 10-tuple with the following structure:
 \begin{itemize}
 \item
     $\Delta_I$ is a nonempty set called the object domain.
@@ -8143,7 +8148,8 @@ standard vocabulary both as part of each signature and in the models.\ednote{Ref
 Actually, the standard vocabulary is given by a certain theory. In case
 of \RDF, it contains e.g.\ resources \texttt{rdf:type} and
 \texttt{rdf:Property} and \texttt{rdf:subject}, and sentences like, e.g.\
-$(\texttt{rdf:type},\texttt{rdf:type},$ $ \texttt{rdf:Property})$, and $(\texttt{rdf:subject}, \texttt{rdf:type},$  $\texttt{rdf:Property})$.
+$$(\texttt{rdf:type},\texttt{rdf:type},$ $ \texttt{rdf:Property}),$$ and 
+$$(\texttt{rdf:subject}, \texttt{rdf:type},$  $\texttt{rdf:Property}).$$
 
 In the models, the standard vocabulary is interpreted with a fixed
 model.  Moreover, for each $\RDF$-model $M = \langle R_m, P_m, S_m,
@@ -8536,8 +8542,8 @@ The default is ``not ordered'' and ``unique''.\footnote{UML
 
 For a class/data type $c \in C$ of a class/data type-hierarchy
 $(C, {\leq_C})$ and a collection type constructor
-$\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
-\mathsf{Bag} \}$,
+$$\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
+\mathsf{Bag} \},$$
  the expression $\tau[c]$ denotes the induced \emph{collection type}.
 
 \medskip
