@@ -6703,7 +6703,7 @@ The semantics of an \syntax{UnionOMS} $O$ is
        with edges from the nodes of $O_1$ and $O_2$,
        respectively, to the node of $O$,
         labeled for each $i=1,2$ with
-        $((\Phi_i, \alpha_i,\beta_i, \iota_i: \Phi_i(O_i) \to \Sig(O))$.
+        $(\Phi_i, \alpha_i,\beta_i, \iota_i: \Phi_i(O_i) \to \Sig(O))$.
 \end{itemize}
 where $O_1 = O.\syntax{oms}$ and $O_2 = O.\syntax{oms2}$. 
 
@@ -6712,14 +6712,14 @@ of the appropriate strength of $O_1$.
 
 %Extension
 
-The semantics of an \syntax{ExtensionOMS} $O=$ is
+The semantics of an \syntax{ExtensionOMS} $O$ is
 \begin{itemize}
   \item $\Inst(O) = \Inst(O.\syntax{oms}) = \Inst(O.\syntax{extension})$ 
   (which means that
   the institutions of $O.\syntax{oms}$ and 
   $O.\syntax{extension}$ must be the same)
   \item $\Sig(O) = \Sig(O.\syntax{oms}) \cup 
-  \Sig((\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms}), \Mod(O.\syntax{oms}), \Th(O.\syntax{oms}))),
+  \Sig((\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms}), \Mod(O.\syntax{oms}), \Th(O.\syntax{oms})),
   O.\syntax{extension})$
   \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(O.\syntax{oms})} \in \Mod(O.\syntax{oms})
   \text{ and }
@@ -6858,7 +6858,7 @@ If $m$ is a \syntax{SymbolMap},
  $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma$$
 
 where 
-$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n)))$\\
+$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$\\
 and 
 $(s,t) = sem(\Gamma, \Sigma_1,\Sigma_2, m.\syntax{generalSymbolMapItem})$,\\
 $Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2,m.\syntax{generalSymbolMapItem2})$.
@@ -6873,7 +6873,7 @@ defined – in detail:
   \REQUIRE $M\subseteq |\Sig(O_s)|\times|\Sig(O_t)|$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
   \FORALL{$e_s\in|\Sigma(O_s)|$ not covered by $M$}
     \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
-    \STATE $N_t\leftarrow\{\operatorname{localname}(e)|e\in|\Sigma(O_t)|\}$
+    \STATE $N_t\leftarrow\{\operatorname{localname}(e) \mid e\in|\Sigma(O_t)|\}$
     \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
       \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
     \ENDIF
@@ -7330,11 +7330,11 @@ where\\
  $sem(\Gamma,  r.\syntax{refinement}) = 
  ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
  such that $G_1$ consists of an isolated node labeled with 
- $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$\\
+ $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$,\\
  $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), r.\syntax{omsRefinementMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
  for each $(M_1, M_2) \in \cM'$,
 $\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM_1$,\\
-G consists of an isolated node labeled with $sem^M(\Gamma,  r.\syntax{oms})$\\
+G consists of an isolated node labeled with $sem^M(\Gamma,  r.\syntax{oms})$,\\
 $\sigma = (\rho_1,\sigma_1);(\rho_2,\sigma_2)$ and
 $\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
 (M_1, M_2) \in \cM' \}$.
@@ -7398,7 +7398,7 @@ where
 $(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{omsName}$ in $G_1$,
 $(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{omsName2}$ in $G_2$,
 $sem(\Gamma, m.\syntax{omsLanguageTranslation}) = \rho = (\Phi,\alpha,\beta) : \cI_1\to\cI_2$, \\
-$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$.
+$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$,
 where $\Gamma.\current=(lang, logic,ser)$,
 $logic'$ is the target logic of $(\Phi,\alpha,\beta)$
 and $lang'$ and $ser'$ are the default language and serialization for $logic'$.
@@ -7435,7 +7435,7 @@ If $t$ is a \syntax{NetworkOMSEntailment},
 $sem(\Gamma,t) = G$
 
 \noindent where $sem(\Gamma, t.\syntax{network}) = G'$ such that $G'$ contains a node $n$ labeled with 
-$(\Name(t.\syntax{omsName})$,
+$\Name(t.\syntax{omsName})$,
 $sem(\Gamma,t.\syntax{oms}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and 
 $\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. Then 
 $G$ extends G' with a new node whose label has 
@@ -7475,7 +7475,7 @@ $$sem(\Gamma,d)=\Gamma'$$
 
 \noindent where 
  $\Gamma' = \Gamma[d.\syntax{equivalenceName} \mapsto 
-                  sem(\Gamma, d.\syntax{equivalenceType})$.
+                  sem(\Gamma, d.\syntax{equivalenceType})]$.
 
 \semdom{sem(\Gamma,\syntax{OMSEquivalence})=(G, N_1, N_2)}
 
@@ -7524,8 +7524,7 @@ $sem(\Gamma, n_3) = G_3$
 such that $G_1$ and $G_2$ are subgraphs of $G_3$
 and for each $i = 1,2$ and each family of models $\cM_i$ compatible with 
 $G_i$ there is a unique family of models $\cM$ compatible with $G_3$ such that
-the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$
-
+the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$.
 \ednote{todo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -7538,12 +7537,12 @@ If $d$ is a \syntax{ModuleRelDefinition},
 $$
 sem(\Gamma, d) = \Gamma'
 $$
-\noindent where $O_1 = d.\syntax{oms}$, $O_2 = d.\syntax{oms2}$,$c = d.\syntax{conservativityType}$, $\Sigma = sem(\Gamma, d.\syntax{interfaceSignature})$,
+\noindent where $O_1 = d.\syntax{oms}$, $O_2 = d.\syntax{oms2}$, $c = d.\syntax{conservativityType}$, $\Sigma = sem(\Gamma, d.\syntax{interfaceSignature})$,
 $\Gamma' = \Gamma[d.\syntax{moduleName}\mapsto 
 (G,\iota, N_2,N_1)]$
 and $G$ is the graph 
 $N_1 \stackrel{\iota}{\rightarrow} N_2$
-where $N_1$ is labeled with $(O_1, \Inst(O_1),\Sig(O_1), \Mod(O_1), \Th(O_1)$
+where $N_1$ is labeled with $(O_1, \Inst(O_1),\Sig(O_1), \Mod(O_1), \Th(O_1))$,
 $N_2$ with 
  $(O_2, \Inst(O_2),\Sig(O_2),  \Mod(O_2), \Th(O_2))$, 
 and $\iota$ is an inclusion, 
@@ -7566,7 +7565,7 @@ and
 $\Gamma'=\Gamma[d.\syntax{AlignmentName} \mapsto (G,id,L_1,L_2)]
 $,
 where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$
-and\\ $G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$
+and\\ $G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$.
 
 \semdom{sem(\Gamma, \syntax{AlignmentType}) = (L_1, L_2)}
 
