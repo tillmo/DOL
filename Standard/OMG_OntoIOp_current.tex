@@ -1810,6 +1810,11 @@ systems}
   \begin{note}
     Since a basic OMS has no structuring elements, it consists of \cbs (or at least denotes)\cbe{} a \termref{signature} equipped with a set of sentences\index{sentence} and annotations\index{annotation}.
   \end{note}
+  \begin{note}
+   In signature-free logics like Common Logic or TPTP, a basic OMS only 
+   consists of sentences. A signature can be obtained a posteriori by
+   collecting all non-logical symbols occuring in the sentences.
+  \end{note}
 	
 
 
@@ -4167,7 +4172,7 @@ The \DOL document types are as follows
 \item OMS mappings 
 \item OMS networks
 %\item \red{queries}
-\item \DOL libraries (items in these are: definitions of OMS, OMS mappings, and OMS networks, as well as qualifications choosing\cbs (i) the logic,
+\item \DOL libraries (items in these are: definitions of OMS, OMS mappings, and OMS networks, as well as qualifications choosing\cbs (1) the logic,
 (2) the OMS language and/or (3) the serialization)\cbe
 \item identifiers
 \item annotations
@@ -4200,10 +4205,7 @@ A \DOL library
  consists of a collection of (named)  OMS, \cbs OMS networks,\cbe{} and mappings between these.  More specifically, a \DOL
 library consists of a name, followed by a list of
 \syntax{LibraryItem}s.  A \syntax{LibraryItem} is either a
-definition of an OMS  (\syntax{OMSDefinition}), 
-a mapping between OMS
-(\syntax{MappingDefinition}), 
-a definition of an OMS network  (\syntax{NetworkDefinition}),
+\syntax{Definition},
 an import of another \DOL library (\syntax{LibraryImport}),
 %a definition related to queries 
 %(\syntax{QueryRelatedDefinition})
@@ -4211,8 +4213,10 @@ or a \syntax{Qualification} selecting a specific
 OMS language, logic and/or syntax that is used to interpret the
 subsequent \syntax{LibraryItem}s.  
 \cbs A \syntax{LibraryImport} leads to the inclusion of all \syntax{LibraryItem}s of the imported \DOL library into the importing one.\cbe
-
-
+A \syntax{Definition} assigns an IRI to an OMS  (\syntax{OMSDefinition}), 
+to a mapping between OMS (\syntax{MappingDefinition}), or
+an OMS network  (\syntax{NetworkDefinition}). Moreover, annex~\ref{a:queries}
+informatively introduces \syntax{QueryRelatedDefinition}.
 
 At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abbreviating long IRIs \cbs using CURIEs\cbe; see \cref{c:identifiers} for further details.
 
@@ -4232,8 +4236,8 @@ At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abb
 
 Document           ::= DOLLibrary | NativeDocument
 DOLLibrary         ::= [PrefixMap] 'library' LibraryName
-                       Qualification LibraryItem*
-NativeDocument     ::= ($<$) language and serialization specific ($>$) 
+                           Qualification LibraryItem*
+NativeDocument     ::= ($<$\rm language and serialization specific $>$) 
 LibraryItem        ::= LibraryImport | Definition | Qualification
 Definition         ::= OMSDefinition
                      | NetworkDefinition
@@ -4246,6 +4250,9 @@ LanguageQualification ::= 'language' LanguageRef
 LogicQualification ::= 'logic' LogicRef
 SyntaxQualification ::= 'serialization' SyntaxRef
 LibraryName        ::= IRI
+LanguageRef        ::= IRI
+LogicRef           ::= IRI
+SyntaxRef          ::= IRI
 \end{lstlisting}
 
 
@@ -4253,11 +4260,11 @@ LibraryName        ::= IRI
 
 PrefixMap      ::= '%prefix(' PrefixBinding* ')%'
 PrefixBinding  ::= BoundPrefix IRIBoundToPrefix [Separators]
-BoundPrefix    ::= ':' | Prefix+$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the \DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+
+BoundPrefix    ::= ':' | Prefix +$<$\rm see definition in \cref{c:curies}$>$\CLnote[type=q-aut]{I think that, in contrast to OWL Manchester, we can allow prefix names that match keywords of the \DOL syntax, as we are enclosing the whole prefix map into an annotation construct -- right?}+
 IRIBoundToPrefix ::= '<' FullIRI '>'
 Separators     ::= 'separators' SeparatorString SeparatorString
 SeparatorString ::= SeparatorChar SeparatorChar*
-SeparatorChar  ::= ipchar | gen-delims - '#'($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+SeparatorChar  ::= ipchar | gen-delims - '#'+$<$\rm as defined in \nisref{IETF/RFC 3987}$>$+
 \end{lstlisting}
 
 
@@ -4273,16 +4280,28 @@ SeparatorChar  ::= ipchar | gen-delims - '#'($<$ \rm as defined in \nisref{IETF/
 \sclause{OMS Networks}\label{c:networks}
 \ssclause{Abstract Syntax}
 
-Inside a \DOL library, one can define OMS networks (\syntax{NetworkDefinition}).
-A \syntax{NetworkDefinition} names an
-OMS network consisting of  OMS and OMS mappings. OMS networks may build on previously-defined
-OMS networks, and they can be used in \syntax{combination}s.  
+Inside a \DOL library, with a \syntax{NetworkDefinition}, one can
+define OMS networks (also called distributed OMS). OMS networks are
+typically used for complex viewpoint specifications; they also can be
+used in \syntax{combination}s (see clause~\ref{c:OMS} below). A
+\syntax{NetworkDefinition} names an OMS network consisting of
+\syntax{NetworkElement}s. These can be \syntax{ElementRef}s,
+i.e.\ IRIs that name OMS, OMS mappings, or previously-defined OMS
+networks. \syntax{ElementRef}s that are OMS can be prefixed with an
+\syntax{Id}; this is then used for disambugation in a
+\syntax{combination}.  An optional \syntax{ConservativityStrength}
+specifies e.g.\ consistency of the network (analogously to
+\syntax{OMSDefinition}s, see clause~\ref{c:OMS} below for details).
 
 
-An OMS network by default also includes all inclusions (\cbs between the extended
-and the extending OMS of an\cbe{} \syntax{ExtensionOMS}) between the involved OMS---unless these are
-explicitly excluded.
-
+An OMS network by default also includes all inclusions (between
+the extended and the extending OMS of an \syntax{ExtensionOMS})
+between the involved OMS---unless these are explicitly excluded.
+The latter can be achieved using \syntax{ExcludingElement}s.
+They consist of \syntax{ElementRef}s naming OMS or OMS mappings,
+and of \syntax{PathReference}s. A \syntax{PathReference} refers
+to an unnamed OMS mapping (e.g.\ one generated by an \syntax{Extension}) 
+by specifying its source and target OMS.
 \medskip
 \begin{center}
 \includegraphics[scale=0.47]{mof/networks.png}
@@ -4491,9 +4510,6 @@ GeneralSymbolMapItem ::= Symbol | SymbolMapItem
 Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
 OMSName            ::= IRI
 OMSRef             ::= IRI
-LanguageRef        ::= IRI
-LogicRef           ::= IRI
-SyntaxRef          ::= IRI
 LoLaRef            ::= LanguageRef | LogicRef
 \end{lstlisting}
 
@@ -9763,7 +9779,7 @@ CURIE  ::= String
 
 
 
-\infannex{Extension of \DOL with Queries}
+\infannex{Extension of \DOL with Queries}\label{a:queries}
 
 \cbs
 
