@@ -4491,13 +4491,19 @@ whether they are kept (and the other ones are removed).
 
 
 While in most cases the translation from concrete to abstract syntax
-is obvious (the structure is largely the same),  both
-\syntax{\%consistent} and \syntax{\%mcons} are translated to
-\syntax{model-conservative}, while both \syntax{\%inconsistent} and
-\syntax{\%notmcons} are translated to
-\syntax{not-model-conservative}. Moreover, both \syntax{closed-world}
-and \syntax{minimize} are translated to \syntax{minimize}.
-
+is obvious (the structure is largely the same),  
+\begin{itemize}
+\item both \syntax{\%satisfiable} and \syntax{\%mcons} are translated
+  to \syntax{model-conservative},
+\item both \syntax{\%consistent}  and \syntax{\%ccons} are translated
+  to \syntax{consequence-conservative},,
+\item  both   \syntax{\%unsatisfiable} and \syntax{\%notmcons} are translated to
+  \syntax{not-model-conservative},
+\item both \syntax{\%inconsistent}  and \syntax{\%notccons} are translated
+  to \syntax{not-consequence-conservative},,
+\item Moreover, both \syntax{closed-world} and \syntax{minimize} are
+  translated to \syntax{minimize}.
+\end{itemize}
                        
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 
@@ -4554,6 +4560,8 @@ Conservative       ::= '%ccons'
                      | '%notmcons'
                      | '%consistent'
                      | '%inconsistent'
+                     | '%satifsiable'
+                     | '%unsatisfiable'
 InterfaceSignature ::= SymbolList
 ImportName         ::= '%(' IRI ')%'
 ExtensionName      ::= '%(' IRI ')%'
