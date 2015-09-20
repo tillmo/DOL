@@ -1,3 +1,5 @@
+%todo: OMSRefs are forbidden in extensions
+
 % remaining comments from Bernd:
 %% - 132, 4: in Menge function Symbols F: "|" durch "\mid" ersetzen.
 %% - 132, 5: in Menge predicate Symbols P:
@@ -4528,6 +4530,7 @@ OMS                ::= ExtendingOMS
                      | OMS Closure
                      | OMS OMSTranslation
                      | OMS Reduction
+                     | OMS Extraction
                      | OMS Approximation
                      | OMS Filtering
                      | OMS 'and' [ConservativityStrength] OMS
@@ -4545,10 +4548,10 @@ CircMin            ::= Symbol Symbol*
 CircVars           ::= 'vars' (Symbol Symbol*)
 GroupOMS           ::= '{' OMS '}' | OMSRef
 OMSTranslation     ::= 'with' LanguageTranslation* SymbolMap
-                     | 'with' LanguageTranslation LanguageTranslation*
+                     | 'with' LanguageTranslation+
 LanguageTranslation ::= 'translation' OMSLanguageTranslation
 Reduction          ::= 'hide' LogicReduction* SymbolList
-                     | 'hide' LogicReduction LogicReduction*
+                     | 'hide' LogicReduction+
                      | 'reveal' SymbolList
 LogicReduction     ::= 'along' OMSLanguageTranslation
 SymbolList         ::= Symbol ( ',' Symbol )*
