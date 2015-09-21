@@ -11354,6 +11354,49 @@ OMS (the raw file), one needs  to serve that, even if the loc/id would
 be ambiguous in a normal request.
 
 
+\infannex{Introduction to Category Theory}\label{a:categories}
+
+\begin{definition}
+A category $C$ consists of 
+ \begin{itemize}
+   \item a class of \emph{objects}, denoted $|C|$,
+   \item for each two objects $a$ and $b$, a class of \emph{morphisms} (or \emph{arrows}), denoted $C(a,b)$,
+   \item for each three objects $a, b$ and $c$, a \emph{composition} operation,
+   denoted $; : C(a,b) \times C(b,c) \to C(a,c)$ such that the following axioms hold:
+    \begin{itemize}
+      \item if $f\in C(a,b)$, $g\in C(b,c)$ and $h\in C(c,d)$ for four objects
+            $a,b,c,d$, then $f;(g;h) = (f;g);h$ 
+      \item for each object $a$ there is a morphism $id_a\in C(a,a)$ such that 
+            for every $f \in C(a,b)$ and every $g \in C(b,a)$ for some object $b$ we 
+            have that $id_a;f = f$ and $g;id_a = g$.
+    \end{itemize}
+ \end{itemize} 
+\end{definition}
+
+\begin{definition}
+Let $C$ and $D$ be two categories. A \emph{functor} $F: C \to D $ is a mapping that 
+\begin{itemize}
+  \item assigns to each object $c$ of $C$ an object $F(c)$ in $D$,
+  \item assigns to each morphism $f\in C(c,d)$ a morphism $F(f)\in D(F(c), F(d))$ such that 
+   \begin{itemize}
+     \item $F(id_c) = id_{F(c)} $ for each $c\in |C|$,
+     \item $F(f;g) = F(f);F(g)$ for each $f\in C(a,b)$, $g\in C(b,c)$ and $a,b,c \in |C|$.
+   \end{itemize}
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+ Let $C, D$ be two categories and let $F$ and $G$ be two functors between $C$ and $D$.
+ A \emph{natural transformation} $\eta : F \to G$ assigns to each object $c\in |C|$ a
+ morphism $\eta_c : F(c) \to G(c) $ such that for every $f\in C(c,d)$ we have that 
+ $F(f);\eta_d = \eta_c;G(c)$, which means that the following diagram commutes
+ $$
+ \xymatrix{
+ F(c) \ar[r]^{F(f)} \ar[d]_{\eta_c} & F(d) \ar[d]^{\eta_d} \\
+ G(c) \ar[r]_{G(f)}& G(d) 
+ }$$ 
+\end{definition}
+
 %\infannex{Bibliography}
 \newpage
 
