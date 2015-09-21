@@ -1,6 +1,4 @@
 %todo: OMSRefs are forbidden in extensions
-%todo: relate keep/remove in AS to different keywords in CS
-%todo: replace SymbolList with InterfaceSignature (or vice versa)
 
 % remaining comments from Bernd:
 %% - 132, 4: in Menge function Symbols F: "|" durch "\mid" ersetzen.
@@ -4262,9 +4260,9 @@ At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abb
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
 Document           ::= DOLLibrary | NativeDocument
-NativeDocument     ::= ($<$\rm language and serialization specific $>$) 
 DOLLibrary         ::= [PrefixMap] 'library' LibraryName
                            Qualification LibraryItem*
+NativeDocument     ::= ($<$\rm language and serialization specific $>$) 
 LibraryItem        ::= LibraryImport | Definition | Qualification
 Definition         ::= OMSDefinition
                      | NetworkDefinition
@@ -4540,14 +4538,14 @@ OMS                ::= ExtendingOMS
                      | Qualification* ':' GroupOMS
                      | 'combine' NetworkElements [ExcludeExtensions]
                      | GroupOMS
-Closure            ::= ClosureType CircClosure [CircVars]
+Closure            ::= ClosureType CircMin [CircVars]
 ClosureType        ::= 'minimize'
                      | 'closed-world'
                      | 'maximize'
                      | 'free'
                      | 'cofree'
-CircClosure        ::= Symbol+
-CircVars           ::= 'vars' Symbol+
+CircMin            ::= Symbol Symbol*
+CircVars           ::= 'vars' (Symbol Symbol*)
 GroupOMS           ::= '{' OMS '}' | OMSRef
 OMSTranslation     ::= 'with' LanguageTranslation* SymbolMap
                      | 'with' LanguageTranslation+
@@ -4686,7 +4684,7 @@ of that node to the target OMS to which it is mapped (this is a
 
 \medskip
 \begin{center}
-\includegraphics[scale=0.41]{mof/interpretations&refinements.png}
+\includegraphics[scale=0.47]{mof/interpretations&refinements.png}
 \end{center}
 
 
@@ -4701,7 +4699,7 @@ network, when restricted to a given node (given by an IRI), are
 models of the OMS.
 
 \begin{center}
-\includegraphics[scale=0.38]{mof/entailment&equivalence.png}
+\includegraphics[scale=0.47]{mof/entailment&equivalence.png}
 \end{center}
 
 
@@ -4730,7 +4728,7 @@ a logic-specific way) of alignments can be specified: whether a single domain is
 or whether several local domains are linked (``contextualized'') by relations.
 
 \begin{center}
-\includegraphics[scale=0.44]{mof/alignment.png}
+\includegraphics[scale=0.47]{mof/alignment.png}
 \end{center}
 
 A \syntax{ModuleRelDefinition} declares that a certain (``module'') OMS
@@ -4769,13 +4767,12 @@ InterpretationDefinition ::= InterpretationKeyword
                              InterpretationType '='
                              LanguageTranslation*
                              [SymbolMap] 'end'
-InterpretationKeyword ::= 'interpretation' | 'view'
+                     | InterpretationKeyword
+                             InterpretationName '='
+                             Refinement 'end'
+InterpretationKeyword ::= 'interpretation' | 'view' | 'refinement'
 InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
-RefinementDefinition ::= 'refinement'
-                         RefinementName '='
-                         Refinement 'end'
-RefinementName     ::= IRI
 Refinement         ::= GroupOMS
                      | NetworkName
                      | Refinement 'then' Refinement
@@ -5196,9 +5193,9 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | 'combine' , NetworkElements , [ ExcludeExtensions ]
 %                      | GroupOMS ;
 %
-% Minimization         = MinimizeKeyword , CircClosure , [ CircVars ] ;
+% Minimization         = MinimizeKeyword , CircMin , [ CircVars ] ;
 % MinimizeKeyword      = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
-% CircClosure = Symbol , {  Symbol } ;
+% CircMin = Symbol , {  Symbol } ;
 % CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
 %
 % GroupOMS            = '{' , OMS , '}'
@@ -7132,10 +7129,10 @@ semantics is undefined. \ednote{@Till: please check this}
 %\multicolumn{1}{|c|}{$O$} & \multicolumn{1}{|c|}{$sem(\Gamma,L,O)=\ldots$}\\\hline
 %\syntax{ExtendingOMS} & 
 %$sem(\Gamma,L,(\emptyset,\cM_\emptyset),\syntax{ExtendingOMS})$\\\hline
-%\syntax{minimize-symbol  OMS  CircClosure  CircVars} &
+%\syntax{minimize-symbol  OMS  CircMin  CircVars} &
 %$(I,\Sigma,\cM')$ 
 %where $sem(\Gamma,L,\syntax{OMS})=(I,\Sigma,\cM)$,\newline
-%$\Sigma_{\mathit{min}}=sem(\syntax{CircClosure},\Sigma)$,
+%$\Sigma_{\mathit{min}}=sem(\syntax{CircMin},\Sigma)$,
 %$\Sigma_{\mathit{var}}=sem(\syntax{CircVars},\Sigma)$,\newline
 %$\Sigma_{\mathit{fixed}}=\Sigma\setminus(\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{var}})$ and\newline
 %\begin{tabular}{ll}
@@ -9761,13 +9758,14 @@ CombinationOMS     ::= combination Network
 ApplicationOMS     ::= application OMS SubstName
 Closure            ::= ClosureType CircClosure CircVars
 ClosureType        ::= minimize | maximize | free | cofree
-CircClosure        ::= Symbol+
+CircClosure        ::= Symbol Symbol*
 CircVars           ::= Symbol*
 OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
 Reduction          ::= reduction RemovalKind OMSLanguageTranslation*
                                  [SymbolList]
-SymbolList         ::= Symbol+
-SymbolMap          ::= symbol-map GeneralSymbolMapItem+
+SymbolList         ::= Symbol Symbol*
+SymbolMap          ::= symbol-map GeneralSymbolMapItem
+                                  GeneralSymbolMapItem*
 Extraction         ::= extraction RemovalKind InterfaceSignature
 Approximation      ::= approx RemovalKind [InterfaceSignature] [LogicRef]
 Filtering          ::= filter RemovalKind BasicOMS
@@ -9902,7 +9900,8 @@ Correspondence     ::= CorrespondenceBlock
                      | DefaultCorrespondence
 DefaultCorrespondence ::= default-correspondence
 CorrespondenceBlock ::= correspondence-block [Relation]
-                                             [Confidence] Correspondence+
+                                             [Confidence] Correspondence
+                                             Correspondence*
 SingleCorrespondence ::= correspondence SymbolRef [Relation]
                                         [Confidence] GeneralizedTerm
                                         [CorrespondenceID]
@@ -10051,7 +10050,8 @@ QueryDefinition    ::= select-query-definition
 SubstitutionDefinition ::= substitution-definition
                                                    SubstitutionName OMS OMS
                                                    SymbolMap
-ResultDefinition   ::= result-definition ResultName SubstitutionName+
+ResultDefinition   ::= result-definition ResultName
+                                         SubstitutionName SubstitutionName*
                                          QueryName [Complete]
 OMS                ::= ($...$) | application  OMS  SubstitutionName 
 QueryName          ::= IRI
@@ -11426,6 +11426,31 @@ Let $C$ and $D$ be two categories. A \emph{functor} $F: C \to D $ is a mapping t
    \end{itemize}
 \end{itemize}
 \end{definition}
+
+\begin{example}
+ For each category $C$, the identity functor $id_C : C \to C$ takes 
+ each object and each morphism to itself. 
+\end{example}
+
+\begin{example}
+ The forgetful functor $F$ from the category of unsorted first-order models of a 
+ signature $F$ to $Set$ takes each model $M$ to the set $M_U$ and each
+ model morphism $m:M\to N$ to its underlying function $m:M_U \to N_U$.
+\end{example}
+
+\begin{example}
+ The covariant powerset functor $\mathcal{P} : \Set \to \Set$
+ maps each set $A$ to the set of all subsets of $A$ and each function $f:A \to B$
+ to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$,
+ which is a subset of $B$. 
+ \end{example}
+
+\begin{example}
+ The covariant finite powerset functor $\mathcal{P}_{fin} : \Set \to \Set$
+ maps each set $A$ to the set of all finite subsets of $A$ and each function $f:A \to B$
+ to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$,
+ which is a subset of $B$. 
+ \end{example}
 
 \begin{definition}
  Let $C, D$ be two categories and let $F$ and $G$ be two functors between $C$ and $D$.
