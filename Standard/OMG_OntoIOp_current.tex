@@ -1,4 +1,6 @@
 %todo: OMSRefs are forbidden in extensions
+%todo: relate keep/remove in AS to different keywords in CS
+%todo: replace SymbolList with InterfaceSignature (or vice versa)
 
 % remaining comments from Bernd:
 %% - 132, 4: in Menge function Symbols F: "|" durch "\mid" ersetzen.
@@ -4260,9 +4262,9 @@ At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abb
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
 Document           ::= DOLLibrary | NativeDocument
+NativeDocument     ::= ($<$\rm language and serialization specific $>$) 
 DOLLibrary         ::= [PrefixMap] 'library' LibraryName
                            Qualification LibraryItem*
-NativeDocument     ::= ($<$\rm language and serialization specific $>$) 
 LibraryItem        ::= LibraryImport | Definition | Qualification
 Definition         ::= OMSDefinition
                      | NetworkDefinition
@@ -4538,14 +4540,14 @@ OMS                ::= ExtendingOMS
                      | Qualification* ':' GroupOMS
                      | 'combine' NetworkElements [ExcludeExtensions]
                      | GroupOMS
-Closure            ::= ClosureType CircMin [CircVars]
+Closure            ::= ClosureType CircClosure [CircVars]
 ClosureType        ::= 'minimize'
                      | 'closed-world'
                      | 'maximize'
                      | 'free'
                      | 'cofree'
-CircMin            ::= Symbol Symbol*
-CircVars           ::= 'vars' (Symbol Symbol*)
+CircClosure        ::= Symbol+
+CircVars           ::= 'vars' Symbol+
 GroupOMS           ::= '{' OMS '}' | OMSRef
 OMSTranslation     ::= 'with' LanguageTranslation* SymbolMap
                      | 'with' LanguageTranslation+
@@ -4767,12 +4769,13 @@ InterpretationDefinition ::= InterpretationKeyword
                              InterpretationType '='
                              LanguageTranslation*
                              [SymbolMap] 'end'
-                     | InterpretationKeyword
-                             InterpretationName '='
-                             Refinement 'end'
-InterpretationKeyword ::= 'interpretation' | 'view' | 'refinement'
+InterpretationKeyword ::= 'interpretation' | 'view'
 InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
+RefinementDefinition ::= 'refinement'
+                         RefinementName '='
+                         Refinement 'end'
+RefinementName     ::= IRI
 Refinement         ::= GroupOMS
                      | NetworkName
                      | Refinement 'then' Refinement
@@ -5193,9 +5196,9 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | 'combine' , NetworkElements , [ ExcludeExtensions ]
 %                      | GroupOMS ;
 %
-% Minimization         = MinimizeKeyword , CircMin , [ CircVars ] ;
+% Minimization         = MinimizeKeyword , CircClosure , [ CircVars ] ;
 % MinimizeKeyword      = 'minimize' | 'closed-world' | 'maximize' | 'free' | 'cofree' ;
-% CircMin = Symbol , {  Symbol } ;
+% CircClosure = Symbol , {  Symbol } ;
 % CircVars  = 'vars' ,  ( Symbol , { Symbol } ) ;
 %
 % GroupOMS            = '{' , OMS , '}'
@@ -7130,10 +7133,10 @@ semantics is undefined. \ednote{@Till: please check this}
 %\multicolumn{1}{|c|}{$O$} & \multicolumn{1}{|c|}{$sem(\Gamma,L,O)=\ldots$}\\\hline
 %\syntax{ExtendingOMS} & 
 %$sem(\Gamma,L,(\emptyset,\cM_\emptyset),\syntax{ExtendingOMS})$\\\hline
-%\syntax{minimize-symbol  OMS  CircMin  CircVars} &
+%\syntax{minimize-symbol  OMS  CircClosure  CircVars} &
 %$(I,\Sigma,\cM')$ 
 %where $sem(\Gamma,L,\syntax{OMS})=(I,\Sigma,\cM)$,\newline
-%$\Sigma_{\mathit{min}}=sem(\syntax{CircMin},\Sigma)$,
+%$\Sigma_{\mathit{min}}=sem(\syntax{CircClosure},\Sigma)$,
 %$\Sigma_{\mathit{var}}=sem(\syntax{CircVars},\Sigma)$,\newline
 %$\Sigma_{\mathit{fixed}}=\Sigma\setminus(\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{var}})$ and\newline
 %\begin{tabular}{ll}
@@ -9759,14 +9762,13 @@ CombinationOMS     ::= combination Network
 ApplicationOMS     ::= application OMS SubstName
 Closure            ::= ClosureType CircClosure CircVars
 ClosureType        ::= minimize | maximize | free | cofree
-CircClosure        ::= Symbol Symbol*
+CircClosure        ::= Symbol+
 CircVars           ::= Symbol*
 OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
 Reduction          ::= reduction RemovalKind OMSLanguageTranslation*
                                  [SymbolList]
-SymbolList         ::= Symbol Symbol*
-SymbolMap          ::= symbol-map GeneralSymbolMapItem
-                                  GeneralSymbolMapItem*
+SymbolList         ::= Symbol+
+SymbolMap          ::= symbol-map GeneralSymbolMapItem+
 Extraction         ::= extraction RemovalKind InterfaceSignature
 Approximation      ::= approx RemovalKind [InterfaceSignature] [LogicRef]
 Filtering          ::= filter RemovalKind BasicOMS
@@ -9901,8 +9903,7 @@ Correspondence     ::= CorrespondenceBlock
                      | DefaultCorrespondence
 DefaultCorrespondence ::= default-correspondence
 CorrespondenceBlock ::= correspondence-block [Relation]
-                                             [Confidence] Correspondence
-                                             Correspondence*
+                                             [Confidence] Correspondence+
 SingleCorrespondence ::= correspondence SymbolRef [Relation]
                                         [Confidence] GeneralizedTerm
                                         [CorrespondenceID]
@@ -10051,8 +10052,7 @@ QueryDefinition    ::= select-query-definition
 SubstitutionDefinition ::= substitution-definition
                                                    SubstitutionName OMS OMS
                                                    SymbolMap
-ResultDefinition   ::= result-definition ResultName
-                                         SubstitutionName SubstitutionName*
+ResultDefinition   ::= result-definition ResultName SubstitutionName+
                                          QueryName [Complete]
 OMS                ::= ($...$) | application  OMS  SubstitutionName 
 QueryName          ::= IRI
