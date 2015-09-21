@@ -6515,25 +6515,25 @@ Formally, if $O'$ is a \syntax{RelativeClosureOMS},
 $O'.\syntax{closureType} = \syntax{minimize}$
 and $O = O'.\syntax{closableOMS}$, then 
 \begin{itemize}
- \item $\Inst(O')= \Inst(O)$
- \item $\Sig(O') = \Sig(O)$
+ \item $\Inst(O')= \cI'$
+ \item $\Sig(O') = \Sigma'$
  \item $\Mod(O') = 
-        \{ M \in  \Mod(O) \mid  M \text{ is minimal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+        \{ M \in  \cM \mid  M \text{ is minimal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
  \item $\Th(O) = \bot$ 
 \end{itemize}
-\noindent where the semantics of the \syntax{ClosableOMS} $O$ is given relative to 
-the environment
-$\Gamma$ and the context $(\cI, \Sigma, \cM, \Delta)$, and ``minimal''
+\noindent where 
+$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O) = 
+(\Gamma', (\cI', \Sigma',\cM',\Delta'))$
+and ``minimal''
 is interpreted in the pre-order defined by $\Sigma_1\leq\Sigma_2$
 if there is a signature morphism $\Sigma_1\to\Sigma_2$.
 
 The theory-level semantics for $O'$ cannot be defined.
 
-$Env(\Gamma, O')$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
+$Env(\Gamma, O')$ is obtained from $\Gamma'$ by adding to $\Gamma'.imports$ a new
 node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O'))$ and
 an edge from the node of $O$ to the node of $O'$ labeled with the identity
 morphism on $\Sig(O')$.
-
 
 The semantics of $O'$
 is defined similarly for the other three alternatives of $O'.\syntax{closureType}$, 
@@ -6541,13 +6541,13 @@ only the model class differs:
 \begin{itemize}
 \item if $O'.\syntax{closureType} = \syntax{maximize}$,
 $\Mod(O') = 
-        \{ M \in  \Mod(O) \mid  M \text{ is maximal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+        \{ M \in  \cM \mid  M \text{ is maximal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 \item if $O'.\syntax{closureType} = \syntax{free}$,
 $\Mod(O') = 
-        \{ M \in  \Mod(O) \mid  M \text{ is initial in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+        \{ M \in  \cM \mid  M \text{ is initial in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 \item if $O'.\syntax{closureType} = \syntax{cofree}$,
 $\Mod(O') = 
-        \{ M \in  \Mod(O) \mid  M \text{ is terminal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
+        \{ M \in  \cM \mid  M \text{ is terminal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 \end{itemize}
 Here, initial and terminal models are defined as in
 category theory: $M$ is initial (terminal) in $\cM$ if for each 
@@ -6593,8 +6593,9 @@ $
 
 The semantics of a \syntax{TranslationOMS} $O'$ is given by
 \begin{itemize}
- \item $\Inst(O') = J$, when $\Inst_{\Sig(O'.\syntax{oms})}(O'.\syntax{omsTranslation}) = (\Phi, \alpha, \beta) : \Inst(O'.\syntax{oms}) \to J$ 
- \item $\Sig(O') = \Sigma'$, when $\Mor_{\Sig(O'.\syntax{oms})}(O'.\syntax{omsTranslation}) = \sigma:\Phi(\Sig(O'.\syntax{oms}))\to \Sigma'$
+ \item $\Inst(O') = J$,
+ \item $\Sig(O') = \Sigma'$, when 
+ $sem(\Gamma, \Sig(O'.\syntax{oms}), O'.\syntax{omsTranslation}) = ((\Phi, \alpha, \beta) : \Inst(O'.\syntax{oms}) \to J, \sigma:\Phi(\Sig(O'.\syntax{oms}))\to \Sigma') $,
  \item $\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(O'.\syntax{oms})\}$
  \item $\Th(O') = \{   Sen^J(\sigma)(\alpha_\Sigma(\delta))  \mid \delta \in \Th(O'.\syntax{oms}) \}$. It is defined only if $O'.\syntax{oms}$ is flattenable.
  \item $Env(\Gamma, O')$ is obtained from 
@@ -6609,11 +6610,9 @@ The semantics of a \syntax{TranslationOMS} $O'$ is given by
 The semantics of a \syntax{ReductionOMS} $O'$ is
 \begin{itemize}
 
-  \item $\Inst(O') = J$, when $\Inst_{\Sig(O'.\syntax{oms})}(O'.\syntax{reduction})
-  = (\Phi, \alpha, \beta) : \Inst(O'.\syntax{oms}) \to J$
+  \item $\Inst(O') = J$, 
   \item $\Sig(O') = \Sigma'$, when
-   $\Mor_{\Sig(O'.\syntax{oms})}(O'.\syntax{reduction}) = \sigma:\Sigma'\to
-    \Phi(\Sig(O'.\syntax{oms}))$
+   $sem(\Gamma, \Sig(O'.\syntax{oms}), O'.\syntax{reduction}) = ((\Phi, \alpha, \beta) : \Inst(O'.\syntax{oms}) \to J,\sigma:\Sigma'\to \Phi(\Sig(O'.\syntax{oms})))$,
   \item $\Mod(O') = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \Mod(O'.\syntax{oms})\}$
   \item $\Th(O') = \bot$
   \item $Env(\Gamma, O')$ is obtained from 
@@ -6786,13 +6785,13 @@ The semantics of a \syntax{CombinationOMS} $O$ is
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma,\Sigma, \syntax{OMSTranslation})=((\Phi,\alpha,\beta),  \sigma)}
+\semdom{sem(\Gamma,\Sigma, \syntax{OMSTranslation})=(\rho,  \sigma)}
 The semantics of a \syntax{OMSTranslation}
 $O=$
 is given by
 \begin{itemize}
- \item $\Inst(O) = sem(O.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
- \item $\Mor(O) = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{symbolMap})$
+ \item $\rho= sem(O.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
+ \item $\sigma = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{symbolMap})$
 \end{itemize}
 \noindent where
 $lang'$ and $ser'$ are the default language and serialization for logic $logic'$.
@@ -6819,15 +6818,15 @@ $i=1,\ldots, n$ and
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=((\Phi,\alpha,\beta), \sigma)}
+\semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=(\rho, \sigma)}
 
 The semantics of a \syntax{Reduction}
 $O=$ with $O.\syntax{reduction}.\syntax{removalKind} = remove$
 is given by
 \begin{itemize}
- \item $\Inst(O) = sem(O.\syntax{reduction}.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
+ \item $\rho = sem(O.\syntax{reduction}.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
  \item 
-$\Mor(O) = 
+$\sigma = 
 \iota: \Sigma' \to \Phi(\Sigma)$, where 
 $\Sigma' = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{reduction}.\syntax{symbolList})$,
 $lang'$ and $ser'$ are the default language and serialization for logic $logic'$
@@ -6842,8 +6841,8 @@ The semantics of a reduction
 $O=$  with $O.\syntax{reduction}.\syntax{removalKind} = keep$
 is 
  \begin{itemize}
-  \item $\Inst(O)$ is the identity morphism on the current logic of $\Gamma$
-  \item $\Mor(O)$ is the inclusion of
+  \item $\rho$ is the identity morphism on the current logic of $\Gamma$
+  \item $\sigma$ is the inclusion of
   $sem(\Gamma, \Sigma, O.\syntax{reduction}.\syntax{symbolList})$ in
    $\Sigma$.
  \end{itemize}
