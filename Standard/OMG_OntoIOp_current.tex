@@ -6185,7 +6185,7 @@ the extension of the \DOL library, $sem(nativeDocument)$ will be undefined.
 
 The rule for \syntax{DOLLibrary} is given below.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\sssclause{Semantics of libraries}
 
 \semdom{sem(\syntax{DOLLibrary})= \Gamma}
 
@@ -6209,6 +6209,8 @@ Note  that $dolLibrary$.\syntax{libraryName} is just discarded here.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of lists of library items}
+
 \semdom{sem(\Gamma, Sequence(\syntax{LibraryItem}))= \Gamma'} 
 
 If $libItem_1,\ldots,libItem_n$ are all \syntax{LibraryItem}s, 
@@ -6222,6 +6224,8 @@ $sem(\Gamma_{n-1}, libItem_n)= \Gamma'$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of library items}
+
 \semdom{sem(\Gamma, \syntax{LibraryItem})= \Gamma'}
 
 For a \syntax{LibraryImport} $libImport$,
@@ -6234,7 +6238,9 @@ A \syntax{LibraryItem} can also be an \syntax{OMSDefinition}, \syntax{NetworkDef
 are given in the next sections. (Annex~\ref{a:queries} also introduces
  \syntax{QueryRelatedDefinition}.)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of qualifications}
 
 \semdom{sem(\Gamma,\syntax{Qualification})=\Gamma'}
 
@@ -6328,6 +6334,7 @@ Finally, the operation $addImports(\Gamma, G, [iri_1, \ldots, iri_n])$ adds to G
 all import edges in $\Gamma.imports$ between nodes which appear 
 in the subgraph determined by  $\Gamma(iri_1), \ldots, \Gamma(iri_n)$. 
 
+\sssclause{Semantics of network definitions}
 
 \semdom{sem(\Gamma, \syntax{NetworkDefinition}) = \Gamma'}
 
@@ -6357,12 +6364,16 @@ defined if $sem(\Gamma,n.\syntax{network})=\emptyset$.
 If $n.$\syntax{ConservativityStrength} is \syntax{not-consequence-conservative}, the semantics is 
  defined only if not all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
 
+\sssclause{Semantics of networks}
+
 \semdom{sem(\Gamma, \syntax{Network}) = G}
 
 If $n$ is a network, 
 $$sem(\Gamma, n)= G'$$
 \noindent where $sem(\Gamma, n.\syntax{networkElement}) = G$ and 
 $sem(\Gamma, G, n.\syntax{excludedElement}) = G'$.
+
+\sssclause{Semantics of sets of network elements}
 
 \semdom{sem(\Gamma, Set(\syntax{NetworkElement})) = G'}
 
@@ -6376,10 +6387,14 @@ $$sem(\Gamma, Set\{elem_1, \ldots, elem_n\}) = G'$$
  $G_n = sem(\Gamma, G_{n-1}, elem_n)$,\\
  $G' = addImports(\Gamma, G_n, [elem_1, \ldots, elem_n])$.
 
+\sssclause{Semantics of network elements}
+
 \semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
 If $networkElement$ is a \syntax{NetworkElement},
 $$sem(\Gamma, G, networkElement) = insert(G, \Gamma, networkElement.\syntax{elementRef}.\syntax{iri}, networkElement.\syntax{id})$$
+
+\sssclause{Semantics of sets of excluded elements}
 
 \semdom{sem(\Gamma, G, Set(\syntax{ExcludedElement}))= G'}
 
@@ -6390,6 +6405,8 @@ $$sem(\Gamma, G, Set\{elem_1, \ldots, elem_n\}) = G'$$
  $G_2 = sem(\Gamma, G_1, elem_2)$\\
   $\ldots$ \\
  $G' = sem(\Gamma, G_{n-1}, elem_n)$
+
+\sssclause{Semantics of excluded elements}
 
 \semdom{sem(\Gamma, G, \syntax{ExcludedElement})= G'}
 
@@ -6405,6 +6422,7 @@ and $iri_2 = excludedElem.\syntax{elementRef2}.\syntax{iri})$.
 
 \ssclause{Semantics of OMS}
 
+\sssclause{Semantics of basic OMS}
 
 \semdom{sem(\Gamma, \syntax{BasicOMS}) =
 (\Gamma',(\cI,\Sigma,\cM, \Delta))}
@@ -6424,6 +6442,7 @@ $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with the name of $basicOMS$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'$.
 \end{itemize}
 
+\sssclause{Semantics of basic OMS in a local environment}
 
 \semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{BasicOMS})=
 (\Gamma',(\cI',\Sigma',\cM', \Delta'))}
@@ -6449,6 +6468,7 @@ given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(basicOMS)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of closable OMS}
 
 \semdom{sem(\Gamma, \syntax{ClosableOMS})=
 (\Gamma',(\cI,\Sigma,\cM, \Delta))}
@@ -6476,7 +6496,9 @@ is given by
          $o.\syntax{omsRef}$ to $o$, named $o.\syntax{importName}$ 
          and labeled with the identity on $\Sig(\Gamma(o.\syntax{omsRef}))$.  
  \end{itemize}
-
+ 
+ 
+\sssclause{Semantics of closable OMS in a local environment}
 
 \semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ClosableOMS})=
 (\Gamma',(\cI',\Sigma',\cM', \Delta'))}
@@ -6501,6 +6523,8 @@ is defined only if $\Inst(\Gamma(o.\syntax{omsRef})) = \cI$ as follows:
  \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+\sssclause{Semantics of ExtendingOMS} 
  
 \semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
 (\Gamma',(\cI,\Sigma',\cM', \Delta'))}
@@ -6554,6 +6578,8 @@ category theory: $M$ is initial (terminal) in $\cM$ if for each
 $N\in\cM$, there is exactly one morphism $h:M\to N$ ($h:N\to M$).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of OMS}
 
 \semdom{sem(\Gamma,\syntax{OMS})=(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
@@ -6784,6 +6810,7 @@ The semantics of a \syntax{CombinationOMS} $O$ is
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%
+\sssclause{Semantics of OMS translations}
 
 \semdom{sem(\Gamma,\Sigma, \syntax{OMSTranslation})=(\rho,  \sigma)}
 The semantics of a \syntax{OMSTranslation}
@@ -6799,6 +6826,8 @@ If $O.\syntax{omsLanguageTranslation}$ is missing,
 it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of OMS language translations} 
 
 \semdom{sem(\Gamma, \syntax{OMSLanguageTranslation}) = (\Phi, \alpha,\beta)}
 
@@ -6817,6 +6846,8 @@ $i=1,\ldots, n$ and
  $(\Phi,\alpha,\beta) = (\Phi_1,\alpha_1,\beta_1); \ldots ; (\Phi_n,\alpha_n,\beta_n)$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of reductions}
 
 \semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=(\rho, \sigma)}
 
@@ -6858,6 +6889,8 @@ is
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of sets of symbols}
+
 \semdom{sem(\Gamma, \Sigma, Set(\syntax{Symbol})) = \Sigma'}
 
 If $s_1,\ldots, s_n$ are all \syntax{Symbol}s,
@@ -6869,6 +6902,8 @@ sem(\Gamma,\Sigma,s_n)$, if such a sub-signature exists and is otherwise undefin
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \todonote{I need equations for one signature and for two signatures... TM: what do you want to say here?}
+
+\sssclause{Semantics of symbol maps}
 
 \semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMap})= \sigma:\Sigma\to\Sigma'}
 
@@ -6924,6 +6959,8 @@ OMS.}:\hspace{-2cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of extractions}
+
 \semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction}) = 
         (\Sigma', \Delta')}
 
@@ -6954,6 +6991,8 @@ $$\begin{array}{ll}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of approximations}
+
 \semdom{sem(\Gamma, (\cI, \Sigma), \syntax{Approximation}) = (\cI,\Sigma')}
 
 If $a$ is an \syntax{Approximation},
@@ -6964,6 +7003,8 @@ $$sem(\Gamma,\Sigma, a) =
   where $\Sigma' = sem(\Gamma, \Sigma, a.\syntax{removalKind}, a.\syntax{interfaceSignature})$
   and $sem(a.\syntax{logicRef}) = \cI$.
 %%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of filtering}
 
 \semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (c,\cI,\Sigma', \Delta')}
 
@@ -6984,7 +7025,9 @@ where $sem(\Gamma, (\Sigma,\Delta), f.\syntax{basicOMS}) = (\cI, \Sigma', \Delta
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
-%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of extension}
 
 \semdom{sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{Extension})=(\cI,\Sigma',\cM',\Delta')}
 
@@ -7014,6 +7057,8 @@ If $e.\syntax{extensionName}$ is present, the inclusion link is labeled with thi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of interface signatures}
+
 \semdom{sem( \Gamma, \Sigma, \syntax{RemovalKind}, \syntax{InterfaceSignature}) = 
 \Sigma'}
 
@@ -7027,6 +7072,8 @@ $$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, s.\syntax{symbolList})
 %$sem(\Sigma, \syntax{`remove-signature', InterfaceSignature})$
 
 %%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of OMS definitions}
 
 \semdom{sem(\Gamma,\syntax{OMSDefinition})=\Gamma'}
 
@@ -7051,12 +7098,15 @@ If $O.\syntax{conservativityStrength}$ is \syntax{definitional}, the semantics i
 defined if $sem(\Gamma,O.\syntax{oms})$ is a singleton.
 
 %%%%%
+\sssclause{Semantics of OMS references} 
 \semdom{sem(\Gamma, \syntax{OMSReference} ) = (\cI,\Sigma,\cM,\Delta)}
 
 If $O$ is an \syntax{OMSReference},
 $$sem(\Gamma, O)= \Gamma(O.\syntax{omsRef})$$
 
 %%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of symbols}
 
 \semdom{sem(\Gamma, \Sigma,\syntax{Symbol}) = s}
 
@@ -7065,6 +7115,8 @@ $$sem(\Gamma,\Sigma, sym) = s$$
 where $s$ is a logic-specific symbol with the name $sym.\syntax{iri}$ from $|\Sigma|$.\ednote{Is there some conversion going on here? Then this should be added to the heterogeneous logical env.} If such symbol does not exist, 
 the semantics is undefined.
 
+\sssclause{Semantics of symbol map items}
+
 \semdom{sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMapItem})}
 
 If $smi$ is a \syntax{SymbolMapItem},
@@ -7072,20 +7124,26 @@ $$sem(\Gamma, \Sigma_1,\Sigma_2, smi) = (s_1,s_2)$$
 \noindent where $sem(\Gamma,\Sigma_1,smi.\syntax{symbol}) = s_1$
 and $sem(\Gamma,\Sigma_2,smi.\syntax{symbol2}) = s_2$.
 
+\sssclause{Semantics of general symbol map items}
+
 \semdom{sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{GeneralSymbolMapItem}) = (s,t)}
 
 If $gsmi$ is a \syntax{SymbolMapItem}, then its semantics has been given in the previous rule.
 
 If $gsmi$ is a \syntax{Symbol},
 $sem(\Gamma, \Sigma_1,\Sigma_2, gsmi) = (s,s)$ 
-where $sem(\Gamma,\Sigma_1, gsmi) = s$.
+where $sem(\Gamma,\Sigma_1, gsmi) = s$
 
+
+\sssclause{Semantics of sentences}
 
 \semdom{sem(\Gamma, \Sigma, \syntax{Sentence}) = \varphi}
 
 If $sen$ is a \syntax{Sentence},
 $$sem(\Gamma, \Sigma, sen) = \varphi$$
 \noindent where $\varphi\in Sen(\Sigma)$ and the analysis is done in a logic-specific way.\ednote{This should be added to the heterogeneous logical env.}
+
+\sssclause{Semantics of references}
 
 \semdom{sem(\syntax{LolaRef})=L}
 $L$ is the language or the institution from the heterogeneous logical environment named by
@@ -7104,6 +7162,8 @@ $S$ is the serialization from the heterogeneous logical environment named by
 \semdom{sem(\syntax{LogicRef})=L}
 $L$ is the institution from the heterogeneous logical environment named by
 \syntax{LogicRef}.
+
+\sssclause{Semantics of OMS language translations}
 
 \semdom{sem(\Gamma,\syntax{OMSLanguageTranslation})=\rho}
 
@@ -7197,8 +7257,12 @@ semantics is undefined. \ednote{@Till: please check this}
 %\todonote{Here, we need to introduce institution morphisms and
 %require $\Phi(\Sigma)\leq\Sigma$ in the Grothendieck institution!}
 
+\sssclause{Semantics of mapping definitions}
+
 \semdom{sem(\Gamma,\syntax{MappingDefinition})= \Gamma'}
 See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \\\syntax{ModuleRelDefinition} and \syntax{AlignmentDefinition}.
+
+\sssclause{Semantics of interpretation definitions}
 
 \semdom{sem(\Gamma,\syntax{InterpretationDefinition}) = \Gamma'}
 
@@ -7237,6 +7301,8 @@ there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha
 $\cM_1\not\models \varphi$.
 \end{itemize}
 
+\sssclause{Semantics of refinement definitions}
+
 \semdom{sem(\Gamma, \syntax{RefinementDefinition}) = \Gamma'}
 
 If $d$ is a \syntax{RefinementDefinition},
@@ -7246,6 +7312,7 @@ where $ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto (G,\sigma, N_1, N_
 and 
 $sem(\Gamma, d.\syntax{refinement}) = (G,\sigma, N_1, N_2)$.
 
+\sssclause{Semantics of interpretation types}
 
 \semdom{sem(\Gamma, \syntax{InterpretationType}) = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))}
 
@@ -7266,6 +7333,8 @@ $$sem(\Gamma,  t) = (L_1, L_2)$$
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of refinements}
 
 \semdom{sem(\Gamma, \syntax{Refinement}) = ((G_1, G_2), \sigma, \cM)}
 
@@ -7372,6 +7441,8 @@ where\\
 
 %%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of OMS refinement maps}
+
 \semdom{sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{OMSRefinementMap}) = (\rho, \sigma)}
 
 If $m$ is an \syntax{OMSRefinementMap},
@@ -7384,7 +7455,9 @@ and
 $sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, m.\syntax{symbolMap}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
 where $\Gamma.\current=(lang, logic,ser)$, $logic'$ is the target logic of $(\Phi,\alpha,\beta)$, and $lang'$ and 
 $ser'$ are the default language and serializations for 
-$logic'$ .
+$logic'$.
+
+\sssclause{Semantics of network refinement maps}
 
 \semdom{sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap}) = \sigma:G_1\to G_2}
 
@@ -7392,6 +7465,7 @@ If $m$ is a \syntax{NetworkRefinementMap},
 $$sem(\Gamma, G_1, G_2, m)
 = sem(\Gamma, G_1,G_2, m.nodeMap)$$
 
+\sssclause{Semantics of sets of node maps}
 
 \semdom{sem(\Gamma,G_1,G_2, Set(\syntax{NodeMap})) = \sigma:G_1\to G_2 }
 
@@ -7405,6 +7479,8 @@ $\sigma^M_{name^i_1} = (\rho_i, \sigma_i)$ for each $i= 1,\ldots, n$.
 The map is required to be total on the nodes of $G_1$.
 
 %%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of node maps}
 
 \semdom{sem(\Gamma, G_1, G_2,
 \syntax{NodeMap}) = 
@@ -7424,6 +7500,7 @@ and $lang'$ and $ser'$ are the default language and serialization for $logic'$.
 
 %%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of entailment definitions}
 
 \semdom{sem(\Gamma,  \syntax{EntailmentDefinition}) = \Gamma'}
 
@@ -7433,6 +7510,8 @@ $$sem(\Gamma, e) = \Gamma'$$
 where $\Gamma' = \Gamma[e.\syntax{entailmentName} \mapsto sem(\Gamma, e.\syntax{entailmentType})]$.
 
 %%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of entailment types}
 
 \semdom{sem(\Gamma, \syntax{EntailmentType}) = (G, id, L_2,L_1)}
 
@@ -7487,6 +7566,8 @@ on $\Sig(i_1)$. \ednote{check formulation}
 
 %%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of equivalence definitions}
+
 \semdom{sem(\Gamma,\syntax{EquivalenceDefinition})=\Gamma'}
 
 If $d$ is an \syntax{EquivalenceDefinition},
@@ -7495,6 +7576,8 @@ $$sem(\Gamma,d)=\Gamma'$$
 \noindent where 
  $\Gamma' = \Gamma[d.\syntax{equivalenceName} \mapsto 
                   sem(\Gamma, d.\syntax{equivalenceType})]$.
+                  
+\sssclause{Semantics of OMS equivalences}
 
 \semdom{sem(\Gamma,\syntax{OMSEquivalence})=(G, N_1, N_2)}
 
@@ -7529,6 +7612,8 @@ such that $M\forget{\Sig(O_i)} = M_i$.
 \end{enumerate}
 %
 
+\sssclause{Semantics of network equivalences}
+
 \semdom{sem(\Gamma,\syntax{NetworkEquivalence})=(G_1,G_2,G_3)}
 
 If $t$ is  a \syntax{NetworkEquivalence},
@@ -7547,6 +7632,9 @@ the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$.
 \ednote{todo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{Semantics of module relation definitions}
+
 \semdom{sem(\Gamma,  \syntax{ModuleRelDefinition}) = \Gamma'}
 
 \ednote{in the manifesto this is called a conservative extension. TM: so we have once decided to change this into conservative extension? I vaguely can
@@ -7573,6 +7661,8 @@ implies $O_2\models\varphi$.
 
 %%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of alignment definitions}
+
 \semdom{sem(\Gamma,\syntax{AlignmentDefinition})=\Gamma'}
 
 If $d$ is an  \syntax{AlignmentDefinition},
@@ -7586,6 +7676,8 @@ $,\\
 where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$
 and\\ $G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$.
 
+\sssclause{Semantics of alignment types}
+
 \semdom{sem(\Gamma, \syntax{AlignmentType}) = (L_1, L_2)}
 
 If $t$ is an \syntax{AlignmentType}
@@ -7596,6 +7688,8 @@ given by $sem(\Gamma, t.\syntax{oms})$
 and similarly, $L_2$ is a node label whose name is
 $\Name(t.\syntax{oms2})$ and whose other components are
 given by $sem(\Gamma, t.\syntax{oms2})$.
+
+\sssclause{Semantics of alignments}
 
 \semdom{sem(\Gamma,  L_1, L_2, Set(\syntax{AlignmentCardinalityPair}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
 G}
