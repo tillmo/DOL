@@ -2200,7 +2200,7 @@ If a symbol is removed, all axioms containing that symbol are removed, too.
 
 
 
-\termdefinition{closed world assumption}{default assumption about facts whose status in unknown.}
+\termdefinition{closed world assumption}{assumption that facts whose status is unknown are true.}
 
 \termdefinitionLight{\termref{closure}\synonym circumscription\index{circumscription|see {closure}}}
 {structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \termref{models}\index{model} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
@@ -2323,7 +2323,7 @@ Alignments consist of correspondences\index{correspondence}, each of which may h
 confidence values are 1, the alignment can be given a formal, logic-based semantics.
 \end{note}
 
- \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from non-logical symbols\index{non-logical symbol} from $O_2$.
+ \termdefinition{correspondence}{relationship between an \termref{non-logical symbol} $e_1$ from an \termref{OMS} $O_1$ and an \termref{non-logical symbol} $e_2$ from an OMS $O_2$, or between an \termref{non-logical symbol} $e_1$ from $O_1$ and a \termref{term} $t_2$ formed from non-logical symbols\index{non-logical symbol} from $O_2$, with a confidence level.
   \begin{note}
 A correspondence is given as a quadruple 
 $(e_1, R, \left\{\begin{array}{c}e_2\\ t_2\end{array}\right\}, c)$,
@@ -2517,8 +2517,7 @@ supports relation between languages and logics, stating that
 the language has exactly the expressivity of the logic.}
 
  \termdefinition{institution}{metaframework mathematically formalizing
-the notion of a \termref{logic},  providing formal interfaces
-for the notions of
+the notion of a \termref{logic} in terms of notions of
 \termref{signature}, \termref{model}, \termref{sentence}
 and \termref{satisfaction}.}
  \begin{note}
@@ -2558,13 +2557,24 @@ and \termref{satisfaction}.
     that forgets those parts of the logical structure not
     fitting the target \termref{logic}.}
 
-\termdefinition{simple theoroidal logic translation} translation that maps 
-signatures of the source logic to theories (i.e.~signatures and sets of sentences)
-of the target logic. 
+
+\termdefinition{simple theoroidal logic translation}{translation that maps 
+signatures of the source logic to theories (i.e.~signatures and sets of sentences, playing the role of \termref{infrastructure axioms})
+of the target logic.}
 \begin{example}
  The translation from OWL to multi-sorted first-order logic translates each OWL built-in type
  to its first-order axiomatization as a datatype.
 \end{example}
+
+\termdefinition{infrastructure axiom}{axiom that is used in the
+target of a logic translation in order to encode a signature
+of the source logic}
+\begin{example}
+ The translation from OWL to multi-sorted first-order logic translates
+ each OWL built-in type to its first-order axiomatization as a
+ datatype. These first order axioms are infrastructure axioms.
+\end{example}
+
 
 \termdefinition{sublogic}{a \termref{logic} that is a syntactic restriction of another logic, inheriting its semantics.}
 
@@ -2592,16 +2602,18 @@ See section~\ref{dist-het-onto}.
 
  
 \termdefinition{faithful mapping}{\termref{logic mapping} that
-  preserves and reflects \termref{logical consequence}}
+  preserves and reflects \termref{logical consequence}.}
 
-\termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective model translation (ensuring faithfulness of the mapping)}
+\termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective model translation (ensuring faithfulness of the mapping).}
 
-\termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of models}
+\termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of models.}
 
 \termdefinition{exact mapping}{\termref{logic mapping} that is
-  compatible with certain \DOL structuring constructs}
+  compatible with certain \DOL structuring constructs, e.g.\ \termref{union},
+  \termref{OMS translation} and \termref{OMS reduction}.}
 
-\termdefinition{weakly exact mapping}{\termref{logic mapping} that is weakly compatible with certain \DOL structuring constructs}
+\termdefinition{weakly exact mapping}{\termref{logic mapping} that is weakly compatible with certain \DOL structuring constructs, e.g.\ \termref{union},
+  \termref{OMS translation} and \termref{OMS reduction}.}
 
 \termdefinition{embedding}{\termref{logic mapping} that embeds the
   source into the target logic, using components that are embeddings
@@ -2776,7 +2788,7 @@ is an element of an OMS.  The predicate is an RDF property defined in an externa
 describes in what way the annotation object is related to the annotation subject.
   \end{note}  
   \begin{note}
-According to note~\ref{note:annotation-rdf} it is possible to interpret annotations under an RDF 
+According to the preceding note, it is possible to interpret annotations under an RDF 
 semantics.  ``Without a logical semantics'' in this definition means that annotations to an OMS are 
 not considered sentences of that OMS.
   \end{note}
@@ -3108,6 +3120,7 @@ standard documents.
 %These challenges can be illustrated by the following set of use cases:
 
 \section{Use Case Onto-1: Interoperability Between OWL and FOL Ontologies}
+\label{onto-1}
 
 In order to achieve interoperability during ontology development it is often necessary to describe 
 concepts in a language more expressive than OWL.  Therefore, it is common practice to informally 
@@ -3175,7 +3188,7 @@ framework that may be reused by the  domain ontologies; further, watered-down ve
 foundational ontologies in OWL (like DOLCE-lite or the OWL version of BFO) are used as basis for 
 the  development of domain ontologies, be this as is, in an even less expressive version (e.g., a 
 DOLCE-lite in OWL 2 EL), or only a relevant subset thereof (e.g., only the branch of endurants). A 
-sample orchestration of interactions between the foundational and domain ontologies in various 
+sample interplay between  foundational and domain ontologies in various 
 languages is depicted in Figure \ref{f:DOL-mapping} below.
 
 DOL  provides the framework for integrating different domain ontologies, aligning these to 
@@ -3306,7 +3319,7 @@ sciences.
 
 \section{Use Case Onto-5: Verification of Rules Translating Dublin Core Into PROV}
 The Dublin Core Metadata terms, which have been formalized as an RDF Schema vocabulary, developed initially by the digital library community, are less 
-comprehensive but more widely used than PROV (cf. Use Case Onto-1). The rules for translating Dublin Core to the OWL subset of PROV (and, with restrictions, 
+comprehensive but more widely used than PROV (cf.\ subclause~\ref{onto-1}). The rules for translating Dublin Core to the OWL subset of PROV (and, with restrictions, 
 vice versa) are not known to yield valid instances of the PROV data model, i.e.\ they are not known to yield OWL ontologies consistent with respect to the OWL axioms that 
 capture part of the PROV data model. This may disrupt systems that would like to reason about the provenance of an entity, and thus the assessment of the 
 entity's quality, reliability or trustworthiness.
@@ -3335,8 +3348,6 @@ of specifications:
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
 
 library Sorting
-
-%% refinement from abstract sorting to insert sort
 
 language lang:CASL
 %right_assoc __::__
@@ -3434,6 +3445,7 @@ then
  hide insert
 end
 
+%% refinement from abstract sorting to insert sort
 refinement InsertSortCorrectness =
    Sorting refined via sorter |-> insert_sort to InsertSort
 end
@@ -3486,6 +3498,10 @@ forall x, y : Bin
  .  x 1 + y 1 = (x ++ y) 0  .  x 1 ++ y 1 = (x ++ y) 1 
 end
 
+refinement R1 =
+ Monoid refined via Elem |-> Nat to Nat
+end
+
 refinement R2 =
  Nat refined via Nat |-> Bin to NatBin
 end
@@ -3513,12 +3529,13 @@ refinement R3''' = R1 then R2
 \label{model-1}
 
 A typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
-requirements. Typical questions that arise in this context are, e.g.,
+requirements. Typical questions that arise in this context are ask for
+semantic consistency, e.g.,
 
 \begin{itemize}
-\item whether the multiplicities in a class diagram are consistent with each other;
-\item whether the attributes and operations in a state machine are
-available in a class diagram;
+\item whether the multiplicities in a class diagram are semantically consistent with each other;
+%\item whether the attributes and operations in a state machine are
+%available in a class diagram;
 \item	  whether the sequential composition of actions in an interaction diagram is justified by an accompanying OCL specification;
 \item 	whether cooperating state machines comply with pre-/post-conditions and invariants;
 \item 	whether the behavior prescribed in an interaction diagram is realizable by several state machines cooperating according to a composite structure diagram.
@@ -3655,7 +3672,7 @@ section, and \texttt{stm2cd} and \texttt{psm2cd} are suitable logic
 projections extracting the classes, attributes and operations from a
 (protocol) state machine, delivering a class diagram.
 
-\section{Use Case Model-2: Refinements Between UML Diagrams of Different Types, and Their Reuse}
+\section{Use Case Model-2: Refinements Between UML Models of Different Types, and Their Reuse}
 \label{model-2}
 
 A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
@@ -3929,7 +3946,7 @@ language', but a meta-language that is used on top of existing OMS languages.
 
 The major functions of \DOL are the following: 
 \begin{itemize}
-		\item \DOL allows the use of OMS in other OMS languages (e.g., UML class diagrams, \CASL, 
+		\item \DOL allows the use of OMS in other OMS languages (e.g., UML models, \CASL, 
 		OWL, Common Logic) without requiring any changes. These are called \emph{native OMS}.  A native OMS is serialized in a \emph{native document}.   
 		\item \DOL provides for defining new, \emph{structured OMS} based on existing OMS.\footnote{Native OMS can also use the structuring constructs from their OMS language. However, these structuring constructs are often quite limited, and moreover, they differ from OMS language to OMS language.} \DOL provides a number of operations for this purpose; e.g.,
 		it is possible to define a structured OMS $C$ as the union of an OWL
@@ -3962,7 +3979,7 @@ The major functions of \DOL are the following:
 \DOL is a language enabling OMS interoperability. 
 \DOL is
 \begin{description}
-\item[free] \DOL is freely available for unrestricted use.
+\item[free] \DOL is freely available for unrestricted use (as any OMG specification is).
 \item[generally applicable] \DOL is neither restricted to OMS in a specific domain, nor to foundational OMS, nor to OMS represented in a specific OMS language, nor to OMS stored in any specific repositories.
 \item[open] \DOL supports mapping, integrating, and annotating OMS across arbitrary internet locations.  It makes use of existing open standards wherever suitable.  The criteria for extending \DOL (see next item) are transparent and explicit.
 \item[extensible] \DOL provides a framework into which any existing, and, desirably, any future OMS language can be plugged.
@@ -4435,7 +4452,7 @@ An \syntax{ExtendingOMS} can be one of the following:
 \begin{itemize}
 \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
 language (which is defined outside this standard)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
-However, \DOL's module sublanguage should be given preference over the module sublanguage of 
+However, \DOL's module sublanguage should be used instead of the module sublanguage of 
 the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.};
 \item a reference (through an IRI) to an OMS (\syntax{OMSReference}); or
 \item a \syntax{RelativeClosureOMS}, applying a closure operator to a
