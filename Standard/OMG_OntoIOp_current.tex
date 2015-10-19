@@ -1,4 +1,6 @@
 %todo: OMSRefs are forbidden in extensions
+% should we include more examples in section 9, illustrating all DOL constructs?
+% more subsections in semantics, one for each semantic domain
 
 % remaining comments from Bernd:
 %% - 132, 4: in Menge function Symbols F: "|" durch "\mid" ersetzen.
@@ -16,7 +18,7 @@
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
 
-\newcommand{\version}{0.97}
+\newcommand{\version}{0.98a}
 
 
 %todo
@@ -5401,7 +5403,6 @@ The lexical symbols of the \DOL text serialization include various key words and
 
 
 Key words are always written lowercase. The following key words are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  These rewritings do not change the semantics.}, although they can be used as parts of tokens. 
-\cbs
 %{\ttfamily %
 \begin{lstlisting}
 alignment 
@@ -7953,7 +7954,7 @@ From an ontology serialized in this super-language of OWL/XML, one can obtain a 
 
 \subsubsection{RDF Conformance of a Modified Serialization of OWL in RDF With \DOL}
 
-The serialization of OWL in RDF (regardless of the concrete \emph{RDF} serialization employed to serialize the RDF graph that represents the OWL ontology) does not satisfy \cbs{}requirement (\ref{it:ids-for-structure}) for RDF conformance because\cbe{} there is an \texttt{owl:imports} property but no class representing imports. 
+The serialization of OWL in RDF (regardless of the concrete \emph{RDF} serialization employed to serialize the RDF graph that represents the OWL ontology) does not satisfy requirement (\ref{it:ids-for-structure}) for RDF conformance because there is an \texttt{owl:imports} property but no class representing imports. 
 Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as an RDF resource.
 However, only resources can have identifiers in RDF.
 RDF reification would allow for turning the statement $O_1$ \texttt{owl:imports} $O_2$ into a resource and thus giving it an identifier. 
@@ -8653,7 +8654,7 @@ $\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ are used for
 representing the meta-attributes ``ordered'' and ``unique'' of
 \uml{MultiplicityElement} according to the following
 table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128; UML
-  2.5, p.~27.}
+  2.5, p.~34.}
 %
 \begin{quotation}
 \begin{tabular}{@{}r||c|c@{}}
@@ -8679,9 +8680,12 @@ $$\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
 Let $(C, {\leq_C})$ be a class/data type hierarchy.
 %
 \begin{itemize}[label={--}, leftmargin=*]
-  \item An \emph{attribute declaration} over $(C, {\leq_C})$ is of the form
+  \item An \emph{attribute declaration}\footnote{We separate attributes
+ from association member ends due to their different uses.  In UML,
+ both are of class \uml{Property} (\cite[p.~109]{uml-2.5}).} over $(C, {\leq_C})$ is of the form
 $c.p : \tau[c']$ with $c, c' \in C$, $\tau$ a collection type
-constructor, and $p$ an \emph{attribute name}. ({Attributes
+constructor, and $p$ an \emph{attribute name}. Additionally, an attribute may be \emph{composite} and we write
++$c\composition p : \tau[c']$ if this fact plays a rôle. ({Attributes
   and association member ends are distinguished due to their different uses.  In UML,
   both are of class \uml{Property}.}) 
 
@@ -8696,7 +8700,7 @@ form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_r[c_r])$ with $r \geq 2$,
 $c_1, \dots, c_r \in C$, $\tau_1, \ldots, \tau_r$ classifier
 annotations, $a$ an \emph{association name}, and $p_1, \dots, p_r$
 \emph{member end names}.\footnote{The member ends are ordered according
-  to the UML Superstructure Specification 2.4.1, p.~29; UML 2.5, p.~206;
+  to the UML Superstructure Specification 2.4.1, p.~29; UML 2.5, p.~197;
   hence they are represented in a tuple-like notation.}  An association declaration
 $\mathbf{a} = a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])$
 \emph{yields} the \emph{property declarations}
@@ -8704,14 +8708,16 @@ $\mathbf{a}.p_i : \tau_i[c_i]$ for $1 \leq i \leq r$.  An association
 declaration is \emph{binary} if $r = 2$.\footnote{Only binary
   association may show member ends that are properties not owned by the
   association (UML Superstructure Specification 2.4.1, p.~37; UML 2.5,
-  p.~228).  The property declarations induced by a more than binary
+  p.~218).  The property declarations induced by a more than binary
   association result in a query operation.}
 
   \item A \emph{composition declaration} over $(C, {\leq_C})$ is of the
 form $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$ with
 $c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
 \emph{composition name}, and $p_1, p_2$ \emph{member end
-  names}. A
+  names}.\footnote{Composite properties, i.e., properties with
+   aggregation kind \uml{composite} can only be member ends of binary associations (\cite[p.~218]{uml-2.5}) and their multiplicity must not
+  exceed one (\cite[p.~150]{uml-2.5}).} A
 composition declaration
 $\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
 \tau_2[c_2])$
@@ -8768,14 +8774,18 @@ $1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not be
   of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36; UML
   2.5, p.~206.}
 owned by a class/data type coincides with its declarations as attribute:
-a property declaration $\mathbf{a}.p_i : \tau_i[c_i]$
-yielded by a binary association
+ We say that a property declaration
+$\mathbf{a}.p_i : \tau_i[c_i]$ yielded by a binary association
 $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2])$ is \emph{owned
   by} $c_0 \in C$, if $c_{3-i} \leq_C c_0$ and there is an attribute
 declaration $c_0.p_i : \tau_i[c_i] \in P$; and similarly for property
-declarations yielded by composition declarations.  (Note that by the
-uniqueness of attribute names along the generalization hierarchy only a
-single attribute with name $p_i$ may exist.)
+declarations yielded by composition declarations, where the second end
+$\mathbf{m}.p_2 : \tau_2[c_2]$ of the composition declaration
+$\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
+\tau_2[c_2])$
+has to be composite, i.e., $c_0\composition p_2 : \tau_2[c_2]$.  (Note
+that by the uniqueness of attribute names along the generalisation
+hierarchy only a single attribute with name $p_i$ may exist.)
 \end{itemize}
 
 A \emph{class/data type net morphism}
@@ -8789,7 +8799,8 @@ Q,\allowbreak B, N)$ is given by
 
   \item an attribute declaration map $\varphi : P \to Q$ such that if
 $\varphi({c.p : \tau[c']}) = {d.q : \tau'[d']} \in Q$, then
-$d = \gamma(c)$, $d' = \gamma(c')$, and $\tau = \tau'$;
+$d = \gamma(c)$, $d' = \gamma(c')$, and $\tau = \tau'$; furthermore,
+each composite attribute has to be mapped to a composite attribute.
 
   \item a query operation declaration map $\rho : O \to R$ such that if
 $\rho(c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_r[c_r]) : \tau[c']) =
@@ -9003,7 +9014,15 @@ correct type:
 In case $\tau_2$ is not present or $\tau_2=\mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:\\
 \texttt{(forall (x y) (if (m x y) (and ($c_1$ x) ($c_2$ y))))}\\
   \item 
-for any pair of composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
+\ednote{todo: define ownership by a big disjuction over all
+composition delcarations and composite attributes.  each instance has at most one owner: We say that $o$ is
++an owner of $o'$ in $\mathcal{I}$ if
++$o' \in P^{\mathcal{I}}(c\composition p : \tau[c'])(o)$ or
++$o' \in M^{\mathcal{I}}(m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
++\tau_2[c_2]).p_2)(o)$.
++If $o_1$ and $o_2$ are owners of $o'$ in $\mathcal{I}$, then
++$o_1 = o_2$;}
+for any composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
 at most one owner'':
 \begin{lstlisting}[language=clif,morekeywords={then,with}]
 (forall (o o' i)
@@ -9013,9 +9032,16 @@ at most one owner'':
 \end{lstlisting}
 In case \texttt{m} is represented in the simplified way, \texttt{(form:sequence-member (form:pair o i) m)} is replaced by \texttt{(m o i)}, and analogously for \texttt{m'}.
   \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(a)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
-being represented as sequences)\footnote{Ignoring the annotations $\tau_i$ in the interpretation of an association is intentional, see OMG UML version 2.5 (ptc/2013-09-05) in section 11.5.3: ``When one or more ends of the Association have isUnique =false, it is possible to have several links associating the same set of
-instances. In such a case, links carry an additional identifier apart from their end values.
-When one or more ends of the Association are ordered, links carry ordering information in addition to their end values.'' Similarly in UML Superstructure Specification 2.4.1, p.~37.  The additional information required for links is covered by using sequences of tuples.}:\\
+being represented as sequences)\footnote{Ignoring the annotations $\tau_i$ in the interpretation of an association is intentional, see OMG UML version 2.5, p.~197: ``A link is a tuple with one value for
+  each \uml{memberEnd} of the Association, where each value is an
+  instance whose type conforms to or implements the type of the end.
+  [\ldots] When one or more ends of the Association have
+  $\uml{isUnique} = \mathit{false}$, it is possible to have several
+  links associating the same set of instances. In such a case, links
+  carry an additional identifier apart from their end values.  When one
+  or more ends of the Association are ordered, links carry ordering
+  information in addition to their end values.'' 
+Similarly in UML Superstructure Specification 2.4.1, p.~37.  The additional information required for links is covered by using sequences of tuples.}:\\
 \texttt{(from:Sequence a)}\\
 \texttt{(forall (t) (if (form:sequence-member t a)\\
 \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
