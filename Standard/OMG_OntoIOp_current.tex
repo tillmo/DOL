@@ -5764,14 +5764,21 @@ parts of the model.
 %given tuple of arguments).
 
 For the rest of the section, an arbitrary institution is considered. 
+
+\begin{definition}[Theory]
 A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
+\end{definition}
+
  A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
 $M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
 for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
 $\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, $\Delta\models\varphi$, if all models satisfying all sentences in
-$\Delta$ also satisfy $\varphi$. A \defsty{theory morphism} $\phi: (\Sigma, \Delta) \rightarrow (\Sigma',  \Delta')$ is 
-   a signature morphism $\phi:\Sigma\rightarrow \Sigma'$ such that $\Delta'\models \phi(\Delta)$.
+$\Delta$ also satisfy $\varphi$. 
 
+\begin{definition}[Theory morphism]
+A \defsty{theory morphism} $\phi: (\Sigma, \Delta) \rightarrow (\Sigma',  \Delta')$ is 
+   a signature morphism $\phi:\Sigma\rightarrow \Sigma'$ such that $\Delta'\models \phi(\Delta)$.
+\end{definition}
 \medskip
 
 Institution comorphisms capture the intuition of encoding or embedding a logic into a more expressive one.
@@ -5895,27 +5902,9 @@ Colimits are a categorical concept providing means of
 combining objects interconnected by morphisms, where the colimit
 glues together objects along the morphisms.
 They can be employed for constructing larger theories from already available 
-smaller ones, see \cite{GoguenBurstall92}. 
+smaller ones, see \cite{GoguenBurstall92}. For a formal mathematical definition,
+see \ref{sec:colimits}.
 
-A \emph{network}\footnote{A network is called a diagram in category theory texts. This terminology is introduced to disambiguate OMS networks
-from UML diagrams.} in a category $C$ is 
-a functor $D:G\to C$, where $G$ is a small category\footnote{That is, it has a set of objects and sets of morphisms between them
-instead of classes.}, and can be thought of as the shape of the graph of
-interconnections between the objects of $C$ selected by the functor $D$. A \emph{cocone} of
-a network $D:G\to C$ consists of an object $c$ of $C$ and a family of
-morphisms $\alpha_i\map{D(i)}{c}$, for each object $i$ of $G$, such that for
-each edge of the network, $e\map{i}{i'}$  it holds that 
-$D(e);\alpha_{i'} = \alpha_{i}$. 
-A \emph{colimiting cocone} (or colimit) $(c, \{\alpha_i\}_{i\in|G|})$ can be
-intuitively understood as a minimal cocone, i.e.\ has the property that for any 
-cocone $(d, \{\beta_i\}_{i\in |G|})$ there exists a unique morphism 
-$\gamma\map{c}{d}$ such that $\alpha_i;\gamma = \beta_i$. By dropping the 
-uniqueness condition and requiring only that a morphism $\gamma$ should exist,
- a \emph{weak} colimit is obtained. 
-
-When $G$ is the category $\xymatrix{\bullet & \bullet \ar[l] \ar[r]
-& \bullet }$ with 3 objects and 2 non-identity arrows, $G$-colimits are
-called  \emph{pushouts}.  
 
 A major property of colimits of specifications is \emph{amalgamation} (also related to `exactness' \cite{DGS91}). It can be intuitively explained as 
 stating that models of given
@@ -5961,15 +5950,6 @@ returning the selected weakly amalgamable cocone for the network and
 a function $\oplus$ taking as argument a family of models compatible with a network
 and returning its selected amalgamation.
 
- To be able to talk about the symbols of a signature in a formal way, it is required that the category of signatures of an institution is 
-an inclusive category with symbols, as defined below:
-\begin{definition}
-An \emph{inclusive category with symbols} is an inclusive category
-$\C$ equipped with a faithful functor $|\_|:\C\to\Set$\footnote{That is,
-$(\C,|\_|)$ is a concrete category.} that preserves
-inclusions.
-\end{definition}
-
 \sclause{Semantics of \DOL Language Constructs}\label{c:direct-sematics}
 
 The semantics of \DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
@@ -5992,11 +5972,13 @@ serializations.
 
  It is required that for each institution in the heterogeneous logical environment there is a trivial signature
 $\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
-from $\emptyset$ to any signature of the institution. Moreover, the existence of a partial union operation on logics is required; denoted $\bigcup$: 
-$L_1 \bigcup L_2 = (L, \rho_1:L_1 \to L, \rho_2 : L_2 \to L)$, when defined. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism 
-and at most one morphism is marked as default.
+from $\emptyset$ to any signature of the institution. Moreover, the existence of a partial union operation on institutions is required, denoted $\bigcup$: 
+$L_1 \bigcup L_2 = (L, \rho_1:L_1 \to L, \rho_2 : L_2 \to L)$, when defined, where
+$L$ is an institution and $\rho_1$ and
+$\rho_2$ are institution comorphisms, giving the embedding of $L_1$ and
+respectively $L_2$ in $L$. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism and at most one morphism is marked as default.
 
-For each logic in the heterogeneous logical environment, it is further required that there is:
+For each institution in the heterogeneous logical environment, it is further required that there is:
 
 \begin{itemize}
   \item  a function giving the semantics of basic OMS. It has format 
@@ -6051,14 +6033,23 @@ $\Sigma_1, \Sigma_2$, the greatest signature $\Sigma$ such that
   \item $\Sigma \cap \Sigma_2 = \emptyset$
 \end{enumerate} 
 exists and is equal to $\Sigma_1\setminus \Sigma_2$.
-  
 
+We will write $\iota_{A\subseteq B}$ for the inclusion of $A$ in $B$ in an
+inclusive category, when such an inclusion exists.
+
+To be able to talk about the symbols of a signature in a formal way, it is required that the category of signatures of an institution is 
+an inclusive category with symbols, as defined below:
+\begin{definition}
+An \emph{inclusive category with symbols} is an inclusive category
+$\C$ equipped with a faithful functor $|\_|:\C\to\Set$\footnote{That is,
+$(\C,|\_|)$ is a concrete category.} that preserves
+inclusions.
+\end{definition}
+  
 
 This concludes the definition of heterogeneous logical environment and the assumptions made about it.
 
 \medskip
-
-
 
 \DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of models 
 over some signature of an institution. This is called \emph{model-level}  semantics. In some cases, but not in all, one can also define
@@ -6129,7 +6120,7 @@ $\Gamma$ containing:
 
 If $\Gamma$ is such a global environment, $\Gamma[\syntax{IRI} \mapsto \cS]$
 extends the domain of $\Gamma$ with \syntax{IRI} and
-the newly added value of $\Gamma$ in \syntax{IRI} is the semantic entity $\cS$.
+the newly added value of \syntax{IRI} in $\Gamma$ is the semantic entity $\cS$.
  $\Gamma_\emptyset$ is the empty global environment, i.e.~the domain of $\Gamma_\emptyset$ is the empty set, its import graph $\Gamma.imports$ is empty,
 the prefix map is empty and the current triple contains the error logic together with its language and serialization.
 The union of two global environments $\Gamma_1$ and $\Gamma_2$, 
@@ -6199,12 +6190,14 @@ For a \syntax{NativeDocument} $nativeDocument$,
 $$sem(nativeDocument) = \Gamma''$$
 
 \noindent where 
-$\Gamma' =\Gamma_\emptyset.\{\current = L\} $, with $L$ determined from the extension of the file containing the native document
+$\Gamma' =\Gamma_\emptyset.\{\current = (lang, logic, ser)\} $, with 
+$lang, logic, ser$ determined from the extension of the file containing the native document
 and 
-$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(\Gamma'.lang, \Gamma'.logic, \Gamma'.ser)}(nativeDocument)]$.
+$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(lang, logic, ser)}(nativeDocument)]$.
 
-Note that if the OMS in the \DOL library does not conform with the logic determined by
-the extension of the \DOL library, $sem(nativeDocument)$ will be undefined.
+Note that if the OMS in the native document does not conform with the logic determined by
+the extension of the file where the document is stored, 
+$sem(nativeDocument)$ will be undefined.
 
 The rule for \syntax{DOLLibrary} is given below.
 
@@ -6366,23 +6359,26 @@ $$sem(\Gamma, n) = \Gamma'$$
 \noindent where $\Gamma' = \Gamma[n.\syntax{networkName} \mapsto sem(\Gamma, n.\syntax{network})]$.
 
 If $n.$\syntax{ConservativityStrength} is \syntax{model-conservative}, the semantics is only
-defined if $sem(\Gamma,n.\syntax{network})\not=\emptyset$.
+defined if the class of families of models compatible with the graph $sem(\Gamma,n.\syntax{network})$ is not empty.
 
 If $n.$\syntax{ConservativityStrength} is \syntax{consequence-conservative}, the semantics is 
  defined only if all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
 
 If $n.$\syntax{ConservativityStrength} is \syntax{monomorphic}, the semantics is only
-defined if $sem(\Gamma,n.\syntax{network})$ consist of exactly one isomorphism
+defined if the class of families of models compatible with the graph 
+$sem(\Gamma,n.\syntax{network})$ consist of exactly one isomorphism
 class of families of models.
 
 If $n.$\syntax{ConservativityStrength} is \syntax{weak-definitional}, the semantics is only
-defined if $sem(\Gamma,n.\syntax{network})$ is at most a singleton.
+defined if the class of families of models compatible with the graph 
+$sem(\Gamma,n.\syntax{network})$ is at most a singleton.
 
 If $n.$\syntax{ConservativityStrength} is \syntax{definitional}, the semantics is only
-defined if $sem(\Gamma,n.\syntax{network})$ is a singleton.
+defined if the class of families of models compatible with the graph 
+$sem(\Gamma,n.\syntax{network})$ is a singleton.
 
 If $n.$\syntax{ConservativityStrength} is \syntax{not-model-conservative}, the semantics is only
-defined if $sem(\Gamma,n.\syntax{network})=\emptyset$.
+defined if the class of families of models compatible with the graph $sem(\Gamma,n.\syntax{network})$ is the empty set.
 
 If $n.$\syntax{ConservativityStrength} is \syntax{not-consequence-conservative}, the semantics is 
  defined only if not all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
@@ -6404,7 +6400,7 @@ If $elem_1, \ldots, elem_n$ are all \syntax{NetworkElement}s,
 $$sem(\Gamma, Set\{elem_1, \ldots, elem_n\}) = G'$$
 
 \noindent where \\
- $G_1 = sem(\Gamma, G_\emptyset, elem_1)$\\
+ $G_1 = sem(\Gamma, G_\emptyset, elem_1)$, where $G_\emptyset$ is the empty graph,\\
  $G_2 = sem(\Gamma, G_1, elem_2)$\\
  $\ldots$\\
  $G_n = sem(\Gamma, G_{n-1}, elem_n)$,\\
@@ -6477,7 +6473,7 @@ environment $(\cI, \Sigma, \cM, \Delta)$, its semantics is defined only if
 $\Gamma.logic = \cI$
 as follows:  
 
-$$sem(\Gamma, (\Sigma, \cM, \Delta), basicOMS)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
+$$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), basicOMS)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
 
 \noindent where 
 \begin{itemize}
@@ -6486,7 +6482,7 @@ $$sem(\Gamma, (\Sigma, \cM, \Delta), basicOMS)= (\Gamma',(\Gamma.logic,\Sigma',\
 \item
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with the name of $basicOMS$ and the other components as
-given by $sem_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(basicOMS)$.
+given by $semBasic_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma, basicOMS)$.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6535,7 +6531,7 @@ is defined only if $\Inst(\Gamma(o.\syntax{omsRef})) = \cI$ as follows:
    \item $\Inst(o) = \Inst(\Gamma(o.\syntax{omsRef}))$
    \item $\Sig(o) = \Sig(\Gamma(o.\syntax{omsRef})) \cup \Sigma$
    \item $\Mod(o) = \{M\in \Mod(\Sig(o)) \mid M\forget\Sigma \in \cM \text{ and } 
-                      M\forget \Sig(\Gamma(o.\syntax{omsRef})) \in 
+                      M\forget {\Sig(\Gamma(o.\syntax{omsRef}))} \in 
                       \Mod(\Gamma(o.\syntax{omsRef}))\}$
    \item $\Th(o) = \iota_{\Sig(\Gamma(o.\syntax{omsRef})\subseteq \Sig(o)}(\Th(\Gamma(o.\syntax{omsRef}))) \cup \iota_{\Sigma\subseteq \Sig(o)}(\Delta)$
    \item $Env(\Gamma, o)$ extends the graph of imports $\Gamma.imports$
@@ -6546,8 +6542,51 @@ is defined only if $\Inst(\Gamma(o.\syntax{omsRef})) = \cI$ as follows:
  \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
+
 \sssclause{Semantics of ExtendingOMS} 
+ \semdom{sem(\Gamma, \syntax{ExtendingOMS})=
+(\Gamma',(\cI,\Sigma,\cM, \Delta))}
+ 
+The semantics for \syntax{ClosableOMS} has been defined above.
+
+If $O'$ is a  \syntax{RelativeClosureOMS},
+$O'.\syntax{closureType} = \syntax{minimize}$
+and $O = O'.\syntax{closableOMS}$, then 
+\begin{itemize}
+ \item $\Inst(O')= \cI'$
+ \item $\Sig(O') = \Sig(O)$
+ \item $\Mod(O') = 
+        \{ M \in  \Mod(O) \mid  M \text{ is minimal in } \Mod(O)\}$
+ \item $\Th(O') = \bot$ 
+\end{itemize}
+and ``minimal''
+is interpreted in the pre-order defined by $M_1\leq M_2$
+if there is a model homomorphism $\M_1\to\M_2$.
+ 
+$Env(\Gamma, O')$ is obtained from $\Gamma'$ by adding to $\Gamma'.imports$ a new
+node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O'))$ and
+an edge from the node of $O$ to the node of $O'$ labeled with the identity
+morphism on $\Sig(O)$.
+ 
+ 
+The semantics of $O'$
+is defined similarly for the other three alternatives of $O'.\syntax{closureType}$, 
+only the model class differs:
+\begin{itemize}
+\item if $O'.\syntax{closureType} = \syntax{maximize}$,
+$\Mod(O') = 
+        \{ M \in  \cM \mid  M \text{ is maximal in } \Mod(O)\}$
+\item if $O'.\syntax{closureType} = \syntax{free}$,
+$\Mod(O') = 
+        \{ M \in  \cM \mid  M \text{ is initial in } \Mod(O)\}$
+\item if $O'.\syntax{closureType} = \syntax{cofree}$,
+$\Mod(O') = 
+        \{ M \in  \cM \mid  M \text{ is terminal in } \Mod(O)\}$
+\end{itemize}
+Here, initial and terminal models are defined as in
+category theory, see \ref{sec:colimits}. 
+ 
+\sssclause{Semantics of ExtendingOMS in a local environment} 
  
 \semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
 (\Gamma',(\cI,\Sigma',\cM', \Delta'))}
@@ -6566,14 +6605,14 @@ and $O = O'.\syntax{closableOMS}$, then
  \item $\Sig(O') = \Sigma'$
  \item $\Mod(O') = 
         \{ M \in  \cM \mid  M \text{ is minimal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
- \item $\Th(O) = \bot$ 
+ \item $\Th(O') = \bot$ 
 \end{itemize}
 \noindent where 
 $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O) = 
 (\Gamma', (\cI', \Sigma',\cM',\Delta'))$
 and ``minimal''
-is interpreted in the pre-order defined by $\Sigma_1\leq\Sigma_2$
-if there is a signature morphism $\Sigma_1\to\Sigma_2$.
+is interpreted in the pre-order defined by $M_1\leq M_2$
+if there is a model homomorphism $\M_1\to\M_2$.
 
 The theory-level semantics for $O'$ cannot be defined.
 
@@ -6596,9 +6635,6 @@ $\Mod(O') =
 $\Mod(O') = 
         \{ M \in  \cM \mid  M \text{ is terminal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 \end{itemize}
-Here, initial and terminal models are defined as in
-category theory: $M$ is initial (terminal) in $\cM$ if for each 
-$N\in\cM$, there is exactly one morphism $h:M\to N$ ($h:N\to M$).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6606,9 +6642,7 @@ $N\in\cM$, there is exactly one morphism $h:M\to N$ ($h:N\to M$).
 
 \semdom{sem(\Gamma,\syntax{OMS})=(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
-An \syntax{OMS} is interpreted in a context similar to that for
-a \syntax{ClosableOMS}, the difference being that there is
-no local environment.
+The semantics for a \syntax{ClosableOMS} has been defined above.
 
 The semantics for an \syntax{ExtendingOMS} has been defined above.
 
@@ -11512,6 +11546,8 @@ be ambiguous in a normal request.
 
 \infannex{Introduction to Category Theory}\label{a:categories}
 
+\section{Categories}
+
 \begin{definition}
 A category $C$ consists of 
  \begin{itemize}
@@ -11572,6 +11608,92 @@ A category $C$ consists of
 \end{example}
 
 \begin{definition}
+Let $C$ be a category. Its dual or opposite category, denoted $C^{op}$ 
+\begin{itemize}
+\item has the same 
+objects as $C$: $|C^{op}| = |C|$,
+\item for two objects $a,b\in |C|$, $C^{op}(a,b) = C(b,a)$,
+\item $;^{op} : C^{op}(a,b) \times C^{op}(b,c) \to C^{op}(a,c)$ is defined as
+$f;^{op} g = g;f$ for any $f\in C^{op}(a,b) = C(b,a)$ and $g\in C^{op}(b,c) = C(c,b)$.
+The result $g;f$ is a morphism in $C(c,a) = C^{op}(a,c)$,
+\item for each object $a$, $id_a \in C^{op}(a,a) = C(a,a)$ is the identity w.r.t. the composition $;^{op}$
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+An object $A$ is called an initial object in a category 
+$C$ if for each object $B$ of $C$ there is
+exactly one morphism from $A$ to $B$.
+\end{definition}
+
+\begin{definition}
+An object $A$ is called a terminal object in a category 
+$C$ if for each object $B$ of $C$ there is
+exactly one morphism from $B$ to $A$.
+\end{definition}
+
+\begin{example}
+In $\Set$, the empty set is the initial object and each singleton set is a
+terminal object.
+\end{example}
+
+\ssclause{Limits and colimits}\label{sec:colimits}
+
+\begin{definition}
+A \emph{network}\footnote{A network is called a diagram in category theory texts. This terminology is introduced to disambiguate OMS networks
+from UML diagrams.} in a category $C$ is 
+a functor $D:G\to C$, where $G$ is a small category\footnote{That is, it has a set of objects and sets of morphisms between them
+instead of classes.}, and can be thought of as the shape of the graph of
+interconnections between the objects of $C$ selected by the functor $D$. 
+\end{definition}
+
+\begin{definition}
+A \emph{cocone} of
+a network $D:G\to C$ consists of an object $c$ of $C$ and a family of
+morphisms $\alpha_i\map{D(i)}{c}$, for each object $i$ of $G$, such that for
+each edge of the network, $e\map{i}{i'}$  it holds that 
+$D(e);\alpha_{i'} = \alpha_{i}$. 
+\end{definition}
+
+\begin{definition}
+A \emph{colimiting cocone} (or colimit) $(c, \{\alpha_i\}_{i\in|G|})$ 
+has the property that for any 
+cocone $(d, \{\beta_i\}_{i\in |G|})$ there exists a unique morphism 
+$\gamma\map{c}{d}$ such that $\alpha_i;\gamma = \beta_i$.
+ \end{definition}
+  By dropping the 
+uniqueness condition and requiring only that a morphism $\gamma$ should exist,
+ a \emph{weak} colimit is obtained. 
+
+When $G$ is the category $\xymatrix{\bullet & \bullet \ar[l] \ar[r]
+& \bullet }$, $G$-colimits are
+called  \emph{pushouts}. 
+When $G$ is a discrete category (i.e. no arrows between objects other than identities),
+ $G$-limits are called \emph{coproducts}.
+
+\begin{definition}
+A \emph{cone} of
+a network $D:G\to C$ consists of an object $c$ of $C$ and a family of
+morphisms $\alpha_i\map{c}{D(i)}$, for each object $i$ of $G$, such that for
+each edge of the network, $e\map{i}{i'}$  it holds that 
+$\alpha_{i'} = \alpha_{i};D(e)$. 
+\end{definition} 
+
+\begin{definition}
+A \emph{limiting cone} (or limit) $(c, \{\alpha_i\}_{i\in|G|})$ 
+has the property that for any 
+cone $(d, \{\beta_i\}_{i\in |G|})$ there exists a unique morphism 
+$\gamma\map{c}{d}$ such that $\gamma;\alpha_i = \beta_i$.
+ \end{definition}
+ 
+ When $G$ is the category $\xymatrix{\bullet \ar[r]& \bullet & \bullet \ar[l] }$, $G$-limits are
+called  \emph{pullbacks}.
+ When $G$ is a discrete category,
+ $G$-limits are called \emph{products}.
+
+\section{Functors}
+
+\begin{definition}
 Let $C$ and $D$ be two categories. A \emph{functor} $F: C \to D $ is a mapping that 
 \begin{itemize}
   \item assigns to each object $c$ of $C$ an object $F(c)$ in $D$,
@@ -11607,6 +11729,8 @@ Let $C$ and $D$ be two categories. A \emph{functor} $F: C \to D $ is a mapping t
  to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$,
  which is a subset of $B$. 
  \end{example}
+ 
+ \section{Natural transformations}
 
 \begin{definition}
  Let $C, D$ be two categories and let $F$ and $G$ be two functors between $C$ and $D$.
