@@ -6463,6 +6463,13 @@ and $iri_2 = excludedElem.\syntax{elementRef2}.\syntax{iri})$.
 
 \ssclause{Semantics of OMS}
 
+In the rest of this section, given a global environment $\Gamma$ and an
+\syntax{OMS} $O$, the notation 
+$Env(\Gamma, O)$ is used for the global environment $\Gamma'$ 
+such that
+$sem(\Gamma, O) = (\Gamma', (\cI,\Sigma,\cM,\Delta))$.
+
+
 \sssclause{Semantics of basic OMS}
 
 \semdom{sem(\Gamma, \syntax{BasicOMS}) =
@@ -6512,14 +6519,6 @@ node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'
 
 \semdom{sem(\Gamma, \syntax{ClosableOMS})=
 (\Gamma',(\cI,\Sigma,\cM, \Delta))}
-
-
-
-In the rest of this section, given a global environment $\Gamma$ and an
-\syntax{OMS} $O$, the notation 
-$Env(\Gamma, O)$ is used for the global environment $\Gamma'$ 
-such that
-$sem(\Gamma, O) = \Gamma'$.
 
 The semantics of a \syntax{BasicOMS} has been defined above.
 
@@ -6671,33 +6670,41 @@ The semantics for an \syntax{ExtendingOMS} has been defined above.
 
 
 If $o$ is a \syntax{ClosureOMS},
-$$sem(\Gamma, o) = (I,\Sigma,\cM',\bot)$$
-where \ednote{what is $sem(\syntax{CircVars},\Sigma)$? TM: CircVars is a set of symbols, and $sem(CircVars,\Sigma)$ is just the subsignature of $\Sigma$ induced by CircVars. I think this is the same as in the subsubsection ``Semantics of sets of symbols'', just the notation needs to be adapted to that section. (By the way: could we remove the global env $\Gamma$ from the semantics of sets of symbols? I think it is not needed.)
-Moreover, $\Sigma_{min}$ can be replaced with $\Sigma$, and then the equation involving ClosureType disappears.
+$$sem(\Gamma, O) = (I,\Sigma,\cM',\bot)$$
+where \ednote{what is $sem(\syntax{CircVars},\Sigma)$? TM: CircVars is a set of symbols, and $sem(CircVars,\Sigma)$ is just the subsignature of $\Sigma$ induced by CircVars. I think this is the same as in the subsubsection ``Semantics of sets of symbols'', just the notation needs to be adapted to that section. (By the way: could we remove the global env $\Gamma$ from the semantics of sets of symbols? I think it is not needed.
+MC: I think $\Gamma$ tells you what the current logic is, so you know how to analyze
+the symbols.)
 }
 
 \begin{align*}
-(I,\Sigma,\cM,\Delta) &= sem(\Gamma, O.\syntax{oms}),  & \Sigma_{\mathit{min}} &=sem(\Gamma, \Sigma,O.\syntax{closure}.\syntax{circMin}), \\
-\Sigma_{\mathit{var}} & = sem(\Gamma, \Sigma,O.\syntax{closure}.\syntax{circVars}),
-& \Sigma_{\mathit{fixed}} &=\Sigma \setminus (\Sigma_{\mathit{min}} \cup \Sigma_{\mathit{var}})
+(I,\Sigma,\cM,\Delta) &= sem(\Gamma, O.\syntax{oms}),  & \Sigma_{\mathit{closure}} &=sem(\Gamma, \Sigma,O.\syntax{closure}.\syntax{circClosure}), \\
+\Sigma_{\mathit{var}} & = sem(\Gamma,\Sigma,O.\syntax{closure}.\syntax{circVars}),
+& \Sigma_{\mathit{fixed}} &=\Sigma \setminus (\Sigma_{\mathit{closure}} \cup \Sigma_{\mathit{var}})
 \end{align*}
 and
 \begin{itemize}
 \item if $O.\syntax{closure}.\syntax{closureType} = \syntax{minimize}$, then\\
-$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \item if $O.\syntax{closure}.\syntax{closureType} = \syntax{maximize}$, then\\
-$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is maximal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is maximal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \item
 if $O.\syntax{closure}.\syntax{closureType} = \syntax{free}$, then\\
-$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is initial in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is initial in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \item
 if $O.\syntax{closure}.\syntax{closureType} = \syntax{cofree}$, then\\
-$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is terminal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is terminal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \end{itemize}
+
+$Env(\Gamma, O)$ is obtained from 
+       $\Gamma' = Env(\Gamma, O.\syntax{oms})$
+       by extending $\Gamma'.imports$
+        with a new node for $O$ labeled as in the items above
+        and with a new edge from the node of $O.\syntax{oms}$ to the node of $O$
+        labeled with the identity morphism on $\Sigma$.
 
 %Translation
 
@@ -6888,12 +6895,15 @@ The semantics of a \syntax{CombinationOMS} $O$ is
   $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
 \end{itemize}
 %%%%%
-\sssclause{Semantics of \syntax{CircMin}}
-\semdom{sem(\Gamma, \Sigma, \syntax{CircMin}) = \Sigma'}
-\ednote{add missing definition}
+\sssclause{Semantics of \syntax{CircClosure}}
+\semdom{sem(\Gamma,\Sigma, \syntax{CircClosure}) = \Sigma'}
+If $c$ is a \syntax{CircClosure},
+$$sem(\Gamma,\Sigma, c) = sem(\Gamma, \Sigma, c.symbol)$$
 %%%%%
 \sssclause{Semantics of \syntax{CircVar}}
-\semdom{sem(\Gamma, \Sigma, \syntax{CircVar}) = \Sigma'}
+\semdom{sem(\Gamma,\Sigma, \syntax{CircVar}) = \Sigma'}
+If $c$ is a \syntax{CircVar},
+$$sem(\Gamma,\Sigma, c) = sem(\Gamma, \Sigma, c.symbol)$$
 
 %%%%%%%%%%%%%%%%%%%%%%%
 \sssclause{Semantics of OMS translations}
