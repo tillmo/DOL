@@ -5769,11 +5769,14 @@ For the rest of the section, an arbitrary institution is considered.
 A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
 \end{definition}
 
- A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
+
+Given a theory $T=(\Sigma, \Delta)$, the class of $T$-models is the class of all
+$\Sigma$-models $M$ such that $M\models \delta$, for each sentence $\delta \in \Delta$.
+A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
 $M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
 for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
 $\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, $\Delta\models\varphi$, if all models satisfying all sentences in
-$\Delta$ also satisfy $\varphi$. 
+$\Delta$ also satisfy $\varphi$. For a theory $(\Sigma, \Delta)$, we write $\Delta^\bullet$ for the set of all $\Sigma$-sentences $\varphi$ such that $\Delta \models \varphi$. 
 
 \begin{definition}[Theory morphism]
 A \defsty{theory morphism} $\phi: (\Sigma, \Delta) \rightarrow (\Sigma',  \Delta')$ is 
@@ -5967,7 +5970,10 @@ translations), and a collection of serializations. Moreover, some of the institu
 a binary supports relation between OMS languages and institutions,
 and a binary supports relation between OMS languages and
 serializations. 
- Each language is required to have a default logic and serialization.
+ Each language is required to have a default logic and serialization. Moreover, we assume
+ that logics, languages and serializations are uniquely identified by names, and we use
+ the notation $\Gamma(n)$ for the logic, language or serialization identified by the name
+ $n$ int the heterogeneous logical environment $\Gamma$.\ednote{@Till: new notation, check.}
 
 
  It is required that for each institution in the heterogeneous logical environment there is a trivial signature
@@ -5978,14 +5984,17 @@ $L$ is an institution and $\rho_1$ and
 $\rho_2$ are institution comorphisms, giving the embedding of $L_1$ and
 respectively $L_2$ in $L$. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism and at most one morphism is marked as default.
 
-For each institution in the heterogeneous logical environment, it is further required that there is:
+For each institution $\cI$ in the heterogeneous logical environment, it is further required that there is:
 
 \begin{itemize}
-  \item  a function giving the semantics of basic OMS. It has format 
-$$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,\syntax{BasicOMS}),$$ where $\Sigma$ is a
-signature giving the local environment,  $\Sigma'\supseteq\Sigma$ is
-the resulting signature, and $\Delta'$ the resulting set of sentences,
-  \item a function that turns a symbol map into a signature morphism,
+  \item  a function giving the semantics of a basic OMS. It has the format
+  $$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\syntax{BasicOMS})$$ 
+  \noindent where  $\Sigma'$ is
+the resulting signature and $\Delta'$ the resulting set of sentences. Moreover, a function with the same name 
+$$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,\syntax{BasicOMS})$$
+and one more argument signature $\Sigma$ is used for the semantics of a basic OMS in
+the context of previous declarations. It is required then that $\Sigma\subseteq\Sigma'$.
+  \item a function $makeNorphism_\cI$ that turns a symbol map into a signature morphism,
   \item a relativization procedure taking as argument a theory and giving as 
   result a theory, and three procedures for translating correspondences of alignments
   into sentences in the logic, as needed in Section \ref{sec:oms-mappings}.
@@ -6035,7 +6044,10 @@ $\Sigma_1, \Sigma_2$, the greatest signature $\Sigma$ such that
 exists and is equal to $\Sigma_1\setminus \Sigma_2$.
 
 We will write $\iota_{A\subseteq B}$ for the inclusion of $A$ in $B$ in an
-inclusive category, when such an inclusion exists.
+inclusive category, when such an inclusion exists. If $\cI$ is an inclusive institution
+and $\Sigma\subseteq\Sigma'$ is an inclusion of signatures, we write 
+$M'\forget{\Sigma}$ for the reduct of a $\Sigma'$-model $M'$ along the inclusion
+$\iota_{\Sigma\subseteq\Sigma'}$.
 
 To be able to talk about the symbols of a signature in a formal way, it is required that the category of signatures of an institution is 
 an inclusive category with symbols, as defined below:
@@ -6256,6 +6268,16 @@ are given in the next sections. (Annex~\ref{a:queries} also introduces
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\sssclause{Semantics of a list of qualifications}
+
+\semdom{sem(\Gamma, Sequence(\syntax{Qualification}))=\Gamma'}
+
+If $q_1,\ldots, q_n$ are all \syntax{Qualification}s,
+$$sem(\Gamma, Sequence(q_1, \ldots, q_n)) = \Gamma'$$ 
+\noindent where
+$sem(\Gamma, q_1) = \Gamma_1$, $sem(\Gamma_1,q_2) = \Gamma_2$, $\ldots$,
+$sem(\Gamma_{n-1}, q_n) = \Gamma'$.
+
 \sssclause{Semantics of qualifications}
 
 \semdom{sem(\Gamma,\syntax{Qualification})=\Gamma'}
@@ -6447,18 +6469,18 @@ and $iri_2 = excludedElem.\syntax{elementRef2}.\syntax{iri})$.
 (\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
 
-For a \syntax{BasicOMS} $basicOMS$ 
+For a \syntax{BasicOMS} $O$ 
 in a global environment $\Gamma$, the  semantics is defined as follows:  
 
-$$sem(\Gamma, basicOMS)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
+$$sem(\Gamma, O)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
 
 \noindent where 
 \begin{itemize}
-\item  $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\emptyset,basicOMS)$ 
+\item  $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(O)$, 
 \item  $\cM'=\{M\in \Mod(\Sigma') \mid M\models\Delta'\}$ 
 \item
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
-node labeled with the name of $basicOMS$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'$.
+node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'$.
 \end{itemize}
 
 \sssclause{Semantics of basic OMS in a local environment}
@@ -6467,22 +6489,21 @@ node labeled with the name of $basicOMS$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $
 (\Gamma',(\cI',\Sigma',\cM', \Delta'))}
 
 
-For a \syntax{BasicOMS} $basicOMS$ 
+For a \syntax{BasicOMS} $O$ 
 in a global environment $\Gamma$ and local
 environment $(\cI, \Sigma, \cM, \Delta)$, its semantics is defined only if
 $\Gamma.logic = \cI$
 as follows:  
 
-$$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), basicOMS)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
+$$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$ 
 
 \noindent where 
 \begin{itemize}
-\item  $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma,basicOMS)$  
+\item  $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma,O)$  
 \item  $\cM'=\{M\in \cM \mid M\models\Delta'\}$ 
 \item
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
-node labeled with the name of $basicOMS$ and the other components as
-given by $semBasic_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma, basicOMS)$.
+node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'$.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6495,25 +6516,27 @@ given by $semBasic_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(\Sigma, basicOMS)$.
 
 
 In the rest of this section, given a global environment $\Gamma$ and an
-\syntax{OMS} $oms$, the notation 
-$Env(\Gamma, oms)$ is used for the global environment $\Gamma'$ 
+\syntax{OMS} $O$, the notation 
+$Env(\Gamma, O)$ is used for the global environment $\Gamma'$ 
 such that
-$sem(\Gamma, oms) = \Gamma'$.
+$sem(\Gamma, O) = \Gamma'$.
 
 The semantics of a \syntax{BasicOMS} has been defined above.
 
-The semantics of an \syntax{OMSReference} $o$
+The semantics of an \syntax{OMSReference} $O$
 is given by
  \begin{itemize}
-   \item $\Inst(o) = \Inst(\Gamma(o.\syntax{omsRef}))$
-   \item $\Sig(o) = \Sig(\Gamma(o.\syntax{omsRef}))$
-   \item $\Mod(o) = \Mod(\Gamma(o.\syntax{omsRef}))$
-   \item $\Th(o) = \Th(\Gamma(o.\syntax{omsRef}))$
-   \item $Env(\Gamma, o)$ extends the graph of imports $\Gamma.imports$
-         with a new node for $o$ labeled as defined in the items above
+   \item $\Inst(O) = \Inst(\Gamma(O.\syntax{omsRef}))$
+   \item $\Sig(O) = \Sig(\Gamma(O.\syntax{omsRef}))$
+   \item $\Mod(O) = \Mod(\Gamma(O.\syntax{omsRef}))$
+   \item $\Th(O) = \Th(\Gamma(O.\syntax{omsRef}))$
+   \item $Env(\Gamma,O)$ extends the graph of imports $\Gamma.imports$
+         with a new node for $O$ whose name is either 
+         $O.importName$, or, if $O.importName$ is missing, the name of $O.omsRef$,
+         and whose other components of the label are as defined in the items above,
          and with a new edge from the node labeled with 
-         $o.\syntax{omsRef}$ to $o$, named $o.\syntax{importName}$ 
-         and labeled with the identity on $\Sig(\Gamma(o.\syntax{omsRef}))$.  
+         $O.\syntax{omsRef}$ to $O$, named $O.\syntax{importName}$ 
+         and labeled with the identity on $\Sig(\Gamma(O.\syntax{omsRef}))$.  
  \end{itemize}
  
  
@@ -6525,20 +6548,20 @@ is given by
 
 The semantics of a \syntax{BasicOMS} has been defined above.
 
-The semantics of an \syntax{OMSReference} $o$
-is defined only if $\Inst(\Gamma(o.\syntax{omsRef})) = \cI$ as follows:
+The semantics of an \syntax{OMSReference} $O$
+is defined only if $\Inst(\Gamma(O.\syntax{omsRef})) = \cI$ as follows:
  \begin{itemize}
-   \item $\Inst(o) = \Inst(\Gamma(o.\syntax{omsRef}))$
-   \item $\Sig(o) = \Sig(\Gamma(o.\syntax{omsRef})) \cup \Sigma$
-   \item $\Mod(o) = \{M\in \Mod(\Sig(o)) \mid M\forget\Sigma \in \cM \text{ and } 
-                      M\forget {\Sig(\Gamma(o.\syntax{omsRef}))} \in 
-                      \Mod(\Gamma(o.\syntax{omsRef}))\}$
-   \item $\Th(o) = \iota_{\Sig(\Gamma(o.\syntax{omsRef})\subseteq \Sig(o)}(\Th(\Gamma(o.\syntax{omsRef}))) \cup \iota_{\Sigma\subseteq \Sig(o)}(\Delta)$
-   \item $Env(\Gamma, o)$ extends the graph of imports $\Gamma.imports$
-         with a new node for $o$ labeled as defined in the items above
+   \item $\Inst(O) = \Inst(\Gamma(O.\syntax{omsRef}))$
+   \item $\Sig(O) = \Sig(\Gamma(O.\syntax{omsRef})) \cup \Sigma$
+   \item $\Mod(O) = \{M\in \Mod(\Sig(O)) \mid M\forget\Sigma \in \cM \text{ and } 
+                      M\forget {\Sig(\Gamma(O.\syntax{omsRef}))} \in 
+                      \Mod(\Gamma(O.\syntax{omsRef}))\}$
+   \item $\Th(O) = \iota_{\Sig(\Gamma(O.\syntax{omsRef})\subseteq \Sig(O)}(\Th(\Gamma(O.\syntax{omsRef}))) \cup \iota_{\Sigma\subseteq \Sig(O)}(\Delta)$
+   \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
+         with a new node for $O$ labeled as defined in the items above
          and with a new edge from the node labeled with 
-         $o.\syntax{omsRef}$ to $o$, named $o.\syntax{importName}$ 
-         and labeled with the inclusion of $\Sigma$ in $\Sig(\Gamma(o.\syntax{omsRef}))$.  
+         $O.\syntax{omsRef}$ to $O$, named $O.\syntax{importName}$ 
+         and labeled with the inclusion of $\Sigma$ in $\Sig(\Gamma(O.\syntax{omsRef}))$.  
  \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6549,39 +6572,39 @@ is defined only if $\Inst(\Gamma(o.\syntax{omsRef})) = \cI$ as follows:
  
 The semantics for \syntax{ClosableOMS} has been defined above.
 
-If $O'$ is a  \syntax{RelativeClosureOMS},
-$O'.\syntax{closureType} = \syntax{minimize}$
-and $O = O'.\syntax{closableOMS}$, then 
+If $O$ is a  \syntax{RelativeClosureOMS},
+$O.\syntax{closureType} = \syntax{minimize}$
+and $O' = O.\syntax{closableOMS}$, then 
 \begin{itemize}
- \item $\Inst(O')= \cI'$
- \item $\Sig(O') = \Sig(O)$
- \item $\Mod(O') = 
-        \{ M \in  \Mod(O) \mid  M \text{ is minimal in } \Mod(O)\}$
- \item $\Th(O') = \bot$ 
+ \item $\Inst(O)= \Inst(O')$
+ \item $\Sig(O) = \Sig(O')$
+ \item $\Mod(O) = 
+        \{ M \in  \Mod(O') \mid  M \text{ is minimal in } \Mod(O')\}$
+ \item $\Th(O) = \bot$ 
 \end{itemize}
 and ``minimal''
 is interpreted in the pre-order defined by $M_1\leq M_2$
 if there is a model homomorphism $\M_1\to\M_2$.
  
-$Env(\Gamma, O')$ is obtained from $\Gamma'$ by adding to $\Gamma'.imports$ a new
-node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O'))$ and
-an edge from the node of $O$ to the node of $O'$ labeled with the identity
-morphism on $\Sig(O)$.
+$Env(\Gamma, O)$ is obtained from $\Gamma'$ by adding to $\Gamma'.imports$ a new
+node labeled with $(Name(O), \Inst(O),\allowbreak \Sig(O), \Mod(O), \Th(O))$ and
+an edge from the node of $O'$ to the node of $O$ labeled with the identity
+morphism on $\Sig(O')$.
  
  
-The semantics of $O'$
-is defined similarly for the other three alternatives of $O'.\syntax{closureType}$, 
+The semantics of $O$
+is defined similarly for the other three alternatives of $O.\syntax{closureType}$, 
 only the model class differs:
 \begin{itemize}
-\item if $O'.\syntax{closureType} = \syntax{maximize}$,
-$\Mod(O') = 
-        \{ M \in  \cM \mid  M \text{ is maximal in } \Mod(O)\}$
-\item if $O'.\syntax{closureType} = \syntax{free}$,
-$\Mod(O') = 
-        \{ M \in  \cM \mid  M \text{ is initial in } \Mod(O)\}$
-\item if $O'.\syntax{closureType} = \syntax{cofree}$,
-$\Mod(O') = 
-        \{ M \in  \cM \mid  M \text{ is terminal in } \Mod(O)\}$
+\item if $O.\syntax{closureType} = \syntax{maximize}$,
+$\Mod(O) = 
+        \{ M \in  \cM \mid  M \text{ is maximal in } \Mod(O')\}$
+\item if $O.\syntax{closureType} = \syntax{free}$,
+$\Mod(O) = 
+        \{ M \in  \cM \mid  M \text{ is initial in } \Mod(O')\}$
+\item if $O.\syntax{closureType} = \syntax{cofree}$,
+$\Mod(O) = 
+        \{ M \in  \cM \mid  M \text{ is terminal in } \Mod(O')\}$
 \end{itemize}
 Here, initial and terminal models are defined as in
 category theory, see \ref{sec:colimits}. 
@@ -6597,42 +6620,42 @@ The semantics for minimization selects the models that are minimal
 in the class of all models with the same interpretation for the
 local environment (= fixed non-logical symbols, in the terminology of circumscription).
 
-Formally, if $O'$ is a \syntax{RelativeClosureOMS},
-$O'.\syntax{closureType} = \syntax{minimize}$
-and $O = O'.\syntax{closableOMS}$, then 
+Formally, if $O$ is a \syntax{RelativeClosureOMS},
+$O.\syntax{closureType} = \syntax{minimize}$
+and $O'= O.\syntax{closableOMS}$, then 
 \begin{itemize}
- \item $\Inst(O')= \cI'$
- \item $\Sig(O') = \Sigma'$
- \item $\Mod(O') = 
+ \item $\Inst(O)= \cI'$
+ \item $\Sig(O) = \Sigma'$
+ \item $\Mod(O) = 
         \{ M \in  \cM \mid  M \text{ is minimal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
- \item $\Th(O') = \bot$ 
+ \item $\Th(O) = \bot$ 
 \end{itemize}
 \noindent where 
-$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O) = 
+$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O') = 
 (\Gamma', (\cI', \Sigma',\cM',\Delta'))$
 and ``minimal''
 is interpreted in the pre-order defined by $M_1\leq M_2$
 if there is a model homomorphism $\M_1\to\M_2$.
 
-The theory-level semantics for $O'$ cannot be defined.
+The theory-level semantics for $O$ cannot be defined.
 
-$Env(\Gamma, O')$ is obtained from $\Gamma'$ by adding to $\Gamma'.imports$ a new
-node labeled with $(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O'))$ and
-an edge from the node of $O$ to the node of $O'$ labeled with the identity
-morphism on $\Sig(O')$.
+$Env(\Gamma, O)$ is obtained from $\Gamma'$ by adding to $\Gamma'.imports$ a new
+node labeled with $(Name(O), \Inst(O),\allowbreak \Sig(O), \Mod(O), \Th(O))$ and
+an edge from the node of $O'$ to the node of $O$ labeled with the identity
+morphism on $\Sig(O)$.
 
-The semantics of $O'$
-is defined similarly for the other three alternatives of $O'.\syntax{closureType}$, 
+The semantics of $O$
+is defined similarly for the other three alternatives of $O.\syntax{closureType}$, 
 only the model class differs:
 \begin{itemize}
-\item if $O'.\syntax{closureType} = \syntax{maximize}$,
-$\Mod(O') = 
+\item if $O.\syntax{closureType} = \syntax{maximize}$,
+$\Mod(O) = 
         \{ M \in  \cM \mid  M \text{ is maximal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
-\item if $O'.\syntax{closureType} = \syntax{free}$,
-$\Mod(O') = 
+\item if $O.\syntax{closureType} = \syntax{free}$,
+$\Mod(O) = 
         \{ M \in  \cM \mid  M \text{ is initial in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
-\item if $O'.\syntax{closureType} = \syntax{cofree}$,
-$\Mod(O') = 
+\item if $O.\syntax{closureType} = \syntax{cofree}$,
+$\Mod(O) = 
         \{ M \in  \cM \mid  M \text{ is terminal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 \end{itemize}
 
@@ -6646,30 +6669,32 @@ The semantics for a \syntax{ClosableOMS} has been defined above.
 
 The semantics for an \syntax{ExtendingOMS} has been defined above.
 
+
 If $o$ is a \syntax{ClosureOMS},
 $$sem(\Gamma, o) = (I,\Sigma,\cM',\bot)$$
 where \todonote{didn't look at this} \todonote{free, cofree, maximize are missing, see \syntax{MinType}. TM: I do not understand, they are there!} \ednote{what is $sem(\syntax{CircVars},\Sigma)$? TM: CircVars is a set of symbols, and $sem(CircVars,\Sigma)$ is just the subsignature of $\Sigma$ induced by CircVars. I think this is the same as in the subsubsection ``Semantics of sets of symbols'', just the notation needs to be adapted to that section. (By the way: could we remove the global env $\Gamma$ from the semantics of sets of symbols? I think it is not needed.)
 Moreover, $\Sigma_{min}$ can be replaced with $\Sigma$, and then the equation involving ClosureType disappears.
 }
+
 \begin{align*}
-(I,\Sigma,\cM,\Delta) &= sem(\Gamma, o.\syntax{oms}),  & \Sigma_{\mathit{min}} &=sem(o.\syntax{closure}.\syntax{closureType},\Sigma), \\
-\Sigma_{\mathit{var}} & = sem(o.\syntax{closure}.\syntax{CircVars},\Sigma),
+(I,\Sigma,\cM,\Delta) &= sem(\Gamma, O.\syntax{oms}),  & \Sigma_{\mathit{min}} &=sem(\Gamma, \Sigma,O.\syntax{closure}.\syntax{circMin}), \\
+\Sigma_{\mathit{var}} & = sem(\Gamma, \Sigma,O.\syntax{closure}.\syntax{circVars}),
 & \Sigma_{\mathit{fixed}} &=\Sigma \setminus (\Sigma_{\mathit{min}} \cup \Sigma_{\mathit{var}})
 \end{align*}
 and
 \begin{itemize}
-\item if $o.\syntax{closure}.\syntax{closureType} = \syntax{minimize}$, then\\
+\item if $O.\syntax{closure}.\syntax{closureType} = \syntax{minimize}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-\item if $o.\syntax{closure}.\syntax{closureType} = \syntax{maximize}$, then\\
+\item if $O.\syntax{closure}.\syntax{closureType} = \syntax{maximize}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is maximal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \item
-if $o.\syntax{closure}.\syntax{closureType} = \syntax{free}$, then\\
+if $O.\syntax{closure}.\syntax{closureType} = \syntax{free}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is initial in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \item
-if $o.\syntax{closure}.\syntax{closureType} = \syntax{cofree}$, then\\
+if $O.\syntax{closure}.\syntax{closureType} = \syntax{cofree}$, then\\
 $\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is terminal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 \end{itemize}
@@ -6716,7 +6741,7 @@ The semantics of an \syntax{ExtractionOMS} $O'$ is
   \item $\Inst(O') = \Inst(O'.\syntax{oms})$
   \item $\Sig(O') = \Sigma'$,
   \item $\Th(O') = \Delta'$
-  \item $\Mod(O')$ is the class of $Th(O)$-models
+  \item $\Mod(O')$ is the class of $Th(O')$-models
   \item $Env(\Gamma, O')$ is obtained from 
        $\Gamma'' = Env(\Gamma, O'.\syntax{oms})$
        by extending $\Gamma''.imports$
@@ -6735,10 +6760,10 @@ $sem(\Gamma, (\Sig(O'.\syntax{oms}), \Th(O'.\syntax{oms})), O'.\syntax{extractio
 %Approximation
 The semantics of an \syntax{ApproximationOMS} $O'$ is
 \begin{itemize}
-  \item $\Inst(O) = \cI$ when $(\Phi,\alpha,\beta) : \Inst(O'.\syntax{oms}) \to \cI)$ is the default projection (in case $O'.\syntax{approximation}.\syntax{logicRef}$ is missing, it is the identity on $\Inst(O'.\syntax{oms})$)
+  \item $\Inst(O) = \cI'$,
   \item $\Sig(O) = \Phi(\Sigma)$
-  \item $\Th(O) = \alpha^{-1}_{\Sig(O'.\syntax{oms})}(\Th(O'.\syntax{oms})^\bullet)\cap\Sen^I(\Sig(O'.\syntax{oms}))$%
-\footnote{In  practice, one looks for a finite subset that still is logically equivalent to this set. Note that $\Delta^\bullet$ is the set of logical consequences of $\Delta$, i.e.\ $\Delta^\bullet = \mathbf{Th}(\Delta)$.}, i.e.\ that part of $\Th(O'.\syntax{oms})$ that can be expressed in the smaller signature and logic 
+  \item $\Th(O) = \alpha^{-1}_{\Sig(O'.\syntax{oms})}(\Th(O'.\syntax{oms})^\bullet)\cap\Sen^{\cI'}(\Sig(O'.\syntax{oms}))$%
+\footnote{In  practice, one looks for a finite subset that still is logically equivalent to this set.}, i.e.\ that part of $\Th(O'.\syntax{oms})$ that can be expressed in the smaller signature and logic 
   \item $\Mod(O)$ is the class of $\Th(O)$-models
   \item $Env(\Gamma, O')$ is obtained from 
        $\Gamma'' = Env(\Gamma, O'.\syntax{oms})$
@@ -6748,42 +6773,42 @@ The semantics of an \syntax{ApproximationOMS} $O'$ is
         labeled with $((\Phi,\alpha,\beta),\iota: \Phi(\Sigma) \to \Sig(O'.\syntax{oms}))$ 
 \end{itemize}
 
-\noindent where $(\cI,\Sigma) = sem(\Gamma, (\Inst(O'.\syntax{oms}), \Sig(O'.\syntax{oms})), O'.\syntax{approximation})$.
+\noindent where $(\rho = (\Phi,\alpha,\beta):\cI\to\cI',\Sigma) = sem(\Gamma, (\Inst(O'.\syntax{oms}), \Sig(O'.\syntax{oms})), O'.\syntax{approximation})$.
 
 %Filtering
-The semantics of a \syntax{FilteringOMS} $O$, where
-$O' = O.\syntax{filtering}.\syntax{basicOMS}$,
-is
-defined only if  $\Sig(O')\subseteq\Sig(O.\syntax{oms})$ and 
-$\Th(O')\subseteq\Th(O.\syntax{oms})$.
- Two cases are distinguished based on the value of $O.\syntax{filtering}.\syntax{removalKind}$.\\
-If $O.\syntax{filtering}.\syntax{removalKind} = keep$, 
+The semantics of a \syntax{FilteringOMS} $O$
+is defined by case distinction.
+Let
+ $(\Gamma',(\cI,\Sigma,\cM, \Delta)) = sem(\Gamma, O.\syntax{oms})$ and
+ $(c, \cI',\Sigma',\Delta') = sem(\Gamma', (\cI, \Sigma, \cM, \Delta), O.\syntax{filtering})$.
+ 
+If $c = keep$, 
 the semantics of $O$ is given by
 \begin{itemize}
-  \item $\Inst(O) = \Inst(O')$
-  \item $\Sig(O) = \Sigma'$ where $\Sigma'$ is the smallest signature
-with $\Sig(O')\subseteq\Sigma'$ and $\Th(O')\subseteq\Sen(\Sigma')$. ({If this smallest signature does not exist, the semantics is undefined.})
-  \item $\Th(O) = (\Th(O.\syntax{oms})\cap\Sen(\Sig(O)))\cup\Th(O')$
+  \item $\Inst(O) = \cI'$
+  \item $\Sig(O) = \Sigma''$ where $\Sigma''$ is the smallest signature
+with $\Sigma'\subseteq\Sigma''$ and $\Delta'\subseteq\Sen(\Sigma'')$. ({If this smallest signature does not exist, the semantics is undefined.})
+  \item $\Th(O) = (\Delta\cap\Sen(\Sig(O)))\cup\Delta'$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
   \item $Env(\Gamma, O')$ is obtained from 
-       $\Gamma'' = Env(\Gamma, O.\syntax{oms})$
-       by extending $\Gamma''.imports$
+       $\Gamma'$
+       by extending $\Gamma'.imports$
        with a new node for $O$ labeled as in the items above and
        with a new edge from the node of $O$ to the node of $O.\syntax{oms}$
         labeled with the inclusion of $\Sigma'$ in $\Sig(O.\syntax{oms})$.
 \end{itemize}
 
 \noindent
-If $O.\syntax{filtering}.\syntax{removalKind} = remove$, the semantics of $O$  
+If $c = remove$, the semantics of $O$  
 is
 \begin{itemize}
-  \item $\Inst(O) = \Inst(O')$
-  \item $\Sig(O) = \Sig(O.\syntax{oms})\setminus \Sig(O')$ 
-  \item $\Th(O) = \Th(O.\syntax{oms})\cap\Sen(\Sig(O))\setminus\Th(O')$
+  \item $\Inst(O) = \cI'$
+  \item $\Sig(O) = \Sigma\setminus \Sigma'$ 
+  \item $\Th(O) = \Delta\cap\Sen(\Sig(O))\setminus\Delta'$
   \item $\Mod(O)$ is the class of all $\Th(O)$-models.
     \item $Env(\Gamma, O')$ is obtained from 
-       $\Gamma'' = Env(\Gamma, O.\syntax{oms})$
-       by extending $\Gamma''.imports$
+       $\Gamma'$
+       by extending $\Gamma'.imports$
        with a new node for $O$ labeled as in the items above and
        with a new edge from the node of $O$ to the node of $O.\syntax{oms}$
         labeled with the inclusion of $\Sigma'$ in $\Sig(O.\syntax{oms})$.
@@ -6793,11 +6818,11 @@ is
 
 The semantics of an \syntax{UnionOMS} $O$ is
 \begin{itemize}
-  \item $\Inst(O) = I$ where
-    $\Inst(O_1) \bigcup \Inst(O_2) =(I, (\Phi_1, \alpha_1,\beta_1) : \Inst(O_1) \rightarrow I, 
-                    (\Phi_2, \alpha_2,\beta_2) : \Inst(O_2) \rightarrow I)$
+  \item $\Inst(O) = \cI$ where
+    $\Inst(O_1) \bigcup \Inst(O_2) =(\cI, (\Phi_1, \alpha_1,\beta_1) : \Inst(O_1) \rightarrow \cI, 
+                    (\Phi_2, \alpha_2,\beta_2) : \Inst(O_2) \rightarrow \cI)$
   \item $\Sig(O) = \Phi_1(\Sig(O_1)) \cup \Phi_2(\Sig(O_2))$
-  \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(O_i))}) \in \Mod(O_i), \text{ for } i=1,2 \}$
+  \item $\Mod(O) = \{ M\in \Mod^\cI(\Sig(O)) \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(O_i))}) \in \Mod(O_i), \text{ for } i=1,2 \}$
   \item $\Th(O) = \alpha_1(\Th(O_1)) \cup \alpha_2(\Th(O_2))$.
     \item 
         $Env(\Gamma, O')$ is obtained from 
@@ -6823,19 +6848,14 @@ The semantics of an \syntax{ExtensionOMS} $O$ is
   the institutions of $O.\syntax{oms}$ and 
   $O.\syntax{extension}$ must be the same)
   \item $\Sig(O) = \Sig(O.\syntax{oms}) \cup 
-  \Sig((\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms}), \Mod(O.\syntax{oms}), \Th(O.\syntax{oms})),
+  \Sig(sem(\Gamma, 
+       (\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms}), \Mod(O.\syntax{oms}), \Th(O.\syntax{oms}) ),
   O.\syntax{extension})$
   \item $\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(O.\syntax{oms})} \in \Mod(O.\syntax{oms})
   \text{ and }
   M \forget{\Sig(O.\syntax{extension})} \in \Mod(O.\syntax{extension})\}$
   \item $\Th(O) = \Th(O.\syntax{oms}) \cup \Th(O.\syntax{extension})$
-  \item $Env(\Gamma, O')$ is obtained from 
-       $\Gamma'' = Env(\Gamma, O.\syntax{oms})$
-       by extending $\Gamma''.imports$
-       with a new node for $O$ labeled as in the items above and
-       with a new edge from the node of $O.\syntax{oms}$ to the node of $O$
-        labeled with the inclusion of $\Sig(O.\syntax{oms})$ in 
-        $\Sig(O)$.
+  \item $Env(\Gamma, O')$ is $Env(Env(\Gamma, O.\syntax{oms}), O.\syntax{extension})$.
 \end{itemize}
 
 %Qualification
@@ -6850,7 +6870,7 @@ means that if the qualification appears as a term in
 a larger expression, after its analysis the context will
 be $\Gamma$ and not $\Gamma'$.
 Formally,
-$$sem(\Gamma, O) = (\Gamma, (\cI,\Sigma, \cM, \Delta))$$
+$$sem(\Gamma, O) = (\Gamma'', (\cI,\Sigma, \cM, \Delta))$$
 \noindent where $(\Gamma'',(\cI,\Sigma,\cM,\Delta)) = 
 sem(sem(\Gamma, O.\syntax{qualification}), 
     O.\syntax{oms})$.
@@ -6860,13 +6880,20 @@ sem(sem(\Gamma, O.\syntax{qualification}),
 The semantics of a \syntax{CombinationOMS} $O$ is
 \begin{itemize}
   \item $\Inst(O) = I$,
-  \item $\Sig(O) = \Sigma$, where $(I,\Sigma,  \{\mu_i\}_{i\in |G|})$ is the colimit of the graph $G$ given by the semantics of $O.\syntax{network}$,
+  \item $\Sig(O) = \Sigma$, where $(I,\Sigma,  \{\mu_i\}_{i\in |G|})$ is the colimit of the graph $G = sem(\Gamma,O.\syntax{network})$,
   \item $\Th(O) = \cup_{i\in |G|} \mu_i(\Th(O_i))$, where $O_i$ is the OMS label of the node $i$ in $G$
   \item $\Mod(O) =  \{ M\in\Mod(\Sigma) \mid M\forget{\mu_i} \in \Mod(O_i), i\in |G| \}$, where $O_i$ is the OMS label of the node $i$ in $G$.
   \item $Env(\Gamma,O)$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ 
   a new node for $O$ labeled as in the items above and with edges from each node in
   $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
 \end{itemize}
+%%%%%
+\sssclause{Semantics of \syntax{CircMin}}
+\semdom{sem(\Gamma, \Sigma, \syntax{CircMin}) = \Sigma'}
+\ednote{add missing definition}
+%%%%%
+\sssclause{Semantics of \syntax{CircVar}}
+\semdom{sem(\Gamma, \Sigma, \syntax{CircVar}) = \Sigma'}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 \sssclause{Semantics of OMS translations}
@@ -6886,23 +6913,33 @@ it defaults to the identity comorphism of the current logic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\sssclause{Semantics of OMS language translations} 
+\sssclause{Semantics of OMS language translations}
 
-\semdom{sem(\Gamma, \syntax{OMSLanguageTranslation}) = (\Phi, \alpha,\beta)}
+\semdom{sem(\Gamma,\syntax{OMSLanguageTranslation})=\rho}
 
-The semantics of a \syntax{OMSLanguageTranslation} $O$ is 
-$sem(\Gamma, O.\syntax{iri})=(\Phi,\alpha,\beta)$,
-where $(\Phi,\alpha,\beta)$ is the institution comorphism
-named by $O.\syntax{iri}$ in the heterogeneous logical environment.
+If $t$ is a \syntax{NamedLanguageTranslation},
+$$sem(\Gamma,t)=\Gamma(O.\syntax{omsLanguageTranslationRef})$$
+\noindent where $\Gamma(O.\syntax{omsLanguageTranslationRef}$ is
+an institution comorphism.  This is defined only if the
+domain of $\rho$ is the current logic of $\Gamma$.
 
-\semdom{sem(\Gamma, Sequence(\syntax{OMSLanguageTranslation})) = (\Phi, \alpha,\beta)}
+If $t$ is a \syntax{DefaultTranslation},
+$$sem(\Gamma, t)=\rho$$
+\noindent where $\rho$ is the
+unique default institution comorphism of the heterogeneous logical
+environment running from $\Gamma.logic$ to $t.\syntax{languageRef}$ (if this is a
+logic) or to some logic supported by $t.\syntax{languageRef}$ (if this
+is a language). If there is no or no unique such comorphism, the
+semantics is undefined. 
+
+\semdom{sem(\Gamma, Sequence(\syntax{OMSLanguageTranslation})) = \rho}
 
 If $t_1, \ldots, t_n$ are all \syntax{OMSLanguageTranslation}s,
-$sem(\Gamma, Sequence\{t_1, \ldots, t_n\}) =(\Phi,\alpha,\beta)$,
+$sem(\Gamma, Sequence\{t_1, \ldots, t_n\}) = \rho$,
 where
-$sem(\Gamma, t_i) = (\Phi_i,\alpha_i,\beta_i)$ for 
+$sem(\Gamma, t_i) = \rho_i$ for 
 $i=1,\ldots, n$ and
- $(\Phi,\alpha,\beta) = (\Phi_1,\alpha_1,\beta_1); \ldots ; (\Phi_n,\alpha_n,\beta_n)$. 
+ $(\Phi,\alpha,\beta) = \rho_1;\rho_2;\ldots;\rho_n$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6972,10 +7009,9 @@ If $m$ is a \syntax{SymbolMap},
  $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma$$
 
 where 
-$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$\\
-and 
-$(s,t) = sem(\Gamma, \Sigma_1,\Sigma_2, m.\syntax{generalSymbolMapItem})$,\\
-$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2,m.\syntax{generalSymbolMapItem2})$.
+$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$ 
+and \\
+$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2, \allowbreak m.\syntax{generalSymbolMapItem})$.
 
 Applications \shall 
 implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
@@ -6987,7 +7023,7 @@ defined – in detail:
   \REQUIRE $M\subseteq |\Sig(O_s)|\times|\Sig(O_t)|$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
   \FORALL{$e_s\in|\Sigma(O_s)|$ not covered by $M$}
     \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
-    \STATE $N_t\leftarrow\{\operatorname{localname}(e) \mid e\in|\Sigma(O_t)|\}$
+    \STATE $N_t\leftarrow\{\operatorname{ e\in|\Sigma(O_t)|  \mid localname}(e) = n_s\}$
     \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
       \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
     \ENDIF
@@ -7001,7 +7037,7 @@ of the required kind and type. It does not cover the case where just
 the symbol with the same name is used. But maybe all this should be
 made institution-specific?}
 
-The local name of a non-logical symbol is determined as follows\footnote{In practice, this can 
+The local name of a non-logical symbol $e$ is determined as follows\footnote{In practice, this can 
 often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
 respective OMS (\cf \cref{c:identifiers}).  In general, however, functions that turn abbreviations 
 into IRIs are not invertible.  For this reason, the implicit mapping of non-logical symbols is 
@@ -7030,58 +7066,58 @@ $$sem(\Gamma, (\Sigma, \Delta), e) =
 \noindent
 where $sem(\Gamma, \Sigma, e.\syntax{removalKind}, e.\syntax{interfaceSignature}) =
 \Sigma''$, $\langle\Sigma',\Delta'\rangle$ is the smallest depleting
-$\Sigma''$-module (see \cite{DBLP:journals/ai/KontchakovWZ10} for the
-definition in a description logic context and \cite{IbanezEtAl15} for a
-generalization to an arbitrary institution), i.e.\ the
+$\Sigma''$-module, i.e.\ the
 smallest sub-theory $\langle\Sigma',\Delta'\rangle$ of
 $(\Sigma, \Delta)$ such that the following
 model-theoretic inseparability holds
   $$\Delta \setminus \Delta'  \equiv_{\Sigma' \cup \Sigma''}  \emptyset.$$
-({In \cite{DBLP:journals/ai/KontchakovWZ10}, it is
-  shown that the smallest depleting $\Sigma''$-module exists in
-  description logics, and in \cite{IbanezEtAl15} this is generalized to arbitrary
-  institutions.})
 
 This means intuitively that $\Delta \setminus \Delta'$
-cannot be distinguished from $\emptyset$ (what $\Sigma'\cup \Sigma''$ concerns) and formally that 
+cannot be distinguished from $\emptyset$ (as far as $\Sigma'\cup \Sigma''$ is 
+concerned) and formally that 
 $$\begin{array}{ll}
 &\{M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sigma), M  \models \Delta \setminus \Delta' \}\\
 = &\{ M\forget{\Sigma'\cup \Sigma''} \mid M\in\Mod(\Sigma) \}.
 \end{array}$$
 
+\cite{DBLP:journals/ai/KontchakovWZ10} defines the concept of smallest depleting $\Sigma$-module in a description logic context and shows that the smallest depleting $\Sigma''$-module exists in description logics. 
+\cite{IbanezEtAl15} generalizes both the definition of smallest depleting $\Sigma''$-module and the mentioned result to arbitrary institutions.
+
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of approximations}
 
-\semdom{sem(\Gamma, (\cI, \Sigma), \syntax{Approximation}) = (\cI,\Sigma')}
+\semdom{sem(\Gamma, (\cI, \Sigma), \syntax{Approximation}) = (\rho:\cI\to\cI',\Sigma')}
 
 If $a$ is an \syntax{Approximation},
-$$sem(\Gamma,\Sigma, a) = 
-  (\cI,\Sigma')$$
+$$sem(\Gamma, (\cI, \Sigma), a) = 
+  (\rho,\Sigma')$$
   
   \noindent
-  where $\Sigma' = sem(\Gamma, \Sigma, a.\syntax{removalKind}, a.\syntax{interfaceSignature})$
-  and $sem(a.\syntax{logicRef}) = \cI$.
+  where $\Sigma' = sem(\Gamma, \Sigma, a.\syntax{removalKind}, a.\syntax{interfaceSignature})$, and $\rho$ is the default projection 
+  (institution morphism) from 
+  $\cI$ to $\allowbreak sem(\Gamma, a.\syntax{logicRef}) = \cI'$, when $a.\syntax{logicRef}$ is present and
+  the identity institution morphism on $\cI$, when $a.\syntax{logicRef}$ is missing.
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of filtering}
 
-\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Filtering}) = (c,\cI,\Sigma', \Delta')}
+\semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{Filtering}) = (c,\cI',\Sigma', \Delta')}
 
 If $f$ is a \syntax{Filtering} such that
 $f.\syntax{removalKind} = keep$,
-$$sem(\Gamma, (\Sigma, \Delta), f) = 
-(keep, \cI,\Sigma', \Delta')$$
+$$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
+(keep, \cI',\Sigma', \Delta')$$
 \noindent
-where $sem(\Gamma, (\Sigma,\Delta), f.\syntax{basicOMS}) = (\cI, \Sigma', \Delta')$.
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
 %and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
 %includes $(\Sigma'',\Delta'')$. \ednote{TODO: update}
 
 If $f$ is a \syntax{Filtering} such that
 $f.\syntax{removalKind} = remove$,
-$$sem(\Gamma, (\Sigma, \Delta), f) = 
-(remove,\cI,\Sigma', \Delta')$$
-where $sem(\Gamma, (\Sigma,\Delta), f.\syntax{basicOMS}) = (\cI, \Sigma', \Delta')$.
+$$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
+(remove,\cI',\Sigma', \Delta')$$
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
@@ -7089,13 +7125,14 @@ where $sem(\Gamma, (\Sigma,\Delta), f.\syntax{basicOMS}) = (\cI, \Sigma', \Delta
 
 \sssclause{Semantics of extension}
 
-\semdom{sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{Extension})=(\cI,\Sigma',\cM',\Delta')}
+\semdom{sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{Extension})=
+(\Gamma',(\cI,\Sigma',\cM',\Delta'))}
 
 If $e$ is an \syntax{Extension},
 $$sem(\Gamma,(\cI,\Sigma,\cM,\Delta),e)=
-(\cI,\Sigma',\cM',\Delta')$$
+(\Gamma',(\cI,\Sigma',\cM',\Delta'))$$
 \noindent
-where $(\cI,\Sigma',\cM',\Delta')=sem(\Gamma,(\Sigma,\cM),e.\syntax{extendingOMS})$.
+where $(\Gamma',(\cI,\Sigma',\cM',\Delta')) = sem(\Gamma,(\Sigma,\cM),e.\syntax{extendingOMS})$.
 
 If $e.\syntax{conservativityStrength}$ is \syntax{model-conservative} or
 \syntax{implied}, the semantics is only defined if each model in
@@ -7123,8 +7160,8 @@ If $e.\syntax{extensionName}$ is present, the inclusion link is labeled with thi
 \Sigma'}
 
 If $r$ is a \syntax{RemovalKind} and $s$ is an \syntax{InterfaceSignature},
-$sem(\Gamma, \Sigma, \syntax{ Qual Symbol+}) = \Sigma'$, 
-where 
+$$sem(\Gamma, \Sigma, r,s ) = \Sigma'$$
+\noindent where 
 %
 $$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, s.\syntax{symbolList}) &\text{ if } \quad r = keep\\
 \Sigma \setminus   sem(\Gamma, \Sigma, s.\syntax{symbolList})  & \text{ if } \quad r = remove
@@ -7140,29 +7177,31 @@ $$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, s.\syntax{symbolList})
 An \syntax{OMSDefinition} $O$ extends the global environment:
 $$
 sem(\Gamma,O)
-=\Gamma[O.\syntax{omsName}\mapsto sem(\Gamma,O.\syntax{oms})]
+=\Gamma'[O.\syntax{omsName}\mapsto sem(\Gamma,O.\syntax{oms})]
 $$
+\noindent where $sem(\Gamma, O.\syntax{oms}) = (\Gamma', (\cI,\Sigma,\cM, \Delta))$ 
+and
+$\Gamma.logic$ and $\cI$ must be the same.
 
-$\Gamma.logic$ and $\Inst(O.\syntax{oms})$ must be the same.
 
-If $O.\syntax{conservativityStrength}$ is \syntax{model-conservative}, the semantics is only
-defined if $sem(\Gamma,O.\syntax{oms})\not=\emptyset$.
+\noindent If $O.\syntax{conservativityStrength}$ is \syntax{model-conservative}, the semantics is only
+defined if $\cM\not=\emptyset$.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{consequence-conservative}, the semantics is only
-defined if $sem(\Gamma,O.\syntax{oms})$ has only tautologies\footnote{A tautology is a sentence holding in every model.} as signature-free\footnote{A signature-free sentence is one over the empty signature.} logical consequences.
+defined if $\Delta$ has only tautologies\footnote{A tautology is a sentence holding in every model.} as signature-free\footnote{A signature-free sentence is one over the empty signature.} logical consequences.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{monomorphic}, the semantics is only
-defined if $sem(\Gamma,O.\syntax{oms})$ consist of exactly one isomorphism
-class of models.
+defined if $\cM$ consist of exactly one isomorphism
+class of models.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{weak-definitional}, the semantics is only
-defined if $sem(\Gamma,O.\syntax{oms})$ is empty or a singleton.
+defined if $\cM$ is empty or a singleton.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{definitional}, the semantics is only
-defined if $sem(\Gamma,O.\syntax{oms})$ is a singleton.
+defined if $\cM$ is a singleton.
 
 %%%%%
 \sssclause{Semantics of OMS references} 
-\semdom{sem(\Gamma, \syntax{OMSReference} ) = (\cI,\Sigma,\cM,\Delta)}
+\semdom{sem(\Gamma, \syntax{OMSReference} ) = (\Gamma',(\cI,\Sigma,\cM,\Delta))}
 
-If $O$ is an \syntax{OMSReference},
-$$sem(\Gamma, O)= \Gamma(O.\syntax{omsRef})$$
+The rule for \syntax{OMSReference}s has been given above, as
+\syntax{OMSReference}s are a particular case of \syntax{ClosableOMS}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7181,8 +7220,8 @@ the semantics is undefined.
 
 If $smi$ is a \syntax{SymbolMapItem},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, smi) = (s_1,s_2)$$
-\noindent where $sem(\Gamma,\Sigma_1,smi.\syntax{symbol}) = s_1$
-and $sem(\Gamma,\Sigma_2,smi.\syntax{symbol2}) = s_2$.
+\noindent where $sem(\Gamma,\Sigma_1,smi.\syntax{source}) = s_1$
+and $sem(\Gamma,\Sigma_2,smi.\syntax{target}) = s_2$.
 
 \sssclause{Semantics of general symbol map items}
 
@@ -7207,15 +7246,15 @@ $$sem(\Gamma, \Sigma, sen) = \varphi$$
 
 \semdom{sem(\syntax{LolaRef})=L}
 $L$ is the language or the institution from the heterogeneous logical environment named by
-\syntax{LogicRef}.
+\syntax{LolaRef}.
 
 \semdom{sem(\syntax{LanguageRef})=L}
 $L$ is the language from the heterogeneous logical environment named by
-\syntax{LogicRef}.
+\syntax{LanguageRef}.
 
 \semdom{sem(\syntax{SyntaxRef})=S}
 $S$ is the serialization from the heterogeneous logical environment named by
-\syntax{LogicRef}.
+\syntax{SyntaxRef}.
 %%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -7223,23 +7262,6 @@ $S$ is the serialization from the heterogeneous logical environment named by
 $L$ is the institution from the heterogeneous logical environment named by
 \syntax{LogicRef}.
 
-\sssclause{Semantics of OMS language translations}
-
-\semdom{sem(\Gamma,\syntax{OMSLanguageTranslation})=\rho}
-
-If $t$ is a \syntax{NamedLanguageTranslation},
-$sem(\Gamma,t)=\rho$ where $\rho$ is
-the institution comorphism from the heterogeneous logical environment
-named by $t.\syntax{omsLanguageTranslationRef}$.  This is defined only if the
-domain of $\rho$ is the current logic of $\Gamma$.
-
-If $t$ is a \syntax{DefaultTranslation},
-$sem(\Gamma, t)=\rho$ where $\rho$ is the
-unique default institution comorphism from the heterogeneous logical
-environment running from $\Gamma.logic$ to $t.\syntax{languageRef}$ (if this is a
-logic) or to some logic supported by $t.\syntax{languageRef}$ (if this
-is a language). If there is no or no unique such comorphism, the
-semantics is undefined. \ednote{@Till: please check this. TM: sounds good.}
 
 \ssclause{Semantics of OMS Mappings}\label{sec:oms-mappings}
 
@@ -7339,8 +7361,10 @@ $$
    \item $(L_1, L_2) = sem(\Gamma, d.\syntax{interpretationType})$
    \item $\rho = (\Phi,\alpha,\beta):
              \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, d.\syntax{omsLanguageTranslation})$.\\ If $d.\syntax{OMSLanguageTranslation}$ is missing, the default translations between the logics is selected. 
-   \item    $sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), d.\syntax{symbolMap}) = \sigma,$
-where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$. 
+   \item    $\sigma = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), d.\syntax{symbolMap})$,
+where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$, or, 
+if $d.\syntax{symbolMap}$ is missing, $\sigma$ is the identity signature 
+morphism on $\Phi(\Sig(L_1))$ which must be equal with $\Sig(L_2)$.
   \end{itemize}
 
 The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L_1)$ for each $M_2\in\Mod(L_2)$.\\
@@ -7368,9 +7392,7 @@ $\cM_1\not\models \varphi$.
 If $d$ is a \syntax{RefinementDefinition},
 $$sem(\Gamma, d) = \Gamma'$$
 \noindent
-where $ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto (G,\sigma, N_1, N_2)]$
-and 
-$sem(\Gamma, d.\syntax{refinement}) = (G,\sigma, N_1, N_2)$.
+where $ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto sem(\Gamma, d.\syntax{refinement})]$.
 
 \sssclause{Semantics of interpretation types}
 
@@ -7380,16 +7402,16 @@ If $t$ is an \syntax{InterpretationType},
 $$sem(\Gamma,  t) = (L_1, L_2)$$
 \noindent where
 \begin{itemize}
- \item $\Name(L_1) = \Name(t.\syntax{oms})$ and
-       $\Name(L_2) = \Name(t.\syntax{oms2})$,
+ \item $\Name(L_1) = \Name(t.\syntax{source})$ and
+       $\Name(L_2) = \Name(t.\syntax{target})$,
  \item $(\Inst(L_1), 
          \Sig(L_1),
          \Mod(L_1),
-         \Th(L_1)) = sem(\Gamma, t.\syntax{oms})$,
+         \Th(L_1)) = sem(\Gamma, t.\syntax{source})$,
  \item $(\Inst(L_2), 
          \Sig(L_2),
          \Mod(L_2),
-         \Th(L_2)) = sem(\Gamma, t.\syntax{oms2})$,
+         \Th(L_2)) = sem(\Gamma, t.\syntax{target})$,
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%
@@ -7407,8 +7429,9 @@ $\sigma : G_1\to G_2$ is
 
 \begin{enumerate}
 \item a 
-functor $\sigma^G: Shape(G_1)\to Shape(G_2)$, 
-together with 
+functor $\sigma^G: Shape(G_1)\to Shape(G_2)$, where given a network $G$, its shape 
+$Shape(G)$ is a graph with same nodes and edges as $G$ but with no labels of nodes,
+\ednote{@Till: is this enough?}
 \item a natural transformation $\sigma^M : G_1 \to \sigma^G;G_2$
 \end{enumerate}
  such that
@@ -7429,6 +7452,13 @@ Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$,
  $F\forget\sigma$ is defined as the family of models 
 $\{M_i\}_{i\in Nodes(G_1)}$ such that
 $M_i = F_{\sigma^G(i)}\forget{\sigma^M_{i}}$ for each $i\in Nodes(G_1)$.
+
+Thus, the semanntics of a \syntax{Refinement} consists of
+\begin{itemize}
+ \item a refinement signature $(G_1,G_2)$,
+ \item a network morphism $\sigma$ and
+ \item a refinement model $\cM$.
+\end{itemize}
 \medskip
 
 If $r$ is \syntax{RefinementOMS},
@@ -7439,7 +7469,7 @@ $$sem(\Gamma, \syntax{r}) =
   \item $G$ is a graph with just one isolated node $N$
   such that $\Name(N) = \Name(r.\syntax{oms})$
   and the other elements of the tuple labeling
-  $L$ are given by $sem(\Gamma,r.\syntax{oms})$,
+  $N$ are given by $sem(\Gamma,r.\syntax{oms})$,
   \item $\sigma$ is the identity morphism on 
   $\Sig(r.\syntax{oms})$,  
   \item $\cM = \{((M), (M)) \mid M \in \Mod(r.\syntax{oms})\}$,
@@ -7458,7 +7488,7 @@ If $r$ is \syntax{RefinementComposition},
 $$sem(\Gamma, r) = 
 ((G_1, G'_2), \sigma, \cM)$$
 \noindent where\\ 
-$sem(\Gamma, r.\syntax{refinement}) = 
+$sem(\Gamma, r.\syntax{refinement1}) = 
 ((G_1, G'_1), \sigma_1, \cM_1)$,
 $sem(\Gamma, r.\syntax{refinement2}) = 
 ((G_2, G'_2), \sigma_2, \cM_2)$
@@ -7474,7 +7504,7 @@ If $r$ is \syntax{SimpleOMSRefinement},
 $$sem(\Gamma, r) = 
 ((G, G_2), \sigma, \cM)$$
 where\\
- $sem^M(\Gamma,  r.\syntax{oms}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
+ $sem(\Gamma,  r.\syntax{oms}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
  $sem(\Gamma,  r.\syntax{refinement}) = 
  ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
  such that $G_1$ consists of an isolated node labeled with 
@@ -7548,15 +7578,16 @@ The map is required to be total on the nodes of $G_1$.
 
 If $m$ is a \syntax{NodeMap},
 $$sem(\Gamma, G_1, G_2,
-n) = (m.\syntax{omsName}, m.\syntax{omsName2}, \rho,\sigma)$$
+n) = (m.\syntax{source}, m.\syntax{target}, \rho,\sigma)$$
 where\\
-$(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{omsName}$ in $G_1$,\\
-$(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{omsName2}$ in $G_2$,\\
+$(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{source}$ in $G_1$,\\
+$(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{target}$ in $G_2$,\\
 $sem(\Gamma, m.\syntax{omsLanguageTranslation}) = \rho = (\Phi,\alpha,\beta) : \cI_1\to\cI_2$, \\
-$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$,
+$sem(\Gamma', \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$,
 where $\Gamma.\current=(lang, logic,ser)$,
-$logic'$ is the target logic of $(\Phi,\alpha,\beta)$
-and $lang'$ and $ser'$ are the default language and serialization for $logic'$.
+$logic'$ is the target logic of $(\Phi,\alpha,\beta)$,
+$lang'$ and $ser'$ are the default language and serialization for $logic'$
+and $\Gamma' = \Gamma.\current=(lang', logic',ser')$.
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -7579,12 +7610,12 @@ If $t$ is an \syntax{OMSOMSEntailment},
 $$sem(\Gamma, t) = L_2 \stackrel{\id}{\to} L_1$$
 
 \noindent where 
-$\Name(L_1) = \Name(t.\syntax{oms})$,
-$\Name(L_2) = \Name(t.\syntax{oms2})$,\\
+$\Name(L_1) = \Name(t.\syntax{premise})$,
+$\Name(L_2) = \Name(t.\syntax{conclusion})$,\\
 $(\Inst(L_1),\Sig(L_1),\Mod(L_1),\Th(L_1)) = 
-sem(\Gamma, t.\syntax{oms})$,
+sem(\Gamma, t.\syntax{premise})$,
 $(\Inst(L_2),\Sig(L_2),\Mod(L_2),\Th(L_2)) = 
-sem(\Gamma, t.\syntax{oms2})$ 
+sem(\Gamma, t.\syntax{conclusion})$ 
 such that $\Sig(L_1) = \Sig(L_2)$
 and $\Mod(L_1)\subseteq \Mod(L_2)$
 and $id$ is the identity morphism on $\Sig(L_1)$.
@@ -7593,7 +7624,7 @@ If $t$ is a \syntax{NetworkOMSEntailment},
 $sem(\Gamma,t) = G$
 
 \noindent where $sem(\Gamma, t.\syntax{network}) = G'$ such that $G'$ contains a node $n$ labeled with 
-$\Name(t.\syntax{omsName})$,
+$\Name(t.\syntax{premise})$,
 $sem(\Gamma,t.\syntax{oms}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and 
 $\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. Then 
 $G$ extends G' with a new node whose label has 
@@ -7605,8 +7636,8 @@ the identity morphism on $\Sigma$.
 If $t$ is a \syntax{NetworkNetworkEntailment},
 $$sem(\Gamma,t) = G$$
 
-\noindent where $sem(\Gamma, t.\syntax{network}) = G_1$,
-$sem(\Gamma, t.\syntax{network2}) = G_2$, 
+\noindent where $sem(\Gamma, t.\syntax{premise}) = G_1$,
+$sem(\Gamma, t.\syntax{conclusion}) = G_2$, 
 such that $Shape(G_1) = Shape(G_2)$ and, for each node $i\in |Shape(G_1)|$,
 its names in the networks $G_1$ and $G_2$ are the same,
 its signatures are the same
@@ -7645,9 +7676,11 @@ $$sem(\Gamma,d)=\Gamma'$$
 If $t$ is an \syntax{OMSEquivalence},
 $$ sem(\Gamma,t) = 
 (G, N_1, N_2)$$
-\noindent where $O_1 = t.\syntax{oms}$, $O_2 = t.\syntax{oms2}$, $O_3 = t.\syntax{oms3}$,
-$sem^{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}_{\Gamma.lang,\Gamma.logic,\Gamma.ser}(O_3)
-= (\cI, \Sigma, \cM,\Delta)$\\
+\noindent where $O_1 = t.\syntax{oms}$, $O_2 = t.\syntax{oms2}$, $O_3 = t.\syntax{mediatingOMS}$,\\
+$
+sem(\Gamma, (\cI, \Sig(O_1)\cup\Sig(O_2), \Mod^{\cI}(\Sig(O_1)\cup\Sig(O_2)), \emptyset),
+O_3)
+= (\Gamma',(\cI, \Sigma, \cM,\Delta))$\\
 $G$ is the graph
 $N_1 \stackrel{\iota_1}{\rightarrow} N_3 \stackrel{\iota_2}{\leftarrow} 
 N_3$ where
@@ -7665,7 +7698,7 @@ such that
 \begin{enumerate}
 \item $\iota_i : \Sig(O_i) \to \Sigma$ are signature inclusions,
 \item 
-$\Inst(O_1) = \Inst(O_2) = \Inst(O_3)$ and 
+$\cI = \Inst(O_1) = \Inst(O_2)$ and 
 \item
 for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \cM$
 such that $M\forget{\Sig(O_i)} = M_i$. 
@@ -7681,7 +7714,7 @@ $$sem(\Gamma,t)=(G_1,G_2,G_3)$$
 \noindent where 
 $n_1 = t.\syntax{network}$, 
 $n_2 = t.\syntax{network2}$, 
-$n_3 = t.\syntax{network3}$,
+$n_3 = t.\syntax{mediatingNetwork}$,
 $sem(\Gamma, n_1) = G_1$,
 $sem(\Gamma, n_2) = G_2$,
 $sem(\Gamma, n_3) = G_3$
@@ -7689,7 +7722,6 @@ such that $G_1$ and $G_2$ are subgraphs of $G_3$
 and for each $i = 1,2$ and each family of models $\cM_i$ compatible with 
 $G_i$ there is a unique family of models $\cM$ compatible with $G_3$ such that
 the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$.
-\ednote{todo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7704,7 +7736,8 @@ If $d$ is a \syntax{ModuleRelDefinition},
 $$
 sem(\Gamma, d) = \Gamma'
 $$
-\noindent where $O_1 = d.\syntax{oms}$, $O_2 = d.\syntax{oms2}$, $c = d.\syntax{conservativityType}$, $\Sigma = sem(\Gamma, d.\syntax{interfaceSignature})$,
+\noindent where $O_1 = d.\syntax{moduleType}.\syntax{module}$, 
+$O_2 = d.\syntax{moduleType}.\syntax{whole}$, $c = d.\syntax{conservativityType}$, $\Sigma = sem(\Gamma, d.\syntax{interfaceSignature})$,
 $\Gamma' = \Gamma[d.\syntax{moduleName}\mapsto 
 (G,\iota, N_2,N_1)]$
 and $G$ is the graph 
@@ -7714,9 +7747,9 @@ $N_2$ with
  $(O_2, \Inst(O_2),\Sig(O_2),  \Mod(O_2), \Th(O_2))$, 
 and $\iota$ is an inclusion, 
 when $\Sigma \subseteq \Sig(O_2) \subseteq \Sig(O_1)$
-and if $c=$\%mcons and for each $M\in\Mod(O_2)$ there is a model $M'\in \Mod(O_1)$ such that
+and if $c= \syntax{model-conservative}$ and for each $M\in\Mod(O_2)$ there is a model $M'\in \Mod(O_1)$ such that
 $M'\forget{\Sigma} = M\forget{\Sigma}$,
-or if $c=$\%ccons and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
+or if $c=\syntax{consequence-conservative}$ and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
 implies $O_2\models\varphi$.
 
 %%%%%%%%%%%%%%%%%%%%
@@ -7743,24 +7776,24 @@ and\\ $G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\synta
 If $t$ is an \syntax{AlignmentType}
 $$sem(\Gamma, t) = (L_1, L_2)$$
 \noindent where $L_1$ is a node label whose name is
-$\Name(t.\syntax{oms})$ and whose other components are
-given by $sem(\Gamma, t.\syntax{oms})$
+$\Name(t.\syntax{source})$ and whose other components are
+given by $sem(\Gamma, t.\syntax{source})$
 and similarly, $L_2$ is a node label whose name is
-$\Name(t.\syntax{oms2})$ and whose other components are
-given by $sem(\Gamma, t.\syntax{oms2})$.
+$\Name(t.\syntax{target})$ and whose other components are
+given by $sem(\Gamma, t.\syntax{target})$.
 
 \sssclause{Semantics of alignments}
 
-\semdom{sem(\Gamma,  L_1, L_2, Set(\syntax{AlignmentCardinalityPair}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
+\semdom{sem(\Gamma,  L_1, L_2,\syntax{AlignmentCardinalityPair},\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
 G}
 
-If $card$ is a set of \syntax{AlignmentCardinalityPair}s, 
+If $card$ is a \syntax{AlignmentCardinalityPair}, 
 $sem$ an \syntax{AlignmentSemantics}
 and $C = Set\{c_1, \ldots, c_n\}$ a set of \syntax{Correspondence}s,
 $$sem(\Gamma, L_1, L_2, card, sem, C)=
 G$$
 \noindent
-where\\
+where
 if at least one of the correspondences $c_1, \ldots,c_n$ has a confidence value different than $1$, then the semantics of the 
 alignment is not defined, 
 and the alignment is ill-formed if the alignment mapping does not have the arities given by
