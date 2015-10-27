@@ -4466,17 +4466,12 @@ the respective conforming OMS language; \eg \DOL's OMS reference and extension c
   definition of relations and datatypes), and cofreeness (enabling the
   coinductive definition of relations and datatypes).
 \end{itemize}
-Using \syntax{ExtendingOMS}, further OMS can be built:
-\begin{itemize}
-\item extensions of an OMS with an \syntax{Extension}, which is an \syntax{ExtendingOMS} optionally named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{ConservativityStrength}, see clause~\ref{s:structuredOMS} for details),
-\item  closures of an OMS with a \syntax{Closure}.  This is
-  similar to a \syntax{RelativeClosureOMS}, but the non-logical
-  symbols to be  minimized/maximized and to be varied are
-  explicitly declared here (while a \syntax{RelativeClosureOMS} takes
-  the local environment to be fixed, i.e.\ not varied).
-\end{itemize}
 Recall that the local environment is the OMS built from all
 previously-declared symbols and axioms.
+
+Using \syntax{ExtendingOMS}, extensions of an OMS with an \syntax{ExtendingOMS}
+can be built. The latter can optionally be named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{ConservativityStrength}, see clause~\ref{s:structuredOMS} for details).
+
 \medskip
 \begin{center}
 \includegraphics[scale=0.47]{mof/extension&closure.png}
@@ -4484,6 +4479,11 @@ previously-declared symbols and axioms.
 
 Furthermore, OMS can be constructed using 
 \begin{itemize}
+\item  closures of an OMS with a \syntax{Closure}.  This is
+  similar to a \syntax{RelativeClosureOMS}, but the non-logical
+  symbols to be  minimized/maximized and to be varied are
+  explicitly declared here (while a \syntax{RelativeClosureOMS} takes
+  the local environment to be fixed, i.e.\ not varied);
 \item a translation \syntax{OMSTranslation} of an OMS into a different
   signature or OMS language. The former is done using a \syntax{SymbolMap},
   specifying a map of symbols to symbols. The latter is done using an 
@@ -4823,15 +4823,11 @@ ModuleRelDefinition ::= 'module' ModuleName [Conservative] ':'
 ModuleName         ::= IRI
 ModuleType         ::= GroupOMS 'of' GroupOMS
 AlignmentDefinition ::= 'alignment' AlignmentName
-                        [AlignmentCardinalityPair] ':'
+                        [AlignmentCardinality AlignmentCardinality] ':'
                         AlignmentType
                         ['=' Correspondence ( ',' Correspondence )*]
                         ['assuming' AlignmentSemantics] 'end'
 AlignmentName      ::= IRI
-AlignmentCardinalityPair ::= AlignmentCardinalityForward
-                             AlignmentCardinalityBackward
-AlignmentCardinalityForward ::= AlignmentCardinality
-AlignmentCardinalityBackward ::= AlignmentCardinality
 AlignmentCardinality ::= '1' | '?' | '+' | '*'
 AlignmentType      ::= GroupOMS 'to' GroupOMS
 AlignmentSemantics ::= 'SingleDomain'
@@ -7783,6 +7779,9 @@ given by $sem(\Gamma, t.\syntax{target})$.
 
 \sssclause{Semantics of alignments}
 
+\ednote{Note that \syntax{AlignmentCardinalityPair} has been replaced
+by a pair of \syntax{AlignmentCardinality}s.}
+
 \semdom{sem(\Gamma,  L_1, L_2,\syntax{AlignmentCardinalityPair},\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
 G}
 
@@ -10088,21 +10087,15 @@ ModuleRelDefinition ::= module-definition ModuleName
 ModuleName         ::= IRI
 ModuleType         ::= module-type OMS OMS
 AlignmentDefinition ::= alignment-definition AlignmentName
-                                             [AlignmentCardinalityPair]
-                                             AlignmentType Correspondence*
-                                             [AlignmentSemantics]<\footnote{%
+                              [AlignmentCardinality AlignmentCardinality]
+                              AlignmentType Correspondence*
+                              [AlignmentSemantics]<\footnote{%
                         Note that this grammar uses ``type'' as in
                         ``the type of a function'', whereas the Alignment API
                         \cite{AlignmentAPI} uses ``type''  for\:  the
                         totality/injectivity of the relation/function.  For the
                         latter, this grammar uses ``cardinality''.}>
 AlignmentName      ::= IRI
-AlignmentCardinalityPair ::= AlignmentCardinalityForward
-                                                         AlignmentCardinalityBackward
-AlignmentCardinalityForward ::= alignment-cardinality-forward
-                                                              AlignmentCardinality
-AlignmentCardinalityBackward ::= alignment-cardinality-backward
-                                                                AlignmentCardinality
 AlignmentCardinality ::= injective-and-total
                      | injective
                      | total
