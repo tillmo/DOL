@@ -8801,45 +8801,41 @@ with $c, c_1,\ldots, c_r, c' \in C$, $\tau$ a collection type
 constructor, $o$ an \emph{operation name}, and $x_1, \ldots, x_r$
 \emph{parameter names}.
 
-\item An \emph{association declaration} over $(C, {\leq_C})$ is of the
-form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_r[c_r])$ with $r \geq 2$,
-$c_1, \dots, c_r \in C$, $\tau_1, \ldots, \tau_r$ classifier
-annotations, $a$ an \emph{association name}, and $p_1, \dots, p_r$
+  \item An \emph{association declaration} over $(C, {\leq_C})$
+is of the form $a(p_1 : \tau_1[c_1], \dots, p_r : \tau_r[c_r])$
+with $r \geq 2$,
+$c_1, \dots, c_r \in C$,
+$\tau_1, \ldots, \tau_r$
+classifier annotations, $a$
+an \emph{association name}, and $p_1, \dots, p_r$
 \emph{member end names}.\footnote{The member ends are ordered according
   to the UML Superstructure Specification 2.4.1, p.~29; UML 2.5, p.~197;
-  hence they are represented in a tuple-like notation.}  An association declaration
+  hence they are represented in a tuple-like notation.}  An association
+declaration
 $\mathbf{a} = a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])$
 \emph{yields} the \emph{property declarations}
-$\mathbf{a}.p_i : \tau_i[c_i]$ for $1 \leq i \leq r$.  An association
-declaration is \emph{binary} if $r = 2$.\footnote{Only binary
-  association may show member ends that are properties not owned by the
-  association (UML Superstructure Specification 2.4.1, p.~37; UML 2.5,
-  p.~218).  The property declarations induced by a more than binary
-  association result in a query operation.}
-
-  \item A \emph{composition declaration} over $(C, {\leq_C})$ is of the
-form $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$ with
-$c_1, c_2 \in C$, $\tau_2$ a collection type constructor, $m$ a
-\emph{composition name}, and $p_1, p_2$ \emph{member end
-  names}.\footnote{Composite properties, i.e., properties with
-   aggregation kind \uml{composite} can only be member ends of binary associations (\cite[p.~218]{uml-2.5}) and their multiplicity must not
-  exceed one (\cite[p.~150]{uml-2.5}).} A
-composition declaration
-$\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
-\tau_2[c_2])$
-\emph{yields} the property declarations
-$\mathbf{m}.p_1 : \mathsf{Set}[c_1]$ and $\mathbf{m}.p_2 : \tau_2[c_2]$.
+$\mathbf{a}.p_i : \tau_i[c_i]$
+for $1 \leq i \leq r$.
+An association declaration is \emph{binary} if $r = 2$.\footnote{Only
+  binary association may show member ends that are properties not owned
+  by the association (UML Superstructure Specification 2.4.1, p.~37; UML
+  2.5, p.~218).  The property declarations induced by a more than binary
+  association result in a query operation.}  For a binary association
+with $\tau_1 = \mathsf{Set}$,
+the second member end may be \emph{composite}, and we write
+$a(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$
+if this fact plays a rôle.\footnote{Composite properties, i.e.,
+  properties with aggregation kind \uml{composite} can only be member
+  ends of binary associations (\cite[p.~218]{uml-2.5}) and their
+  multiplicity must not exceed one (\cite[p.~150]{uml-2.5}).}
 \end{itemize}
 
-\ednote{define a composition declaration as an association declaration
-that has a composite property}
-
 \medskip\noindent\textbf{Class/data type nets (Signatures).}
-A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A, M)$
+A \emph{class/data type net} $\Sigma = ((C, {\leq_C}), P, O, A)$
 comprises a class/data type hierarchy $(C, {\leq_C})$ and a set $P$ of
 attribute declarations, a set $O$ of operation declarations,
- a set $A$ of association declarations over
-$(C, {\leq_C})$, and a set $M$ of composition declarations over $(C, {\leq_C})$, such that
+ and a set $A$ of association declarations over
+$(C, {\leq_C})$, such that
 the following properties are satisfied:
 %
 \begin{itemize}[label={--}, leftmargin=*]
@@ -8848,13 +8844,13 @@ $c_1.p_1 : \tau_1[c_1']$ and $c_2.p_2 : \tau_2[c_2']$ are different
 property declarations in $P$ and $c_1 \leq_C c_2$, then $p_1 \neq
 p_2$;
 
-  \item association and composition names are unique: if $d_1$ and
-$d_2$ are the names of two different association or composition
-declarations in $M \cup A$, then $d_1 \neq d_2$;
+  \item association names are unique: if $d_1$
+and $d_2$
+are the names of two different association declarations in $M \cup A$,
+then $d_1 \neq d_2$;
 
   \item member end names are unique: if $p_1, \ldots, p_r$ are the
-member end names of an association declaration in $A$ or a composition
-declaration in $M$, then $p_i \neq p_j$ for
+member end names of an association declaration in $A$, then $p_i \neq p_j$ for
 $1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not be
   unique.  However, for (1)~a simpler handling of selecting a particular
   member end in the sentences and avoiding the use of number selectors,
@@ -8866,26 +8862,27 @@ $1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not be
 
   \item the type of a member end\footnote{All member ends are instances
   of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36; UML
-  2.5, p.~206.}
-owned by a class/data type coincides with its declarations as attribute:
- We say that a property declaration
-$\mathbf{a}.p_i : \tau_i[c_i]$ yielded by a binary association
-$\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2])$ is \emph{owned
-  by} $c_0 \in C$, if $c_{3-i} \leq_C c_0$ and there is an attribute
-declaration $c_0.p_i : \tau_i[c_i] \in P$; and similarly for property
-declarations yielded by composition declarations, where the second end
-$\mathbf{m}.p_2 : \tau_2[c_2]$ of the composition declaration
-$\mathbf{m} = m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
-\tau_2[c_2])$
-has to be composite, i.e., $c_0\composition p_2 : \tau_2[c_2]$.  (Note
-that by the uniqueness of attribute names along the generalisation
+  2.5, p.~206.}  owned by a class/data type coincides with its
+declarations as attribute: We say that a property declaration
+$\mathbf{a}.p_i : \tau_i[c_i]$
+yielded by a binary association
+$\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2])$
+is \emph{owned by} $c_0 \in C$,
+if $c_{3-i} \leq_C c_0$
+and there is an attribute declaration $c_0.p_i : \tau_i[c_i] \in P$,
+where for the second end $\mathbf{a}.p_2 : \tau_2[c_2]$
+of an association declaration
+$\mathbf{a} = a(p_1 : \mathsf{Set}[c_1], \composition p_2 :
+\tau_2[c_2])$ the property has to be composite, i.e.,
+$c_0\composition p_2 : \tau_2[c_2]$.
+(Note that by the uniqueness of attribute names along the generalisation
 hierarchy only a single attribute with name $p_i$ may exist.)
 \end{itemize}
 
 A \emph{class/data type net morphism}
-$\sigma = (\gamma, \varphi, \alpha, \mu) : \Sigma = ((C,
-{\leq}_C), P, A, M) \to \Tau = ((D, {\leq}_D),\allowbreak
-Q,\allowbreak B, N)$ is given by
+$\sigma = (\gamma, \varphi, \alpha) : \Sigma = ((C,
+{\leq}_C), P, A) \to \Tau = ((D, {\leq}_D),\allowbreak
+Q,\allowbreak B)$ is given by
 %
 \begin{itemize}[label={--}, leftmargin=*]
   \item a class/data type hierarchy map $\gamma : (C, {\leq_C}) \to (D,
@@ -8907,14 +8904,7 @@ $\alpha(a(p_1 : \tau_1[c_1], \dots, p_r : \tau_r[c_r])) = b(q_1 :
 \tau_1'[d_1], \dots, q_s : \tau_s'[d_s]) \in B$,
 then $r = s$ and $d_i = \gamma(c_i)$ and $\tau_i = \tau_i'$ for
 $1 \leq i \leq r$, and member ends owned by the association are mapped
-into owned member ends;
-
-  \item a composition declaration map $\mu : M \to N$ such that if
-$\mu(m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])) =
-n(q_1 : \mathsf{Set}[d_1], \composition q_2 : \tau_2'[d_2]) \in N$,
-then $d_1 = \gamma(c_1)$, $d_2 = \gamma(c_2)$, and $\tau_2 = \tau_2'$,
-and member ends owned by the composition are mapped into owned member
-ends.
+into owned member ends.
 \end{itemize}
 
 Class/data type nets as objects and class/data type net morphisms as
@@ -8947,19 +8937,19 @@ $\mathrm{Cl}$.
 \\[-.5ex]
   \phantom{\text{Properties: }}\mathsf{Linear.track : Set[Track]}, \mathsf{Linear.line : Set[Line]}
 \\
-  \text{Associations: }\mathsf{l2l(line : Set[Line], linear : Set[Linear])},
+  \text{Associations: }\mathsf{L2L(line : Set[Line], linear : Set[Linear])},
 \\[-.5ex]
-  \phantom{\text{Associations: }}\mathsf{l2t(linear : Set[Linear], track : Set[Track])},
+  \phantom{\text{Associations: }}\mathsf{L2T(linear : Set[Linear], track : Set[Track])},
 \\[-.5ex]
-  \phantom{\text{Associations: }}\mathsf{c2u(connector : Set[Connector], unit : Set[Unit])}
+  \phantom{\text{Associations: }}\mathsf{C2U(connector : Set[Connector], unit : Set[Unit])}
 \\
-  \text{Compositions: }\mathsf{n2s(net : Set[Net], \composition station : Set[Station])},
+  \text{Compositions: }\mathsf{N2S(net : Set[Net], \composition station : Set[Station])},
 \\[-.5ex]
-  \phantom{\text{Compositions: }}\mathsf{n2l(net : Set[Net], \composition line : Set[Line])},
+  \phantom{\text{Compositions: }}\mathsf{N2L(net : Set[Net], \composition line : Set[Line])},
 \\[-.5ex]
-  \phantom{\text{Compositions: }}\mathsf{s2u(station : Set[Station], \composition unit : Set[Unit])},
+  \phantom{\text{Compositions: }}\mathsf{S2U(station : Set[Station], \composition unit : Set[Unit])},
 \\[-.5ex]
-  \phantom{\text{Compositions: }}\mathsf{s2t(station : Set[Station], \composition track : Set[Track])}
+  \phantom{\text{Compositions: }}\mathsf{S2T(station : Set[Station], \composition track : Set[Track])}
 \end{gather*}
 %
 Here all member ends are owned by class/data types.
@@ -8977,15 +8967,15 @@ Here all member ends are owned by class/data types.
 \umlemptyclass[x=-2, y=-3]{Station}
 \umlclass[x=2.5, y=-3]{Line}{linear : Boolean}{}
 \umlcompo[name=NetStation,mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
-\draw (NetStation-4) node[above] {n2s};
+\draw (NetStation-4) node[above] {N2S};
 \umlcompo[name=NetLine,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
-\draw (NetLine-4) node[above] {n2l};
+\draw (NetLine-4) node[above] {N2L};
 \umlemptyclass[x=-4, y=-6]{Unit}
 \umlclass[x=0, y=-6]{Track}{linear : Boolean}{}
 \umlcompo[name=StationUnit,mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
-\draw (StationUnit-4) node[above] {s2u};
+\draw (StationUnit-4) node[above] {S2U};
 \umlcompo[name=StationTrack,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
-\draw (StationTrack-4) node[above] {s2t};
+\draw (StationTrack-4) node[above] {S2T};
 \umlemptyclass[x=-8, y=-6]{Connector}
 \umlassoc[name=ConnectorUnit, mult1=1..4, pos1=0, align1=left, mult2=1, pos2=1, align2=right]{Connector}{Unit}
 \draw (ConnectorUnit-middle) node[above] {c2u};
@@ -8994,9 +8984,9 @@ Here all member ends are owned by class/data types.
 \umlinherit[geometry=|-|]{Point}{Unit}
 \umlinherit[geometry=|-|]{Linear}{Unit}
 \umlassoc[name=LinearTrack, mult1=1..*, pos1=0, align1=left, anchor1=20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Track}
-\draw (LinearTrack-2) node[right] {l2t};
+\draw (LinearTrack-2) node[right] {L2T};
 \umlassoc[name=LinearLine, mult1=1..*, pos1=0, align1=left, anchor1=-20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Line}
-\draw (LinearLine-2) node[right] {l2l};
+\draw (LinearLine-2) node[right] {L2L};
 \end{tikzpicture}
 \end{center}
 \caption{Sample UML class diagram.}
@@ -9156,15 +9146,20 @@ $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
 If $\mathbf{a}$ is represented in simplified form, then instead the following is used \\
 \texttt{(forall (o s)\\
 \qqquad (if (c.p o s) (forall (x) (iff (member x s) (a o x)))))}
-\item the interpretation of a member end of a composition declaration
-owned by a class/data type coincides with the interpretation of the
-attribute: if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ is owned
-by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
+\item the interpretation of a member end of a composition
+declaration\ednote{Adapt to the definition of composition declarations
+  as a special case of association declarations.}  owned by a class/data
+type coincides with the interpretation of the attribute: if for
+$i\in\{1,2\}$,
+$\mathbf{m}.p : \tau_i[c_i]$
+for
+$\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])
+\in M$ is owned by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m)))))}\\
+  \qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m)))))}\\
 Again, if $\mathbf{m}$ is represented in simplified form, then the following is used\\
 \texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (forall (x) (iff (member x s) (m o x)))))}
+  \qqquad (if (c.p o s) (forall (x) (iff (member x s) (m o x)))))}
 %% \footnote{
 %% Ignoring the annotations $\tau_i$ in the interpretation of an
 %% association is intentional, see the semantics of associations in the UML
@@ -9242,27 +9237,27 @@ names.
 \begin{example}
  For the example in Fig. \ref{fig:bjoerners_dsl} there are the following multiplicity formulas:
 \begin{gather*}
-  \mathsf{2 \leq \#n2s(net : Set[Net], \composition station : Set[Station]).station}
+  \mathsf{2 \leq \#N2S(net : Set[Net], \composition station : Set[Station]).station}
 \\
-  \mathsf{\#n2s(net : Set[Net], \composition station : Set[Station]).net = 1}
+  \mathsf{\#N2S(net : Set[Net], \composition station : Set[Station]).net = 1}
 \\
-  \mathsf{\#n2l(net : Set[Net], \composition line : Set[Line]).net = 1}
+  \mathsf{\#N2L(net : Set[Net], \composition line : Set[Line]).net = 1}
 \\
-  \mathsf{\#s2u(station : Set[Station], \composition unit : Set[Unit]).station = 1}
+  \mathsf{\#S2U(station : Set[Station], \composition unit : Set[Unit]).station = 1}
 \\
-  \mathsf{\#s2t(station : Set[Station], \composition track : Set[Track]).station = 1}
+  \mathsf{\#S2T(station : Set[Station], \composition track : Set[Track]).station = 1}
 \\
-  \mathsf{1 \leq \#c2u(connector : Set[Connector], unit : Set[Unit]).unit \leq 4}
+  \mathsf{1 \leq \#C2U(connector : Set[Connector], unit : Set[Unit]).unit \leq 4}
 \\
-  \mathsf{\#c2u(connector : Set[Connector], unit : Set[Unit]).connector = 1}
+  \mathsf{\#C2U(connector : Set[Connector], unit : Set[Unit]).connector = 1}
 \\
-  \mathsf{1 \leq \#l2t(track : Set[Track], linear : Set[Linear]).track}
+  \mathsf{1 \leq \#L2T(track : Set[Track], linear : Set[Linear]).track}
 \\
-  \mathsf{\#l2t(track : Set[Track], linear : Set[Linear]).linear = 1}
+  \mathsf{\#L2T(track : Set[Track], linear : Set[Linear]).linear = 1}
 \\
-  \mathsf{1 \leq \#l2t(line : Set[Line], linear : Set[Linear]).line}
+  \mathsf{1 \leq \#L2T(line : Set[Line], linear : Set[Linear]).line}
 \\
-  \mathsf{\#l2l(line : Set[Line], linear : Set[Linear]).linear = 1}
+  \mathsf{\#L2L(line : Set[Line], linear : Set[Linear]).linear = 1}
 \end{gather*}
 %
  ``$x = y$'' is an  
