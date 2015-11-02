@@ -1707,7 +1707,7 @@ Mapping to RDF Graphs (Second Edition).  W3C Recommendation, 11 December 2012\\ 
   \item{W3C/TR REC-skos-reference:2009} {SKOS Simple Knowledge Organization System
 Reference.  W3C Recommendation, 18 August 2009\\ \url{http://www.w3.org/TR/2009/REC-skos-reference-20090818/}}
   \item{OMG Specification Metadata:2014} {Specification Metadata (SM) Vocabulary.  OMG, 18 August 2014\\
-\url{http://www.omg.org/techprocess/ab/SpecifiationMetadata.rdf}}
+\url{http://www.omg.org/techprocess/ab/20140801/SpecificationMetadata.rdf}}
 
 
 
@@ -2938,8 +2938,7 @@ for OMS in other DOL conformant languages (\emph{informative}).
 Annex \ref{a:uses} provides of \DOL texts, which provide examples for all \DOL constructs, which 
 are specified in the abstract syntax 
 (\emph{informative}).
-Annex \ref{a:use-cases} sketches scenarios that outline how \DOL is intended to be applied  (\emph{informative}). For 
-each scenario,  a brief description  is provided, and the utilized \DOL features as well as the status of its implementation are listed.
+%Annex \ref{a:use-cases} sketches scenarios that outline how \DOL is intended to be applied  (\emph{informative}). For  each scenario,  a brief description  is provided, and the utilized \DOL features as well as the status of its implementation are listed.
 
 Annex~\ref{a:tools} gives an overview of available  software tools for
 \DOL.  Annex~\ref{a:loc/id} discusses the implementation of a
@@ -3344,8 +3343,73 @@ The Dublin Core to PROV ontology translation%
 \footnote{\url{http://www.w3.org/TR/2013/NOTE-prov-dc-20130430/}}
   is expressed partly by a symbol mapping and partly by FOL rules. These FOL rules are implemented by CONSTRUCT patterns in the SPARQL RDF query language.%
 \footnote{E.g., \url{http://www.w3.org/TR/2013/NOTE-prov-dc-20130430/\#dct-creator}} 
-SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which is different from the model-theoretic semantics of the OWL and RDF Schema languages; nevertheless SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules between ontologies in RDF-based languages in a subset of FOL.
-\DOL  not only supports the reuse of the existing Dublin Core RDF Schema and PROV OWL ontologies as modules of a distributed ontology (= OMS network), but it is also able to support the description of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, and thus enable formal verification of the translation from Dublin Core to PROV.
+SPARQL has a formal specification of the evaluation semantics of its algebraic expressions, which 
+ is different from the model-theoretic semantics of the OWL and RDF Schema languages; nevertheless 
+SPARQL CONSTRUCT is a popular and immediately executable syntax for expressing translation rules 
+ between ontologies in RDF-based languages in a subset of FOL.
+\DOL  not only supports the reuse of the existing Dublin Core RDF Schema and PROV OWL ontologies as 
+ modules of a distributed ontology (= OMS network), but it is also able to support the description 
+of the FOL translation rules in a sufficiently expressive ontology language, e.g. Common Logic, 
+and thus enable formal verification of the translation from Dublin Core to PROV.
+
+
+
+\section{Use Case Onto-6: Maintaining Different Versions of an Ontology 
+in Languages with Different Expressivity}
+Often is useful to maintain different versions of an ontology within languages, which differ in 
+ their expressivity. 
+ 
+ 
+For example,  DOLCE is a foundational ontology that has primarily been formalized in
+ the first-order logic 
+ontology language KIF (a predecessor of Common Logic), but also in OWL (``DOLCE Lite'') 
+\cite{dolce}. This ‘OWLized’ version was targeting use in semantic web services and domain 
+ontology interoperability, and to provide the generic categories and relationships to aid 
+ domain ontology development. DOLCE has been used also for semantic middleware, and in 
+OWL-formalized ontologies of different domains, including neuroimaging, computing, and ecology.
+  Given the differences in expressivity between KIF and OWL, DOLCE Lite 
+   had to simplify certain notions.  For example, 
+ the DOLCE Lite formalization of ``temporary parthood'' (something is part of something else at a 
+certain point or interval in time) omits any information about the time, as OWL only supports 
+binary predicates (a.k.a.\ ``properties'').  That leaves ambiguities for modeling a view from
+DOLCE Lite to the first-order DOLCE, as such a view would have to reintroduce the third (temporal) 
+component of such predicates:
+  \begin{itemize}
+  \item Should a relation asserted in terms of DOLCE Lite be assumed to hold for \emph{all} possible points/intervals in time, \ie should it be universally quantified?
+  \item Or should such a relation be assumed to hold for \emph{some} points/intervals in time, \ie should it be existentially quantified?
+  \item Or should a concrete value for the temporal component be assumed, \eg ``0'' or ``now''?
+  \end{itemize}
+%  
+\DOL supports the formalization of  all of these views. Given suitable consistency 
+checking tools, DOL enables the analysis of  whether any such view satisfies all further
+ axioms that the  first-order DOLCE states about temporal parthood.
+
+\section{Use Case Onto-7: Metadata within OMS Repositories}
+DOL provides a language for the metadata within OMS Repositories. 
+For example, the Common Logic Repository (COLORE) \footnote{\url{http://stl.mie.utoronto.ca/colore/}} is an open 
+repository of more than 150 ontologies as of December 2011, all formalized in Common Logic. 
+COLORE  stores metadata about its ontologies, which are represented using a custom XML schema that 
+covers the following aspects\footnote{\url{http://stl.mie.utoronto.ca/colore/metadata.html}}, 
+without specifying a formal semantics for them:
+  \begin{description}
+  \item[module provenance] author, date, version, description, keyword, parent 
+ontology\footnote{Note that this use of the term ``module'' in COLORE corresponds
+to the term \termref{structured OMS} in this \IS{}.}
+  \item[axiom source provenance] name, author, year\footnote{Note that this may cover any 
+   sentences\index{sentence} in the sense of this \IS{}.}
+  \item[direct relations] maps (signature morphisms), definitional extension, conservative 
+   extension, inconsistency between ontologies, imports, relative interpretation, faithful 
+interpretation, definable equivalence
+  \end{description}
+
+  \DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal 
+semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE 
+metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV, 
+and it supports the implementation of one or multiple Common Logic ontologies plus their 
+annotations as one coherent \DOL library.
+
+
+
 
 
 \section{Use Case Spec-1: Modularity of Specifications}\label{spec-1}
@@ -3815,7 +3879,6 @@ oms JointModel = clStateModel and
                  clTaxonomy
 end
 \end{lstlisting}
-
 
 \section{Conclusion}
 
@@ -4718,10 +4781,10 @@ be done using interpretations).  Refinements can also be composed
 first refinement matches the source of the second one. Furthermore,
 refinements can also be specified between networks
 (\syntax{SimpleNetworkRefinement}).  A refinement between OMS networks
-has to specify both a mapping (\syntax{NodeMap}) between the nodes of
-the OMS network, as well as, for each node, a symbol map from the OMS
-of that node to the target OMS to which it is mapped (this is a
-\syntax{NetworkRefinementMap}). 
+consists of a list of ordinary refinements (between OMS), one for
+each node in the source network (the OMS refinement is then required
+to refine the node in the source network to some node in the target
+network).
 
 \medskip
 \begin{center}
@@ -4816,14 +4879,10 @@ InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
 Refinement         ::= GroupOMS
                      | NetworkName
-                     | Refinement 'then' Refinement
-                     | GroupOMS 'refined' [RefMap] 'to' Refinement
-                     | NetworkName 'refined' [RefMap] 'to' Refinement
+                     | Refinment 'refined' [RefMap] 'to' Refinement
 RefMap             ::= 'via' LanguageTranslation [SymbolMap]
                      | 'via' [LanguageTranslation] SymbolMap
-                     | 'via' NodeMap ( ',' NodeMap )*
-NodeMap            ::= OMSName '|->' OMSName
-                       ['using' LanguageTranslation* [SymbolMap]]
+                     | 'via' Refinement ( ',' Refinement )*
 EntailmentDefinition ::= 'entailment' EntailmentName '='
                          EntailmentType 'end'
 EntailmentName     ::= IRI
@@ -4833,8 +4892,8 @@ EntailmentType     ::= GroupOMS 'entails' GroupOMS
 EquivalenceDefinition ::= 'equivalence' EquivalenceName ':'
                           EquivalenceType 'end'
 EquivalenceName    ::= IRI
-EquivalenceType    ::= GroupOMS '<->' GroupOMS '=' OMS
-                     | Network '<->' Network '=' Network
+EquivalenceType    ::= GroupOMS '<->' GroupOMS ['=' OMS]
+                     | Network '<->' Network ['=' Network]
 ModuleRelDefinition ::= 'module' ModuleName [Conservative] ':'
                         ModuleType 'for' InterfaceSignature
 ModuleName         ::= IRI
@@ -6204,11 +6263,7 @@ $sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.
 \ssclause{Semantics of Documents}
  In this section the semantics of \DOL constructs regarding documents and \DOL libraries is defined. 
 
-\semdom{ 
-\begin{array}{ll}
- sem(\syntax{Document})& = \Gamma\\
- & : LogicalEnvironment
-\end{array}}
+\semdom{ sem(\syntax{Document}) = \Gamma}
 
  A document is either a \DOL library, or a native document written
 in one of the languages supported by the heterogeneous logical
@@ -6232,12 +6287,7 @@ The rule for \syntax{DOLLibrary} is given below.
 
 \sssclause{Semantics of libraries}
 
-\semdom{
-\begin{array}{ll}
- sem(\syntax{DOLLibrary})& = \Gamma\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\syntax{DOLLibrary})= \Gamma}
 
  A \DOL library is list of definitions of OMS, OMS
 mappings and OMS networks, starting with an optional prefix map and a qualification.
@@ -6261,12 +6311,7 @@ Note  that $dolLibrary$.\syntax{libraryName} is just discarded here.
 
 \sssclause{Semantics of lists of library items}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, Sequence(\syntax{LibraryItem}))& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-} 
+\semdom{sem(\Gamma, Sequence(\syntax{LibraryItem}))= \Gamma'} 
 
 If $libItem_1,\ldots,libItem_n$ are all \syntax{LibraryItem}s, 
 
@@ -6281,12 +6326,7 @@ $sem(\Gamma_{n-1}, libItem_n)= \Gamma'$.
 
 \sssclause{Semantics of library items}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \syntax{LibraryItem})& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{LibraryItem})= \Gamma'}
 
 For a \syntax{LibraryImport} $\mathit{libImport}$,
 $$sem(\Gamma, \mathit{libImport}) = \Gamma \cup \Gamma'$$
@@ -6302,12 +6342,7 @@ are given in the next sections. (Annex~\ref{a:queries} also introduces
 
 \sssclause{Semantics of a list of qualifications}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, Sequence(\syntax{Qualification}))& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma, Sequence(\syntax{Qualification}))=\Gamma'}
 
 If $q_1,\ldots, q_n$ are all \syntax{Qualification}s,
 $$sem(\Gamma, Sequence(q_1, \ldots, q_n)) = \Gamma'$$ 
@@ -6317,12 +6352,7 @@ $sem(\Gamma_{n-1}, q_n) = \Gamma'$.
 
 \sssclause{Semantics of qualifications}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{Qualification})& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{Qualification})=\Gamma'}
 
 For a \syntax{LanguageQualification} $q$,
 
@@ -6416,12 +6446,7 @@ in the subgraph determined by  $\Gamma(iri_1), \ldots, \Gamma(iri_n)$.
 
 \sssclause{Semantics of network definitions}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \syntax{NetworkDefinition})& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{NetworkDefinition}) = \Gamma'}
 
 If $n$ is a \syntax{NetworkDefinition},
 $$sem(\Gamma, n) = \Gamma'$$
@@ -6454,12 +6479,7 @@ If $n.$\syntax{ConservativityStrength} is \syntax{not-consequence-conservative},
 
 \sssclause{Semantics of networks}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \syntax{Network})& = G\\
- & : OMSGraph
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{Network}) = G}
 
 If $n$ is a network, 
 $$sem(\Gamma, n)= G'$$
@@ -6468,43 +6488,28 @@ $sem(\Gamma, G, n.\syntax{excludedElement}) = G'$.
 
 \sssclause{Semantics of sets of network elements}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, Set(\syntax{NetworkElement}))& = G\\
- & : OMSGraph
-\end{array}
-}
+\semdom{sem(\Gamma, Set(\syntax{NetworkElement})) = G'}
 
 If $elem_1, \ldots, elem_n$ are all \syntax{NetworkElement}s,
-$$sem(\Gamma, Set\{elem_1, \ldots, elem_n\}) = G$$
+$$sem(\Gamma, Set\{elem_1, \ldots, elem_n\}) = G'$$
 
 \noindent where \\
  $G_1 = sem(\Gamma, G_\emptyset, elem_1)$, where $G_\emptyset$ is the empty graph,\\
  $G_2 = sem(\Gamma, G_1, elem_2)$\\
  $\ldots$\\
  $G_n = sem(\Gamma, G_{n-1}, elem_n)$,\\
- $G = addImports(\Gamma, G_n, [elem_1, \ldots, elem_n])$.
+ $G' = addImports(\Gamma, G_n, [elem_1, \ldots, elem_n])$.
 
 \sssclause{Semantics of network elements}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, G, \syntax{NetworkElement})& = G'\\
- & : OMSGraph
-\end{array}
-}
+\semdom{sem(\Gamma, G, \syntax{NetworkElement}) = G'}
 
 If $networkElement$ is a \syntax{NetworkElement},
 $$sem(\Gamma, G, networkElement) = insert(G, \Gamma, networkElement.\syntax{elementRef}.\syntax{iri}, networkElement.\syntax{id})$$
 
 \sssclause{Semantics of sets of excluded elements}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, G, Set(\syntax{ExcludedElement}))& = G'\\
- & : OMSGraph
-\end{array}
-}
+\semdom{sem(\Gamma, G, Set(\syntax{ExcludedElement}))= G'}
 
 If $elem_1, \ldots, elem_n$ are all \syntax{ExcludedElement}s,
 $$sem(\Gamma, G, Set\{elem_1, \ldots, elem_n\}) = G'$$
@@ -6516,12 +6521,7 @@ $$sem(\Gamma, G, Set\{elem_1, \ldots, elem_n\}) = G'$$
 
 \sssclause{Semantics of excluded elements}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, G, \syntax{ExcludedElement})& = G'\\
- & : OMSGraph
-\end{array}
-}
+\semdom{sem(\Gamma, G, \syntax{ExcludedElement})= G'}
 
 If $excludedElem$ is a $\syntax{ElementRef}$,
 $$sem(\Gamma, G, excludedElem) = removeElement(\Gamma, G, excludedElem.\syntax{iri})$$.
@@ -6544,12 +6544,8 @@ $sem(\Gamma, O) = (\Gamma', (\cI,\Sigma,\cM,\Delta))$.
 
 \sssclause{Semantics of basic OMS}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \syntax{BasicOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{BasicOMS}) =
+(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
 
 For a \syntax{BasicOMS} $O$ 
@@ -6568,12 +6564,8 @@ node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'
 
 \sssclause{Semantics of basic OMS in a local environment}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{BasicOMS})& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array}
-}
+\semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{BasicOMS})=
+(\Gamma',(\cI',\Sigma',\cM', \Delta'))}
 
 
 For a \syntax{BasicOMS} $O$ 
@@ -6597,12 +6589,8 @@ node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'
 
 \sssclause{Semantics of closable OMS}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \syntax{ClosableOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{ClosableOMS})=
+(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
 The semantics of a \syntax{BasicOMS} has been defined above.
 
@@ -6627,12 +6615,9 @@ is given by
  
 \sssclause{Semantics of closable OMS in a local environment}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ClosableOMS})& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array}
-}
+\semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ClosableOMS})=
+(\Gamma',(\cI',\Sigma',\cM', \Delta'))}
+
 
 The semantics of a \syntax{BasicOMS} has been defined above.
 
@@ -6656,12 +6641,8 @@ $locId = postfixLogicIRI(O.\syntax{omsRef},name(\Gamma.logic))$, as follows:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of ExtendingOMS} 
- \semdom{
-\begin{array}{ll}
- sem(\Gamma, \syntax{ExtendingOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array} 
-}
+ \semdom{sem(\Gamma, \syntax{ExtendingOMS})=
+(\Gamma',(\cI,\Sigma,\cM, \Delta))}
  
 The semantics for \syntax{ClosableOMS} has been defined above.
 
@@ -6704,12 +6685,8 @@ category theory, see \ref{sec:colimits}.
  
 \sssclause{Semantics of ExtendingOMS in a local environment} 
  
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ExtendingOMS}))& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array}
-}
+\semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ExtendingOMS})=
+(\Gamma',(\cI,\Sigma',\cM', \Delta'))}
 
 The semantics for \syntax{ClosableOMS} has been defined above.
 
@@ -6760,12 +6737,7 @@ $\Mod(O) =
 
 \sssclause{Semantics of OMS}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{OMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{OMS})=(\Gamma',(\cI,\Sigma,\cM, \Delta))}
 
 The semantics for a \syntax{ClosableOMS} has been defined above.
 
@@ -7004,35 +6976,19 @@ adding an edge between a node identified by its name and another node.}
 \end{itemize}
 %%%%%
 \sssclause{Semantics of \syntax{CircClosure}}
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\Sigma, \syntax{CircClosure})& = \Sigma'\\
- & : Signature
-\end{array}
-}
+\semdom{sem(\Gamma,\Sigma, \syntax{CircClosure}) = \Sigma'}
 If $c$ is a \syntax{CircClosure},
 $$sem(\Gamma,\Sigma, c) = sem(\Gamma, \Sigma, c.symbol)$$
 %%%%%
 \sssclause{Semantics of \syntax{CircVar}}
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\Sigma, \syntax{CircVar})& = \Sigma'\\
- & : Signature
-\end{array}
-}
+\semdom{sem(\Gamma,\Sigma, \syntax{CircVar}) = \Sigma'}
 If $c$ is a \syntax{CircVar},
 $$sem(\Gamma,\Sigma, c) = sem(\Gamma, \Sigma, c.symbol)$$
 
 %%%%%%%%%%%%%%%%%%%%%%%
 \sssclause{Semantics of OMS translations}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\Sigma, \syntax{OMSTranslation})& = (\rho,  \sigma)\\
- & : (Comorphism, SignatureMorphism)
-\end{array}
-}
-
+\semdom{sem(\Gamma,\Sigma, \syntax{OMSTranslation})=(\rho,  \sigma)}
 The semantics of a \syntax{OMSTranslation}
 $O=$
 is given by
@@ -7049,12 +7005,7 @@ it defaults to the identity comorphism of the current logic.
 
 \sssclause{Semantics of OMS language translations}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{OMSLanguageTranslation})& = \rho\\
- & : Translation
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{OMSLanguageTranslation})=\rho}
 
 If $t$ is a \syntax{NamedLanguageTranslation},
 $$sem(\Gamma,t)=\Gamma(O.\syntax{omsLanguageTranslationRef})$$
@@ -7071,12 +7022,7 @@ logic) or to some logic supported by $t.\syntax{languageRef}$ (if this
 is a language). If there is no or no unique such comorphism, the
 semantics is undefined. 
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,Sequence(\syntax{OMSLanguageTranslation}))& = \rho\\
- & : Translation
-\end{array}
-}
+\semdom{sem(\Gamma, Sequence(\syntax{OMSLanguageTranslation})) = \rho}
 
 If $t_1, \ldots, t_n$ are all \syntax{OMSLanguageTranslation}s,
 $sem(\Gamma, Sequence\{t_1, \ldots, t_n\}) = \rho$,
@@ -7089,12 +7035,7 @@ $i=1,\ldots, n$ and
 
 \sssclause{Semantics of reductions}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \Sigma, \syntax{Reduction})& = (\rho, \sigma)\\
- & : (Morphism, SignatureMorphism)
-\end{array}
-}
+\semdom{sem(\Gamma, \Sigma, \syntax{Reduction})=(\rho, \sigma)}
 
 The semantics of a \syntax{Reduction}
 $O=$ with $O.\syntax{reduction}.\syntax{removalKind} = remove$
@@ -7136,12 +7077,7 @@ is
 
 \sssclause{Semantics of sets of symbols}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \Sigma, Set(\syntax{Symbol}))& = \Sigma'\\
- & : Signature
-\end{array}
- }
+\semdom{sem(\Gamma, \Sigma, Set(\syntax{Symbol})) = \Sigma'}
 
 If $s_1,\ldots, s_n$ are all \syntax{Symbol}s,
 $$sem(\Gamma, \Sigma, Set\{s_1,\ldots, s_n\}) = \Sigma'$$
@@ -7153,22 +7089,12 @@ sem(\Gamma,\Sigma,s_n)$, if such a sub-signature exists and is otherwise undefin
 
 \sssclause{Semantics of symbol maps}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,\Sigma, \syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
- & : SignatureMorphism
-\end{array}
-}
+\semdom{sem(\Gamma,\Sigma, \syntax{SymbolMap})= \sigma:\Sigma\to\Sigma'}
 
 \ednote{This is needed for translations, same as induced\_from vs. induced\_from\_to
 in CASL. How to deal with this?}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
- & : SignatureMorphism
-\end{array}
-}
+\semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMap})= \sigma:\Sigma\to\Sigma'}
 
 If $m$ is a \syntax{SymbolMap},
 
@@ -7223,12 +7149,8 @@ OMS.}:\hspace{-2cm}
 
 \sssclause{Semantics of extractions}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction})& = (\Sigma', \Delta')\\
- & : (Signature, Sentences)
-\end{array}
-        }
+\semdom{sem(\Gamma, (\Sigma, \Delta), \syntax{Extraction}) = 
+        (\Sigma', \Delta')}
 
 If $e$ is an \syntax{Extraction},
 $$sem(\Gamma, (\Sigma, \Delta), e) =
@@ -7257,12 +7179,7 @@ $$\begin{array}{ll}
 
 \sssclause{Semantics of approximations}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma), \syntax{Approximation})& = (\rho:\cI\to\cI',\Sigma')\\
- & : (Morphism, Signature)
-\end{array}
- }
+\semdom{sem(\Gamma, (\cI, \Sigma), \syntax{Approximation}) = (\rho:\cI\to\cI',\Sigma')}
 
 If $a$ is an \syntax{Approximation},
 $$sem(\Gamma, (\cI, \Sigma), a) = 
@@ -7277,12 +7194,7 @@ $$sem(\Gamma, (\cI, \Sigma), a) =
 
 \sssclause{Semantics of filtering}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{Filtering})& = (c,\cI',\Sigma', \Delta')\\
- & : ('keep'|'remove',Institution,Signature, Sentences)
-\end{array}
-}
+\semdom{sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{Filtering}) = (c,\cI',\Sigma', \Delta')}
 
 If $f$ is a \syntax{Filtering} such that
 $f.\syntax{removalKind} = keep$,
@@ -7305,12 +7217,8 @@ where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Si
 
 \sssclause{Semantics of extension}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{Extension})& = (\Gamma',(\cI,\Sigma',\cM',\Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
-\end{array}
-}
+\semdom{sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{Extension})=
+(\Gamma',(\cI,\Sigma',\cM',\Delta'))}
 
 If $e$ is an \syntax{Extension},
 $$sem(\Gamma,(\cI,\Sigma,\cM,\Delta),e)=
@@ -7340,12 +7248,8 @@ If $e.\syntax{extensionName}$ is present, the inclusion link is labeled with thi
 
 \sssclause{Semantics of interface signatures}
 
-\semdom{
-\begin{array}{ll}
- sem( \Gamma, \Sigma, \syntax{RemovalKind}, \syntax{InterfaceSignature})& = \Sigma'\\
- & : Signature
-\end{array}
-}
+\semdom{sem( \Gamma, \Sigma, \syntax{RemovalKind}, \syntax{InterfaceSignature}) = 
+\Sigma'}
 
 If $r$ is a \syntax{RemovalKind} and $s$ is an \syntax{InterfaceSignature},
 $$sem(\Gamma, \Sigma, r,s ) = \Sigma'$$
@@ -7360,21 +7264,13 @@ $$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, s.\syntax{symbolList})
 
 \sssclause{Semantics of OMS definitions}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{OMSDefinition})& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{OMSDefinition})=\Gamma'}
 
-An \syntax{OMSDefinition} $O$ extends the global environment. 
-
+An \syntax{OMSDefinition} $O$ extends the global environment:
 $$
-sem(\Gamma,O) = \Gamma'$$
-\noindent where 
-$
-\Gamma=\Gamma'[O.\syntax{omsName}\mapsto sem(\Gamma,O.\syntax{oms})]
-$
+sem(\Gamma,O)
+=\Gamma'[O.\syntax{omsName}\mapsto sem(\Gamma,O.\syntax{oms})]
+$$
 \noindent where $sem(\Gamma, O.\syntax{oms}) = (\Gamma', (\cI,\Sigma,\cM, \Delta))$ 
 and
 $\Gamma.logic$ and $\cI$ must be the same.
@@ -7394,14 +7290,7 @@ defined if $\cM$ is a singleton.
 
 %%%%%
 \sssclause{Semantics of OMS references} 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{OMSReference})& = (\Gamma',(\cI,\Sigma,\cM,\Delta))\\
- & : (LogicalEnvironment,(Institution, Signature,ModelClass, Sentences))
-\end{array}
-}
-
-%%% HERE!
+\semdom{sem(\Gamma, \syntax{OMSReference} ) = (\Gamma',(\cI,\Sigma,\cM,\Delta))}
 
 The rule for \syntax{OMSReference}s has been given above, as
 \syntax{OMSReference}s are a particular case of \syntax{ClosableOMS}. 
@@ -7410,12 +7299,7 @@ The rule for \syntax{OMSReference}s has been given above, as
 
 \sssclause{Semantics of symbols}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \Sigma,\syntax{Symbol})& = s\\
- & : LogicalSymbol
-\end{array}
-}
+\semdom{sem(\Gamma, \Sigma,\syntax{Symbol}) = s}
 
 If $sym$ is a \syntax{Symbol}
 $$sem(\Gamma,\Sigma, sym) = s$$
@@ -7424,12 +7308,7 @@ the semantics is undefined.
 
 \sssclause{Semantics of symbol map items}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMapItem})& = (s_1,s_2)\\
- & : (LogicalSymbol,LogicalSymbol)
-\end{array}
-}
+\semdom{sem(\Gamma, \Sigma_1,\Sigma_2,\syntax{SymbolMapItem})}
 
 If $smi$ is a \syntax{SymbolMapItem},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, smi) = (s_1,s_2)$$
@@ -7438,12 +7317,7 @@ and $sem(\Gamma,\Sigma_2,smi.\syntax{target}) = s_2$.
 
 \sssclause{Semantics of general symbol map items}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{GeneralSymbolMapItem})& = (s,t)\\
- & : (LogicalSymbol,LogicalSymbol)
-\end{array}
-}
+\semdom{sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{GeneralSymbolMapItem}) = (s,t)}
 
 If $gsmi$ is a \syntax{SymbolMapItem}, then its semantics has been given in the previous rule.
 
@@ -7462,35 +7336,21 @@ where $sem(\Gamma,\Sigma_1, gsmi) = s$
 
 \sssclause{Semantics of references}
 
-\semdom{
-\begin{array}{ll}
- sem(\syntax{LolaRef})& = L\\
- & : Language | Institution
-\end{array}
-}
+\semdom{sem(\syntax{LolaRef})=L}
 $L$ is the language or the institution from the heterogeneous logical environment named by
 \syntax{LolaRef}.
 
-\semdom{\begin{array}{ll}
- sem(\syntax{LanguageRef})& = L\\
- & : Language 
-\end{array}}
+\semdom{sem(\syntax{LanguageRef})=L}
 $L$ is the language from the heterogeneous logical environment named by
 \syntax{LanguageRef}.
 
-\semdom{\begin{array}{ll}
- sem(\syntax{SyntaxRef})& = S\\
- & : Serialization
-\end{array}}
+\semdom{sem(\syntax{SyntaxRef})=S}
 $S$ is the serialization from the heterogeneous logical environment named by
 \syntax{SyntaxRef}.
 %%%%%%%%%%%%%%%%%%%%%%%
 
 
-\semdom{\begin{array}{ll}
- sem(\syntax{LogicRef})& = L\\
- & : Institution
-\end{array}}
+\semdom{sem(\syntax{LogicRef})=L}
 $L$ is the institution from the heterogeneous logical environment named by
 \syntax{LogicRef}.
 
@@ -7573,22 +7433,12 @@ $L$ is the institution from the heterogeneous logical environment named by
 
 \sssclause{Semantics of mapping definitions}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{MappingDefinition})& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{MappingDefinition})= \Gamma'}
 See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \\\syntax{ModuleRelDefinition} and \syntax{AlignmentDefinition}.
 
 \sssclause{Semantics of interpretation definitions}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{InterpretationDefinition})& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{InterpretationDefinition}) = \Gamma'}
 
 If $d$ is an \syntax{InterpretationDefinition},
 $$
@@ -7629,12 +7479,7 @@ $\cM_1\not\models \varphi$.
 
 \sssclause{Semantics of refinement definitions}
 
-\semdom{
-\begin{array}{ll}
- sem(\Gamma,\syntax{RefinementDefinition})& = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{RefinementDefinition}) = \Gamma'}
 
 If $d$ is a \syntax{RefinementDefinition},
 $$sem(\Gamma, d) = \Gamma'$$
@@ -7643,12 +7488,7 @@ where $ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto sem(\Gamma, d.\syn
 
 \sssclause{Semantics of interpretation types}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, \syntax{InterpretationType})& = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))\\
- & : (NodeLabel,NodeLabel)
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{InterpretationType}) = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))}
 
 If $t$ is an \syntax{InterpretationType},
 $$sem(\Gamma,  t) = (L_1, L_2)$$
@@ -7670,12 +7510,7 @@ $$sem(\Gamma,  t) = (L_1, L_2)$$
 
 \sssclause{Semantics of refinements}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, \syntax{Refinement})& = (((G_1, G_2), \sigma, \cM)\\
- & : (OMSGraph,OMSGraph,GraphMorphism, ModelClass)
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{Refinement}) = ((G_1, G_2), \sigma, \cM)}
 
 The signature of a refinement is a pair consisting of the graph of the
 OMS or network of OMS being refined and the 
@@ -7789,12 +7624,7 @@ where\\
 
 \sssclause{Semantics of OMS refinement maps}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{OMSRefinementMap})& = (\rho, \sigma)\\
- & : (Comorphism,SignatureMorphism)
-\end{array}
-}
+\semdom{sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{OMSRefinementMap}) = (\rho, \sigma)}
 
 If $m$ is an \syntax{OMSRefinementMap},
 $$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), m) = ((\Phi,\alpha,\beta), \sigma) $$
@@ -7810,25 +7640,16 @@ $logic'$.
 
 \sssclause{Semantics of network refinement maps}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap})& = \sigma:G_1\to G_2\\
- & : GraphMorphism
-\end{array}
-}
+\semdom{sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap}) = \sigma:G_1\to G_2}
 
 If $m$ is a \syntax{NetworkRefinementMap},
 $$sem(\Gamma, G_1, G_2, m)
 = sem(\Gamma, G_1,G_2, m.nodeMap)$$
 
 \sssclause{Semantics of sets of node maps}
+\ednote{this has to be changed, see new syntax}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,G_1,G_2, Set(\syntax{NodeMap}))& = \sigma:G_1\to G_2\\
- & : GraphMorphism
-\end{array}
-}
+\semdom{sem(\Gamma,G_1,G_2, Set(\syntax{NodeMap})) = \sigma:G_1\to G_2 }
 
 If $m_1,\ldots, m_n$ are all \syntax{NodeMap}s,
 $$sem(\Gamma,G_1,G_2, Set\{m_1,\ldots,m_n\}) = \sigma:$$
@@ -7843,13 +7664,9 @@ The map is required to be total on the nodes of $G_1$.
 
 \sssclause{Semantics of node maps}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, G_1, G_2,
-\syntax{NodeMap}) & = (name_1, name_2,\rho,\sigma)\\
- & : (NodeName, NodeName, Comorphism, SignatureMorphism)
-\end{array}
-}
+\semdom{sem(\Gamma, G_1, G_2,
+\syntax{NodeMap}) = 
+(name_1, name_2,\rho,\sigma)}
 
 If $m$ is a \syntax{NodeMap},
 $$sem(\Gamma, G_1, G_2,
@@ -7868,12 +7685,7 @@ and $\Gamma' = \Gamma.\current=(lang', logic',ser')$.
 
 \sssclause{Semantics of entailment definitions}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,  \syntax{EntailmentDefinition}) & = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,  \syntax{EntailmentDefinition}) = \Gamma'}
 
 If $e$ is an \syntax{EntailmentDefinition},
 $$sem(\Gamma, e) = \Gamma'$$
@@ -7884,12 +7696,7 @@ where $\Gamma' = \Gamma[e.\syntax{entailmentName} \mapsto sem(\Gamma, e.\syntax{
 
 \sssclause{Semantics of entailment types}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,  \syntax{EntailmentType}) & = G\\
- & : OMSGraph
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{EntailmentType}) = (G, id, L_2,L_1)}
 
 If $t$ is an \syntax{OMSOMSEntailment},
 $$sem(\Gamma, t) = L_2 \stackrel{\id}{\to} L_1$$
@@ -7943,12 +7750,7 @@ on $\Sig(i_1)$.
 
 \sssclause{Semantics of equivalence definitions}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,\syntax{EquivalenceDefinition}) & = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{EquivalenceDefinition})=\Gamma'}
 
 If $d$ is an \syntax{EquivalenceDefinition},
 $$sem(\Gamma,d)=\Gamma'$$
@@ -7959,12 +7761,7 @@ $$sem(\Gamma,d)=\Gamma'$$
                   
 \sssclause{Semantics of OMS equivalences}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,\syntax{OMSEquivalence}) & = (G, N_1, N_2)\\
- & : (OMSGraph, Node, Node)
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{OMSEquivalence})=(G, N_1, N_2)}
 
 
 If $t$ is an \syntax{OMSEquivalence},
@@ -8001,12 +7798,7 @@ such that $M\forget{\Sig(O_i)} = M_i$.
 
 \sssclause{Semantics of network equivalences}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,\syntax{NetworkEquivalence}) & = (G_1,G_2,G_3)\\
- & : (OMSGraph, OMSGraph,OMSGraph)
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{NetworkEquivalence})=(G_1,G_2,G_3)}
 
 If $t$ is  a \syntax{NetworkEquivalence},
 $$sem(\Gamma,t)=(G_1,G_2,G_3)$$
@@ -8026,12 +7818,7 @@ the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$.
 
 \sssclause{Semantics of module relation definitions}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,  \syntax{ModuleRelDefinition}) & = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,  \syntax{ModuleRelDefinition}) = \Gamma'}
 
 \ednote{in the manifesto this is called a conservative extension. TM: so we have once decided to change this into conservative extension? I vaguely can
 remember...}
@@ -8060,12 +7847,7 @@ implies $O_2\models\varphi$.
 
 \sssclause{Semantics of alignment definitions}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,  \syntax{AlignmentDefinition}) & = \Gamma'\\
- & : LogicalEnvironment
-\end{array}
-}
+\semdom{sem(\Gamma,\syntax{AlignmentDefinition})=\Gamma'}
 
 If $d$ is an  \syntax{AlignmentDefinition},
 $$sem(\Gamma, d) = \Gamma' $$
@@ -8084,12 +7866,7 @@ and $G = sem(\Gamma, L'_1, L'_2, card, aSem, d.\syntax{correspondence})$.
 
 \sssclause{Semantics of alignment types}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,  \syntax{AlignmentType})& = (L_1, L_2)\\
- & : (NodeLabel,NodeLabel)
-\end{array}
-}
+\semdom{sem(\Gamma, \syntax{AlignmentType}) = (L_1, L_2)}
 
 If $t$ is an \syntax{AlignmentType}
 $$sem(\Gamma, t) = (L_1, L_2)$$
@@ -8102,12 +7879,8 @@ given by $sem(\Gamma, t.\syntax{target})$.
 
 \sssclause{Semantics of alignments}
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))& = G\\
- & : OMSGraph
-\end{array}
-}
+\semdom{sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
+G}
 
 If $card_1, card_2$ are \syntax{AlignmentCardinality}, 
 $aSem$ is an \syntax{AlignmentSemantics}
@@ -8152,12 +7925,7 @@ $L_B = (alignName++"\_bridge", \cI ,\Sigma,\Mod((\Sigma,\Delta)),\Delta)$.
 
 
 \sssclause{Semantics of sets of correspondences}
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))& = (\Sigma_s,\Sigma_t,(\cI,\Sigma,\Delta),\phi_s:\Sigma_s\to\Sigma,\phi_t:\Sigma_t\to\Sigma, smap, cvalues)\\
- & : (Signature,Signature,(Institution,Signature,Sentences),SignatureMorphism,SignatureMorphism,MapOfSymbols,Bool)
-\end{array}
- }
+\semdom{sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{AlignmentSemantics}, Set(\syntax{Correspondence})) = (\Sigma_s,\Sigma_t,(\cI,\Sigma,\Delta),\phi_s:\Sigma_s\to\Sigma,\phi_t:\Sigma_t\to\Sigma, smap, cvalues)}
 
 If $c_1,\ldots,c_n$ are all \syntax{Correspondence}s and 
 $aSem$ is an \syntax{AlignmentSemantics},
@@ -8176,12 +7944,7 @@ aSem, clist_1 ++ \ldots ++ clist_n)$.
 \cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
 \sssclause{Semantics of  correspondences}
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), \syntax{Correspondence})& = (clist,cvalues)\\
- & : (Sequence((Relation, Symbol, Symbol)), Bool)
-\end{array}
-}
+\semdom{sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), \syntax{Correspondence}) = (Sequence((Relation, Symbol, Symbol)), Bool)}
 
 If $c$ is a \syntax{DefaultCorrespondence},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
@@ -8236,12 +7999,7 @@ $cvalues = \lor_{i=1,\ldots,n} cvalues_i$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, L_1,L_2,\syntax{AlignmentSemantics})& = (L'_1, L'_2)\\
- & : (NodeLabel,NodeLabel)
-\end{array}
-}
+\semdom{sem(\Gamma, L_1,L_2,\syntax{AlignmentSemantics}) = (L'_1, L'_2)}
 
 If $s$ is an \syntax{AlignmentSemantics},
 
@@ -8342,7 +8100,7 @@ $$ rel(L) =
 \appendix
 
 %\chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary that implements the \DOL terminology}
-\normannex{\DOL Ontology}
+\infannex{\DOL Ontology}
 \label{a:dol-onto}
 
 
@@ -8373,7 +8131,9 @@ The ontology makes use of the following standard ontologies and vocabularies:
 \item SKOS (\nisref{W3C/TR REC-skos-reference:2009})
 \end{itemize}
 
-The sources of the \DOL ontology are being maintained in OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at \url{https://ontohub.org/meta/dol-ontology.omn}.
+%The sources of the \DOL ontology are being maintained in OWL Manchester
+% syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at 
+% \url{https://ontohub.org/meta/dol-ontology.omn}.
 
 It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
 
@@ -10480,19 +10240,15 @@ InterpretationName ::= IRI
 InterpretationType ::= interpretation-type OMS OMS
 Refinement         ::= RefinementOMS
                      | RefinementNetwork
-                     | RefinementComposition
                      | SimpleOMSRefinement
                      | SimpleNetworkRefinement
 RefinementOMS      ::= refinement-oms OMS
 RefinementNetwork  ::= refinement-network Network
-RefinementComposition ::= refinement-composition Refinement Refinement
-SimpleOMSRefinement ::= simple-oms-ref OMS OMSRefinementMap Refinement
-SimpleNetworkRefinement ::= simple-network-ref Network
+SimpleOMSRefinement ::= simple-oms-ref Refinement OMSRefinementMap Refinement
+SimpleNetworkRefinement ::= simple-network-ref Refinement
                                                NetworkRefinementMap Refinement
 OMSRefinementMap   ::= oms-refmap [OMSLanguageTranslation] [SymbolMap]
-NetworkRefinementMap ::= network-refmap NodeMap*
-NodeMap            ::= node-map OMSName OMSName
-                                OMSLanguageTranslation* [SymbolMap]
+NetworkRefinementMap ::= network-refmap Refinement*
 EntailmentDefinition ::= entailment EntailmentName EntailmentType
 OMSOMSEntailment   ::= oms-oms-entailment OMS OMS
 NetworkOMSEntailment ::= network-oms-entailment Network OMSName OMS
@@ -10506,8 +10262,8 @@ EquivalenceDefinition ::= equivalence-definition
                                                  EquivalenceType
 EquivalenceName    ::= IRI
 EquivalenceType    ::= OMSEquivalence | NetworkEquivalence
-OMSEquivalence     ::= oms-equivalence OMS OMS OMS
-NetworkEquivalence ::= network-equivalence Network Network Network
+OMSEquivalence     ::= oms-equivalence OMS OMS [OMS]
+NetworkEquivalence ::= network-equivalence Network Network [Network]
 ModuleRelDefinition ::= module-definition ModuleName
                                           [ConservativityStrength] ModuleType
                                           InterfaceSignature
@@ -11523,119 +11279,8 @@ end
 
 \end{lstlisting}
 
-\infannex{Use cases}\label{a:use-cases}
-
-This annex sketches scenarios that outline how \DOL is intended to be applied.  For each scenario,  the status of its implementation is described, the \DOL features it makes use of are listed, and a brief description is provided.
-
-\newenvironment{usecase}[3]{\sclause{#1}%
-\begin{description}
-\item[Status] #2
-\item[Features] #3
-\end{description}
-}{}
-\begin{usecase}{Generating multilingual labels for menus in a user interface}{exists (but not yet \DOL-based)}{Aligning (multiple OWL ontologies), Annotation}
-  DO-ROAM (\textbf{D}ata and \textbf{O}ntology driven \textbf{R}oute-finding \textbf{O}f \textbf{A}ctivity-oriented \textbf{M}obility\footnote{\url{http://www.do-roam.org}}) is a web service with an interactive frontend that extends OpenStreetMap by an ontology-based search for located activities and opening hours \cite{do-roam}.  The service is driven by a set of different OWL ontologies that have been aligned to each other using the Falcon matching tool \cite{HuQu-08}.  The user interface of the DO-ROAM web frontend offers multilingual labels, which are maintained in close connection to the underlying ontologies.
-
-  Porting DO-ROAM to \DOL would enable the coherent representation of the aligned ontologies as one OMS network, and it would enable  the maintenance of the user interface labels as annotations inside the ontology.
-\end{usecase}
-
-\begin{usecase}{Connecting devices of differing complexity in an Ambient Assisted Living setting}{core ontology (not \DOL-based) and service environment exists – the \DOL-based extensions not yet}{Logical OMS mappings across different logics, connection to linked open datasets}
-  Consider the following ambient assisted living (AAL) scenario:
-  \begin{quote}
-    Clara instructs her \textbf{wheelchair} to get her to the \textbf{kitchen} (\textbf{\underline{next door}} to the \textbf{living room}.  For \textbf{dinner}, she would like to take a \textit{pizza} from the \textbf{freezer} and bake it in the \textbf{oven}.  (Her diet is \textit{vegetarian}.)  \textbf{\underline{Afterwards}} she needs to rest in \textbf{bed}.
-  \end{quote}
-  Existing ontologies for ambient assisted living (\eg the OpenAAL\footnote{\url{http://openaal.org}} OWL ontology) cover the \emph{core} of these  concepts; they provide at least classes (or generic superclasses) corresponding to the concepts highlighted in \textbf{bold}.  However, that does not cover the scenario completely:
-  \begin{itemize}
-  \item Some concepts (here: food and its properties, \textit{italicized}) are not covered.  There are separate ontologies for that (such as the Pizza ontology\footnote{This is not a fully comprehensive food ontology, but rather a well-known sample OWL ontology; \cf \url{http://owl.cs.manchester.ac.uk/tutorials/protegeowltutorial/}}), whereas information about concrete products (here: information about the concrete pizza in Clara's oven) would rather come from Linked Open Datasets than from formal ontologies.
-  \item Not all concepts (here: space and time, \underline{underlined}) are covered at the required level of complexity.  OpenAAL says that appointments have a date and that rooms can be connected to each other, but not what exactly that means.  Foundational ontologies and spatial calculi, often formalized in first-order logic, cover space and time at the level of complexity required by a central controller of an apartment and by an autonomously navigating wheelchair.
-  \item Thirdly, even description logic might be too complex for very simple devices involved into the scenario, such as the kitchen light switch, for which propositional logic may be sufficient.
-  \end{itemize}
-  Thus, an adequate formalization of this scenario has to be heterogeneous.  For example, one could imagine the following axioms:
-  \begin{description}
-  \item[light switch] ``light is switched on if and only if someone is in the room and it is dark outside'' – this could be formalized in propositional logic as $\mathrm{light\_on}\equiv\mathrm{person\_in\_room}\wedge\mathrm{dark\_outside}$.
-  \item[freezer] ``a vegetarian pizza is a pizza whose toppings are all vegetarian'' – this could be formalized in description logic as $\mathrm{VegetarianPizza}\equiv\mathrm{Pizza}\sqcap \forall \mathrm{hasTopping}.\mathrm{Vegetarian}$
-  \item[wheelchair] ``two areas in a house (\eg a working area in a room) are either the same, or intersecting, or bordering, or separated, or one is part of the other'' – this could be formalized as an RCC-style spatial calculus in first-order logic as $$\begin{array}{ll}\forall a_1, a_2 . & \mathrm{equal}(a_1, a_2) \veebar \mathrm{overlapping}(a_1, a_2) \veebar \mathrm{bordering}(a_1, a_2) \veebar \mathrm{disconnected}(a_1, a_2) \\
-&\veebar \mathrm{part\_of}(a_1, a_2) \veebar \mathrm{part\_of}(a_2, a_1).\end{array}$$
-  \end{description}
-  
-  \DOL would be capable of expressing all that within one \DOL library of heterogeneous ontologies arranged around an OWL core (here: the OpenAAL ontology), including OMS mappings from OpenAAL to the other ontologies, as well as a re-declaration of a concrete pizza product from a product dataset as an instance of the Pizza OWL class.
-\end{usecase}
-
-\begin{usecase}{Interpreting the OWL formalization of the DOLCE foundational ontology in First-order logic}{potential use case}{Logical OMS mappings}
-  DOLCE is a foundational ontology that has primarily been formalized in the first-order logic ontology language KIF (a predecessor of Common Logic), but also in OWL (``DOLCE Lite'') \cite{dolce}. This ‘OWLized’ version was targeting use in semantic web services and domain ontology interoperability, and to provide the generic categories and relationships to aid domain ontology development. DOLCE has been used also for semantic middleware, and in OWL-formalized ontologies of neuroimaging, computing, ecology, and data mining and optimization.
-  Given the differences in expressivity, DOLCE Lite had to simplify certain notions.  For example, the DOLCE Lite formalization of ``temporary parthood'' (something is part of something else at a certain point or interval in time) omits any information about the time, as OWL only supports binary predicates (a.k.a.\ ``properties'').  That leaves ambiguities for modeling a view from DOLCE Lite to the first-order DOLCE, as such a view would have to reintroduce the third (temporal) component of such predicates:
-  \begin{itemize}
-  \item Should a relation asserted in terms of DOLCE Lite be assumed to hold for \emph{all} possible points/intervals in time, \ie should it be universally quantified?
-  \item Or should such a relation be assumed to hold for \emph{some} points/intervals in time, \ie should it be existentially quantified?
-  \item Or should a concrete value for the temporal component be assumed, \eg ``0'' or ``now''?
-  \end{itemize}
-  
-  \DOL would support the formalization of  all of these views and, given suitable consistency checking tools, the analysis of  whether any such view would satisfy all further axioms that the first-order DOLCE states about temporal parthood.
-\end{usecase}
-
-\begin{usecase}{Extending the OWL Time ontology to a more comprehensive coverage of time}{potential use case}{Logical OMS mappings}
-The OWL Time ontology\footnote{\url{http://www.w3.org/TR/2006/WD-owl-time-20060927/}} covers temporal concepts such as instants and intervals and has been designed for describing the temporal content of Web pages and the temporal properties of Web services.  While OWL is suitable for these intended applications, only a first-order axiomatization is capable of faithfully capturing all relevant notions, such as the trichotomy of the ``before'' relation: One instant is either before another one, or at the same time, or after.  Moreover, a relationship between facts expressed in terms of instants and facts expressed in terms of intervals (both of which is, independently, possible in OWL), can only be established via first-order logic, \eg by declaring an interval of length zero equivalent to an instant. 
-
-A separate first-order axiomatization of OWL Time exists
-\cite{OWLTime,OWLSTime}.  \DOL would instead provide the mechanism of modeling
-OWL Time as one coherent heterogeneous ontology, using OWL and, \eg,
-Common Logic.\footnote{This is also a use case for multiple namespaces:
-  OWL supports namespaces, CL does not.}  For the temporal description
-logic $\mathcal{DLR_{US}}$ for knowledge bases and logic-based
-temporal conceptual data modeling \cite{Artale02,Artale07a};
-$\mathcal{DLR_{US}}$ combines the propositional temporal logic with
-the {\em Since} and {\em Until} operators and the (non-temporal)
-description logic $\mathcal{DLR}$ and can be regarded as an expressive
-fragment of the first-order temporal logic $L^{since, until}$. Within
-\DOL, this would enable one to have `lightweight' time aspects with OWL
-Time, which are then properly formalized with $\mathcal{DLR_{US}}$ or
-a leaner variant TDL-Lite \cite{Artale07time}, where notions such as
-(some time) ``before'' are given a formal semantics of the intended
-meaning that the plain OWL Times human-readable object property does
-not have. The latter, then, would enable the modeler to represent the
-meaning --hence, restrict the possible models-- and check the
-consistency of the temporal constraints and so-called `evolution
-constraints' in the ontology (evolution constraints constrain
-membership of an object or an individual relation to a concept or
-relationship over time). For instance, that each divorcee must have
-been a participant in a marriage before, that boarding only may occur
-after checking in, and that any employee must obtain a salary increase
-after two years of employment. It also can be used to differentiate
-between essential and immutable parthood, therewith being precise in
-the ontology about, e.g., the distinction how a human brain is part of
-a human (humans cannot live without it), versus how a hand is part of
-a human (humans can live without it), versus how the hand is part of,
-say, a boxer, which is essential to the boxer but only for has long as
-he is a boxer \cite{AGK08}.
-
-\end{usecase}
-
-\begin{usecase}{Metadata in COLORE (Common Logic Repository)}{exists (but not yet \DOL-based)}{Annotation, Metadata vocabularies}
-  COLORE, the Common Logic Repository\footnote{\url{http://stl.mie.utoronto.ca/colore/}} is an open repository of more than 150 ontologies as of December 2011, all formalized in Common Logic.  COLORE stores metadata about its ontologies, which are represented using a custom XML schema that covers the following aspects\footnote{\url{http://stl.mie.utoronto.ca/colore/metadata.html}}, without specifying a formal semantics for them:
-  \begin{description}
-  \item[module provenance] author, date, version, description, keyword, parent ontology\footnote{Note that this use of the term ``module'' in COLORE corresponds
-to the term \termref{structured OMS} in this \IS{}.}
-  \item[axiom source provenance] name, author, year\footnote{Note that this may cover any sentences\index{sentence} in the sense of this \IS{}.}
-  \item[direct relations] maps (signature morphisms), definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
-  \end{description}
-
-  \DOL provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV, and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent \DOL library.
-\end{usecase}
-
-%% \begin{usecase}{Extending OWL with datatypes defined in CASL}{potential use case}{...}
-%%   \begin{itemize}
-%%   \item OWL datatypes are in practice restricted to the XML Schema datatypes
-%%   \item XML Schema can only specify the \emph{syntax} of datatypes
-%%   \item CASL can specify syntax (but not quite in the same way as XML Schema) \emph{and} semantics of datatypes
-%%   \end{itemize}
-%% \end{usecase}
-
-%% ~\todonote[author=Christoph Lange,date=D:201204131320+02'00',type=todo]{ModuleRelDefinition combined with approximation and RDF-based querying of annotation/metadata dimensions}
-%% ~\todonote[author=Christoph Lange,date=D:201108212129+02'00',type=todo]{Maybe have an(other?) appendix that refers to the usage of \DOL within ontology engineering methodologies, or at least to some good practices of using \DOL}
-
-
-
-
+%\infannex{Use cases}\label{a:use-cases}
+% This annex has been removed. Some of the use cases have been moved to section \ref{c:goal}
 
 \infannex{Tools for \DOL}\label{a:tools}
 
