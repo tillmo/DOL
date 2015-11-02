@@ -4781,10 +4781,10 @@ be done using interpretations).  Refinements can also be composed
 first refinement matches the source of the second one. Furthermore,
 refinements can also be specified between networks
 (\syntax{SimpleNetworkRefinement}).  A refinement between OMS networks
-has to specify both a mapping (\syntax{NodeMap}) between the nodes of
-the OMS network, as well as, for each node, a symbol map from the OMS
-of that node to the target OMS to which it is mapped (this is a
-\syntax{NetworkRefinementMap}). 
+consists of a list of ordinary refinements (between OMS), one for
+each node in the source network (the OMS refinement is then required
+to refine the node in the source network to some node in the target
+network).
 
 \medskip
 \begin{center}
@@ -4879,14 +4879,10 @@ InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
 Refinement         ::= GroupOMS
                      | NetworkName
-                     | Refinement 'then' Refinement
-                     | GroupOMS 'refined' [RefMap] 'to' Refinement
-                     | NetworkName 'refined' [RefMap] 'to' Refinement
+                     | Refinment 'refined' [RefMap] 'to' Refinement
 RefMap             ::= 'via' LanguageTranslation [SymbolMap]
                      | 'via' [LanguageTranslation] SymbolMap
-                     | 'via' NodeMap ( ',' NodeMap )*
-NodeMap            ::= OMSName '|->' OMSName
-                       ['using' LanguageTranslation* [SymbolMap]]
+                     | 'via' Refinement ( ',' Refinement )*
 EntailmentDefinition ::= 'entailment' EntailmentName '='
                          EntailmentType 'end'
 EntailmentName     ::= IRI
@@ -7651,6 +7647,7 @@ $$sem(\Gamma, G_1, G_2, m)
 = sem(\Gamma, G_1,G_2, m.nodeMap)$$
 
 \sssclause{Semantics of sets of node maps}
+\ednote{this has to be changed, see new syntax}
 
 \semdom{sem(\Gamma,G_1,G_2, Set(\syntax{NodeMap})) = \sigma:G_1\to G_2 }
 
@@ -10243,19 +10240,15 @@ InterpretationName ::= IRI
 InterpretationType ::= interpretation-type OMS OMS
 Refinement         ::= RefinementOMS
                      | RefinementNetwork
-                     | RefinementComposition
                      | SimpleOMSRefinement
                      | SimpleNetworkRefinement
 RefinementOMS      ::= refinement-oms OMS
 RefinementNetwork  ::= refinement-network Network
-RefinementComposition ::= refinement-composition Refinement Refinement
-SimpleOMSRefinement ::= simple-oms-ref OMS OMSRefinementMap Refinement
-SimpleNetworkRefinement ::= simple-network-ref Network
+SimpleOMSRefinement ::= simple-oms-ref Refinement OMSRefinementMap Refinement
+SimpleNetworkRefinement ::= simple-network-ref Refinement
                                                NetworkRefinementMap Refinement
 OMSRefinementMap   ::= oms-refmap [OMSLanguageTranslation] [SymbolMap]
-NetworkRefinementMap ::= network-refmap NodeMap*
-NodeMap            ::= node-map OMSName OMSName
-                                OMSLanguageTranslation* [SymbolMap]
+NetworkRefinementMap ::= network-refmap Refinement*
 EntailmentDefinition ::= entailment EntailmentName EntailmentType
 OMSOMSEntailment   ::= oms-oms-entailment OMS OMS
 NetworkOMSEntailment ::= network-oms-entailment Network OMSName OMS
