@@ -2343,6 +2343,14 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
   \begin{note}
      Not all OMS languages implement logical equivalence.  For example, OWL does not implement logical equivalence in general, but separately implements equivalence relations restricted to individuals (\textit{owl:sameAs}), classes (\textit{owl:equivalentClass}) and properties (\textit{owl:equivalentProperty}).
   \end{note}
+  \begin{note}
+  A default correspondence can be used for stating that all symbols with the same name
+  in the two ontologies
+  are equivalent. A correspondence block can be used for specifying the relation and/or
+  the confidence value of several single correspondences in the same time: if the
+  relation or the confidence value of a single correspondence in a block are missing, 
+  they will be replaced with those specified as parameters of the block.
+  \end{note}
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}.}
   \begin{note}
@@ -6249,9 +6257,9 @@ $(lang, logic, ser)$.
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
 
  \DOL assumes a \emph{language-specific semantics} of native structured
-OMS, inherited from the OMS language. For a native structured OMS $O$ 
+OMS, inherited from the OMS language. For a native document $D$ 
 in a language $L$, logic $L'$ and serialization $S$, 
-$sem_{(L,L',S)}(O)$ denotes the language-specific semantics of $O$.
+$semNative_{(L,L',S)}(D)$ denotes the language-specific semantics of $D$.
 Further, \DOL assumes similar language-specific semantics of a basic OMS fragment $O$ in
 the context of previous declarations, which is denoted 
 $sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.
@@ -6273,7 +6281,7 @@ $$sem(nativeDocument) = \Gamma''$$
 $\Gamma' =\Gamma_\emptyset.\{\current = (lang, logic, ser)\} $, with 
 $lang, logic, ser$ determined from the extension of the file containing the native document
 and 
-$\Gamma'' = \Gamma[\syntax{IRI} \mapsto sem_{(lang, logic, ser)}(nativeDocument)]$.
+$\Gamma'' = \Gamma[\syntax{IRI} \mapsto semNative_{(lang, logic, ser)}(nativeDocument)]$.
 
 Note that if the OMS in the native document does not conform with the logic determined by
 the extension of the file where the document is stored, 
@@ -6593,17 +6601,19 @@ The semantics of a \syntax{BasicOMS} has been defined above.
 The semantics of an \syntax{OMSReference} $O$
 is given by
  \begin{itemize}
-   \item $\Inst(O) = \Inst(\Gamma(O.\syntax{omsRef}))$
-   \item $\Sig(O) = \Sig(\Gamma(O.\syntax{omsRef}))$
-   \item $\Mod(O) = \Mod(\Gamma(O.\syntax{omsRef}))$
-   \item $\Th(O) = \Th(\Gamma(O.\syntax{omsRef}))$
+   \item $\Inst(O) = \Inst(\Gamma(locId))$,
+   where $locId = postfixLogicIRI(O.\syntax{omsRef},name(\Gamma.logic)) $
+     \ednote{this function needs to be defined}
+   \item $\Sig(O) = \Sig(\Gamma(locId))$
+   \item $\Mod(O) = \Mod(\Gamma(locId))$
+   \item $\Th(O) = \Th(\Gamma(locId))$
    \item $Env(\Gamma,O)$ extends the graph of imports $\Gamma.imports$
          with a new node for $O$ whose name is either 
-         $O.importName$, or, if $O.importName$ is missing, the name of $O.omsRef$,
+         $O.importName$, or, if $O.importName$ is missing, $locId$,
          and whose other components of the label are as defined in the items above,
          and with a new edge from the node labeled with 
-         $O.\syntax{omsRef}$ to $O$, named $O.\syntax{importName}$ 
-         and labeled with the identity on $\Sig(\Gamma(O.\syntax{omsRef}))$.  
+         $locId$ to $O$, named $O.\syntax{importName}$ 
+         and labeled with the identity on $\Sig(\Gamma(locId))$.  
  \end{itemize}
  
  
@@ -6616,19 +6626,20 @@ is given by
 The semantics of a \syntax{BasicOMS} has been defined above.
 
 The semantics of an \syntax{OMSReference} $O$
-is defined only if $\Inst(\Gamma(O.\syntax{omsRef})) = \cI$ as follows:
+is defined only if $\Inst(\Gamma(locId)) = \cI$, where
+$locId = postfixLogicIRI(O.\syntax{omsRef},name(\Gamma.logic))$, as follows:
  \begin{itemize}
-   \item $\Inst(O) = \Inst(\Gamma(O.\syntax{omsRef}))$
-   \item $\Sig(O) = \Sig(\Gamma(O.\syntax{omsRef})) \cup \Sigma$
+   \item $\Inst(O) = \Inst(\Gamma(locId))$
+   \item $\Sig(O) = \Sig(\Gamma(locId)) \cup \Sigma$
    \item $\Mod(O) = \{M\in \Mod(\Sig(O)) \mid M\forget\Sigma \in \cM \text{ and } 
-                      M\forget {\Sig(\Gamma(O.\syntax{omsRef}))} \in 
-                      \Mod(\Gamma(O.\syntax{omsRef}))\}$
-   \item $\Th(O) = \iota_{\Sig(\Gamma(O.\syntax{omsRef})\subseteq \Sig(O)}(\Th(\Gamma(O.\syntax{omsRef}))) \cup \iota_{\Sigma\subseteq \Sig(O)}(\Delta)$
+                      M\forget {\Sig(\Gamma(locId))} \in 
+                      \Mod(\Gamma(locId))\}$
+   \item $\Th(O) = \iota_{\Sig(\Gamma(locId)\subseteq \Sig(O)}(\Th(\Gamma(locId))) \cup \iota_{\Sigma\subseteq \Sig(O)}(\Delta)$
    \item $Env(\Gamma, O)$ extends the graph of imports $\Gamma.imports$
          with a new node for $O$ labeled as defined in the items above
          and with a new edge from the node labeled with 
-         $O.\syntax{omsRef}$ to $O$, named $O.\syntax{importName}$ 
-         and labeled with the inclusion of $\Sigma$ in $\Sig(\Gamma(O.\syntax{omsRef}))$.  
+         $locId$ to $O$, named $O.\syntax{importName}$ 
+         and labeled with the inclusion of $\Sigma$ in $\Sig(\Gamma(locId))$.  
  \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6739,10 +6750,7 @@ The semantics for an \syntax{ExtendingOMS} has been defined above.
 
 If $o$ is a \syntax{ClosureOMS},
 $$sem(\Gamma, O) = (I,\Sigma,\cM',\bot)$$
-where \ednote{what is $sem(\syntax{CircVars},\Sigma)$? TM: CircVars is a set of symbols, and $sem(CircVars,\Sigma)$ is just the subsignature of $\Sigma$ induced by CircVars. I think this is the same as in the subsubsection ``Semantics of sets of symbols'', just the notation needs to be adapted to that section. (By the way: could we remove the global env $\Gamma$ from the semantics of sets of symbols? I think it is not needed.
-MC: I think $\Gamma$ tells you what the current logic is, so you know how to analyze
-the symbols.)
-}
+where 
 
 \begin{align*}
 (I,\Sigma,\cM,\Delta) &= sem(\Gamma, O.\syntax{oms}),  & \Sigma_{\mathit{closure}} &=sem(\Gamma, \Sigma,O.\syntax{closure}.\syntax{circClosure}), \\
@@ -6961,6 +6969,14 @@ The semantics of a \syntax{CombinationOMS} $O$ is
   \item $Env(\Gamma,O)$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ 
   a new node for $O$ labeled as in the items above and with edges from each node in
   $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
+  \ednote{
+  We could also do this:
+  $Env(\Gamma, O) = \Gamma_k$, where
+$(\Gamma_0, n) = addImportNode(\Gamma, (Name(O), Inst(O), Sig(O), Mod(O),Th(O)))$ [where n is the new node]
+if $n_1, \ldots, n_k$ are the nodes of $\Gamma$, for $i=1,\ldots, k$ we have
+$\Gamma_i = addImportEdge(\Gamma_{i-1}, n_i, n, \mu_i)$,
+but this has the drawback that we must introduce many auxiliary functions. For example, we would need both a function for adding an edge between two given nodes and one for
+adding an edge between a node identified by its name and another node.}
 \end{itemize}
 %%%%%
 \sssclause{Semantics of \syntax{CircClosure}}
@@ -7073,12 +7089,14 @@ where $\Sigma'$ is the smallest sub-signature of $\Sigma$ containing
 $sem(\Gamma, \Sigma,s_1), \ldots, 
 sem(\Gamma,\Sigma,s_n)$, if such a sub-signature exists and is otherwise undefined.
 
-%%%%%%%%%%%%%%%%%%%%%%%
-
-\todonote{I need equations for one signature and for two signatures... TM: what do you want to say here? TM: we could try to introduce the same machinery
-as in the CASL reference manual. Or we could make this institution-specific.}
+%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of symbol maps}
+
+\semdom{sem(\Gamma,\Sigma, \syntax{SymbolMap})= \sigma:\Sigma\to\Sigma'}
+
+\ednote{This is needed for translations, same as induced\_from vs. induced\_from\_to
+in CASL. How to deal with this?}
 
 \semdom{sem(\Gamma,\Sigma,\Sigma', \syntax{SymbolMap})= \sigma:\Sigma\to\Sigma'}
 
@@ -7507,9 +7525,8 @@ $\sigma : G_1\to G_2$ is
 
 \begin{enumerate}
 \item a 
-functor $\sigma^G: Shape(G_1)\to Shape(G_2)$, where given a network $G$, its shape 
+graph homomorphism $\sigma^G: Shape(G_1)\to Shape(G_2)$, where given a network $G$, its shape 
 $Shape(G)$ is a graph with same nodes and edges as $G$ but with no labels of nodes,
-\ednote{@Till: is this enough? TM: I think so. But yhw a functor? Shouldn't it be a graph homomorphism, since $Shape(G)$ is a graph?}
 \item a natural transformation $\sigma^M : G_1 \to \sigma^G;G_2$
 \end{enumerate}
  such that
@@ -7531,7 +7548,7 @@ Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$,
 $\{M_i\}_{i\in Nodes(G_1)}$ such that
 $M_i = F_{\sigma^G(i)}\forget{\sigma^M_{i}}$ for each $i\in Nodes(G_1)$.
 
-Thus, the semanntics of a \syntax{Refinement} consists of
+Thus, the semantics of a \syntax{Refinement} consists of
 \begin{itemize}
  \item a refinement signature $(G_1,G_2)$,
  \item a network morphism $\sigma$ and
@@ -7841,10 +7858,14 @@ $$sem(\Gamma, d) = \Gamma' $$
 where
 $sem(\Gamma,d.\syntax{alignmentType}) = (L_1, L_2)$
 and 
-$\Gamma'=\Gamma[d.\syntax{AlignmentName} \mapsto (G,id,L_1,L_2)]
+$\Gamma'=\Gamma[d.\syntax{AlignmentName} \mapsto (G,L'_1,L'_2)]
 $,\\
-where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$
-and\\ $G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$.
+where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$,\\
+$card=d.\syntax{alignmentCardinality}$ or, when this is missing, 
+$card=('1','1')$,\\
+$aSem = d.\syntax{alignmentSemantics}$ or, when this is missing,
+$aSem = \syntax{single-domain}$,\\
+and $G = sem(\Gamma, L'_1, L'_2, card, aSem, d.\syntax{correspondence})$.
 
 \sssclause{Semantics of alignment types}
 
@@ -7861,34 +7882,123 @@ given by $sem(\Gamma, t.\syntax{target})$.
 
 \sssclause{Semantics of alignments}
 
-\ednote{Note that \syntax{AlignmentCardinalityPair} has been replaced
-by a pair of \syntax{AlignmentCardinality}s.}
-
-\semdom{sem(\Gamma,  L_1, L_2,\syntax{AlignmentCardinalityPair},\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
+\semdom{sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))=
 G}
 
-If $card$ is a \syntax{AlignmentCardinalityPair}, 
-$sem$ an \syntax{AlignmentSemantics}
+If $card_1, card_2$ are \syntax{AlignmentCardinality}, 
+$aSem$ is an \syntax{AlignmentSemantics}
 and $C = Set\{c_1, \ldots, c_n\}$ a set of \syntax{Correspondence}s,
-$$sem(\Gamma, L_1, L_2, card, sem, C)=
+$$sem(\Gamma, L_1, L_2, (card_1,card_2), aSem, C)=
 G$$
 \noindent
 where
-if at least one of the correspondences $c_1, \ldots,c_n$ has a confidence value different than $1$, then the semantics of the 
-alignment is not defined, 
-and the alignment is ill-formed if the alignment mapping does not have the arities given by
-$card$, otherwise
+$sem(\Gamma, \Sig(L_1),\Sig(L_2), aSem, C) = (\Sigma_s,\Sigma_t,(\Sigma,\Delta),\phi_s:\Sigma_s\to\Sigma,\phi_t:\Sigma_t\to\Sigma, smap, cvalues)$,\\
+where the semantics of the alignment is not defined in the following cases:
+\begin{itemize}
+\item
+if $cvalues = True$ and then at least one of the correspondences in $C$ has a confidence value different than $1$ or
+\item if the alignment does not have the specified cardinality, i.e.
+\begin{itemize}
+\item if $card_1 = '?'$, then $smap$ must be injective,
+\item if $card_1 = '+'$, then $smap$ must be total on the symbols of $\Sig(L_1)$,
+\item if $card_1 = '1'$, then $smap$ must be injective and total,
+\item if $card_1 = '*'$, then no cardinality restriction on $smap$ is made,
+\end{itemize}
+\begin{itemize}
+\item if $card_2 = '?'$, then $smap^{-1}$ must be injective,
+\item if $card_2 = '+'$, then $smap^{-1}$ must be total on the symbols of $\Sig(L_2)$,
+\item if $card_2 = '1'$, then $smap^{-1}$ must be injective and total,
+\item if $card_2 = '*'$, then no cardinality restriction on $smap^{-1}$ is made,
+\end{itemize}
+\end{itemize}
+\noindent and when the above conditions are met,  
 $G$ is a W-shaped graph as below
 $$
 \xymatrix{
 L_1 & &  L_B &&L_2 \\
- & L_s \ar[ul]^{\iota_1}\ar[ur]_{\sigma_1} &&L_t \ar[ur]^{\iota_2}\ar[ul]_{\sigma_2}& 
+ & L_s \ar[ul]^{\iota_1}\ar[ur]_{\phi_s} &&L_t \ar[ur]^{\iota_2}\ar[ul]_{\phi_t}& 
 }
 $$
-where $L_B$, $L_s$ and $L_t$ are built in a 
-logic-specific way from the correspondences 
-$C_1,\ldots, C_n$ taking into account $sem$.
+where
+$L_s = (alignName++"\_source", \Inst(L_1) ,\Sigma_s,\Mod(\Sigma_s),\emptyset)$,
+$L_t = (alignName++"\_target", \Inst(L_2) ,\Sigma_t,\Mod(\Sigma_t),\emptyset)$
+and
+$L_B = (alignName++"\_bridge", \cI ,\Sigma,\Mod((\Sigma,\Delta)),\Delta)$.
+
+
+
+\sssclause{Semantics of sets of correspondences}
+\semdom{sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{AlignmentSemantics}, Set(\syntax{Correspondence})) = (\Sigma_s,\Sigma_t,(\cI,\Sigma,\Delta),\phi_s:\Sigma_s\to\Sigma,\phi_t:\Sigma_t\to\Sigma, smap, cvalues)}
+
+If $c_1,\ldots,c_n$ are all \syntax{Correspondence}s and 
+$aSem$ is an \syntax{AlignmentSemantics},
+$$sem(\Gamma, \Sigma_1,\Sigma_2, aSem, Set(c_1,\ldots,c_n)) = (\Sigma_s,\Sigma_t,(\Sigma,\Delta),\phi_s,\phi_t, smap, cvalues)$$
+\noindent where
+$sem(\Gamma, \Sigma_1,\Sigma_2, (1, \syntax{equivalent}), c_i) = (clist_i, cvalues_i)$ for $i=1,\ldots,n$,\\
+$cvalues = \lor_{i=1,\ldots,n}cvalues_i$,\\
+$smap = \{s^1_i\mapsto s^2_i\}$,\\
+$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains all $s^1_i$\\
+and 
+$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains all $s^2_i$\\
+for any $(r, s^1_i,s^2_i)$ in some $clist_j$ where 
+$j=1,\ldots, n$,\\
+$(\cI, \Sigma,\Delta, \phi_s,\phi_t) = \mathit{theoryOfCorresp}_{\Gamma.logic}(
+aSem, clist_1 ++ \ldots ++ clist_n)$.
 \cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
+
+\sssclause{Semantics of  correspondences}
+\semdom{sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), \syntax{Correspondence}) = (Sequence((Relation, Symbol, Symbol)), Bool)}
+
+If $c$ is a \syntax{DefaultCorrespondence},
+$$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
+\noindent where
+$cvalues = False$, 
+$Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = matchSymbols(\Gamma,\Sigma_1,\Sigma_2)$,\\
+$clist = Sequence((equivalent,sym^1_i,sym^2_i)\}_{i=1,\ldots,k})$.
+%$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains $sym^1_1,\ldots,sym^1_k$,
+%$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains $sym^2_1,\ldots,sym^2_k$,
+%$(\Sigma,\Delta, \phi_s:\Sigma_s\to\Sigma,\phi_2:\Sigma_t\to\Sigma) = \mathit{theoryOfCorresp}_{\Gamma.logic}(Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)))$.
+
+If $c$ is a \syntax{SingleCorrespondence},
+$$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
+\noindent 
+where
+$conf = \begin{cases}
+       \mathit{defaultConf} & c.\syntax{confidence} \text{ is missing,}\\
+       c.\syntax{confidence} & \text{otherwise} 
+\end{cases}$\\
+$rel = 
+\begin{cases}
+       \mathit{defaultRel} & c.\syntax{relation} \text{ is missing,}\\
+       c.\syntax{relation} & \text{otherwise} 
+\end{cases}
+$\\
+$cvalues = \begin{cases}
+ False& conf = 1\\
+ True& \text{ otherwise }
+\end{cases}
+$\\
+$sem(\Gamma,\Sigma_1,c.generalizedTerm) = sym1$, \ednote{How do we get a symbol from an IRI?}
+$sem(\Gamma,\Sigma_2,c.symbolRef) = sym2$,
+$clist = Sequence((rel, sym1, sym2))$,
+
+%$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains $sym1$,
+%$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains $sym2$,
+%$(\Sigma,\Delta, \phi_s:\Sigma_s\to\Sigma,\phi_2:\Sigma_t\to\Sigma) = \mathit{theoryOfCorresps}_{\Gamma.logic}(Sequence((sym1,sym2)))$.
+
+If $c$ is a \syntax{CorrespondenceBlock},
+$$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
+\noindent 
+where
+if $c.\syntax{relation}$ is missing, $rel=\mathit{defaultRel}$, else $rel=c.\syntax{relation}$\\
+if $c.\syntax{confidence}$ is missing, $conf=\mathit{defaultConf}$, 
+else $conf=c.\syntax{confidence}$\\
+for all correspondences $c_1,\ldots, c_n$ in $c.\syntax{correspondence}$,
+$(clist_i,cvalues_i)= sem(\Gamma,\Sigma_1,\Sigma_2, (conf,rel),c_i)$,\\
+$clist = clist_1 ++ \ldots ++ clist_n$
+and 
+$cvalues = \lor_{i=1,\ldots,n} cvalues_i$.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7900,12 +8010,11 @@ $$sem(\Gamma, L_1, L_2, s) = (rel(L_1), rel(L_2))$$
 \noindent where
 $$ rel(L) =
  \begin{cases}
-                                   L & \mbox{if } s = \syntax{global-domain}\\
+                                   L & \mbox{if } s = \syntax{single-domain}\\
                                    relativize_{logic(\Gamma.current)}(L)& \mbox{otherwise}
                                                                                                                    \end{cases}$$
                                                                                                                   
-                                                                                                                   \noindent where the relativization procedure is logic-specific. An example of this is done for OWL can be found in \cite{OM2014}.
-                                                                                                           
+                                                                                                                   \noindent where the relativization procedure is logic-specific.                                                                           
                                                                                                                    
 %\sclause{Translational semantics of \DOL language constructs}
 %
@@ -8336,6 +8445,8 @@ modeled \emph{inside} this institution, as a constraint on OMS.  This
 constraint is generally not preserved under unions or
 extensions. \DOL's multi-logic capability allows the clean distinction
 between ordinary OWL 2 DL and {OWL} 2 DL without restrictions.
+\ednote{Add here the relativization and the procedures for transforming correspondences 
+into bridge theories. Problem: we have something for ALC and not for SROIQ(D).}
 
 
 \infannex{Conformance of Common Logic with \DOL}\label{a:cl}
