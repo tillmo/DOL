@@ -3254,7 +3254,7 @@ alignment BFO2GFO :
   bfo:1.1 to gfo:gfo.owl =
 	Entity = Entity, Object = Material_object,
 	ObjectBoundary  = Material_boundary, Role < Role ,
- 	Occurrent = Occurrent, 	Process = Process, Quality = Property
+ 	Occurrent = Occurrent, 	Process = Process, Quality = Property,
  	SpatialRegion 	= Spatial_region, TemporalRegion = Temporal_region 	
 \end{lstlisting}
 
@@ -3296,10 +3296,10 @@ integration.
 library GalenModule
 language lang:OWL
 ontology myGalen = 
-  http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
+  <http://purl.bioontology.org/ontology/GALEN> extract Drugs, Joints, Bodyparts
 end
 
-module myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
+module myGalenIsAModule : <myGalen of http://purl.bioontology.org/ontology/GALEN> 
   for Drugs, Joints, Bodyparts
 end
 \end{lstlisting}
@@ -3743,7 +3743,7 @@ view cd2psm = cd to { psm hide along psm2cd} end
 network ATM_network = %consistent
                       cd, stm, psm, cmp,
                       cd2stm, cd2psm, abstract_to_concrete_atm
-entailment atm in ATM_network entails sd
+entailment atm = ATM_network entails sd
 network Some_refined_ATM_network = ...
 refinement r = ATM_network refined to Some_refined_ATM_network
 entailment e = Some_refined_ATM_network entails ATM_network
@@ -3847,25 +3847,27 @@ various aspects need to be taken care of:
 \end{itemize}
 
 \begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, OMS, Characteristics,Transitive,Asymmetric,translation,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,oms,model},escapechar=@,mathescape]
-model xmiStateModel = <https://ontohub.org/ATM/state.xmi>
+model xmiStateModel = <https://ontohub.org/ATM/state.xmi> end
 
 model clStateModel = xmiStateModel with
                      translation UMLState2CL
+end
 
-model xmiClassModel = <https://ontohub.org/ATM/class.xmi>			
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi> end
 
 model clClassModel = xmiClassModel with 
             translation UMLClass2CL 
             Bank |-> FinancialIntermediary
+end
 
-ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>			
+ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl> end
 
 ontology NoLivestockTaxonomy = BigTaxonomy reject
                                Class: Livestock
 						  end
 
 ontology ExtendedTaxonomy = NoLivestockTaxonomy then 
-         ObjectProperty FinancialIntermediary.owns.ATM
+         ObjectProperty: FinancialIntermediary.owns.ATM
            SubPropertyOf: owns 
            Domain: FinancialIntermediary 
            Range: ATM
@@ -10801,7 +10803,6 @@ then
   . (forall (Set a) (iff (fusion Set a)                                  
             (forall (b) (iff (overlaps b a)
                              (exists (c) (and (Set c) (overlaps c a)))))))
-  }
 \end{lstlisting}
 
 \sclause{Defined Concepts}
@@ -10812,8 +10813,8 @@ library Persons
 language lang:OWL
 
 ontology Persons =
-  Class Person
-  Class Female
+  Class: Person
+  Class: Female
 then %def
   Class: Woman  EquivalentTo: Person and Female
 end
@@ -10871,7 +10872,7 @@ ontology Blocks_Alternative =
   	EquivalentTo: Block and not Abnormal 
 	SubClassOf: Ontable 
         %% Normally, a block is on the table
-  minimize Abnormal var Ontable, BlockNotAbnormal
+  minimize Abnormal vars Ontable BlockNotAbnormal
 then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
@@ -10889,7 +10890,7 @@ ontology Blocks_Alternative2 =
   	EquivalentTo: Block and Normal 
 	SubClassOf: Ontable 
         %% Normally, a block is on the table
-  maximize Normal var Ontable, BlockNotAbnormal
+  maximize Normal vars Ontable BlockNotAbnormal
 then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
@@ -10941,7 +10942,7 @@ alignment VAlignment : Onto1 to Onto2 =
 end
 
 network N =
-  1 : Onto1, 2 : Onto2, VAlignment
+  1:Onto1, 2:Onto2, VAlignment
 end
  
 ontology VAlignedOntology =
@@ -10995,8 +10996,8 @@ end
 
 ontology Publications_Combined =
 combine
-  1 : Publications1 with translation OWL2MS-OWL,
-  2 : Publications2 with translation OWL2MS-OWL
+  1:Publications1 with translation OWL2MS-OWL,
+  2:Publications2 with translation OWL2MS-OWL
   %% implicitly: Article $\mapsto$ 1:Article @\ldots@
   %%             Article $\mapsto$ 2:Article @\ldots@  
   with translation MS-OWL2DDL
@@ -11073,10 +11074,10 @@ spec explicit_group =
 (forall (x y z)
         (= (op x (op y z)) (op (op x y) z)))
 (forall (x)     (and    (= x (op e x))
-                        (= x (op x e)))))
+                        (= x (op x e))))
 (forall (x)
                 (and    (= x (op x (op x (inv x))))
-                        (= x (op x (op (inv x) x))))))
+                        (= x (op x (op (inv x) x)))))
 end
 
 equivalence groups_equiv : implicit_group <-> { explicit_group hide e, inv }
@@ -11143,10 +11144,10 @@ language lang:HasCASL
 spec Group_in_second_order_logic =
   sort Elem
   ops 0:Elem; __+__:Elem*Elem->Elem; 
-  exists inv:Elem->Elem .
-    forall x,y,z:elem . x+0=x
-                        /\ x+(y+z) = (x+y)+z
-                        /\ x+inv(x)=0
+  . exists inv:Elem->Elem .
+      forall x,y,z:elem . x+0=x
+                          /\ x+(y+z) = (x+y)+z
+                          /\ x+inv(x)=0
 end
 \end{lstlisting}
 
