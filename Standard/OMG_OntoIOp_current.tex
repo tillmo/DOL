@@ -3669,30 +3669,30 @@ bank). After three unsuccessful trials the card is kept.
 \caption{ATM example}\label{fig:atm-example}
 \end{figure}
 
-Figure~\ref{fig:interaction} shows a possible \emph{interaction}
-between an \uml{atm} and a \uml{bank} object, which consists of
-four messages: the \uml{atm} requests the \uml{bank} to \uml{verify}
-if a card and PIN number combination is valid, in the first case the
-\uml{bank} requests to reenter the PIN, in the second case the
-verification is successful.  This interaction presumes that the system
-has an \uml{atm} and a \uml{bank} as objects. This can, e.g., be
-ensured by a \emph{composite structure diagram}, see
-Fig.~\ref{fig:system}, which -- among other things -- specifies the
-objects in the initial system state.  Furthermore, it specifies that
-the communication between \uml{atm} and \uml{bank} goes through the
-two ports \uml{bankCom} and \uml{atmCom} linked by a connector.  The
-communication protocol on this connector is captured with a
-\emph{protocol state machine}, see Fig.~\ref{fig:psm}.  The protocol
-state machine fixes in which order the messages \uml{verify},
-\uml{verified}, \uml{reenterPIN}, and \uml{markInvalid} between
-\uml{atm} and \uml{bank} may occur.  Figure~\ref{fig:class} provides
-structural information in form of an interface specifying what is
-provided at the \uml{userCom} port of the \uml{atm} instance. An
-interface is a set of operations that other MDE model elements have to
-implement. In our case, the interface is described in a \emph{class
-  diagram}. Here, the operation \uml{keepCard} is enriched with the
-OCL constraint \uml{trialsNum >= 3}, which refines its semantics:
-\uml{keepCard} can only be invoked if the OCL constraints holds.
+Figure~\ref{fig:interaction} shows a possible \emph{interaction} between
+an \uml{atm} and a \uml{bank} object, which consists of four messages:
+the \uml{atm} requests the \uml{bank} to \uml{verify} if a card and PIN
+number combination is valid, in the first case the \uml{bank} requests
+to reenter the PIN, in the second case the verification is successful.
+This interaction presumes that the system has an \uml{atm} and a
+\uml{bank} as objects. This can, e.g., be ensured by a \emph{composite
+  structure diagram}, see Fig.~\ref{fig:system}, which -- among other
+things -- specifies the objects in the initial system state.
+Furthermore, it specifies that the communication between \uml{atm} and
+\uml{bank} goes through the two ports \uml{bankCom} and \uml{atmCom}
+linked by a connector.  The communication protocol on this connector is
+captured with a \emph{protocol state machine}, see Fig.~\ref{fig:psm}.
+The protocol state machine fixes in which order the messages
+\uml{verify}, \uml{verified}, \uml{reenterPIN}, and \uml{markInvalid}
+between \uml{atm} and \uml{bank} may occur.  Figure~\ref{fig:class}
+provides structural information in form of interfaces specifying what is
+provided and required at the \uml{userCom} port and the \uml{bankCom}
+port of the \uml{atm} instance.  An interface is a set of operations
+that other MDE model elements have to implement. In our case, the
+interfaces are described in a \emph{class diagram}. In this class
+diagram also the component type \uml{ATM} is enriched with the OCL
+constraint \uml{trialsNum <= 3}, which refines its semantics requiring
+that \uml{trialsNum} must not exceed three.
 
 Finally, the dynamic behavior of the \uml{atm} object is specified by
 the \emph{behavioral state machine} shown in
