@@ -6047,34 +6047,8 @@ serializations.
  are uniquely identified by names, and we use
  the notation $\Gamma(n)$ for the institution, institution morphism and institution comorphism identified by the name $n$ int the heterogeneous logical environment $\Gamma$.
 
-
- It is required that for each institution in the heterogeneous logical environment there is a trivial signature
-$\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
-from $\emptyset$ to any signature of the institution. Moreover, the existence of a partial union operation on institutions is required, denoted $\bigcup$: 
-$L_1 \bigcup L_2 = (L, \rho_1:L_1 \to L, \rho_2 : L_2 \to L)$, when defined, where
-$L$ is an institution and $\rho_1$ and
-$\rho_2$ are institution comorphisms, giving the embedding of $L_1$ and
-respectively $L_2$ in $L$. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism and at most one morphism is marked as default.
-
-For each institution $\cI$ in the heterogeneous logical environment, it is further required that there is:
-
-\begin{itemize}
-  \item  a function giving the semantics of a basic OMS. It has the format
-  $$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\syntax{BasicOMS})$$ 
-  \noindent where  $\Sigma'$ is
-the resulting signature and $\Delta'$ the resulting set of sentences. Moreover, a function with the same name 
-$$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,\syntax{BasicOMS})$$
-and one more argument signature $\Sigma$ is used for the semantics of a basic OMS in
-the context of previous declarations. It is required then that $\Sigma\subseteq\Sigma'$.
-  \item a function $makeNorphism_\cI$ that turns a symbol map into a signature morphism,
-  \item a relativization procedure taking as argument a theory and giving as 
-  result a theory, and three procedures for translating correspondences of alignments
-  into sentences in the logic, as needed in Section \ref{sec:oms-mappings}.
-%not needed!  \item a default language and a default language serialization.
-\end{itemize}
-
-
-Further,  for each institution, it is required that there exist (possibly partial) union and difference operations on signatures.
+We are going to require existence of union and difference operations on the signatures
+of an institution in the heterogeneous logical environment.
 These concepts could be captured in a categorical setting using \emph{inclusion systems} \cite{DGS91}.
  However, inclusion systems are too strong for the purposes of this specification.  Therefore, weaker assumptions will be used.
 
@@ -6129,9 +6103,43 @@ $\C$ equipped with a faithful functor $|\_|:\C\to\Set$\footnote{That is,
 $(\C,|\_|)$ is a concrete category.} that preserves
 inclusions.
 \end{definition}
-  
 
-This concludes the definition of heterogeneous logical environment and the assumptions made about it.
+After these preliminaries, we can now list the assumptions made about the
+institutions in a heterogeneous logical environment.
+It is required that for each institution in the heterogeneous logical environment there is a trivial signature
+$\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
+from $\emptyset$ to any signature of the institution. Moreover, the existence of a partial union operation on institutions is required, denoted $\bigcup$: 
+$L_1 \bigcup L_2 = (L, \rho_1:L_1 \to L, \rho_2 : L_2 \to L)$, when defined, where
+$L$ is an institution and $\rho_1$ and
+$\rho_2$ are institution comorphisms, giving the embedding of $L_1$ and
+respectively $L_2$ in $L$. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism and at most one morphism is marked as default.
+
+For each institution $\cI$ in the heterogeneous logical environment, it is further required that there is:
+
+\begin{itemize}
+  \item  a function giving the semantics of a basic OMS. It has the format
+  $$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\syntax{BasicOMS})$$ 
+  \noindent where  $\Sigma'$ is
+the resulting signature and $\Delta'$ the resulting set of sentences. Moreover, a function with the same name 
+$$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,\syntax{BasicOMS})$$
+and one more argument signature $\Sigma$ is used for the semantics of a basic OMS in
+the context of previous declarations. It is required then that $\Sigma\subseteq\Sigma'$.
+  \item a function $makeMorphism_\cI$ that turns a symbol map into a signature morphism,
+  \item a function $matchSymbols_\cI$ that takes as arguments two signatures 
+  $\Sigma_1$ and $\Sigma_2$ of $\cI$
+  and returns as result the list of all pairs of symbols $(s^1_i,s^2_i)$ such that
+  $s^1_i\in|\Sigma_1|$ and $s^2_i\in|\Sigma_2|$ and the symbols have the same name
+  \ednote{@Till: this is not formal...}.
+  \item a relativization function $relativize_\cI$ 
+  taking as argument a theory and giving as 
+  result a theory, and a function
+  $theoryOfCorrespondences$ for translating correspondences of alignments
+  into sentences in the logic according to a given assumption about the
+  semantics of the alignment, both needed in Section \ref{sec:oms-mappings}.
+%not needed!  \item a default language and a default language serialization.
+\end{itemize}
+
+Further,  for each institution, it is required that there exist (possibly partial) union and difference operations on signatures.
 
 \medskip
 
@@ -8231,9 +8239,8 @@ and
 $\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains all $s^2_i$\\
 for any $(r, s^1_i,s^2_i)$ in some $clist_j$ where 
 $j=1,\ldots, n$,\\
-$(\cI, \Sigma,\Delta, \phi_s,\phi_t) = \mathit{theoryOfCorresp}_{\Gamma.logic}(
+$(\cI, \Sigma,\Delta, \phi_s,\phi_t) = \mathit{theoryOfCorrespondences}_{\Gamma.logic}(
 aSem, clist_1 ++ \ldots ++ clist_n)$.
-\cite{OM2014} illustrates how this construction works in the case of OWL, in a way that can be generalized to other logics.
 
 \sssclause{Semantics of  correspondences}
 \semdom{
@@ -8246,8 +8253,8 @@ sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), \syn
 If $c$ is a \syntax{DefaultCorrespondence},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
 \noindent where
-$cvalues = False$, 
-$Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = matchSymbols(\Gamma,\Sigma_1,\Sigma_2)$,\\
+$cvalues = False$,\\
+$Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = matchSymbols_{\Gamma.logic}(\Sigma_1,\Sigma_2)$,\\
 $clist = Sequence((equivalent,sym^1_i,sym^2_i)\}_{i=1,\ldots,k})$.
 %$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains $sym^1_1,\ldots,sym^1_k$,
 %$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains $sym^2_1,\ldots,sym^2_k$,
