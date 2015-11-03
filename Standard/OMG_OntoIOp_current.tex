@@ -84,8 +84,6 @@
 %% Hacks
 %\usepackage{savesym}
 
-%\usepackge{enumitem}
-
 %% Font and language
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -121,7 +119,7 @@
 \usepackage{ifmtarg}
 \usepackage{stringstrings}
 \usepackage{stmaryrd}
-\usepackage{enumitem}
+\usepackage[inline]{enumitem}
 
 %% Graphics
 \usepackage{standalone}
@@ -1514,8 +1512,16 @@ namespaces.%\todonote[author=Christoph
 %explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
 %of  a serialization that is merely text conforming).}
 \item The serialization shall use XML \emph{elements} to represent all structural elements of an OMS.
-\item\label{it:foreign-xml-namespaces} The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
- \DOL namespace \url{http://www.omg.org/spec/DOL/1.0/xml}) on any elements. (This  is because either an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.)
+\item XML elements that represent structural elements of an OMS shall support identifier injection in at least one of the following two ways:
+  \begin{enumerate}
+  \item\label{it:xml-annotation} Such elements shall be able to carry annotations that comprise at least an object (the value of the annotation) and a IRI-valued predicate (the type of annotation), where the structural element is the subject.
+    The value of the predicate shall either be full IRI according to \nisref{IETF/RFC 3987:2005}, or the serialization shall specify a way of interpreting the value of the predicate as a full IRI – for example if it is a relative URI or if an abbreviating notation is used.
+    Analogously, the serialization shall permit the object to be a full IRI or anything that can be interpreted as a full IRI.
+  \item\label{it:foreign-xml-namespaces}
+The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
+ \DOL namespace \url{http://www.omg.org/spec/DOL/1.0/xml}) on such elements.
+  \end{enumerate}
+  This requirement is necessary because either an annotation or an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.
 \end{enumerate}
 
 \item[RDF conformance]
@@ -1682,6 +1688,8 @@ be able to expand CURIEs into IRIs when requested.
   \item{ISO/IEC 14977:1996} {Information technology – Syntactic metalanguage – Extended BNF}
   \item{W3C/TR REC-xml:2008} {Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \\
   \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
+  \item{W3C/TR REC-owl2-primer:2012} {OWL 2 Web Ontology Language: Primer (Second Edition). W3C Recommendation, 11 December 2012. \\
+  \url{http://www.w3.org/TR/2012/REC-owl2-primer-20121211/}}
   \item{W3C/TR REC-owl2-profiles:2009} {OWL 2 Web Ontology Language: Profiles. W3C Recommendation, 27 October 2009. \\
   \url{http://www.w3.org/TR/2009/REC-owl2-profiles-20091027/}}
   \item{ISO/IEC 24707:2007} {Information technology – Common Logic (CL): a framework for a family of logic-based languages}
@@ -5592,7 +5600,13 @@ language can be used as-is in \DOL, by reference to its IRI.
 
 The following cases apply for injecting identifiers into fragments of OMS languages, depending on the conformance level of the respective serialization of the OMS language used in terms of section~\ref{c:conform:serialization}:
 \begin{description}
-\item[XML conformance] Identifiers are added to XML elements by using the IRI-valued \textit{dol:id} XML attribute from the \url{http://www.omg.org/spec/DOL/1.0/xml} namespace, or, if the serialization does not support this attribute, by adding a \textit{dol:id} XML element as the first child, containing exactly one text node with the IRI.
+\item[XML conformance]
+  \begin{enumerate}
+  \item If the serialization supports annotation of the root element of the fragment of interest, as specified in XML conformance requirement~\ref{it:xml-annotation}, an identifier is assigned by way of an annotation whose predicate is \url{http://www.w3.org/2002/07/owl#sameAs} from the OWL language \nisref{W3C/TR REC-owl2-primer:2012} and whose object is expected to be the desired IRI identifier.
+  \item If the \textit{dol:id} XML attribute from the \url{http://www.omg.org/spec/DOL/1.0/xml} namespace is supported on the element, as specified in XML conformance requirement~\ref{it:foreign-xml-namespaces}, its value is expected to be the IRI identifier.
+  \item If the \texttt{dol:id} XML element is supported as the first child of the element, as specified in XML conformance requirement~\ref{it:foreign-xml-namespaces}, it is expected to contain exactly one text node whose value is the IRI identifier.
+  \end{enumerate}
+  It is a \DOL syntax error if \begin{enumerate*}\item an \texttt{owl:sameAs} annotation or a \texttt{dol:id} attribute or child element is present and its value is not, or cannot be interpreted, as a full IRI, or if \item more than one of these three alternative fields (annotation, attribute or child element) is present on an element\end{enumerate*}.
 \item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
 \item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
 \item[Standoff markup conformance] Standard mechanisms like XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) or \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of XML or text in the given OMS serialization.  { (As a use case for XPointer, consider the identification of axioms in the OWL 2 XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211}, which does not provide a native way for assigning identifiers to axioms.  If, for example, in an OMS file \textit{birds.owx}, the axiom \texttt{<SubClassOf><Class IRI="\#Penguin"/><Class IRI="\#FlightlessBird"/></SubClassOf>} is the first one (in document order) to declare a superclass for \textit{Penguin}, it can be referred to by the IRI \url{birds.owx\#xpointer(/owl:SubClassOf/owl:Class[@IRI='\%23Penguin'][1])} assuming the right binding for the namespace prefix \textit{owl} in scope, whereas unique reference by the axiom's structure rather than by position would require a more complex expression.
@@ -8551,11 +8565,11 @@ With minor modifications detailed below, the OWL/XML serialization~\cite{W3C:REC
 Both modifications define a super-language of the respective OWL serialization.
 Any OWL ontology serialization $S'$ in one of these two super-languages can be translated into an OWL ontology serialization $S$ that fully conforms to the original specification OWL/XML or ``OWL serialized in RDF'' and is semantically equivalent to the extended serialization $S'$ with regard to the semantics of OWL.
 Without these modifications, neither OWL/XML nor ``OWL serialized in RDF'' satisfies the XML or RDF conformance requirements, respectively.
-The reason is that with imports there is a structural element supported by OWL that cannot have identifiers, and that these two OWL serializations do not permit the use of XML or RDF constructs that would enable assigning identifiers to imports.
+The reason is that with imports there is a structural element supported by OWL that cannot have identifiers nor carry annotations, and that these two OWL serializations do not permit the use of XML or RDF constructs that would enable assigning identifiers to imports.
 
-\subsubsection{XML Conformance of a Modified OWL/XML With \DOL}
+\subsubsection{XML Conformance of a Modified OWL/XML With \DOL}\label{sec:xml-conf-modif}
 
-In the OWL/XML serialization, the \textit{Import} element is only allowed to carry the attributes \textit{xml:base}, \textit{xml:lang} and \textit{xml:space}, but no further attributes or child elements from foreign namespaces (requirement (\ref{it:foreign-xml-namespaces})), and therefore in particularly not a \textit{dol:id} attribute or child elements, as would be required for adding identifiers (cf.\ clause~\ref{sec:existing-serialization}).
+In the OWL/XML serialization, the \textit{Import} element does not have annotations and is only allowed to carry the attributes \textit{xml:base}, \textit{xml:lang} and \textit{xml:space}, but no further attributes or child elements from foreign namespaces (requirement (\ref{it:foreign-xml-namespaces})), and therefore in particularly not a \textit{dol:id} attribute or child elements, as would be required for adding identifiers (cf.\ clause~\ref{sec:existing-serialization}).
 
 An extended specification of OWL/XML that does allow the \textit{dol:id} attribute on \textit{Import} satisfies the XML conformance criteria.
 From an ontology serialized in this super-language of OWL/XML, one can obtain a semantically equivalent ontology (with regard to the semantics of OWL) by stripping all \textit{dol:id} attributes.
