@@ -7450,16 +7450,25 @@ $$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, s.\syntax{symbolList})
 An \syntax{OMSDefinition} $O$ extends the global environment. 
 
 $$
-sem(\Gamma,O) = \Gamma'$$
-\noindent where 
-$
-\Gamma=\Gamma'[O.\syntax{omsName}\mapsto sem(\Gamma,O.\syntax{oms})]
-$
-\noindent where $sem(\Gamma, O.\syntax{oms}) = (\Gamma', (\cI,\Sigma,\cM, \Delta))$ 
-and
-$\Gamma.logic$ and $\cI$ must be the same.
+sem(\Gamma,O) = \Gamma''$$
+\noindent 
+where 
+$\Gamma.logic$ and $\cI$ must be the same
+and for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
+we have \\
+$\Gamma_1=\Gamma'_1[
+postfixLogicIRI(O.\syntax{omsName},\cI_1)\mapsto (\cI_1,\Sigma_1,\cM_1,\Delta_1)]$
+where $sem(\Gamma.{logic=\cI_1},O.\syntax{oms}) = (\Gamma'_1,(\cI_1,\Sigma_1,\cM_1,\Delta_1))$,\\ 
+$\Gamma_2=\Gamma'_2[
+postfixLogicIRI(O.\syntax{omsName},\cI_2)\mapsto (\cI_2,\Sigma_2,\cM_2,\Delta_2)]$
+where $sem(\Gamma'_1.{logic=\cI_2},O.\syntax{oms}) = (\Gamma'_2,(\cI_2,\Sigma_2,\cM_2,\Delta_2))$,
+$\ldots$,\\
+$\Gamma''=\Gamma'_n[
+postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)]$
+where $sem(\Gamma'_{n-1}.{logic=\cI_n},O.\syntax{oms}) = (\Gamma'_{n},(\cI_n,\Sigma_n,\cM_n,\Delta_n))$
 
 
+\ednote{@Till: to which of the possible $n$ institutions do these annotations refer to?}
 \noindent If $O.\syntax{conservativityStrength}$ is \syntax{model-conservative}, the semantics is only
 defined if $\cM\not=\emptyset$.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{consequence-conservative}, the semantics is only
