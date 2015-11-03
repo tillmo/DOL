@@ -1550,10 +1550,13 @@ The given serialization has to satisfy all of the following conditions:
 \end{itemize}
 
 \item[Standoff markup conformance]
-An OMS language is standoff markup conforming with \DOL if one of its serializations conforms with
-the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046},
-section 4.1.3.  Note that conformance with \mimetype{text/plain} is a prerequisite for using, for
+The given serialization has to satisfy at least one of the following conditions:
+\begin{enumerate}
+\item\label{it:standoff-text-plain} The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.
+Note that conformance with \mimetype{text/plain} is a prerequisite for using, for
 example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying text ranges.
+\item\label{it:standoff-xpointer} The serialization conforms with XML \nisref{W3C/TR REC-xml:2008}, which is a prerequisite for using XPointer fragment URIs for addressing subresources of an XML resource (cf. \nisref{W3C/TR REC-xptr-framework:2003}).
+\end{enumerate}
 \end{description}
 
 %~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
@@ -2875,7 +2878,7 @@ As listed below, these symbols and abbreviations are generally for the main clau
 using the OWL 2 RDF-Based Semantics \cite{W3C:REC-owl2-rdf-based-semantics-20091027}}
 \symboldef{OWL 2 QL}{profile of OWL 2 designed to support fast query answering over large amounts of data}
 \symboldef{OWL 2 RL}{fragment of OWL 2 designed to support rule-based reasoning}
-\symboldef{OWL 2 XML}{XML-based serialization of the OWL 2 language}
+\symboldef{OWL/XML}{XML-based serialization of the OWL 2 language}
 \symboldef{P-DL}{Package-based description logic}
 \symboldef{RDF}{Resource Description Framework, a graph data model}
 \symboldef{RDFS}{RDF Schema}
@@ -5609,12 +5612,13 @@ The following cases apply for injecting identifiers into fragments of OMS langua
   It is a \DOL syntax error if \begin{enumerate*}\item an \texttt{owl:sameAs} annotation or a \texttt{dol:id} attribute or child element is present and its value is not, or cannot be interpreted, as a full IRI, or if \item more than one of these three alternative fields (annotation, attribute or child element) is present on an element\end{enumerate*}.
 \item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
 \item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
-\item[Standoff markup conformance] Standard mechanisms like XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) or \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of XML or text in the given OMS serialization.  { (As a use case for XPointer, consider the identification of axioms in the OWL 2 XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211}, which does not provide a native way for assigning identifiers to axioms.  If, for example, in an OMS file \textit{birds.owx}, the axiom \texttt{<SubClassOf><Class IRI="\#Penguin"/><Class IRI="\#FlightlessBird"/></SubClassOf>} is the first one (in document order) to declare a superclass for \textit{Penguin}, it can be referred to by the IRI \url{birds.owx\#xpointer(/owl:SubClassOf/owl:Class[@IRI='\%23Penguin'][1])} assuming the right binding for the namespace prefix \textit{owl} in scope, whereas unique reference by the axiom's structure rather than by position would require a more complex expression.
-The same axiom in the text-based OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} could be referred to as \url{birds.omn\#line=27} according to \nisref{IETF/RFC 5147} if it is on line 27 of the document.)}
+\item[Standoff markup conformance] If the given OMS serialization conforms with the \mimetype{text/plain} media type as per standoff markup conformance requirement~\ref{it:standoff-text-plain} but not with XML, \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of text in the given OMS serialization.
+If the serialization conforms with XML as per requirement~\ref{it:standoff-xpointer}, one of \nisref{IETF/RFC 5147} or XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) shall be used. { (As an example, consider the identification of imports in the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211}, which does not provide a native way for assigning identifiers to imports unless modified as suggested in annex~\ref{sec:conformance-owl-xml-rdf}.  For example, in an OMS file \textit{cars.owx}, the import \texttt{<Import>http://example.org/engines</Import>} can be referred to by the IRI \url{cars.owx\#xpointer(/owl:Ontology/owl:Import[text()='http://example.org/engines'])} assuming the right binding for the namespace prefix \textit{owl} in scope.
+The same import in the text-based OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} could be referred to as \url{cars.omn\#line=27} according to \nisref{IETF/RFC 5147} if it is on line 27 of the document.)}
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
-Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a document may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by URI. { (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of Common Logic sentences.)}
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a document may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by IRI, as specified above. (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of sentences in the XCL serialization of Common Logic.) 
 
 \clause{\DOL Semantics}\label{c:semantics}
 
@@ -8557,7 +8561,7 @@ is established in \cite{OntoGraph}.
 
 The OWL 2 Manchester syntax satisfies the criteria for text conformance established in clause~\ref{c:conform:serialization} in a straightforward way thanks to its line-based comment syntax (comments starting with \texttt{\#}) and its flexible handling of line breaks.
 
-\subsection{Conformance of the XML and RDF Serializations of OWL With \DOL}
+\subsection{Conformance of the XML and RDF Serializations of OWL With \DOL}\label{sec:conformance-owl-xml-rdf}
 
 \subsubsection{General Issues}
 
@@ -10097,7 +10101,7 @@ The following syntaxes are part of the heterogeneous logical environments:
 \begin{itemize}
  \item Turtle, supported by $\OWL$, \EL, \QL, \RL , \RDF, \RDFS
  \item RDF-XML, supported by $\OWL$, \EL, \QL, \RL , \RDF, \RDFS
- \item OWL 2 XML, supported by $\OWL$, \EL, \QL, \RL 
+ \item OWL/XML, supported by $\OWL$, \EL, \QL, \RL 
  \item Manchester Syntax, supported by $\OWL$, \EL, \QL, \RL
   \item TPTP, supported by TPTP
   \item CASL, supported by \CASL
