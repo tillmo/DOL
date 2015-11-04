@@ -4677,9 +4677,9 @@ Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
                      | 'keep' InterfaceSignature ['keep' LogicRef]
                      | 'keep' LogicRef
 Filtering          ::= 'select' SymbolList
-                     | 'select' BasicOMS
+                     | 'select' '{' BasicOMS '}'
                      | 'reject' SymbolList
-                     | 'reject' BasicOMS
+                     | 'reject' '{' BasicOMS '}'
 ExtensionOMS       ::= [ExtConservativityStrength]
                        [ExtensionName]
                        ExtendingOMS
@@ -10620,7 +10620,8 @@ SymbolMap          ::= symbol-map GeneralSymbolMapItem
                                   GeneralSymbolMapItem*
 Extraction         ::= extraction RemovalKind InterfaceSignature
 Approximation      ::= approx RemovalKind [InterfaceSignature] [LogicRef]
-Filtering          ::= filter RemovalKind BasicOMS
+Filtering          ::= filter RemovalKind BasicOMSOrSymbolList
+BasicOMSOrSymbolList ::= BasicOMS | SymbolList
 Extension          ::= extension [ConservativityStrength]
                                  [ExtensionName] ExtendingOMS
 RemovalKind        ::= keep | remove
