@@ -5062,21 +5062,9 @@ the only standardized RDF serialization to support CURIEs so far.  Other seriali
 RDF/XML or Turtle, support a subset of the CURIE syntax, whereas some machine-oriented 
 serializations, including N-Triples, only support full IRIs.}
 
-CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.  Informatively, 
-the CURIE grammar supported by \DOL can be restated as follows:
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
+CURIEs can occur in any place where IRIs are allowed, as stated in \cref{c:iris}.
 
-CURIE         ::= MaybeEmptyCURIE -
-MaybeEmptyCURIE ::= [Prefix] RefWithoutComma
-RefWithoutComma ::= Reference - StringWithComma
-StringWithComma ::= UChar* ',' UChar*
-UChar         ::= ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) 
-Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
-Reference     ::= Path [Query] [Fragment]
-Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query         ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment      ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-\end{lstlisting}
+The CURIE grammar of \DOL is summarized in \cref{c:curie-syntax}.
 
 %\ednote{This is concrete syntax. Shouldn't it be moved to chapter \ref{{a:text-syntax}}? --- I have copied it there, altough this is code
 %duplication.}
@@ -5161,7 +5149,7 @@ within the \DOL library.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\ssclause{Concrete Syntax}
+\ssclause{Concrete Syntax}\label{c:curie-syntax}
 
 \vspace{-1.4em}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
