@@ -6138,12 +6138,10 @@ For each institution $\cI$ in the heterogeneous logical environment, it is furth
 
 \begin{itemize}
   \item  a function giving the semantics of a basic OMS. It has the format
-  $$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\syntax{BasicOMS})$$ 
-  \noindent where  $\Sigma'$ is
-the resulting signature and $\Delta'$ the resulting set of sentences. Moreover, a function with the same name 
 $$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,\syntax{BasicOMS})$$
-and one more argument signature $\Sigma$ is used for the semantics of a basic OMS in
-the context of previous declarations. It is required then that $\Sigma\subseteq\Sigma'$.
+where $\Sigma$ gives the context of previous declarations, $\Sigma'$ is the resulting
+signature and $\Delta'$ is the resulting set of sentences.
+ It is required then that $\Sigma\subseteq\Sigma'$.
   \item a function $makeMorphism_\cI$ that turns a symbol map into a signature morphism,
   \item a function $matchSymbols_\cI$ that takes as arguments two signatures 
   $\Sigma_1$ and $\Sigma_2$ of $\cI$
@@ -6284,9 +6282,9 @@ $(lang, logic, ser)$.
 OMS, inherited from the OMS language. For a native document $D$ 
 in a language $L$, logic $L'$ and serialization $S$, 
 $semNative_{(L,L',S)}(D)$ denotes the language-specific semantics of $D$.
-Further, \DOL assumes similar language-specific semantics of a basic OMS fragment $O$ in
-the context of previous declarations, which is denoted 
-$sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.
+%Further, \DOL assumes similar language-specific semantics of a basic OMS fragment $O$ in
+%the context of previous declarations, which is denoted 
+%$sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.
 
 \ssclause{Semantics of Documents}
  In this section the semantics of \DOL constructs regarding documents and \DOL libraries is defined. 
@@ -8181,34 +8179,33 @@ If $d$ is an  \syntax{AlignmentDefinition},
 $$sem(\Gamma, d) = \Gamma' $$
 \noindent
 where
-$sem(\Gamma,d.\syntax{alignmentType}) = (L_1, L_2)$
+$sem(\Gamma,d.\syntax{alignmentType}) = (\Gamma_0,L_1, L_2)$
 and 
-$\Gamma'=\Gamma[d.\syntax{AlignmentName} \mapsto (G,L'_1,L'_2)]
+$\Gamma'=\Gamma_0[d.\syntax{AlignmentName} \mapsto (G,L'_1,L'_2)]
 $,\\
 where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$,\\
 $card=d.\syntax{alignmentCardinality}$ or, when this is missing, 
 $card=('1','1')$,\\
 $aSem = d.\syntax{alignmentSemantics}$ or, when this is missing,
 $aSem = \syntax{single-domain}$,\\
-and $G = sem(\Gamma, L'_1, L'_2, card, aSem, d.\syntax{correspondence})$.
+and $G = sem(\Gamma_0, L'_1, L'_2, card, aSem, d.\syntax{correspondence})$.
 
 \sssclause{Semantics of alignment types}
 
 \semdom{
 \begin{array}{ll}
-sem(\Gamma,  \syntax{AlignmentType})& = (L_1, L_2)\\
- & : (NodeLabel,NodeLabel)
+sem(\Gamma,  \syntax{AlignmentType})& = (\Gamma',L_1, L_2)\\
+ & : (LogicalEnvironment, NodeLabel,NodeLabel)
 \end{array}
 }
 
 If $t$ is an \syntax{AlignmentType}
-$$sem(\Gamma, t) = (L_1, L_2)$$
-\noindent where $L_1$ is a node label whose name is
-$\Name(t.\syntax{source})$ and whose other components are
-given by $sem(\Gamma, t.\syntax{source})$
-and similarly, $L_2$ is a node label whose name is
-$\Name(t.\syntax{target})$ and whose other components are
-given by $sem(\Gamma, t.\syntax{target})$.
+$$sem(\Gamma, t) = (\Gamma'',L_1, L_2)$$
+\noindent where
+$sem(\Gamma,t.\syntax{source}) = (\Gamma', (\cI_1,\Sigma_1,\cM_1,\Delta_1))$,
+$sem(\Gamma',t.\syntax{target}) = (\Gamma'', (\cI_2,\Sigma_2,\cM_2,\Delta_2) )$,
+$L_1$ and $L_2$ are the labels of the nodes of $t.\syntax{source}$
+and $t.\syntax{target}$ in $\Gamma'.imports$.
 
 \sssclause{Semantics of alignments}
 
@@ -8276,13 +8273,8 @@ $$sem(\Gamma, \Sigma_1,\Sigma_2, aSem, Set(c_1,\ldots,c_n)) = (\Sigma_s,\Sigma_t
 $sem(\Gamma, \Sigma_1,\Sigma_2, (1, \syntax{equivalent}), c_i) = (clist_i, cvalues_i)$ for $i=1,\ldots,n$,\\
 $cvalues = \lor_{i=1,\ldots,n}cvalues_i$,\\
 $smap = \{s^1_i\mapsto s^2_i\}$,\\
-$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains all $s^1_i$\\
-and 
-$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains all $s^2_i$\\
-for any $(r, s^1_i,s^2_i)$ in some $clist_j$ where 
-$j=1,\ldots, n$,\\
-$(\cI, \Sigma,\Delta, \phi_s,\phi_t) = \mathit{theoryOfCorrespondences}_{\Gamma.logic}(
-aSem, clist_1 ++ \ldots ++ clist_n)$.
+$(\cI, \Sigma,\Delta, \phi_s:\Sigma_s\to\Sigma,\phi_t:\Sigma_t\to\Sigma) = \mathit{theoryOfCorrespondences}_{\Gamma.logic}(
+aSem, \Sigma_1,\Sigma_2,clist_1 ++ \ldots ++ clist_n)$.
 
 \sssclause{Semantics of  correspondences}
 \semdom{
@@ -8295,9 +8287,9 @@ sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), \syn
 If $c$ is a \syntax{DefaultCorrespondence},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
 \noindent where
-$cvalues = False$,\\
+$cvalues = True$ if $\mathit{defaultConf}$ is different than $1$ and $False$ otherwise,\\
 $Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = matchSymbols_{\Gamma.logic}(\Sigma_1,\Sigma_2)$,\\
-$clist = Sequence((equivalent,sym^1_i,sym^2_i)\}_{i=1,\ldots,k})$.
+$clist = Sequence((defaultRel,sym^1_i,sym^2_i)\}_{i=1,\ldots,k})$.
 %$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains $sym^1_1,\ldots,sym^1_k$,
 %$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains $sym^2_1,\ldots,sym^2_k$,
 %$(\Sigma,\Delta, \phi_s:\Sigma_s\to\Sigma,\phi_2:\Sigma_t\to\Sigma) = \mathit{theoryOfCorresp}_{\Gamma.logic}(Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)))$.
@@ -8347,22 +8339,32 @@ $cvalues = \lor_{i=1,\ldots,n} cvalues_i$.
 
 \semdom{
 \begin{array}{ll}
-sem(\Gamma, L_1,L_2,\syntax{AlignmentSemantics})& = (L'_1, L'_2)\\
+sem(\Gamma, L_1,L_2,\syntax{AlignmentSemantics})& = ((Name_1,\cI'_1,\Sigma'_1,\cM'_1,\Delta'_1),
+(Name_2,cI'_2,\Sigma'_2,\cM'_2,\Delta'_2))\\
  & : (NodeLabel,NodeLabel)
 \end{array}
 }
 
 If $s$ is an \syntax{AlignmentSemantics},
+$L_1 = (aName, \cI_1,\Sigma_1,\cM_1,\Delta_1)$
+and
+$L_2 = (aName', \cI_2,\Sigma_2,\cM_2,\Delta_2)$
 
 $$sem(\Gamma, L_1, L_2, s) = (rel(L_1), rel(L_2))$$
 \noindent where
 $$ rel(L) =
  \begin{cases}
-                                   L & \mbox{if } s = \syntax{single-domain}\\
-                                   relativize_{logic(\Gamma.current)}(L)& \mbox{otherwise}
-                                                                                                                   \end{cases}$$
-                                                                                                                  
-                                                                                                                   \noindent where the relativization procedure is logic-specific.                                                                           
+                                   (L_1,L_2) & \mbox{if } s = \syntax{single-domain}\\
+                                   (name_1,\cI_1,\Sigma'_1,\cM'_1,\Delta'_1),
+                                   (name_2,\cI_2,\Sigma'_2,\cM'_2,\Delta'_2)& \mbox{otherwise}
+                                                                                                                  \end{cases}$$
+                                                                                                                  \noindent
+$relativize_{\cI_1}(\Sigma_1,\Delta_1) = (\Sigma'_1,\Delta'_1)$,
+$\cM'_1$ is the class of $\Delta'_1$-models,
+$name_1 = 'relativized' ++ aName$,\\
+$relativize_{\cI_2}(\Sigma_2,\Delta_2) = (\Sigma'_2,\Delta'_2)$,
+$\cM'_2$ is the class of $\Delta'_2$-models and
+$name_2 = 'relativized'++aName'$.
                                                                                                                    
 %\sclause{Translational semantics of \DOL language constructs}
 %
@@ -8793,10 +8795,123 @@ modeled \emph{inside} this institution, as a constraint on OMS.  This
 constraint is generally not preserved under unions or
 extensions. \DOL's multi-logic capability allows the clean distinction
 between ordinary OWL 2 DL and {OWL} 2 DL without restrictions.
-\ednote{Add here the relativization and the procedures for transforming correspondences 
-into bridge theories. Problem: we have something for ALC and not for SROIQ(D).}
 
+\ssclause{Relativization in \OWL}
 
+\begin{definition}
+Given an \OWL theory $T = ((C,R,I), \Delta)$,
+the \emph{relativization} of $T$, denoted $\tilde{T}$, is the theory 
+$((C',R,I),\Delta')$ where
+\begin{itemize}
+\item $C' = C\cup\{\top_T\}$
+\item $\Delta'$ contains axioms stating that:
+  \begin{itemize}
+    \item each concept in $C$ is subsumed by $\top_T$,
+    \item each individual in $I$ is an instance of $\top_T$,
+    \item each role $r$ has its domain and range intersected with $\top_T$, if they
+    are present in $\Delta$, otherwise they are $\top_T$,
+  \end{itemize}
+  \noindent and the sentences in $\Delta$ where the following replacement of concepts
+  are made:
+  \begin{itemize}
+   \item each occurence of $\top$ is replaced with $\top_T$,
+   \item each occurence of $\neg C$ is replaced with $\top_T \sqcap \neg C$,
+   \item each occurence of $\forall~r\bullet C$ is replaced with 
+   $\top_T \sqcap \forall~r\bullet C$.
+  \end{itemize}
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+Given an \OWL theory $T = ((C,R,I), \Delta)$,
+we define $\beta: Mod^\OWL(\tilde{T}) \to Mod^\OWL(T)$ as follows: 
+if $M'\in Mod^\OWL(\tilde{T})$, then $M=\beta(M')$ has as universe
+$\Delta^M$ the set $(\top_T)^{M'}$ and each concept, role and individual are
+interpreted in $M$ in the same way as in $M'$. Since $M'$ is a $\Delta'$-model,
+we get that $M$ is indeed a $(C,R,I)$-model and moreover $M\models \Delta$.
+\end{definition}
+
+\ssclause{Translating correspondences to a bridge theory in \OWL}
+
+We define the function $theoryOfCorrespondences_\OWL$ that takes as arguments
+the assumption made on the semantics of the alignment where the
+correspondences come from, the signatures of the two ontologies being aligned
+and a list of processed correspondences, in the sense 
+that the default correspondence and any correspondence block, if present, 
+are replaced with the lists of single correspondences they induce,
+represented as triples of the form $(relation, sourceSymbol, targetSymbol)$.
+The result of the function is a co-span of theories:
+$\xymatrix{(\Sigma_s,\emptyset) \ar[r]^{\varphi_s} & (\Sigma,\Delta) & \ar[l]_{\varphi_t} (\Sigma_t,\emptyset)}$. Intuitively, $\Sigma_s$ and $\Sigma_t$ gather the symbols
+of the aligned ontologies that appear in the list of correspondences passed as an
+argument, while $(\Sigma,\Delta)$ contains an \OWL sentence 
+representing each correspondence.
+
+We distinguish three cases.
+\begin{enumerate}
+\item Single domain:
+ \begin{itemize}
+   \item no other symbols occur in the signatures $\Sigma_s$ and $\Sigma_t$
+         than the ones that appear in correspondences:
+         $\Sigma_s = (C_s, R_s, I_s)$ and $\Sigma_t = (C_t, R_t,I_t)$,
+         where $C_s$, $R_s$ and $I_s$ are the sets of all concept names, roles
+         and individuals that appear in the list of correspondences as source symbols
+         and $C_t$, $R_t$ and $I_t$ are the sets of all concept names, roles
+         and individuals that appear in the list of correspondences as target symbols.
+  \item $\Sigma = \Sigma_s \uplus \Sigma_t$, where we prefix the symbols of 
+        $\Sigma$ coming from $\Sigma_s$ with $1:$ and those coming from
+        $\Sigma_t$ with $2:$
+  \item $\varphi_s$ maps each symbol $s$ in $\Sigma_s$ to $1:s$
+        and $\varphi_t$ maps each symbol $s$ in $\Sigma_t$ to $2:s$.
+  \item $\Delta$ contains the translation of correspondences to $\Sigma$-sentences
+        using the following rules:
+         $$\begin{array}{ll}
+            ('equivalent', c1, c2) & \verb+Class: 1:c1 EquivalentTo: 2:c2+ \\
+            ('equivalent', r1, r2) & \verb+ObjectProperty: 1:r1 EquivalentTo: 2:r2+\\
+            ('equivalent', i1, i2) & \verb+Individual: 1:i1 SameAs: 2:i2+\\
+            ('incompatible',c1, c2)& \verb+Class: 1:c1 DisjointWith: 2:c2+ \\
+            ('incompatible',r1, r2)& \verb+ObjectProperty: 1:r1 DisjointWith: 2:r2+ \\
+            ('incompatible',i1, i2)& \verb+Individual: 1:i1 DifferentFrom: 2:i2+ \\
+            ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf: 1:c1+ \\
+            ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
+            ('is-subsumed',c1, c2)& \verb+Class: 1:c1 SubClassOf: 2:c2+ \\
+            ('is-subsumed',r1, r2)& \verb+ObjectProperty: 1:r1+ SubPropertyOf: 2:r2  \\
+            ('has-instance', c1, i2) & \verb+Individual: 2:i2 Types: 1:c1+\\
+            ('instance-of', i1, c2) & \verb+Individual: 1:i1 Types: 2:c2+
+          \end{array}$$         
+ \end{itemize}
+\item Global domain: \ednote{in the absence of terms, there is no difference to first case}
+\item Contextualized domain:
+ \begin{itemize}
+   \item $\Sigma_s$ and $\Sigma_t$ are constructed as before, but now they also
+         include the relativized top concepts $\top_S$ and $\top_T$ respectively.
+   \item $\Sigma$ extends the disjoint union $\Sigma_s \uplus \Sigma_t$ with 
+         new roles $r_{st}$ and $r_{ts}$.
+   \item $\Delta$ contains the following axioms: 
+          $$ \verb+ObjectProperty: + r_{st}~ \verb+Domain:+ \top_S~ \verb+Range:+ \top_T$$
+          and 
+          $$ \verb+ObjectProperty: + r_{ts}~ \verb+Domain:+ \top_T~ \verb+Range:+ \top_S$$
+          together with the property that $r_{st}$ is the converse of $r_{ts}$:
+          $$\verb+ObjectProperty: + r_{st} \verb+ InverseOf: + r_{ts}$$
+          and translation of correspondences to $\Sigma$-sentences
+        using the following rules:\ednote{correct incompatible, what to do with 2, 5,6, 8,10?}
+         $$\begin{array}{ll}
+            ('equivalent', c1, c2) & \verb+Class: 1:c1 EquivalentTo: + r_{st}\verb+ some 2:c2+ \\
+            ('equivalent', r1, r2) & \verb+ObjectProperty: 1:r1 EquivalentTo: 2:r2+\\
+            ('equivalent', i1, i2) & \verb+Individual: 1:i1 Facts: + r_{st} \verb+ 2:i2+\\
+            ('incompatible',c1, c2)& \verb+EquivalentClasses: + 1:c1 \verb+ and + 
+            r_{st} \verb+ some 2:c2, Nothing+\\
+            ('incompatible',r1, r2)& \verb+ObjectProperty: 1:r1 DisjointWith: 2:r2+ \\
+            ('incompatible',i1, i2)& \verb+Individual: 1:i1 DifferentFrom: 2:i2+ \\
+            ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf:  + r_{sz}\verb+ some 1:c1+ \\
+            ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
+            ('is-subsumed',c1, c2)& \verb+Class: 1:c1 SubClassOf: + r_{ts}\verb+ some 2:c2+ \\
+            ('is-subsumed',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyOf: 2:r2+ \\
+            ('has-instance', c1, i2) & \verb+Individual: 2:i2 Types: + r_{ts}\verb+ some 1:c1+\\
+            ('instance-of', i1, c2) & \verb+Individual: 1:i1 Types: + r_{st}\verb+ some 2:c2+
+          \end{array}$$   
+ \end{itemize}
+\end{enumerate}
+ 
 \infannex{Conformance of Common Logic with \DOL}\label{a:cl}
 
 The semantic conformance of Common Logic (as specified in \nisref{ISO/IEC 24707:2007}) with \DOL is established in \cite{OntoGraph}.
