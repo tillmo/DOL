@@ -7835,131 +7835,190 @@ $\sigma$ is the identity network morphism on $G$
 and 
 $\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 
-If $r$ is \syntax{RefinementComposition},
-$$sem(\Gamma, r) = 
-((G_1, G'_2), \sigma, \cM)$$
-\noindent where\\ 
-$sem(\Gamma, r.\syntax{refinement1}) = 
-((G_1, G'_1), \sigma_1, \cM_1)$,
-$sem(\Gamma, r.\syntax{refinement2}) = 
-((G_2, G'_2), \sigma_2, \cM_2)$
-such that $G'_1 = G_2$,
-$\sigma = \sigma_1;\sigma_2$
-is a network morphism from $G_1$ to $G'_2$, 
-and
-$\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that } 
-(F_1, F_2) \in \cM_1  \text{ and }
-(F_2, F_3) \in \cM_2  \}$
+%If $r$ is \syntax{RefinementComposition},
+%$$sem(\Gamma, r) = 
+%((G_1, G'_2), \sigma, \cM)$$
+%\noindent where\\ 
+%$sem(\Gamma, r.\syntax{refinement1}) = 
+%((G_1, G'_1), \sigma_1, \cM_1)$,
+%$sem(\Gamma, r.\syntax{refinement2}) = 
+%((G_2, G'_2), \sigma_2, \cM_2)$
+%such that $G'_1 = G_2$,
+%$\sigma = \sigma_1;\sigma_2$
+%is a network morphism from $G_1$ to $G'_2$, 
+%and
+%$\cM = \{(F_1, F_3) \mid \exists F_2 \text{ such that } 
+%(F_1, F_2) \in \cM_1  \text{ and }
+%(F_2, F_3) \in \cM_2  \}$
+%
+%If $r$ is \syntax{SimpleOMSRefinement},
+%$$sem(\Gamma, r) = 
+%((G, G_2), \sigma, \cM)$$
+%where\\
+% $sem(\Gamma,  r.\syntax{oms}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
+% $sem(\Gamma,  r.\syntax{refinement}) = 
+% ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
+% such that $G_1$ consists of an isolated node labeled with 
+% $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$,\\
+% $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), r.\syntax{omsRefinementMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
+% for each $(M_1, M_2) \in \cM'$,
+%$\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM_1$,\\
+%G consists of an isolated node labeled with $sem^M(\Gamma,  r.\syntax{oms})$,\\
+%$\sigma = (\rho_1,\sigma_1);(\rho_2,\sigma_2)$ and
+%$\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
+%(M_1, M_2) \in \cM' \}$.
 
-If $r$ is \syntax{SimpleOMSRefinement},
+If $r$ is \syntax{SimpleRefinement},\ednote{@MC: check!}
 $$sem(\Gamma, r) = 
-((G, G_2), \sigma, \cM)$$
+((G_1,G'_2),\sigma', \cM')$$
 where\\
- $sem(\Gamma,  r.\syntax{oms}) = (\cI_1,\Sigma_1, \cM_1, \Delta_1)$,\\
- $sem(\Gamma,  r.\syntax{refinement}) = 
- ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
- such that $G_1$ consists of an isolated node labeled with 
- $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$,\\
- $sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), r.\syntax{omsRefinementMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$,\\
- for each $(M_1, M_2) \in \cM'$,
-$\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM_1$,\\
-G consists of an isolated node labeled with $sem^M(\Gamma,  r.\syntax{oms})$,\\
-$\sigma = (\rho_1,\sigma_1);(\rho_2,\sigma_2)$ and
-$\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
-(M_1, M_2) \in \cM' \}$.
-
-If $r$ is \syntax{SimpleNetworkRefinement},
-$$sem(\Gamma, r) = 
-((G_1,G_2),\sigma, \cM)$$
-where\\
- $sem^M(\Gamma,  r.\syntax{network}) = G_1$,\\
- $sem(\Gamma,  r.\syntax{refinement}) = ((G'_1, G_2),\sigma_2, \cM')$,\\ 
+ $sem(\Gamma,  r.\syntax{refinementSource}) = ((G_1,G'_1), \sigma_1,\cM_1)$,\\
+ $sem(\Gamma,  r.\syntax{refinementTarget}) = ((G_2, G'_2),\sigma_2, \cM_2)$,\\ 
+ $sem(\Gamma, G'_1, G_2, r.\syntax{refMap}) = \sigma:G'_1\to G_2$,\\
  $sem(\Gamma, G_1, G_2, r.\syntax{networkRefinementMap}) = \sigma_1:G_1\to G'_1$,\\
- $\sigma = \sigma_1;\sigma_2$ is a network morphism
+ $\sigma' = \sigma_1;\sigma;\sigma_2$ \\
  and 
- $\cM = \{( F_2\forget{\sigma} , F_2) \mid (F_1, F_2) \in \cM' \}$.
+ $\cM = \{(F_1,F_3) \mid \exists F_2 \text{ such that } 
+                         (F_1, F_2\forget{\sigma}) \in \cM_1       
+                         \text{ and } (F_2, F_3) \in \cM_2 \}$.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%
-
-\sssclause{Semantics of OMS refinement maps}
+\sssclause{Semantics of a set of refinements}
 
 \semdom{
 \begin{array}{ll}
-sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{OMSRefinementMap})& = (\rho, \sigma)\\
- & : (Comorphism,SignatureMorphism)
+sem(\Gamma, G_1, G_2, Set(\syntax{Refinement}))& = \sigma\\
+ & : GraphMorphism
 \end{array}
 }
 
+If $r_1,\ldots, r_n$ are all \syntax{Refinement}s,
+$$sem(\Gamma, G_1, G_2, Set(r_1,\ldots, r_n)) = \sigma$$
+\noindent where\\
+$sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,\\
+$sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$\\
+such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map.}
+$G_1 = \bigcup_{i=1,\ldots,n} G^i_1$,
+$G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and
+$\sigma : G_1 \to G_2 = \bigcup_{i=1,\ldots, n} \sigma_i$ 
+is total on the nodes of $G_1$.
+
+\sssclause{Semantics of refinement maps}
+
+\semdom{
+\begin{array}{ll}
+sem(\Gamma, G_1, G_2, \syntax{RefinementMap})& = \sigma\\
+ & : GraphMorphism
+\end{array}
+}
+           
 If $m$ is an \syntax{OMSRefinementMap},
-$$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), m) = ((\Phi,\alpha,\beta), \sigma) $$
-
-where\\
- $sem(\Gamma, m.\syntax{omsLanguageTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
-such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
-and 
-$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, m.\syntax{symbolMap}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
-where $\Gamma.\current=(lang, logic,ser)$, $logic'$ is the target logic of $(\Phi,\alpha,\beta)$, and $lang'$ and 
-$ser'$ are the default language and serializations for 
-$logic'$.
-
-\sssclause{Semantics of network refinement maps}
-
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap})& = \sigma:G_1\to G_2\\
- & : GraphMorphism
-\end{array}
-}
-
-If $m$ is a \syntax{NetworkRefinementMap},
-$$sem(\Gamma, G_1, G_2, m)
-= sem(\Gamma, G_1,G_2, m.nodeMap)$$
-
-\sssclause{Semantics of sets of node maps}
-\ednote{this has to be changed, see new syntax}
-
-\semdom{
-\begin{array}{ll}
-sem(\Gamma,G_1,G_2, Set(\syntax{NodeMap}))& = \sigma:G_1\to G_2\\
- & : GraphMorphism
-\end{array}
-}
-
-If $m_1,\ldots, m_n$ are all \syntax{NodeMap}s,
-$$sem(\Gamma,G_1,G_2, Set\{m_1,\ldots,m_n\}) = \sigma:$$
-where \\
-$sem(\Gamma, G_1, G_2,m_1)= (name^1_1, name^1_2,\rho_1,\sigma_1)$, $\ldots$\\
-$sem(\Gamma, G_1, G_2,m_n) = (name^n_1, name^n_2,\rho_n,\sigma_n)$ and\\
-$\sigma^G (name^i_1) = name^i_2$ and
-$\sigma^M_{name^i_1} = (\rho_i, \sigma_i)$ for each $i= 1,\ldots, n$.
-The map is required to be total on the nodes of $G_1$.
-
-%%%%%%%%%%%%%%%%%%%%
-
-\sssclause{Semantics of node maps}
-
-\semdom{
-\begin{array}{ll}
-sem(\Gamma, G_1, G_2,
-\syntax{NodeMap}) & = (name_1, name_2,\rho,\sigma)\\
- & : (NodeName, NodeName, Comorphism, SignatureMorphism)
-\end{array}
-}
-
-If $m$ is a \syntax{NodeMap},
-$$sem(\Gamma, G_1, G_2,
-n) = (m.\syntax{source}, m.\syntax{target}, \rho,\sigma)$$
-where\\
-$(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{source}$ in $G_1$,\\
-$(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{target}$ in $G_2$,\\
-$sem(\Gamma, m.\syntax{omsLanguageTranslation}) = \rho = (\Phi,\alpha,\beta) : \cI_1\to\cI_2$, \\
-$sem(\Gamma', \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$,
+$$sem(\Gamma, G_1,G_2,m) = (name_1, name_2, \rho,\sigma)$$
+\noindent 
+where\\ $G_1$ must be a graph with just one isolated node
+labeled $(name_1,\cI_1,\Sigma_1,\cM_1,\Delta_1)$ \\  
+$G_2$ must be a graph with just one isolated node
+labeled $(name_2,\cI_2,\Sigma_2,\cM_2,\Delta_2)$,\\
+$sem(\Gamma,m.\syntax{translation}) = \rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2$,
+or if $m.\syntax{translation}$ is missing, the default comorphism 
+between $\cI_1$ and $\cI_2$,\\
+$sem(\Gamma', \Phi(\Sigma_1),\Sigma_2,m.\syntax{symbolMap}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$   
 where $\Gamma.\current=(lang, logic,ser)$,
 $logic'$ is the target logic of $(\Phi,\alpha,\beta)$,
 $lang'$ and $ser'$ are the default language and serialization for $logic'$
-and $\Gamma' = \Gamma.\current=(lang', logic',ser')$.
+and $\Gamma' = \Gamma.\current=(lang', logic',ser')$,
+or, when $m.\syntax{symbolMap}$ is missing,
+$\Phi(\Sigma_1)$ and $\Sigma_2$ must be the same and $\sigma$ is the identity
+signature morphism on $\Sigma_2$.
 
+If $m$ is a \syntax{NetworkRefinementMap},
+$$sem(\Gamma, G_1,G_2, m) = \sigma$$
+\noindent 
+where 
+$sem(\Gamma,G_1,G_2, m.refinements) = \sigma$.                    
+
+
+%%%%%%%%%%%%%%%%%%%%
+
+%\sssclause{Semantics of OMS refinement maps}
+%
+%\semdom{
+%\begin{array}{ll}
+%sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), \syntax{OMSRefinementMap})& = (\rho, \sigma)\\
+% & : (Comorphism,SignatureMorphism)
+%\end{array}
+%}
+%
+%If $m$ is an \syntax{OMSRefinementMap},
+%$$sem(\Gamma, (I_1,\Sigma_1), (I_2,\Sigma_2), m) = ((\Phi,\alpha,\beta), \sigma) $$
+%
+%where\\
+% $sem(\Gamma, m.\syntax{omsLanguageTranslation}) = (\Phi,\alpha,\beta) : \cI'_1\to\cI'_2$ 
+%such that $\cI'_1 = \cI_1$ and $\cI'_2 = \cI_2$ \\
+%and 
+%$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, m.\syntax{symbolMap}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
+%where $\Gamma.\current=(lang, logic,ser)$, $logic'$ is the target logic of $(\Phi,\alpha,\beta)$, and $lang'$ and 
+%$ser'$ are the default language and serializations for 
+%$logic'$.
+%
+%\sssclause{Semantics of network refinement maps}
+%
+%\semdom{
+%\begin{array}{ll}
+%sem(\Gamma, G_1, G_2, \syntax{NetworkRefinementMap})& = \sigma:G_1\to G_2\\
+% & : GraphMorphism
+%\end{array}
+%}
+%
+%If $m$ is a \syntax{NetworkRefinementMap},
+%$$sem(\Gamma, G_1, G_2, m)
+%= sem(\Gamma, G_1,G_2, m.nodeMap)$$
+%
+%\sssclause{Semantics of sets of node maps}
+%\ednote{this has to be changed, see new syntax}
+%
+%\semdom{
+%\begin{array}{ll}
+%sem(\Gamma,G_1,G_2, Set(\syntax{NodeMap}))& = \sigma:G_1\to G_2\\
+% & : GraphMorphism
+%\end{array}
+%}
+%
+%If $m_1,\ldots, m_n$ are all \syntax{NodeMap}s,
+%$$sem(\Gamma,G_1,G_2, Set\{m_1,\ldots,m_n\}) = \sigma:$$
+%where \\
+%$sem(\Gamma, G_1, G_2,m_1)= (name^1_1, name^1_2,\rho_1,\sigma_1)$, $\ldots$\\
+%$sem(\Gamma, G_1, G_2,m_n) = (name^n_1, name^n_2,\rho_n,\sigma_n)$ and\\
+%$\sigma^G (name^i_1) = name^i_2$ and
+%$\sigma^M_{name^i_1} = (\rho_i, \sigma_i)$ for each $i= 1,\ldots, n$.
+%The map is required to be total on the nodes of $G_1$.
+%
+%%%%%%%%%%%%%%%%%%%%%
+%
+%\sssclause{Semantics of node maps}
+%
+%\semdom{
+%\begin{array}{ll}
+%sem(\Gamma, G_1, G_2,
+%\syntax{NodeMap}) & = (name_1, name_2,\rho,\sigma)\\
+% & : (NodeName, NodeName, Comorphism, SignatureMorphism)
+%\end{array}
+%}
+%
+%If $m$ is a \syntax{NodeMap},
+%$$sem(\Gamma, G_1, G_2,
+%n) = (m.\syntax{source}, m.\syntax{target}, \rho,\sigma)$$
+%where\\
+%$(\cI_1, \Sigma_1,\cM_1)$ is the label of $m.\syntax{source}$ in $G_1$,\\
+%$(\cI_2, \Sigma_2,\cM_2)$ is the label of $m.\syntax{target}$ in $G_2$,\\
+%$sem(\Gamma, m.\syntax{omsLanguageTranslation}) = \rho = (\Phi,\alpha,\beta) : \cI_1\to\cI_2$, \\
+%$sem(\Gamma', \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$,
+%where $\Gamma.\current=(lang, logic,ser)$,
+%$logic'$ is the target logic of $(\Phi,\alpha,\beta)$,
+%$lang'$ and $ser'$ are the default language and serialization for $logic'$
+%and $\Gamma' = \Gamma.\current=(lang', logic',ser')$.
+%
 %%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of entailment definitions}
