@@ -4961,11 +4961,11 @@ AlignmentSemantics ::= 'SingleDomain'
 Correspondence     ::= CorrespondenceBlock | SingleCorrespondence | '*'
 CorrespondenceBlock ::= 'relation' [Relation] [Confidence] '{'
                         Correspondence ( ',' Correspondence )* '}'
-SingleCorrespondence ::= SymbolRef [Relation] [Confidence]
+SingleCorrespondence ::= Symbol [Relation] [Confidence]
                          GeneralizedTerm [CorrespondenceId]
 CorrespondenceId   ::= '%(' IRI ')%'
-SymbolRef          ::= IRI
-GeneralizedTerm    ::= SymbolRef
+Symbol          ::= IRI
+GeneralizedTerm    ::= Symbol
 Relation           ::= '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI
 Confidence         ::= Double
 \end{lstlisting}
@@ -5127,8 +5127,8 @@ While \DOL uses IRIs as identifiers throughout, OMS languages do not necessarily
 \item F-logic \cite{flogic} does not use them at all.
 \end{itemize}
 However, \DOL OMS mappings as well as 
-%\CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of SymbolRef}
-certain operations on OMS require making unambiguous references to non-logical symbols of basic OMS (\syntax{SymbolRef}).  Therefore, \DOL provides a function that maps global identifiers used within basic OMS to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  \DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
+%\CLnote[type=todo]{maybe clarify which ones, by checking the grammar for all occurrences of Symbol}
+certain operations on OMS require making unambiguous references to non-logical symbols of basic OMS (\syntax{Symbol}).  Therefore, \DOL provides a function that maps global identifiers used within basic OMS to IRIs.  This mapping affects all non-logical symbol identifiers (such as class names in an OWL ontology), but not locally-scoped identifiers such as bound variables in Common Logic ontologies.  \DOL reuses the CURIE mechanism for abbreviating IRIs for this purpose (\cf \cref{c:curies}).
 
 The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by the following function:
 \begin{algorithmic}
@@ -5487,11 +5487,11 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | '*' ;
 % CorrespondenceBlock  = 'relation' , [ Relation ] , [ Confidence ] ,
 %                        '{' , Correspondence , { ',' , Correspondence } , '}' ;
-% SingleCorrespondence = SymbolRef , [ Relation ] ,
+% SingleCorrespondence = Symbol , [ Relation ] ,
 %                        [ Confidence ] , GeneralizedTerm , [ CorrespondenceId ] ;
 % CorrespondenceId     = '%(' , IRI , ')%' ;
-% SymbolRef            = IRI ;
-% GeneralizedTerm      = SymbolRef ;
+% Symbol            = IRI ;
+% GeneralizedTerm      = Symbol ;
 % Relation          = '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI ;
 % Confidence           = Double ;
 % \end{lstlisting}
@@ -10896,12 +10896,12 @@ DefaultCorrespondence ::= default-correspondence
 CorrespondenceBlock ::= correspondence-block [Relation]
                                              [Confidence] Correspondence
                                              Correspondence*
-SingleCorrespondence ::= correspondence SymbolRef [Relation]
+SingleCorrespondence ::= correspondence Symbol [Relation]
                                         [Confidence] GeneralizedTerm
                                         [CorrespondenceID]
 CorrespondenceID   ::= IRI
-SymbolRef          ::= IRI
-GeneralizedTerm    ::= SymbolRef
+Symbol          ::= IRI
+GeneralizedTerm    ::= Symbol
 Relation           ::= RelationReference | StandardRelation
 StandardRelation   ::= StandardRelationValues
 StandardRelationValues ::= subsumes
@@ -11012,7 +11012,7 @@ world semantics.
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 
 Term               ::= ($<$)an expression specific to an OMS language($>$) 
-GeneralizedTerm    ::= Term | SymbolRef
+GeneralizedTerm    ::= Term | Symbol
 QueryRelatedDefinition ::= QueryDefinition
                      | SubstitutionDefinition
                      | ResultDefinition
