@@ -2076,7 +2076,7 @@ first OMS.
 
 \termdefinitionLight{conservative extension\index{conservative extension ! (general)}}{extension that does not add new logical properties with respect to the signature of the extended OMS.}
   \begin{note}
-   An extension is a consequence-theoretic or model-theoretic conservative extension\index{conservative extension ! model-theoretic}. If used without qualification, the consequence-theoretic version is meant.
+   An extension is a consequence-theoretic or model-theoretic conservative extension\index{conservative extension ! model-theoretic}. If used without qualification, the model-theoretic version is meant.
   \end{note}
 
 
@@ -2176,7 +2176,7 @@ Any satisfiable OMS is \termref{consistent}, but there are some
 %OMS that preserve all entailments over a set of terms $\Sigma$ called seed signature.  Modules based on syntactic locality are defined in Cuenca Grau, B., Horrocks, I., Kazakov, Y., Sattler, U.: Modular reuse of ontologies: Theory and practice. J. of Artif. Intell. Research 31, 273–318 (2008)}}
   \begin{note}
 The conservative extension can be either model-theoretic or consequence-theoretic; without
- qualification, the consequence-theoretic version is used.
+ qualification, the model-theoretic version is used.
   \end{note}
 %\ednote{this is about coverage only. Should we also care about safety? No, see \url{https://github.com/tillmo/DOL/issues/23}.}
 
@@ -4648,7 +4648,7 @@ whether they are kept (and the other ones are removed).
 While in most cases the translation from concrete to abstract syntax
 is obvious (the structure is largely the same),  
 \begin{itemize}
-\item both \syntax{\%satisfiable} and \syntax{\%mcons} are translated
+\item both \syntax{\%satisfiable}, \syntax{\%cons} and \syntax{\%mcons} are translated
   to \syntax{model-conservative},
 \item both \syntax{\%consistent}  and \syntax{\%ccons} are translated
   to \syntax{consequence-conservative},,
@@ -4710,7 +4710,8 @@ ExtensionOMS       ::= [ExtConservativityStrength]
                        ExtendingOMS
 ConservativityStrength ::= Conservative | '%mono' | '%wdef' | '%def'
 ExtConservativityStrength ::= ConservativityStrength | '%implied'
-Conservative       ::= '%ccons'
+Conservative       ::= '%cons'
+                     | '%ccons'
                      | '%mcons'
                      | '%notccons'
                      | '%notmcons'
@@ -6336,7 +6337,8 @@ $\Gamma' =\Gamma_\emptyset.\{\current = (lang, logic, ser)\} $, with
 $lang, logic, ser$ determined from the extension of the file containing the native document
 and 
 $\Gamma'' = \Gamma[\syntax{IRI} \mapsto semNative_{(lang, logic, ser)}(nativeDocument)]$.
-
+\ednote{TM: aha, here we need to consider all logics $l$ supported by $lang$ and
+store the respective semantics under $postfixLogicIRI(IRI,l)$.}
 Note that if the OMS in the native document does not conform with the logic determined by
 the extension of the file where the document is stored, 
 $sem(nativeDocument)$ will be undefined.
@@ -6722,9 +6724,9 @@ The semantics of a \syntax{BasicOMS} has been defined above.
 The semantics of an \syntax{OMSReference} $O$
 is given by $$sem(\Gamma, O) = (\cI, \Sigma, \cM,\Delta)$$
 \noindent where $locId = postfixLogicIRI(O.\syntax{omsRef},name(\Gamma.logic))$ 
-\ednote{this function needs to be defined}
 and
  \begin{itemize}
+   \item $postfixLogicIRI(o,l)$ is the string $o?logic=l$
    \item $\cI = \Inst(\Gamma(locId))$,
    \item $\Sigma = \Sig(\Gamma(locId))$
    \item $\cM = \Mod(\Gamma(locId))$
