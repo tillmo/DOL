@@ -6296,7 +6296,8 @@ $\Gamma' =\Gamma_\emptyset.\{\current = (lang, logic, ser)\} $, with
 $lang, logic, ser$ determined from the extension of the file containing the native document
 and 
 $\Gamma'' = \Gamma[\syntax{IRI} \mapsto semNative_{(lang, logic, ser)}(nativeDocument)]$.
-
+\ednote{TM: aha, here we need to consider all logics $l$ supported by $lang$ and
+store the respective semantics under $postfixLogicIRI(IRI,l)$.}
 Note that if the OMS in the native document does not conform with the logic determined by
 the extension of the file where the document is stored, 
 $sem(nativeDocument)$ will be undefined.
@@ -6682,9 +6683,9 @@ The semantics of a \syntax{BasicOMS} has been defined above.
 The semantics of an \syntax{OMSReference} $O$
 is given by $$sem(\Gamma, O) = (\cI, \Sigma, \cM,\Delta)$$
 \noindent where $locId = postfixLogicIRI(O.\syntax{omsRef},name(\Gamma.logic))$ 
-\ednote{this function needs to be defined}
 and
  \begin{itemize}
+   \item $postfixLogicIRI(o,l)$ is the string $o?logic=l$
    \item $\cI = \Inst(\Gamma(locId))$,
    \item $\Sigma = \Sig(\Gamma(locId))$
    \item $\cM = \Mod(\Gamma(locId))$
