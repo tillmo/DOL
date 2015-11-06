@@ -5724,7 +5724,7 @@ domain.
  In the following the theoretical foundations of the semantics of \DOL are  specified.
 The notions of \emph{institution} and institution 
 \emph{comorphism} and \emph{morphism} are introduced, which provide formalizations of the terms 
-\termref{logic}, respectively \termref{logic translation}, respectively  \termref{logic reduction}. 
+\termref{logic}, \termref{logic translation} and \termref{logic reduction}, respectively. 
 
 Since \DOL covers OMS written in one or several logical systems, the
 \DOL semantics needs to clarify the notion of logical
@@ -5878,12 +5878,8 @@ signature morphism component.
 %
 
 Further examples of institutions are: $\mathcal{SROIQ}(D)$, unsorted first-order logic, 
-many-sorted first-order logic, and many others.  Note that reduct is generally given by forgetting 
-parts of the model.
-%, and the pre-order on models is given as follows: $M_1\leq M_2$ if $M_1$ and 
-%$M_2$ only differ in the interpretation of propositional non-logical symbols and predicates, and 
-%moreover each propositional (and predicate) symbol true in $M_1$ is also true in $M_2$ (for a
-%given tuple of arguments).
+many-sorted first-order logic, and many others.  Note that the reduct of a model 
+is generally given by forgetting some of its parts.
 
 For the rest of the section, an arbitrary institution is considered. 
 
@@ -5895,7 +5891,7 @@ A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and 
 Given a theory $T=(\Sigma, \Delta)$, the class of $T$-models is the class of all
 $\Sigma$-models $M$ such that $M\models \delta$, for each sentence $\delta \in \Delta$.
 A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
-$M\models\varphi$ for $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
+$M\models\varphi$ for each $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
 for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
 $\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, $\Delta\models\varphi$, if all models satisfying all sentences in
 $\Delta$ also satisfy $\varphi$. For a theory $(\Sigma, \Delta)$, we write $\Delta^\bullet$ for the set of all $\Sigma$-sentences $\varphi$ such that $\Delta \models \varphi$. 
@@ -5909,9 +5905,9 @@ A \defsty{theory morphism} $\phi: (\Sigma, \Delta) \rightarrow (\Sigma',  \Delta
 Institution comorphisms capture the intuition of encoding or embedding a logic into a more expressive one.
 
 \begin{definition}[Institution Comorphism] An \defsty{institution comorphism} from an institution $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ to an institution $J=(\Sig^J, \Mod^J,\Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and
-two natural transformations $\beta: \Mod^J \circ \Phi \Longrightarrow \Mod^I$
+two natural transformations $\beta: \Mod^J \circ \Phi^{op} \Longrightarrow \Mod^I$
 and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
-for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^I(\Sigma)$ and each model $M'\in\Mod^J(\Phi(\Sigma))$
+for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^I(\Sigma)$ and each model $M'\in|\Mod^J(\Phi(\Sigma))|$
 $$ M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi) \Leftrightarrow
 \beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
 $$
@@ -5958,11 +5954,11 @@ $$
 }
 $$
 admits (weak) amalgamation, i.e.\
-any for any two models $M_2\in\Mod^I(\Sigma_2)$
-and $M'_1\in\Mod^J(\Phi(\Sigma_1))$
+any for any two models $M_2\in|\Mod^I(\Sigma_2)|$
+and $M'_1\in|\Mod^J(\Phi(\Sigma_1))|$
 with $M_2\forget{\sigma}=\beta_{\Sigma_1}(M'_1)$,
 there is a unique (not necessarily unique) 
-$M'_2\in\Mod^J(\Phi(\Sigma_2))$
+$M'_2\in|\Mod^J(\Phi(\Sigma_2))|$
 with $\beta_{\Sigma_2}(M'_2)=M_2$
 and $M'_2\forget{\Phi(\sigma)}=M'_1$;
 
@@ -5990,7 +5986,7 @@ as OMS translation and OMS reduction.
 
 \begin{definition}
   Given an institution  $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$, the
-   institution of its theories can be defined, denoted $I^{th}$, as follows. The category of signatures of $I^{th}$ is the category
+   institution of its theories, denoted $I^{th}$ can be defined as follows. The category of signatures of $I^{th}$ is the category
    of $I$-theories and $I$-theory morphisms, that  is denoted $\Th^I$.
    For each theory $(\Sigma, \Delta)$, its sentences are just $\Sigma$-sentences in $I$, and
    its models are just $\Sigma$-models in $I$ that satisfy the sentences in $\Delta$, while the
@@ -6003,7 +5999,7 @@ syntax of the source logic into the target logic.
 \begin{definition}
 
  Let $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ and $J = (\Sig^J, \Mod^J,
-\Sen^J, \models^J)$ be two institutions. An \defsty{theoroidal institution comorphism} from $I$ to
+\Sen^J, \models^J)$ be two institutions. A \defsty{theoroidal institution comorphism} from $I$ to
 $J$ is a institution comorphism from $I$ to $J^{th}$.
 \qed\end{definition}
 
@@ -6015,7 +6011,7 @@ Institution morphisms capture the intuition of projecting from a more expressive
 An \defsty{institution morphism} from an institution $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ to
 an institution $J = (\Sig^J, \Mod^J,
 \Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and two
-natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi$
+natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi^{op}$
 and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^J(\Phi(\Sigma))$ and each model $M\in\Mod^I(\Sigma)$
 $$ M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi) \Leftrightarrow
 \beta_{\Sigma}(M)\models^J_{\Phi(\Sigma)}\varphi.
@@ -6089,8 +6085,8 @@ OMS languages and OMS language translations\footnote{The
   below.}, a collection of institutions, \termref{institution} morphisms and
 institution comorphisms (serving as logics, logic reductions and logic
 translations), and a collection of serializations. Moreover, some of the institution comorphisms are marked as default translations (but only at most one between a given source and target institution), and there is
-a binary supports relation between OMS languages and institutions,
-and a binary supports relation between OMS languages and
+a binary relation $\mathit{supports}$ between OMS languages and institutions,
+and a binary relation $\mathit{supports}$ between OMS languages and
 serializations. 
  Each language is required to have a default logic and serialization. Moreover, we assume
  that institutions, institution morphisms and institution comorphisms
@@ -6128,7 +6124,7 @@ A functor between two inclusive categories is inclusive if it takes inclusions i
    \begin{itemize}
      \item $\Sig$ is inclusive and has pushouts which preserve inclusions,
      \item $\Sen$ is inclusive, and
-     \item each model category have a broad subcategory of inclusions.
+     \item each model category has a broad subcategory of inclusions.
    \end{itemize}
 \qed\end{definition}
 
@@ -6164,17 +6160,17 @@ from $\emptyset$ to any signature of the institution. Moreover, the existence of
 $L_1 \bigcup L_2 = (L, \rho_1:L_1 \to L, \rho_2 : L_2 \to L)$, when defined, where
 $L$ is an institution and $\rho_1$ and
 $\rho_2$ are institution comorphisms, giving the embedding of $L_1$ and
-respectively $L_2$ in $L$. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projection, with the condition that between two institutions at most one comorphism and at most one morphism is marked as default.
+respectively $L_2$ in $L$. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projections, with the condition that between any two institutions at most one comorphism and at most one morphism is marked as default.
 
 For each institution $\cI$ in the heterogeneous logical environment, it is further required that there is:
 
 \begin{itemize}
   \item  a function giving the semantics of a basic OMS. It has the format
-$$(\Sigma',\Delta')=\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,\syntax{BasicOMS})$$
-where $\Sigma$ gives the context of previous declarations, $\Sigma'$ is the resulting
+$$\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,O) = (\Sigma',\Delta')$$
+where $O$ is a \syntax{BasicOMS}, $\Sigma$ gives the context of previous declarations, $\Sigma'$ is the resulting
 signature and $\Delta'$ is the resulting set of sentences.
  It is required then that $\Sigma\subseteq\Sigma'$.
-  \item a function $makeMorphism_\cI$ that turns a symbol map into a signature morphism,
+  \item a function $makeMorphism_\cI$ that turns symbol maps into signature morphisms,
   \item a function $matchSymbols_\cI$ that takes as arguments two signatures 
   $\Sigma_1$ and $\Sigma_2$ of $\cI$
   and returns as result the list of all pairs of symbols $(s^1_i,s^2_i)$ such that
@@ -6189,7 +6185,8 @@ signature and $\Delta'$ is the resulting set of sentences.
 %not needed!  \item a default language and a default language serialization.
 \end{itemize}
 
-Further,  for each institution, it is required that there exist (possibly partial) union and difference operations on signatures.
+Further,  for each institution, it is required that there exist (possibly partial) union
+\ednote{If the institutions are inclusive, should the union not always be defined?} and difference operations on signatures.
 
 \medskip
 
@@ -6276,8 +6273,8 @@ $\Gamma_1\cup\Gamma_2.imports = \Gamma_1.imports \cup \Gamma_2.imports$,
 $\Gamma_1\cup\Gamma_2.\current = \Gamma_1.\current$
 and $\Gamma_1\cup\Gamma_2.\prefix = \Gamma_1.\prefix \cup \Gamma_2.\prefix$.
   $\Gamma.\{\prefix = \PMap\}$ represents the global environment that sets the prefix map of 
-$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ for updating the current triple of $\Gamma$ to
-$(lang, logic, ser)$.
+$\Gamma$ to $\PMap$ and $\Gamma.\{\current  = (lang, logic, ser)\}$ is used for 
+updating the current triple of $\Gamma$ to $(lang, logic, ser)$.
 
 
 %We  assume a \emph{language-specific semantics} of basic
