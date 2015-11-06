@@ -6334,11 +6334,14 @@ $$sem(nativeDocument) = \Gamma''$$
 
 \noindent where 
 $\Gamma' =\Gamma_\emptyset.\{\current = (lang, logic, ser)\} $, with 
-$lang, logic, ser$ determined from the extension of the file containing the native document
-and 
-$\Gamma'' = \Gamma[\syntax{IRI} \mapsto semNative_{(lang, logic, ser)}(nativeDocument)]$.
+$lang, logic, ser$ determined from the extension of the file containing the native document, \\
+$postfixLogicIRI(o,l)$ is the string $o?logic=l$,\\
+$l_1\ldots, l_n$ are the logics supported by $lang$ for some natural number $n$,\\
+$\Gamma_1 = \Gamma'[postfixLogicIRI(IRI, l_1)\mapsto semNative_{(lang,l_1,ser)}(nativeDocument)]$,\\
+$\Gamma_2 = \Gamma_1[postfixLogicIRI(IRI, l_2)\mapsto semNative_{(lang,l_2,ser)}(nativeDocument)],\ldots$\\
+$\Gamma'' = \Gamma_{n-1}[postfixLogicIRI(IRI, l_n)\mapsto semNative_{(lang,l_n,ser)}(nativeDocument)]$.\\
 \ednote{TM: aha, here we need to consider all logics $l$ supported by $lang$ and
-store the respective semantics under $postfixLogicIRI(IRI,l)$.}
+store the respective semantics under $postfixLogicIRI(IRI,l)$. MC: done}
 Note that if the OMS in the native document does not conform with the logic determined by
 the extension of the file where the document is stored, 
 $sem(nativeDocument)$ will be undefined.
