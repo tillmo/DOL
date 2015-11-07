@@ -1228,7 +1228,7 @@ and interoperability of
 ontologies, specifications and MDE models (OMS for short). \DOL is a language for
 distributed knowledge representation, system specification and 
 model-driven development across multiple OMS, particularly OMS
- that have been formalized in different OMS languages.\ednote{Suggestion from Terry: ``\DOL is a tool for managing and manipulating distributed knowledge representations, system specifications, and model-driven design/development artifacts among multiple OMS, particularly...''. However, I think \DOL is not a tool, but a language. Hence, this does not fit. TM} 
+ that have been formalized in different OMS languages.
 This \IS responds to the
 OntoIOp Request for Proposals \cite{RFP}.
 
@@ -1465,9 +1465,7 @@ language aspect.  Furthermore, language translations \should preserve
 comments and annotations.  All comments attached to a sentence (or
 symbol) in the source \should be attached to its translation in the
 target (if there are more than one sentences (respectively symbols)
-expressing the translation, to at least one of them).\ednote{TM: corrected
-from wrong English. ``there is more than one'' needs to be followed
-by a verb in singular form.}
+expressing the translation, to at least one of them).
 
 \sclause{Conformance of a Serialization of an OMS Language With \DOL}\label{c:conform:serialization}
 \begin{fminipage}{\textwidth}
@@ -4836,15 +4834,16 @@ be further specialized to a (target) OMS via an
 \syntax{OMSRefinementMap}. The latter involves a symbol map and/or OMS
 language translation, analogously to interpretations.  With this style
 of notation, simple refinements can be easily chained up (which cannot
-be done using interpretations).  Refinements can also be composed
-(\syntax{RefinementComposition}), provided that the target of the
-first refinement matches the source of the second one. Furthermore,
+be done using interpretations).  Refinements themselves can
+also be refined, also by other refinements---this amounts
+to the possibility of composing refinements. Furthermore,
 refinements can also be specified between networks
 (\syntax{SimpleNetworkRefinement}).  A refinement between OMS networks
 consists of a list of ordinary refinements (between OMS), one for
 each node in the source network (the OMS refinement is then required
 to refine the node in the source network to some node in the target
-network).
+network). The list may also include network refinements, much in the
+same way as network definitions also may include other networks.
 
 \medskip
 \begin{figure}
@@ -6202,7 +6201,7 @@ signature and $\Delta'$ is the resulting set of sentences.
   $\Sigma_1$ and $\Sigma_2$ of $\cI$
   and returns as result the list of all pairs of symbols $(s^1_i,s^2_i)$ such that
   $s^1_i\in|\Sigma_1|$ and $s^2_i\in|\Sigma_2|$ and the symbols have the same name
-  \ednote{@Till: this is not formal...}.
+  \ednote{@Till: this is not formal... TM: yes, it is formal. Maybe rename it to $sameName$ in order to stress that sameness of names is formalized here in some institution-specific way? It would make sense to require that this is an equivalence relation.}.
   \item a relativization function $relativize_\cI$ 
   taking as argument a theory and giving as 
   result a theory, and a function
@@ -6213,7 +6212,7 @@ signature and $\Delta'$ is the resulting set of sentences.
 \end{itemize}
 
 Further,  for each institution, it is required that there exist (possibly partial) union
-\ednote{If the institutions are inclusive, should the union not always be defined?} and difference operations on signatures.
+\ednote{If the institutions are inclusive, should the union not always be defined? TM: yes, it should.} and difference operations on signatures.
 
 \medskip
 
@@ -7319,7 +7318,8 @@ sem(\Gamma,\Sigma, \syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 }
 
 \ednote{This is needed for translations, same as induced\_from vs. induced\_from\_to
-in CASL. How to deal with this?}
+in CASL. How to deal with this? TM: couldn't we use the same notions as in
+the CASL reference manual p. 198/199? I have packed the sources into sem.tgz}
 
 \semdom{
 \begin{array}{ll}
@@ -7359,7 +7359,8 @@ do not have symbols. The ``unique target'' method does not cover cases
 where the target is unique because the target has a unique symbol
 of the required kind and type. It does not cover the case where just
 the symbol with the same name is used. But maybe all this should be
-made institution-specific?}
+made institution-specific? TM: I think my answer to the previous
+ednote should solve this.}
 
 The local name of a non-logical symbol $e$ is determined as follows\footnote{In practice, this can 
 often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
@@ -7531,7 +7532,7 @@ $$
 sem(\Gamma,O) = \Gamma''$$
 \noindent 
 where 
-$\Gamma.logic$ and $\cI$ must be the same
+$\Gamma.logic$ and $\cI$\ednote{@Mihai: what is $\cI$?} must be the same
 and for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
 we have \\
 $\Gamma_1=\Gamma'_1[
@@ -7546,7 +7547,7 @@ postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)
 where $sem(\Gamma'_{n-1}.{logic=\cI_n},O.\syntax{oms}) = (\Gamma'_{n},(\cI_n,\Sigma_n,\cM_n,\Delta_n))$
 
 
-\ednote{@Till: to which of the possible $n$ institutions do these annotations refer to?}
+\ednote{@Till: to which of the possible $n$ institutions do these annotations refer to? TM: to $\Gamma.logic$.}
 \noindent If $O.\syntax{conservativityStrength}$ is \syntax{model-conservative}, the semantics is only
 defined if $\cM\not=\emptyset$.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{consequence-conservative}, the semantics is only
@@ -7586,7 +7587,7 @@ The rule for \syntax{OMSReference}s has been given above, as
 
 If $sym$ is a \syntax{Symbol}
 $$sem(\Gamma,\Sigma, sym) = s$$
-where $s$ is a logic-specific symbol with the name $sym.\syntax{iri}$ from $|\Sigma|$.\ednote{Is there some conversion going on here? Then this should be added to the heterogeneous logical env.} If such symbol does not exist, 
+where $s$ is a logic-specific symbol with the name $sym.\syntax{iri}$ from $|\Sigma|$.\ednote{Is there some conversion going on here? Then this should be added to the heterogeneous logical env. TM: no, I think no conversion is needed.} If such symbol does not exist, 
 the semantics is undefined.
 
 \sssclause{Semantics of symbol map items}
@@ -7970,7 +7971,7 @@ $$sem(\Gamma, G_1, G_2, Set(r_1,\ldots, r_n)) = \sigma$$
 \noindent where\\
 $sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,\\
 $sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$\\
-such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map.}
+such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map. TM: cool! I did not think of this possibility, but it clearly makes sense. It is analogous to the possibility to include networks into the definition of other networks. Note hwever that the semantics of a set of refinements should be a network morphism, not a graph morphism.}
 $G_1 = \bigcup_{i=1,\ldots,n} G^i_1$,
 $G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and
 $\sigma : G_1 \to G_2 = \bigcup_{i=1,\ldots, n} \sigma_i$ 
@@ -8260,8 +8261,7 @@ sem(\Gamma,  \syntax{ModuleRelDefinition}) & = \Gamma'\\
 \end{array}
 }
 
-\ednote{in the manifesto this is called a conservative extension. TM: so we have once decided to change this into conservative extension? I vaguely can
-remember...}
+\ednote{in the manifesto this is called a conservative extension. TM:  we have decided to change this into conservative extension!}
 
 If $d$ is a \syntax{ModuleRelDefinition},
 $$
@@ -8430,7 +8430,8 @@ $cvalues = \begin{cases}
  True& \text{ otherwise }
 \end{cases}
 $\\
-$sem(\Gamma,\Sigma_1,c.generalizedTerm) = sym1$, \ednote{How do we get a symbol from an IRI?}
+$sem(\Gamma,\Sigma_1,c.generalizedTerm) = sym1$, \ednote{How do we get a symbol from an IRI? TM: we would need an institution-specific function for this.
+But I think it is easier to assume that symbols \emph{are} IRIs.}
 $sem(\Gamma,\Sigma_2,c.symbolRef) = sym2$,
 $clist = Sequence((rel, sym1, sym2))$,
 
@@ -9065,10 +9066,10 @@ We distinguish three cases.
             ('incompatible',i1, i2)& \verb+Individual: 1:i1 DifferentFrom: 2:i2+ \\
             ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf: 1:c1+ \\
             ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
-            ('is-subsumed',c1, c2)& \verb+Class: 1:c1 SubClassOf: 2:c2+ \\
-            ('is-subsumed',r1, r2)& \verb+ObjectProperty: 1:r1+ SubPropertyOf: 2:r2  \\
-            ('has-instance', c1, i2) & \verb+Individual: 2:i2 Types: 1:c1+\\
-            ('instance-of', i1, c2) & \verb+Individual: 1:i1 Types: 2:c2+
+            ('\mathit{is\text{-}subsumed}',c1, c2)& \verb+Class: 1:c1 SubClassOf: 2:c2+ \\
+            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1+ SubPropertyOf: 2:r2  \\
+            ('\mathit{has\text{-}instance}', c1, i2) & \verb+Individual: 2:i2 Types: 1:c1+\\
+            ('\mathit{instance\text{-}of}', i1, c2) & \verb+Individual: 1:i1 Types: 2:c2+
           \end{array}$$         
  \end{itemize}
 \item Global domain: \ednote{in the absence of terms, there is no difference to first case}
@@ -9085,7 +9086,7 @@ We distinguish three cases.
           together with the property that $r_{st}$ is the converse of $r_{ts}$:
           $$\verb+ObjectProperty: + r_{st} \verb+ InverseOf: + r_{ts}$$
           and translation of correspondences to $\Sigma$-sentences
-        using the following rules:\ednote{correct incompatible, what to do with 2, 5,6, 8,10?}
+        using the following rules:\ednote{correct incompatible, what to do with 2, 5,6, 8,10? TM: I do not understand the question.}
          $$\begin{array}{ll}
             ('equivalent', c1, c2) & \verb+Class: 1:c1 EquivalentTo: + r_{st}\verb+ some 2:c2+ \\
             ('equivalent', r1, r2) & \verb+ObjectProperty: 1:r1 EquivalentTo: 2:r2+\\
@@ -9096,10 +9097,10 @@ We distinguish three cases.
             ('incompatible',i1, i2)& \verb+Individual: 1:i1 DifferentFrom: 2:i2+ \\
             ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf:  + r_{sz}\verb+ some 1:c1+ \\
             ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
-            ('is-subsumed',c1, c2)& \verb+Class: 1:c1 SubClassOf: + r_{ts}\verb+ some 2:c2+ \\
-            ('is-subsumed',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyOf: 2:r2+ \\
-            ('has-instance', c1, i2) & \verb+Individual: 2:i2 Types: + r_{ts}\verb+ some 1:c1+\\
-            ('instance-of', i1, c2) & \verb+Individual: 1:i1 Types: + r_{st}\verb+ some 2:c2+
+            ('\mathit{is\text{-}subsumed}',c1, c2)& \verb+Class: 1:c1 SubClassOf: + r_{ts}\verb+ some 2:c2+ \\
+            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyOf: 2:r2+ \\
+            ('\mathit{has\text{-}instance}', c1, i2) & \verb+Individual: 2:i2 Types: + r_{ts}\verb+ some 1:c1+\\
+            ('\mathit{instance\text{-}of}', i1, c2) & \verb+Individual: 1:i1 Types: + r_{st}\verb+ some 2:c2+
           \end{array}$$   
  \end{itemize}
 \end{enumerate}
