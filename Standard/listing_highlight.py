@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 
-with open("OMG_OntoIOp_current-diff2e94c79.tex", "r") as readDiff:
+import sys
+
+inputDiff = sys.argv[1]
+outputDiff = sys.argv[2]
+
+#with open("OMG_OntoIOp_current-diff2e94c79.tex", "r") as readDiff:
+with open(inputDiff, "r") as readDiff:
       
-      with open("dol-diff.tex", "w") as writeDiff:
+#      with open("OMG_diff.tex", "w") as writeDiff:
+      with open(outputDiff, "w") as writeDiff:
             begin_listing = r"\begin{lstlisting}"
             end_listing = "\end{lstlisting}"
 
