@@ -517,8 +517,9 @@ author=,date=,id=,replyto=,type=}{}%
 %\renewcommand{\sclause}[1]{\section{#1}}
 %\renewcommand{\ssclause}[1]{\subsection{#1}}
 %\renewcommand{\sssclause}[1]{\subsubsection{#1}}
-\renewcommand{\termdefinition}[2]{\index{#1}\paragraph{#1} #2}
-\newcommand{\termdefinitionLight}[2]{\paragraph{#1} #2}
+\renewcommand{\termdefinition}[2]{\index{#1}\textbf{#1} #2}
+%\newcommand{\termdefinitionLight}[2]{\paragraph{#1} #2}
+\newcommand{\termdefinitionLight}[2]{\textbf{#1} #2}
 \newcommand{\nisref}[1]{#1}
 \renewcommand{\subjectfield}[1]{} % {#1}
 \renewcommand{\normannex}[1]{ \chapter{Annex: #1} \normative}
@@ -702,9 +703,16 @@ they may find by completing the Issue Reporting Form listed on the main web page
 \renewcommand{\contentsname}{Table of Contents}
 \tableofcontents
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clause*{Preface}
 \addcontentsline{toc}{clause}{Preface}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \sclause*{OMG}
 \addcontentsline{toc}{sclause}{OMG}
@@ -716,6 +724,9 @@ Founded in 1989, the Object Management Group, Inc. (OMG) is an open membership, 
 OMG member companies write, adopt, and maintain its specifications following a mature, open process. OMG's specifications implement the Model Driven Architecture\textregistered\xspace (MDA\textregistered\xspace), maximizing ROI through a full-lifecycle approach to enterprise integration that covers multiple operating systems, programming languages, middleware and networking infrastructures, and software development environments. OMG's specifications include: UML\textregistered\xspace (Unified Modeling Language\texttrademark\xspace); CORBA\textregistered\xspace (Common Object Request Broker Architecture); CWM\texttrademark\xspace (Common Warehouse Metamodel); and industry-specific standards for dozens of vertical markets.
 
 More information on the OMG is available at http://www.omg.org/.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \sclause*{OMG Specifications}
@@ -775,6 +786,9 @@ Email: \url{pubs@omg.org}\\
 
 \noindent Certain OMG specifications are also available as ISO standards. Please consult \url{http://www.iso.org}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \sclause*{Typographical Conventions}
 \addcontentsline{toc}{sclause}{Typographical Conventions}
@@ -805,20 +819,979 @@ Helvetica/Arial - 10 pt.: } Exceptions
 NOTE: Italic text represents names defined in the specification or the name of
  a document, specification, or other publication. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
 
 \sclause*{Issues}
 \addcontentsline{toc}{sclause}{Issues}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The reader is encouraged to report any technical or editing issues/problems
  with this specification to \url{http://www.omg.org/report_issue.htm}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+
+\setcounter{clause}{-1}
+\clause{Submission-Specific Material}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Submission Preface}
+Fraunhofer FOKUS, MITRE, and Thematix Partners LLC are pleased  to submit this joint proposal in response to the Ontology, Modeling and Specification Integration and Interoperability (OntoIOp) RFP  (OMG document ad/2013-12-02). The joint proposal is supported by Athan Services  and the Otto-von-Guericke University Magdeburg. The contacts for this submission are:
+\begin{itemize}
+	\item Fraunhofer FOKUS, Andreas Hoffmann, andreas.hoffmann@fokus.fraunhofer.de
+	\item MITRE, Leo Obrst, lobrst@mitre.org
+	\item Thematix Partners LLC, Elisa Kendall, ekendall@thematix.com	
+	\item Athan Services, Tara Athan, taraathan@gmail.com
+	\item Otto-von-Guericke University Magdeburg, Till Mossakowski, till@iws.cs.uni-magdeburg.de  (\textit{lead contact})
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Mandatory Requirements}
+
+
+\begin{center}
+\begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
+%\caption{Mandatory Requirements}\\
+\hline
+\textbf{ID} & \textbf{RFP requirement} & \textbf{How this proposal  addresses requirement}\\
+\hline
+\endfirsthead
+\multicolumn{3}{l}%
+{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\hline
+\textbf{ID} & \textbf{RFP requirement} & \textbf{How this proposal addresses requirement}\\
+\hline
+\endhead
+\hline \multicolumn{3}{l}{\textit{Continued on next page}} \\
+\endfoot
+\hline
+\endlastfoot
+
+6.5.1(a) & 
+Proposals shall provide a specification of a metalanguage for relationships between the components
+of logically heterogeneous OMS, particularly, given a language translation from a language L1 to
+another language L2, the application of the language translation to an OMS that is written in the
+language L1. &
+\DOL provides the required translation construct using syntax \syntax{O with translation t}, see \ref{c:OMS} and \ref{a:dol-text:OMS}.
+Moreover, \DOL provides heterogeneous interpretations between OMS, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}. 
+   \\ \hline
+%
+6.5.1(b) & 
+Proposals shall provide a specification of a metalanguage for the union of OMS written in
+different languages, which implicitly involves the application of suitable default translations in
+order to reach a common target language. &
+The syntax for unions is \syntax{O1 and O2}, see \ref{c:OMS} and \ref{a:dol-text:OMS}. Default translations are discussed in
+\ref{c:OMS}, and \DOL's notion of heterogeneous logical
+environment explicitly specifies default translations, see \ref{c:direct-sematics}.
+	\\ \hline
+%
+6.5.1(c) & 
+Proposals shall provide a specification of a metalanguage for importation in modular OMS.	&
+\DOL allows the import of OMS by their IRI, see \ref{c:OMS} and \ref{a:dol-text:OMS}.
+	\\  \hline
+%
+6.5.1(d) & 
+Proposals shall provide a specification of a metalanguage for relationships between OMS and their
+extracted modules e.g. the whole theory is a conservative extension of the module. 	&
+\DOL provides such a construct with syntax \syntax{module m : o1 of o2 for sig}, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
+	\\ \hline
+%
+6.5.1(e) & 
+Proposals shall provide a specification of a metalanguage for relationships between OMS and their
+approximation in less expressive languages such that the approximation is logically implied by the
+original theory, where the approximation generally has to be maximal in some suitable sense. 	&
+\DOL provides such a construct with syntax \syntax{o keep logic},  see \ref{c:OMS} and \ref{a:dol-text:OMS}.	\\ \hline
+%
+6.5.1(f) & 
+Proposals shall provide a specification of a metalanguage for links such as imports,
+interpretations, refinements, and alignments between OMS/modules.
+	&
+\DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
+	\\ \hline
+%
+6.5.1(g) & 
+Proposals shall provide a specification of a metalanguage for combination of OMS along links. 	&
+\DOL provides such a construct with syntax \syntax{combine n}, where \syntax{n} is a network of OMS and mappings (links),  see \ref{c:OMS} and \ref{a:dol-text:OMS}.
+	\\ \hline
+%
+6.5.2(a)& 
+The constructs of the metalanguage shall be applicable to different logics.	&
+The semantics of \DOL is based on a heterogeneous logical
+environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
+   \\ \hline
+%
+6.5.2(b)& 
+The metalanguage shall neither be restricted to OMS in a specific domain, nor to OMS represented
+in a specific logical language.	&
+The semantics of \DOL is based on a heterogeneous logical
+environment, which can contain arbitrary logics, see \ref{c:direct-sematics}.
+   \\ \hline
+%
+6.5.2(c)& 
+The metalanguage shall not replace the object language constructs of the conforming logical
+languages.	&
+The syntax of a \syntax{NativeDocument} is left unspecified in this standard. Rather, here this standard relies on other
+standards and language definitions.
+See \ref{c:OMS} and \ref{a:dol-text:OMS}.
+   \\ \hline
+%
+6.5.2(d)& 
+The metalanguage shall provide syntactic constructs for (i) structuring OMS regardless of the
+logic in which their sentences are formalized and (ii) basic and structured OMS and facilities to
+identify them in a globally unique way.
+	&
+The structuring constructs for OMS in \ref{c:OMS} and \ref{a:dol-text:OMS} can be used for 
+any logic, see the semantics in \ref{c:direct-sematics}. \DOL uses IRIs for referencing both basic and structured OMS, see
+\ref{c:iris}.
+   \\ \hline
+%
+6.5.3(a)& 
+An abstract syntax specified as an SMOF compliant meta model.	&
+ The abstract syntax is specified using SMOF, see clause \ref{c:abstract-syntax}. An EBNF variant is given in annex \ref{a:EBNF}. 
+   \\ \hline
+%
+6.5.3(b)& 
+A human-readable lexical concrete syntax in EBNF and serialization in XML, for the latter XMI shall
+be used.	&
+The concrete syntax (in EBNF) is specified in clause \ref{c:abstract-syntax}. The XMI representation 
+is automatically derived from the SMOF meta model.
+   \\ \hline
+%
+6.5.3(c)& 
+Complete round-trip mappings from the human-readable concrete syntax to the abstract syntax and
+vice versa.	&
+ The metaclasses of the MOF abstract syntax are used as non-terminals
+of the EBNF concrete syntax (clause 
+\ref{c:abstract-syntax}); this makes a round-trip mapping between both straight-forward. Moreover, the 
+round-trip mapping has been implemented in form of a parser and a printer as part of the 
+heterogeneous tool set  (see appendix~\ref{a:tools} and  \url{http://hets.eu}).
+   \\ \hline
+%
+6.5.3(d)& 
+A formal semantics for the abstract syntax.	&
+The formal semantics is given in clause \ref{c:semantics}.
+   \\ \hline
+%
+%
+6.5.4(a)& 
+Existing OMS in existing serializations shall validate as OMS in the metalanguage with a minimum
+amount of syntactic adaptation.	& 
+Any document providing an OMS in a serialization of a \DOL conforming
+language can be used as-is in \DOL, by reference to its IRI.
+See \ref{sec:existing-serialization}.
+   \\ \hline
+%
+6.5.4(b)& 
+It shall be possible to refer to existing files/documents from an OMS implemented in the
+metalanguage without the need for modifying these files/documents.	&
+Documents can be referenced by IRIs, see \ref{c:iris}.
+   \\ \hline
+%
+6.5.4(c)& 
+Translations between logical languages shall preserve (possibly to different degrees) the semantics
+of the logical languages. Between a given pair of logical languages, several translations are
+possible.	&
+The semantics of \DOL is based on a heterogeneous logical
+environment, which contains institution comorphisms as translations, see \ref{c:direct-sematics}. 
+Institution comorphisms preserve semantics
+in a weak form through their satisfaction condition. The \DOL Ontology specifies properties of 
+translations (comorphisms) preserving more and more of the semantics, see annex 
+\ref{a:dol-onto}.
+   \\ \hline
+%
+6.5.5(a)& 
+Informative annexes shall establish the conformance of a number of relevant logical languages. An
+initial set of language translations may be part of an informative annex.	&
+For conformance of logical languages, see 6.5.5(b) below.
+Conformance of some translations is established in annex \ref{a:graph}.
+   \\ \hline
+%
+6.5.5(b)& 
+Conformance of the following subset of logical languages  shall be established: OWL2 (with profiles
+EL, RL, QL), CLIF, RDF, UML class diagrams.
+	&
+ Conformance of the following languages is established: OWL 2 (annex \ref{a:owl}), CLIF (annex \ref{a:cl}), RDF and RDF Schema (annex \ref{a:rdfs}), UML class diagrams (annex \ref{a:uml-class}).
+   \\ \hline
+%
+6.5.5(c)& 
+Conformance of a suitable set of translations among the languages mentioned in the previous bullet
+point shall be established.	&
+Conformance of some translations is established in annex \ref{a:graph}.
+   \\ \hline
+%
+6.5.6 & 
+Existing standards and best practices for allocating globally unique identifiers shall be reused.
+The same standards and best practices shall also be applied to associate different representations
+of the same content to one unique identifier.	&
+\DOL uses IRIs to reference documents (both \DOL documents, as well
+as documents written in some conforming language). See \ref{c:iris}.
+   \\ \hline
+%
+
+
+\end{longtable}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\sclause{Optional Requirements}
+
+\begin{center}
+\begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
+%\caption{Optional Requirements}\\
+\hline
+\textbf{ID} & \textbf{RFP requirement} & \textbf{How this proposal  addresses requirement}\\
+\hline
+\endfirsthead
+\multicolumn{3}{l}%
+{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\hline
+\textbf{ID} & \textbf{RFP requirement} & \textbf{How this proposal addresses requirement}\\
+\hline
+\endhead
+\hline \multicolumn{3}{l}{\textit{Continued on next page}} \\
+\endfoot
+\hline
+\endlastfoot
+%
+6.6.1 & 
+Submissions may include additional languages  without a standardized model theory.	&
+This has been left for forthcoming versions.
+   \\ \hline
+%%
+6.6.2 & 
+Proposals may provide constructs for non-monotonic logics. 	&
+Currently, only monotonic logics are supported.
+However, \DOL provides a circumscription-like non-monotonic
+structuring construct with syntax \syntax{o1 then \%minimize o2},
+see \ref{c:OMS} and \ref{a:dol-text:OMS}.
+   \\ \hline
+%
+6.6.3 & 
+A characterization of the trade-offs among different translations. 	&
+This is left for future work.
+   \\ \hline
+%
+\end{longtable}
+\end{center}
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Issues to be Discussed}
+
+\begin{center}
+\begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
+%\caption{Optional Requirements}\\
+\hline
+\textbf{ID} & \textbf{Discussion item} & \textbf{Resolution}\\
+\hline
+\endfirsthead
+\multicolumn{3}{l}%
+{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\hline
+\textbf{ID} & \textbf{Discussion item} & \textbf{Resolution}\\
+\hline
+\endhead
+\hline \multicolumn{3}{l}{\textit{Continued on next page}} \\
+\endfoot
+\hline
+\endlastfoot
+%
+6.7.(a)	& 
+Do existing language standards need to be extended or adapted in order to make them OntoIOp 
+conforming.	&
+The goal of \DOL is to support existing languages without any
+adaptations, see also 6.5.4(a). However, in order to meet
+requirement 6.5.6, \DOL-conforming languages should support the
+use of IRIs. If they do not, there is a mechanism for assigning IRIs
+to (fragments of) language documents even if the language itself does not support
+this, see \ref{c:conform:serialization}.
+Moreover, there is a mechanism for injecting IRIs in existing language serializations, see \ref{sec:existing-serialization} and \ref{c:req:annotation}.
+   \\ \hline
+%
+6.7.(b)	& 
+Proposals should discuss whether the semantics of the metalanguage shall be included into the
+standard
+&
+The semantics of the  \DOL metalanguage is included in this specification. The reasons are discussed
+in the introduction of clause \ref{c:semantics}.
+   \\ \hline
+%	
+6.7.(c)	& 
+Proposals should discuss the chosen list of logics and translations.	&
+The chosen list of logics and translations is discussed in the
+introduction of annex \ref{a:graph}.
+   \\ \hline
+%	
+6.7.(d)	& 
+Proposals should discuss a meta-ontology of logical languages and theories.	&
+The \DOL Ontology is discussed in annex \ref{a:dol-onto}.
+   \\ \hline
+%	
+6.7.(e)	& 
+Proposals should discuss the use of QVT for expressing logic translations.	&
+ This is discussed in annex \ref{sec:repr-trans}.
+   \\ \hline
+%	
+6.7.(f)	& 
+Proposals should discuss the role of APIs.	&
+The role of APIs is discussed in section \ref{c:APIs}. 
+   \\ \hline
+%	
+6.7.(g)	& 
+Proposals should discuss availability and use of tools.	&
+Tools for \DOL are discussed in annex \ref{a:tools}. 
+   \\ \hline
+%	
+6.7.(h)	& 
+Proposals should discuss a registry of logical languages.	&
+A registry is discussed in  annex \ref{a:registry}.
+   \\ \hline
+%	
+\end{longtable}
+\end{center}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\sclause{Evaluation Criteria}
+
+\begin{center}
+\begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
+%\caption{Optional Requirements}\\
+\hline
+\textbf{ID} & \textbf{Criterion} & \textbf{Comment}\\
+\hline
+\endfirsthead
+\multicolumn{3}{l}%
+{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\hline
+\textbf{ID} & \textbf{Criterion} & \textbf{Comment}\\
+\hline
+\endhead
+\hline \multicolumn{3}{l}{\textit{Continued on next page}} \\
+\endfoot
+\hline
+\endlastfoot
+%
+6.8(a)	& 
+Proposals covering a broader range of features and of use cases will be favored. As a minimum, proposals shall define conformance criteria for logical languages and translations, and their proposed metalanguage shall cover some metalogical relationships and shall be applicable to multiple logics.	&
+Based on the notion of institution, conformance criteria for logical languages are defined in \ref{c:conform:logic} and those for translations in \ref{c:conform:translation}. \DOL covers several metalogical relationships, namely entailments, interpretations, equivalences, refinements, alignments and module relations, see \ref{c:oms-mappings} and \ref{a:dol-text:mappings}.
+\DOL is applicable to multiple logics (see also 6.8(c) and~\ref{sem-foundations} below).
+   \\ \hline
+%
+6.8(b)		&
+Proposals covering existing language standards without (or with fewer) modifications will be favored.	&
+Any document providing an OMS in a serialization of a \DOL conforming
+language can be used as-is in \DOL, by reference to its IRI. See \ref{sec:existing-serialization}.
+	\\ \hline
+%
+6.8(c)		&
+Proposals establishing actually (or making this at least possible in theory) OntoIOp conformance of more logical languages and translations will be favored. 	&
+The conformance of OWL 2 (annex \ref{a:owl}), Common Logic (annex \ref{a:cl}), RDF and RDF Schema (annex \ref{a:rdfs}), UML class diagrams (annex \ref{a:uml-class}) and \CASL (annex \ref{a:casl})
+ is established.
+	\\ \hline
+
+\end{longtable}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Proof of Concept}
+Prototypical open source tools for \DOL are already available, see
+annex \ref{a:tools}. It is expected that they will reach industrial
+strength within two or three years.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\sclause{Changes to Adopted OMG Specifications}
+This specification proposes no changes to adopted OMG specifications.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\clause{Scope}
+\pagenumbering{arabic} 
+This \IS specifies the Distributed Ontology, Modeling and Specification  Language (\DOL) \index{\dolindex ! definition}.  
+\DOL is designed to achieve integration and interoperability of ontologies, specifications and MDE models (OMS for short). 
+\DOL is a language for distributed knowledge representation, system specification and model-driven development across multiple OMS, particularly OMS
+ that have been formalized in different OMS languages.\ednote{Suggestion from Terry: ``\DOL is a tool for managing and manipulating distributed knowledge representations, system specifications, and model-driven design/development artifacts among multiple OMS, particularly...''. However, I think \DOL is not a tool, but a language. Hence, this does not fit. TM} 
+This \IS responds to the OntoIOp Request for Proposals \cite{RFP}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\sclause{Background Information}
+Logical languages are used in several fields of computing for the development of formal, 
+machine-processable texts that carry a formal semantics. Among those fields are 1) 
+\textbf{O}ntologies 
+ formalizing domain knowledge, 2) (formal) \textbf{M}odels of systems, and 3) the formal 
+\textbf{S}pecification
+of systems. Ontologies, MDE models  and specifications will (for the purpose of this document) 
+henceforth be abbreviated as \textbf{OMS}\index{OMS}.
+
+An OMS provides formal descriptions, which range in scope from domain knowledge and activities
+(ontologies, MDE models) to properties and behaviors of hardware and software systems (MDE models,
+specifications). These formal descriptions can be used for the analysis and verification of domain
+models, system models and systems themselves, using rigorous and effective reasoning tools.   As 
+systems increase in complexity, it becomes concomitantly less practical to provide a monolithic 
+logical cover for all.  Instead various MDE models are developed to represent different viewpoints or 
+perspectives on a domain or system. 
+ Hence, interoperability becomes
+a crucial issue, in particular, formal interoperability, i.e.\ interoperability that is based on
+the formal semantics of the different viewpoints. Interoperability is both about the ability to 
+interface different domains and systems and the ability to use several OMS in a common application
+scenario. Further,  interoperability is about coherence and consistency, ensuring at an early stage of the development
+that a coherent system can be reached.
+
+
+In complex applications, which involve multiple OMS with overlapping concept spaces,
+it is often necessary to identify correspondences between concepts in the different OMS; this is called  OMS alignment\index{alignment}. 
+While OMS alignment is most commonly studied for OMS formalized in the same OMS 
+language, the different OMS used by complex applications may also be written in different 
+OMS languages, which may even vary in their expressiveness. 
+This \IS faces this diversity not by proposing yet another OMS language that would subsume all the others.  
+Instead, it accepts the diverse reality and formulates means (on a sound and formal semantic basis) 
+to compare and integrate OMS that are written in different formalisms.
+It specifies \DOL, a formal language for
+expressing not only OMS but also mappings between OMS formalized in different OMS languages.
+
+Thus, \DOL gives interoperability a formal grounding and makes heterogeneous OMS and services based
+on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences,
+and compliance).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Features Within Scope}\index{\dolindex ! scope}
+% Can't use \begin{inscope}, as that creates an itemize environment
+The following are within the scope of this \IS:
+\begin{enumerate}
+\item\label{it:scope-heterogeneous} homogeneous OMS as well as heterogeneous OMS (OMS that consist of parts written in different languages);
+\item mappings between OMS (which map OMS symbols to OMS symbols);
+\item OMS networks (involving several OMS and mappings between them);
+\item \label{it:scope-translation} translations between different OMS languages conforming with \DOL (translating a whole OMS to another language);
+\item \label{it:scope-non-mon} structuring constructs for modeling non-monotonic behavior; 
+\item\label{it:scope-annotation} annotation and documentation of OMS, mappings between OMS, symbols,
+and sentences;
+\item recommendations of vocabularies for annotating and documenting OMS;
+\item a syntax for embedding the constructs mentioned under (\ref{it:scope-heterogeneous})–(\ref{it:scope-annotation}) as annotations into existing OMS;
+\item a syntax for expressing (\ref{it:scope-heterogeneous})–(\ref{it:scope-non-mon}) as standoff markup that points into existing OMS;
+\item a formal semantics of (\ref{it:scope-heterogeneous})–(\ref{it:scope-non-mon});
+\item criteria for existing or future OMS languages to conform with \DOL.
+\end{enumerate}
+
+The following are outside the scope of this \IS:
+\begin{enumerate}
+\item the (re)definition of elementary OMS languages, \ie languages that allow the declaration of OMS symbols (non-logical symbols) 
+and
+stating sentences about them;
+\item algorithms for obtaining mappings between OMS;
+\item concrete OMS and their conceptualization and application;
+%% I believe that this is really obsolete now. –Christoph Lange, 2011-12-13
+% \item a formal definition of interoperability and how to measure the degree of interoperability of two systems\todonote[author=Christoph Lange,date=D:201110182133+02'00']{Well, now this might even be in scope.  We'll see...}
+\item mappings between services and devices, and definitions of service and device interoperability;
+\item non-monotonic logics\footnote{Only monotonic logics are within scope of this specification. Conformance criteria for non-monotonic logics are still under development. However, closure (i.e.\ employing a closed-world assumption) provides non-monotonic reasoning in \DOL. It is also possible to include non-monotonic logics by construing entailments between formulas as sentences of the logic (formalized as an institution).}. 
+
+\end{enumerate}
+
+This \IS describes the syntax and the semantics of the Distributed Ontology, Modeling and
+Specification Language (\DOL) by defining an abstract syntax and an associated model-theoretic
+semantics for \DOL. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\clause{Conformance}\label{c:conformance}
+\index{conformance|(}
+
+This clause defines conformance criteria for languages and logics that can be used with \DOL, as well as conformance criteria for
+serializations, translations and applications. The conformance of a
+number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, UML Class Diagrams, TPTP, CASL) as well as translations among
+these is discussed in informative annexes of this \IS.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Conformance of an OMS Language/a Logic with \DOL}\label{c:conform:logic}
+
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: for an OMS language to conform with \DOL,
+\begin{itemize}
+\item its logical language aspect\index{language aspect ! logical} either needs to satisfy certain criteria  related to its own abstract syntax and formal semantics, or there must be a translation (again satisfying certain
+criteria) to a language that already is \DOL-conforming.
+\item its structuring language aspect\index{language aspect ! structuring} (if present) must  be compatible\ with \DOL's own structuring
+mechanisms
+\item its annotation language aspect\index{language aspect ! annotation} must  be compatible\ with \DOL's meta-language constructs.
+\end{itemize}
+ Several conformance levels are defined. They differ with respect to the usage of IRIs as identifiers for all kinds 
+of entities that the OMS language supports.
+\end{fminipage}
+
+An OMS language is conforming with \DOL if it satisfies the following conditions:
+\begin{enumerate}
+\item its abstract syntax is conformant. This means that a) it is specified as an SMOF compliant meta model
+or as an EBNF grammar. Moreover, b) an SMOF metaclass or an EBNF non-terminal has to be declared to be a subclass of \syntax{NativeDocument}, and optionally
+another metaclass or non-terminal may be declared to be a subclass of \syntax{BasicOMS}  (see clause~\ref{s:mof-metaclasses});
+\item it has at least one serialization in the sense of section~\ref{c:conform:serialization};
+%\item complete round-trip mappings from the human-readable serialization
+%to the abstract syntax and vice versa;
+\item either there exists a translation of it into a conforming
+  language\footnote{For  example, consider the translation of OBO1.4
+    to OWL, giving a formal semantics to OBO1.4.}, or:
+\begin{enumerate}
+\item the logical language aspect\index{language aspect ! logical} (for expressing basic OMS) is conforming, and in particular has a semantics (see below),
+\item  the structuring language aspect\index{language aspect ! structuring} (for expressing structured OMS and relations
+between those) is conforming (see below), and
+\item the annotation language aspect\index{language aspect ! annotation} (for expressing comments and annotations)
+is conforming (see below).
+\end{enumerate}
+\end{enumerate}
+
+
+The \emph{logical language aspect}\index{language aspect ! logical} of an OMS language
+is %semantically
+conforming with \DOL if each logic corresponding to a profile (including
+the logic corresponding to the whole logical language aspect) is presented as an
+institution  in the sense of Definition~\ref{def:inst} in clause~\ref{c:semantics} , and there is a mapping from
+the abstract syntax of the OMS language to signatures and sentences
+of the institution.
+% It may additionally be presented as an institution, leading
+%to the possibility of interpreting additional \DOL language constructs.%
+Note that one OMS language can have several sublanguages or profiles 
+corresponding to several logics (for example, OWL 2 has profiles EL, RL and QL, apart from the
+whole OWL 2 itself).
+
+
+The \emph{structuring language aspect}\index{language aspect ! structuring} of an OMS language is conforming with \DOL if it can be
+mapped to \DOL's structuring language in a semantics-preserving way. The structuring language aspect
+\may be empty.
+
+The \emph{annotation language aspect}\index{language aspect ! annotation} of an OMS language is conforming with \DOL if its constructs
+have no impact on the semantics. The annotation language aspect \shall be non-empty; it \shall
+provide the facility to express comments.
+
+
+Concerning item 1.\ in the definition of \DOL conformance of OMS
+languages above, the following levels of conformance of the abstract
+syntax of an OMS language with \DOL are defined,\ 
+listed from highest to lowest:
+
+
+\begin{description}
+\item[Full IRI conformance] The abstract syntax specifies that IRIs be used for
+ identifying all symbols and entities.
+\item[No mandatory use of IRIs] The abstract syntax does not require  IRIs
+ to be used to identify entities. Note that this includes the case of
+  optionally supporting IRIs without enforcing their use (such as in Common
+  Logic).
+\end{description}
+
+Any conforming language and logic shall have a machine-processable description
+ as detailed in \cref{c:conform:description}.
+
+\ssclause{Conformance of language/logic translations with \DOL}\label{c:conform:translation}
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: a translation between logics must satisfy certain criteria in order to conform with \DOL.
+Also, a translation between OMS languages based on such logics must be consistent with the
+translation between these logics.  Translations should break neither structuring language aspects nor comments/annotations\index{language aspect ! (general)}.
+\end{fminipage}
+
+A logic translation is conforming with \DOL if it is presented either as an institution morphism or
+as an institution comorphism.  
+
+
+A language translation \shall provide a mapping between
+the abstract syntaxes (it \may also provide mappings between concrete
+syntaxes). 
+A language translation  from language $L_1$ (based on institution
+$I_1$) to language $L_2$ (based on institution $I_2$) is conforming
+with \DOL if it is based on a logic translation such that the following
+diagram commutes (i.e.\ following both possible paths from 
+$L_1$ to $I_2$ leads to the same result):
+$$\xymatrix{
+L_1 \ar[rrrrrr]^{\Text{\normalsize mapping between abstract syntaxes}} \ar[ddd]_{\Text{\normalsize abstract syntax\\\normalsize  to institution}}
+&&&&&& L_2 \ar[ddd]^{\Text{\normalsize abstract syntax\\\normalsize to institution}}\\
+&&&&&&\\
+&&&&&&\\
+I_1\ar[rrrrrr]^{\Text{\normalsize institution (co)morphism}} &&&&&& I_2
+}$$
+Language
+translations \may also translate the structuring language aspect, in
+this case, they \shall preserve the semantics of the structuring
+language aspect.  Furthermore, language translations \should preserve
+comments and annotations.  All comments attached to a sentence (or
+symbol) in the source \should be attached to its translation in the
+target (if there are more than one sentences (respectively symbols)
+expressing the translation, to at least one of them).\ednote{TM: corrected
+from wrong English. ``there is more than one'' needs to be followed
+by a verb in singular form.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Conformance of a Serialization of an OMS Language With \DOL}\label{c:conform:serialization}
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: The main reason for the following specifications is identifier injection. \DOL is capable
+of assigning identifiers to entities (symbols, axioms, modules, etc.) inside fragments of OMS
+languages that occur in a \DOL document, even if that OMS language does not support such identifiers
+by its own means. 
+Such identifiers will be visible to a \DOL tool, but not to a tool that only supports the OMS
+language.  To achieve this without breaking the formal semantics of that OMS language,
+  \DOL utilizes  the \termref{annotation} or commenting features that the OMS language supports, 
+ in order to place such
+identifiers inside annotations/ comments.  
+Depending on the nature of a given concrete
+serialization of the OMS language (be it plain text, some serialization of RDF, XML, or some other 
+structured text format), one can be more specific about what the annotation/commenting facilities of
+that serialization must look like in order to support this identifier injection.  
+Well-behaved XML and RDF schemas support identifier injection in a `nice' way (rather than using
+text-level comments).  In the worst case it is not possible to
+inject something into an OMS language fragment, because the OMS language serialization 
+does not enable the addition of suitable comments. In this case the solution is to point into the OMS language fragment from the enclosing context 
+by using \termref{standoff markup}.
+
+
+Further conformance criteria in this section are introduced to facilitate the convenient reuse of
+verbatim fragments of OMS language inside a \DOL document.
+
+Independently from these criteria,   several levels of conformance of a
+serialization are distinguished. They differ with respect to their means of conveniently abbreviating long IRI identifiers. 
+\end{fminipage}
+
+There are seven levels of conformance of a serialization of an OMS language with \DOL{}.
+
+
+\begin{description}
+\item[XMI conformance]
+An XMI serialization  for OMS written in the OMS language \ has been automatically derived from the SMOF specification
+of the abstract syntax, using the canonical MOF 2 XMI Mapping.
+%\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there. TM: XMI is an XML-based format.}
+\item[XML conformance]
+The given serialization has to be specified as an XML schema that satisfies
+ all of the following conditions:
+\begin{enumerate}
+\item The elements of the schema belong to one or more non-empty XML
+namespaces.%\todonote[author=Christoph
+%Lange,date=D:201110051438+02'00',type=fyi]{That means that in a heterogeneous
+%OMS we can recognize that a sentence is, \eg, stated in OWL, without
+%explicitly ``tagging'' it as ``OWL'' (which we would have to do in the case
+%of  a serialization that is merely text conforming).}
+\item The serialization shall use XML \emph{elements} to represent all structural elements of an OMS.
+\item XML elements that represent structural elements of an OMS shall support identifier injection in at least one of the following two ways:
+  \begin{enumerate}
+  \item\label{it:xml-annotation} Such elements shall be able to carry annotations that comprise at least an object (the value of the annotation) and a IRI-valued predicate (the type of annotation), where the structural element is the subject.
+    The value of the predicate shall either be full IRI according to \nisref{IETF/RFC 3987:2005}, or the serialization shall specify a way of interpreting the value of the predicate as a full IRI – for example if it is a relative URI or if an abbreviating notation is used.
+    Analogously, the serialization shall permit the object to be a full IRI or anything that can be interpreted as a full IRI.
+  \item\label{it:foreign-xml-namespaces}
+The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
+ \DOL namespace \url{http://www.omg.org/spec/DOL/1.0/xml}) on such elements.
+  \end{enumerate}
+  This requirement is necessary because either an annotation or an attribute or a child element is used to inject identifiers into elements of the XML serialization; cf. clause~\ref{sec:existing-serialization}.
+\end{enumerate}
+
+\item[RDF conformance]
+The given serialization has to be specified as an RDF vocabulary that
+ satisfies all of the following conditions:
+\begin{enumerate}
+\item The elements of the vocabulary belong to one or more RDF namespaces
+ identified by absolute URIs.
+\item\label{it:ids-for-structure} The serialization shall specify ways of giving IRIs or URIs to all structural elements of an OMS. (The  rationale is that RDF syntax supports the identification of any kinds of items, so an RDF-based serialization of an OMS language should not forbid making use of such RDF constructs that do allow for identifying arbitrary items.)
+% \todonote[author=Christoph Lange,date=D:201109221422+02'00',type=q-aut]{Update on 2014-10-09: Is it OK to have this footnote here?  Or if not, where should it go?  I believe it answers the following question:\\ And what if it doesn't? \eg OWL doesn't specify IRIs for import declarations, so we can, \eg, not annotate them when using the RDF serialization of OWL. We could only do it via RDF reification, or by using an XML serialization.}
+\item There shall be no additional rules (stated in writing in the specification of the serialization, or formalized in its implementation in, e.g., OWL) that forbid properties from foreign vocabulary namespaces to be stated about arbitrary subjects for the purpose of annotation.
+\end{enumerate}
+
+See annex~\ref{a:owl} for an example.
+
+
+\item[Text conformance]
+The given serialization has to satisfy all of the following conditions:
+\begin{itemize}
+\item The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.
+\item The serialization shall provide a designated comment construct that can be placed sufficiently flexibly as to be uniquely associated with any non-comment construct of the language.  That means, for example, one of the following:
+  \begin{itemize}
+  \item The serialization provides a construct that indicates the start and end of a comment and may be placed before/after each token that represents a structural element of an OMS.
+  \item The serialization provides line-based comments (ranging from an indicated position to the end of a line) but at the same time allows the flexible placement of line breaks before/after each token that represents a structural element of an OMS.
+  \end{itemize}
+\end{itemize}
+
+\item[Standoff markup conformance]
+The given serialization has to satisfy at least one of the following conditions:
+\begin{enumerate}
+\item\label{it:standoff-text-plain} The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.
+Note that conformance with \mimetype{text/plain} is a prerequisite for using, for
+example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying text ranges.
+\item\label{it:standoff-xpointer} The serialization conforms with XML \nisref{W3C/TR REC-xml:2008}, which is a prerequisite for using XPointer fragment URIs for addressing subresources of an XML resource (cf. \nisref{W3C/TR REC-xptr-framework:2003}).
+\end{enumerate}
+\end{description}
+
+%~\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=fyi]{The latter two seem trivial, but we need them to rule out ad hoc diagrams drawn on a napkin}
+
+Independently from the conformance levels given above, there is the following hierarchy of conformance \wrt CURIEs (compact URIs) as a means of abbreviating IRIs (grammar specified in \cref{c:curies}), listed from highest to lowest:
+\begin{description}
+\item[Prefixed CURIE conformance] The given serialization allows non-logical symbol identifiers to have the syntactic form of a CURIE, or any subset of the CURIE grammar that allows named prefixes (\syntax{prefix:reference}, where a declaration of \DOL-conformance of a serialization \may redefine the separator character to a character different from \syntax{:}).  A serialization that conforms \wrt a prefixed CURIE  is \notrequired to support CURIEs with no prefix: its declaration of \DOL-conformance \may forbid the use of prefixed CURIEs.\\
+  Informative comments:
+  \begin{itemize}
+  \item In the case that CURIEs are used, a prefix map with multiple prefixes \may be used to map the non-logical symbol identifiers of a native OMS to IRIs in multiple namespaces (\cf \cref{c:map-ids})
+  \item The reason for allowing redefinitions of the prefix/reference separator character is that certain serializations of OMS languages may not allow the colon (\syntax{:}) in identifiers.
+  \end{itemize}
+\item[Non-prefixed names only] The given serialization only supports CURIEs with no prefix, or any subset of the grammar of the \syntax{REFERENCE} nonterminal in the CURIE grammar.\\
+  Informative comment: In this case, a binding for the empty prefix \hasto be declared, as this is the only possibility of mapping the identifiers of the native OMS to IRIs that are located in one flat namespace.
+\end{description}
+
+Any conforming serialization of an OMS language shall have a machine-processable description as detailed in \cref{c:conform:description}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Machine-Processable Description of Conforming Languages, Logics, and Serializations}\label{c:conform:description}
+
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: When a parser processes a \DOL OMS found somewhere that refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore,   all languages/logics/serializations that conform with \DOL are required to describe themselves in a machine-processable way.
+
+\end{fminipage}
+
+For any conforming OMS language, logic, and serialization of an OMS language, it is required that it be assigned an HTTP IRI, by which it can be identified.  It is also required that a machine-processable description of this language/logic/serialization is retrievable by dereferencing this IRI; this requirement follows the linked data principles \nisref{W3C/TR REC-ldp-20150226:2015}. 
+ As a minimal requirement, there must be a RDF description conforming to the vocabulary specified in \aref{a:dol-onto}. That description must be made available in the RDF/XML serialization when a client requests content of the MIME type \mimetype{application/rdf+xml}.  Descriptions of the language/logic/serialization in further representations, having different content types, may be provided.%\CLnote[type=fyi]{that opens the door for, \eg, OMDoc}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Conformance of a Document With \DOL}\label{c:conform:document}
+\begin{fminipage}{\textwidth}
+\textbf{Rationale}: for exchanging \DOL documents with other users/tools, nothing that has a formal semantics
+must be left implicit.  One \DOL tool may assume that by default any OMS fragments inside a \DOL
+document are in some fixed OMS language unless specified otherwise, but another \DOL tool can't be
+assumed to understand such \DOL documents.  Defaults are, however, practically convenient, which is
+the reason for having the following section about the conformance of an \emph{application}.
+\end{fminipage}
+
+A document conforms with \DOL if it contains a \DOL text that is well-formed according to the
+grammar.  That means, in particular, that any information related to logics must be made explicit
+(as foreseen by the \DOL abstract syntax specified in \cref{c:abstract-syntax}), such as:
+\begin{itemize}
+\item the logic of each OMS that is part of the \DOL document,
+\item any translation that is employed between two logics (unless it is one of the default translations specified in \aref{a:graph})
+\end{itemize}
+However, details about aspects of an OMS that do not have a formal, logic-based semantics, may be
+left implicit.  For example, a conforming document may omit explicit references to matching
+algorithms that have been employed in obtaining an alignment.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Conformance of an Application With \DOL}\label{c:conform:application}
+
+
+In the following, ``\DOL abstract syntax'' means an XMI document that
+conforms to the \DOL metamodel. Optionally, further representations
+(e.g. as JSON) can be supported.
+\begin{itemize}
+\item
+A \emph{parser} is \DOL-conformant if it can parse the \DOL textual syntax and produce the corresponding \DOL abstract syntax.
+\item
+A \emph{printer} is \DOL-conformant if it can read \DOL abstract syntax and produce \DOL textual syntax.
+\item
+{\DOL}-conformant software that is used to \emph{edit, format or manage} \DOL libraries \hasto be capable of reading and writing \DOL abstract syntax. Moreover, it \hasto meet the requirements for a \DOL-conformant parser if it is able to read in \DOL textual input. It \hasto meet the requirements of a \DOL-conformant printer if it is able to generate \DOL textual output. However, it is also possible that a software for \DOL management will work on the abstract syntax only, delegating the reading and generation of \DOL text to external parsers and/or printers.
+\item a \emph{static analyzer} is \DOL-conformant if it can compute
+  the logic and the signature of an OMS according to the semantics
+  defined in section~\ref{c:semantics}. In more detail, a static analyzer
+  can have the following capabilities:
+\begin{itemize}
+\item \emph{simple analysis}: static analysis of \DOL excluding networks and alignments;
+\item \emph{full analysis}: static analysis of full \DOL.
+\end{itemize}
+\item a \emph{transformation tool} is \DOL-conformant if it implements
+one (or more) language translations, logic translations, language
+projections and/or logic projections.
+\item
+Software that implements machine \emph{reasoning} about OMS (e.g., theorem proving, approximation)  complies with this specification if and only if it interprets  DOL documents according to the semantics defined in section~\ref{c:semantics}. In more detail, a reasoning tool can have the following capabilities:
+\begin{itemize}
+\item \emph{simple logical consequence}, i.e.\ checking whether all sentences that are marked as \syntax{\%implied} within basic OMS
+and extensions are logical consequences
+of the enclosing OMS;
+\item \emph{structured logical consequence}, i.e.\ checking whether all sentences that are marked as \syntax{\%implied} are logical consequences
+  of the enclosing OMS and whether all entailments in a DOL document
+  have a defined semantics;
+\item \emph{interpretation}, i.e.\ checking whether all interpretations in a DOL document have a defined semantics;
+\item \emph{simple refinement}, i.e.\ checking whether all
+  refinements of OMS in a DOL document have a defined semantics;
+\item \emph{full refinement}, i.e.\ checking whether all refinements
+  (both of OMS and networks) in a DOL document have a defined
+  semantics;
+\item \emph{simple conservativity}, i.e.\ checking whether all conservativity
+  statements in a DOL document have a defined semantics;
+\item \emph{full conservativity}, i.e.\ checking whether all
+  statements about conservative, monomorphic, definitional and weakly
+  definitional extensions in a DOL document have a defined semantics;
+\item \emph{module extraction}, i.e.\ the ability to compute modules
+(typically, a given tool will provide this only for some logics);
+\item \emph{approximation}, i.e.\ the ability to compute approximations
+(typically, a given tool will provide this only for some logics
+and logic projections);
+\item \emph{full \DOL reasoning}, i.e.\ checking whether an DOL
+  document has a defined semantics.
+\end{itemize}
+\end{itemize}
+
+
+In practice, \DOL-aware \emph{applications} may also deal with documents that are not conforming 
+with \DOL according to the criteria established in \cref{c:conform:document}.  However, an 
+application only \emph{conforms} with \DOL if it is capable of producing \DOL-conforming documents as 
+its output when requested.
+
+
+\DOL-aware applications \shall support a fixed (possibly extensible) set of OMS languages
+conforming with \DOL.
+
+  It is, for example, possible that a \DOL-aware application only supports OWL
+and Common Logic.  In that case, the application may process \DOL documents that mix OWL and Common 
+Logic ontologies, as well as native OWL and Common Logic documents.
+
+\DOL-aware applications also  \shall  be able to strip \DOL annotations
+from embedded fragments in other OMS languages. Moreover, they  \shall 
+be able to expand CURIEs into IRIs when requested.
+
+\index{conformance|)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\clause{Normative References}
+\begin{enumerate}[label=\bfseries NR\arabic*:]
+% OLD text
+% The following referenced documents are indispensable for the application of this document. For dated references, only
+% the edition cited applies. For undated references, the latest edition of the referenced document (including any
+% amendments) applies.
+  \item{W3C/TR REC-ldp-20150226:2015} {Linked Data Platform 1.0. W3C Recommendation, 26 February 2015.\\ \url{http://www.w3.org/TR/2015/REC-ldp-20150226/}}
+  \item{W3C/TR REC-owl2-syntax:2012} {OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax (Second Edition). W3C Recommendation, 11 December 2012.\\ \url{http://www.w3.org/TR/2012/REC-owl2-syntax-20121211/}}
+  \item{ISO/IEC 14977:1996} {Information technology – Syntactic metalanguage – Extended BNF}
+  \item{W3C/TR REC-xml:2008} {Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \\
+  \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
+  \item{W3C/TR REC-owl2-primer:2012} {OWL 2 Web Ontology Language: Primer (Second Edition). W3C Recommendation, 11 December 2012. \\
+  \url{http://www.w3.org/TR/2012/REC-owl2-primer-20121211/}}
+  \item{W3C/TR REC-owl2-profiles:2012} {OWL 2 Web Ontology Language: Profiles (Second Edition). W3C Recommendation, 11 December 2012. \\
+  \url{http://www.w3.org/TR/2012/REC-owl2-profiles-20121211/}}
+  \item{ISO/IEC 24707:2007} {Information technology – Common Logic (CL): a framework for a family of logic-based languages}
+  \item{OMG Document ptc/2013-09-05:} {OMG Unified Modeling Language (OMG UML)\\
+  \url{http://www.omg.org/spec/UML/Current}}
+  \item{IETF/RFC 3986} {Uniform Resource Identifier (URI): Generic Syntax. January 2005.\\ \url{http://tools.ietf.org/html/rfc3986}}
+  \item{IETF/RFC 3987} {Internationalized Resource Identifiers (IRIs). January 2005.\\ \url{http://tools.ietf.org/html/rfc3987}}
+  \item{IETF/RFC 5147} {URI Fragment Identifiers for the text/plain Media Type.  April 2008.\\ \url{http://tools.ietf.org/html/rfc5147}}
+  \item{W3C/TR REC-xptr-framework:2003} {XPointer Framework.  W3C Recommendation, 25 March 2003. \\ \url{http://www.w3.org/TR/2003/REC-xptr-framework-20030325/}}
+  \item{W3C/TR REC-rdf11-concepts:2014} {RDF 1.1 Concepts and Abstract Syntax.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/}}
+  \item{W3C/TR REC-xml-names:2009} {Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009.\\
+   \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
+  \item{W3C/TR REC-rdfa-core:2015} {RDFa Core 1.1 -- Third Edition.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 17 March 2015.\\ \url{http://www.w3.org/TR/2015/REC-rdfa-core-20150317/}}
+  % This standard has no unique year, as it consist of multiple parts (see http://tools.ietf.org/html/rfc3629#ref-ISO.10646)
+  \item{ISO/IEC 10646} {Information technology – Universal Multiple-Octet coded Character Set (UCS)}
+  %\item{W3C/TR REC-rdf-sparql-query:2008} {SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
+  \item{W3C/TR REC-rdf-schema:2014} {RDF Schema 1.1. W3C Recommendation, 25 February 2014.\\ \url{http://www.w3.org/TR/2014/REC-rdf-schema-20140225/}}
+  \item{W3C/TR REC-rdf11-mt:2014} {RDF 1.1 Semantics.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/}}
+  \item{W3C/TR REC-owl2-mapping-to-rdf:2012} {OWL 2 Web Ontology Language
+Mapping to RDF Graphs (Second Edition).  W3C Recommendation, 11 December 2012\\ \url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/}}
+  \item{DCMI Metadata Terms:2012} {DCMI Metadata Terms, DCMI Recommendation, DCMI Usage Board, 14 July 2012.\\
+     \url{http://dublincore.org/documents/2012/06/14/dcmi-terms/}}
+  \item{W3C/TR REC-skos-reference:2009} {SKOS Simple Knowledge Organization System
+Reference.  W3C Recommendation, 18 August 2009\\ \url{http://www.w3.org/TR/2009/REC-skos-reference-20090818/}}
+  \item{OMG Specification Metadata:2014} {Specification Metadata (SM) Vocabulary.  OMG, 18 August 2014\\
+\url{http://www.omg.org/techprocess/ab/20140801/SpecificationMetadata.rdf}}
+
+
+
+  \item{ODM} {Ontology Definition Metamodel, 2 September 2014. \\ \url{http://www.omg.org/spec/ODM/1.1/}}
+\item{MOF} { Meta Object Facility} \\ \url{http://www.omg.org/spec/MOF/}
+\item{SMOF} { Support for Semantic Structure, April 2013} \\ \url{http://www.omg.org/spec/SMOF/1.0/}
+\item{XMI} {Metadata Interchange (XMI) – using MOF 2 XMI, April 2014} \\ \url{http://www.omg.org/spec/XMI/}
+%\item{PRR} {Production Rule Representation, December 2009} \\ \url{ http://www.omg.org/spec/PRR/1.0// }
+\item{SBVR} {Semantics Of Business Vocabulary And Rules, November 2013} \\ \url{http://www.omg.org/spec/SBVR/}
+\item{DTV} {Date-Time Vocabulary, August 2013} \\ \url{http://www.omg.org/spec/DTV/1.0/}
+\item{RIF} {Rule Interchange Format, February 2013} \\ \url{http://www.w3.org/TR/rif-overview/}
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\clause{Terms and Definitions}\label{terms-and-defs}
+%\ednote{OMG specifications shall not contain glossaries, hence always
+%refer to this section if definitions of terms are needed.}
+
+For the purposes of this document, the following terms and definitions apply.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Distributed Ontology, Modeling and Specification Language}
+
+\begin{definitions}
+  \termdefinitionLight{Distributed Ontology, Modeling and Specification Language \synonym\DOL} \index{\dolindex ! definition}{unified metalanguage for the structured and heterogeneous expression of ontologies, specifications, and MDE models, using  \termref{DOL libraries}\index{library} of \termref{OMS}, OMS mappings and OMS networks\index{OMS network}, 
+  whose syntax and semantics are specified in this \IS{}.}
+%
+
+% \begin{note}
+%  When viewed as an \termref{OMS language}, \DOL has \termref{OMS} as its
+% non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mapping} as its sentences\index{sentence}.
+% \end{note}
+
+\termdefinition{DOL library}{collection of named \termref{OMS} and OMS networks\index{OMS network}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}.}
+
+
+\end{definitions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 \end{document}
