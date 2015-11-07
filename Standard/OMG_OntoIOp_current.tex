@@ -3187,7 +3187,7 @@ import. In the result, both the \OWL and the FOL axioms are amenable to, e.g., a
 checking and theorem proving. Hence, all available information can be used in the reasoning process.
 For example, the ontology below extends the \OWL definition of \texttt{isProperPartOf} as an asymmetric relation
 with a first-order axiom (in Common Logic) asserting that the relation is also transitive.
-\begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,morekeywords={logic,ontology,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,alsolanguage=clif,alsolanguage=owl2Manchester,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/>
                 %% descriptions of languages ...
          trans: <http://purl.net/DOL/translations/> )%
@@ -3232,7 +3232,7 @@ contains alignments\index{alignment} between a number of foundational ontologies
 entities.  For this use-case three such ontologies are considered, containing spatial and temporal concepts: DOLCE\footnote{See \url{http://www.loa.istc.cnr.it/DOLCE.html}}, GFO\footnote{See \url{http://www.onto-med.de/ontologies/gfo/}} and BFO\footnote{See \url{http://www.ifomis.org/bfo/}}, and present alignments between them 
 using \DOL syntax:
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,escapechar=@,mathescape]
 %prefix(
            gfo:   <http://www.onto-med.de/ontologies/>
            dolce: <http://www.loa-cnr.it/ontologies/>
@@ -3275,7 +3275,7 @@ alignment BFO2GFO :
 
  \DOL can be used to combine ontologies, while taking into account the semantic dependencies given by the alignments. In the following example the ontology \lstinline{Space} is defined as a combination of three different ontologies (BFO, GFO, DolceLite) along three alignments. 
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,escapechar=@,mathescape]
 ontology Space =
  combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
 \end{lstlisting} 
@@ -3305,15 +3305,16 @@ integration.
 \end{figure}
 
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
 library GalenModule
 language lang:OWL
 ontology myGalen = 
-  http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
+  @http://purl.bioontology.org/ontology/GALEN@ extract Drugs, Joints, Bodyparts
 end
 
-cons-ext myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
+cons-ext myGalenIsAModule : @http://purl.bioontology.org/ontology/GALEN@
+  of  myGalen 
   for Drugs, Joints, Bodyparts
 end
 \end{lstlisting}
@@ -3439,7 +3440,7 @@ structuring a simple specification of sorting lists in the
 following way enhances both readability and potential for re-use
 of specifications:
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]	
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
 
 library Sorting
@@ -3526,7 +3527,7 @@ A simple example is the refinement of the (purely declarative) sorting
 specification from use case in section \ref{spec-1} into a specification of a particular sorting
 algorithm (for simplicity, insert sort is used for demonstration):
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]	
 spec InsertSort = 
   TotalOrder and List
 then
@@ -3561,7 +3562,7 @@ that natural numbers can be efficiently represented for implementation
 as lists of binary digits, together with several equivalent ways of
 composing these refinements.
 
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={sort, ops, refinement, free,spec type, assoc, unit,props,op,spec,refined, via,generated, then,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]	
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]	
 spec Monoid =
  sort Elem
  ops 0 : Elem;
@@ -3745,9 +3746,9 @@ Fig.~\ref{fig:class} & cd & class diagram\\\hline
 Fig.~\ref{fig:state-machine} & stm & state machine\\\hline
 \end{tabular}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via,network,entailment,entails,refined,consistent},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/uml/>
-         uml:   <http://www.uml.org/spec/UML/>
+         uml:   @<http://www.uml.org/spec/UML/>@
          log:   <http://purl.net/DOL/logics/> )%
                 %% descriptions of logics ...
 library ATM
@@ -3786,7 +3787,7 @@ stored at \url{http://www.example.org/uml/},
 e.g.\ \url{http://www.example.org/uml/atm.xmi} } 
 
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
 refinement abstract_to_concrete_atm =
   psm refined via translation psm2atm to 
        {  atm with Idle |-> Idle, CardEntered |-> Idle, 
@@ -3833,7 +3834,7 @@ This terminology often is specified by an ontology, and then
 it is desirable to relate the model to the ontology. Consider
 the following financial ontology fragment:
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, Irreflexive, Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
 ontology myTaxonomy =
   ObjectProperty: owns 
     Characteristics: Irreflexive, Asymmetric
@@ -3860,7 +3861,7 @@ various aspects need to be taken care of:
   \item Removing irrelevant parts (livestock) 
 \end{itemize}
 
-\begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, OMS, Characteristics,Transitive,Asymmetric,translation,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,oms,model},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
 model xmiStateModel = <https://ontohub.org/ATM/state.xmi>
 
 model clStateModel = xmiStateModel with
@@ -5090,7 +5091,7 @@ bound to the prefix and the reference.  In the following example that uses \DOL 
 means that the CURIE \url{lang:OWL2} will be expanded to the IRI
 \url{http://purl.net/DOL/languages/OWL2}.
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
          lang:  <http://purl.net/DOL/languages/>
@@ -5610,6 +5611,7 @@ serialization
 spec
 specification
 substitution
+syntax
 then
 to
 translation
@@ -5619,6 +5621,7 @@ via
 view
 where
 with
+%cons
 %ccons
 %complete
 %consistent
@@ -10640,37 +10643,37 @@ Let $\Sigma = ((C, {\leq_C}), P, O, A, M)$ be a \emph{class/data type net} repre
 The ontology is extended by translating parts of this net and its multiplicity constraints $\mathit{Mult}(\Sigma)$:
 \begin{itemize}
 \item For each class $c \in C$ with superclasses $c_1,c_2,...,c_n \in C$ (i.e.\ $c \leq_C c_i$ for $i=1,...,n$):
-\begin{lstlisting} 
+\begin{lstlisting}[language=owl2Manchester]
 	Class: c
 		SubClassOf: c1
 		...
 		SubClassOf: cn
 \end{lstlisting}
 \item For each attribute declaration $c.p:c'$ in $P$
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	ObjectProperty: p
 		Domain: c
 		Range: c'
 \end{lstlisting}
 
 \item For each attribute multiplicity $n\ \mathsf{\leq}\ c.p:\tau[c']$ in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	SubClassOf: p min n c'
 \end{lstlisting}
 
 \item For each attribute multiplicity $ c.p:\tau[c'] \ \mathsf{\leq}\ n$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	SubClassOf: p max n c'
 \end{lstlisting}
 
 \item For each unidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	ObjectProperty: p
 		Domain: c1
 		Range: c2
 \end{lstlisting}
 \item For each bidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	ObjectProperty: p1
 		Domain: c
 		Range: c'
@@ -10682,16 +10685,16 @@ The ontology is extended by translating parts of this net and its multiplicity c
 		InverseOf: p1
 \end{lstlisting}
 \item For each binary association $n \leq a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$ in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	SubClassOf: pi min n ci
 \end{lstlisting}
 \item For each binary association $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	SubClassOf: pi max n ci
 \end{lstlisting}
 \item For each composition declaration $m(\mathsf{Set}[c_1], \composition p_2 :
 \tau_2[c_2])$ in $M$:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	ObjectProperty: p
 		Characteristics:
 			Functional, 
@@ -10700,11 +10703,11 @@ The ontology is extended by translating parts of this net and its multiplicity c
 		Range: c2
 \end{lstlisting}
 \item For each binary association $n \leq a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$  extend the description of class $c_j$ by:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	SubClassOf: pi min n ci
 \end{lstlisting}
 \item For each binary association $a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
-\begin{lstlisting}
+\begin{lstlisting}[language=owl2Manchester]
 	SubClassOf: pi max n ci
 \end{lstlisting}
 \end{itemize}
@@ -11307,7 +11310,7 @@ combine NetworkElements  & Alignments, Publications \\\hline
 \end{tabular}
 
 \sclause{Simple Examples in Propositional Logic}\label{ex:prop}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=prop,escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/prop#>
          log:   <http://purl.net/DOL/logics/>
                 %% descriptions of logics ...
@@ -11346,15 +11349,15 @@ logic log:Propositional syntax ser:Prop/Hets
 %% basic taxonomic information about mereology reused from DOLCE:
 ontology Taxonomy = %conssistent      
   props PT, T, S, AR, PD
-  . S $\vee$ T $\vee$ AR $\vee$ PD $\longrightarrow$ PT                                                    %% PT is the top concept
+  . S $\vee$ T $\vee$ AR $\vee$ PD $\longrightarrow$ PT          %% PT is the top concept
   . S $\wedge$  T  $\longrightarrow$ $\bot$                  %% PD, S, T, AR are pairwise disjoint
-  . T $\wedge$ AR $\longrightarrow$ $\bot$                                                                         %% and so on
+  . T $\wedge$ AR $\longrightarrow$ $\bot$                   %% and so on
 end
 \end{lstlisting}
 
 \sclause{Engine Diagnosis and Repair}\label{ex:engine}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=prop,escapechar=@,mathescape]
 %prefix( log: <http://purl.net/DOL/logics/> )%
 
 library Engine
@@ -11438,7 +11441,7 @@ interpretation repair3 : Repair to MyRepair = %cons
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
 \label{dist-het-onto}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=owl2Manchester,alsolanguage=clif,escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
          lang:  <http://purl.net/DOL/languages/>
@@ -11512,15 +11515,15 @@ then
 \end{lstlisting}
 
 \sclause{Defined Concepts}\label{ex:definedconcepts}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
 
 library Persons
 language lang:OWL
 
 ontology Persons =
-  Class Person
-  Class Female
+  Class: Person
+  Class: Female
 then %def
   Class: Woman  EquivalentTo: Person and Female
 end
@@ -11529,7 +11532,7 @@ end
 
 \sclause{Blocks World: Minimization}\label{ex:blocks}
 \CLnote[type=q-aut]{Here we need the prefixes for registry entries (e.g.\ logics) once more; they should be reused across examples.  Or we need to specify a mechanism that gets rid of \emph{these} prefixes altogether.  @TM, could you please comment on my specification enhancement request \texttt{http://trac.informatik.uni-bremen.de:8080/hets/ticket/1020\#comment:33}?}
-  \begin{lstlisting}[language=dolText,morekeywords={forall,if,not,Class,Individual,Types,EquivalentTo,SubClassOf,and}]
+  \begin{lstlisting}[language=dolText,alsolanguage=OWL2manchester]
 %prefix( lang:  <http://purl.net/DOL/languages/>)%
 
 library BlocksWithCircumscription
@@ -11565,7 +11568,7 @@ end
   uses inheritance networks with exceptions, and then use
   circumscription to axiomatize that ontology.}
  
-\begin{lstlisting}[language=dolText,morekeywords={forall,if,not,circ,var,Class,Individual,EquivalentTo,and,SubClassOf}]
+\begin{lstlisting}[language=dolText,alsolanguage=OWL2manchester]
 ontology Blocks_Alternative =
   Class: Block
   Class: Abnormal
@@ -11605,8 +11608,8 @@ end
 
 \sclause{Alignments}\label{ex:alignment}
 \index{alignment}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed},escapechar=@,mathescape]
-%prefix( :      <http://www.example.org/alignment#>
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
+%prefix( :      <http://www.example.org/@alignment@#>
          owl:   <http://www.w3.org/2002/07/owl#>
          lang:  <http://purl.net/DOL/languages/>
                 %% definitions of conforming languages ...
@@ -11667,7 +11670,7 @@ end
 
 \sclause{Distributed Description Logics}\label{ex:DDL}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
          lang:  <http://purl.net/DOL/languages/>
@@ -11749,9 +11752,8 @@ end
 \sclause{Algebra}\label{ex:algebra}
 
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,equivalence},escapechar=@,mathescape]
-%prefix( :      <http://www.example.org/alignment#>
-         owl:   <http://www.w3.org/2002/07/owl#>
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=clif,escapechar=@,mathescape]
+%prefix( :      <http://www.example.org/algebra#>
          lang:  <http://purl.net/DOL/languages/>
                 %% descriptions of languages ...
          ser:   <http://purl.net/DOL/serializations/>
@@ -11790,7 +11792,7 @@ equivalence groups_equiv : implicit_group <-> { explicit_group hide e, inv }
 end
 \end{lstlisting}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,equivalence,spec},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=clif,escapechar=@,mathescape]
 equivalence e : algebra:BooleanAlgebra
                 $\leftrightarrow$ algebra:BooleanRing =
     x$\wedge$y = x$\cdot$y
@@ -11801,7 +11803,7 @@ equivalence e : algebra:BooleanAlgebra
 end
 \end{lstlisting}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,forget,entails,entailment,spec},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 language lang:CASL
 
 spec InterpolatedGroup =
@@ -11821,7 +11823,7 @@ end
 \ssclause{Groups specified with different forms of hiding and forgetting}
 
 \sssclause{Groups and hiding}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %prefix( lang: <http://purl.net/DOL/languages/> )%
 
 library All_kinds_of_group_specifications
@@ -11845,7 +11847,7 @@ The semantics of this specification is the class of all monoids that
 can be extended with an inverse, i.e.\ class of all groups. The effect
 is second-order quantification:
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 language lang:HasCASL
 spec Group_in_second_order_logic =
   sort Elem
@@ -11859,7 +11861,7 @@ end
 
 \sssclause{Groups and module extraction}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 language lang:CASL
 spec Group_via_module_extraction_1 =
   Group_with_inverse remove inv
@@ -11870,7 +11872,7 @@ since the module needs to be enlarged to the whole specification.
 This is of course unsatisfactory. A better use of module extraction
 is the following:
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 language lang:CASL
 spec Group_with_implicit_inverse =
   sort Elem
@@ -11892,7 +11894,7 @@ is conservative.
 
 \sssclause{Groups via interpolation}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 language lang:CASL
 spec Group_via_interpolation1 =
   Group_with_inverse forget inv
@@ -11907,7 +11909,7 @@ are equivalent to \syntax{Group\_with\_implicit\_inverse}.
 \medskip
 
 \sssclause{Groups and filtering}\label{ex:reject}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget,reject,select},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 language lang:CASL
 spec Group_via_Filtering_1 =
   Group_with_inverse reject inv
@@ -11919,7 +11921,7 @@ end
 Both specifications are equivalent, and they are equivalent 
 to the following theory which just omits the inverse
 axioms (and hence does not specify groups):
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,spec,forget},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 language lang:CASL
 spec Group_via_reject =
   sort Elem
@@ -11934,7 +11936,7 @@ end
 
 
 \sclause{Queries}\label{ex:queries}
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,query,select,where,in,substitution,result,for,along,library,spec,sort,pred,op},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
 library MyQuery
 language lang:CASL
@@ -11952,7 +11954,7 @@ result MyResult = MySubst for MyQuery
 
 \sclause{Datatypes}\label{ex:datatypes}
 
-\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,free,cofree,spec},escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
 library Datatypes
 language lang:CASL
