@@ -1370,8 +1370,9 @@ of entities that the OMS language supports.
 
 An OMS language is conforming with \DOL if it satisfies the following conditions:
 \begin{enumerate}
-\item its abstract syntax is specified as an SMOF compliant meta model
-or as an EBNF grammar;
+\item its abstract syntax is conformant. This means that a) it is specified as an SMOF compliant meta model
+or as an EBNF grammar. Moreover, b) an SMOF metaclass or an EBNF non-terminal has to be declared to be a subclass of \syntax{NativeDocument}, and optionally
+another metaclass or non-terminal may be declared to be a subclass of \syntax{BasicOMS}  (see clause~\ref{s:mof-metaclasses});
 \item it has at least one serialization in the sense of section~\ref{c:conform:serialization};
 %\item complete round-trip mappings from the human-readable serialization
 %to the abstract syntax and vice versa;
@@ -4298,6 +4299,7 @@ The \DOL document types are as follows
 
 
 \sclause{MOF Metaclasses}
+\label{s:mof-metaclasses}
 
 \DOL provides MOF metaclasses for (among others):   
 \begin{itemize}
@@ -4311,26 +4313,31 @@ The \DOL document types are as follows
 \item annotations
 \end{itemize}
  
-Additionally, the  MOF metaclasses  of the abstract syntaxes
-of any conforming OMS languages (\cf \cref{c:conform:logic})  are
-subclasses of the \DOL metaclass \syntax{NativeDocument}.
+The \DOL metaclasses \syntax{NativeDocument} and \syntax{BasicOMS} are
+abstract metaclasses without any instances within the normative \DOL
+metamodel.  In order to use \DOL with some specific conforming OMS language, the top-level MOF
+metaclass of the abstract syntax of this language
+(\cf \cref{c:conform:logic}) has to be a subclass (in the sense of
+SMOF multiple classification) of the \DOL metaclass
+\syntax{NativeDocument}, see Fig.~\ref{fig:native_document}. 
+Likewise, if the conforming OMS language has a metaclass for basic OMS,
+this has to be a subclass of the metaclass \syntax{BasicOMS},
+see Fig.~\ref{fig:basic_oms}.
+See the informative annexes~\ref{a:owl} to~\ref{a:casl} for details.
 
-\medskip
+
 \begin{figure}
   \centering
     \includegraphics[scale=0.47]{mof/native_document.png}
-   \caption{Add the caption}
+   \caption{Informative diagram showing subclasses of \synatx{NativeDocument}}
    \label{fig:native_document}
 \end{figure}
 
-If a conforming OMS language has a metaclass for basic OMS,
-this is a subclass of the metaclass \syntax{BasicOMS}.
 
-\medskip
 \begin{figure}
   \centering
     \includegraphics[scale=0.47]{mof/basic_oms.png}
-   \caption{Add the caption}
+   \caption{Informative diagram showing subclasses of \synatx{BasicOMS}}
    \label{fig:basic_oms}
 \end{figure}
 
@@ -8715,6 +8722,14 @@ OMG maintains the registry as an informative resource governed by the standard. 
 The semantic conformance of OWL 2 DL (as specified in \nisref{W3C/TR REC-owl2-syntax:2012}) with \DOL
 is established in \cite{OntoGraph}.
 
+\section{Abstract Syntax Conformance of OWL 2 With \DOL}
+
+The metaclass \syntax{OWL Ontology} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{NativeDocument}.
+The metaclass \syntax{OWL Universe} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{BasicOMS}.
+
+
 \section{Conformance of the OWL Serializations With \DOL}\label{a:owl-serializations}
 
 \subsection{Text Conformance of the OWL 2 Manchester Syntax With \DOL}
@@ -9072,6 +9087,15 @@ We distinguish three cases.
  
 \infannex{Conformance of Common Logic with \DOL}\label{a:cl}
 
+\section{Abstract Syntax Conformance of Common Logic With \DOL}
+
+The metaclass \syntax{Text} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{NativeDocument}.
+The metaclass \syntax{Sentence} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{BasicOMS}.
+
+\section{Text and Semantic Conformance of Common Logic With \DOL}
+
 The semantic conformance of Common Logic (as specified in \nisref{ISO/IEC 24707:2007}) with \DOL is established in \cite{OntoGraph}.
 
 The XCF dialect of Common Logic has a serialization that satisfies the criteria for XML conformance.  The CLIF dialect of Common Logic has a serialization that satisfies the criteria for text conformance.
@@ -9144,6 +9168,15 @@ in order to obtain a theory in the \CL institution.
  
 \infannex{Conformance of RDF and RDF Schema with \DOL}\label{a:rdfs}
 
+\section{Abstract Syntax Conformance of RDF and RDF Schema  With \DOL}
+
+The metaclass \syntax{Document} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{NativeDocument}.
+The metaclass \syntax{Triple} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{BasicOMS}.
+
+\section{Semantic Conformance of RDF and RDF Schema  With \DOL}
+
 The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR REC-rdf-schema:2014}) with \DOL is established in \cite{OntoGraph}.
 
 The way of representing RDF Schema ontologies as RDF graphs satisfies the criteria for RDF conformance.
@@ -9215,7 +9248,14 @@ The institution of UML class and object diagrams is defined using a
 translation of UML class diagrams to Common Logic, following the fUML
 specification and \cite{Seidewitz08}.
 
-\section{Preliminaries}
+\section{Abstract Syntax Conformance of UML With \DOL}
+
+The metaclass \syntax{OWL Model} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{NativeDocument}.
+The metaclass \syntax{OWL PackageableElement} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{BasicOMS}.
+
+\section{Semantic Conformance: Preliminaries}
 
  The axioms for primitive types
 are imported from the fUML specification, section 10.3.1:
@@ -10161,13 +10201,31 @@ The underlying logic is unsorted first-order logic. In
 an institution; the single-sorted sublogic (using only a fixed
 set of sorts $\{s\}$ is isomorphic to unsorted first-order logic).
 
+\section{Abstract Syntax Conformance of TPTP With \DOL}
+
+The metaclass \syntax{TPTP\_file} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{NativeDocument}.
+The metaclass \syntax{annotated\_formula} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{BasicOMS}.
+
 \infannex{Conformance of CASL with \DOL}\label{a:casl}
 
 
 \CASL \cite{CASL-RM} extends many-sorted first-order logic with
 partial functions and subsorting.  It also provides induction
-sentences, expressing the (free) generation of datatypes.  \CASL has
-been presented as an institution in \cite{Mossakowski02,CASL-RM}. This annex presents
+sentences, expressing the (free) generation of datatypes. 
+
+
+\section{Abstract Syntax Conformance of CASL With \DOL}
+
+The metaclass \syntax{LIBRARY} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{NativeDocument}.
+The metaclass \syntax{BASIC\_SPEC} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{BasicOMS}.
+
+\section{Semantic Conformance of CASL With \DOL}
+ \CASL has
+been presented as an institution in \cite{Mossakowski02,CASL-RM}. This section presents
 a sketch of this institution.
 
 \CASL signatures consist of a set $S$ of sorts with a subsort relation $\leq$ between them
