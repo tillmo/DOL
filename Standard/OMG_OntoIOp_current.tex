@@ -2332,7 +2332,7 @@ specialization relation
     Adapted from \cite{CuencaGrauEtAl:ExtractingModulesOntologies2007}.
   \end{note}
 
-  \termdefinition{module relation}{\termref{OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
+%  \termdefinition{module relation}{\termref{OMS mapping} stating that one \termref{OMS} is a \termref{module} of the other one.}
 
 
 \termdefinition{alignment}{an \termref{OMS mapping} expressing a collection of semantic
@@ -3313,7 +3313,7 @@ ontology myGalen =
   http://purl.bioontology.org/ontology/GALEN extract Drugs, Joints, Bodyparts
 end
 
-module myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
+cons-ext myGalenIsAModule : myGalen of http://purl.bioontology.org/ontology/GALEN 
   for Drugs, Joints, Bodyparts
 end
 \end{lstlisting}
@@ -4238,8 +4238,8 @@ clause~\ref{c:abstract-syntax}.
 \item alignments between OMS, see the
  MOF metaclass   \syntax{AlignmentDefinition} in
 clause~\ref{c:abstract-syntax}.
-\item mappings between OMS and their modules, see the
- MOF metaclass   \syntax{ModuleRelDefinition} in
+\item conservative extensions, e.g.\ mappings between OMS and their modules, see the
+ MOF metaclass   \syntax{ConservativeExtensionDefinition} in
 clause~\ref{c:abstract-syntax}.
 \end{itemize}
 \DOL uses symbol maps to express signature translations in such OMS mappings; see the
@@ -4800,7 +4800,7 @@ definition is the definition of either a named interpretation
 refinement (\syntax{RefinementDefinition}) or equivalence
 (\syntax{EquivalenceDefinition}), a named declaration of the relation
 between a module of an OMS and the whole OMS
-(\syntax{ModuleRelDefinition}), or a named \termref{alignment}
+(\syntax{ConservativeExtensionDefinition}), or a named \termref{alignment}
 (\syntax{AlignmentDefinition}).
 
 
@@ -4906,17 +4906,17 @@ or whether several local domains are linked (``contextualized'') by relations.
 \end{figure}
 
 
-The DOL metamodel for module relations is shown in 
+The DOL metamodel for conservative extension definitions is shown in 
 Fig.~\ref{fig:modules}.
-A \syntax{ModuleRelDefinition} declares that a certain (``module'') OMS
-actually is a module of some other (``whole'') OMS with respect
+A \syntax{ConservativeExtensionDefinition} declares that a certain (``whole) OMS
+actually is a conservative extension some other (``module'') OMS with respect
 to the \syntax{InterfaceSignature}.
 
 
 \begin{figure}
   \centering
     \includegraphics[scale=0.47]{mof/modules.png}
-  \caption{DOL metamodel: Module relations}
+  \caption{DOL metamodel: conservative extension definitions}
   \label{fig:modules}
 \end{figure}
 
@@ -4935,7 +4935,7 @@ to the \syntax{InterfaceSignature}.
 MappingDefinition  ::= InterpretationDefinition
                      | EntailmentDefinition
                      | EquivalenceDefinition
-                     | ModuleRelDefinition
+                     | ConservativeExtensionDefinition
                      | AlignmentDefinition
 InterpretationDefinition ::= InterpretationKeyword
                              InterpretationName
@@ -4970,10 +4970,10 @@ EquivalenceDefinition ::= 'equivalence' EquivalenceName ':'
 EquivalenceName    ::= IRI
 EquivalenceType    ::= GroupOMS '<->' GroupOMS ['=' OMS]
                      | Network '<->' Network ['=' Network]
-ModuleRelDefinition ::= 'module' ModuleName [Conservative] ':'
-                        ModuleType 'for' InterfaceSignature
-ModuleName         ::= IRI
-ModuleType         ::= GroupOMS 'of' GroupOMS
+ConservativeExtensionDefinition ::= 'cons-ext' ConsExtName [Conservative] ':'
+                        ConsExtType 'for' InterfaceSignature
+ConsExtName         ::= IRI
+ConsExtType         ::= GroupOMS 'of' GroupOMS
 AlignmentDefinition ::= 'alignment' AlignmentName
                         [AlignmentCardinality AlignmentCardinality] ':'
                         AlignmentType
@@ -5460,7 +5460,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 % \ssclause{OMS Mappings}\label{a:dol-text:mappings}
 % \index{alignment}
 % \begin{lstlisting}[language=ebnf,mathescape]
-% MappingDefinition             = InterpretationDefinition | EntailmentDefinition | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition ;
+% MappingDefinition             = InterpretationDefinition | EntailmentDefinition | EquivalenceDefinition | ConservativeExtensionDefinition | AlignmentDefinition ;
 %
 % InterpretationDefinition            = InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType ,  'end'
 %                      | InterpretationKeyword , InterpretationName , [ Conservative ] , ':' , InterpretationType , '=' ,
@@ -5492,10 +5492,10 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 % EquivalenceType            = GroupOMS , '<->' , GroupOMS  , '=' , OMS
 %                      | Network , '<->' , Network , '=' , Network ;
 %
-% ModuleRelDefinition        = 'module' , ModuleName , [ Conservative ] , ':' , ModuleType ,
+% ConservativeExtensionDefinition        = 'module' , ConsExtName , [ Conservative ] , ':' , ConsExtType ,
 %                        'for' , InterfaceSignature ;
-% ModuleName           = IRI ;
-% ModuleType           = GroupOMS , 'of' , GroupOMS ;
+% ConsExtName           = IRI ;
+% ConsExtType           = GroupOMS , 'of' , GroupOMS ;
 %
 % AlignmentDefinition  = 'alignment' , AlignmentName ,
 %                        [ AlignmentCardinalityPair ] , ':' , AlignmentType ,
@@ -5570,6 +5570,7 @@ and
 closed-world
 cofree
 combine
+cons-ext
 end
 entails
 entailment
@@ -5589,7 +5590,6 @@ library
 logic
 maximize
 model
-module
 minimize
 network
 ni
@@ -7747,7 +7747,7 @@ $L$ is the institution from the heterogeneous logical environment named by
  & : LogicalEnvironment
 \end{array}
 }
-See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \\\syntax{ModuleRelDefinition} and \syntax{AlignmentDefinition}.
+See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \\\syntax{ConservativeExtensionDefinition} and \syntax{AlignmentDefinition}.
 
 \sssclause{Semantics of interpretation definitions}
 
@@ -8252,18 +8252,18 @@ the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-\sssclause{Semantics of module relation definitions}
+\sssclause{Semantics of conservative extension definitions}
 
 \semdom{
 \begin{array}{ll}
-sem(\Gamma,  \syntax{ModuleRelDefinition}) & = \Gamma'\\
+sem(\Gamma,  \syntax{ConservativeExtensionDefinition}) & = \Gamma'\\
  & : LogicalEnvironment
 \end{array}
 }
 
-\ednote{in the manifesto this is called a conservative extension. TM:  we have decided to change this into conservative extension!}
+\ednote{in the manifesto this is called a conservative extension. TM:  we have decided to change this into conservative extension! ``moduleType'' needs to be changed once this has been changed in the metamodel.}
 
-If $d$ is a \syntax{ModuleRelDefinition},
+If $d$ is a \syntax{ConservativeExtensionDefinition},
 $$
 sem(\Gamma, d) = \Gamma'
 $$
@@ -10930,7 +10930,7 @@ MappingDefinition  ::= InterpretationDefinition
                      | RefinementDefinition
                      | EntailmentDefinition
                      | EquivalenceDefinition
-                     | ModuleRelDefinition
+                     | ConservativeExtensionDefinition
                      | AlignmentDefinition
 InterpretationDefinition ::= interpretation-definition
                                                        InterpretationName
@@ -10967,11 +10967,11 @@ EquivalenceName    ::= IRI
 EquivalenceType    ::= OMSEquivalence | NetworkEquivalence
 OMSEquivalence     ::= oms-equivalence OMS OMS [OMS]
 NetworkEquivalence ::= network-equivalence Network Network [Network]
-ModuleRelDefinition ::= module-definition ModuleName
-                                          [ConservativityStrength] ModuleType
+ConservativeExtensionDefinition ::= cons-ext-definition ConsExtName
+                                          [ConservativityStrength] ConsExtType
                                           InterfaceSignature
-ModuleName         ::= IRI
-ModuleType         ::= module-type OMS OMS
+ConsExtName         ::= IRI
+ConsExtType         ::= cons-ext-type OMS OMS
 AlignmentDefinition ::= alignment-definition AlignmentName
                               [AlignmentCardinality AlignmentCardinality]
                               AlignmentType Correspondence*
@@ -11236,7 +11236,7 @@ entailment IRI = OMSName in Network entails OMS & section~\ref{model-1}\\\hline
 entailment IRI = Network entails Network & section~\ref{model-1}\\\hline
 equivalence IRI : OMS \lessthan-\greaterthan\ OMS = OMS end  &  Algebra \\\hline
 %equivalence IRI : Network \lessthan-\greaterthan\ Network = Network end  &  \\\hline
-module IRI : OMS of OMS for Symbols  & section~\ref{onto-3} \\\hline
+cons-ext IRI : OMS of OMS for Symbols  & section~\ref{onto-3} \\\hline
 %module IRI \%ccons : OMS of OMS for Symbols  &  \\\hline
 %alignment IRI : OMS to OMS end  &  \\\hline
 %alignment IRI 1 : OMS to OMS end  &  \\\hline
