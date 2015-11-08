@@ -3729,11 +3729,13 @@ the bank results in \uml{reenterPIN}, and the \emph{guard}
 
 
 The ATM example in Fig.~\ref{fig:atm-example} consists of five different
-UML models, which naturally form a network. Coherence of this network
-is expressed as its consistency. 
-It is assumed that XMI representations of the
-relevant UML models have been stored at
-\url{http://www.example.org/uml/} in a single xmi-file that contains a \textt{uml:Model} element for each UML model whose \texttt{xmi:id} has a prefix \textt{xxx} followed by an underscore. \text{xxx} is determined as follows:\medskip
+UML models, which naturally form a network. Coherence of this network is
+expressed as its consistency.  It is assumed that XMI representations of
+the relevant UML models have been stored at
+\url{http://www.example.org/uml/} in a single xmi-file that contains a
+\texttt{uml:Model} element for each UML model whose \texttt{xmi:id} has
+a prefix \texttt{xxx} followed by an underscore. \texttt{xxx} is determined
+as follows:\medskip
 
 \begin{tabular}{|l|l|l|}\hline
 \textbf{Figure} & \textbf{\texttt{xxx}} & \textbf{diagram type}\\\hline
@@ -9963,34 +9965,6 @@ for certain arguments due to violation of multiplicity constraints.
 % (forall (x y) (if ($m$ x y) (and ($c_1$ x) ($c_2$ y))))
 % \end{lstlisting}
 % 
-%   \item \ednote{todo: define ownership by a big disjuction over all
-%   composition delcarations and composite attributes.  each instance has
-%   at most one owner: ``we say that $o$
-%   is an owner of $o'$
-%   in $\mathcal{i}$
-%   if $o' \in p^{\mathcal{i}}(c\composition p : \tau[c'])(o)$
-%   or
-%   $o' \in m^{\mathcal{i}}(m(p_1 : \mathsf{set}[c_1], \composition p_2 :
-%   \tau_2[c_2]).p_2)(o)$.  if $o_1$
-%   and $o_2$
-%   are owners of $o'$
-%   in $\mathcal{i}$,
-%   then $o_1 = o_2$;}
-% for any composition declarations
-% $m(p_1 : \mathsf{set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 :
-% \mathsf{set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in m$, an axiom
-% stating ``each instance has at most one owner'':
-% %
-% \begin{lstlisting}[language=clif, mathescape]
-% (forall (o o' i)
-%         (if (and (form:sequence-member (form:pair o i) $m$)
-%                  (form:sequence-member (form:pair o' i) $m'$))
-%             (= o o')))
-% \end{lstlisting}
-% %
-% in case $m$ is represented in the simplified way,
-% \lstinline[language=clif, mathescape]!(form:sequence-member (form:pair o i) $m$)!
-% is replaced by \lstinline[language=clif, mathescape]!($m$ o i)!, and analogously for $m'$.
 
   \item $\CL$ maps each association declaration
 $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in a$
@@ -10027,62 +10001,92 @@ $\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:
 %
 \begin{lstlisting}[language=clif, mathescape]
 (forall (x$_1$ x$_2$ $\cdots$ x$_n$)
-        (if ($\CL(a)$ x$_1$ x$_2$ $\cdots$ $_xn$) (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_n)$ $x_n$))))
+        (if ($\CL(a)$ x$_1$ x$_2$ $\cdots$ x$_n$) (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_n)$ $x_n$))))
 \end{lstlisting}
 %
-\item the interpretation of a member end of a binary association
+  \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
-of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
-$\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
-$c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then
+of the attribute: if for $i\in\{1,2\}$,
+$\mathbf{a}.p_i : \tau_i[c_i]$
+for $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$
+is owned by $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then
 %
-\begin{lstlisting}[language=clif,escapechar=@]
+\begin{lstlisting}[language=clif, mathescape]
 (forall (o s)
-        (if (c.p o s)
-            (= s (form:seq2@$\tau_i$@ (form:select@$i$@ o a)))))
+        (if ($\CL(c.p)$ o s)
+            (= s (form:seq2$\CL(\tau_i)$ (form:select$i$ o $\CL(a)$)))))
 \end{lstlisting}
 %
 If $\mathbf{a}$ is represented in simplified form, then instead the
 following is used
 %
-\begin{lstlisting}[language=clif,escapechar=@]
+\begin{lstlisting}[language=clif, mathescape]
 (forall (o s)
-        (if (c.p o s)
-            (forall (x) (iff (member x s) (a o x)))))
+        (if ($\CL(c.p)$ o s)
+            (forall (x) (iff (member x s) ($\CL(a)$ o x)))))
+\end{lstlisting}
+
+  \item For the compositions, let $c^{1}\composition p^{1} :
+\tau[{c'}^{1}], \ldots, c^{k}\composition p^{k} : \tau[{c'}^{k}]$ be
+all the composite attributes in $P$ and $\mathbf{a}^{1} = a^{1}(p_1^{1} :
+\mathsf{Set}[c_1^{1}], \composition p_2^{1} :
+\tau_2^{(1)}[c_2^{1}]), \ldots, \mathbf{a}^{l} = a^{(l)}(p_1^{l} :
+\mathsf{Set}[c_1^{l}], \composition p_2^{l} :
+\tau_2^{(1)}[c_2^{l}])$ all
+the composite binary associations in $A$.  Abbreviate
+%
+\begin{lstlisting}[language=clif, mathescape]
+(or ($\CL(c^{1}.p^{1})$ o x) $\cdots$
+    ($\CL(c^{k}.p^{k})$ o x)
+    (form:sequence-member (form:pair o x) $\CL(a^{1})$) $\cdots$
+    (form:sequence-member (form:pair o x) $\CL(a^{l})$)))
 \end{lstlisting}
 %
-\item the interpretation of a member end of a composition
-declaration\ednote{Adapt to the definition of composition declarations
-  as a special case of association declarations.}  owned by a class/data
-type coincides with the interpretation of the attribute: if for
-$i\in\{1,2\}$,
-$\mathbf{m}.p : \tau_i[c_i]$
-for
-$\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])
-\in M$ is owned by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
+by \lstinline[language=clif]{(owner o x)}, where, for each binary
+association $a^{j}$ represented
+in the simplified way, \lstinline[language=clif, mathescape]!($\CL(a^{j})$ o i)!
+replaces
+\lstinline[language=clif, mathescape]!(form:sequence-member (form:pair o x) $\CL(a^{j})$)!.
+Then
 %
-\begin{lstlisting}[language=clif,escapechar=@]
-(forall (o s)
-        (if (c.p o s)
-            (= s (form:seq2@$\tau_i$@ (form:select@$i$@ o m)))))
+\begin{lstlisting}[language=clif, mathescape]
+(forall (o1 o2 x)
+        (if (and (owner o1 x) (owner o2 x))
+            (= o1 o2)))
 \end{lstlisting}
 %
-Again, if $\mathbf{m}$ is represented in simplified form, then the following is used
-%
-\begin{lstlisting}[language=clif,escapechar=@]
-(forall (o s)
-        (if (c.p o s)
-            (forall (x)
-                    (iff (member x s) (m o x)))))
-\end{lstlisting}
-%% \footnote{
-%% Ignoring the annotations $\tau_i$ in the interpretation of an
-%% association is intentional, see the semantics of associations in the UML
-%% Superstructure Specification 2.4.1, p.~37.}
+%   \item \ednote{todo: define ownership by a big disjuction over all
+%   composition delcarations and composite attributes.  each instance has
+%   at most one owner: ``we say that $o$
+%   is an owner of $o'$
+%   in $\mathcal{i}$
+%   if $o' \in p^{\mathcal{i}}(c\composition p : \tau[c'])(o)$
+%   or
+%   $o' \in m^{\mathcal{i}}(m(p_1 : \mathsf{set}[c_1], \composition p_2 :
+%   \tau_2[c_2]).p_2)(o)$.  if $o_1$
+%   and $o_2$
+%   are owners of $o'$
+%   in $\mathcal{i}$,
+%   then $o_1 = o_2$;}
+% for any composition declarations
+% $m(p_1 : \mathsf{set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 :
+% \mathsf{set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in m$, an axiom
+% stating ``each instance has at most one owner'':
+% %
+% \begin{lstlisting}[language=clif, mathescape]
+% (forall (o o' i)
+%         (if (and (form:sequence-member (form:pair o i) $m$)
+%                  (form:sequence-member (form:pair o' i) $m'$))
+%             (= o o')))
+% \end{lstlisting}
+% %
+% in case $m$ is represented in the simplified way,
+% \lstinline[language=clif, mathescape]!(form:sequence-member (form:pair o i) $m$)!
+% is replaced by \lstinline[language=clif, mathescape]!($m$ o i)!, and analogously for $m'$.
 \end{itemize}
 
-
-It is straightforward to extend $\CL$ from signatures to signature morphisms.
+It is straightforward to extend $\CL$
+from signatures to signature morphisms.
 
 \smallskip\noindent
 \textit{Models.}
