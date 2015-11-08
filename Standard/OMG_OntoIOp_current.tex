@@ -3821,18 +3821,18 @@ the following financial ontology fragment:
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, Irreflexive, Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract},escapechar=@,mathescape]
 ontology myTaxonomy =
-  ObjectProperty: owns 
+  ObjectProperty: owns
     Characteristics: Irreflexive, Asymmetric
 
   Class: FinancialIntermediary
-    SubClassOf: CorporatePerson 
+    SubClassOf: CorporatePerson
   Class: CorporatePerson
     SubClassOf: ImmaterialEntity
   Class: ImmaterialEntity
     DisjointWith: MaterialEntity
     SubClassOf: has_part only ImmaterialEntity
-  Class: Livestock 	
-    SubClassOf: MaterialEntity 
+  Class: Livestock
+    SubClassOf: MaterialEntity
 ...
 end
 \end{lstlisting}
@@ -3855,8 +3855,8 @@ end
 
 model xmiClassModel = <https://ontohub.org/ATM/class.xmi> end
 
-model clClassModel = xmiClassModel with 
-            translation UMLClass2CL 
+model clClassModel = xmiClassModel with
+            translation UMLClass2CL
             Bank |-> FinancialIntermediary
 end
 
@@ -3864,20 +3864,20 @@ ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl> end
 
 ontology NoLivestockTaxonomy = BigTaxonomy reject
                                Class: Livestock
-						  end
+end
 
-ontology ExtendedTaxonomy = NoLivestockTaxonomy then 
+ontology ExtendedTaxonomy = NoLivestockTaxonomy then
          ObjectProperty: FinancialIntermediary.owns.ATM
-           SubPropertyOf: owns 
-           Domain: FinancialIntermediary 
+           SubPropertyOf: owns
+           Domain: FinancialIntermediary
            Range: ATM
 end
 
-ontology clTaxonomy = ExtendedTaxonomy with 
+ontology clTaxonomy = ExtendedTaxonomy with
                       translation OWL22CommonLogic
 
-oms JointModel = clStateModel and 
-                 clClassModel and 
+oms JointModel = clStateModel and
+                 clClassModel and
                  clTaxonomy
 end
 \end{lstlisting}
