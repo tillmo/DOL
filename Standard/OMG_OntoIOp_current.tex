@@ -10108,15 +10108,13 @@ the following grammar:
 \\[1ex]
   \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Attribute}\\
                    &   | & \mathit{\#}\ \mathit{Association}\ \mathsf{.}\ \mathit{End}\\
-                   &   | & \mathit{\#}\ \mathit{Composition}\ \mathsf{.}\ \mathit{End}
-\\
                    &   | & \mathit{\#}\ \mathit{Operation}\ \mathsf{.}\ \mathit{Param}
 \\[1ex]
-  \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End} \mathsf{:} \mathit{Type}
+  \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End}\ \mathsf{:}\ \mathit{Type}\\
+                     &   | & \mathit{Classifier}\ \composition\ \mathit{End}\ \mathsf{:}\ \mathit{Type}
 \\
-  \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )
-\\
-  \mathit{Composition} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
+  \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )\\
+                       &   | & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
 \\
   \mathit{Operation} & ::= & \mathit{Name}\ (\  (\  \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{Param}\  \mathsf{\leq}\ \mathit{NumLiteral} \mathsf{:}\ \mathit{Type} \mathsf{,}\ )^*\ ) : Type
 \\[1ex]
@@ -10138,14 +10136,15 @@ where $\mathit{Name}$ is a set of names and $\mathit{NumLiteral}$ is
 assumed to be equipped with an appropriate function
 $\sem{-} : \mathit{NumLiteral} \to \NZ$.
 
-The set of $\Sigma$-\emph{multiplicity constraints}
-$\mathit{Mult}(\Sigma)$ for a class/data type net $\Sigma$ is given by the
-multiplicity formulae in $\mathit{Frm}$ such that all mentioned elements
-of $\mathit{Association}$ and $\mathit{Composition}$ correspond to
-association declarations and composition declarations of $\Sigma$,
+The set of $\Sigma$-\emph{multiplicity
+  constraints} $\mathit{Mult}(\Sigma)$
+for a class/data type net $\Sigma$
+is given by the multiplicity formulae in $\mathit{Frm}$
+such that all mentioned elements of $\mathit{Association}$
+correspond to association declarations and composition declarations of
+$\Sigma$,
 respectively, and the member end name mentioned in the clauses of
-$\mathit{FunExpr}$ occur in the mentioned association and composition,
-respectively.
+$\mathit{FunExpr}$ occur in the mentioned association, respectively.
 
 The \emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
 along a class/data type net morphism $\sigma$, written as $\sigma(\varphi)$,
@@ -10196,64 +10195,67 @@ latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic):
 $$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
 
 The translation of multiplicity formulas to Common Logic is as follows:
-\begin{itemize}
-  \item  $\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) =$\\
-\texttt{(forall (x y n)}\\
-\qqquad\texttt{(if (and (c.p x y) (form:$\tau$-size y n)) (buml:leq $\sem{\ell}$ n))}
-  \item $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
-\texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)}\\
-\qqquad\texttt{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$)\\
-\qqquad\qqquad\qqquad  (form:sequence-size \\
-\qqquad\qqquad\qqquad\qqquad(form:n-select a $i$ [$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$]) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}\\
-If $a$ is represented in simplified form, the following is used instead:\\
-$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
-\texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)\\
-\qqquad(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$))\\
-\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
-\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
-\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_1$ $x_{i+1}$ $\cdots$ $x_r$)\\
-\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
-\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_{\sem{\ell}}$ $x_{i+1}$ $\cdots$ $x_r$) ))))}
-  \item  $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i)=$\\
-\texttt{(forall (x)}\\
-\qqquad\texttt{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n))}\\
-If $m$ is represented in simplified form, the following is used instead:\\
-$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1)=$\\
-\texttt{(forall (x)\\
-\qqquad(if ($c_2$ $x$) \\
-\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
-\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
-\qqquad\qqquad\qqquad\qqquad\qquad(m $y_1$ x)\\
-\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
-\qqquad\qqquad\qqquad\qqquad\qquad(m $y_{\sem{\ell}}$ x) ))))}\\
-$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2)=$\\
-\texttt{(forall (x)\\
-\qqquad(if ($c_1$ $x$) \\
-\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
-\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
-\qqquad\qqquad\qqquad\qqquad\qquad(m x  $y_1$)\\
-\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
-\qqquad\qqquad\qqquad\qqquad\qquad(m x $y_{\sem{\ell}}$) ))))}
-\item
-$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c'])=$\\
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-\qqquad  (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) \\
-\qqquad\qqquad\qquad (form:$\tau$-size $x_1$ $n_1$) \\
-\qqquad\qqquad\qquad\ldots\\
-\qqquad\qqquad\qquad (form:$\tau$-size $x_k$ $n_k$) \\
-\qqquad\qqquad\qquad (form:$\tau$-size $y$ $n$) \\
-\qqquad\qqquad\qquad (buml:leq $\sem{\ell_1}$ $n_1$)\\
-\qqquad\qqquad\qquad (buml:leq $n_1$ $\sem{\ell'_1}$)\\
-\qqquad\qqquad\qquad\ldots\\
-\qqquad\qqquad\qquad (buml:leq $\sem{\ell_k}$ $n_k$)\\
-\qqquad\qqquad\qquad (buml:leq $n_k$ $\sem{\ell'_k}$) )\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
-%\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-%\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
-%\qqquad\qqquad (exists (y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
-\end{itemize}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) = \CL(\ell \leq \mathsf{\#}c\composition p \mathrel{\mathsf{:}} \tau[c']) ={}$
+  (forall (x y n)
+          (if (and ($\CL(c.p)$ x y) (form:$\CL(\tau)$-size y n)) (buml:leq $\sem{\ell}$ n))
+\end{lstlisting}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
+  (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$ n)
+          (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$)
+                   (form:sequence-size (form:n-select a $i$ [x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$]) n))
+              (buml:leq $\sem{\ell}$ n)))
+\end{lstlisting}
+
+\noindent If $a$ is represented in simplified form, the following is used instead:
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
+  (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$)
+          (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$))
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
+                           ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_1$ x$_{i+1}$ $\cdots$ x$_r$) $\cdots$
+                           ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_{\sem{\ell}}$ x$_{i+1}$ $\cdots$ x$_r$)))))
+\end{lstlisting}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i) ={}$
+  (forall (x n)
+          (if (and ($\CL(c_{3-i})$ x) (form:$\CL(\tau)$-size (form:select$i$ x $\CL(a)$) n))
+              (buml:leq $\sem{\ell}$ n)))
+\end{lstlisting}
+
+\noindent If $a$
+is represented in simplified form, the following is used instead:
+%
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1) ={}$
+  (forall (x)
+          (if ($\CL(c_2)$ x)
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
+                           ($\CL(a)$ y$_1$ x) $\cdots$ ($\CL(m)$ y$_{\sem{\ell}}$ x)))))
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2) ={}$
+  (forall (x)
+          (if ($\CL(c_1)$ x)
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
+                           ($\CL(a)$ x y$_1$) $\cdots$ ($\CL(a)$ x y$_{\sem{\ell}}$)))))
+\end{lstlisting}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)\\
+          (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y)
+                   (form:$\CL(\tau)$-size x$_1$ n$_1$) $\cdots$ (form:$\CL(\tau)$-size $x_k$ $n_k$)
+                   (form:$\CL(\tau)$-size $y$ n)
+                   (buml:leq $\sem{\ell_1}$ n$_1$) (buml:leq n$_1$ $\sem{\ell'_1}$) $\cdots$
+                   (buml:leq $\sem{\ell_k}$ n$_k$) (buml:leq n$_k$ $\sem{\ell'_k}$))
+                   (buml:leq $\sem{\ell}$ n)))
+\end{lstlisting}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer, and $[x_1\cdots x_n]$ abbreviates \texttt{(form:sequence-insert $x_1$ $\cdots$ (form:sequence-insert $x_n$ form:empty-sequence))}.
