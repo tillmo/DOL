@@ -3729,11 +3729,13 @@ the bank results in \uml{reenterPIN}, and the \emph{guard}
 
 
 The ATM example in Fig.~\ref{fig:atm-example} consists of five different
-UML models, which naturally form a network. Coherence of this network
-is expressed as its consistency. 
-It is assumed that XMI representations of the
-relevant UML models have been stored at
-\url{http://www.example.org/uml/} in a single xmi-file that contains a \textt{uml:Model} element for each UML model whose \texttt{xmi:id} has a prefix \textt{xxx} followed by an underscore. \text{xxx} is determined as follows:\medskip
+UML models, which naturally form a network. Coherence of this network is
+expressed as its consistency.  It is assumed that XMI representations of
+the relevant UML models have been stored at
+\url{http://www.example.org/uml/} in a single xmi-file \url{http://www.example.org/uml/atm.xmi} that contains a
+\texttt{uml:Model} element for each UML model whose \texttt{xmi:id} has
+a prefix \texttt{xxx} followed by an underscore. \texttt{xxx} is determined
+as follows:\medskip
 
 \begin{tabular}{|l|l|l|}\hline
 \textbf{Figure} & \textbf{\texttt{xxx}} & \textbf{diagram type}\\\hline
@@ -9855,9 +9857,8 @@ As stated above, models (in the sense of the term \termref{model} defined in
 clause~\ref{terms-and-defs}) of UML class diagrams are obtained 
 via a translation to Common Logic.
 
-For a classifier net
-$\Sigma = ((C, {\leq_C}), K, P, M, A)$, a Common Logic theory
-$CL(\Sigma)$ is defined consisting of:
+For a classifier net $\Sigma = ((C, {\leq_C}), P, O, A)$,
+a Common Logic theory $\CL(\Sigma)$ is defined consisting of:
 %
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
   \item for $c \in C$,
@@ -9865,174 +9866,227 @@ a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,
 such that
 %\ednote{class predicates should be restricted to be unary} 
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
-\item 
-  $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$, 
-\item 
-  $\CL(\mathsf{String}) = \texttt{buml:String}$,
-\item 
-  $\CL(\mathsf{Integer}) = \texttt{buml:Integer}$,
-\item 
-  $\CL(\mathsf{UnlimitedNatural}) = \texttt{form:NaturalNumber}$,
-\item 
-  $\CL(\mathsf{Real}) = \texttt{buml:Real}$,
-\item 
-  $\CL(\mathsf{c}) = c$, if $c$ is an enumeration type with values $k_1,\ldots,k_n$. In this case, additionally, the Common Logic theory is augmented by
-\texttt{(not (= $k_i$ $\cdots$ $k_j$))} for $i\neq j$ and
-\texttt{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))},
+  \item $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$,
+
+  \item $\CL(\mathsf{String}) = \texttt{buml:String}$,
+
+  \item $\CL(\mathsf{Integer}) = \texttt{buml:Integer}$,
+
+  \item $\CL(\mathsf{UnlimitedNatural}) = \texttt{form:NaturalNumber}$,
+
+  \item $\CL(\mathsf{Real}) = \texttt{buml:Real}$,
+
+  \item $\CL(c) = c$,
+if $c$
+is an enumeration type with values $k_1, \ldots, k_n$.
+In this case, additionally, the Common Logic theory is augmented by
+%
+\begin{lstlisting}[language=clif, mathescape, escapechar=@]
+(not (= $k_i$ $k_j$))} @\normalfont for $i \neq j$@
+(forall (x) (if ($\CL(c)$ x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))
+\end{lstlisting}
 %\ednote{Ed Seidewitz:
 %enumerations are specializable, but this is type-unsafe, so maybe omit it}
-\item 
-  $\CL(\mathsf{List}[c]) = \texttt{form:Sequence}$,
-\item 
-  $\CL(\mathsf{Set}[c]) = \texttt{form:Set}$,
-\item 
-  $\CL(\mathsf{OrderedSet}[c]) = \texttt{form:OrderedSet}$,
-\item 
-  $\CL(\mathsf{Bag}[c]) = \texttt{form:Bag}$,
-\item 
-  $\CL(\mathsf{c}) = c$, if $c$ a class name which is not one of the above. 
+
+  \item $\CL(\mathsf{List}[c]) = \CL(\mathsf{List}) = \texttt{form:Sequence}$,
+
+  \item $\CL(\mathsf{Set}[c]) = \CL(\mathsf{Set}) = \texttt{form:Set}$,
+
+  \item $\CL(\mathsf{OrderedSet}[c]) = \CL(\mathsf{OrderedSet}) = \texttt{form:OrderedSet}$,
+
+  \item $\CL(\mathsf{Bag}[c]) = \CL(\mathsf{Bag}) = \texttt{form:Bag}$,
+
+  \item $\CL(c) = c$,
+if $c$ a class name which is not one of the above.
 \end{itemize}
-\item for each relation $c_1
-  \leq_C c_2$, an axiom \texttt{(forall (x) (if ($C_1$ x) ($C_2$ x)))},
-  where $C_1 = \CL(c_1)$, $C_2 = \CL(c_2)$, 
+
+  \item for each relation $c_1 \leq_C c_2$, an axiom %
+\lstinline[language=clif, mathescape]!(forall (x) (if ($\CL(c_1)$ x) ($\CL(c_2)$ x)))!
 
 %  \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
 %\texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
 %  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
-  \item $\CL$ maps each attribute declaration $c.p : \tau[c'] \in P$ to a predicate $\CL(c.p)$ and axioms stating type-correctness
-and functionality:\ednote{shouldn't attributes involving Set only also
-be represented in a simplified way?}
-\begin{itemize}
-\item
-\texttt{(forall (x y) (if (c.p x y) (c x))) }
-  \item
-\texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote{\texttt{($\tau[c]$ x)} is an abbreviation of either (if $\tau$ is present)\\
-  \texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.\\
-  or (if $\tau$ is omitted) just \texttt{(c x)}.}
-%% \item 
-%% \texttt{(forall (x y m)\\
-%% \qqquad (if (and (c.p x y) (member m y)) (c' m)))}
-\item 
-\texttt{(forall (x)\\
-\qqquad  (if (c x) (exists (y) (c.p x y))))}
-\item 
-\texttt{(forall (x y z)}\\
-\qqquad \texttt{(if (and (c.p x y) (c.p x z))}\\
-\qqquad\qqquad\texttt{(= y z)))}
-\end{itemize}
-  \item $\CL$ maps each query operation declaration $c.q(x_1 :
-    \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$ to a
-    predicate $\CL(c.q)$ and axioms stating type-correctness and
-    functionality:
-\begin{itemize}
-\item
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($c$ $x$))) }
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau_i[c_i]$ $x_i$))) }
-for each $i=1\ldots n$,\footnote{Note that the $\cdots$ here is meta notation, not a sequence marker.}
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y) (if (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) ($\tau[c']$ $y$))) }
+  \item $\CL$
+maps each attribute declaration $c.p : \tau[c'] \in P$
+to a predicate $\CL(c.p)$
+and axioms stating type-correctness and functionality:\ednote{shouldn't
+  attributes involving Set only also be represented in a simplified
+  way?}
+%
+\begin{lstlisting}[language=clif, mathescape, escapechar=@]
+  (forall (x y) (if ($\CL(c.p)$ x y) ($\CL(c)$ x)))
+  (forall (x y) (if ($\CL(c.p)$ x y) ($\tau[c']$ y)))@ \footnotemark@
+  (forall (x) (if ($\CL(c)$ x) (exists (y) ($\CL(c.p)$ x y))))
+  (forall (x y z) (if (and ($\CL(c.p)$ x y) ($\CL(c.p)$ x z)) (= y z)))
+\end{lstlisting}%
+\footnotetext{\lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!($\tau[c^\prime]\ $ y)! is an abbreviation of either
+\lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!(and ($\mathsf{CL}(\tau)\ $ y) (forall (m) (if (from:$\mathsf{CL}(\tau)$-member m y) ($\mathsf{CL}(c^\prime)\ $ m))))! (if $\tau$ is present)
+or just \lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!($c^\prime\ $ y)! (if $\tau$ is omitted).}
+
+  \item $\CL$
+maps each query operation declaration
+$c.q(x_1 : \tau_1[c_1], \dots, x_r : \tau_n[c_r]) : \tau[c'] \in O$
+to a predicate $\CL(c.q)$
+and axioms stating type-correctness and functionality:
+%
+\begin{lstlisting}[language=clif, mathescape, escapechar=@]
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c)$ x)))
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\tau_i[c_i]$ x$_i$))) @\normalfont\quad for each $i = 1, \ldots, n$ \footnotemark@
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\tau[c']$ $y$)))
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y z)
+          (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ z))
+              (= y z)))
+\end{lstlisting}%
+\footnotetext{Note that the $\cdots$
+  here is meta notation, not a sequence marker.}
+%
 %% \item 
 %% \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
 %% \qqquad (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
-\item 
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y z)}\\
-\qqquad \texttt{(if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ z))}\\
-\qqquad\qqquad\texttt{(= y z)))}
-\end{itemize}
-{Query operations are modeled as partial
-functions: they may be undefined for certain arguments due to
-violation of multiplicity constraints.}
-  \item \CL maps each composition declaration $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ to
-a constant $\CL(m)$ and axioms stating that $\CL(m)$ is a finite
-binary relation represented as a sequence of pairs of the
-correct type:
-\begin{lstlisting}[language=clif,morekeywords={then,with}]
-(from:Sequence m)
-(forall (p) (if (form:sequence-member p m)
-                (and (form:Pair p) (c1 (form:first p)) (c2 (form:second p))))
-\end{lstlisting}
-In case $\tau_2$ is not present or $\tau_2=\mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:\\
-\texttt{(forall (x y) (if (m x y) (and ($c_1$ x) ($c_2$ y))))}\\
-  \item 
-\ednote{todo: define ownership by a big disjuction over all
-composition delcarations and composite attributes.  each instance has at most one owner: We say that $o$ is
-+an owner of $o'$ in $\mathcal{I}$ if
-+$o' \in P^{\mathcal{I}}(c\composition p : \tau[c'])(o)$ or
-+$o' \in M^{\mathcal{I}}(m(p_1 : \mathsf{Set}[c_1], \composition p_2 :
-+\tau_2[c_2]).p_2)(o)$.
-+If $o_1$ and $o_2$ are owners of $o'$ in $\mathcal{I}$, then
-+$o_1 = o_2$;}
-for any composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
-at most one owner'':
-\begin{lstlisting}[language=clif,morekeywords={then,with}]
-(forall (o o' i)
-        (if (and (form:sequence-member (form:pair o i) m)
-                 (form:sequence-member (form:pair o' i) m'))
-            (= o o')))
-\end{lstlisting}
-In case \texttt{m} is represented in the simplified way, \texttt{(form:sequence-member (form:pair o i) m)} is replaced by \texttt{(m o i)}, and analogously for \texttt{m'}.
-  \item \CL maps each association declaration
-$a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$
+Query operations are modeled as partial functions: they may be undefined
+for certain arguments due to violation of multiplicity constraints.
+
+%   \item \CL maps each composition declaration
+% $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$
+% to a constant $\CL(m)$
+% and axioms stating that $\CL(m)$
+% is a finite binary relation represented as a sequence of pairs of the
+% correct type:
+% %
+% \begin{lstlisting}[language=clif, mathescape]
+% (from:Sequence $\CL(m)$)
+% (forall (p) (if (form:sequence-member p $\CL(m)$)
+%                 (and (form:Pair p) ($\CL(c_1)$ (form:first p)) ($\CL(c_2)$ (form:second p))))
+% \end{lstlisting}
+% %
+% In case $\tau_2$ is not present or $\tau_2 = \mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:
+% %
+% \begin{lstlisting}[language=clif, mathescape]
+% (forall (x y) (if ($m$ x y) (and ($c_1$ x) ($c_2$ y))))
+% \end{lstlisting}
+% 
+
+  \item $\CL$ maps each association declaration
+$a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in a$
 to a predicate $\CL(a)$
 and axioms stating that $\CL(a)$
 is a finite relation represented as a sequence of tuples of the correct
 types (the latter again being represented as
-sequences)\footnote{Ignoring the annotations $\tau_i$
+sequences)\footnote{ignoring the annotations $\tau_i$
   in the interpretation of an association is
-  intentional~\cite[p.~197]{uml-2.5}: ``A link is a tuple with one value
-  for each \uml{memberEnd} of the Association, where each value is an
+  intentional~\cite[p.~197]{uml-2.5}: ``a link is a tuple with one value
+  for each \uml{memberend} of the association, where each value is an
   instance whose type conforms to or implements the type of the end.
-  [\ldots] When one or more ends of the Association have
-  $\uml{isUnique} = \mathit{false}$,
+  [\ldots] when one or more ends of the association have
+  $\uml{isunique} = \mathit{false}$,
   it is possible to have several links associating the same set of
   instances. In such a case, links carry an additional identifier apart
   from their end values.  When one or more ends of the Association are
   ordered, links carry ordering information in addition to their end
   values.'' The additional information required for links is covered by
-  using sequences of tuples.}:\\
-\texttt{(from:Sequence a)}\\
-\texttt{(forall (t) (if (form:sequence-member t a)\\
-  \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
-  \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
-  \ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert\\
-  \qqquad\qqquad\qqquad\ \ $x_r$ form:empty-sequence))))))))}
+  using sequences of tuples.}:
+%
+\begin{lstlisting}[language=clif, mathescape]
+(from:Sequence $\CL(a)$)
+(forall (t)
+        (if (form:sequence-member t $\CL(a)$)
+            (exists (x$_1$ $\cdots$ x$_r$)
+                    (and ($\CL(c_1)$ $x_1$) $\cdots$ ($\CL(c_r)$ x$_r$)
+                         (= t (form:sequence-insert x$_1$ ($\cdots$
+                              (form:sequence-insert x$_r$ form:empty-sequence))))))))
+\end{lstlisting}
 
 In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
-$\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:\\
-\texttt{(forall ($x_1$ $x_2$ $\cdots$  $x_n$) (if (a $x_1$ $x_2$ $\cdots$  $x_n$) (and ($c_1$ $x_1$) $\cdots$ ($c_n$ $x_n$))))}
-\item the interpretation of a member end of a binary association
+$\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:
+%
+\begin{lstlisting}[language=clif, mathescape]
+(forall (x$_1$ x$_2$ $\cdots$ x$_n$)
+        (if ($\CL(a)$ x$_1$ x$_2$ $\cdots$ x$_n$) (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_n)$ $x_n$))))
+\end{lstlisting}
+%
+  \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
-of the attribute: if for $i\in\{1,2\}$, $\mathbf{a}.p_i : \tau_i[c_i]$ for
-$\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$ is owned by
-$c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then\\
-\texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o a)))))}\\
-If $\mathbf{a}$ is represented in simplified form, then instead the following is used \\
-\texttt{(forall (o s)\\
-\qqquad (if (c.p o s) (forall (x) (iff (member x s) (a o x)))))}
-\item the interpretation of a member end of a composition
-declaration\ednote{Adapt to the definition of composition declarations
-  as a special case of association declarations.}  owned by a class/data
-type coincides with the interpretation of the attribute: if for
-$i\in\{1,2\}$,
-$\mathbf{m}.p : \tau_i[c_i]$
-for
-$\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])
-\in M$ is owned by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
-\texttt{(forall (o s)\\
-  \qqquad (if (c.p o s) (= s (form:seq2$\tau_i$ (form:select$i$ o m)))))}\\
-Again, if $\mathbf{m}$ is represented in simplified form, then the following is used\\
-\texttt{(forall (o s)\\
-  \qqquad (if (c.p o s) (forall (x) (iff (member x s) (m o x)))))}
-%% \footnote{
-%% Ignoring the annotations $\tau_i$ in the interpretation of an
-%% association is intentional, see the semantics of associations in the UML
-%% Superstructure Specification 2.4.1, p.~37.}
+of the attribute: if for $i\in\{1,2\}$,
+$\mathbf{a}.p_i : \tau_i[c_i]$
+for $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2]) \in A$
+is owned by $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then
+%
+\begin{lstlisting}[language=clif, mathescape]
+(forall (o s)
+        (if ($\CL(c.p)$ o s)
+            (= s (form:seq2$\CL(\tau_i)$ (form:select$i$ o $\CL(a)$)))))
+\end{lstlisting}
+%
+If $\mathbf{a}$ is represented in simplified form, then instead the
+following is used
+%
+\begin{lstlisting}[language=clif, mathescape]
+(forall (o s)
+        (if ($\CL(c.p)$ o s)
+            (forall (x) (iff (member x s) ($\CL(a)$ o x)))))
+\end{lstlisting}
+
+  \item For the compositions, let $c^{1}\composition p^{1} :
+\tau[{c'}^{1}], \ldots, c^{k}\composition p^{k} : \tau[{c'}^{k}]$ be
+all the composite attributes in $P$ and $\mathbf{a}^{1} = a^{1}(p_1^{1} :
+\mathsf{Set}[c_1^{1}], \composition p_2^{1} :
+\tau_2^{(1)}[c_2^{1}]), \ldots, \mathbf{a}^{l} = a^{(l)}(p_1^{l} :
+\mathsf{Set}[c_1^{l}], \composition p_2^{l} :
+\tau_2^{(1)}[c_2^{l}])$ all
+the composite binary associations in $A$.  Abbreviate
+%
+\begin{lstlisting}[language=clif, mathescape]
+(or ($\CL(c^{1}.p^{1})$ o x) $\cdots$
+    ($\CL(c^{k}.p^{k})$ o x)
+    (form:sequence-member (form:pair o x) $\CL(a^{1})$) $\cdots$
+    (form:sequence-member (form:pair o x) $\CL(a^{l})$)))
+\end{lstlisting}
+%
+by \lstinline[language=clif]{(owner o x)}, where, for each binary
+association $a^{j}$ represented
+in the simplified way, \lstinline[language=clif, mathescape]!($\CL(a^{j})$ o i)!
+replaces
+\lstinline[language=clif, mathescape]!(form:sequence-member (form:pair o x) $\CL(a^{j})$)!.
+Then
+%
+\begin{lstlisting}[language=clif, mathescape]
+(forall (o1 o2 x)
+        (if (and (owner o1 x) (owner o2 x))
+            (= o1 o2)))
+\end{lstlisting}
+%
+%   \item \ednote{todo: define ownership by a big disjuction over all
+%   composition delcarations and composite attributes.  each instance has
+%   at most one owner: ``we say that $o$
+%   is an owner of $o'$
+%   in $\mathcal{i}$
+%   if $o' \in p^{\mathcal{i}}(c\composition p : \tau[c'])(o)$
+%   or
+%   $o' \in m^{\mathcal{i}}(m(p_1 : \mathsf{set}[c_1], \composition p_2 :
+%   \tau_2[c_2]).p_2)(o)$.  if $o_1$
+%   and $o_2$
+%   are owners of $o'$
+%   in $\mathcal{i}$,
+%   then $o_1 = o_2$;}
+% for any composition declarations
+% $m(p_1 : \mathsf{set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 :
+% \mathsf{set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in m$, an axiom
+% stating ``each instance has at most one owner'':
+% %
+% \begin{lstlisting}[language=clif, mathescape]
+% (forall (o o' i)
+%         (if (and (form:sequence-member (form:pair o i) $m$)
+%                  (form:sequence-member (form:pair o' i) $m'$))
+%             (= o o')))
+% \end{lstlisting}
+% %
+% in case $m$ is represented in the simplified way,
+% \lstinline[language=clif, mathescape]!(form:sequence-member (form:pair o i) $m$)!
+% is replaced by \lstinline[language=clif, mathescape]!($m$ o i)!, and analogously for $m'$.
 \end{itemize}
 
-
-It is straightforward to extend $\CL$ from signatures to signature morphisms.
+It is straightforward to extend $\CL$
+from signatures to signature morphisms.
 
 \smallskip\noindent
 \textit{Models.}
@@ -10054,15 +10108,13 @@ the following grammar:
 \\[1ex]
   \mathit{FunExpr} & ::= & \mathit{\#}\ \mathit{Attribute}\\
                    &   | & \mathit{\#}\ \mathit{Association}\ \mathsf{.}\ \mathit{End}\\
-                   &   | & \mathit{\#}\ \mathit{Composition}\ \mathsf{.}\ \mathit{End}
-\\
                    &   | & \mathit{\#}\ \mathit{Operation}\ \mathsf{.}\ \mathit{Param}
 \\[1ex]
-  \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End} \mathsf{:} \mathit{Type}
+  \mathit{Attribute} & ::= & \mathit{Classifier}\ \mathsf{.}\ \mathit{End}\ \mathsf{:}\ \mathit{Type}\\
+                     &   | & \mathit{Classifier}\ \composition\ \mathit{End}\ \mathsf{:}\ \mathit{Type}
 \\
-  \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )
-\\
-  \mathit{Composition} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
+  \mathit{Association} & ::= & \mathit{Name}\ (\ \mathit{End} : \mathit{Type}(\ \mathsf{,}\ \mathit{End}\ \mathsf{:}\ \mathit{Type})^*\ )\\
+                       &   | & \mathit{Name}\ (\ \mathit{End} : \mathsf{Set}\ [\ \mathit{Classifier}\ ]\mathsf{,}\ \composition \mathit{End}\ \mathsf{:}\ \mathit{Type}\ )
 \\
   \mathit{Operation} & ::= & \mathit{Name}\ (\  (\  \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{Param}\  \mathsf{\leq}\ \mathit{NumLiteral} \mathsf{:}\ \mathit{Type} \mathsf{,}\ )^*\ ) : Type
 \\[1ex]
@@ -10084,14 +10136,15 @@ where $\mathit{Name}$ is a set of names and $\mathit{NumLiteral}$ is
 assumed to be equipped with an appropriate function
 $\sem{-} : \mathit{NumLiteral} \to \NZ$.
 
-The set of $\Sigma$-\emph{multiplicity constraints}
-$\mathit{Mult}(\Sigma)$ for a class/data type net $\Sigma$ is given by the
-multiplicity formulae in $\mathit{Frm}$ such that all mentioned elements
-of $\mathit{Association}$ and $\mathit{Composition}$ correspond to
-association declarations and composition declarations of $\Sigma$,
+The set of $\Sigma$-\emph{multiplicity
+  constraints} $\mathit{Mult}(\Sigma)$
+for a class/data type net $\Sigma$
+is given by the multiplicity formulae in $\mathit{Frm}$
+such that all mentioned elements of $\mathit{Association}$
+correspond to association declarations and composition declarations of
+$\Sigma$,
 respectively, and the member end name mentioned in the clauses of
-$\mathit{FunExpr}$ occur in the mentioned association and composition,
-respectively.
+$\mathit{FunExpr}$ occur in the mentioned association, respectively.
 
 The \emph{translation} of a formula $\varphi \in \mathit{Mult}(\Sigma)$
 along a class/data type net morphism $\sigma$, written as $\sigma(\varphi)$,
@@ -10142,64 +10195,67 @@ latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic):
 $$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
 
 The translation of multiplicity formulas to Common Logic is as follows:
-\begin{itemize}
-  \item  $\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) =$\\
-\texttt{(forall (x y n)}\\
-\qqquad\texttt{(if (and (c.p x y) (form:$\tau$-size y n)) (buml:leq $\sem{\ell}$ n))}
-  \item $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
-\texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)}\\
-\qqquad\texttt{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$)\\
-\qqquad\qqquad\qqquad  (form:sequence-size \\
-\qqquad\qqquad\qqquad\qqquad(form:n-select a $i$ [$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$]) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}\\
-If $a$ is represented in simplified form, the following is used instead:\\
-$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$\\
-\texttt{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)\\
-\qqquad(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$))\\
-\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
-\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
-\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_1$ $x_{i+1}$ $\cdots$ $x_r$)\\
-\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
-\qqquad\qqquad\qqquad\qqquad\qquad(a $x_1$ $\cdots$ $x_{i-1}$ $y_{\sem{\ell}}$ $x_{i+1}$ $\cdots$ $x_r$) ))))}
-  \item  $\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i)=$\\
-\texttt{(forall (x)}\\
-\qqquad\texttt{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n))}\\
-If $m$ is represented in simplified form, the following is used instead:\\
-$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1)=$\\
-\texttt{(forall (x)\\
-\qqquad(if ($c_2$ $x$) \\
-\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
-\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
-\qqquad\qqquad\qqquad\qqquad\qquad(m $y_1$ x)\\
-\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
-\qqquad\qqquad\qqquad\qqquad\qquad(m $y_{\sem{\ell}}$ x) ))))}\\
-$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2)=$\\
-\texttt{(forall (x)\\
-\qqquad(if ($c_1$ $x$) \\
-\qqquad\qqquad\qquad  (exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)\\
-\qqquad\qqquad\qquad\qquad (and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) \\
-\qqquad\qqquad\qqquad\qqquad\qquad(m x  $y_1$)\\
-\qqquad\qqquad\qqquad\qqquad\qquad$\cdots$\\
-\qqquad\qqquad\qqquad\qqquad\qquad(m x $y_{\sem{\ell}}$) ))))}
-\item
-$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c'])=$\\
-\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-\qqquad  (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) \\
-\qqquad\qqquad\qquad (form:$\tau$-size $x_1$ $n_1$) \\
-\qqquad\qqquad\qquad\ldots\\
-\qqquad\qqquad\qquad (form:$\tau$-size $x_k$ $n_k$) \\
-\qqquad\qqquad\qquad (form:$\tau$-size $y$ $n$) \\
-\qqquad\qqquad\qquad (buml:leq $\sem{\ell_1}$ $n_1$)\\
-\qqquad\qqquad\qquad (buml:leq $n_1$ $\sem{\ell'_1}$)\\
-\qqquad\qqquad\qquad\ldots\\
-\qqquad\qqquad\qquad (buml:leq $\sem{\ell_k}$ $n_k$)\\
-\qqquad\qqquad\qquad (buml:leq $n_k$ $\sem{\ell'_k}$) )\\
-\qqquad\qqquad (buml:leq $\sem{\ell}$ n)))}
-%\texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
-%\qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
-%\qqquad\qqquad (exists (y) (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y))))}
-\end{itemize}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) = \CL(\ell \leq \mathsf{\#}c\composition p \mathrel{\mathsf{:}} \tau[c']) ={}$
+  (forall (x y n)
+          (if (and ($\CL(c.p)$ x y) (form:$\CL(\tau)$-size y n)) (buml:leq $\sem{\ell}$ n))
+\end{lstlisting}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
+  (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$ n)
+          (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$)
+                   (form:sequence-size (form:n-select a $i$ [x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$]) n))
+              (buml:leq $\sem{\ell}$ n)))
+\end{lstlisting}
+
+\noindent If $a$ is represented in simplified form, the following is used instead:
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
+  (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$)
+          (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$))
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
+                           ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_1$ x$_{i+1}$ $\cdots$ x$_r$) $\cdots$
+                           ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_{\sem{\ell}}$ x$_{i+1}$ $\cdots$ x$_r$)))))
+\end{lstlisting}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i) ={}$
+  (forall (x n)
+          (if (and ($\CL(c_{3-i})$ x) (form:$\CL(\tau)$-size (form:select$i$ x $\CL(a)$) n))
+              (buml:leq $\sem{\ell}$ n)))
+\end{lstlisting}
+
+\noindent If $a$
+is represented in simplified form, the following is used instead:
+%
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1) ={}$
+  (forall (x)
+          (if ($\CL(c_2)$ x)
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
+                           ($\CL(a)$ y$_1$ x) $\cdots$ ($\CL(m)$ y$_{\sem{\ell}}$ x)))))
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2) ={}$
+  (forall (x)
+          (if ($\CL(c_1)$ x)
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
+                           ($\CL(a)$ x y$_1$) $\cdots$ ($\CL(a)$ x y$_{\sem{\ell}}$)))))
+\end{lstlisting}
+
+\begin{lstlisting}[language=clif, mathescape]
+$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)\\
+          (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y)
+                   (form:$\CL(\tau)$-size x$_1$ n$_1$) $\cdots$ (form:$\CL(\tau)$-size $x_k$ $n_k$)
+                   (form:$\CL(\tau)$-size $y$ n)
+                   (buml:leq $\sem{\ell_1}$ n$_1$) (buml:leq n$_1$ $\sem{\ell'_1}$) $\cdots$
+                   (buml:leq $\sem{\ell_k}$ n$_k$) (buml:leq n$_k$ $\sem{\ell'_k}$))
+                   (buml:leq $\sem{\ell}$ n)))
+\end{lstlisting}
 %
 where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
 to an integer, and $[x_1\cdots x_n]$ abbreviates \texttt{(form:sequence-insert $x_1$ $\cdots$ (form:sequence-insert $x_n$ form:empty-sequence))}.
