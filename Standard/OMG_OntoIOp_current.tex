@@ -3619,6 +3619,80 @@ refinement R3''' = R1 refined to R2
 
 \end{lstlisting}
 
+It can be useful to also consider refinement of networks of OMS.
+Suppose that the specification \syntax{Nat} is extended in different
+ways: by a specification \syntax{Int} of integers, as well
+as by a specification \syntax{List} of lists.
+These three specifications form a network, see Fig.~\ref{fig:simple-network}.
+The network expresses the distributed character of the development:
+some people might use only \syntax{Int}, others only \syntax{List},
+so there is no necessity to unite all specifications into one
+large specification. 
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
+spec Int = %mono
+  Nat
+then %mono
+     generated type Int ::= __ - __(Nat;Nat)
+     forall a,b,c,d: Nat
+     .  a - b = c - d <=> a + d = c + b    %(equality_Int)%
+     sort  Nat < Int
+     forall a: Nat . a = a - 0             %(Nat2Int_embedding)%
+end
+
+spec List = 
+  Nat 
+then 
+  sort Elem
+  free type List ::=  [] |  __ :: __ (Elem; List)
+     op   #__: List -> Nat;
+     forall x,: Elem; L: List
+     . # [] = 0                              %(numberOf_nil_List)%
+     . # (x :: L) = suc( # L )               %(numberOf_NeList_List)%
+end
+
+network NatIntList = Nat, Int, List
+end
+\end{lstlisting}
+
+\begin{figure}
+$$\xymatrix{
+\Text{Int} && \Text{List}\\
+& \Text{Nat} \ar[ru] \ar[lu]
+}$$
+\caption{An OMS network consisting of three specifications
+\label{fig:simple-network}}
+\end{figure}
+
+The network in Fig.~\ref{fig:simple-network} can be refined
+to a network that is closer to implementation.
+This amounts to refining the specifications of the network
+individually, see Fig.~\ref{fig:simple-network-refinement}.
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
+spec IntBin = NatBin then ...
+end
+spec ArrayWithPointer = NatBin then ...
+end
+network NatIntListImpl = NatBin, IntBin, ArrayWithPointer
+end
+refinement NetworkRefinement = 
+  NatIntList refined via 
+      R2, %% Nat is refined to NatBin, see above
+      Int refined via sort Int |-> BinInt to IntBin,
+      List via sort List |-> Array to ArrayWithPointer
+    to NatIntListImpl
+end
+\end{lstlisting}
+
+\begin{figure}
+$$\xymatrix{
+\Text{Int}\ar@/^2.0pc/@[red][rrrrr] && \Text{List}\ar@/^2.0pc/@[red][rrrrr] &&& \Text{BinInt} && \Text{ArrayWithPointer}\\
+& \Text{Nat}\ar@/_2.0pc/@[red][rrrrr] \ar[ru] \ar[lu] &&&&& \text{Bin}\ar[ru] \ar[lu] & \\
+&&\\
+&\Text{NatIntList}\ar@[red][rrrrr] &&&&& \Text{NatIntListImpl}
+}$$
+\caption{A refinement between OMS networks
+\label{fig:simple-network-refinement}}
+\end{figure}
 
 
 \section{Use Case Model-1: Consistency Among UML Diagrams of Different Types}
