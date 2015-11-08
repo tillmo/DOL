@@ -10976,7 +10976,7 @@ end
 
 library Publications
 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
+language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester
 
 ontology Publications1 =
   Class: Publication
@@ -11019,17 +11019,24 @@ Publications with translation DDL2-ECO
   %% add E-connection style bridge rules on top
 end
 
+%% repeat prefix declarations from above
 
 library Market
 
+language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester
 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
+ontology One = Class: PurchaseOrder end
+ontology Two =
+  ObjectProperty: Buyer
+  ObjectProperty: Good
+  ObjectProperty: BoughtBy
+end
+
+
 ontology Purchases =
 combine
-  1 : { Class: PurchaseOrder },
-  2 : { ObjectProperty: Buyer
-       ObjectProperty: Good
-       ObjectProperty: BoughtBy }
+  1:One,
+  2:Two
   with translation OWL2DDLwithRoles
 then
   1:PurchaseOrder -into-> 2:BoughtBy
