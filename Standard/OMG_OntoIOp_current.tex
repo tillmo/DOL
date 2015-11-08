@@ -9943,12 +9943,12 @@ OMSSymbolSeparator ::= String
 
 NetworkDefinition ::= network-definition NetworkName
                                          [ConservativityStrength] Network
-NetworkName     ::= IRI
-Network         ::= network NetworkElement* ExcludedElement*
-NetworkElement  ::= network-element [Id] ElementRef
-ExcludedElement ::= PathReference | OMSOrMappingorNetworkRef
-PathReference   ::= path OMSOrMappingorNetworkRef OMSOrMappingorNetworkRef
-ElementRef      ::= IRI
+NetworkName         ::= IRI
+Network             ::= network NetworkElement* ExcludedElement*
+NetworkElement      ::= network-element [Id] IRI
+ExcludedElement     ::= PathReference | ExcludedElementRef
+PathReference       ::= path IRI IRI
+ExcludedElementRef  ::= IRI
 \end{lstlisting}
 
 
@@ -9982,7 +9982,7 @@ ApproximationOMS   ::= approximation OMS Approximation
 FilteringOMS       ::= filtering OMS Filtering
 UnionOMS           ::= union OMS [ConservativityStrength] OMS
 ExtensionOMS       ::= extension OMS Extension
-QualifiedOMS       ::= qualified-oms Qualification* OMS
+QualifiedOMS       ::= qualified-oms Qualification Qualification* OMS
 CombinationOMS     ::= combination Network
 ApplicationOMS     ::= application OMS SubstName
 Closure            ::= ClosureType CircClosure CircVars
@@ -10101,7 +10101,7 @@ ModuleRelDefinition ::= module-definition ModuleName
 ModuleName         ::= IRI
 ModuleType         ::= module-type OMS OMS
 AlignmentDefinition ::= alignment-definition AlignmentName
-                              [AlignmentCardinality AlignmentCardinality]
+                              [AlignmentCardinality] [AlignmentCardinality]
                               AlignmentType Correspondence*
                               [AlignmentSemantics]<\footnote{%
                         Note that this grammar uses ``type'' as in
