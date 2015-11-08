@@ -9616,8 +9616,7 @@ $c \in \{ \mathsf{Boolean},\allowbreak \mathsf{UnlimitedNatural},\allowbreak
 $\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ are used for
 representing the meta-attributes ``ordered'' and ``unique'' of
 \uml{MultiplicityElement} according to the following
-table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128; UML
-  2.5, p.~34.}
+table:\footnote{UML 2.5, p.~34.}
 %
 \begin{quotation}
 \begin{tabular}{@{}r||c|c@{}}
@@ -9629,8 +9628,8 @@ table:\footnote{Cf.~UML Superstructure Specification 2.4.1, p.~128; UML
 \end{tabular}
 \end{quotation}
 %
-The default is ``not ordered'' and ``unique''.\footnote{UML
-  Superstructure Specification 2.4.1, p.~96; there does not seem to be
+The default is ``not ordered'' and
+``unique''.\footnote{\cite[p.~96]{uml-2.4.1-super}; there does not seem to be
   default in UML 2.5.}
 
 For a class/data type $c \in C$ of a class/data type-hierarchy
@@ -9668,26 +9667,24 @@ $c_1, \dots, c_r \in C$,
 $\tau_1, \ldots, \tau_r$
 classifier annotations, $a$
 an \emph{association name}, and $p_1, \dots, p_r$
-\emph{member end names}.\footnote{The member ends are ordered according
-  to the UML Superstructure Specification 2.4.1, p.~29; UML 2.5, p.~197;
-  hence they are represented in a tuple-like notation.}  An association
-declaration
+\emph{member end names}.\footnote{The member ends are
+  ordered~\cite[p.~197]{uml-2.5} hence they are represented in a
+  tuple-like notation.}  An association declaration
 $\mathbf{a} = a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])$
 \emph{yields} the \emph{property declarations}
 $\mathbf{a}.p_i : \tau_i[c_i]$
 for $1 \leq i \leq r$.
 An association declaration is \emph{binary} if $r = 2$.\footnote{Only
   binary association may show member ends that are properties not owned
-  by the association (UML Superstructure Specification 2.4.1, p.~37; UML
-  2.5, p.~218).  The property declarations induced by a more than binary
-  association result in a query operation.}  For a binary association
-with $\tau_1 = \mathsf{Set}$,
+  by the association~\cite[p.~218]{uml-2.5}.  The property declarations
+  induced by a more than binary association result in a query
+  operation.}  For a binary association with $\tau_1 = \mathsf{Set}$,
 the second member end may be \emph{composite}, and we write
 $a(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2])$
 if this fact plays a rôle.\footnote{Composite properties, i.e.,
   properties with aggregation kind \uml{composite} can only be member
-  ends of binary associations (\cite[p.~218]{uml-2.5}) and their
-  multiplicity must not exceed one (\cite[p.~150]{uml-2.5}).}
+  ends of binary associations~\cite[p.~218]{uml-2.5} and their
+  multiplicity must not exceed one~\cite[p.~150]{uml-2.5}.}
 \end{itemize}
 
 \medskip\noindent\textbf{Class/data type nets (Signatures).}
@@ -9709,22 +9706,23 @@ and $d_2$
 are the names of two different association declarations in $M \cup A$,
 then $d_1 \neq d_2$;
 
-  \item member end names are unique: if $p_1, \ldots, p_r$ are the
-member end names of an association declaration in $A$, then $p_i \neq p_j$ for
-$1 \leq i \neq j \leq r$;\footnote{In UML, member end names need not be
-  unique.  However, for (1)~a simpler handling of selecting a particular
-  member end in the sentences and avoiding the use of number selectors,
-  and (2)~making the notion of member ends ``owned'' by a class/data
-  type, this constraint is added. An association declaration violating this
-  uniqueness constraints can easily be transformed into an association 
-  declaration satisfying it by decorating member end names with the
-  numbers $1,\ldots,r$.}
+  \item member end names are unique: if $p_1, \ldots, p_r$
+are the member end names of an association declaration in $A$,
+then $p_i \neq p_j$
+for $1 \leq i \neq j \leq r$;\footnote{In
+  UML, member end names need not be unique.  However, for (1)~a simpler
+  handling of selecting a particular member end in the sentences and
+  avoiding the use of number selectors, and (2)~making the notion of
+  member ends ``owned'' by a class/data type, this constraint is
+  added. An association declaration violating this uniqueness
+  constraints can easily be transformed into an association declaration
+  satisfying it by decorating member end names with the numbers
+  $1, \ldots, r$.}
 
   \item the type of a member end\footnote{All member ends are instances
-  of \uml{Property}; UML Superstructure Specification 2.4.1, p.~36; UML
-  2.5, p.~206.}  owned by a class/data type coincides with its
-declarations as attribute: We say that a property declaration
-$\mathbf{a}.p_i : \tau_i[c_i]$
+  of \uml{Property}~\cite[p.~206]{uml-2.5}.}  owned by a class/data type
+coincides with its declarations as attribute: We say that a property
+declaration $\mathbf{a}.p_i : \tau_i[c_i]$
 yielded by a binary association
 $\mathbf{a} = a(p_1 : \tau_1[c_1], p_2 : \tau_2[c_2])$
 is \emph{owned by} $c_0 \in C$,
@@ -9783,9 +9781,9 @@ $\mathrm{Cl}$.
 \\
   \text{Properties: }\mathsf{Line.linear : Set[Boolean]}, \mathsf{Track.linear : Set[Boolean]},
 \\[-.5ex]
-  \phantom{\text{Properties: }}\mathsf{Net.station : Set[Station]}, \mathsf{Net.line : Set[Line]},
+  \phantom{\text{Properties: }}\mathsf{Net\composition station : Set[Station]}, \mathsf{Net\composition line : Set[Line]},
 \\[-.5ex]
-  \phantom{\text{Properties: }}\mathsf{Station.net : Set[Net]}, \mathsf{Station.unit : Set[Unit]}, \mathsf{Station.track : Set[Track]},
+  \phantom{\text{Properties: }}\mathsf{Station.net : Set[Net]}, \mathsf{Station\composition unit : Set[Unit]}, \mathsf{Station\composition track : Set[Track]},
 \\[-.5ex]
   \phantom{\text{Properties: }}\mathsf{Line.net : Set[Net]}, \mathsf{Line.linear : Set[Linear]},
 \\[-.5ex]
@@ -9802,14 +9800,14 @@ $\mathrm{Cl}$.
   \phantom{\text{Associations: }}\mathsf{L2T(linear : Set[Linear], track : Set[Track])},
 \\[-.5ex]
   \phantom{\text{Associations: }}\mathsf{C2U(connector : Set[Connector], unit : Set[Unit])}
-\\
-  \text{Compositions: }\mathsf{N2S(net : Set[Net], \composition station : Set[Station])},
 \\[-.5ex]
-  \phantom{\text{Compositions: }}\mathsf{N2L(net : Set[Net], \composition line : Set[Line])},
+  \phantom{\text{Associations: }}\mathsf{N2S(net : Set[Net], \composition station : Set[Station])},
 \\[-.5ex]
-  \phantom{\text{Compositions: }}\mathsf{S2U(station : Set[Station], \composition unit : Set[Unit])},
+  \phantom{\text{Associations: }}\mathsf{N2L(net : Set[Net], \composition line : Set[Line])},
 \\[-.5ex]
-  \phantom{\text{Compositions: }}\mathsf{S2T(station : Set[Station], \composition track : Set[Track])}
+  \phantom{\text{Associations: }}\mathsf{S2U(station : Set[Station], \composition unit : Set[Unit])},
+\\[-.5ex]
+  \phantom{\text{Associations: }}\mathsf{S2T(station : Set[Station], \composition track : Set[Track])}
 \end{gather*}
 %
 Here all member ends are owned by class/data types.
@@ -9864,7 +9862,9 @@ $\Sigma = ((C, {\leq_C}), K, P, M, A)$, a Common Logic theory
 $CL(\Sigma)$ is defined consisting of:
 %
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
-\item for $c \in C$, a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,  such that
+  \item for $c \in C$,
+a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,
+such that
 %\ednote{class predicates should be restricted to be unary} 
 \begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
 \item 
@@ -9907,11 +9907,10 @@ be represented in a simplified way?}
 \begin{itemize}
 \item
 \texttt{(forall (x y) (if (c.p x y) (c x))) }
-\item 
-\texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote
-{ \texttt{($\tau[c]$ x)} is an abbreviation of either (if $\tau$ is present)\\
-\texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.\\
-or (if $\tau$ is omitted) just \texttt{(c x)}.}
+  \item
+\texttt{(forall (x y) (if (c.p x y) ($\tau[c']$ $y$))) }\footnote{\texttt{($\tau[c]$ x)} is an abbreviation of either (if $\tau$ is present)\\
+  \texttt{(and ($\tau$ x) (forall (m) (if (from:$\tau$-member m x) (c' m))))}.\\
+  or (if $\tau$ is omitted) just \texttt{(c x)}.}
 %% \item 
 %% \texttt{(forall (x y m)\\
 %% \qqquad (if (and (c.p x y) (member m y)) (c' m)))}
@@ -9975,23 +9974,31 @@ at most one owner'':
             (= o o')))
 \end{lstlisting}
 In case \texttt{m} is represented in the simplified way, \texttt{(form:sequence-member (form:pair o i) m)} is replaced by \texttt{(m o i)}, and analogously for \texttt{m'}.
-  \item \CL maps each association declaration $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$ to a predicate $\CL(a)$ and axioms stating that $\CL(a)$ is a finite relation represented as a sequence of tuples of the correct types (the latter again
-being represented as sequences)\footnote{Ignoring the annotations $\tau_i$ in the interpretation of an association is intentional, see OMG UML version 2.5, p.~197: ``A link is a tuple with one value for
-  each \uml{memberEnd} of the Association, where each value is an
+  \item \CL maps each association declaration
+$a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in A$
+to a predicate $\CL(a)$
+and axioms stating that $\CL(a)$
+is a finite relation represented as a sequence of tuples of the correct
+types (the latter again being represented as
+sequences)\footnote{Ignoring the annotations $\tau_i$
+  in the interpretation of an association is
+  intentional~\cite[p.~197]{uml-2.5}: ``A link is a tuple with one value
+  for each \uml{memberEnd} of the Association, where each value is an
   instance whose type conforms to or implements the type of the end.
   [\ldots] When one or more ends of the Association have
-  $\uml{isUnique} = \mathit{false}$, it is possible to have several
-  links associating the same set of instances. In such a case, links
-  carry an additional identifier apart from their end values.  When one
-  or more ends of the Association are ordered, links carry ordering
-  information in addition to their end values.'' 
-Similarly in UML Superstructure Specification 2.4.1, p.~37.  The additional information required for links is covered by using sequences of tuples.}:\\
+  $\uml{isUnique} = \mathit{false}$,
+  it is possible to have several links associating the same set of
+  instances. In such a case, links carry an additional identifier apart
+  from their end values.  When one or more ends of the Association are
+  ordered, links carry ordering information in addition to their end
+  values.'' The additional information required for links is covered by
+  using sequences of tuples.}:\\
 \texttt{(from:Sequence a)}\\
 \texttt{(forall (t) (if (form:sequence-member t a)\\
-\qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
-\qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
-\ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert\\
-\qqquad\qqquad\qqquad\ \  $x_r$ form:empty-sequence))))))))}
+  \qqquad\qqquad  (exists ($x_1$ $\cdots$ $x_r$)\\
+  \qqquad\qqquad\qqquad\ \  (and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)\\
+  \ \ \  (= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert\\
+  \qqquad\qqquad\qqquad\ \ $x_r$ form:empty-sequence))))))))}
 
 In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
 $\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:\\
