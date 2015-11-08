@@ -11056,7 +11056,7 @@ end
 
 library Algebra
 
-language lang:CommonLogic syntax ser:CommonLogic/CLIF
+language lang:CommonLogic serialization ser:CommonLogic/CLIF
 
 spec implicit_group =
 (forall (x y z)
@@ -11086,13 +11086,17 @@ end
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,equivalence,spec},escapechar=@,mathescape]
-equivalence e : algebra:BooleanAlgebra
-                $\leftrightarrow$ algebra:BooleanRing =
-    x$\wedge$y = x$\cdot$y
-    x$\vee$y = x+y+x$\cdot$y
-    $\neg$x = 1+x
-    x$\cdot$y = x$\wedge$y
-    x+y = (x$\vee$y) $\wedge$ $\neg$(x$\wedge$y)
+language lang:CASL
+
+equivalence e : algebra:BooleanAlgebra <-> algebra:BooleanRing =
+  sort E
+  forall x,y:E
+  . x∧y = x·y
+  . x$\wedge$y = x$\cdot$y
+  . x$\vee$y = x+y+x$\cdot$y
+  . $\neg$x = 1+x
+  . x$\cdot$y = x$\wedge$y
+  . x+y = (x$\vee$y) $\wedge$ $\neg$(x$\wedge$y)
 end
 \end{lstlisting}
 
@@ -11108,8 +11112,8 @@ spec InterpolatedGroup =
   forget inv
 end
 
-entailment ent = InterpolatedGroup 
-  entails { . forall x:Elem . exists y . Elem . x+y=0 }
+entailment ent = InterpolatedGroup
+  entails { . forall x:Elem . exists y : Elem . x+y=0 }
 end
 \end{lstlisting}
 
