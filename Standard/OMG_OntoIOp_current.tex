@@ -11454,7 +11454,7 @@ OMS with translation IRI  & Mereology \\\hline
 OMS hide SymbolList  &  Algebra \\\hline
 OMS reveal Symbols  & Datatypes \\\hline
 %OMS reveal Symbol |-> Symbol ...  &  \\\hline
-OMS hide along IRI  & section~\ref{model-1} \\\hline
+OMS hide along IRI  & section~\ref{model-1}, MetricSpaces \\\hline
 %OMS hide along IRI : IRI $\to$ IRI  &  \\\hline
 %OMS hide along IRI $\to$ IRI  &  \\\hline
 %OMS hide along $\to$ IRI  &  \\\hline
@@ -12119,25 +12119,168 @@ end
 \end{lstlisting}
 
 
-
-
-
-\sclause{Queries}\label{ex:queries}
+\sclause{Real Numbers and Metric Spaces}\label{ex:queries}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
-library MyQuery
+
+library MetricSpaces
+
 language lang:CASL
-spec Person =
-  sort s
-  pred Person:s 
-  op max,peter:Person
+
+spec Monoid =
+     sort Elem
+     ops  e:       Elem;
+          __ * __: Elem * Elem -> Elem, assoc, unit e
 end
-query MyQuery = select x where Person(x) in Person
+
+spec CommutativeMonoid =
+     Monoid
+then
+     op __ * __: Elem * Elem -> Elem, comm
 end
-substitution MySubst : { Person then op x:Person } to Person = x |-> max
+
+spec Group =
+     Monoid
+then
+     forall x: Elem
+     . exists x': Elem . x' * x = e   %(inv_Group)%
 end
-result MyResult = MySubst for MyQuery
+
+spec AbelianGroup =
+     Group
+and
+     CommutativeMonoid
+end
+
+spec Ring =
+     AbelianGroup with sort Elem,
+                       ops __ * __ |-> __ + __,
+                           e       |-> 0
+and
+     Monoid with ops e, __*__
+then
+     forall x,y,z:Elem
+     . (x + y) * z = (x * z) + (y * z)          %(distr1_Ring)%
+     . z * ( x + y ) = (z * x) + (z * y)        %(distr2_Ring)%
+end
+
+view AbelianGroup_in_Ring_add:
+     AbelianGroup to Ring =
+     ops e |-> 0,
+         __ * __ |-> __ + __
+end
+
+spec CommutativeRing =
+     Ring with ops 0,  __ + __, e, __ * __
+and
+     CommutativeMonoid with ops e, __ * __
+end
+
+spec ConstructField =
+{     CommutativeRing
+then
+     . not e = 0 %(zeroNeqOne_Field)%
+     sort NonZeroElem = { x: Elem . not x = 0 } %(NonZeroElem_def)%
+}
+and
+     {Group with sort Elem |-> NonZeroElem, ops e, __*__}
+end
+
+spec BasicField =
+     ConstructField hide sort NonZeroElem
+end
+
+spec Field =
+     BasicField with op e |-> 1
+then %def
+     op -__: Elem -> Elem
+     forall x: Elem
+     . -x + x = 0       %(Field_unary_minus_idef)%
+end
+
+spec FieldWithOrdering =
+     Field and TotalOrder
+then
+    vars a, b, c:Elem
+    . (a + c) <= (b + c) if a <= b              %(FWO_plus_left)%
+    . (a * c) <= (b * c) if a <= b /\ 0 <= c;   %(FWO_times_left)%
+then %implies
+    vars a, b, c, d: Elem
+    . (a + b) <= (a + c) if b <= c              %(FWO_plus_right)%
+    . (a * b) <= (a * c) if b <= c /\ 0 <= a    %(FWO_times_right)%
+    . (a + b) <= (c + d) if a <= c /\ b <= d    %(FWO_plus)%
+end
+
+
+spec OrderedField =
+     Field
+then
+     pred Pos: Elem
+     forall x,y: Elem
+     . Pos(x) /\ Pos(y) => Pos(x*y)             %(OF_plus)%
+     . Pos(x) /\ Pos(y) => Pos(x+y)             %(OF_times)%
+     . Pos(x) /\ Pos(-x) => x = 0               %(OF_mutex)%
+     . Pos(x) \/ Pos(-x)                        %(OF_exhaust)%
+end
+
+spec RichOrderedField =
+  OrderedField 
+then %def
+  ops min, max: Elem * Elem -> Elem, comm,assoc %implied
+  preds __ <= __, __ < __,
+           __ >= __, __ > __: Elem * Elem;
+  forall x,y:Elem
+     . x >= y <=> y <= x                   %(geq_def_ExtPartialOrder)%
+     . x < y <=> (x <= y /\ not (x=y))     %(less_def_ExtPartialOrder)%
+     . x > y <=> y < x                     %(greater_def_ExtPartialOrder)%
+  forall x,y: Elem
+    . min(x,y) = x when x <= y else y      %(min_def_ExtTotalOrder)%
+    . max(x,y) = y when x <= y else x      %(max_def_ExtTotalOrder)%
+  forall x,y: Elem
+       . x <= y  <=> Pos(y + -x)
+end
+
+%% real numbers, using a specification of fields
+language lang:HasCASL
+spec Real =
+     RichOrderedField with Elem |-> Real
+then
+  free type Nat ::= 0 | suc Nat
+  ops __<=__ :     Pred(Real * Pred(Real));
+      __<=__ :     Pred(Pred(Real) * Real);
+      isBounded : Pred(Pred(Real));
+      inf,sup :   Pred(Real) ->? Real;
+      inj:        Nat -> Real
+   forall r,s:Real; M:Pred(Real); n: Nat
+   . M <= r <=> forall s:Real . M(s) => s <= r          %(Real_ub_def)%
+   . r <= M <=> forall s:Real . M(s) => r <= s          %(Real_lb_def)%
+   . inf(M)=r <=> r <= M /\ forall s:Real . s <= M => s <= r  %(Real_inf_def)%
+   . sup(M)=r <=> M <= r /\ forall s:Real . M <= s => r <= s  %(Real_sup_def)%
+   . isBounded(M) <=> exists ub,lb:Real . lb <= M /\ M <= ub
+                                                        %(Real_isBounded_def)%
+   . isBounded(M) => def inf(M) /\ def sup(M)  %(completeness)%
+   . inj 0 = 0                                          %(Real_inj_0)%
+   . inj (suc n) = 1 + inj n                    %(Real_inj_suc)%
+   . exists n: Nat. r <= inj n                  %(Real_archimedian)%
+end
+
+%% metric spaces in a first-order setting
+language lang:CASL
+spec MetricSpace =
+     Real hide along HasCASL2CASL
+then
+     sort S
+     op d:S*S->Real
+     var x,y,z:S
+     . d(x,y) = 0 <=> x = y
+     . d(x,y) = d(y,x)
+     . d(x,z) <= d(x,y) + d(y,z)
+end
+
 \end{lstlisting}
+
+
+
 
 \sclause{Datatypes}\label{ex:datatypes}
 
@@ -12173,6 +12316,23 @@ spec Finite =
   reveal Elem
 end
 
+\end{lstlisting}
+
+\sclause{Queries}\label{ex:queries}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
+%prefix( lang:  <http://purl.net/DOL/languages/> )%
+library MyQuery
+language lang:CASL
+spec Person =
+  sort s
+  pred Person:s 
+  op max,peter:Person
+end
+query MyQuery = select x where Person(x) in Person
+end
+substitution MySubst : { Person then op x:Person } to Person = x |-> max
+end
+result MyResult = MySubst for MyQuery
 \end{lstlisting}
 
 %\infannex{Use cases}\label{a:use-cases}
