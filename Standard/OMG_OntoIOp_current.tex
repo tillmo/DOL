@@ -1,19 +1,3 @@
-%todo: OMSRefs are forbidden in extensions
-% should we include more examples in section 9, illustrating all DOL constructs?
-% more subsections in semantics, one for each semantic domain
-
-% remaining comments from Bernd:
-%% - 132, 4: in Menge function Symbols F: "|" durch "\mid" ersetzen.
-%% - 132, 5: in Menge predicate Symbols P:
-%%     zweimal "|" durch "\mid" ersetzen.
-%% - 132, -10 und Fußnote:
-%%     Notation "t[a/x]" kenne ich eigentlich als "t[x/a]" ????
-%% - 132, -6: fehlendes Komma in "\exists z_1 , \ldots  z_{n-1}",
-%%     also  "\exists z_1 , \ldots , z_{n-1}"
-%% - 133, 4--7: in Proposition 20 und Beweis:
-%%     4-mal "|" durch "\mid" ersetzen.
-%% - 134, 6: zweimal "..." durch "\ldots" ersetzen. 
-
 % arara: pdflatex: { synctex: on } 
 % arara: makeindex 
 % arara: pdflatex: { synctex: on } 
@@ -2890,6 +2874,8 @@ using the OWL 2 RDF-Based Semantics \cite{W3C:REC-owl2-rdf-based-semantics-20091
 \symboldef{RIF}{Rule Interchange Format}
 \symboldef{SBVR}{Semantics of Business Vocabulary and Business Rules}
 \symboldef{SMOF}{MOF Support for Semantic Structures}
+\symboldef{SPARQL}{SPARQL Protocol and RDF Query Language}
+\symboldef{SQL}{Structured Query Language}
 \symboldef{UML}{Unified Modeling Language}
 \symboldef{URI}{Uniform Resource Identifier}
 \symboldef{URL}{Uniform Resource Locator}
@@ -3199,7 +3185,7 @@ ObjectProperty: isProperPartOf
   Characteristics: Asymmetric  
   SubPropertyOf: isPartOf 
 with translation trans:SROIQtoCL
-then
+then language lang:CommonLogic :
   (if (and (isProperPartOf x y) (isProperPartOf y z)) 
         (isProperPartOf x z))
 \end{lstlisting}
@@ -3268,7 +3254,7 @@ alignment BFO2GFO :
   bfo:1.1 to gfo:gfo.owl =
 	Entity = Entity, Object = Material_object,
 	ObjectBoundary  = Material_boundary, Role < Role ,
- 	Occurrent = Occurrent, 	Process = Process, Quality = Property
+ 	Occurrent = Occurrent, 	Process = Process, Quality = Property,
  	SpatialRegion 	= Spatial_region, TemporalRegion = Temporal_region 	
 \end{lstlisting}
 
@@ -3310,10 +3296,10 @@ integration.
 library GalenModule
 language lang:OWL
 ontology myGalen = 
-  @http://purl.bioontology.org/ontology/GALEN@ extract Drugs, Joints, Bodyparts
+  <http://purl.bioontology.org/ontology/GALEN> extract Drugs, Joints, Bodyparts
 end
 
-cons-ext myGalenIsAModule : @http://purl.bioontology.org/ontology/GALEN@
+cons-ext myGalenIsAModule : <http://purl.bioontology.org/ontology/GALEN>
   of  myGalen 
   for Drugs, Joints, Bodyparts
 end
@@ -3732,7 +3718,7 @@ The ATM example in Fig.~\ref{fig:atm-example} consists of five different
 UML models, which naturally form a network. Coherence of this network is
 expressed as its consistency.  It is assumed that XMI representations of
 the relevant UML models have been stored at
-\url{http://www.example.org/uml/} in a single xmi-file that contains a
+\url{http://www.example.org/uml/} in a single xmi-file \url{http://www.example.org/uml/atm.xmi} that contains a
 \texttt{uml:Model} element for each UML model whose \texttt{xmi:id} has
 a prefix \texttt{xxx} followed by an underscore. \texttt{xxx} is determined
 as follows:\medskip
@@ -3753,13 +3739,14 @@ Fig.~\ref{fig:state-machine} & stm & state machine\\\hline
                 %% descriptions of logics ...
 library ATM
 
-view cd2stm = cd to { atm hide along stm2cd} end
-view cd2psm = cd to { psm hide along psm2cd} end
+view cd2stm = cd refined to { atm hide along stm2cd} end
+view cd2psm = cd refined to { psm hide along psm2cd} end
 network ATM_network = %consistent
                       cd, stm, psm, cmp,
                       cd2stm, cd2psm, abstract_to_concrete_atm
-entailment atm in ATM_network entails sd
-network Some_refined_ATM_network = ...
+end
+entailment atm = ATM_network entails sd
+network Some_refined_ATM_network = ... end
 refinement r = ATM_network refined to Some_refined_ATM_network
 entailment e = Some_refined_ATM_network entails ATM_network
 \end{lstlisting}
@@ -3836,19 +3823,19 @@ the following financial ontology fragment:
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
 ontology myTaxonomy =
-  ObjectProperty: owns 
+  ObjectProperty: owns
     Characteristics: Irreflexive, Asymmetric
 
   Class: FinancialIntermediary
-    SubClassOf: CorporatePerson 
+    SubClassOf: CorporatePerson
   Class: CorporatePerson
     SubClassOf: ImmaterialEntity
   Class: ImmaterialEntity
     DisjointWith: MaterialEntity
     SubClassOf: has_part only ImmaterialEntity
-  Class: Livestock 	
-    SubClassOf: MaterialEntity 
-...
+  Class: Livestock
+    SubClassOf: MaterialEntity
+  %% ...
 end
 \end{lstlisting}
 
@@ -3862,35 +3849,37 @@ various aspects need to be taken care of:
 \end{itemize}
 
 \begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
-model xmiStateModel = <https://ontohub.org/ATM/state.xmi>
+model xmiStateModel = <https://ontohub.org/ATM/state.xmi> end
 
 model clStateModel = xmiStateModel with
                      translation UMLState2CL
+end
 
-model xmiClassModel = <https://ontohub.org/ATM/class.xmi>			
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi> end
 
-model clClassModel = xmiClassModel with 
-            translation UMLClass2CL 
+model clClassModel = xmiClassModel with
+            translation UMLClass2CL
             Bank |-> FinancialIntermediary
+end
 
-ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>			
+ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl> end
 
 ontology NoLivestockTaxonomy = BigTaxonomy reject
-                               Class: Livestock
-						  end
+                               { Class: Livestock }
+end
 
-ontology ExtendedTaxonomy = NoLivestockTaxonomy then 
-         ObjectProperty FinancialIntermediary.owns.ATM
-           SubPropertyOf: owns 
-           Domain: FinancialIntermediary 
+ontology ExtendedTaxonomy = NoLivestockTaxonomy then
+         ObjectProperty: FinancialIntermediary.owns.ATM
+           SubPropertyOf: owns
+           Domain: FinancialIntermediary
            Range: ATM
 end
 
-ontology clTaxonomy = ExtendedTaxonomy with 
+ontology clTaxonomy = ExtendedTaxonomy with
                       translation OWL22CommonLogic
 
-oms JointModel = clStateModel and 
-                 clClassModel and 
+oms JointModel = clStateModel and
+                 clClassModel and
                  clTaxonomy
 end
 \end{lstlisting}
@@ -4595,6 +4584,8 @@ previously-declared symbols and axioms.
 
 Using \syntax{ExtendingOMS}, extensions of an OMS with an \syntax{ExtendingOMS}
 can be built. The latter can optionally be named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{ConservativityStrength}, see clause~\ref{s:structuredOMS} for details).
+Note that an \syntax{ExtendingOMS} used in an extension must
+not be an \syntax{OMSReference}.
 
 \medskip
 \begin{figure}
@@ -4957,6 +4948,7 @@ InterpretationType ::= GroupOMS 'to' GroupOMS
 Refinement         ::= GroupOMS
                      | NetworkName
                      | Refinment 'refined' [RefMap] 'to' Refinement
+                     | Refinment 'interpreted' [RefMap] 'by' Refinement
 RefMap             ::= 'via' LanguageTranslation [SymbolMap]
                      | 'via' [LanguageTranslation] SymbolMap
                      | 'via' Refinement ( ',' Refinement )*
@@ -5106,7 +5098,7 @@ means that the CURIE \url{lang:OWL2} will be expanded to the IRI
 library Mereology
 
 %% OWL Manchester syntax declaration: 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
+language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester
 [...]
 \end{lstlisting}
 
@@ -5611,7 +5603,6 @@ serialization
 spec
 specification
 substitution
-syntax
 then
 to
 translation
@@ -5919,10 +5910,10 @@ A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and 
 
 Given a theory $T=(\Sigma, \Delta)$, the class of $T$-models is the class of all
 $\Sigma$-models $M$ such that $M\models \delta$, for each sentence $\delta \in \Delta$.
-A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
-$M\models\varphi$ for each $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
+A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if at least one 
+ $\Sigma$-model exists. \defsty{Semantic entailment} is defined as usual: 
 for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
-$\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, $\Delta\models\varphi$, if all models satisfying all sentences in
+$\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, written $\Delta\models\varphi$, if all models satisfying all sentences in
 $\Delta$ also satisfy $\varphi$. For a theory $(\Sigma, \Delta)$, we write $\Delta^\bullet$ for the set of all $\Sigma$-sentences $\varphi$ such that $\Delta \models \varphi$. 
 
 \begin{definition}[Theory morphism]
@@ -6025,8 +6016,8 @@ as OMS translation and OMS reduction.
 
 \begin{definition}
   Given an institution  $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$, the
-   institution of its theories, denoted $I^{th}$ can be defined as follows. The category of signatures of $I^{th}$ is the category
-   of $I$-theories and $I$-theory morphisms, that  is denoted $\Th^I$.
+   institution of its theories, denoted $I^{th}$, can be defined as follows. The category of signatures of $I^{th}$ is the category
+   of $I$-theories and $I$-theory morphisms, denoted $\Th^I$.
    For each theory $(\Sigma, \Delta)$, its sentences are just $\Sigma$-sentences in $I$, and
    its models are just $\Sigma$-models in $I$ that satisfy the sentences in $\Delta$, while the
    $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in models of $I$.
@@ -6199,6 +6190,9 @@ $(\C,|\_|)$ is a concrete category.} that preserves
 inclusions.\quad\qed
 \end{definition}
 
+Moreover, if $\sigma:\Sigma\to\Sigma'$ is a signature morphism,
+it uniquely determines a map $|\sigma|:|\Sigma|\to|\Sigma'|$.
+
 After these preliminaries, we can now list the assumptions made about the
 institutions in a heterogeneous logical environment.
 It is required that for each institution in the heterogeneous logical environment there is a trivial signature
@@ -6220,11 +6214,12 @@ where $O$ is a \syntax{BasicOMS}, $\Sigma$ gives the context of previous declara
 signature and $\Delta'$ is the resulting set of sentences.
  It is required then that $\Sigma\subseteq\Sigma'$.
   \item a function $makeMorphism_\cI$ that turns symbol maps into signature morphisms,
-  \item a function $matchSymbols_\cI$ that takes as arguments two signatures 
+  \item a function $sameName_\cI$ that takes as arguments two signatures 
   $\Sigma_1$ and $\Sigma_2$ of $\cI$
   and returns as result the list of all pairs of symbols $(s^1_i,s^2_i)$ such that
-  $s^1_i\in|\Sigma_1|$ and $s^2_i\in|\Sigma_2|$ and the symbols have the same name
-  \ednote{@Till: this is not formal... TM: yes, it is formal. Maybe rename it to $sameName$ in order to stress that sameness of names is formalized here in some institution-specific way? It would make sense to require that this is an equivalence relation.}.
+  $s^1_i\in|\Sigma_1|$ and $s^2_i\in|\Sigma_2|$ and the symbols have the same name.
+  The relation represented by $sameName_\cI(\Sigma_1,\Sigma_2)$ must be an
+  equivalence relation.
   \item a relativization function $relativize_\cI$ 
   taking as argument a theory and giving as 
   result a theory, and a function
@@ -6234,8 +6229,7 @@ signature and $\Delta'$ is the resulting set of sentences.
 %not needed!  \item a default language and a default language serialization.
 \end{itemize}
 
-Further,  for each institution, it is required that there exist (possibly partial) union
-\ednote{If the institutions are inclusive, should the union not always be defined? TM: yes, it should.} and difference operations on signatures.
+Further,  for each institution, it is required that there exist union and difference operations on signatures.
 
 \medskip
 
@@ -6274,17 +6268,18 @@ which has two kinds of edges:
   \item theorem links (written using double arrows, $S\Rightarrow T$)
 \end{itemize}
 both labeled with 
-heterogeneous signature morphisms between the signatures of the source and target nodes.
+heterogeneous signature morphisms between the signatures of the source and target nodes
+(i.e.~ 
+an edge from the node $S$ to the node $T$ is labeled with a pair 
+$(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
+$\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$).
 The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
 the class of models of that node is the class of models of $\Th(N)$. 
 For brevity,  the label of a node may be written as a tuple. Further, it is required that  any OMS can be assigned a unique name. 
 
 The semantics of a network of OMS is a graph
 whose nodes are labeled like in the semantics of OMS mappings and 
-edges are labeled with heterogeneous signature morphisms (i.e.~ 
-an edge from the node $S$ to the node $T$ is labeled with a pair 
-$(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
-$\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$). 
+edges are labeled with heterogeneous signature morphisms. 
 The intuition is that
 network provide means of putting together graphs of OMS and OMS mappings
 and of removing sub-graphs of existing networks. 
@@ -6389,8 +6384,6 @@ $l_1\ldots, l_n$ are the logics supported by $lang$ for some natural number $n$,
 $\Gamma_1 = \Gamma'[postfixLogicIRI(IRI, l_1)\mapsto semNative_{(lang,l_1,ser)}(nativeDocument)]$,\\
 $\Gamma_2 = \Gamma_1[postfixLogicIRI(IRI, l_2)\mapsto semNative_{(lang,l_2,ser)}(nativeDocument)],\ldots$\\
 $\Gamma'' = \Gamma_{n-1}[postfixLogicIRI(IRI, l_n)\mapsto semNative_{(lang,l_n,ser)}(nativeDocument)]$.\\
-\ednote{TM: aha, here we need to consider all logics $l$ supported by $lang$ and
-store the respective semantics under $postfixLogicIRI(IRI,l)$. MC: done}
 Note that if the OMS in the native document does not conform with the logic determined by
 the extension of the file where the document is stored, 
 $sem(nativeDocument)$ will be undefined.
@@ -7340,9 +7333,44 @@ sem(\Gamma,\Sigma, \syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 \end{array}
 }
 
+If $r$ is a \syntax{SymbolMap} such that for every 
+\syntax{SymbolMapItem} $gItem$ in $r.\syntax{generalSymbolMapItem}$
+we have that $gItem.\syntax{source}$ is a symbol in $|\Sigma|$ 
+and
+for every 
+\syntax{Symbol} $s$ in $r.\syntax{generalSymbolMapItem}$
+we have that $s$ is a symbol in $|\Sigma|$,
+$$sem(\Gamma,\Sigma,r) = \sigma: \Sigma\to\Sigma'$$
+\noindent where 
+$\sigma$ must be the unique signature morphism with the properties
+\begin{enumerate}
+\item $\sigma$ matches $r$: for each \syntax{SymbolMapItem} 
+$r.\syntax{generalSymbolMapItem}$ $gItem$ in 
+$r.\syntax{generalSymbolMapItem}$, we have that
+$|\sigma|(gItem.\syntax{source}) = gItem.\syntax{target}$ and for each 
+\syntax{Symbol} $s$ in $r.\syntax{generalSymbolMapItem}$,
+$|\sigma|(s) = s$,
+\item $\sigma$ is the identity outside the domain of $r$:
+for each symbol $s\in|Sigma|$ such that there is no \syntax{SymbolMapItem}
+$gItem$ in $r.\syntax{generalSymbolMapItem}$ with $gItem.source = s$,
+$|\sigma|(s) = s$,
+\item $\sigma$ is surjective on $|\Sigma'|$: for each $y\in|\Sigma'|$,
+there is $x\in |\Sigma|$ such that $|\sigma|(x) = y$,
+\item $\sigma$ is final: for each signature $\Sigma''$ and each
+map of symbols $r':|\Sigma'|\times|\Sigma''|$, $r'$ determines a signature
+morphism $\sigma'':\Sigma'\to\Sigma''$ whenever
+$|\sigma|;r'$ determines a signature morphism
+$\sigma_{r'}:\Sigma\to\Sigma''$.
+\end{enumerate}
+
+If $\sigma$ does not exist or is not uniquely determined, the semantics of
+$r$ is undefined.
+
 \ednote{This is needed for translations, same as induced\_from vs. induced\_from\_to
 in CASL. How to deal with this? TM: couldn't we use the same notions as in
-the CASL reference manual p. 198/199? I have packed the sources into sem.tgz}
+the CASL reference manual p. 198/199? I have packed the sources into sem.tgz
+MC: I have replaced the condition that $\sigma$ should be generative - institution dependent - with the property ensured by generativity, namely finality. I would prefer
+here not to introduce another concept. But: is this sufficient or we must introduce generativity?}
 
 \semdom{
 \begin{array}{ll}
@@ -7351,55 +7379,69 @@ sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 \end{array}
 }
 
-If $m$ is a \syntax{SymbolMap},
+If $r$ is a \syntax{SymbolMap} such that for each 
+\syntax{SymbolMapItem}  $gItem$ in $r.\syntax{generalSymbolMapItem}$ we have that
+$gItem.\syntax{source} \in |\Sigma|$ and
+$gItem.\syntax{target} \in |\Sigma'|$
+and for each
+\syntax{Symbol}  $s$ in $r.\syntax{generalSymbolMapItem}$ we have that
+$s$ is an element both of $|\Sigma|$ and $|\Sigma'|$,
+$$sem(\Gamma,\Sigma,\Sigma',m) = \sigma:\Sigma\to\Sigma'$$
+\noindent where $\sigma$ must be the unique element of the set
+$\{ \varphi : \Sigma\to\Sigma' \mid \text{ there is a set } S \subseteq |\Sigma|
+\text{ such that } \varphi \text{ matches } r \text{ and is the identity on } S\\
+\text{ and } S \text{ is maximal with the property that such morphism exists} \}$.
+If the set fails to be a singleton, the semantics of $r$ is undefined.
 
- $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma$$
-
-where 
-$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$ 
-and \\
-$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2, \allowbreak m.\syntax{generalSymbolMapItem})$.
-
-Applications \shall 
-implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
-given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely 
-defined – in detail:
-
-\begin{algorithmic}
-  \REQUIRE $O_s, O_t$ are OMS
-  \REQUIRE $M\subseteq |\Sig(O_s)|\times|\Sig(O_t)|$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
-  \FORALL{$e_s\in|\Sig(O_s)|$ not covered by $M$}
-    \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
-    \STATE $N_t\leftarrow\{\operatorname{ e\in|\Sig(O_t)|  \mid localname}(e) = n_s\}$
-    \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
-      \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
-    \ENDIF
-  \ENDFOR
-  \ENSURE $M$ completely covers $|\Sigma(O_s)|$
-\end{algorithmic}
-\ednote{We need institutions with a symbol functor, otherwise signatures
-do not have symbols. The ``unique target'' method does not cover cases
-where the target is unique because the target has a unique symbol
-of the required kind and type. It does not cover the case where just
-the symbol with the same name is used. But maybe all this should be
-made institution-specific? TM: I think my answer to the previous
-ednote should solve this.}
-
-The local name of a non-logical symbol $e$ is determined as follows\footnote{In practice, this can 
-often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
-respective OMS (\cf \cref{c:identifiers}).  In general, however, functions that turn abbreviations 
-into IRIs are not invertible.  For this reason, the implicit mapping of non-logical symbols is 
-specified independently from IRI abbreviation mechanisms possibly employed in the 
-OMS.}:\hspace{-2cm}
-\begin{algorithmic}
-  \REQUIRE $e$ is a non-logical symbol (identified by an IRI; \cf \cref{c:identifiers})
-  \IF[production \syntax{ifragment} in \nisref{IETF/RFC 3987:2005}]{$e$ has a fragment $f$}
-    \RETURN $f$
-  \ELSE
-    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nisref{W3C/TR REC-xml:2008}
-    \RETURN $n$
-  \ENDIF
-\end{algorithmic}
+%If $m$ is a \syntax{SymbolMap}, 
+%
+% $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma$$
+%
+%where 
+%$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$ 
+%and \\
+%$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2, \allowbreak m.\syntax{generalSymbolMapItem})$.
+%
+%Applications \shall 
+%implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
+%given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely 
+%defined – in detail:
+%
+%\begin{algorithmic}
+%  \REQUIRE $O_s, O_t$ are OMS
+%  \REQUIRE $M\subseteq |\Sig(O_s)|\times|\Sig(O_t)|$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
+%  \FORALL{$e_s\in|\Sig(O_s)|$ not covered by $M$}
+%    \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
+%    \STATE $N_t\leftarrow\{\operatorname{ e\in|\Sig(O_t)|  \mid localname}(e) = n_s\}$
+%    \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
+%      \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
+%    \ENDIF
+%  \ENDFOR
+%  \ENSURE $M$ completely covers $|\Sigma(O_s)|$
+%\end{algorithmic}
+%\ednote{We need institutions with a symbol functor, otherwise signatures
+%do not have symbols. The ``unique target'' method does not cover cases
+%where the target is unique because the target has a unique symbol
+%of the required kind and type. It does not cover the case where just
+%the symbol with the same name is used. But maybe all this should be
+%made institution-specific? TM: I think my answer to the previous
+%ednote should solve this.}
+%
+%The local name of a non-logical symbol $e$ is determined as follows\footnote{In practice, this can 
+%often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
+%respective OMS (\cf \cref{c:identifiers}).  In general, however, functions that turn abbreviations 
+%into IRIs are not invertible.  For this reason, the implicit mapping of non-logical symbols is 
+%specified independently from IRI abbreviation mechanisms possibly employed in the 
+%OMS.}:\hspace{-2cm}
+%\begin{algorithmic}
+%  \REQUIRE $e$ is a non-logical symbol (identified by an IRI; \cf \cref{c:identifiers})
+%  \IF[production \syntax{ifragment} in \nisref{IETF/RFC 3987:2005}]{$e$ has a fragment $f$}
+%    \RETURN $f$
+%  \ELSE
+%    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nisref{W3C/TR REC-xml:2008}
+%    \RETURN $n$
+%  \ENDIF
+%\end{algorithmic}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -7471,7 +7513,8 @@ $f.\syntax{removalKind} = keep$,
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
 (keep, \cI',\Sigma', \Delta')$$
 \noindent
-where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) = 
+(\cI', \Sigma',\cM',\Delta')$.
 %and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
 %includes $(\Sigma'',\Delta'')$. \ednote{TODO: update}
 
@@ -7479,11 +7522,30 @@ If $f$ is a \syntax{Filtering} such that
 $f.\syntax{removalKind} = remove$,
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
 (remove,\cI',\Sigma', \Delta')$$
-where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) = 
+(\cI', \Sigma',\cM', \Delta')$.
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
 %%%%%%%%%%%%%%%%%%%%%
+
+\semdom{
+\begin{array}{ll}
+ sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{BasicOMSOrSymbolList})& = 
+     (\cI',\Sigma',\cM',\Delta')\\
+ & : (Institution,Signature,Sentences)
+\end{array}
+}
+
+If $O$ is a \syntax{BasicOMS}, we have defined
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta), O) = (Gamma,(\cI',\Sigma',\cM',\Delta'))$
+and the semantics of $O$ as a \syntax{BasicOMSOrSymbolList} is 
+$(\cI',\Sigma',\cM',\Delta')$.
+
+If $s$ is a set of symbols,
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta), s) = (\cI, sem(\Gamma,\Sigma,s), \emptyset,\emptyset)$.
+
+%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of extension}
 
@@ -7554,9 +7616,7 @@ An \syntax{OMSDefinition} $O$ extends the global environment.
 $$
 sem(\Gamma,O) = \Gamma''$$
 \noindent 
-where 
-$\Gamma.logic$ and $\cI$\ednote{@Mihai: what is $\cI$?} must be the same
-and for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
+where for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
 we have \\
 $\Gamma_1=\Gamma'_1[
 postfixLogicIRI(O.\syntax{omsName},\cI_1)\mapsto (\cI_1,\Sigma_1,\cM_1,\Delta_1)]$
@@ -7570,7 +7630,12 @@ postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)
 where $sem(\Gamma'_{n-1}.{logic=\cI_n},O.\syntax{oms}) = (\Gamma'_{n},(\cI_n,\Sigma_n,\cM_n,\Delta_n))$
 
 
-\ednote{@Till: to which of the possible $n$ institutions do these annotations refer to? TM: to $\Gamma.logic$.}
+
+\medskip
+
+The conservativity strength annotations refer to the semantics of 
+$O.\syntax{oms}$ in the current logic of $\Gamma$. Therefore, let $(\Gamma_0,(\cI,\Sigma,\cM,\Delta)) = sem(\Gamma, O.\syntax{oms})$.
+
 \noindent If $O.\syntax{conservativityStrength}$ is \syntax{model-conservative}, the semantics is only
 defined if $\cM\not=\emptyset$.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{consequence-conservative}, the semantics is only
@@ -7610,7 +7675,8 @@ The rule for \syntax{OMSReference}s has been given above, as
 
 If $sym$ is a \syntax{Symbol}
 $$sem(\Gamma,\Sigma, sym) = s$$
-where $s$ is a logic-specific symbol with the name $sym.\syntax{iri}$ from $|\Sigma|$.\ednote{Is there some conversion going on here? Then this should be added to the heterogeneous logical env. TM: no, I think no conversion is needed.} If such symbol does not exist, 
+where $s$ is a logic-specific symbol with the name $sym.\syntax{iri}$ from $|\Sigma|$.
+ If such symbol does not exist, 
 the semantics is undefined.
 
 \sssclause{Semantics of symbol map items}
@@ -7964,7 +8030,7 @@ $\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 %$\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
 %(M_1, M_2) \in \cM' \}$.
 
-If $r$ is \syntax{SimpleRefinement},\ednote{@MC: check!}
+If $r$ is \syntax{SimpleRefinement},
 $$sem(\Gamma, r) = 
 ((G_1,G'_2),\sigma', \cM')$$
 where\\
@@ -7994,7 +8060,8 @@ $$sem(\Gamma, G_1, G_2, Set(r_1,\ldots, r_n)) = \sigma$$
 \noindent where\\
 $sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,\\
 $sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$\\
-such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map. TM: cool! I did not think of this possibility, but it clearly makes sense. It is analogous to the possibility to include networks into the definition of other networks. Note hwever that the semantics of a set of refinements should be a network morphism, not a graph morphism.}
+such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map. TM: cool! I did not think of this possibility, but it clearly makes sense. It is analogous to the possibility to include networks into the definition of other networks. Note hwever that the semantics of a set of refinements should be a network morphism, not a graph morphism. MC: this is what happens when you invent names - networks denote OMSGraphs, then network morphisms are
+GraphMorphisms.}
 $G_1 = \bigcup_{i=1,\ldots,n} G^i_1$,
 $G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and
 $\sigma : G_1 \to G_2 = \bigcup_{i=1,\ldots, n} \sigma_i$ 
@@ -8430,7 +8497,7 @@ If $c$ is a \syntax{DefaultCorrespondence},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
 \noindent where
 $cvalues = True$ if $\mathit{defaultConf}$ is different than $1$ and $False$ otherwise,\\
-$Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = matchSymbols_{\Gamma.logic}(\Sigma_1,\Sigma_2)$,\\
+$Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = sameName_{\Gamma.logic}(\Sigma_1,\Sigma_2)$,\\
 $clist = Sequence((defaultRel,sym^1_i,sym^2_i)\}_{i=1,\ldots,k})$.
 %$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains $sym^1_1,\ldots,sym^1_k$,
 %$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains $sym^2_1,\ldots,sym^2_k$,
@@ -8633,10 +8700,15 @@ It is intended to implement future versions of the \DOL ontology as a DOL docume
 
 Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} of \DOL-conforming languages and translations detailed below in clause~\ref{a:registry}.
 
+The DOL ontology will also be used by the API for Knowledge Platforms
+(API4KP) OMG standardization initiative, see
+\url{http://www.omgwiki.org/API4KB}, as part of their larger ontology.
+
 \section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
 
 
-The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. Classes that are reifications of relations also have been introduced as object properties.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise. 
+The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. This includes most of the classes used in the \DOL metamodel, but also terms used in the \DOL semantics. 
+ Classes that are reifications of relations also have been introduced as object properties.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise. 
 The \DOL Ontology additionally contains some top-level abstract classes
 as shown in Fig.~\ref{fig:dol-onto-classes}.
 
@@ -9027,7 +9099,8 @@ $((C',R,I),\Delta')$ where
     \item each role $r$ has its domain and range intersected with $\top_T$, if they
     are present in $\Delta$, otherwise they are $\top_T$,
   \end{itemize}
-  \noindent and the sentences in $\Delta$ where the following replacement of concepts
+  \noindent and, for each sentence $e\in\Delta$, the sentence $\alpha(e)$, obtained by
+  replacing the concepts in $e$ as follows:
   are made:
   \begin{itemize}
    \item each occurence of $\top$ is replaced with $\top_T$,
@@ -9046,6 +9119,12 @@ $\Delta^M$ the set $(\top_T)^{M'}$ and each concept, role and individual are
 interpreted in $M$ in the same way as in $M'$. Since $M'$ is a $\Delta'$-model,
 we get that $M$ is indeed a $(C,R,I)$-model and moreover $M\models \Delta$.
 \end{definition}
+
+\begin{note}
+If $T = ((C,R,I),\Delta)$ is an \OWL theory, $M'$ is a $\tilde{T}$-model and
+$e$ is a $(C,R,I)$-sentence, we have that $M'\models \alpha(e)$ if and only if
+$\beta(M')\models e$.
+\end{note}
 
 \ssclause{Translating correspondences to a bridge theory in \OWL}
 
@@ -9109,19 +9188,23 @@ We distinguish three cases.
           together with the property that $r_{st}$ is the converse of $r_{ts}$:
           $$\verb+ObjectProperty: + r_{st} \verb+ InverseOf: + r_{ts}$$
           and translation of correspondences to $\Sigma$-sentences
-        using the following rules:\ednote{correct incompatible, what to do with 2, 5,6, 8,10? TM: I do not understand the question.}
+        using the following rules:\ednote{
+        what to do with 2, 5,6, 8,10? TM: I do not understand the question.MC:
+        2,5,8,10 - is it possible to write in OWL that a relation is equivalent, disjoint
+        or subproperty of a chain? 6 - should we require that its not the case that
+        $1:i1~r_{st}~2:i2$ and $2:i2~r_{ts}~1:i1$? }
          $$\begin{array}{ll}
             ('equivalent', c1, c2) & \verb+Class: 1:c1 EquivalentTo: + r_{st}\verb+ some 2:c2+ \\
-            ('equivalent', r1, r2) & \verb+ObjectProperty: 1:r1 EquivalentTo: 2:r2+\\
+            ('equivalent', r1, r2) & \verb+ObjectProperty: 1:r1 EquivalentTo: + r_{st} \verb+ o 2:r2 o + r_{ts}\\
             ('equivalent', i1, i2) & \verb+Individual: 1:i1 Facts: + r_{st} \verb+ 2:i2+\\
             ('incompatible',c1, c2)& \verb+EquivalentClasses: + 1:c1 \verb+ and + 
             r_{st} \verb+ some 2:c2, Nothing+\\
-            ('incompatible',r1, r2)& \verb+ObjectProperty: 1:r1 DisjointWith: 2:r2+ \\
+            ('incompatible',r1, r2)& \verb+ObjectProperty: 1:r1 DisjointWith: + r_{st} \verb+ o 2:r2 o + r_{ts}\\
             ('incompatible',i1, i2)& \verb+Individual: 1:i1 DifferentFrom: 2:i2+ \\
             ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf:  + r_{sz}\verb+ some 1:c1+ \\
-            ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
+            ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyTo: + r_{ts} \verb+ o 1:r1 o + r_{st}\\
             ('\mathit{is\text{-}subsumed}',c1, c2)& \verb+Class: 1:c1 SubClassOf: + r_{ts}\verb+ some 2:c2+ \\
-            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyOf: 2:r2+ \\
+            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyTo: + r_{st} \verb+ o 2:r2 o + r_{ts} \\
             ('\mathit{has\text{-}instance}', c1, i2) & \verb+Individual: 2:i2 Types: + r_{ts}\verb+ some 1:c1+\\
             ('\mathit{instance\text{-}of}', i1, c2) & \verb+Individual: 1:i1 Types: + r_{st}\verb+ some 2:c2+
           \end{array}$$   
@@ -10622,11 +10705,11 @@ Sentences are translated as follows:
 
 \begin{itemize}
  \item $\alpha_\Sigma (C \sqsubseteq D) = \forall x.\, (\alpha_x(C) \rightarrow \alpha_x(D))$
- \item $\alpha_\Sigma (a:C) = \alpha_x(C)[a/x]$\footnote{$t[a/x]$ means ``in $t$, replace $x$ by $a$''.}
+ \item $\alpha_\Sigma (a:C) = \alpha_x(C)[x\mapsto a]$\footnote{$t[x\mapsto a]$ means ``in $t$, replace $x$ by $a$''.}
  \item $\alpha_\Sigma (R(a,b)) = R(a,b)$
  \item $\alpha_\Sigma (R \sqsubseteq S) = \forall x, y. R(x,y) \rightarrow S(x,y) $
  \item $\alpha_\Sigma (R_1; \ldots; R_n \sqsubseteq R) =$\\
-$ \forall x,y . (\exists z_1,\ldots z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \wedge \ldots \wedge R_n(z_{n-1},y)) \rightarrow R(x,y) $
+$ \forall x,y . (\exists z_1,\ldots, z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \wedge \ldots \wedge R_n(z_{n-1},y)) \rightarrow R(x,y) $
  \item $\alpha_\Sigma (\text{Dis}(R_1,R_2)) = \neg\exists x,y . R_1(x,y)\wedge R_2(x,y)$	
  \item $\alpha_\Sigma (\text{Ref}(R)) = \forall x. R(x,x)$
  \item $\alpha_\Sigma (\text{Irr}(R)) = \forall x. \neg R(x,x)$
@@ -10702,7 +10785,7 @@ This is an obvious sublogic.
 Let $\Sigma = ((C, {\leq_C}), P, O, A, M)$ be a \emph{class/data type net} representing a UML class diagram as described in annex~\ref{a:uml-class}. This net can be translated to OWL2 using the approach described in \cite{zedlitz2012uml}.
 The ontology is extended by translating parts of this net and its multiplicity constraints $\mathit{Mult}(\Sigma)$:
 \begin{itemize}
-\item For each class $c \in C$ with superclasses $c_1,c_2,...,c_n \in C$ (i.e.\ $c \leq_C c_i$ for $i=1,...,n$):
+\item For each class $c \in C$ with superclasses $c_1,c_2,\ldots,c_n \in C$ (i.e.\ $c \leq_C c_i$ for $i=1,\ldots,n$):
 \begin{lstlisting}[language=owl2Manchester]
 	Class: c
 		SubClassOf: c1
@@ -11377,10 +11460,10 @@ combine NetworkElements  & Alignments, Publications \\\hline
          ser:   <http://purl.net/DOL/serializations/> )%
                 %% ... and serializations
 
-%% non-standard serialization built into Hets: 
-logic log:Propositional syntax ser:Prop/Hets       
-
 library PropositionalExamples
+
+%% non-standard serialization built into Hets: 
+logic log:Propositional serialization ser:Propositional/Hets       
 
 oms Consistent = %consistent
   props A, B
@@ -11400,14 +11483,15 @@ end
 entailment Ent = SingleModel entails { . not ( A=>B ) }
 end
 
+%% repeat prefix declarations from above
 
 library PropositionalMereology
 
 %% non-standard serialization built into Hets: 
-logic log:Propositional syntax ser:Prop/Hets       
+logic log:Propositional serialzation ser:Propositional/Hets
 
 %% basic taxonomic information about mereology reused from DOLCE:
-ontology Taxonomy = %conssistent      
+ontology Taxonomy = %consistent
   props PT, T, S, AR, PD
   . S $\vee$ T $\vee$ AR $\vee$ PD $\longrightarrow$ PT          %% PT is the top concept
   . S $\wedge$  T  $\longrightarrow$ $\bot$                  %% PD, S, T, AR are pairwise disjoint
@@ -11518,7 +11602,7 @@ library Mereology
 import PropositionalMereology
 
 %% OWL Manchester syntax declaration: 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester           
+language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester           
 
 %% Parthood in SROIQ, as far as easily expressible:
 ontology BasicParthood =                             
@@ -11539,10 +11623,11 @@ end             %% an atom has no proper parts
 %% translate the logic, then rename the entities
 interpretation TaxonomyToParthood : Taxonomy to BasicParthood =
   translation trans:PropositionalToSROIQ,
-  PT $\mapsto$ Particular,	S $\mapsto$ SpaceRegion, 
-  T $\mapsto$ TimeInterval,	A $\mapsto$ AbstractRegion, %[ and so on ]%
+  PT |-> Particular,   S |-> SpaceRegion,
+  T  |-> TimeInterval, A |-> AbstractRegion %[ and so on ]%
+end
 
-logic log:CommonLogic syntax ser:CommonLogic/CLIF
+logic log:CommonLogic serialization ser:CommonLogic/CLIF
                 %% syntax: the Lisp-like CLIF dialect of Common Logic
 
 %% ClassicalExtensionalParthood imports the OWL ontology from above, 
@@ -11553,10 +11638,10 @@ then
   . (forall (X) (if (or (= X S) (= X T) (= X AR) (= X PD))
                     (forall (x y z) (if (and (X x) (X y) (X z))
                                         (and                          
-%% now list all the axioms: 
-	%% antisymmetry:
+// now list all the axioms: 
+	// antisymmetry:
       (if (and (isPartOf x y) (isPartOf y x)) (= x y)) 
-	%% transitivity; not combinable with asymmetry in OWL DL:
+	// transitivity; not combinable with asymmetry in OWL DL:
       (if (and (isProperPartOf x y) (isProperPartOf y z)) (isProperPartOf x z))
       (iff (overlaps x y) (exists (pt) (and (isPartOf pt x) (isPartOf pt y))))
       (iff (isAtomicPartOf x y) (and (isPartOf x y) (Atom x)))
@@ -11564,14 +11649,13 @@ then
            (forall (w) (iff 
 		   	  (overlaps w z) 
 			  (and (overlaps w x) (overlaps w y)))))
- %% existence of the sum:
+ // existence of the sum:
       (exists (s) (sum s x y))                                          
       )))))
 %% definition of fusion	  
   . (forall (Set a) (iff (fusion Set a)                                  
             (forall (b) (iff (overlaps b a)
                              (exists (c) (and (Set c) (overlaps c a)))))))
-  }
 \end{lstlisting}
 
 \sclause{Defined Concepts}\label{ex:definedconcepts}
@@ -11641,7 +11725,7 @@ ontology Blocks_Alternative =
   	EquivalentTo: Block and not Abnormal 
 	SubClassOf: Ontable 
         %% Normally, a block is on the table
-  minimize Abnormal var Ontable, BlockNotAbnormal
+  minimize Abnormal vars Ontable BlockNotAbnormal
 then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
@@ -11659,7 +11743,7 @@ ontology Blocks_Alternative2 =
   	EquivalentTo: Block and Normal 
 	SubClassOf: Ontable 
         %% Normally, a block is on the table
-  maximize Normal var Ontable, BlockNotAbnormal
+  maximize Normal vars Ontable BlockNotAbnormal
 then %implied
   Individual: B2 Types: Ontable
      %% B2 is on the table
@@ -11682,7 +11766,7 @@ end
 
 library Alignments
 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
+language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester
 
 alignment Alignment1 : { Class: Woman } to { Class: Person } =
   Woman < Person
@@ -11711,9 +11795,9 @@ alignment VAlignment : Onto1 to Onto2 =
 end
 
 network N =
-  1 : Onto1, 2 : Onto2, VAlignment
+  1:Onto1, 2:Onto2, VAlignment
 end
- 
+
 ontology VAlignedOntology =
   combine N
   %% 1:Person is identified with 2:HumanBeing
@@ -11744,7 +11828,7 @@ end
 
 library Publications
 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
+language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester
 
 ontology Publications1 =
   Class: Publication
@@ -11765,8 +11849,8 @@ end
 
 ontology Publications_Combined =
 combine
-  1 : Publications1 with translation OWL2MS-OWL,
-  2 : Publications2 with translation OWL2MS-OWL
+  1:Publications1 with translation OWL2MS-OWL,
+  2:Publications2 with translation OWL2MS-OWL
   %% implicitly: Article $\mapsto$ 1:Article @\ldots@
   %%             Article $\mapsto$ 2:Article @\ldots@  
   with translation MS-OWL2DDL
@@ -11787,17 +11871,24 @@ Publications with translation DDL2-ECO
   %% add E-connection style bridge rules on top
 end
 
+%% repeat prefix declarations from above
 
 library Market
 
+language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester
 
-language lang:OWL2 logic log:SROIQ syntax ser:OWL2/Manchester
+ontology One = Class: PurchaseOrder end
+ontology Two =
+  ObjectProperty: Buyer
+  ObjectProperty: Good
+  ObjectProperty: BoughtBy
+end
+
+
 ontology Purchases =
 combine
-  1 : { Class: PurchaseOrder },
-  2 : { ObjectProperty: Buyer
-       ObjectProperty: Good
-       ObjectProperty: BoughtBy }
+  1:One,
+  2:Two
   with translation OWL2DDLwithRoles
 then
   1:PurchaseOrder -into-> 2:BoughtBy
@@ -11823,7 +11914,7 @@ end
 
 library Algebra
 
-language lang:CommonLogic syntax ser:CommonLogic/CLIF
+language lang:CommonLogic serialization ser:CommonLogic/CLIF
 
 spec implicit_group =
 (forall (x y z)
@@ -11842,10 +11933,10 @@ spec explicit_group =
 (forall (x y z)
         (= (op x (op y z)) (op (op x y) z)))
 (forall (x)     (and    (= x (op e x))
-                        (= x (op x e)))))
+                        (= x (op x e))))
 (forall (x)
                 (and    (= x (op x (op x (inv x))))
-                        (= x (op x (op (inv x) x))))))
+                        (= x (op x (op (inv x) x)))))
 end
 
 equivalence groups_equiv : implicit_group <-> { explicit_group hide e, inv }
@@ -11853,13 +11944,17 @@ end
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=clif,escapechar=@,mathescape]
-equivalence e : algebra:BooleanAlgebra
-                $\leftrightarrow$ algebra:BooleanRing =
-    x$\wedge$y = x$\cdot$y
-    x$\vee$y = x+y+x$\cdot$y
-    $\neg$x = 1+x
-    x$\cdot$y = x$\wedge$y
-    x+y = (x$\vee$y) $\wedge$ $\neg$(x$\wedge$y)
+language lang:CASL
+
+equivalence e : algebra:BooleanAlgebra <-> algebra:BooleanRing =
+  sort E
+  forall x,y:E
+  . x$\wedge$y = x$\cdot$y
+  . x$\wedge$y = x$\cdot$y
+  . x$\vee$y = x+y+x$\cdot$y
+  . $\neg$x = 1+x
+  . x$\cdot$y = x$\wedge$y
+  . x+y = (x$\vee$y) $\wedge$ $\neg$(x$\wedge$y)
 end
 \end{lstlisting}
 
@@ -11875,8 +11970,8 @@ spec InterpolatedGroup =
   forget inv
 end
 
-entailment ent = InterpolatedGroup 
-  entails { . forall x:Elem . exists y . Elem . x+y=0 }
+entailment ent = InterpolatedGroup
+  entails { . forall x:Elem . exists y : Elem . x+y=0 }
 end
 \end{lstlisting}
 
@@ -11912,10 +12007,10 @@ language lang:HasCASL
 spec Group_in_second_order_logic =
   sort Elem
   ops 0:Elem; __+__:Elem*Elem->Elem; 
-  exists inv:Elem->Elem .
-    forall x,y,z:elem . x+0=x
-                        /\ x+(y+z) = (x+y)+z
-                        /\ x+inv(x)=0
+  . exists inv:Elem->Elem .
+      forall x,y,z:elem . x+0=x
+                          /\ x+(y+z) = (x+y)+z
+                          /\ x+inv(x)=0
 end
 \end{lstlisting}
 
@@ -12165,7 +12260,7 @@ exchange with other instances, so that e.g.\ Ontohub and Modelhub
 can exchange information about available repositories and their OMS.
 
 In the future, these APIs shall be aligned with OMG's standardization
-effort API4KB.
+effort API4KP.
 
 
 \infannex{Ontohub loc/id v2}\label{a:loc/id}
