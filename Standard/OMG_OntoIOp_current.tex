@@ -7433,12 +7433,6 @@ $\sigma_{r'}:\Sigma\to\Sigma''$.
 If $\sigma$ does not exist or is not uniquely determined, the semantics of
 $r$ is undefined.
 
-\ednote{This is needed for translations, same as induced\_from vs. induced\_from\_to
-in CASL. How to deal with this? TM: couldn't we use the same notions as in
-the CASL reference manual p. 198/199? I have packed the sources into sem.tgz
-MC: I have replaced the condition that $\sigma$ should be generative - institution dependent - with the property ensured by generativity, namely finality. I would prefer
-here not to introduce another concept. But: is this sufficient or we must introduce generativity?}
-
 \semdom{
 \begin{array}{ll}
 sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
@@ -8097,7 +8091,24 @@ $\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 %$\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
 %(M_1, M_2) \in \cM' \}$.
 
-If $r$ is \syntax{SimpleRefinement},
+If $r$ is \syntax{SimpleOMSRefinement},
+$$sem(\Gamma, r) = 
+((G_1,G_2),\sigma', \cM)$$
+where\\
+ $sem(\Gamma,  r.\syntax{source}) = (\cI_1,\Sigma_1,\cM_1,\Delta_1)$,\\
+ $sem(\Gamma,  r.\syntax{target}) = (\cI_2,\Sigma_2,\cM_2,\Delta_2)$,\\ 
+ $sem(\Gamma, \Sigma_1, \Sigma_2, r.\syntax{refMap}) = (\rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2,\sigma:\Phi(\Sigma_1)\to\Sigma_2)$,\\
+ $G_1$ and $G_2$ are graphs consisting each of one isolated node
+ labeled $(\Name(r.\syntax{source}),\cI_1,\Sigma_1,\cM_1,\Delta_1)$ and
+ respectively $(\Name(r.\syntax{target}),\cI_2,\Sigma_2,\cM_2,\Delta_2)$,
+ the network morphism $\sigma'$ maps the node of $\Name(r.\syntax{source})$ to
+ the node of $\Name(r.\syntax{target})$ via $(\rho, \sigma)$
+ and $\cM = \{ (\beta_{\Sigma_2}(M\forget{\sigma}), M) \mid M \in \cM_2 \}$.\\
+ The refinement is correct only if $\beta_{\Sigma_2}(M\forget{\sigma})\in \cM_1$,
+ for each $M\in\cM_2$.
+ 
+
+If $r$ is \syntax{SimpleNetworkRefinement},
 $$sem(\Gamma, r) = 
 ((G_1,G'_2),\sigma', \cM')$$
 where\\
@@ -8109,7 +8120,9 @@ where\\
  and 
  $\cM = \{(F_1,F_3) \mid \exists F_2 \text{ such that } 
                          (F_1, F_2\forget{\sigma}) \in \cM_1       
-                         \text{ and } (F_2, F_3) \in \cM_2 \}$.
+                         \text{ and } (F_2, F_3) \in \cM_2 \}$.\\
+ The refinement is correct only if for each $(F_2,F_3) \in \cM_2$,
+ there is a $(F_1,F_2\forget{\sigma}) \in \cM_1$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -8127,12 +8140,16 @@ $$sem(\Gamma, G_1, G_2, Set(r_1,\ldots, r_n)) = \sigma$$
 \noindent where\\
 $sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,\\
 $sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$\\
-such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map. TM: cool! I did not think of this possibility, but it clearly makes sense. It is analogous to the possibility to include networks into the definition of other networks. Note hwever that the semantics of a set of refinements should be a network morphism, not a graph morphism. MC: this is what happens when you invent names - networks denote OMSGraphs, then network morphisms are
-GraphMorphisms.}
-$G_1 = \bigcup_{i=1,\ldots,n} G^i_1$,
-$G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and
-$\sigma : G_1 \to G_2 = \bigcup_{i=1,\ldots, n} \sigma_i$ 
-is total on the nodes of $G_1$.
+such that 
+$G_1 = \bigcup_{i=1,\ldots,n} G^i_1$ and no node of $G_1$ appears in two graphs
+$G^i_1$ and $G^j_1$ for some $i\neq j\in 1, \ldots, n$,\\
+$G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and no node of $G_2$ appears in two graphs
+$G^i_2$ and $G^j_2$ for some $i\neq j\in 1, \ldots, n$, \\
+and $\sigma : G_1 \to G_2$
+is defined by $\sigma^G(n) = \sigma_i^G(n)$ if the node $n$ comes from $G^i_1$
+and similarly for such a node $n$ of $G$ coming from $G^i_1$,
+we have that $\sigma^M_n = \sigma_i^M(n)$.
+Moreover, $\sigma$ must be total on the nodes of $G_1$.
 
 \sssclause{Semantics of refinement maps}
 
@@ -8587,8 +8604,7 @@ $cvalues = \begin{cases}
  True& \text{ otherwise }
 \end{cases}
 $\\
-$sem(\Gamma,\Sigma_1,c.generalizedTerm) = sym1$, \ednote{How do we get a symbol from an IRI? TM: we would need an institution-specific function for this.
-But I think it is easier to assume that symbols \emph{are} IRIs.}
+$sem(\Gamma,\Sigma_1,c.generalizedTerm) = sym1$, 
 $sem(\Gamma,\Sigma_2,c.symbolRef) = sym2$,
 $clist = Sequence((rel, sym1, sym2))$,
 
@@ -9261,13 +9277,30 @@ We distinguish three cases.
             ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf: 1:c1+ \\
             ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
             ('\mathit{is\text{-}subsumed}',c1, c2)& \verb+Class: 1:c1 SubClassOf: 2:c2+ \\
-            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1+ SubPropertyOf: 2:r2  \\
+            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyOf: 2:r2+  \\
             ('\mathit{has\text{-}instance}', c1, i2) & \verb+Individual: 2:i2 Types: 1:c1+\\
             ('\mathit{instance\text{-}of}', i1, c2) & \verb+Individual: 1:i1 Types: 2:c2+
           \end{array}$$         
  \end{itemize}
-\item Global domain: \ednote{in the absence of terms, there is no difference to first case}
-\item Contextualized domain:
+\item Global domain: 
+  \begin{itemize}
+   \item 
+         $\Sigma_s = (C_s\cup{\top_s}, R_s, I_s)$ and $\Sigma_t = (C_t\cup{\top_t}, R_t,I_t)$,
+         where $C_s$, $R_s$ and $I_s$ are the sets of all concept names, roles
+         and individuals that appear in the list of correspondences as source symbols
+         and $C_t$, $R_t$ and $I_t$ are the sets of all concept names, roles
+         and individuals that appear in the list of correspondences as target symbols.
+  \item $\Sigma = \Sigma_s \uplus \Sigma_t$, where we prefix the symbols of 
+        $\Sigma$ coming from $\Sigma_s$ with $1:$ and those coming from
+        $\Sigma_t$ with $2:$
+  \item $\varphi_s$ maps each symbol $s$ in $\Sigma_s$ to $1:s$
+        and $\varphi_t$ maps each symbol $s$ in $\Sigma_t$ to $2:s$.
+  \item $\Delta$ is constructed in the same way as in the previous case, except
+        that if \verb+Thing+ appears in a correspondence, it is replaced by
+        $\top_s$ or $\top_t$.\footnote{An extension of the language where complex concepts are allowed in alignments would make the construction of $\Delta$ in this
+        case substantially different to the one in the previous case.} 
+  \end{itemize}
+        \item Contextualized domain:
  \begin{itemize}
    \item $\Sigma_s$ and $\Sigma_t$ are constructed as before, but now they also
          include the relativized top concepts $\top_S$ and $\top_T$ respectively.
