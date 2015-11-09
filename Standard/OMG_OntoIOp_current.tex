@@ -5027,19 +5027,14 @@ MappingDefinition  ::= InterpretationDefinition
                      | EquivalenceDefinition
                      | ConservativeExtensionDefinition
                      | AlignmentDefinition
-InterpretationDefinition ::= InterpretationKeyword
-                             InterpretationName
-                             [Conservative] ':'
-                             InterpretationType 'end'
-                     | InterpretationKeyword
-                             InterpretationName
-                             [Conservative] ':'
-                             InterpretationType '='
-                             LanguageTranslation*
-                             [SymbolMap] 'end'
-                     | InterpretationKeyword
-                             InterpretationName '='
-                             Refinement 'end'
+InterpretationDefinition ::= InlineInterpretation | RefinementDefinition
+InlineInterpretation ::= InterpretationKeyword InterpretationName
+                         [Conservative] ':' InterpretationType
+                         [ '=' LanguageTranslation* [SymbolMap] ]
+                         'end'
+RefinementDefinition ::= InterpretationKeyword InterpretationName '='
+                         Refinement
+                         'end'
 InterpretationKeyword ::= 'interpretation' | 'view' | 'refinement'
 InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
