@@ -9059,7 +9059,8 @@ $((C',R,I),\Delta')$ where
     \item each role $r$ has its domain and range intersected with $\top_T$, if they
     are present in $\Delta$, otherwise they are $\top_T$,
   \end{itemize}
-  \noindent and the sentences in $\Delta$ where the following replacement of concepts
+  \noindent and, for each sentence $e\in\Delta$, the sentence $\alpha(e)$, obtained by
+  replacing the concepts in $e$ as follows:
   are made:
   \begin{itemize}
    \item each occurence of $\top$ is replaced with $\top_T$,
@@ -9078,6 +9079,12 @@ $\Delta^M$ the set $(\top_T)^{M'}$ and each concept, role and individual are
 interpreted in $M$ in the same way as in $M'$. Since $M'$ is a $\Delta'$-model,
 we get that $M$ is indeed a $(C,R,I)$-model and moreover $M\models \Delta$.
 \end{definition}
+
+\begin{note}
+If $T = ((C,R,I),\Delta)$ is an \OWL theory, $M'$ is a $\tilde{T}$-model and
+$e$ is a $(C,R,I)$-sentence, we have that $M'\models \alpha(e)$ if and only if
+$\beta(M')\models e$.
+\end{note}
 
 \ssclause{Translating correspondences to a bridge theory in \OWL}
 
@@ -9141,19 +9148,23 @@ We distinguish three cases.
           together with the property that $r_{st}$ is the converse of $r_{ts}$:
           $$\verb+ObjectProperty: + r_{st} \verb+ InverseOf: + r_{ts}$$
           and translation of correspondences to $\Sigma$-sentences
-        using the following rules:\ednote{correct incompatible, what to do with 2, 5,6, 8,10? TM: I do not understand the question.}
+        using the following rules:\ednote{
+        what to do with 2, 5,6, 8,10? TM: I do not understand the question.MC:
+        2,5,8,10 - is it possible to write in OWL that a relation is equivalent, disjoint
+        or subproperty of a chain? 6 - should we require that its not the case that
+        $1:i1~r_{st}~2:i2$ and $2:i2~r_{ts}~1:i1$? }
          $$\begin{array}{ll}
             ('equivalent', c1, c2) & \verb+Class: 1:c1 EquivalentTo: + r_{st}\verb+ some 2:c2+ \\
-            ('equivalent', r1, r2) & \verb+ObjectProperty: 1:r1 EquivalentTo: 2:r2+\\
+            ('equivalent', r1, r2) & \verb+ObjectProperty: 1:r1 EquivalentTo: + r_{st} \verb+ o 2:r2 o + r_{ts}\\
             ('equivalent', i1, i2) & \verb+Individual: 1:i1 Facts: + r_{st} \verb+ 2:i2+\\
             ('incompatible',c1, c2)& \verb+EquivalentClasses: + 1:c1 \verb+ and + 
             r_{st} \verb+ some 2:c2, Nothing+\\
-            ('incompatible',r1, r2)& \verb+ObjectProperty: 1:r1 DisjointWith: 2:r2+ \\
+            ('incompatible',r1, r2)& \verb+ObjectProperty: 1:r1 DisjointWith: + r_{st} \verb+ o 2:r2 o + r_{ts}\\
             ('incompatible',i1, i2)& \verb+Individual: 1:i1 DifferentFrom: 2:i2+ \\
             ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf:  + r_{sz}\verb+ some 1:c1+ \\
-            ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
+            ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyTo: + r_{ts} \verb+ o 1:r1 o + r_{st}\\
             ('\mathit{is\text{-}subsumed}',c1, c2)& \verb+Class: 1:c1 SubClassOf: + r_{ts}\verb+ some 2:c2+ \\
-            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyOf: 2:r2+ \\
+            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyTo: + r_{st} \verb+ o 2:r2 o + r_{ts} \\
             ('\mathit{has\text{-}instance}', c1, i2) & \verb+Individual: 2:i2 Types: + r_{ts}\verb+ some 1:c1+\\
             ('\mathit{instance\text{-}of}', i1, c2) & \verb+Individual: 1:i1 Types: + r_{st}\verb+ some 2:c2+
           \end{array}$$   
