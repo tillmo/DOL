@@ -10054,10 +10054,10 @@ types (the latter again being represented as
 sequences)\footnote{ignoring the annotations $\tau_i$
   in the interpretation of an association is
   intentional~\cite[p.~197]{uml-2.5}: ``a link is a tuple with one value
-  for each \uml{memberend} of the association, where each value is an
+  for each \uml{memberEnd} of the association, where each value is an
   instance whose type conforms to or implements the type of the end.
   [\ldots] when one or more ends of the association have
-  $\uml{isunique} = \mathit{false}$,
+  $\uml{isUnique} = \mathit{false}$,
   it is possible to have several links associating the same set of
   instances. In such a case, links carry an additional identifier apart
   from their end values.  When one or more ends of the Association are
@@ -10166,8 +10166,7 @@ Then
 It is straightforward to extend $\CL$
 from signatures to signature morphisms.
 
-\smallskip\noindent
-\textit{Models.}
+\medskip\noindent\textbf{Models.}
 A $\Sigma$-model of the UML class diagram institution is just a
 $\CL(\Sigma)$-model in Common Logic. That is, the UML class diagram
 institution inherits models from Common Logic. Moreover, model reducts
@@ -10229,7 +10228,6 @@ along a class/data type net morphism $\sigma$, written as $\sigma(\varphi)$,
 is given by applying $\sigma$ to associations, compositions, and member end
 names.
 
-
 \begin{example}
  For the example in Fig. \ref{fig:bjoerners_dsl} there are the following multiplicity formulas:
 \begin{gather*}
@@ -10260,17 +10258,22 @@ names.
 abbreviation for the two inequations ``$x\leq y$'' and ``$y\leq x$''.
 ``$x \leq y \leq z$'' is an abbreviation for the two  inequations 
 ``$x\leq y$'' and ``$y\leq z$''.
-
 \end{example}
 
 
 \section{Satisfaction Relation}\label{a:UML-CD-sat}
+
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object diagram $\Sigma$, a
 multiplicity formula $\varphi$ and a $\Sigma$-model $M$ (the
 latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic): 
-$$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
+%
+\begin{equation*}
+  M \models_\Sigma \varphi
+\iff
+  M \models_{\CL(\Sigma)} \CL(\varphi)
+\end{equation*}
 
 The translation of multiplicity formulas to Common Logic is as follows:
 
@@ -10326,7 +10329,7 @@ $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}
 
 \begin{lstlisting}[language=clif, mathescape]
 $\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$
-  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)\\
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)
           (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y)
                    (form:$\CL(\tau)$-size x$_1$ n$_1$) $\cdots$ (form:$\CL(\tau)$-size $x_k$ $n_k$)
                    (form:$\CL(\tau)$-size $y$ n)
@@ -10461,16 +10464,20 @@ semantics of \DOL as defined in Sec.~\ref{c:semantics}.
 
 \sclause{Languages}
  
- The selected OMS languages
-are those whose conformance with \DOL is established in the preceding annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, RDFS in \aref{a:rdfs},
-\CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The logic graph is shown in \fref{fig:ontograph-standards}; the language graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes refer to the following OMS languages and profiles:
+The selected OMS languages are those whose conformance with \DOL is
+established in the preceding annexes (OWL 2 DL in \aref{a:owl}, Common
+Logic in \aref{a:cl}, RDFS in \aref{a:rdfs}, \CASL in \aref{a:casl}, UML
+class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The
+logic graph is shown in \fref{fig:ontograph-standards}; the language
+graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes
+refer to the following OMS languages and profiles:
 \begin{itemize}
 \item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
 \item RDF Schema \nisref{W3C/TR REC-rdf11-schema:2014}
 \item EL, QL, RL (all being profiles of OWL) \nisref{W3C/TR REC-owl2-profiles:2012}
 \item OWL \nisref{W3C/TR REC-owl2-syntax:2012}
 \item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
-\item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.4.1}
+\item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.5}
 \item \CASL \cite{CASL-RM} and its sublanguage classical first-order logic (FOL)
 \item TPTP
 \end{itemize}
@@ -10479,22 +10486,22 @@ are those whose conformance with \DOL is established in the preceding annexes (O
 % ones in the RFP. Since these are only ontology and modeling
 % languages, also a specification language is included, namely the
 % Common Algebraic Specification Language (CASL).
- The list of
-language translations, given below, comprises standard translations from the literature  \cite{OntoGraph,MossakowskiEtAl14b},
-as well as further translations that are considered useful for
-logical interoperability:
+The list of language translations, given below, comprises standard
+translations from the literature~\cite{OntoGraph,MossakowskiEtAl14b}, as
+well as further translations that are considered useful for logical
+interoperability:
 \begin{itemize}
-  \item \EL $\to$ $\OWL$ 
-  \item \QL $\to$ $\OWL$
-  \item \RL $\to$ $\OWL$
+  \item $\EL \to \OWL$ 
+  \item $\QL \to \OWL$
+  \item $\RL \to \OWL$
   \item $\RDF \to \RDFS$
   \item $\RDFS \to \OWL$
   \item $\OWL  \to \CASL.\FOL$
-  \item $\CASL.\FOL \to TPTP$
-  \item $TPTP \to \CASL.\FOL$
-  \item $\CASL.FOL \to \CL$
-  \item $\CASL.FOL \to \CASL$
-  \item $UML\mbox{-}CD \to \CL$.
+  \item $\CASL.\FOL \to \mathit{TPTP}$
+  \item $\mathit{TPTP} \to \CASL.\FOL$
+  \item $\CASL.\FOL \to \CL$
+  \item $\CASL.\FOL \to \CASL$
+  \item $\mathit{UML\textit{-}CD} \to \CL$.
 \end{itemize}
 
 The translations are specified in \cite{OntoGraph,MossakowskiEtAl14b}.
