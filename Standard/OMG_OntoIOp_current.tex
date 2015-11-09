@@ -6907,7 +6907,8 @@ and
 The semantics of a \syntax{BasicOMS} has been defined above.
 
 The semantics of an \syntax{OMSReference} $O$
-is defined only if $\Inst(\Gamma(locId)) = \cI$, where
+is defined only if $\Inst(\Gamma(locId)) = \cI$,\\
+ where
 $locId = postfixLogicIRI(O.\syntax{omsRef},name(\Gamma.logic))$, as follows:
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)= (\Gamma',(\cI',\Sigma',\cM', \Delta'))$$
 \noindent where
@@ -6991,7 +6992,7 @@ local environment (= fixed non-logical symbols, in the terminology of circumscri
 
 Formally, if $O$ is a \syntax{RelativeClosureOMS},
 $O.\syntax{closureType} = \syntax{minimize}$
-and $O'= O.\syntax{closableOMS}$, and
+and $O'= O.\syntax{closableOMS}$, and\\
 $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O') = 
 (\Gamma', (\cI', \Sigma',\cM',\Delta'))$ then
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)) = (\Gamma'',(\cI'',\Sigma'',\cM'', \Delta''))$$
@@ -7482,17 +7483,18 @@ sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 \end{array}
 }
 
-If $r$ is a \syntax{SymbolMap} such that for each 
-\syntax{SymbolMapItem}  $gItem$ in $r.\syntax{generalSymbolMapItem}$ we have that
+\noindent If $r$ is a \syntax{SymbolMap} such that
+ for each 
+\syntax{SymbolMapItem}  $gItem$ in $r.\syntax{generalSymbolMapItem}$ we have that\\
 $gItem.\syntax{source} \in |\Sigma|$ and
-$gItem.\syntax{target} \in |\Sigma'|$
+$gItem.\syntax{target} \in |\Sigma'|$\\
 and for each
 \syntax{Symbol}  $s$ in $r.\syntax{generalSymbolMapItem}$ we have that
 $s$ is an element both of $|\Sigma|$ and $|\Sigma'|$,
 $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma:\Sigma\to\Sigma'$$
 \noindent where $\sigma$ must be the unique element of the set
 $\{ \varphi : \Sigma\to\Sigma' \mid \text{ there is a set } S \subseteq |\Sigma|
-\text{ such that } \varphi \text{ matches } r \text{ and is the identity on } S\\
+\text{ such that } \varphi \text{ matches } r$ and is the identity on $S
 \text{ and } S \text{ is maximal with the property that such morphism exists} \}$.
 If the set fails to be a singleton, the semantics of $r$ is undefined.
 
@@ -7722,14 +7724,14 @@ sem(\Gamma,O) = \Gamma''$$
 where for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
 we have \\
 $\Gamma_1=\Gamma'_1[
-postfixLogicIRI(O.\syntax{omsName},\cI_1)\mapsto (\cI_1,\Sigma_1,\cM_1,\Delta_1)]$
+postfixLogicIRI(O.\syntax{omsName},\cI_1)\mapsto (\cI_1,\Sigma_1,\cM_1,\Delta_1)]$\\
 where $sem(\Gamma.{logic=\cI_1},O.\syntax{oms}) = (\Gamma'_1,(\cI_1,\Sigma_1,\cM_1,\Delta_1))$,\\ 
 $\Gamma_2=\Gamma'_2[
-postfixLogicIRI(O.\syntax{omsName},\cI_2)\mapsto (\cI_2,\Sigma_2,\cM_2,\Delta_2)]$
+postfixLogicIRI(O.\syntax{omsName},\cI_2)\mapsto (\cI_2,\Sigma_2,\cM_2,\Delta_2)]$\\
 where $sem(\Gamma'_1.{logic=\cI_2},O.\syntax{oms}) = (\Gamma'_2,(\cI_2,\Sigma_2,\cM_2,\Delta_2))$,
 $\ldots$,\\
 $\Gamma''=\Gamma'_n[
-postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)]$
+postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)]$\\
 where $sem(\Gamma'_{n-1}.{logic=\cI_n},O.\syntax{oms}) = (\Gamma'_{n},(\cI_n,\Sigma_n,\cM_n,\Delta_n))$
 
 
@@ -7973,14 +7975,14 @@ The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L
 If the optional argument $d.\syntax{conservativityStrength}$ is
 \begin{itemize}
 \item \syntax{model-conservative}, for
-each model  $M_1\in\Mod(L_1)$ there must exist a model $M_2\in\Mod(L_2)$ such that
+each model  $M_1\in |\Mod(L_1)|$ there must exist a model $M_2\in|\Mod(L_2)|$ such that
 $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. 
 \item \syntax{consequence-conservative}, 
 for each $\Sig(L_1)$-sentence $\varphi$, if $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ then
 $\cM_1\models \varphi$.
 \item \syntax{not-model-conservative}, 
-there must exist a model  $M_1\in\Mod(L_1)$ such that there is no 
-model $M_2\in\Mod(L_2)$ such that
+there must exist a model  $M_1\in|\Mod(L_1)|$ such that there is no 
+model $M_2\in|\Mod(L_2)|$ such that
 $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$.
 \item \syntax{not-consequence-conservative}, 
 there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ and
@@ -8356,9 +8358,10 @@ If $t$ is a \syntax{NetworkOMSEntailment},
 $sem(\Gamma,t) = G$
 
 \noindent where $sem(\Gamma, t.\syntax{network}) = G'$ such that $G'$ contains a node $n$ labeled with 
-$\Name(t.\syntax{premise})$,
-$sem(\Gamma,t.\syntax{oms}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and 
-$\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. Then 
+$\Name(t.\syntax{premise})$,\\
+$sem(\Gamma,t.\syntax{oms}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and \\
+$\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. 
+Then 
 $G$ extends G' with a new node whose label has 
 the name $\Name(t.\syntax{oms})$ and the other 
 components given by $sem(\Gamma,t.\syntax{oms})$ and with
