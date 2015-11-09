@@ -5042,9 +5042,10 @@ Refinement         ::= GroupOMS
                      | NetworkName
                      | Refinement 'refined' [RefMap] 'to' Refinement
                      | Refinement 'interpreted' [RefMap] 'by' Refinement
-RefMap             ::= 'via' LanguageTranslation [SymbolMap]
-                     | 'via' [LanguageTranslation] SymbolMap
-                     | 'via' Refinement ( ',' Refinement )*
+RefMap             ::= 'via' ( OMSRefinementMap | NetworkRefinementMap )
+OMSRefinementMap   ::= LanguageTranslation [SymbolMap]
+                     | [LanguageTranslation] SymbolMap
+NetworkRefinementMap ::= Refinement ( ',' Refinement )*
 EntailmentDefinition ::= 'entailment' EntailmentName '='
                          EntailmentType 'end'
 EntailmentName     ::= IRI
