@@ -1354,13 +1354,16 @@ of entities that the OMS language supports.
 
 An OMS language is conforming with \DOL if it satisfies the following conditions:
 \begin{enumerate}
-\item its abstract syntax is conformant. This means that a) it is specified as an SMOF compliant meta model
+\item \textbf{abstract syntax conformance:} its abstract syntax is conformant. This means that a) it is specified as an SMOF compliant meta model
 or as an EBNF grammar. Moreover, b) an SMOF metaclass or an EBNF non-terminal has to be declared to be a subclass of \syntax{NativeDocument}, and optionally
-another metaclass or non-terminal may be declared to be a subclass of \syntax{BasicOMS}  (see clause~\ref{s:mof-metaclasses});
-\item it has at least one serialization in the sense of section~\ref{c:conform:serialization};
+another metaclass or non-terminal may be declared to be a subclass of \syntax{BasicOMS}  (see clause~\ref{s:mof-metaclasses}).
+Note that an XMI serialization for OMS written in the OMS language can be 
+automatically derived from the SMOF specification
+of the abstract syntax, using the canonical MOF 2 XMI Mapping;
+\item  \textbf{serialization conformance:} it has at least one serialization in the sense of section~\ref{c:conform:serialization};
 %\item complete round-trip mappings from the human-readable serialization
 %to the abstract syntax and vice versa;
-\item either there exists a translation of it into a conforming
+\item  \textbf{semantic conformance:} either there exists a translation of it into a conforming
   language\footnote{For  example, consider the translation of OBO1.4
     to OWL, giving a formal semantics to OBO1.4.}, or:
 \begin{enumerate}
@@ -1480,14 +1483,10 @@ Independently from these criteria,   several levels of conformance of a
 serialization are distinguished. They differ with respect to their means of conveniently abbreviating long IRI identifiers. 
 \end{fminipage}
 
- There are seven levels of conformance of a serialization of an OMS language with \DOL{}.
+ There are six levels of conformance of a serialization of an OMS language with \DOL{}.
 
 
 \begin{description}
-\item[XMI conformance]
-An XMI serialization  for OMS written in the OMS language \ has been automatically derived from the SMOF specification
-of the abstract syntax, using the canonical MOF 2 XMI Mapping.
-%\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there. TM: XMI is an XML-based format.}
 \item[XML conformance]
 The given serialization has to be specified as an XML schema that satisfies
  all of the following conditions:
@@ -8888,7 +8887,7 @@ $i$ rdf:object $o$ .
 and thus introduces a resource $i$ to represent that the ontology $s$ imports the ontology $o$, these three triples are removed from $G$.
 From an ontology serialized in this super-language of the serialization of OWL in RDF, one can obtain semantically equivalent ontologies (with regard to the semantics of OWL) by stripping all triples whose predicate is \textit{rdf:subject}, \textit{rdf:predicate} or \textit{rdf:object}, or by adding triples that declare these three properties to be \emph{annotation properties}.
 
-\section{Conformance of the \SROIQ Logic With \DOL}\label{a:owl-logic}
+\section{Semantic Conformance of OWL 2 With \DOL}\label{a:owl-logic}
 
  The logic \SROIQ underlying 
 OWL can be formalized as an institution as follows:
@@ -9220,11 +9219,13 @@ multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{Sentence} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Text and Semantic Conformance of Common Logic With \DOL}
+\section{Serialization Conformance of Common Logic With \DOL}
 
 The semantic conformance of Common Logic (as specified in \nisref{ISO/IEC 24707:2007}) with \DOL is established in \cite{OntoGraph}.
 
 The XCF dialect of Common Logic has a serialization that satisfies the criteria for XML conformance.  The CLIF dialect of Common Logic has a serialization that satisfies the criteria for text conformance.
+
+\section{Semantic Conformance of Common Logic With \DOL}
 
 Common Logic can be defined as an institution as follows:
 
@@ -9301,12 +9302,15 @@ multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{Triple} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
 
+\section{Serialization Conformance of RDF and RDF Schema  With \DOL}
+
+The way of representing RDF Schema ontologies as RDF graphs satisfies
+the criteria for RDF conformance.
+
 \section{Semantic Conformance of RDF and RDF Schema  With \DOL}
 
-The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR REC-rdf-schema:2014}) with \DOL is established in \cite{OntoGraph}.
-
-The way of representing RDF Schema ontologies as RDF graphs satisfies the criteria for RDF conformance.
-
+The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR
+  REC-rdf-schema:2014}) with \DOL is established in \cite{OntoGraph}.
 
 \begin{definition}[\RDF and RDF Schema]
 The institutions for the Resource Description Framework (\RDF) and \RDF
@@ -9371,15 +9375,12 @@ such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the represen
 \infannex{Conformance of UML class and object diagrams with \DOL}\label{a:uml-class}
 
 \noindent%
-This informative annex demonstrates conformance of a subset of UML class and
-object diagrams with \DOL by defining an institution for both.  The subset is restricted to the
- static aspects of class diagrams; that is, change
-of state is ignored. This means that all operations are query
-operations.
+This informative annex demonstrates conformance of a subset of UML
+class and object diagrams with \DOL by defining an institution for
+both.  The subset is restricted to the static aspects of class
+diagrams; that is, change of state is ignored. This means that all
+operations are query operations.
 
-The institution of UML class and object diagrams is defined using a
-translation of UML class diagrams to Common Logic, following the fUML
-specification and \cite{Seidewitz08}.
 
 \section{Abstract Syntax Conformance of UML With \DOL}
 
@@ -9388,7 +9389,13 @@ multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{OWL PackageableElement} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Semantic Conformance: Preliminaries}
+\section{Semantic Conformance of UML With \DOL}
+
+The institution of UML class and object diagrams is defined using a
+translation of UML class diagrams to Common Logic, following the fUML
+specification and \cite{Seidewitz08}.
+
+\subsection{Preliminaries}
 
  The axioms for primitive types
 are imported from the fUML specification, section 10.3.1:
@@ -9686,7 +9693,7 @@ end
 \end{lstlisting}
 
 
-\section{Signatures}
+\subsection{Signatures}
 
 \textbf{Class/data type hierarchies.}  A \emph{class/data type
   hierarchy} $(C, {\leq_C})$
@@ -9959,7 +9966,7 @@ Here all member ends are owned by class/data types.
 \label{fig:bjoerners_dsl}
 \end{figure}
 
-\section{Models}\label{a:UML-CD-models}
+\subsection{Models}\label{a:UML-CD-models}
 
 As stated above, models (in the sense of the term \termref{model} defined in
 clause~\ref{terms-and-defs}) of UML class diagrams are obtained 
@@ -10173,7 +10180,7 @@ institution inherits models from Common Logic. Moreover, model reducts
 are inherited as well, using the action of $\CL$ on signature morphisms.
 
 
-\section{Sentences}
+\subsection{Sentences}
 
 The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
 the following grammar:
@@ -10261,7 +10268,7 @@ abbreviation for the two inequations ``$x\leq y$'' and ``$y\leq x$''.
 \end{example}
 
 
-\section{Satisfaction Relation}\label{a:UML-CD-sat}
+\subsection{Satisfaction Relation}\label{a:UML-CD-sat}
 
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
@@ -10365,10 +10372,7 @@ equal.
 TPTP \cite{TPTP,DBLP:conf/cade/SutcliffeSY94,DBLP:journals/jar/Sutcliffe09}
 is a language spoken by dozens of first-order theorem provers,
 and large libraries have been formalized in TPTP.
-The underlying logic is unsorted first-order logic. In 
-\cite{GoguenBurstall92}, many-sorted first has been formalized as
-an institution; the single-sorted sublogic (using only a fixed
-set of sorts $\{s\}$ is isomorphic to unsorted first-order logic).
+The underlying logic is unsorted first-order logic. 
 
 \section{Abstract Syntax Conformance of TPTP With \DOL}
 
@@ -10376,6 +10380,17 @@ The metaclass \syntax{TPTP\_file} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{annotated\_formula} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
+
+\section{Serialization Conformance of TPTP With \DOL}
+
+The TPTP text syntax is text conformant with \DOL.
+
+\section{Semantic Conformance of TPTP With \DOL}
+
+In \cite{GoguenBurstall92}, many-sorted first has been formalized as
+an institution; the single-sorted sublogic (using only a fixed set of
+sorts $\{s\}$ is isomorphic to unsorted first-order logic).
+
 
 \infannex{Conformance of CASL with \DOL}\label{a:casl}
 
@@ -10391,6 +10406,10 @@ The metaclass \syntax{LIBRARY} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{BASIC\_SPEC} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
+
+\section{Serialization Conformance of CASL With \DOL}
+
+The \CASL text syntax is text conformant with \DOL.
 
 \section{Semantic Conformance of CASL With \DOL}
  \CASL has
