@@ -4809,10 +4809,9 @@ Extraction         ::= 'extract' InterfaceSignature
 Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
                      | 'keep' InterfaceSignature ['keep' LogicRef]
                      | 'keep' LogicRef
-Filtering          ::= 'select' SymbolList
-                     | 'select' '{' BasicOMS '}'
-                     | 'reject' SymbolList
-                     | 'reject' '{' BasicOMS '}'
+Filtering          ::= RemovalKind BasicOMSOrSymbolList
+RemovalKind        ::= 'reject' | 'select'
+BasicOMSOrSymbolList ::= '{' BasicOMS '}' | SymbolList
 ExtensionOMS       ::= [ExtConservativityStrength]
                        [ExtensionName]
                        ExtendingOMS
