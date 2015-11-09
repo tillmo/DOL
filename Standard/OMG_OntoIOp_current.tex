@@ -5907,10 +5907,10 @@ A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and 
 
 Given a theory $T=(\Sigma, \Delta)$, the class of $T$-models is the class of all
 $\Sigma$-models $M$ such that $M\models \delta$, for each sentence $\delta \in \Delta$.
-A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if there exists a $\Sigma$-model $M$ such that
-$M\models\varphi$ for each $\varphi \in \Delta$. \defsty{Semantic entailment} is defined as usual: 
+A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if at least one 
+ $\Sigma$-model exists. \defsty{Semantic entailment} is defined as usual: 
 for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
-$\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, $\Delta\models\varphi$, if all models satisfying all sentences in
+$\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, written $\Delta\models\varphi$, if all models satisfying all sentences in
 $\Delta$ also satisfy $\varphi$. For a theory $(\Sigma, \Delta)$, we write $\Delta^\bullet$ for the set of all $\Sigma$-sentences $\varphi$ such that $\Delta \models \varphi$. 
 
 \begin{definition}[Theory morphism]
@@ -6003,8 +6003,8 @@ as OMS translation and OMS reduction.
 
 \begin{definition}
   Given an institution  $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$, the
-   institution of its theories, denoted $I^{th}$ can be defined as follows. The category of signatures of $I^{th}$ is the category
-   of $I$-theories and $I$-theory morphisms, that  is denoted $\Th^I$.
+   institution of its theories, denoted $I^{th}$, can be defined as follows. The category of signatures of $I^{th}$ is the category
+   of $I$-theories and $I$-theory morphisms, denoted $\Th^I$.
    For each theory $(\Sigma, \Delta)$, its sentences are just $\Sigma$-sentences in $I$, and
    its models are just $\Sigma$-models in $I$ that satisfy the sentences in $\Delta$, while the
    $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in models of $I$.
@@ -6188,11 +6188,12 @@ where $O$ is a \syntax{BasicOMS}, $\Sigma$ gives the context of previous declara
 signature and $\Delta'$ is the resulting set of sentences.
  It is required then that $\Sigma\subseteq\Sigma'$.
   \item a function $makeMorphism_\cI$ that turns symbol maps into signature morphisms,
-  \item a function $matchSymbols_\cI$ that takes as arguments two signatures 
+  \item a function $sameName_\cI$ that takes as arguments two signatures 
   $\Sigma_1$ and $\Sigma_2$ of $\cI$
   and returns as result the list of all pairs of symbols $(s^1_i,s^2_i)$ such that
-  $s^1_i\in|\Sigma_1|$ and $s^2_i\in|\Sigma_2|$ and the symbols have the same name
-  \ednote{@Till: this is not formal... TM: yes, it is formal. Maybe rename it to $sameName$ in order to stress that sameness of names is formalized here in some institution-specific way? It would make sense to require that this is an equivalence relation.}.
+  $s^1_i\in|\Sigma_1|$ and $s^2_i\in|\Sigma_2|$ and the symbols have the same name.
+  The relation represented by $sameName_\cI(\Sigma_1,\Sigma_2)$ must be an
+  equivalence relation.
   \item a relativization function $relativize_\cI$ 
   taking as argument a theory and giving as 
   result a theory, and a function
@@ -6202,8 +6203,7 @@ signature and $\Delta'$ is the resulting set of sentences.
 %not needed!  \item a default language and a default language serialization.
 \end{itemize}
 
-Further,  for each institution, it is required that there exist (possibly partial) union
-\ednote{If the institutions are inclusive, should the union not always be defined? TM: yes, it should.} and difference operations on signatures.
+Further,  for each institution, it is required that there exist union and difference operations on signatures.
 
 \medskip
 
@@ -6242,17 +6242,18 @@ which has two kinds of edges:
   \item theorem links (written using double arrows, $S\Rightarrow T$)
 \end{itemize}
 both labeled with 
-heterogeneous signature morphisms between the signatures of the source and target nodes.
+heterogeneous signature morphisms between the signatures of the source and target nodes
+(i.e.~ 
+an edge from the node $S$ to the node $T$ is labeled with a pair 
+$(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
+$\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$).
 The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
 the class of models of that node is the class of models of $\Th(N)$. 
 For brevity,  the label of a node may be written as a tuple. Further, it is required that  any OMS can be assigned a unique name. 
 
 The semantics of a network of OMS is a graph
 whose nodes are labeled like in the semantics of OMS mappings and 
-edges are labeled with heterogeneous signature morphisms (i.e.~ 
-an edge from the node $S$ to the node $T$ is labeled with a pair 
-$(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
-$\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$). 
+edges are labeled with heterogeneous signature morphisms. 
 The intuition is that
 network provide means of putting together graphs of OMS and OMS mappings
 and of removing sub-graphs of existing networks. 
@@ -6357,8 +6358,6 @@ $l_1\ldots, l_n$ are the logics supported by $lang$ for some natural number $n$,
 $\Gamma_1 = \Gamma'[postfixLogicIRI(IRI, l_1)\mapsto semNative_{(lang,l_1,ser)}(nativeDocument)]$,\\
 $\Gamma_2 = \Gamma_1[postfixLogicIRI(IRI, l_2)\mapsto semNative_{(lang,l_2,ser)}(nativeDocument)],\ldots$\\
 $\Gamma'' = \Gamma_{n-1}[postfixLogicIRI(IRI, l_n)\mapsto semNative_{(lang,l_n,ser)}(nativeDocument)]$.\\
-\ednote{TM: aha, here we need to consider all logics $l$ supported by $lang$ and
-store the respective semantics under $postfixLogicIRI(IRI,l)$. MC: done}
 Note that if the OMS in the native document does not conform with the logic determined by
 the extension of the file where the document is stored, 
 $sem(nativeDocument)$ will be undefined.
@@ -7522,9 +7521,7 @@ An \syntax{OMSDefinition} $O$ extends the global environment.
 $$
 sem(\Gamma,O) = \Gamma''$$
 \noindent 
-where 
-$\Gamma.logic$ and $\cI$\ednote{@Mihai: what is $\cI$?} must be the same
-and for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
+where for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
 we have \\
 $\Gamma_1=\Gamma'_1[
 postfixLogicIRI(O.\syntax{omsName},\cI_1)\mapsto (\cI_1,\Sigma_1,\cM_1,\Delta_1)]$
@@ -7538,7 +7535,12 @@ postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)
 where $sem(\Gamma'_{n-1}.{logic=\cI_n},O.\syntax{oms}) = (\Gamma'_{n},(\cI_n,\Sigma_n,\cM_n,\Delta_n))$
 
 
-\ednote{@Till: to which of the possible $n$ institutions do these annotations refer to? TM: to $\Gamma.logic$.}
+
+\medskip
+
+The conservativity strength annotations refer to the semantics of 
+$O.\syntax{oms}$ in the current logic of $\Gamma$. Therefore, let $(\Gamma_0,(\cI,\Sigma,\cM,\Delta)) = sem(\Gamma, O.\syntax{oms})$.
+
 \noindent If $O.\syntax{conservativityStrength}$ is \syntax{model-conservative}, the semantics is only
 defined if $\cM\not=\emptyset$.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{consequence-conservative}, the semantics is only
@@ -7578,7 +7580,8 @@ The rule for \syntax{OMSReference}s has been given above, as
 
 If $sym$ is a \syntax{Symbol}
 $$sem(\Gamma,\Sigma, sym) = s$$
-where $s$ is a logic-specific symbol with the name $sym.\syntax{iri}$ from $|\Sigma|$.\ednote{Is there some conversion going on here? Then this should be added to the heterogeneous logical env. TM: no, I think no conversion is needed.} If such symbol does not exist, 
+where $s$ is a logic-specific symbol with the name $sym.\syntax{iri}$ from $|\Sigma|$.
+ If such symbol does not exist, 
 the semantics is undefined.
 
 \sssclause{Semantics of symbol map items}
@@ -7932,7 +7935,7 @@ $\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 %$\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
 %(M_1, M_2) \in \cM' \}$.
 
-If $r$ is \syntax{SimpleRefinement},\ednote{@MC: check!}
+If $r$ is \syntax{SimpleRefinement},
 $$sem(\Gamma, r) = 
 ((G_1,G'_2),\sigma', \cM')$$
 where\\
@@ -7962,7 +7965,8 @@ $$sem(\Gamma, G_1, G_2, Set(r_1,\ldots, r_n)) = \sigma$$
 \noindent where\\
 $sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,\\
 $sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$\\
-such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map. TM: cool! I did not think of this possibility, but it clearly makes sense. It is analogous to the possibility to include networks into the definition of other networks. Note hwever that the semantics of a set of refinements should be a network morphism, not a graph morphism.}
+such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map. TM: cool! I did not think of this possibility, but it clearly makes sense. It is analogous to the possibility to include networks into the definition of other networks. Note hwever that the semantics of a set of refinements should be a network morphism, not a graph morphism. MC: this is what happens when you invent names - networks denote OMSGraphs, then network morphisms are
+GraphMorphisms.}
 $G_1 = \bigcup_{i=1,\ldots,n} G^i_1$,
 $G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and
 $\sigma : G_1 \to G_2 = \bigcup_{i=1,\ldots, n} \sigma_i$ 
@@ -8398,7 +8402,7 @@ If $c$ is a \syntax{DefaultCorrespondence},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), c) = (clist, cvalues)$$
 \noindent where
 $cvalues = True$ if $\mathit{defaultConf}$ is different than $1$ and $False$ otherwise,\\
-$Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = matchSymbols_{\Gamma.logic}(\Sigma_1,\Sigma_2)$,\\
+$Sequence((sym^1_1,sym^2_1),\ldots,(sym^1_k,sym^2_k)) = sameName_{\Gamma.logic}(\Sigma_1,\Sigma_2)$,\\
 $clist = Sequence((defaultRel,sym^1_i,sym^2_i)\}_{i=1,\ldots,k})$.
 %$\Sigma_s$ is the smallest subsignature of $\Sigma_1$ that contains $sym^1_1,\ldots,sym^1_k$,
 %$\Sigma_t$ is the smallest subsignature of $\Sigma_2$ that contains $sym^2_1,\ldots,sym^2_k$,
