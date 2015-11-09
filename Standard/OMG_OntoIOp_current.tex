@@ -11095,6 +11095,7 @@ for one or more repetitions of \syntax{N}.
 %Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 
 
+% Corresponds to image mof/libraries.png and mof/prefixes.png
 \sclause{Documents}\label{e:libraries}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
@@ -11114,9 +11115,11 @@ Qualification      ::= LanguageQualification
 LanguageQualification ::= lang-select LanguageRef
 LogicQualification ::= logic-select LogicRef
 SyntaxQualification ::= syntax-select SyntaxRef
+LanguageRef        ::= IRI
+LogicRef           ::= IRI
+SyntaxRef          ::= IRI
 LibraryName        ::= IRI
 PrefixMap          ::= prefix-map PrefixBinding*
-PrefixBinding      ::= prefix-binding Prefix FullIRI [Separators]
 Prefix             ::= String
 Separators         ::= separators LibraryOMSSeparator OMSSymbolSeparator
 LibraryOMSSeparator ::= String
@@ -11131,6 +11134,7 @@ OMSSymbolSeparator ::= String
 %%   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
 
 
+% Corresponds to image mof/networks.png
 \sclause{OMS Networks}\label{a:networks}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
@@ -11148,13 +11152,10 @@ ExcludedElementRef  ::= IRI
 
 \sclause{OMS}
 
+% Corresponds to image mof/oms.png and mof/basic_oms.png
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 BasicOMS           ::= ($<$)language specific($>$) 
-ClosableOMS        ::= BasicOMS | OMSReference
-OMSReference       ::= oms-reference OMSRef [ImportName]
-ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
-RelativeClosureOMS ::= relative-closure ClosureType ClosableOMS
 OMS                ::= ExtendingOMS
                      | ClosureOMS
                      | TranslationOMS
@@ -11178,10 +11179,43 @@ ExtensionOMS       ::= extension OMS Extension
 QualifiedOMS       ::= qualified-oms Qualification Qualification* OMS
 CombinationOMS     ::= combination Network
 ApplicationOMS     ::= application OMS SubstName
+OMSDefinition      ::= oms-definition OMSName [ConservativityStrength] OMS
+ConservativityStrength ::= consequence-conservative
+                     | model-conservative
+                     | not-consequence-conservative
+                     | not-model-conservative
+                     | implied
+                     | monomorphic
+                     | weak-definitional
+                     | definitional
+OMSName            ::= IRI
+SubstName          ::= IRI
+\end{lstlisting}
+
+% Corresponds to image mof/extension&closure.png
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+ClosableOMS        ::= BasicOMS | OMSReference
+OMSReference       ::= oms-reference OMSRef [ImportName]
+Extension          ::= extension [ConservativityStrength]
+                                 [ExtensionName] ExtendingOMS
+ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
+RelativeClosureOMS ::= relative-closure ClosureType ClosableOMS
 Closure            ::= ClosureType CircClosure CircVars
 ClosureType        ::= minimize | maximize | free | cofree
 CircClosure        ::= Symbol Symbol*
 CircVars           ::= Symbol*
+ExtensionName      ::= IRI
+ImportName         ::= IRI
+OMSRef             ::= IRI
+\end{lstlisting}
+%% \ednote{Alternatively, we could use one type of \syntax{InterfaceSignature}
+%% only, and instead use different constructors for \syntax{Extraction}
+%% and \syntax{Approximation}. This would be a bit more verbose, but a bit
+%% more coherent with position of non-terminals in the concrete syntax.}
+
+
+% Corresponds to image mof/translation&reduction.png
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
 Reduction          ::= reduction RemovalKind OMSLanguageTranslation*
                                  [SymbolList]
@@ -11192,64 +11226,21 @@ Extraction         ::= extraction RemovalKind InterfaceSignature
 Approximation      ::= approx RemovalKind [InterfaceSignature] [LogicRef]
 Filtering          ::= filter RemovalKind BasicOMSOrSymbolList
 BasicOMSOrSymbolList ::= BasicOMS | SymbolList
-Extension          ::= extension [ConservativityStrength]
-                                 [ExtensionName] ExtendingOMS
-RemovalKind        ::= keep | remove
-ConservativityStrength ::= consequence-conservative
-                     | model-conservative
-                     | not-consequence-conservative
-                     | not-model-conservative
-                     | implied
-                     | monomorphic
-                     | weak-definitional
-                     | definitional
 InterfaceSignature ::= SymbolList
-ImportName         ::= IRI
-ExtensionName      ::= IRI
-SubstName          ::= IRI
-\end{lstlisting}
-
-%% \ednote{Alternatively, we could use one type of \syntax{InterfaceSignature}
-%% only, and instead use different constructors for \syntax{Extraction}
-%% and \syntax{Approximation}. This would be a bit more verbose, but a bit
-%% more coherent with position of non-terminals in the concrete syntax.}
-
-
-\sclause{OMS Definitions}
-
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
-OMSDefinition      ::= oms-definition OMSName [ConservativityStrength] OMS
-Symbol             ::= IRI
 SymbolMapItem      ::= symbol-map-item Symbol Symbol
 GeneralSymbolMapItem ::= Symbol | SymbolMapItem
-Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
-OMSName            ::= IRI
-OMSRef             ::= IRI
-ExtensionRef       ::= IRI
-LanguageRef        ::= IRI
-LogicRef           ::= IRI
-SyntaxRef          ::= IRI
 OMSLanguageTranslation ::= NamedTranslation | DefaultTranslation
 NamedTranslation   ::= named-trans OMSLanguageTranslationRef
 DefaultTranslation ::= default-trans LanguageRef
+RemovalKind        ::= keep | remove
 OMSLanguageTranslationRef ::= IRI
+Symbol             ::= IRI
 \end{lstlisting}
-
-
-
 
 \sclause{OMS Mappings}
 
-
+% Corresponds to image mof/interpretation&refinement.png
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
-
-MappingDefinition  ::= InterpretationDefinition
-                     | RefinementDefinition
-                     | EntailmentDefinition
-                     | EquivalenceDefinition
-                     | ConservativeExtensionDefinition
-                     | AlignmentDefinition
 InterpretationDefinition ::= interpretation-definition
                                                        InterpretationName
                                                        [ConservativityStrength]
@@ -11270,6 +11261,16 @@ SimpleNetworkRefinement ::= simple-network-ref Refinement
                                                NetworkRefinementMap Refinement
 OMSRefinementMap   ::= oms-refmap [OMSLanguageTranslation] [SymbolMap]
 NetworkRefinementMap ::= network-refmap Refinement*
+\end{lstlisting}
+
+% Corresponds to image mof/entailment&equivalence.png
+\begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
+MappingDefinition  ::= InterpretationDefinition
+                     | RefinementDefinition
+                     | EntailmentDefinition
+                     | EquivalenceDefinition
+                     | ConservativeExtensionDefinition
+                     | AlignmentDefinition
 EntailmentDefinition ::= entailment EntailmentName EntailmentType
 OMSOMSEntailment   ::= oms-oms-entailment OMS OMS
 NetworkOMSEntailment ::= network-oms-entailment Network OMSName OMS
@@ -11285,11 +11286,10 @@ EquivalenceName    ::= IRI
 EquivalenceType    ::= OMSEquivalence | NetworkEquivalence
 OMSEquivalence     ::= oms-equivalence OMS OMS [OMS]
 NetworkEquivalence ::= network-equivalence Network Network [Network]
-ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName
-                                          [ConservativityStrength] ConservativeExtensionType
-                                          InterfaceSignature
-ConservativeExtensionName         ::= IRI
-ConservativeExtensionType         ::= cons-ext-type OMS OMS
+\end{lstlisting}
+
+% Corresponds to image mof/alignment.png
+\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
 AlignmentDefinition ::= alignment-definition AlignmentName
                               [AlignmentCardinality] [AlignmentCardinality]
                               AlignmentType Correspondence*
@@ -11319,8 +11319,8 @@ SingleCorrespondence ::= correspondence Symbol [Relation]
                                         [Confidence] GeneralizedTerm
                                         [CorrespondenceID]
 CorrespondenceID   ::= IRI
-Symbol          ::= IRI
 GeneralizedTerm    ::= Symbol
+Symbol             ::= IRI
 Relation           ::= RelationReference | StandardRelation
 StandardRelation   ::= StandardRelationValues
 StandardRelationValues ::= subsumes
@@ -11332,11 +11332,16 @@ StandardRelationValues ::= subsumes
                      | default-relation
 RelationReference  ::= relation-ref IRI
 Confidence         ::= Double
+Double             ::= ($<$ a number $\in [0,1]$ $>$) 
 \end{lstlisting}
 
+% Corresponds to image mof/modules.png
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
-
-Double ::= ($<$ a number $\in [0,1]$ $>$) 
+ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName
+                                          [ConservativityStrength] ConservativeExtensionType
+                                          InterfaceSignature
+ConservativeExtensionName         ::= IRI
+ConservativeExtensionType         ::= cons-ext-type OMS OMS
 \end{lstlisting}
 
 
@@ -11345,9 +11350,9 @@ Double ::= ($<$ a number $\in [0,1]$ $>$)
 
 
 \sclause{IRIs and Prefixes}
-
+% Corresponds to image mof/prefixes.png
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
-
+PrefixBinding      ::= prefix-binding Prefix FullIRI [Separators]
 IRI    ::= FullIRI | CurieIRI(\footnote{Specified below in \cref{c:curies}.})
 CurieIRI ::= curie CURIE
 FullIRI ::= ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) 
@@ -11429,6 +11434,7 @@ in Fig.~\ref{fig:queries}.
 
 \sclause{EBNF Concrete Syntax}
 
+% Corresponds to image mof/queries.png
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 
 Term               ::= ($<$)an expression specific to an OMS language($>$) 
@@ -11470,6 +11476,7 @@ SubstitutionDefinition ::= substitution-definition
 ResultDefinition   ::= result-definition ResultName
                                          SubstitutionName SubstitutionName*
                                          QueryName [Complete]
+Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
 OMS                ::= ($...$) | application  OMS  SubstitutionName 
 QueryName          ::= IRI
 SubstitutionName   ::= IRI
