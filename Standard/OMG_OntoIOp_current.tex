@@ -3738,13 +3738,14 @@ Fig.~\ref{fig:state-machine} & stm & state machine\\\hline
                 %% descriptions of logics ...
 library ATM
 
-view cd2stm = cd to { atm hide along stm2cd} end
-view cd2psm = cd to { psm hide along psm2cd} end
+view cd2stm = cd refined to { atm hide along stm2cd} end
+view cd2psm = cd refined to { psm hide along psm2cd} end
 network ATM_network = %consistent
                       cd, stm, psm, cmp,
                       cd2stm, cd2psm, abstract_to_concrete_atm
+end
 entailment atm = ATM_network entails sd
-network Some_refined_ATM_network = ...
+network Some_refined_ATM_network = ... end
 refinement r = ATM_network refined to Some_refined_ATM_network
 entailment e = Some_refined_ATM_network entails ATM_network
 \end{lstlisting}
