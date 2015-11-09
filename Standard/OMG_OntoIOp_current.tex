@@ -9205,13 +9205,29 @@ We distinguish three cases.
             ('subsumes',c1, c2)& \verb+Class: 2:c2 SubClassOf: 1:c1+ \\
             ('subsumes',r1, r2)& \verb+ObjectProperty: 2:r2 SubPropertyOf: 1:r1+ \\
             ('\mathit{is\text{-}subsumed}',c1, c2)& \verb+Class: 1:c1 SubClassOf: 2:c2+ \\
-            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1+ SubPropertyOf: 2:r2  \\
+            ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyOf: 2:r2+  \\
             ('\mathit{has\text{-}instance}', c1, i2) & \verb+Individual: 2:i2 Types: 1:c1+\\
             ('\mathit{instance\text{-}of}', i1, c2) & \verb+Individual: 1:i1 Types: 2:c2+
           \end{array}$$         
  \end{itemize}
-\item Global domain: \ednote{in the absence of terms, there is no difference to first case}
-\item Contextualized domain:
+\item Global domain: 
+  \begin{itemize}
+   \item 
+         $\Sigma_s = (C_s\cup{\top_s}, R_s, I_s)$ and $\Sigma_t = (C_t\cup{\top_t}, R_t,I_t)$,
+         where $C_s$, $R_s$ and $I_s$ are the sets of all concept names, roles
+         and individuals that appear in the list of correspondences as source symbols
+         and $C_t$, $R_t$ and $I_t$ are the sets of all concept names, roles
+         and individuals that appear in the list of correspondences as target symbols.
+  \item $\Sigma = \Sigma_s \uplus \Sigma_t$, where we prefix the symbols of 
+        $\Sigma$ coming from $\Sigma_s$ with $1:$ and those coming from
+        $\Sigma_t$ with $2:$
+  \item $\varphi_s$ maps each symbol $s$ in $\Sigma_s$ to $1:s$
+        and $\varphi_t$ maps each symbol $s$ in $\Sigma_t$ to $2:s$.
+  \item $\Delta$ is constructed in the same way as in the previous case, except
+        that if \verb+Thing+ appears in a correspondence, it is replaced by
+        $\top_s$ or $\top_t$. 
+  \end{itemize}
+        \item Contextualized domain:
  \begin{itemize}
    \item $\Sigma_s$ and $\Sigma_t$ are constructed as before, but now they also
          include the relativized top concepts $\top_S$ and $\top_T$ respectively.
