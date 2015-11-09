@@ -9331,9 +9331,7 @@ We distinguish three cases.
           $$\verb+ObjectProperty: + r_{st} \verb+ InverseOf: + r_{ts}$$
           and translation of correspondences to $\Sigma$-sentences
         using the following rules:\ednote{
-        what to do with 2, 5,6, 8,10? TM: I do not understand the question.MC:
-        2,5,8,10 - is it possible to write in OWL that a relation is equivalent, disjoint
-        or subproperty of a chain? 6 - should we require that its not the case that
+        6 - should we require that its not the case that
         $1:i1~r_{st}~2:i2$ and $2:i2~r_{ts}~1:i1$? }
          $$\begin{array}{ll}
             ('equivalent', c1, c2) & \verb+Class: 1:c1 EquivalentTo: + r_{st}\verb+ some 2:c2+ \\
@@ -9349,7 +9347,15 @@ We distinguish three cases.
             ('\mathit{is\text{-}subsumed}',r1, r2)& \verb+ObjectProperty: 1:r1 SubPropertyTo: + r_{st} \verb+ o 2:r2 o + r_{ts} \\
             ('\mathit{has\text{-}instance}', c1, i2) & \verb+Individual: 2:i2 Types: + r_{ts}\verb+ some 1:c1+\\
             ('\mathit{instance\text{-}of}', i1, c2) & \verb+Individual: 1:i1 Types: + r_{st}\verb+ some 2:c2+
-          \end{array}$$   
+          \end{array}$$  
+          Note that we must express equivalences where role compositions are involved.
+          This is only possible in \OWL 2 Full. Thus the diagram returned by the function
+          $\mathit{theoryOfCorrespondences}$ becomes heterogeneous:
+          $$\xymatrix{ (\OWL,\Sigma_s,\emptyset) \ar[rrr]^{(OWL2Full, \varphi_s)} &&& (\OWL_{\mathit{FULL}}),\Sigma,\Delta) &&&(\OWL,\Sigma_t,\emptyset)\ar[lll]_{(OWL2Full, \varphi_t)} }$$
+         \noindent                   
+          where $OWL2Full$ is the inclusion comorphism of \OWL in \OWL 2 Full,
+          $\varphi_s$  maps each symbol $s$ to $1:s$ and $\top_s$ to itself, 
+          and $\varphi_t$  maps each symbol $t$ to $2_t$ and $\top_t$ to itself.
  \end{itemize}
 \end{enumerate}
  
