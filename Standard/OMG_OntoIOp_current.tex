@@ -7359,12 +7359,6 @@ $\sigma_{r'}:\Sigma\to\Sigma''$.
 If $\sigma$ does not exist or is not uniquely determined, the semantics of
 $r$ is undefined.
 
-\ednote{This is needed for translations, same as induced\_from vs. induced\_from\_to
-in CASL. How to deal with this? TM: couldn't we use the same notions as in
-the CASL reference manual p. 198/199? I have packed the sources into sem.tgz
-MC: I have replaced the condition that $\sigma$ should be generative - institution dependent - with the property ensured by generativity, namely finality. I would prefer
-here not to introduce another concept. But: is this sufficient or we must introduce generativity?}
-
 \semdom{
 \begin{array}{ll}
 sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
@@ -8072,12 +8066,16 @@ $$sem(\Gamma, G_1, G_2, Set(r_1,\ldots, r_n)) = \sigma$$
 \noindent where\\
 $sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,\\
 $sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$\\
-such that \ednote{the union operations should be defined. Note that it would be possible to include even network morphisms in a refinement map. TM: cool! I did not think of this possibility, but it clearly makes sense. It is analogous to the possibility to include networks into the definition of other networks. Note hwever that the semantics of a set of refinements should be a network morphism, not a graph morphism. MC: this is what happens when you invent names - networks denote OMSGraphs, then network morphisms are
-GraphMorphisms.}
-$G_1 = \bigcup_{i=1,\ldots,n} G^i_1$,
-$G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and
-$\sigma : G_1 \to G_2 = \bigcup_{i=1,\ldots, n} \sigma_i$ 
-is total on the nodes of $G_1$.
+such that 
+$G_1 = \bigcup_{i=1,\ldots,n} G^i_1$ and no node of $G_1$ appears in two graphs
+$G^i_1$ and $G^j_1$ for some $i\neq j\in 1, \ldots, n$,\\
+$G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and no node of $G_2$ appears in two graphs
+$G^i_2$ and $G^j_2$ for some $i\neq j\in 1, \ldots, n$, \\
+and $\sigma : G_1 \to G_2$
+is defined by $\sigma^G(n) = \sigma_i^G(n)$ if the node $n$ comes from $G^i_1$
+and similarly for such a node $n$ of $G$ coming from $G^i_1$,
+we have that $\sigma^M_n = \sigma_i^M(n)$.
+Moreover, $\sigma$ must be total on the nodes of $G_1$.
 
 \sssclause{Semantics of refinement maps}
 
