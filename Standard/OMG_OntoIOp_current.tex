@@ -610,7 +610,7 @@ Version \version
 
 OMG Document Number: ad/2015-10-01   \\  %ad/2015-08-01 ad/2015-05-03 ad/15-06-04
 %Normative reference: \\
-Machine readable files: \\ %%ad/2015-08-03, ad-2015-07-02\\
+Machine readable files: \\ 
 Normative:  ad/2015-10-02\\
 Informative: ad/2015-10-03\\
  
@@ -8794,139 +8794,233 @@ OMG maintains the registry as an informative resource governed by the standard. 
 \label{a:dol-onto}
 
 
-%\begin{figure}
-%  \centering
-%   \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG} 
-%  \caption{Subset of the OntoIOp registry, shown as an RDF graph}
-%\label{f:DOL-threelayers}
-%\end{figure}
+This annex describes the DOL ontology, which implements the terms and definitions from
+clause~\ref{terms-and-defs}. While the ontology itself is informative, it is required for the 
+forthcoming Application Programming Interfaces (APIs) for Knowledge Platforms (API4KP) 
+specification, and so every effort has been made to provide a good foundation for that purpose.  
 
-This annex specifies the \DOL Ontology, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
-Part of the background and design considerations of the \DOL Ontology can be found in~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
-
-\section{Normative State and Normative References}\label{a:dol-onto-norm}
-
-
-The canonical namespace IRI for the \DOL Ontology is \url{http://www.omg.org/spec/DOL/dol-language/}.
-Normative snapshots of the implementation are published there.
-The IRI for the version of the \DOL Ontology that corresponds to this version of the OMG standard is \url{http://www.omg.org/spec/DOL/20150801/dol-language/}.
-
-The \DOL Ontology is currently implemented in OWL 2 (\nisref{W3C/TR REC-owl2-syntax:2012}).
-The normative snapshots are encoded in RDF/XML using the OWL 2 mapping to RDF graphs (\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}).
-
-The ontology makes use of the following standard ontologies and vocabularies:
-\begin{itemize}
-\item DCMI Metadata Terms (\nisref{DCMI Metadata Terms:2012})
-\item OMG Specification Metadata (SM) Vocabulary (\nisref{OMG Specification Metadata:2014})
-\item SKOS (\nisref{W3C/TR REC-skos-reference:2009})
-\end{itemize}
-
-%The sources of the \DOL ontology are being maintained in OWL Manchester
-% syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at 
-% \url{https://ontohub.org/meta/dol-ontology.omn}.
-
-It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
-
-\section{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
-
-Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} of \DOL-conforming languages and translations 
-(see annex~\ref{a:registry}).
-
-The DOL ontology will also be used by the API for Knowledge Platforms
-(API4KP) OMG standardization initiative, see
-\url{http://www.omgwiki.org/API4KB}, as part of their larger ontology.
-
-\section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
-
-
-The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. This includes most of the classes used in the \DOL metamodel, but also terms used in the \DOL semantics. 
- Classes that are reifications of relations also have been introduced as object properties.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise. 
-The \DOL Ontology additionally contains some top-level abstract classes
-as shown in Fig.~\ref{fig:dol-onto-classes}.
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.8\textwidth]{illustrations/dol-onto-classes.png}
-  \caption{DOL term ontology: top-level classes}
-  \label{fig:dol-onto-classes}
-\end{figure}
-
-
-
-This reflects central issues in the structure of \DOL:
-while \DOL, as a language, is a linguistic entity, it is
-related to mathematical entities like logics, signatures and models
-through its semantics. That is, semantic entities provide the
-bridge bewteen linguistic and mathematical entities.
-Moreover, processes (like theorem proving) provide algorithmic
-procedcures for manipulating DOL librares, and tools implement
-these in software.
-
-Below the top-level classes, the class structure is as shown
-in Figs.~\ref{fig:linguistic-entity}--\ref{fig:tool}.
+\section{Namespace Definitions}
+The namespaces and prefixes corresponding to external elements required for use by the DOL ontology
+are provided below.  Table \ref{tab:namespace} lists the prefixes and namespaces on which DOL depends.
  
-%\includegraphics[width=0.8\textwidth]{illustrations/linguistic-entity2.png}
+ 
+ \begin{table}[htbp]
+ \begin{center}
+ \begin{longtable}{|p{0.1\textwidth}|p{0.8\textwidth}|}
+ %\caption{Optional Requirements}\\
+ \hline
+  \textbf{Prefix} & \textbf{Namespace}\\
+ \hline
+ \endfirsthead
+ \multicolumn{2}{l}%
+ {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+ \hline
+ \textbf{Prefix} & \textbf{Namespace}\\ \hline
+ \endhead
+ 
+ \hline \multicolumn{2}{l}{\textit{Continued on next page}} \\
+ \endfoot
+ \hline
+ \endlastfoot
+ 
+rdf & \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#}\\ 
+rdfs & \url{http://www.w3.org/2000/01/rdf-schema#} \\ 
+owl & \url{http://www.w3.org/2002/07/owl#} \\   
+ xsd	& \url{http://www.w3.org/2001/XMLSchema#} \\   
+dct	 & \url{http://purl.org/dc/terms/} \\   
+skos & \url{http://www.w3.org/2004/02/skos/core#} \\   
+sm	& \url{http://www.omg.org/techprocess/ab/SpecificationMetadata/} \\   \hline
+ %	
+ \end{longtable}
+ \caption{Prefix and Namespaces for referenced/external vocabularies}
+ \label{tab:namespace}
+ \end{center}
+ \end{table}
 
-\begin{figure}
-  \centering
-    \includegraphics[width=1\textwidth]{illustrations/linguistic-entity.png}
-  \caption{DOL term ontology: linguistic entities}
-  \label{fig:linguistic-entity}
-\end{figure}
+The namespace approach taken for DOL is based on OMG guidelines and is constructed as follows:
+\begin{itemize}
+	\item A standard prefix \url{http://www.omg.org/spec/}
+	\item The abbreviation for the specification: in this case DOL
+	\item The ontology name
+\end{itemize}
+ Note that the URI/IRI strategy for the ontology takes a “slash” rather than “hash” approach, in 
+ order to accommodate server-side applications.   Table \ref{tab:dolnamespace} provides the namespace definition for 
+ the DOL ontology.  While the prefixes given in Tables \ref{tab:namespace} and \ref{tab:dolnamespace} are informative, their use is 
+ required in any extension, including API4KP.
 
-\begin{figure}
-  \centering
-    \includegraphics[width=1\textwidth]{illustrations/mathematical-entity.png}
-  \caption{DOL term ontology: mathematical entities}
-  \label{fig:mathematical-entity}
-\end{figure}
+ 
+ \begin{table}[htbp]
+ \begin{center}
+ \begin{longtable}{|p{0.1\textwidth}|p{0.8\textwidth}|}
+ %\caption{Optional Requirements}\\
+ \hline
+  \textbf{Prefix} & \textbf{Namespace}\\
+ \hline
+ \endfirsthead
+ \multicolumn{2}{l}%
+ {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+ \hline
+ \textbf{Prefix} & \textbf{Namespace}\\ \hline
+ \endhead
+ 
+ \hline \multicolumn{2}{l}{\textit{Continued on next page}} \\
+ \endfoot
+ \hline
+ \endlastfoot
+dol & \url{http://www.omg.org/spec/DOL/DOL-terms/}\\    \hline
+ %	
+ \end{longtable}
+ \caption{Prefix and Namespaces for the DOL ontology}
+ \label{tab:dolnamespace}
+ \end{center}
+ \end{table}
 
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/semantic-entity.png}
-  \caption{DOL term ontology: semantic entities}
-  \label{fig:semantic-entity}
-\end{figure}
+ 
+ 
 
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/web-entity.png}
-  \caption{DOL term ontology: web entities}
-  \label{fig:web-entity}
-\end{figure}
-
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/process.png}
-  \caption{DOL term ontology: processes}
-  \label{fig:process}
-\end{figure}
-
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/tool.png}
-  \caption{DOL term ontology: tools}
-  \label{fig:tool}
-\end{figure}
-
-
-
-
-The top level object properties are structured in a way similar 
-to that of the top-level classes, see Fig.~\ref{fig:dol-onto-properties}.
-\medskip
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/dol-onto-properties.png}
-  \caption{DOL term ontology: properties}
-  \label{fig:dol-onto-properties}
-\end{figure}
+The ontology itself is not documented here, as it is informative, and the bulk of the ontology is 
+documented in clause~\ref{terms-and-defs}, Terms and Definitions, as stated above.  
+Later versions of this 
+specification may provide complete documentation, including machine-readable, ODM-compliant UML 
+XMI, ODM XMI, and additional content such as “about” files, if usage of the ontology is more 
+widespread than anticipated and thus such documentation is warranted.
 
 
+
+%
+% %\begin{figure}
+% %  \centering
+% %   \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG}
+% %  \caption{Subset of the OntoIOp registry, shown as an RDF graph}
+% %\label{f:DOL-threelayers}
+% %\end{figure}
+%
+% This annex specifies the \DOL Ontology, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
+% Part of the background and design considerations of the \DOL Ontology can be found in~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
+%
+% \section{Normative State and Normative References}\label{a:dol-onto-norm}
+%
+%
+% The canonical namespace IRI for the \DOL Ontology is \url{http://www.omg.org/spec/DOL/dol-language/}.
+% Normative snapshots of the implementation are published there.
+% The IRI for the version of the \DOL Ontology that corresponds to this version of the OMG standard is \url{http://www.omg.org/spec/DOL/20150801/dol-language/}.
+%
+% The \DOL Ontology is currently implemented in OWL 2 (\nisref{W3C/TR REC-owl2-syntax:2012}).
+% The normative snapshots are encoded in RDF/XML using the OWL 2 mapping to RDF graphs (\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}).
+%
+% The ontology makes use of the following standard ontologies and vocabularies:
+% \begin{itemize}
+% \item DCMI Metadata Terms (\nisref{DCMI Metadata Terms:2012})
+% \item OMG Specification Metadata (SM) Vocabulary (\nisref{OMG Specification Metadata:2014})
+% \item SKOS (\nisref{W3C/TR REC-skos-reference:2009})
+% \end{itemize}
+%
+% %The sources of the \DOL ontology are being maintained in OWL Manchester
+% % syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at
+% % \url{https://ontohub.org/meta/dol-ontology.omn}.
+%
+% It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
+%
+% \section{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
+%
+% Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} of \DOL-conforming languages and translations
+% (see annex~\ref{a:registry}).
+%
+% The DOL ontology will also be used by the API for Knowledge Platforms
+% (API4KP) OMG standardization initiative, see
+% \url{http://www.omgwiki.org/API4KB}, as part of their larger ontology.
+%
+% \section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
+%
+%
+% The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. This includes most of the classes used in the \DOL metamodel, but also terms used in the \DOL semantics.
+%  Classes that are reifications of relations also have been introduced as object properties.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise.
+% The \DOL Ontology additionally contains some top-level abstract classes
+% as shown in Fig.~\ref{fig:dol-onto-classes}.
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.8\textwidth]{illustrations/dol-onto-classes.png}
+%   \caption{DOL term ontology: top-level classes}
+%   \label{fig:dol-onto-classes}
+% \end{figure}
+%
+%
+%
+% This reflects central issues in the structure of \DOL:
+% while \DOL, as a language, is a linguistic entity, it is
+% related to mathematical entities like logics, signatures and models
+% through its semantics. That is, semantic entities provide the
+% bridge bewteen linguistic and mathematical entities.
+% Moreover, processes (like theorem proving) provide algorithmic
+% procedcures for manipulating DOL librares, and tools implement
+% these in software.
+%
+% Below the top-level classes, the class structure is as shown
+% in Figs.~\ref{fig:linguistic-entity}--\ref{fig:tool}.
+%
+% %\includegraphics[width=0.8\textwidth]{illustrations/linguistic-entity2.png}
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=1\textwidth]{illustrations/linguistic-entity.png}
+%   \caption{DOL term ontology: linguistic entities}
+%   \label{fig:linguistic-entity}
+% \end{figure}
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=1\textwidth]{illustrations/mathematical-entity.png}
+%   \caption{DOL term ontology: mathematical entities}
+%   \label{fig:mathematical-entity}
+% \end{figure}
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/semantic-entity.png}
+%   \caption{DOL term ontology: semantic entities}
+%   \label{fig:semantic-entity}
+% \end{figure}
+%
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/web-entity.png}
+%   \caption{DOL term ontology: web entities}
+%   \label{fig:web-entity}
+% \end{figure}
+%
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/process.png}
+%   \caption{DOL term ontology: processes}
+%   \label{fig:process}
+% \end{figure}
+%
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/tool.png}
+%   \caption{DOL term ontology: tools}
+%   \label{fig:tool}
+% \end{figure}
+%
+%
+%
+%
+% The top level object properties are structured in a way similar
+% to that of the top-level classes, see Fig.~\ref{fig:dol-onto-properties}.
+% \medskip
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/dol-onto-properties.png}
+%   \caption{DOL term ontology: properties}
+%   \label{fig:dol-onto-properties}
+% \end{figure}
+%
+%
 
 
 
