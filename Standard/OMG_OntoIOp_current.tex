@@ -35,7 +35,7 @@
 % ]{scrreprt}
 
 
- \documentclass[10pt,fleqn,final]{scrreprt}
+\documentclass[10pt,fleqn,final]{scrreprt}
 % \documentclass[10pt,fleqn,draft]{scrreprt}
 \textwidth 17.5cm
 \hoffset -2cm
@@ -415,7 +415,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\ELDL}{\ensuremath{\mathcal{EL}}\xspace}
 \newcommand*{\DOL}{\ensuremath{\mathsf{DOL}}\xspace}
 \newcommand*{\PL}{\ensuremath{\mathit{PL}}\xspace}
-\newcommand{\CLminus}{\CL$^-$} 
+\newcommand{\CLminus}{\ensuremath{{\CL}^{-}}\xspace} 
 
 % translations
 \newcommand{\translate}[2]{\ensuremath{{#1}{\to}{#2}}\xspace}
@@ -1354,13 +1354,13 @@ of entities that the OMS language supports.
 
 An OMS language is conforming with \DOL if it satisfies the following conditions:
 \begin{enumerate}
-\item its abstract syntax is conformant. This means that a) it is specified as an SMOF compliant meta model
+\item \textbf{abstract syntax conformance:} its abstract syntax is conformant. This means that a) it is specified as an SMOF compliant meta model
 or as an EBNF grammar. Moreover, b) an SMOF metaclass or an EBNF non-terminal has to be declared to be a subclass of \syntax{NativeDocument}, and optionally
 another metaclass or non-terminal may be declared to be a subclass of \syntax{BasicOMS}  (see clause~\ref{s:mof-metaclasses});
-\item it has at least one serialization in the sense of section~\ref{c:conform:serialization};
+\item  \textbf{serialization conformance:} it has at least one serialization in the sense of section~\ref{c:conform:serialization};
 %\item complete round-trip mappings from the human-readable serialization
 %to the abstract syntax and vice versa;
-\item either there exists a translation of it into a conforming
+\item  \textbf{semantic conformance:} either there exists a translation of it into a conforming
   language\footnote{For  example, consider the translation of OBO1.4
     to OWL, giving a formal semantics to OBO1.4.}, or:
 \begin{enumerate}
@@ -1484,10 +1484,9 @@ serialization are distinguished. They differ with respect to their means of conv
 
 
 \begin{description}
-\item[XMI conformance]
-An XMI serialization  for OMS written in the OMS language \ has been automatically derived from the SMOF specification
-of the abstract syntax, using the canonical MOF 2 XMI Mapping.
-%\ednote{Christoph to all: I'm not sure how MOF and XMI works, i.e. how to inject identifiers into comments there. TM: XMI is an XML-based format.}
+\item[XMI conformance] An XMI serialization for OMS written in the OMS
+  language has been automatically derived from the SMOF specification
+  of the abstract syntax, using the canonical MOF 2 XMI Mapping.
 \item[XML conformance]
 The given serialization has to be specified as an XML schema that satisfies
  all of the following conditions:
@@ -5766,17 +5765,17 @@ satisfaction of a sentence in a model in an abstract way.
 %For the semantics of minimization, we assume a pre-order on models.
 
 \begin{definition}\label{def:room}
-A triple $\cR=(Sen,{\cM,\models)}$  is called a  \defsty{satisfaction system}, or \defsty{room}, if $\cR$  consists of
+A triple $\cR=(\mathit{Sen},{\cM,\models)}$  is called a \defsty{satisfaction system}, or \defsty{room}, if $\cR$ consists of
 \begin{itemize}
-\item a set $Sen$ of \defsty{sentences},
+\item a set $\mathit{Sen}$ of \defsty{sentences},
 \item a class
 %\footnote{If we want to take model morphisms into account, 
 %a \emph{category} of models needs to be given here. However, this is important only
 %for the \syntax{\%mono} annotation.}
 $\cM$ of \defsty{models}, and
 \item a binary relation
-${\models}\subseteq \cM \times Sen$, called the \defsty{satisfaction relation}.
-\end{itemize}\qed
+${\models} \subseteq \cM \times \mathit{Sen}$, called the \defsty{satisfaction relation}.\quad\qed
+\end{itemize}
 \end{definition}
 
 \eat{
@@ -5833,10 +5832,12 @@ each $\Sigma\in |\Sig|$,
 %
 such that for each $\sigma\map{\Sigma}{\Sigma'}$ in $\Sig$ the following \defsty{satisfaction 
 condition} holds:
-$$
-(\star) \qquad M'\models_{\Sigma'}\sigma(\varphi) \mbox{ iff }
+%
+\begin{equation}
+\tag{$\star$} \qquad M'\models_{\Sigma'}\sigma(\varphi) \iff
 M'\forget{\sigma} \models_{\Sigma} \varphi
-$$
+\end{equation}
+%
 for each $M'\in |\IMod(\Sigma')|$ and $\varphi\in \sen(\Sigma)$,
 expressing that truth is invariant under change of notation and
 context.  \qed
@@ -5850,9 +5851,8 @@ $\Sigma_2$-model $M_2$ along a signature morphism $\sigma:{\Sigma_1}\to{\Sigma_2
 the $\Sigma_1$-model given by the composition of $\sigma$ with $M_2$. $\Sigma$-sentences are built from the
 propositional symbols with the usual connectives, and sentence translation is replacing the propositional
 symbols in $\Sigma$ along the morphism. Finally, the satisfaction relation is defined by the standard truth-tables
-semantics. It is straightforward to see that the satisfaction condition holds.
-\qed\end{definition}
-
+semantics. It is straightforward to see that the satisfaction condition holds.\quad\qed
+\end{definition}
 
 \begin{definition}[Common Logic --- \Clogic]\label{sem:CommonLogic}
 A common logic signature
@@ -5894,8 +5894,8 @@ being a discourse name is preserved and reflected.\footnote{That  is, a name is 
 name if and only if its image under the signature morphism is.}
   Model reducts leave $\UR$, $\UD$, 
 $\rel$ and $\fun$ untouched, while $\intCL$ and $\seq$ are composed with the appropriate
-signature morphism component.
-\qed\end{definition}
+signature morphism component.\quad\qed
+\end{definition}
 %
 
 Further examples of institutions are: $\mathcal{SROIQ}(D)$, unsorted first-order logic, 
@@ -5907,7 +5907,6 @@ For the rest of the section, an arbitrary institution is considered.
 \begin{definition}[Theory]
 A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
 \end{definition}
-
 
 Given a theory $T=(\Sigma, \Delta)$, the class of $T$-models is the class of all
 $\Sigma$-models $M$ such that $M\models \delta$, for each sentence $\delta \in \Delta$.
@@ -5929,11 +5928,15 @@ Institution comorphisms capture the intuition of encoding or embedding a logic i
 two natural transformations $\beta: \Mod^J \circ \Phi^{op} \Longrightarrow \Mod^I$
 and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
 for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^I(\Sigma)$ and each model $M'\in|\Mod^J(\Phi(\Sigma))|$
-$$ M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi) \Leftrightarrow
-\beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
-$$
-holds, called the \defsty{satisfaction condition}.
-\qed\end{definition}
+%
+\begin{equation*}
+  M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi)
+\iff
+  \beta_{\Sigma}(M')\models^I_{\Sigma}\varphi.
+\end{equation*}
+%
+holds, called the \defsty{satisfaction condition}.\quad\qed
+\end{definition}
 
 \noindent
 Here, $\Phi(\Sigma)$ is the translation of the signature $\Sigma$ from
@@ -5944,22 +5947,26 @@ $\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
 $\Sigma$-model. Naturality of $\alpha$ and $\beta$ means that for each
 signature morphism $\sigma:\Sigma_1\rightarrow\Sigma_2$ in $I$ the following 
 squares commute:
-
-$$
+%
+\begin{equation*}
 \xymatrix{
 \Sen^I(\Sigma_1) \ar[d]_{\Sen^I(\sigma)} \ar[r]^{\alpha_{\Sigma_1}}& \Sen^J(\Phi(\Sigma_1)) \ar[d]^{\Sen^J(\Phi(\sigma))} 
 & \Mod^J(\Phi(\Sigma_2)) \ar[r]^{\beta_{\Sigma_2}}  \ar[d]^{\Mod^J(\Phi(\sigma))}&\Mod^I(\Sigma_2) \ar[d]^{\Mod^I(\sigma)}\\ 
 \Sen^I(\Sigma_2) \ar[r]_{\alpha_{\Sigma_2}}& \Sen^J(\Phi(\Sigma_2)) 
 & \Mod^J(\Phi(\Sigma_1)) \ar[r]_{\beta_{\Sigma_1}} & \Mod^I(\Sigma_1)
 }
-$$
+\end{equation*}
 
 A comorphism is:
 \begin{itemize}
-
   \item \emph{faithful} if logical consequence is preserved and reflected along the
 comorphism:
-$$\Gamma\models^I\varphi\mbox{\ iff\ }\alpha(\Gamma)\models^J\alpha(\varphi)$$
+%
+\begin{equation*}
+  \Gamma\models^I\varphi
+\iff
+  \alpha(\Gamma)\models^J\alpha(\varphi)
+\end{equation*}
 
  \item \emph{model-expansive} if each $\beta_\Sigma$ is
 surjective;
@@ -5968,12 +5975,14 @@ surjective;
 if
 for each signature morphism $\sigma\map{\Sigma_1}{\Sigma_2}$,
 the naturality diagram
-$$
+%
+\begin{equation*}
 \xymatrix{
  \Mod^J(\Phi(\Sigma_2)) \ar[r]^{\beta_{\Sigma_2}}  \ar[d]^{\Mod^J(\Phi(\sigma))}&\Mod^I(\Sigma_2) \ar[d]^{\Mod^I(\sigma)}\\ 
  \Mod^J(\Phi(\Sigma_1)) \ar[r]_{\beta_{\Sigma_1}} & \Mod^I(\Sigma_1)
 }
-$$
+\end{equation*}
+%
 admits (weak) amalgamation, i.e.\
 any for any two models $M_2\in|\Mod^I(\Sigma_2)|$
 and $M'_1\in|\Mod^J(\Phi(\Sigma_1))|$
@@ -6034,11 +6043,14 @@ an institution $J = (\Sig^J, \Mod^J,
 \Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and two
 natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi^{op}$
 and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^J(\Phi(\Sigma))$ and each model $M\in\Mod^I(\Sigma)$
-$$ M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi) \Leftrightarrow
-\beta_{\Sigma}(M)\models^J_{\Phi(\Sigma)}\varphi.
-$$
-holds, called the \defsty{satisfaction condition}.
-\qed\end{definition}
+%
+\begin{equation*}
+  M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi)
+\iff
+  \beta_{\Sigma}(M)\models^J_{\Phi(\Sigma)}\varphi.
+\end{equation*}
+holds, called the \defsty{satisfaction condition}.\quad\qed
+\end{definition}
 
 Colimits are a categorical concept providing means of
 combining objects interconnected by morphisms, where the colimit
@@ -6131,23 +6143,26 @@ finite products and coproducts, called intersection (denoted $\cap$) and union
 \noindent
 A category \emph{has pushouts which preserve inclusions} iff 
 there exists a pushout
-$$
+%
+\begin{equation*}
 \xymatrix{
   A  \ar[d] \ar@{^{(}->}[r]& A' \ar[d]\\
   B \ar@{^{(}->}[r] & B'
 }
-$$ for each span where one arrow is an inclusion.
+\end{equation*}
+%
+for each span where one arrow is an inclusion.
 
 A functor between two inclusive categories is inclusive if it takes inclusions in the source category to inclusions in the target category.
 
 \begin{definition}
- An institution is \emph{weakly inclusive} if
-   \begin{itemize}
-     \item $\Sig$ is inclusive and has pushouts which preserve inclusions,
-     \item $\Sen$ is inclusive, and
-     \item each model category has a broad subcategory of inclusions.
-   \end{itemize}
-\qed\end{definition}
+An institution is \emph{weakly inclusive} if
+\begin{itemize}
+  \item $\Sig$ is inclusive and has pushouts which preserve inclusions,
+  \item $\Sen$ is inclusive, and
+  \item each model category has a broad subcategory of inclusions.\quad\qed
+\end{itemize}
+\end{definition}
 
 Let $I$ be a weakly inclusive institution.  $I$  \emph{has differences}, if there is a binary operation $\setminus$ on signatures, 
 such that for each pair of signatures 
@@ -6164,13 +6179,15 @@ and $\Sigma\subseteq\Sigma'$ is an inclusion of signatures, we write
 $M'\forget{\Sigma}$ for the reduct of a $\Sigma'$-model $M'$ along the inclusion
 $\iota_{\Sigma\subseteq\Sigma'}$.
 
-To be able to talk about the symbols of a signature in a formal way, it is required that the category of signatures of an institution is 
-an inclusive category with symbols, as defined below:
+To be able to talk about the symbols of a signature in a formal way, it
+is required that the category of signatures of an institution is an
+inclusive category with symbols, as defined below:
+
 \begin{definition}
 An \emph{inclusive category with symbols} is an inclusive category
 $\C$ equipped with a faithful functor $|\_|:\C\to\Set$\footnote{That is,
 $(\C,|\_|)$ is a concrete category.} that preserves
-inclusions.
+inclusions.\quad\qed
 \end{definition}
 
 Moreover, if $\sigma:\Sigma\to\Sigma'$ is a signature morphism,
@@ -6186,8 +6203,10 @@ $L$ is an institution and $\rho_1$ and
 $\rho_2$ are institution comorphisms, giving the embedding of $L_1$ and
 respectively $L_2$ in $L$. Finally, some of the comorphisms are marked as default translations and some of the morphisms as default projections, with the condition that between any two institutions at most one comorphism and at most one morphism is marked as default.
 
-For each institution $\cI$ in the heterogeneous logical environment, it is further required that there is:
-
+For each institution $\cI$
+in the heterogeneous logical environment, it is further required that
+there is:
+%
 \begin{itemize}
   \item  a function giving the semantics of a basic OMS. It has the format
 $$\mathit{semBasic}_{(lang,logic,ser)}(\Sigma,O) = (\Sigma',\Delta')$$
@@ -7494,7 +7513,8 @@ $f.\syntax{removalKind} = keep$,
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
 (keep, \cI',\Sigma', \Delta')$$
 \noindent
-where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) = 
+(\cI', \Sigma',\cM',\Delta')$.
 %and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
 %includes $(\Sigma'',\Delta'')$. \ednote{TODO: update}
 
@@ -7502,11 +7522,30 @@ If $f$ is a \syntax{Filtering} such that
 $f.\syntax{removalKind} = remove$,
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
 (remove,\cI',\Sigma', \Delta')$$
-where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) = 
+(\cI', \Sigma',\cM', \Delta')$.
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
 %%%%%%%%%%%%%%%%%%%%%
+
+\semdom{
+\begin{array}{ll}
+ sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{BasicOMSOrSymbolList})& = 
+     (\cI',\Sigma',\cM',\Delta')\\
+ & : (Institution,Signature,Sentences)
+\end{array}
+}
+
+If $O$ is a \syntax{BasicOMS}, we have defined
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta), O) = (Gamma,(\cI',\Sigma',\cM',\Delta'))$
+and the semantics of $O$ as a \syntax{BasicOMSOrSymbolList} is 
+$(\cI',\Sigma',\cM',\Delta')$.
+
+If $s$ is a set of symbols,
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta), s) = (\cI, sem(\Gamma,\Sigma,s), \emptyset,\emptyset)$.
+
+%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of extension}
 
@@ -8849,7 +8888,7 @@ $i$ rdf:object $o$ .
 and thus introduces a resource $i$ to represent that the ontology $s$ imports the ontology $o$, these three triples are removed from $G$.
 From an ontology serialized in this super-language of the serialization of OWL in RDF, one can obtain semantically equivalent ontologies (with regard to the semantics of OWL) by stripping all triples whose predicate is \textit{rdf:subject}, \textit{rdf:predicate} or \textit{rdf:object}, or by adding triples that declare these three properties to be \emph{annotation properties}.
 
-\section{Conformance of the \SROIQ Logic With \DOL}\label{a:owl-logic}
+\section{Semantic Conformance of OWL 2 With \DOL}\label{a:owl-logic}
 
  The logic \SROIQ underlying 
 OWL can be formalized as an institution as follows:
@@ -9181,11 +9220,13 @@ multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{Sentence} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Text and Semantic Conformance of Common Logic With \DOL}
+\section{Serialization Conformance of Common Logic With \DOL}
 
 The semantic conformance of Common Logic (as specified in \nisref{ISO/IEC 24707:2007}) with \DOL is established in \cite{OntoGraph}.
 
 The XCF dialect of Common Logic has a serialization that satisfies the criteria for XML conformance.  The CLIF dialect of Common Logic has a serialization that satisfies the criteria for text conformance.
+
+\section{Semantic Conformance of Common Logic With \DOL}
 
 Common Logic can be defined as an institution as follows:
 
@@ -9200,7 +9241,7 @@ name in the smaller signature if and only if it is one in the larger signature. 
 the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
 the universe of discourse, and four mappings:
   \begin{itemize}
-   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{<x_1,\ldots,x_n> \mid
+   \item $\rel$ from $\UR$ to subsets of $\UD^* = \{ \langle x_1,\ldots,x_n\rangle \mid
 x_1,\ldots,x_n \in \UD\}$ (i.e., the set of finite sequences of
 elements of $\UD$);
    \item $\fun$ from $\UR$ to total functions from $\UD^*$ into $\UD$;
@@ -9240,11 +9281,11 @@ $h:I_1\to I_2$ is a function $h:\UR_1\to\UR_2$ such that
 \item for each name $n$ in $\Sigma$, $\intCL_2(n)=h(\intCL_1(n))$,
 \item for each sequence marker $n$ in $\Sigma$, $\seq_2(n)=k^*(\seq_1(n))$.
 \end{itemize}
-
+%
 %For details, see \cite{CommonLogic:oldfashioned}.
-  \CLminus is the restriction of \CL to sentence
-without sequence markers.
-\qed\end{definition}
+\CLminus is the restriction of \CL to sentence
+without sequence markers.\qed
+\end{definition}
 
 Note that Common Logic also includes sentence formation constructs like
 \texttt{cl:import}s that in \DOL terms belong to the structuring
@@ -9262,19 +9303,22 @@ multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{Triple} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
 
+\section{Serialization Conformance of RDF and RDF Schema  With \DOL}
+
+The way of representing RDF Schema ontologies as RDF graphs satisfies
+the criteria for RDF conformance.
+
 \section{Semantic Conformance of RDF and RDF Schema  With \DOL}
 
-The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR REC-rdf-schema:2014}) with \DOL is established in \cite{OntoGraph}.
-
-The way of representing RDF Schema ontologies as RDF graphs satisfies the criteria for RDF conformance.
-
+The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR
+  REC-rdf-schema:2014}) with \DOL is established in \cite{OntoGraph}.
 
 \begin{definition}[\RDF and RDF Schema]
-  
-The institutions for the Resource Description
-Framework (\RDF) and \RDF Schema (also known as \RDFS), respectively, are defined following \cite{Lucanu}. Both \RDF and \RDFS 
- are based on a logic called \emph{bare} \RDF (\SimpleRDF), which consists
-of triples only (without any predefined resources).
+The institutions for the Resource Description Framework (\RDF) and \RDF
+Sche\-ma (also known as \RDFS), respectively, are defined in the
+following~\cite{Lucanu}. Both \RDF and \RDFS are based on a logic called
+\emph{bare} \RDF (\SimpleRDF), which consists of triples only (without
+any predefined resources).
 
 %%%%%%%%%%
 A \textit{signature} $\mathbf{R_s}$ in \SimpleRDF is a set of
@@ -9298,23 +9342,29 @@ standard vocabulary both as part of each signature and in the models.\ednote{Ref
 
 Actually, the standard vocabulary is given by a certain theory. In case
 of \RDF, it contains e.g.\ resources \texttt{rdf:type} and
-\texttt{rdf:Property} and \texttt{rdf:subject}, and sentences like, e.g.\
-$$(\texttt{rdf:type},\texttt{rdf:type},\texttt{rdf:Property}),$$ and 
-$$(\texttt{rdf:subject}, \texttt{rdf:type},\texttt{rdf:Property}).$$
+\texttt{rdf:Property} and \texttt{rdf:subject}, and sentences like, e.g.
+%
+\begin{gather*}
+  (\texttt{rdf:type},\texttt{rdf:type},\texttt{rdf:Property})
+\ \text{, and}\\
+  (\texttt{rdf:subject}, \texttt{rdf:type},\texttt{rdf:Property})
+\ \text{.}
+\end{gather*}
 
 In the models, the standard vocabulary is interpreted with a fixed
-model.  Moreover, for each $\RDF$-model $M = \langle R_m, P_m, S_m,
-EXT_m \rangle$, if $p\in P_m$, then it must hold
-$(p,S_m(\texttt{rdf:Property}))\in EXT_m(\texttt{rdf:type})$.
-For \RDFS, similar conditions are formulated (here, for example also
-the subclass relation is fixed).
-
+model.  Moreover, for each $\RDF$-model
+$M = \langle R_m, P_m, S_m,\allowbreak \mathit{EXT}_m\rangle$,
+if $p\in P_m$,
+then it must hold
+$(p, S_m(\texttt{rdf:Property})) \in \mathit{EXT}_m(\texttt{rdf:type})$.
+For \RDFS, similar conditions are formulated (here, for example also the
+subclass relation is fixed).
 
 In the case of \RDFS, the standard vocabulary contains more elements,
-like
-\texttt{rdfs:domain},
-\texttt{rdfs:range}, \texttt{rdfs:Resource}, \texttt{rdfs:Literal}, \texttt{rdfs:Datatype}, \texttt{rdfs:Class},
-\texttt{rdfs:subClassOf}, \texttt{rdfs:subPropertyOf}, \texttt{rdfs:member}, \texttt{rdfs:Container},
+like \texttt{rdfs:domain}, \texttt{rdfs:range}, \texttt{rdfs:Resource},
+\texttt{rdfs:Literal}, \texttt{rdfs:Datatype}, \texttt{rdfs:Class},
+\texttt{rdfs:subClassOf}, \texttt{rdfs:subPropertyOf},
+\texttt{rdfs:member}, \texttt{rdfs:} \texttt{Container},
 \texttt{rdfs:ContainerMembershipProperty}.
 
 There is also \OWL Full, an extension of \RDFS with resources
@@ -9325,15 +9375,13 @@ such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the represen
 
 \infannex{Conformance of UML class and object diagrams with \DOL}\label{a:uml-class}
 
-This informative annex demonstrates conformance of a subset of UML class and
-object diagrams with \DOL by defining an institution for both.  The subset is restricted to the
- static aspects of class diagrams; that is, change
-of state is ignored. This means that all operations are query
-operations.
+\noindent%
+This informative annex demonstrates conformance of a subset of UML
+class and object diagrams with \DOL by defining an institution for
+both.  The subset is restricted to the static aspects of class
+diagrams; that is, change of state is ignored. This means that all
+operations are query operations.
 
-The institution of UML class and object diagrams is defined using a
-translation of UML class diagrams to Common Logic, following the fUML
-specification and \cite{Seidewitz08}.
 
 \section{Abstract Syntax Conformance of UML With \DOL}
 
@@ -9342,7 +9390,18 @@ multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{OWL PackageableElement} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Semantic Conformance: Preliminaries}
+\section{Serialization Conformance of UML With \DOL}
+
+The XMI serialization, derived from the MOF metamodel, is widely used
+fpr UML. Hence, UML is serialization conformant with \DOL.
+
+\section{Semantic Conformance of UML With \DOL}
+
+The institution of UML class and object diagrams is defined using a
+translation of UML class diagrams to Common Logic, following the fUML
+specification and \cite{Seidewitz08}.
+
+\subsection{Preliminaries}
 
  The axioms for primitive types
 are imported from the fUML specification, section 10.3.1:
@@ -9353,13 +9412,14 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 \texttt{form:Sequence}, \texttt{form:Character}, and
 \texttt{buml:String}.
 
-
-The following infrastructure, consisting off a number of predicates axiomatized in Common Logic,
-provides a foundation for an institution for UML class diagrams described in the later sections of
-this Annex. 
-
-
-\begin{lstlisting}[language=clif,morekeywords={then,with,logic,oms,end},mathescape]
+The following infrastructure, consisting off a number of predicates
+axiomatized in Common Logic, provides a foundation for an institution
+for UML class diagrams described in the later sections of this Annex.
+%
+\begin{lstlisting}[language=clif, basicstyle={\ttfamily\fontsize{8pt}{9pt}\selectfont},
+                   morekeywords={then, with, logic, oms, end},
+                   morecomment={[l]{//}},
+                   mathescape]
 logic CLIF
 
 oms pairs =
@@ -9371,21 +9431,21 @@ oms pairs =
 end
 
 oms sequences =
-fuml:sequences.clif and pairs
+  fuml:sequences.clif and pairs
 then
-  // fuml:sequence - membership of an element in a sequence
+  // Membership of an element in a sequence
   (forall (x s)
-      (if (form:sequence-member x s)
-          (form:Sequence s)))
-
+          (if (form:sequence-member x s)
+              (form:Sequence s)))
   (forall (x s)
-      (iff (form:sequence-member x s)
-           (exists (pt) 
-               (and (form:in-sequence s pt)
-                    (form:in-position pt x)) )))
+          (iff (form:sequence-member x s)
+               (exists (p) 
+                       (and (form:in-sequence s p)
+                            (form:in-position p x)))))
 
-  // selection of elements
-  (forall (o) (= (form:select1 o form:empty-sequence) form:empty-sequence))
+  // Selection of elements
+  (forall (o)
+          (= (form:select1 o form:empty-sequence) form:empty-sequence))
   (forall (o y s)
           (= (form:select1 o (form:sequence-insert (form:pair o y) s)) 
              (form:sequence-insert y (form:select1 o s))))
@@ -9393,7 +9453,8 @@ then
           (if (not (= x o))
               (= (form:select1 o (form:sequence-insert (form:pair x y) s)) 
                  (form:select1 o s))))
-  (forall (o) (= (form:select2 o form:empty-sequence) form:empty-sequence))
+  (forall (o)
+          (= (form:select2 o form:empty-sequence) form:empty-sequence))
   (forall (o x s)
           (= (form:select2 o (form:sequence-insert (form:pair x o) s)) 
              (form:sequence-insert x (form:select2 o s))))
@@ -9401,7 +9462,6 @@ then
           (if (not (= y o))
               (= (form:select2 o (form:sequence-insert (form:pair x y) s)) 
                  (form:select2 o s))))
-
   (forall (i s)
           (= (form:n-select form:empty-sequence i s) 
              form:empty-sequence))
@@ -9414,7 +9474,7 @@ then
               (= (form:n-select (form:sequence-insert s a) i t)
                  (form:n-select a i t))))
 
-  // insert element at i-th position
+  // Insert element at i-th position
   (forall (x s)
           (= (insert-i form:0 x s) (form:sequence-insert x s)))
   (forall (i j x y s)
@@ -9424,26 +9484,26 @@ then
 end
 
 oms sequences-insert =
-sequences then
-  // insertion of elements
+  sequences
+then
+  // Insertion of elements
   (forall (x s1 s2)
-    // inserting an element means...
-    (if (= (form:sequence-insert x s1) s2)
-        (and (form:Sequence s1)
-             (form:Sequence s2)
-             // the new element is at the first position
-             (form:in-position-count s2 form:1 x)
-             // and all other elements are shifted by one
-             (forall (n1 n2 y)
-               (if (form:add-one n1 n2)
-                   (iff (form:in-position-count s1 n1 y)
-                        (form:in-position-count s2 n2 y)))))))
-  // synonym
- (forall (s) (= (form:sequence-length s) (form:sequence-size s)))
+          (if (= (form:sequence-insert x s1) s2)
+              (and (form:Sequence s1) (form:Sequence s2)
+                   // The new element is at the first position ...
+                   (form:in-position-count s2 form:1 x)
+                   // .. and all other elements are shifted by one
+                   (forall (n1 n2 y)
+                           (if (form:add-one n1 n2)
+                               (iff (form:in-position-count s1 n1 y)
+                                    (form:in-position-count s2 n2 y)))))))
+  // Synonym
+  (forall (s) (= (form:sequence-length s) (form:sequence-size s)))
 end
 
 oms ordered-sets =
-sequences with
+  sequences
+with
   form:Sequence |-> form:Ordered-Set,
   form:empty-sequence |-> form:empty-ordered-set,
   form:sequence-length |-> form:ordered-set-size,
@@ -9454,209 +9514,205 @@ sequences with
   form:position-count |-> form:ordered-set-position-count,
   form:in-position-count |-> form:in-ordered-set-position-count
 then
-  //Different positions contain different elements
+  // Different positions contain different elements
   (forall (s x1 x2 n1 n2)
-  	    (if (and (form:in-ordered-set-position-count s n1 x1)
-  	  	     (form:in-ordered-set-position-count s n2 x2)
-                     (= x1 x2))
-                (= n1 n2)))
-  // insertion of elements
+          (if (and (form:in-ordered-set-position-count s n1 x1)
+                   (form:in-ordered-set-position-count s n2 x2)
+                   (= x1 x2))
+              (= n1 n2)))
+  // Insertion of elements
   (forall (x s1 s2)
-    (if (= (form:ordered-set-insert x s1) s2)
-        (and (form:Ordererd-Set s1)
-             (form:Ordererd-Set s2)
-  // no element can be inserted twice
-  (forall (x s)
-    (if (from:ordered-set-member x s)
-        (= (form:ordered-set-insert x s) s)))
-  // inserting a new element
-  (forall (x s)
-    (if (not (from:ordered-set-member x s1))
-        (exists (s2)
-          (and (= (form:ordered-set-insert x s1) s2)     
-               // the new element is at the first position
-               (form:in-ordered-set-position-count s2 form:1 x)
-               // and all other elements are shifted by one
-               (forall (n1 n2 y)
-                 (if (form:add-one n1 n2)
-                     (iff (form:in-ordered-set-position-count s1 n1 y)
-                          (form:in-ordered-set-position-count s2 n2 y)))))))
+          (if (= (form:ordered-set-insert x s1) s2)
+                 (and (form:Ordererd-Set s1)
+                      (form:Ordererd-Set s2))))
+  (forall (x s1 s2)
+          (iff (= (form:ordered-set-insert x s1) s2)
+               (and // No element can be inserted twice
+                    (if (from:ordered-set-member x s1)
+                        (form:same-ordered-set s1 s2))
+                    // Inserting a new element
+                    (if (not (from:ordered-set-member x s1))
+                        (and // The new element is at the first position ...
+                             (form:in-ordered-set-position-count s2 form:1 x)
+                             // ... and all other elements are shifted by one
+                             (forall (n1 n2 y)
+                                     (if (form:add-one n1 n2)
+                                         (iff (form:in-ordered-set-position-count s1 n1 y)
+                                              (form:in-ordered-set-position-count s2 n2 y)))))))))
 end
 
 oms sets =
-//An empty set has no members.
-(forall (s)
-	(if (form:empty-set s)
-	    (form:Set s)))
-(forall (s)
-	(if (form:Set s)
-	    (iff (form:empty-set s)
-		 (not (exists (x)
-			      (form:set-member x s))))))
-//Size of sets
-(forall (s n)
-	(if (form:set-size s n)
-	    (and (form:Set s)
-		 (buml:UnlimitedNatural n))))
-(= (form:set-size form:empty-set) form:0)
-(forall (x s)
-        (if (not (form:set-member x s))
-            (exists (n)
-              (and (form:add-one (form:set-size s) n)
-                   (= (form:set-size (form:set-insert x s))
-                      n)))))
+  // An empty set has no members.
+  (forall (s)
+          (if (form:empty-set s)
+              (form:Set s)))
+  (forall (s)
+          (if (form:Set s)
+              (iff (form:empty-set s)
+                   (not (exists (x)
+                                (form:set-member x s))))))
+  // Size of sets
+  (forall (s n)
+          (if (form:set-size s n)
+              (and (form:Set s)
+                   (buml:UnlimitedNatural n))))
+  (= (form:set-size form:empty-set) form:0)
+  (forall (x s)
+          (if (not (form:set-member x s))
+              (exists (n)
+                      (and (form:add-one (form:set-size s) n)
+                           (= (form:set-size (form:set-insert x s)) n)))))
 
-//The same-set relation is true for sets that have the same members.
-(forall (s1 s2)
-	(if (form:same-set s1 s2)
-	    (and (form:Set s1)
-		 (form:Set s2))))
-(forall (s1 s2)
-	(iff (form:same-set s1 s2)
-	     (forall (x)
-		     (iff (form:set-member x s1)
-			  (form:set-member x s2)))))
-//Insertion of elements into sets and set membership
-(forall (x s)
-	(if (form:Set s)
-	    (form:Set (form:set-insert x s))))
-(forall (x y s)
-        (iff (form:set-member x (form:set-insert y s))
-             (or (= x y)
-                 (form:set-member x s))))
+  // The same-set relation is true for sets that have the same members.
+  (forall (s1 s2)
+          (if (form:same-set s1 s2)
+              (and (form:Set s1)
+                   (form:Set s2))))
+  (forall (s1 s2)
+          (iff (form:same-set s1 s2)
+               (forall (x)
+                       (iff (form:set-member x s1)
+                            (form:set-member x s2)))))
+  // Insertion of elements into sets and set membership
+  (forall (x s)
+          (if (form:Set s)
+              (form:Set (form:set-insert x s))))
+  (forall (x y s)
+          (iff (form:set-member x (form:set-insert y s))
+               (or (= x y)
+                   (form:set-member x s))))
 end
 
 oms bags =
-//An empty bag has no members.
-(forall (s)
-	(if (form:empty-bag s)
-	    (form:Bag s)))
-(forall (s)
-	(if (form:Bag s)
-	    (iff (form:empty-bag s)
-		 (not (exists (x)
-			      (form:bag-member x s))))))
-//Size of bags
-(forall (s n)
-	(if (form:bag-size s n)
-	    (and (form:Bag s)
-		 (buml:UnlimitedNatural n))))
-(= (form:bag-size form:empty-bag) form:0)
-(forall (x s)
-        (exists (n)
-            (and (form:add-one (form:bag-size s) n)
-                 (= (form:bag-size (form:bag-insert x s))
-                    n))))
+  // An empty bag has no members.
+  (forall (s)
+          (if (form:empty-bag s)
+              (form:Bag s)))
+  (forall (s)
+          (if (form:Bag s)
+              (iff (form:empty-bag s)
+                   (not (exists (x)
+                        (form:bag-member x s))))))
+  // Size of bags
+  (forall (s n)
+          (if (form:bag-size s n)
+              (and (form:Bag s)
+                   (buml:UnlimitedNatural n))))
+  (= (form:bag-size form:empty-bag) form:0)
+  (forall (x s)
+          (exists (n)
+                  (and (form:add-one (form:bag-size s) n)
+                       (= (form:bag-size (form:bag-insert x s)) n))))
 
-//The same-bag relation is true for bags that have the same members.
-(forall (s1 s2)
-	(if (form:same-bag s1 s2)
-	    (and (form:Bag s1)
-		 (form:Bag s2))))
-(forall (s1 s2)
-	(iff (form:same-bag s1 s2)
-	     (forall (x)
-		     (iff (form:bag-member-count x s1)
-			  (form:bag-member-count x s2)))))
-//Insertion of elements into bags and bag membership
-(forall (x s)
-	(if (form:Bag s)
-	    (form:Bag (form:bag-insert x s))))
-(forall (x y s)
-        (iff (form:bag-member x (form:bag-insert y s))
-             (or (= x y)
-                 (form:bag-member x s))))
-//Member count
-(forall (x s)
-	(if (form:Bag s)
-	    (buml:UnlimitedNatural (form:bag-member-count x s))))
-(= (form:bag-member-count form:empty-bag) form:0)
-(forall (x s)
-        (exists (n)
-           (and (form:add-one (form:bag-member-count x s) n)
-                (= (form:bag-member-count x (form:bag-insert x s))
-                   n))))
-(forall (x y s)
-        (if (not (= x y))
-            (= (form:bag-member-count x (form:bag-insert y s))
-               (form:bag-member-count x s))))
+  // The same-bag relation is true for bags that have the same members.
+  (forall (s1 s2)
+          (if (form:same-bag s1 s2)
+              (and (form:Bag s1)
+                   (form:Bag s2))))
+  (forall (s1 s2)
+          (iff (form:same-bag s1 s2)
+               (forall (x)
+                       (iff (form:bag-member-count x s1)
+                            (form:bag-member-count x s2)))))
+  // Insertion of elements into bags and bag membership
+  (forall (x s)
+          (if (form:Bag s)
+              (form:Bag (form:bag-insert x s))))
+  (forall (x y s)
+          (iff (form:bag-member x (form:bag-insert y s))
+               (or (= x y)
+                   (form:bag-member x s))))
+  // Member count
+  (forall (x s)
+          (if (form:Bag s)
+              (buml:UnlimitedNatural (form:bag-member-count x s))))
+  (= (form:bag-member-count form:empty-bag) form:0)
+  (forall (x s)
+          (exists (n)
+                  (and (form:add-one (form:bag-member-count x s) n)
+                       (= (form:bag-member-count x (form:bag-insert x s)) n))))
+  (forall (x y s)
+          (if (not (= x y))
+              (= (form:bag-member-count x (form:bag-insert y s))
+                 (form:bag-member-count x s))))
 end
 
 oms collection-types =
   sequences-insert and ordered-sets and sets and bags
 then
-//bag to set
-(forall (b)
-	(if (form:Bag s)
-	    (form:Set (form:bag2set b))))
-(= (form:bag2set form:empty-bag) form:empty-set)
-(forall (x b)
-        (if (form:Bag b)
-            (= (form:bag2set (form:set-insert x b))
-               (form:bag-insert x (form:bag2set b)))))
+  // Bag to set
+  (forall (b)
+          (if (form:Bag s)
+              (form:Set (form:bag2set b))))
+  (= (form:bag2set form:empty-bag) form:empty-set)
+  (forall (x b)
+          (if (form:Bag b)
+              (= (form:bag2set (form:set-insert x b))
+                 (form:bag-insert x (form:bag2set b)))))
 
-//sequence to ordered set
-(forall (s)
-	(if (form:Sequence s)
-	    (form:Ordered-Set (form:seq2ordset s))))
-(= (form:seq2ordset form:empty-sequence) form:empty-ordered-set)
-(forall (x s)
-        (if (form:Sequence s)
-            (= (form:seq2ordset (form:sequence-insert x s))
-               (form:ordered-set-insert x (form:seq2ordset s)))))
+  // Sequence to ordered set
+  (forall (s)
+          (if (form:Sequence s)
+              (form:Ordered-Set (form:seq2ordset s))))
+  (= (form:seq2ordset form:empty-sequence) form:empty-ordered-set)
+  (forall (x s)
+          (if (form:Sequence s)
+              (= (form:seq2ordset (form:sequence-insert x s))
+                 (form:ordered-set-insert x (form:seq2ordset s)))))
 
-//sequence to bag
-(forall (s)
-	(if (form:Sequence s)
-	    (form:Bag (form:seq2bag s))))
-(= (form:seq2bag form:empty-sequence) form:empty-bag)
-(forall (x s)
-        (if (form:Sequence s)
-            (= (form:seq2bag (form:sequence-insert x s))
-               (form:bag-insert x (form:seq2bag s)))))
+  // Sequence to bag
+  (forall (s)
+          (if (form:Sequence s)
+              (form:Bag (form:seq2bag s))))
+  (= (form:seq2bag form:empty-sequence) form:empty-bag)
+  (forall (x s)
+          (if (form:Sequence s)
+              (= (form:seq2bag (form:sequence-insert x s))
+                 (form:bag-insert x (form:seq2bag s)))))
 
-//ordered-set to set
-(forall (b)
-	(if (form:Ordered-Set s)
-	    (form:Set (form:ordset2set b))))
-(= (form:ordset2set form:empty-ordered-set) form:empty-set)
-(forall (x b)
-        (if (form:Ordered-Set b)
-            (= (form:ordset2set (form:set-insert x b))
-               (form:ordered-set-insert x (form:ordset2set b)))))
+  // Ordered-set to set
+  (forall (b)
+          (if (form:Ordered-Set s)
+              (form:Set (form:ordset2set b))))
+  (= (form:ordset2set form:empty-ordered-set) form:empty-set)
+  (forall (x b)
+          (if (form:Ordered-Set b)
+              (= (form:ordset2set (form:set-insert x b))
+                 (form:ordered-set-insert x (form:ordset2set b)))))
 
-//sequence to set
-(forall (s)
-	(if (form:Sequence s)
-	    (form:Set (form:seq2set s))))
-(forall (s) (= (form:seq2set s) (form:ordset2set (form:seq2ordset s))))
+  // Sequence to set
+  (forall (s)
+          (if (form:Sequence s)
+              (form:Set (form:seq2set s))))
+  (forall (s) (= (form:seq2set s) (form:ordset2set (form:seq2ordset s))))
 
-// leq
-(forall (x y)
-   (iff (buml:leq x y)
-        (or (= x y)
-            (buml:less-than x y))))
+  // leq
+  (forall (x y)
+          (iff (buml:leq x y)
+               (or (= x y)
+                   (buml:less-than x y))))
 end
-
 
 oms uml-cd-preliminaries =
   collection-types and pairs
 end
-
 \end{lstlisting}
 
 
-\section{Signatures}
+\subsection{Signatures}
 
-\medskip\noindent\textbf{Class/data type hierarchies.}  A
-\emph{class/data type hierarchy} $(C, {\leq_C})$ is given by a partial
-order where the set $C$ contains the \emph{class/data type names}, which
-are closed w.r.t.\ the \emph{built-in data types} $\mathsf{Boolean}$,
-$\mathsf{UnlimitedNatural}$, $\mathsf{Integer}$, $\mathsf{Real}$, and
-$\mathsf{String}$, i.e.,
+\textbf{Class/data type hierarchies.}  A \emph{class/data type
+  hierarchy} $(C, {\leq_C})$
+is given by a partial order where the set $C$
+contains the \emph{class/data type names}, which are closed w.r.t.\ the
+\emph{built-in data types} $\mathsf{Boolean}$,
+$\mathsf{UnlimitedNatural}$,
+$\mathsf{Integer}$,
+$\mathsf{Real}$,
+and $\mathsf{String}$,
+i.e.,
 $\{ \mathsf{Boolean}, \mathsf{UnlimitedNatural},\allowbreak
-\mathsf{Integer}, \mathsf{Real}, \mathsf{String} \} \subseteq
-C$;
+\mathsf{Integer}, \mathsf{Real}, \mathsf{String} \} \subseteq C$;
 %\ednote{what
 %  about enumeration types? Should we assume that some classifiers are
 %  marked as enumeration types and equipped with their set of constants?
@@ -9675,12 +9731,11 @@ $\gamma(c) = c$ for all
 $c \in \{ \mathsf{Boolean},\allowbreak \mathsf{UnlimitedNatural},\allowbreak
 \mathsf{Integer}, \mathsf{Real}, \mathsf{String} \}$.
 
-\medskip
- The \emph{collection type constructors} $\mathsf{OrderedSet}$,
+The \emph{collection type constructors} $\mathsf{OrderedSet}$,
 $\mathsf{Set}$, $\mathsf{Sequence}$, and $\mathsf{Bag}$ are used for
 representing the meta-attributes ``ordered'' and ``unique'' of
 \uml{MultiplicityElement} according to the following
-table:\footnote{UML 2.5, p.~34.}
+table:\footnote{\cite[p.~34]{uml-2.5}.}
 %
 \begin{quotation}
 \begin{tabular}{@{}r||c|c@{}}
@@ -9698,11 +9753,14 @@ The default is ``not ordered'' and
 
 For a class/data type $c \in C$ of a class/data type-hierarchy
 $(C, {\leq_C})$ and a collection type constructor
-$$\tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
-\mathsf{Bag} \},$$
- the expression $\tau[c]$ denotes the induced \emph{collection type}.
+%
+\begin{equation*}
+  \tau \in \{ \mathsf{OrderedSet}, \mathsf{Set}, \mathsf{Sequence},
+\mathsf{Bag} \},
+\end{equation*}
+%
+the expression $\tau[c]$ denotes the induced \emph{collection type}.
 
-\medskip
 Let $(C, {\leq_C})$ be a class/data type hierarchy.
 %
 \begin{itemize}[label={--}, leftmargin=*]
@@ -9767,7 +9825,7 @@ p_2$;
 
   \item association names are unique: if $d_1$
 and $d_2$
-are the names of two different association declarations in $M \cup A$,
+are the names of two different association declarations in $A$,
 then $d_1 \neq d_2$;
 
   \item member end names are unique: if $p_1, \ldots, p_r$
@@ -9833,8 +9891,8 @@ Class/data type nets as objects and class/data type net morphisms as
 morphisms form the category of \emph{class/data type nets}, denoted by
 $\mathrm{Cl}$.
 
-\medskip
- For the example in Fig. \ref{fig:bjoerners_dsl} the class/data type net is 
+\medskip%
+For the example in Fig. \ref{fig:bjoerners_dsl} the class/data type net is 
 %
 \begin{gather*}
   \text{Classes/data types: }\mathsf{Net}, \mathsf{Station}, \mathsf{Line}, \mathsf{Connector}, \mathsf{Unit}, \mathsf{Track}, \mathsf{Point}, \mathsf{Linear},
@@ -9875,8 +9933,7 @@ $\mathrm{Cl}$.
 \end{gather*}
 %
 Here all member ends are owned by class/data types.
-
-
+%
 \begin{figure}[!th]
 \begin{center}
 \vspace*{1ex}
@@ -9915,7 +9972,7 @@ Here all member ends are owned by class/data types.
 \label{fig:bjoerners_dsl}
 \end{figure}
 
-\section{Models}\label{a:UML-CD-models}
+\subsection{Models}\label{a:UML-CD-models}
 
 As stated above, models (in the sense of the term \termref{model} defined in
 clause~\ref{terms-and-defs}) of UML class diagrams are obtained 
@@ -9924,12 +9981,12 @@ via a translation to Common Logic.
 For a classifier net $\Sigma = ((C, {\leq_C}), P, O, A)$,
 a Common Logic theory $\CL(\Sigma)$ is defined consisting of:
 %
-\begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
+\begin{itemize}[topsep=0pt, label=--, leftmargin=*]
   \item for $c \in C$,
 a predicate\footnote{Strictly speaking, this is just a name.} $\CL(c)$,
 such that
 %\ednote{class predicates should be restricted to be unary} 
-\begin{itemize} % [topsep=0pt, label=--, leftmargin=*]
+\begin{itemize}[topsep=0pt, label=--, leftmargin=*]
   \item $\CL(\mathsf{Boolean}) = \texttt{buml:Boolean}$,
 
   \item $\CL(\mathsf{String}) = \texttt{buml:String}$,
@@ -9946,7 +10003,7 @@ is an enumeration type with values $k_1, \ldots, k_n$.
 In this case, additionally, the Common Logic theory is augmented by
 %
 \begin{lstlisting}[language=clif, mathescape, escapechar=@]
-(not (= $k_i$ $k_j$))} @\normalfont for $i \neq j$@
+(not (= $k_i$ $k_j$)) @\normalfont\quad for $i \neq j$@
 (forall (x) (if ($\CL(c)$ x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))
 \end{lstlisting}
 %\ednote{Ed Seidewitz:
@@ -9960,22 +10017,16 @@ In this case, additionally, the Common Logic theory is augmented by
 
   \item $\CL(\mathsf{Bag}[c]) = \CL(\mathsf{Bag}) = \texttt{form:Bag}$,
 
-  \item $\CL(c) = c$,
-if $c$ a class name which is not one of the above.
+  \item $\CL(c) = c$, if $c$ a class name which is not one of the above.
 \end{itemize}
 
   \item for each relation $c_1 \leq_C c_2$, an axiom %
 \lstinline[language=clif, mathescape]!(forall (x) (if ($\CL(c_1)$ x) ($\CL(c_2)$ x)))!
 
-%  \item $\CL$ maps each instance specification declaration ${k : c} \in K$ to constant $\CL(k)$ and an axiom
-%\texttt{(c k)}, where by abuse of notation, we identify $c$ with $\CL(c)$, and $k$ with $(\CL(k))$ (this abuse of notation will also be used in the sequel);
-%  \item for the set of instance specifications $k_1 : c_1, \ldots, k_n : c_n$  an axiom \texttt{(different $k_1$ $\cdots$ $k_n$)} (the unique name assumption);
   \item $\CL$
 maps each attribute declaration $c.p : \tau[c'] \in P$
 to a predicate $\CL(c.p)$
-and axioms stating type-correctness and functionality:\ednote{shouldn't
-  attributes involving Set only also be represented in a simplified
-  way?}
+and axioms stating type-correctness and functionality:
 %
 \begin{lstlisting}[language=clif, mathescape, escapechar=@]
   (forall (x y) (if ($\CL(c.p)$ x y) ($\CL(c)$ x)))
@@ -10004,31 +10055,8 @@ and axioms stating type-correctness and functionality:
 \footnotetext{Note that the $\cdots$
   here is meta notation, not a sequence marker.}
 %
-%% \item 
-%% \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$ y m)\\
-%% \qqquad (if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) (member m y)) (c' m)))}
 Query operations are modeled as partial functions: they may be undefined
 for certain arguments due to violation of multiplicity constraints.
-
-%   \item \CL maps each composition declaration
-% $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$
-% to a constant $\CL(m)$
-% and axioms stating that $\CL(m)$
-% is a finite binary relation represented as a sequence of pairs of the
-% correct type:
-% %
-% \begin{lstlisting}[language=clif, mathescape]
-% (from:Sequence $\CL(m)$)
-% (forall (p) (if (form:sequence-member p $\CL(m)$)
-%                 (and (form:Pair p) ($\CL(c_1)$ (form:first p)) ($\CL(c_2)$ (form:second p))))
-% \end{lstlisting}
-% %
-% In case $\tau_2$ is not present or $\tau_2 = \mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:
-% %
-% \begin{lstlisting}[language=clif, mathescape]
-% (forall (x y) (if ($m$ x y) (and ($c_1$ x) ($c_2$ y))))
-% \end{lstlisting}
-% 
 
   \item $\CL$ maps each association declaration
 $a(p_1 : \tau_1[c_1], \ldots, p_r : \tau_r[c_r])\in a$
@@ -10039,10 +10067,10 @@ types (the latter again being represented as
 sequences)\footnote{ignoring the annotations $\tau_i$
   in the interpretation of an association is
   intentional~\cite[p.~197]{uml-2.5}: ``a link is a tuple with one value
-  for each \uml{memberend} of the association, where each value is an
+  for each \uml{memberEnd} of the association, where each value is an
   instance whose type conforms to or implements the type of the end.
   [\ldots] when one or more ends of the association have
-  $\uml{isunique} = \mathit{false}$,
+  $\uml{isUnique} = \mathit{false}$,
   it is possible to have several links associating the same set of
   instances. In such a case, links carry an additional identifier apart
   from their end values.  When one or more ends of the Association are
@@ -10057,15 +10085,15 @@ sequences)\footnote{ignoring the annotations $\tau_i$
             (exists (x$_1$ $\cdots$ x$_r$)
                     (and ($\CL(c_1)$ $x_1$) $\cdots$ ($\CL(c_r)$ x$_r$)
                          (= t (form:sequence-insert x$_1$ ($\cdots$
-                              (form:sequence-insert x$_r$ form:empty-sequence))))))))
+                              (form:sequence-insert x$_r$ form:empty-sequence))$\cdots$))))))
 \end{lstlisting}
 
 In case that all the $\tau_i$ are omitted (or, equivalently, equal to 
-$\mathsf{Set}$), the representation is simplified to an $n$-ary predicate:
+$\mathsf{Set}$), the representation is simplified to an $r$-ary predicate:
 %
 \begin{lstlisting}[language=clif, mathescape]
-(forall (x$_1$ x$_2$ $\cdots$ x$_n$)
-        (if ($\CL(a)$ x$_1$ x$_2$ $\cdots$ x$_n$) (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_n)$ $x_n$))))
+(forall (x$_1$ x$_2$ $\cdots$ x$_r$)
+        (if ($\CL(a)$ x$_1$ x$_2$ $\cdots$ x$_r$) (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_r)$ $x_r$))))
 \end{lstlisting}
 %
   \item the interpretation of a member end of a binary association
@@ -10100,10 +10128,9 @@ all the composite attributes in $P$ and $\mathbf{a}^{1} = a^{1}(p_1^{1} :
 the composite binary associations in $A$.  Abbreviate
 %
 \begin{lstlisting}[language=clif, mathescape]
-(or ($\CL(c^{1}.p^{1})$ o x) $\cdots$
-    ($\CL(c^{k}.p^{k})$ o x)
+(or ($\CL(c^{1}.p^{1})$ o x) $\cdots$ ($\CL(c^{k}.p^{k})$ o x)
     (form:sequence-member (form:pair o x) $\CL(a^{1})$) $\cdots$
-    (form:sequence-member (form:pair o x) $\CL(a^{l})$)))
+      (form:sequence-member (form:pair o x) $\CL(a^{l})$)))
 \end{lstlisting}
 %
 by \lstinline[language=clif]{(owner o x)}, where, for each binary
@@ -10152,15 +10179,14 @@ Then
 It is straightforward to extend $\CL$
 from signatures to signature morphisms.
 
-\smallskip\noindent
-\textit{Models.}
+\medskip\noindent\textbf{Models.}
 A $\Sigma$-model of the UML class diagram institution is just a
 $\CL(\Sigma)$-model in Common Logic. That is, the UML class diagram
 institution inherits models from Common Logic. Moreover, model reducts
 are inherited as well, using the action of $\CL$ on signature morphisms.
 
 
-\section{Sentences}
+\subsection{Sentences}
 
 The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
 the following grammar:
@@ -10215,7 +10241,6 @@ along a class/data type net morphism $\sigma$, written as $\sigma(\varphi)$,
 is given by applying $\sigma$ to associations, compositions, and member end
 names.
 
-
 \begin{example}
  For the example in Fig. \ref{fig:bjoerners_dsl} there are the following multiplicity formulas:
 \begin{gather*}
@@ -10246,17 +10271,22 @@ names.
 abbreviation for the two inequations ``$x\leq y$'' and ``$y\leq x$''.
 ``$x \leq y \leq z$'' is an abbreviation for the two  inequations 
 ``$x\leq y$'' and ``$y\leq z$''.
-
 \end{example}
 
 
-\section{Satisfaction Relation}\label{a:UML-CD-sat}
+\subsection{Satisfaction Relation}\label{a:UML-CD-sat}
+
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object diagram $\Sigma$, a
 multiplicity formula $\varphi$ and a $\Sigma$-model $M$ (the
 latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic): 
-$$M\models_\Sigma\varphi\text{ iff }M\models_{\CL(\Sigma)}\CL(\varphi)$$
+%
+\begin{equation*}
+  M \models_\Sigma \varphi
+\iff
+  M \models_{\CL(\Sigma)} \CL(\varphi)
+\end{equation*}
 
 The translation of multiplicity formulas to Common Logic is as follows:
 
@@ -10312,7 +10342,7 @@ $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}
 
 \begin{lstlisting}[language=clif, mathescape]
 $\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$
-  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)\\
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)
           (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y)
                    (form:$\CL(\tau)$-size x$_1$ n$_1$) $\cdots$ (form:$\CL(\tau)$-size $x_k$ $n_k$)
                    (form:$\CL(\tau)$-size $y$ n)
@@ -10321,15 +10351,19 @@ $\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots,
                    (buml:leq $\sem{\ell}$ n)))
 \end{lstlisting}
 %
-where $\sem{-} : \mathit{NumLit} \to \ZZ$ maps a numerical literal
-to an integer, and $[x_1\cdots x_n]$ abbreviates \texttt{(form:sequence-insert $x_1$ $\cdots$ (form:sequence-insert $x_n$ form:empty-sequence))}.
-The translation for  $\mathit{FunExpr} \leq \mathit{NumLiteral}$
-is analogous. In case of simplified representation,
-the existence of $\sem{\ell}$ distinct individuals 
-would be replaced
-with a statement
-expressing that if $\sem{\ell}+1$ individuals have the specified property,
-at least two of them must be equal.
+where $\sem{-} : \mathit{NumLit} \to \ZZ$
+maps a numerical literal to an integer, and $[x_1\cdots x_n]$
+abbreviates \texttt{(form:sequence-insert $x_1$
+  $\cdots$
+  (form:sequence-insert $x_n$
+  form:empty-sequence)$\cdots$)}.
+The translation for $\mathit{FunExpr} \leq \mathit{NumLiteral}$
+is analogous. In case of simplified representation, the existence of
+$\sem{\ell}$
+distinct individuals would be replaced with a statement expressing that
+if $\sem{\ell}+1$
+individuals have the specified property, at least two of them must be
+equal.
 
 
 %% \infannex{Conformance of Essential MOF with \DOL}\label{a:EMOF}
@@ -10344,10 +10378,7 @@ at least two of them must be equal.
 TPTP \cite{TPTP,DBLP:conf/cade/SutcliffeSY94,DBLP:journals/jar/Sutcliffe09}
 is a language spoken by dozens of first-order theorem provers,
 and large libraries have been formalized in TPTP.
-The underlying logic is unsorted first-order logic. In 
-\cite{GoguenBurstall92}, many-sorted first has been formalized as
-an institution; the single-sorted sublogic (using only a fixed
-set of sorts $\{s\}$ is isomorphic to unsorted first-order logic).
+The underlying logic is unsorted first-order logic. 
 
 \section{Abstract Syntax Conformance of TPTP With \DOL}
 
@@ -10355,6 +10386,17 @@ The metaclass \syntax{TPTP\_file} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{annotated\_formula} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
+
+\section{Serialization Conformance of TPTP With \DOL}
+
+The TPTP text syntax is text conformant with \DOL.
+
+\section{Semantic Conformance of TPTP With \DOL}
+
+In \cite{GoguenBurstall92}, many-sorted first has been formalized as
+an institution; the single-sorted sublogic (using only a fixed set of
+sorts $\{s\}$ is isomorphic to unsorted first-order logic).
+
 
 \infannex{Conformance of CASL with \DOL}\label{a:casl}
 
@@ -10370,6 +10412,10 @@ The metaclass \syntax{LIBRARY} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{BASIC\_SPEC} is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
+
+\section{Serialization Conformance of CASL With \DOL}
+
+The \CASL text syntax is text conformant with \DOL.
 
 \section{Semantic Conformance of CASL With \DOL}
  \CASL has
@@ -10443,16 +10489,20 @@ semantics of \DOL as defined in Sec.~\ref{c:semantics}.
 
 \sclause{Languages}
  
- The selected OMS languages
-are those whose conformance with \DOL is established in the preceding annexes (OWL 2 DL in \aref{a:owl}, Common Logic in \aref{a:cl}, RDFS in \aref{a:rdfs},
-\CASL in \aref{a:casl}, UML class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The logic graph is shown in \fref{fig:ontograph-standards}; the language graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes refer to the following OMS languages and profiles:
+The selected OMS languages are those whose conformance with \DOL is
+established in the preceding annexes (OWL 2 DL in \aref{a:owl}, Common
+Logic in \aref{a:cl}, RDFS in \aref{a:rdfs}, \CASL in \aref{a:casl}, UML
+class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The
+logic graph is shown in \fref{fig:ontograph-standards}; the language
+graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes
+refer to the following OMS languages and profiles:
 \begin{itemize}
 \item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
 \item RDF Schema \nisref{W3C/TR REC-rdf11-schema:2014}
 \item EL, QL, RL (all being profiles of OWL) \nisref{W3C/TR REC-owl2-profiles:2012}
 \item OWL \nisref{W3C/TR REC-owl2-syntax:2012}
 \item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
-\item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.4.1}
+\item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.5}
 \item \CASL \cite{CASL-RM} and its sublanguage classical first-order logic (FOL)
 \item TPTP
 \end{itemize}
@@ -10461,22 +10511,22 @@ are those whose conformance with \DOL is established in the preceding annexes (O
 % ones in the RFP. Since these are only ontology and modeling
 % languages, also a specification language is included, namely the
 % Common Algebraic Specification Language (CASL).
- The list of
-language translations, given below, comprises standard translations from the literature  \cite{OntoGraph,MossakowskiEtAl14b},
-as well as further translations that are considered useful for
-logical interoperability:
+The list of language translations, given below, comprises standard
+translations from the literature~\cite{OntoGraph,MossakowskiEtAl14b}, as
+well as further translations that are considered useful for logical
+interoperability:
 \begin{itemize}
-  \item \EL $\to$ $\OWL$ 
-  \item \QL $\to$ $\OWL$
-  \item \RL $\to$ $\OWL$
+  \item $\EL \to \OWL$ 
+  \item $\QL \to \OWL$
+  \item $\RL \to \OWL$
   \item $\RDF \to \RDFS$
   \item $\RDFS \to \OWL$
   \item $\OWL  \to \CASL.\FOL$
-  \item $\CASL.\FOL \to TPTP$
-  \item $TPTP \to \CASL.\FOL$
-  \item $\CASL.FOL \to \CL$
-  \item $\CASL.FOL \to \CASL$
-  \item $UML\mbox{-}CD \to \CL$.
+  \item $\CASL.\FOL \to \mathit{TPTP}$
+  \item $\mathit{TPTP} \to \CASL.\FOL$
+  \item $\CASL.\FOL \to \CL$
+  \item $\CASL.\FOL \to \CASL$
+  \item $\mathit{UML\textit{-}CD} \to \CL$.
 \end{itemize}
 
 The translations are specified in \cite{OntoGraph,MossakowskiEtAl14b}.
@@ -12487,73 +12537,121 @@ be ambiguous in a normal request.
 
 \begin{definition}
 A category $C$ consists of 
- \begin{itemize}
-   \item a class of \emph{objects}, denoted $|C|$,
-   \item for each two objects $a$ and $b$, a class of \emph{morphisms} (or \emph{arrows}), denoted $C(a,b)$,
-   \item for each three objects $a, b$ and $c$, a \emph{composition} operation,
-   denoted $; : C(a,b) \times C(b,c) \to C(a,c)$ such that the following axioms hold:
-    \begin{itemize}
-      \item if $f\in C(a,b)$, $g\in C(b,c)$ and $h\in C(c,d)$ for four objects
-            $a,b,c,d$, then $f;(g;h) = (f;g);h$ 
-      \item for each object $a$ there is a morphism $id_a\in C(a,a)$ such that 
-            for every $f \in C(a,b)$ and every $g \in C(b,a)$ for some object $b$ we 
-            have that $id_a;f = f$ and $g;id_a = g$.
-    \end{itemize}
- \end{itemize} 
+\begin{itemize}
+  \item a class of \emph{objects}, denoted $|C|$,
+
+  \item for each two objects $a$ and $b$, a class of \emph{morphisms} (or \emph{arrows}), denoted $C(a,b)$,
+
+  \item for each three objects $a, b$
+and $c$,
+a \emph{composition} operation, denoted
+$; : C(a,b) \times C(b,c) \to C(a,c)$
+such that the following axioms hold:
+\begin{itemize}
+  \item if $f \in C(a,b)$,
+$g\in C(b,c)$
+and $h \in C(c,d)$ for four objects $a,b,c,d$, then $f;(g;h) = (f;g);h$
+
+  \item for each object $a$
+there is a morphism $\mathit{id}_a\in C(a,a)$
+such that for every $f \in C(a,b)$
+and every $g \in C(b,a)$
+for some object $b$ we have that $\mathit{id}_a;f = f$ and $g;\mathit{id}_a = g$.
+\end{itemize}
+\end{itemize} 
 \end{definition}
 
 \begin{example}
- $\Set$ is the category whose class of objects is the class of all sets, 
- $Set(A,B)$ is the set of all functions from $A$ to $B$ for any sets $A$ and $B$,
- $id_A$ is the identity function on a set $A$ and the composition 
- is the usual composition of functions.
+$\Set$
+is the category whose class of objects is the class of all sets,
+$\mathit{Set}(A,B)$
+is the set of all functions from $A$
+to $B$
+for any sets $A$
+and $B$,
+$\mathit{id}_A$
+is the identity function on a set $A$
+and the composition is the usual composition of functions.
 \end{example}
 
 \begin{example}
- $Rel$ is the category whose class of objects is the class of all sets,
- $Rel(A,B)$ is the class of all relations $R \subseteq A \times B$, for any sets
- $A$ and $B$, $id_A$ is the diagonal relation $\{(a,a) \mid a \in A\}$ for a set $A$ 
- and the composition of $R\in Rel(A,B)$ with $S\in Rel(B,C)$ for three sets
- $A,B,C$ is defined as $\{(a,c) \mid \text{exists } b \in B \text{ such that } 
- (a,b)\in R \text{ and } (b,c)\in S\}$.
+$\mathit{Rel}$
+is the category whose class of objects is the class of all sets,
+$\mathit{Rel}(A,B)$
+is the class of all relations $R \subseteq A \times B$,
+for any sets $A$
+and $B$,
+$\mathit{id}_A$
+is the diagonal relation $\{(a,a) \mid a \in A\}$
+for a set $A$
+and the composition of $R\in Rel(A,B)$
+with $S \in \mathit{Rel}(B,C)$
+for three sets $A$, $B$, $C$
+is defined as
+$\{(a,c) \mid \text{exists } b \in B \text{ such that } (a,b)\in R
+\text{ and } (b,c)\in S\}$.
 \end{example}
 
 \begin{example}
- The category of unsorted first-order signatures has as objects tuples of the form
- $F = (F_i)_{i\in \mathbb{N}}$ 
- where $F_i$ is a set (of function symbols of arity $i$, for 
- each natural number $i$). Given two objects $F$ and $G$, a morphism
- $\sigma: F \to G$ is a family of functions $(\sigma_i:F_i\to G_i)_{i\in\mathbb{N}}$, 
- which means that the arities of function symbols are preserved by morphisms.
- The identity morphism for an object $F$ is the family of identity functions
- $(id_{F_i})_{i\in\mathbb{N}}$ and the composition is defined component-wise:
- if $\sigma:F \to G$ and $\tau:G \to H$ are signature morphisms between the signatures
- $F, G$ and $H$, then
- $\sigma;\tau = (\sigma_i;\tau_i)_{i\in\mathbb{N}}$
+The category of unsorted first-order signatures has as objects tuples of
+the form $F = (F_i)_{i\in \mathbb{N}}$
+where $F_i$
+is a set (of function symbols of arity $i$,
+for each natural number $i$).
+Given two objects $F$
+and $G$,
+a morphism $\sigma: F \to G$
+is a family of functions $(\sigma_i:F_i\to G_i)_{i\in\mathbb{N}}$,
+which means that the arities of function symbols are preserved by
+morphisms.  The identity morphism for an object $F$
+is the family of identity functions
+$(\mathit{id}_{F_i})_{i\in\mathbb{N}}$
+and the composition is defined component-wise: if $\sigma:F \to G$
+and $\tau:G \to H$
+are signature morphisms between the signatures $F, G$
+and $H$, then $\sigma;\tau = (\sigma_i;\tau_i)_{i\in\mathbb{N}}$.
 \end{example}
 
 \begin{example}
- Given an unsorted first-order signature $F$, a model $M$ of $F$ consists of an 
- universe $M_U$ together with an interpretation of each function symbol
- $f \in F_i$ as a function $M_f$ taking $i$ arguments in $M_U$ with result in $M_U$. 
- Given two such models $M$ and $N$, a model homomorphism $m : M \to N$
- is a function $m: M_U \to N_U$ such that for each $i\in \mathbb{N}$ and each
- $f\in F_i$ we have that $m(M_f(x_1,\ldots, x_n)) = N_f(m(x_1), \ldots, m(x_n))$ for
- every $x_1,\ldots x_n$ in $M_U$. The identity function on $M_U$ is a model homomorphism
- on $M$ and the composition is  the usual composition of functions. This gives us the
- category of first-order models of $F$.
+Given an unsorted first-order signature $F$,
+a model $M$
+of $F$
+consists of an universe $M_U$
+together with an interpretation of each function symbol $f \in F_i$
+as a function $M_f$
+taking $i$
+arguments in $M_U$
+with result in $M_U$.
+Given two such models $M$
+and $N$,
+a model homomorphism $m : M \to N$
+is a function $m: M_U \to N_U$
+such that for each $i\in \mathbb{N}$
+and each $f\in F_i$
+we have that $m(M_f(x_1,\ldots, x_n)) = N_f(m(x_1), \ldots, m(x_n))$
+for every $x_1,\ldots x_n$
+in $M_U$.
+The identity function on $M_U$
+is a model homomorphism on $M$
+and the composition is the usual composition of functions. This gives us
+the category of first-order models of $F$.
 \end{example}
 
 \begin{definition}
-Let $C$ be a category. Its dual or opposite category, denoted $C^{op}$ 
+Let $C$ be a category. Its dual or opposite category, denoted $C^{\mathit{op}}$ 
 \begin{itemize}
-\item has the same 
-objects as $C$: $|C^{op}| = |C|$,
-\item for two objects $a,b\in |C|$, $C^{op}(a,b) = C(b,a)$,
-\item $;^{op} : C^{op}(a,b) \times C^{op}(b,c) \to C^{op}(a,c)$ is defined as
-$f;^{op} g = g;f$ for any $f\in C^{op}(a,b) = C(b,a)$ and $g\in C^{op}(b,c) = C(c,b)$.
-The result $g;f$ is a morphism in $C(c,a) = C^{op}(a,c)$,
-\item for each object $a$, $id_a \in C^{op}(a,a) = C(a,a)$ is the identity w.r.t. the composition $;^{op}$
+  \item has the same objects as $C$: $|C^{\mathit{op}}| = |C|$,
+
+  \item for two objects $a,b\in |C|$, $C^{\mathit{op}}(a,b) = C(b,a)$,
+
+  \item ${;}^{\mathit{op}} : C^{\mathit{op}}(a,b) \times C^{\mathit{op}}(b,c) \to C^{\mathit{op}}(a,c)$
+is defined as $f;^{\mathit{op}} g = g;f$
+for any $f\in C^{\mathit{op}}(a,b) = C(b,a)$
+and $g\in C^{\mathit{op}}(b,c) = C(c,b)$.
+The result $g;f$ is a morphism in $C(c,a) = C^{\mathit{op}}(a,c)$,
+  \item for each object $a$,
+$id_a \in C^{\mathit{op}}(a,a) = C(a,a)$
+is the identity w.r.t. the composition ${;}^{\mathit{op}}$.
 \end{itemize}
 \end{definition}
 
@@ -12636,55 +12734,57 @@ Let $C$ and $D$ be two categories. A \emph{functor} $F: C \to D $ is a mapping t
   \item assigns to each object $c$ of $C$ an object $F(c)$ in $D$,
   \item assigns to each morphism $f\in C(c,d)$ a morphism $F(f)\in D(F(c), F(d))$ such that 
    \begin{itemize}
-     \item $F(id_c) = id_{F(c)} $ for each $c\in |C|$,
+     \item $F(\mathit{id}_c) = \mathit{id}_{F(c)} $ for each $c\in |C|$,
      \item $F(f;g) = F(f);F(g)$ for each $f\in C(a,b)$, $g\in C(b,c)$ and $a,b,c \in |C|$.
    \end{itemize}
 \end{itemize}
 \end{definition}
 
 \begin{example}
- For each category $C$, the identity functor $id_C : C \to C$ takes 
- each object and each morphism to itself. 
+For each category $C$, the identity functor $\mathit{id}_C : C \to C$ takes 
+each object and each morphism to itself. 
 \end{example}
 
 \begin{example}
- The forgetful functor $F$ from the category of unsorted first-order models of a 
- signature $F$ to $Set$ takes each model $M$ to the set $M_U$ and each
- model morphism $m:M\to N$ to its underlying function $m:M_U \to N_U$.
+The forgetful functor $F$ from the category of unsorted first-order models of a 
+signature $F$ to $Set$ takes each model $M$ to the set $M_U$ and each
+model morphism $m:M\to N$ to its underlying function $m:M_U \to N_U$.
 \end{example}
 
 \begin{example}
- The covariant powerset functor $\mathcal{P} : \Set \to \Set$
- maps each set $A$ to the set of all subsets of $A$ and each function $f:A \to B$
- to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$,
- which is a subset of $B$. 
- \end{example}
+The covariant powerset functor $\mathcal{P} : \Set \to \Set$
+maps each set $A$ to the set of all subsets of $A$ and each function $f:A \to B$
+to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$,
+which is a subset of $B$. 
+\end{example}
 
 \begin{example}
- The covariant finite powerset functor $\mathcal{P}_{fin} : \Set \to \Set$
- maps each set $A$ to the set of all finite subsets of $A$ and each function $f:A \to B$
- to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$,
- which is a subset of $B$. 
- \end{example}
+The covariant finite powerset functor $\mathcal{P}_{\mathit{fin}} : \Set \to \Set$
+maps each set $A$ to the set of all finite subsets of $A$ and each function $f:A \to B$
+to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$,
+which is a subset of $B$. 
+\end{example}
  
- \section{Natural transformations}
+\section{Natural transformations}
 
 \begin{definition}
- Let $C, D$ be two categories and let $F$ and $G$ be two functors between $C$ and $D$.
- A \emph{natural transformation} $\eta : F \to G$ assigns to each object $c\in |C|$ a
- morphism $\eta_c : F(c) \to G(c) $ such that for every $f\in C(c,d)$ we have that 
- $F(f);\eta_d = \eta_c;G(c)$, which means that the following diagram commutes
- $$
- \xymatrix{
- F(c) \ar[r]^{F(f)} \ar[d]_{\eta_c} & F(d) \ar[d]^{\eta_d} \\
- G(c) \ar[r]_{G(f)}& G(d) 
- }$$ 
+Let $C, D$ be two categories and let $F$ and $G$ be two functors between $C$ and $D$.
+A \emph{natural transformation} $\eta : F \to G$ assigns to each object $c\in |C|$ a
+morphism $\eta_c : F(c) \to G(c) $ such that for every $f\in C(c,d)$ we have that 
+$F(f);\eta_d = \eta_c;G(c)$, which means that the following diagram commutes
+%
+\begin{equation*}
+\xymatrix{
+  F(c) \ar[r]^{F(f)} \ar[d]_{\eta_c} & F(d) \ar[d]^{\eta_d} \\
+  G(c) \ar[r]_{G(f)}& G(d) 
+}
+\end{equation*}
 \end{definition}
 
 \begin{example}
- There is an inclusion natural transformation $\iota:\mathcal{P}_{fin}\to\mathcal{P}$,
- i.e. for each set $A$, $\iota : \mathcal{P}_{fin}(A)\to\mathcal{P}(A)$ is the inclusion
- function (each finite subset of a set is also a subset of the set).
+There is an inclusion natural transformation $\iota:\mathcal{P}_{\mathit{fin}}\to\mathcal{P}$,
+i.e. for each set $A$, $\iota : \mathcal{P}_{\mathit{fin}}(A)\to\mathcal{P}(A)$ is the inclusion
+function (each finite subset of a set is also a subset of the set).
 \end{example}
 
 %\infannex{Bibliography}
@@ -12922,13 +13022,17 @@ This is the $\mathsf{RDF}$ serialization of SROIQ(D), formalized as a comorphism
 
 Translations from SROIQ(D) to \Flogic are discussed in \cite{Bruijn:2008}.
 
+\end{document}
+
+
 %%% Local Variables: 
-%%% mode: latex
+%%% mode: LaTeX
+%%% mode: TeX-PDF
+%%% mode: TeX-source-correlate
+%%% TeX-master: t
 %%% ispell-local-dictionary: "american"
 %%% End: 
 
 
 
 
-
-\end{document}
