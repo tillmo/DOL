@@ -520,7 +520,7 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\sssclause}[1]{\subsubsection{#1}}
 \newcommand{\termdefinition}[2]{\index{#1}\paragraph{#1} #2}
 \newcommand{\termdefinitionLight}[2]{\paragraph{#1} #2}
-\newcommand{\nisref}[1]{#1}
+\renewcommand{\nref}[1]{\ref{nref-#1}}
 
 
 \renewcommand{\subjectfield}[1]{} % {#1}
@@ -1502,7 +1502,7 @@ namespaces.%\todonote[author=Christoph
 \item XML elements that represent structural elements of an OMS shall support identifier injection in at least one of the following two ways:
   \begin{enumerate}
   \item\label{it:xml-annotation} Such elements shall be able to carry annotations that comprise at least an object (the value of the annotation) and a IRI-valued predicate (the type of annotation), where the structural element is the subject.
-    The value of the predicate shall either be full IRI according to \nisref{IETF/RFC 3987:2005}, or the serialization shall specify a way of interpreting the value of the predicate as a full IRI – for example if it is a relative URI or if an abbreviating notation is used.
+    The value of the predicate shall either be full IRI according to \nref{IRI}, or the serialization shall specify a way of interpreting the value of the predicate as a full IRI – for example if it is a relative URI or if an abbreviating notation is used.
     Analogously, the serialization shall permit the object to be a full IRI or anything that can be interpreted as a full IRI.
   \item\label{it:foreign-xml-namespaces}
 The schema shall not forbid both attributes and child elements from foreign namespaces (here: the
@@ -1528,7 +1528,7 @@ See annex~\ref{a:owl} for an example.
 \item[Text conformance]
 The given serialization has to satisfy all of the following conditions:
 \begin{itemize}
-\item The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.
+\item The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nref{text/plain}, section 4.1.3.
 \item The serialization shall provide a designated comment construct that can be placed sufficiently flexibly as to be uniquely associated with any non-comment construct of the language.  That means, for example, one of the following:
   \begin{itemize}
   \item The serialization provides a construct that indicates the start and end of a comment and may be placed before/after each token that represents a structural element of an OMS.
@@ -1539,10 +1539,10 @@ The given serialization has to satisfy all of the following conditions:
 \item[Standoff markup conformance]
 The given serialization has to satisfy at least one of the following conditions:
 \begin{enumerate}
-\item\label{it:standoff-text-plain} The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nisref{IETF/RFC 2046}, section 4.1.3.
+\item\label{it:standoff-text-plain} The serialization conforms with the requirements for the \mimetype{text/plain} media type specified in \nref{text/plain}, section 4.1.3.
 Note that conformance with \mimetype{text/plain} is a prerequisite for using, for
-example, fragment URIs in the style of \nisref{IETF/RFC 5147} for identifying text ranges.
-\item\label{it:standoff-xpointer} The serialization conforms with XML \nisref{W3C/TR REC-xml:2008}, which is a prerequisite for using XPointer fragment URIs for addressing subresources of an XML resource (cf. \nisref{W3C/TR REC-xptr-framework:2003}).
+example, fragment URIs in the style of \nref{text/plain-URI} for identifying text ranges.
+\item\label{it:standoff-xpointer} The serialization conforms with XML \nref{XML}, which is a prerequisite for using XPointer fragment URIs for addressing subresources of an XML resource (cf. \nref{XPointer}).
 \end{enumerate}
 \end{description}
 
@@ -1574,7 +1574,7 @@ For any conforming OMS language, logic, and serialization of an OMS language, it
 it be assigned an HTTP IRI, by which it can be identified.  It is also required that a 
 machine-processable description of this language/logic/serialization is retrievable by 
 dereferencing this IRI; this requirement follows the linked data principles
-\nisref{W3C/TR  REC-ldp-20150226:2015}. Further, it is required that the language/logic/serialization is registered in the DOL registry (see annex \ref{a:registry}). 
+\nref{linked-data}. Further, it is required that the language/logic/serialization is registered in the DOL registry (see annex \ref{a:registry}). 
 
 
 There may be an RDF description conforming to the vocabulary
@@ -1689,55 +1689,55 @@ be able to expand CURIEs into IRIs when requested.
 \index{conformance|)}
 
 \clause{Normative References}
-\begin{enumerate}[label=\bfseries NR\arabic*:]
+\begin{enumerate}[label=\bfseries NR\arabic*]
 % OLD text
 % The following referenced documents are indispensable for the application of this document. For dated references, only
 % the edition cited applies. For undated references, the latest edition of the referenced document (including any
 % amendments) applies.
-  \item{W3C/TR REC-ldp-20150226:2015} {Linked Data Platform 1.0. W3C Recommendation, 26 February 2015.\\ \url{http://www.w3.org/TR/2015/REC-ldp-20150226/}}
-  \item{W3C/TR REC-owl2-syntax:2012} {OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax (Second Edition). W3C Recommendation, 11 December 2012.\\ \url{http://www.w3.org/TR/2012/REC-owl2-syntax-20121211/}}
-  \item{ISO/IEC 14977:1996} {Information technology – Syntactic metalanguage – Extended BNF}
+  \item{W3C/TR REC-ldp-20150226:2015} {Linked Data Platform 1.0. W3C Recommendation, 26 February 2015.\\ \url{http://www.w3.org/TR/2015/REC-ldp-20150226/}}\label{nref-linked-data}
+  \item{W3C/TR REC-owl2-syntax:2012} {OWL 2 Web Ontology Language: Structural Specification and Functional-Style Syntax (Second Edition). W3C Recommendation, 11 December 2012.\\ \url{http://www.w3.org/TR/2012/REC-owl2-syntax-20121211/}}\label{nref-OWL2}
+  \item{ISO/IEC 14977:1996} {Information technology – Syntactic metalanguage – Extended BNF}\label{nref-EBNF}
   \item{W3C/TR REC-xml:2008} {Extensible Markup Language (XML) 1.0 (Fifth Edition). W3C Recommendation, 26 November 2008. \\
-  \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}
+  \url{http://www.w3.org/TR/2008/REC-xml-20081126/}}\label{nref-XML}
   \item{W3C/TR REC-owl2-primer:2012} {OWL 2 Web Ontology Language: Primer (Second Edition). W3C Recommendation, 11 December 2012. \\
-  \url{http://www.w3.org/TR/2012/REC-owl2-primer-20121211/}}
+  \url{http://www.w3.org/TR/2012/REC-owl2-primer-20121211/}}\label{nref-OWL2-primer}
   \item{W3C/TR REC-owl2-profiles:2012} {OWL 2 Web Ontology Language: Profiles (Second Edition). W3C Recommendation, 11 December 2012. \\
-  \url{http://www.w3.org/TR/2012/REC-owl2-profiles-20121211/}}
-  \item{ISO/IEC 24707:2007} {Information technology – Common Logic (CL): a framework for a family of logic-based languages}
-  \item{OMG Document ptc/2013-09-05:} {OMG Unified Modeling Language (OMG UML)\\
-  \url{http://www.omg.org/spec/UML/Current}}
-  \item{IETF/RFC 3986} {Uniform Resource Identifier (URI): Generic Syntax. January 2005.\\ \url{http://tools.ietf.org/html/rfc3986}}
-  \item{IETF/RFC 3987} {Internationalized Resource Identifiers (IRIs). January 2005.\\ \url{http://tools.ietf.org/html/rfc3987}}
-  \item{IETF/RFC 5147} {URI Fragment Identifiers for the text/plain Media Type.  April 2008.\\ \url{http://tools.ietf.org/html/rfc5147}}
-  \item{W3C/TR REC-xptr-framework:2003} {XPointer Framework.  W3C Recommendation, 25 March 2003. \\ \url{http://www.w3.org/TR/2003/REC-xptr-framework-20030325/}}
-  \item{W3C/TR REC-rdf11-concepts:2014} {RDF 1.1 Concepts and Abstract Syntax.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/}}
+  \url{http://www.w3.org/TR/2012/REC-owl2-profiles-20121211/}}\label{nref-OWL2-profiles}
+  \item{ISO/IEC 24707:2007} {Information technology – Common Logic (CL): a framework for a family of logic-based languages}\label{nref-CL}
+  \item{OMG Document ptc/2013-09-05} {OMG Unified Modeling Language (OMG UML)\\
+  \url{http://www.omg.org/spec/UML/Current}}\label{nref-UML} %%?
+  \item{IETF/RFC 2046} {Multipurpose Internet Mail Extensions (MIME)
+    Part Two: Media Types.\\ 
+    \url{https://www.ietf.org/rfc/rfc2046.txt}}\label{nref-text/plain}
+  \item{IETF/RFC 3986} {Uniform Resource Identifier (URI): Generic Syntax. January 2005.\\ \url{http://tools.ietf.org/html/rfc3986}}\label{nref-URI}
+  \item{IETF/RFC 3987} {Internationalized Resource Identifiers (IRIs). January 2005.\\ \url{http://tools.ietf.org/html/rfc3987}}\label{nref-IRI}
+  \item{IETF/RFC 5147} {URI Fragment Identifiers for the text/plain Media Type.  April 2008.\\ \url{http://tools.ietf.org/html/rfc5147}}\label{nref-text/plain-URI}
+  \item{W3C/TR REC-xptr-framework:2003} {XPointer Framework.  W3C Recommendation, 25 March 2003. \\ \url{http://www.w3.org/TR/2003/REC-xptr-framework-20030325/}}\label{nref-XPointer}
+  \item{W3C/TR REC-rdf11-concepts:2014} {RDF 1.1 Concepts and Abstract Syntax.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/}}\label{nref-RDF}
   \item{W3C/TR REC-xml-names:2009} {Namespaces in XML 1.0 (Third Edition). W3C Recommendation, 8 December 2009.\\
-   \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}
-  \item{W3C/TR REC-rdfa-core:2015} {RDFa Core 1.1 -- Third Edition.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 17 March 2015.\\ \url{http://www.w3.org/TR/2015/REC-rdfa-core-20150317/}}
+   \url{http://www.w3.org/TR/2009/REC-xml-names-20091208/}}\label{nref-XMLns}
+  \item{W3C/TR REC-rdfa-core:2015} {RDFa Core 1.1 -- Third Edition.  Syntax and processing rules for embedding RDF through attributes. W3C Recommendation, 17 March 2015.\\ \url{http://www.w3.org/TR/2015/REC-rdfa-core-20150317/}}\label{nref-RDFa}
   % This standard has no unique year, as it consist of multiple parts (see http://tools.ietf.org/html/rfc3629#ref-ISO.10646)
-  \item{ISO/IEC 10646} {Information technology – Universal Multiple-Octet coded Character Set (UCS)}
+  \item{ISO/IEC 10646} {Information technology – Universal Multiple-Octet coded Character Set (UCS)}\label{nref-UCS}
   %\item{W3C/TR REC-rdf-sparql-query:2008} {SPARQL Query Language for RDF. W3C Recommendation, 15 January 2008. \url{http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/}}
-  \item{W3C/TR REC-rdf-schema:2014} {RDF Schema 1.1. W3C Recommendation, 25 February 2014.\\ \url{http://www.w3.org/TR/2014/REC-rdf-schema-20140225/}}
-  \item{W3C/TR REC-rdf11-mt:2014} {RDF 1.1 Semantics.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/}}
+  \item{W3C/TR REC-rdf-schema:2014} {RDF Schema 1.1. W3C Recommendation, 25 February 2014.\\ \url{http://www.w3.org/TR/2014/REC-rdf-schema-20140225/}}\label{nref-RDFS}
+  \item{W3C/TR REC-rdf11-mt:2014} {RDF 1.1 Semantics.  W3C Recommendation, 25 February 2014. \\ \url{http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/}}\label{nref-RDFSs}
   \item{W3C/TR REC-owl2-mapping-to-rdf:2012} {OWL 2 Web Ontology Language
-Mapping to RDF Graphs (Second Edition).  W3C Recommendation, 11 December 2012\\ \url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/}}
+Mapping to RDF Graphs (Second Edition).  W3C Recommendation, 11 December 2012\\ \url{http://www.w3.org/TR/2012/REC-owl2-mapping-to-rdf-20121211/}}\label{nref-OWL2RDF}
   \item{DCMI Metadata Terms:2012} {DCMI Metadata Terms, DCMI Recommendation, DCMI Usage Board, 14 July 2012.\\
-     \url{http://dublincore.org/documents/2012/06/14/dcmi-terms/}}
+     \url{http://dublincore.org/documents/2012/06/14/dcmi-terms/}}\label{nref-DCMI}
   \item{W3C/TR REC-skos-reference:2009} {SKOS Simple Knowledge Organization System
-Reference.  W3C Recommendation, 18 August 2009\\ \url{http://www.w3.org/TR/2009/REC-skos-reference-20090818/}}
+Reference.  W3C Recommendation, 18 August 2009\\ \url{http://www.w3.org/TR/2009/REC-skos-reference-20090818/}}\label{nref-SKOS}
   \item{OMG Specification Metadata:2014} {Specification Metadata (SM) Vocabulary.  OMG, 18 August 2014\\
-\url{http://www.omg.org/techprocess/ab/20140801/SpecificationMetadata.rdf}}
-
-
-
-  \item{ODM} {Ontology Definition Metamodel, 2 September 2014. \\ \url{http://www.omg.org/spec/ODM/1.1/}}
-\item{MOF} { Meta Object Facility} \\ \url{http://www.omg.org/spec/MOF/}
-\item{SMOF} { Support for Semantic Structure, April 2013} \\ \url{http://www.omg.org/spec/SMOF/1.0/}
-\item{XMI} {Metadata Interchange (XMI) – using MOF 2 XMI, April 2014} \\ \url{http://www.omg.org/spec/XMI/}
+\url{http://www.omg.org/techprocess/ab/20140801/SpecificationMetadata.rdf}}\label{nref-OMG-SM}
+  \item{ODM} {Ontology Definition Metamodel, 2 September 2014. \\ \url{http://www.omg.org/spec/ODM/1.1/}}\label{nref-ODM}
+\item{MOF} { Meta Object Facility} \\ \url{http://www.omg.org/spec/MOF/}\label{nref-MOF}
+\item{SMOF} { Support for Semantic Structure, April 2013} \\ \url{http://www.omg.org/spec/SMOF/1.0/}\label{nref-SMOF}
+\item{XMI} {Metadata Interchange (XMI) – using MOF 2 XMI, April 2014} \\ \url{http://www.omg.org/spec/XMI/}\label{nref-XMI}
 %\item{PRR} {Production Rule Representation, December 2009} \\ \url{ http://www.omg.org/spec/PRR/1.0// }
-\item{SBVR} {Semantics Of Business Vocabulary And Rules, November 2013} \\ \url{http://www.omg.org/spec/SBVR/}
-\item{DTV} {Date-Time Vocabulary, August 2013} \\ \url{http://www.omg.org/spec/DTV/1.0/}
-\item{RIF} {Rule Interchange Format, February 2013} \\ \url{http://www.w3.org/TR/rif-overview/}
+\item{SBVR} {Semantics Of Business Vocabulary And Rules, November 2013} \\ \url{http://www.omg.org/spec/SBVR/}\label{nref-SBVR}
+\item{DTV} {Date-Time Vocabulary, August 2013} \\ \url{http://www.omg.org/spec/DTV/1.0/}\label{nref-DTV}
+\item{RIF} {Rule Interchange Format, February 2013} \\ \url{http://www.w3.org/TR/rif-overview/}\label{nref-RIF}
 \end{enumerate}
 
 
@@ -1867,7 +1867,7 @@ systems}
   \end{note}
 
   \begin{example}
-    Non-logical symbols in OWL \nisref{W3C/TR REC-owl2-syntax:2012} (there called ``entities'') comprise
+    Non-logical symbols in OWL \nref{OWL2} (there called ``entities'') comprise
     \begin{itemize}
     \item individuals (denoting objects from the domain of discourse),
     \item classes (denoting sets of objects; also called concepts), and
@@ -1881,7 +1881,7 @@ systems}
 \smallskip
 
   \begin{example}
-    Non-logical symbols in Common Logic \nisref{ISO/IEC 24707:2007} comprise
+    Non-logical symbols in Common Logic \nref{CL} comprise
     \begin{itemize}
     \item names (denoting objects from the domain of discourse),
     \item sequence markers (denoting sequences of objects).
@@ -2730,7 +2730,7 @@ Common Logic uses the term ``dialect''; the following are standard Common Logic 
 
 \termdefinition{abstract syntax\synonym parse tree}{term language for representing documents in a machine-processable way}
 \begin{note}
-An abstract syntax can be specified as a MOF metamodel. Then abstract abstract syntax documents can be represented as  XMI documents.
+An abstract syntax can be specified as a MOF metamodel \nref{MOF}. Then abstract abstract syntax documents can be represented as  XMI \nref{XMI} documents.
 \end{note}
 
 
@@ -2772,7 +2772,7 @@ global knowledge about OMS.}
 
 \termdefinition{resource\subjectfield{web}}{something that can be globally identified.}
   \begin{note}
-    \nisref{IETF/RFC 3986:2005, Section 1.1} deliberately defines a resource as ``in a general sense \textelp{} whatever might be identified by \textins*{an IRI}''.  The original source refers to URIs, but \DOL uses the compatible IRI standard \nisref{IETF/RFC 3987:2005} for identification.
+    \nref{URI}, Section 1.1 deliberately defines a resource as ``in a general sense \textelp{} whatever might be identified by \textins*{an IRI}''.  The original source refers to URIs, but \DOL uses the compatible IRI standard \nref{IRI} for identification.
   \end{note}
   \begin{example}
 Familiar examples include an electronic document, an image, a source of information with a 
@@ -2781,7 +2781,7 @@ HTTP-to-SMS gateway), and a collection of other resources. A resource is not nec
 via the Internet; \eg, human beings, corporations, and bound books in a library can also be 
 resources. Likewise, abstract concepts can be resources, such as the operators and operands of a 
 mathematical equation, the types of a relationship (\eg, ``parent'' or ``employee''), or numeric 
-values (\eg, zero, one, and infinity). See \nisref{IETF/RFC 3986:2005, Section 1.1}
+values (\eg, zero, one, and infinity). See \nref{URI}, Section 1.1.
   \end{example}
 
 
@@ -2789,9 +2789,9 @@ values (\eg, zero, one, and infinity). See \nisref{IETF/RFC 3986:2005, Section 1
 \termdefinition{element (of an OMS)}{any \termref{resource} in an \termref{OMS} (\eg a \termref{non-logical symbol}, a \termref{sentence}, a \termref{correspondence}, the \termref{OMS} itself, \dots) or a named set of such \termref{resources}.}
   
 
-\termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \nisref{W3C/TR REC-ldp-20150226:2015}\footnote{The original source is widely accepted but not formally a standard~\cite{BernersLee:LinkedData2006}.}.}
+\termdefinition{linked data}{structured data that is published on the Web in a machine-processable way, according to principles specified in \nref{linked-data}\footnote{The original source is widely accepted but not formally a standard~\cite{BernersLee:LinkedData2006}.}.}
   \begin{note}
-    The linked data principles (adapted from \nisref{W3C/TR REC-ldp-20150226:2015} and its paraphrase at \cite{Wikipedia:LinkedData2011}) are the following:
+    The linked data principles (adapted from \nref{linked-data} and its paraphrase at \cite{Wikipedia:LinkedData2011}) are the following:
     \begin{enumerate}
     \item Use IRIs as names for things.
     \item Use HTTP IRIs so that these things can be referred to and looked up (``dereferenced'') 
@@ -2815,7 +2815,7 @@ values (\eg, zero, one, and infinity). See \nisref{IETF/RFC 3986:2005, Section 1
   \termdefinition{annotation}{additional information without a logical semantics that is attached to an element\index{element (of an OMS)} of an \termref{OMS}.}
   \begin{note}\label{note:annotation-rdf}
 Formally, an annotation is given as a $(\text{subject}, \text{predicate}, \text{object})$ triple as 
-defined by \nisref{SOURCE: W3C/TR REC-rdf11-concepts:2014, Section 3.1}.  The subject of an annotation 
+defined by \nref{RDF}, Section 3.1.  The subject of an annotation 
 is an element of an OMS.  The predicate is an RDF property defined in an external OMS and 
 describes in what way the annotation object is related to the annotation subject.
   \end{note}  
@@ -2920,7 +2920,7 @@ The next three clauses are \emph{informative}. This clause provides some backgro
 
 
 \medskip \noindent 
-Clause \ref{c:abstract-syntax} defines the abstract syntax of \DOL (\emph{normative}) as an SMOF compliant meta model.
+Clause \ref{c:abstract-syntax} defines the abstract syntax of \DOL (\emph{normative}) as an SMOF \nref{SMOF} compliant meta model.
 Further,  the same clause also provides a human friendly text serialization of the abstract syntax of 
 \DOL (\emph{normative}). 
 Annex \ref{a:EBNF} contains the abstract syntax specified using Extended
@@ -3171,7 +3171,7 @@ greater expressiveness. However, relegating FOL axioms to  informal annotations 
 are not available for machine processing.  Another example of this problem is the following: For 
 formally representing concept schemes (including taxonomies, thesauri and classification schemes) 
 and provenance information there are the two W3C standards SKOS (Simple Knowledge Organization 
-System; \nisref{W3C/TR REC-skos-reference:2009}) and PROV, as well as \ednote{CL: Did we mean something like “ISO 12345” here, i.e.\ some 
+System; \nref{SKOS}) and PROV, as well as \ednote{CL: Did we mean something like “ISO 12345” here, i.e.\ some 
 specific ISO standard that we reference by number? Terry: (re: footnote 29) Probably the family headed by ISO 11179 Information Technology -- Metadata registries (MDR) (http://metadata-stds.org/)
 The 11179 standard is a multipart standard that includes the following parts:·         '          Part 1: Framework
 ·         Part 2: Classification
@@ -3815,7 +3815,7 @@ the bank results in \uml{reenterPIN}, and the \emph{guard}
 
 The ATM example in Fig.~\ref{fig:atm-example} consists of five different
 UML models, which naturally form a network. Coherence of this network is
-expressed as its consistency.  It is assumed that XMI representations of
+expressed as its consistency.  It is assumed that XMI \nref{XMI} representations of
 the relevant UML models have been stored at
 \url{http://www.example.org/uml/} in a single xmi-file \url{http://www.example.org/uml/atm.xmi} that contains a
 \texttt{uml:Model} element for each UML model whose \texttt{xmi:id} has
@@ -3891,14 +3891,14 @@ Often a single problem area within a given domain must be represented using seve
 and usage. 
 Typically the different representations are written by different people using formalisms that are based on different logics. Thus, it is a challenge to maintain 
 consistency across the different representations. 
-The need for the use of multiple OMS languages, even within the OMG community, is also reflected by the OMG Ontology Definition Metamodel (ODM), which 
+The need for the use of multiple OMS languages, even within the OMG community, is also reflected by the OMG Ontology Definition Metamodel (ODM, \nref{ODM}), which 
 provides a number of syntactic transformations between such languages.
-One example is the OMG Date-Time Vocabulary (DTV). DTV has been formulated in different languages, each of which addresses different audiences:
+One example is the OMG Date-Time Vocabulary (DTV, \nref{DTV}). DTV has been formulated in different languages, each of which addresses different audiences:
 \begin{itemize}
-\item	 SBVR: business users
-\item 	UML (class models and OCL): software implementors
-\item 	OWL: ontology developers and users
-\item 	Common Logic: (foundational) ontology developers and users
+\item	 SBVR \nref{SBVR}: business users
+\item 	UML \nref{UML} (class models and OCL): software implementors
+\item 	OWL \nref{OWL2}: ontology developers and users
+\item 	Common Logic \nref{CL}: (foundational) ontology developers and users
 \end{itemize}
 With \DOL, one can, e.g.,
 \begin{itemize}
@@ -4359,7 +4359,7 @@ the rule for \syntax{combination} for the  MOF metaclass
 \clause{\DOL  Syntax}\label{c:abstract-syntax}%\label{a:text-syntax}
 
 
-This clause specifies the \DOL abstract syntax as a MOF metamodel.
+This clause specifies the \DOL abstract syntax as a MOF \nref{MOF} metamodel.
 In annex~\ref{a:EBNF}, the same abstract syntax is specified using EBNF.
 We further include  the \DOL concrete syntax, which
 uses the metaclasses of the abstract syntax as non-terminals of
@@ -4505,11 +4505,11 @@ BoundPrefix    ::= ':' | Prefix +$<$\rm see definition in \cref{c:curies}$>$\CLn
 IRIBoundToPrefix ::= '<' FullIRI '>'
 Separators     ::= 'separators' SeparatorString SeparatorString
 SeparatorString ::= SeparatorChar SeparatorChar*
-SeparatorChar  ::= ipchar | gen-delims - '#'+$<$\rm as defined in \nisref{IETF/RFC 3987}$>$+
+SeparatorChar  ::= ipchar | gen-delims - '#'+$<$\rm as defined in \nref{IRI}$>$+
 \end{lstlisting}
 
 
- Note that the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2015, Section 6}) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+ Note that the empty prefix (called ``no prefix'' in \nref{RDFa}, Section 6) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
 
 \vspace{1em}
 	
@@ -5131,12 +5131,12 @@ as linked data.
 %\todonote[type=q-aut,author=Christoph Lange]{Does this motivation/justification sound reasonable to 
 %you? --- Yes.}
 Therefore, in order to impose fewer conformance requirements on applications, \DOL requires the use of
- IRIs for identification per \nisref{IETF/RFC 3987:2005}.
+ IRIs for identification per \nref{IRI}.
   It is \recommended that \DOL libraries use 
 IRIs that translate to URLs when applying the algorithm for mapping IRIs to URIs specified in 
-\nisref{IETF/RFC 3987:2005, Section 3.1}.  \DOL descriptions of any element of a \DOL library that is 
+\nref{IRI}, Section 3.1.  \DOL descriptions of any element of a \DOL library that is 
 identified by a certain IRI \should be \emph{located} at the corresponding URL, so that agents can 
-locate them.  As IRIs are specified with a concrete syntax only in \nisref{IETF/RFC 3987:2005}, \DOL 
+locate them.  As IRIs are specified with a concrete syntax only in \nref{IRI}, \DOL 
 adopts the latter into its abstract syntax as well as all of its concrete syntaxes 
 (serializations).
 The DOL metamodel for IRIs and prefixes is shown in Fig.~\ref{fig:prefixes}.
@@ -5212,7 +5212,7 @@ language lang:OWL2 logic log:SROIQ serialization ser:OWL2/Manchester
 \end{lstlisting}
 
 
-\DOL adopts the CURIE specification of RDFa Core 1.1 \nisref{W3C/TR REC-rdfa-core:2015, Section 6} with the following changes:
+\DOL adopts the CURIE specification of RDFa Core 1.1 \nref{RDFa}, Section 6 with the following changes:
 \begin{itemize}
 \item \DOL does not support the declaration of a ``default prefix'' mapping %\CLnote[type=q-aut]{Are such explanatory notes OK here? --- Yes}
 (covering CURIEs such as \syntax{:name}).
@@ -5253,8 +5253,8 @@ Bindings in a prefix map are evaluated from left to right.  Authors \shouldnot b
 
 While \DOL uses IRIs as identifiers throughout, OMS languages do not necessarily do; for example:
 \begin{itemize}
-\item OWL \nisref{W3C/TR REC-owl2-syntax:2012, Section 5.5} does use IRIs.
-\item Common Logic \nisref{ISO/IEC 24707:2007} supports them but does not enforce their use.
+\item OWL \nref{OWL2}, Section 5.5 does use IRIs.
+\item Common Logic \nref{CL} supports them but does not enforce their use.
 \item F-logic \cite{flogic} does not use them at all.
 \end{itemize}
 However, \DOL OMS mappings as well as 
@@ -5278,7 +5278,7 @@ The IRI of a non-logical symbol identifier in a basic OMS $O$ is determined by t
     \ELSE
       \STATE $\mathit{sep}\leftarrow\mathit{:}$ \COMMENT{the standard CURIE separator character}
     \ENDIF
-    \STATE \COMMENT{The following statements construct a modified EBNF grammar of CURIEs; see \nisref{ISO/IEC 14977:1996} for EBNF, and \cref{c:curies} for the original grammar of CURIEs.}
+    \STATE \COMMENT{The following statements construct a modified EBNF grammar of CURIEs; see \nref{EBNF} for EBNF, and \cref{c:curies} for the original grammar of CURIEs.}
     \IF{$\mathit{sep}$ is defined}
       \STATE $\mathit{cp}\leftarrow [ \mathit{NCName}, \mathit{sep} ] , \mathit{Reference}$
     \ELSE
@@ -5327,17 +5327,17 @@ within the \DOL library.
 \begin{lstlisting}[language=ebnf,escapeinside={()}]
 
 IRI           ::= '<' FullIRI '>' | CURIE
-FullIRI       ::= ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) 
+FullIRI       ::= ($<$ an IRI as defined in \nref{IRI} $>$) 
 CURIE         ::= MaybeEmptyCURIE -
 MaybeEmptyCURIE ::= [Prefix] RefWithoutComma
 RefWithoutComma ::= Reference - StringWithComma
 StringWithComma ::= UChar* ',' UChar*
-UChar         ::= ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) 
-Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
+UChar         ::= ($<$ any Unicode \nref{UCS} character $>$) 
+Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nref{XMLns}, Section 3 $>$)
 Reference     ::= Path [Query] [Fragment]
-Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Query         ::= '?' iquery($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-Fragment      ::= '#' ifragment($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nref{IRI} $>$)
+Query         ::= '?' iquery($<$ \rm as defined in \nref{IRI} $>$)
+Fragment      ::= '#' ifragment($<$ \rm as defined in \nref{IRI} $>$)
 \end{lstlisting}
 
 
@@ -5404,11 +5404,11 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 % Separators               = 'separators' , SeparatorString , SeparatorString ;
 % SeparatorString  = SeparatorChar , { SeparatorChar } ;
 % SeparatorChar    = ipchar | gen-delims , - , '#' ;
-%                    ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+%                    ($<$ \rm as defined in \nref{IRI} $>$)
 %
 % \end{lstlisting}
 %
-%  Note that the empty prefix (called ``no prefix'' in \nisref{W3C/TR REC-rdfa-core:2015, Section 6}) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+%  Note that the empty prefix (called ``no prefix'' in \nref{RDFa}, Section 6) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
 %
 % \vspace{1em}
 %
@@ -5635,25 +5635,25 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %
 % \begin{lstlisting}[language=ebnf,escapeinside={()}]
 % IRI     = '<' , FullIRI , '>' | CURIE ;
-% FullIRI = ($<$ an IRI as defined in \nisref{IETF/RFC 3987:2005} $>$) ;
+% FullIRI = ($<$ an IRI as defined in \nref{IRI} $>$) ;
 % CURIE     = MaybeEmptyCURIE , - ;
 % MaybeEmptyCURIE = [ Prefix ] , RefWithoutComma ;
 % RefWithoutComma = Reference , - , StringWithComma ;
 % StringWithComma = { UChar } , ',' , { UChar } ;
-% UChar     = ($<$ any Unicode \nisref{ISO/IEC 10646} character $>$) ;
+% UChar     = ($<$ any Unicode \nref{UCS} character $>$) ;
 % Prefix    = NCName , ':' ; ($<$ \rm see ``NCName'' in \nisref{W3C/TR REC-xml-names:2009}, Section 3 $>$)
 % Reference = Path , [ Query ] , [ Fragment ] ;
 % Path      = ipath-absolute | ipath-rootless | ipath-empty ;
-%             ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-% Query     = '?' , iquery ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
-% Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nisref{IETF/RFC 3987} $>$)
+%             ($<$ \rm as defined in \nref{IRI} $>$)
+% Query     = '?' , iquery ; ($<$ \rm as defined in \nref{IRI} $>$)
+% Fragment  = '#' , ifragment ; ($<$ \rm as defined in \nref{IRI} $>$)
 % \end{lstlisting}
 %
 % In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the \DOL syntax (cf.\ clause \label{c:keywords}).
 
 \sclause{Lexical Symbols}
 
-The character set for the \DOL text serialization is the UTF-8 encoding of Unicode \nisref{ISO/IEC 10646}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nisref{IETF/RFC 3987:2005}.}  For enhanced readability of OMS, the \DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical symbols (e.g.\ Greek letters)  or operators (e.g.\ $\partial$ for partial derivatives). %\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
+The character set for the \DOL text serialization is the UTF-8 encoding of Unicode \nref{UCS}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nref{IRI}.}  For enhanced readability of OMS, the \DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical symbols (e.g.\ Greek letters)  or operators (e.g.\ $\partial$ for partial derivatives). %\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
 \ssclause{Key words and signs}\label{c:keywords}
 
@@ -5766,20 +5766,20 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 \begin{description}
 \item[XML conformance]
   \begin{enumerate}
-  \item If the serialization supports annotation of the root element of the fragment of interest, as specified in XML conformance requirement~\ref{it:xml-annotation}, an identifier is assigned by way of an annotation whose predicate is \url{http://www.w3.org/2002/07/owl#sameAs} from the OWL language \nisref{W3C/TR REC-owl2-primer:2012} and whose object is expected to be the desired IRI identifier.
+  \item If the serialization supports annotation of the root element of the fragment of interest, as specified in XML conformance requirement~\ref{it:xml-annotation}, an identifier is assigned by way of an annotation whose predicate is \url{http://www.w3.org/2002/07/owl#sameAs} from the OWL language \nref{OWL2-primer} and whose object is expected to be the desired IRI identifier.
   \item If the \textit{dol:id} XML attribute from the \url{http://www.omg.org/spec/DOL/1.0/xml} namespace is supported on the element, as specified in XML conformance requirement~\ref{it:foreign-xml-namespaces}, its value is expected to be the IRI identifier.
   \item If the \texttt{dol:id} XML element is supported as the first child of the element, as specified in XML conformance requirement~\ref{it:foreign-xml-namespaces}, it is expected to contain exactly one text node whose value is the IRI identifier.
   \end{enumerate}
   It is a \DOL syntax error if \begin{enumerate*}\item an \texttt{owl:sameAs} annotation or a \texttt{dol:id} attribute or child element is present and its value is not, or cannot be interpreted, as a full IRI, or if \item more than one of these three alternative fields (annotation, attribute or child element) is present on an element\end{enumerate*}.
 \item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
 \item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
-\item[Standoff markup conformance] If the given OMS serialization conforms with the \mimetype{text/plain} media type as per standoff markup conformance requirement~\ref{it:standoff-text-plain} but not with XML, \nisref{IETF/RFC 5147} shall be used as means of non-destructively assigning a URI to pieces of text in the given OMS serialization.
-If the serialization conforms with XML as per requirement~\ref{it:standoff-xpointer}, one of \nisref{IETF/RFC 5147} or XPointer (\nisref{W3C/TR REC-xptr-framework:2003}) shall be used. { (As an example, consider the identification of imports in the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211}, which does not provide a native way for assigning identifiers to imports unless modified as suggested in annex~\ref{sec:conformance-owl-xml-rdf}.  For example, in an OMS file \textit{cars.owx}, the import \texttt{<Import>http://example.org/engines</Import>} can be referred to by the IRI \url{cars.owx\#xpointer(/owl:Ontology/owl:Import[text()='http://example.org/engines'])} assuming the right binding for the namespace prefix \textit{owl} in scope.
-The same import in the text-based OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} could be referred to as \url{cars.omn\#line=27} according to \nisref{IETF/RFC 5147} if it is on line 27 of the document.)}
+\item[Standoff markup conformance] If the given OMS serialization conforms with the \mimetype{text/plain} media type as per standoff markup conformance requirement~\ref{it:standoff-text-plain} but not with XML, \nref{text/plain-URI} shall be used as means of non-destructively assigning a URI to pieces of text in the given OMS serialization.
+If the serialization conforms with XML as per requirement~\ref{it:standoff-xpointer}, one of \nref{text/plain-URI} or XPointer (\nref{XPointer}) shall be used. { (As an example, consider the identification of imports in the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211}, which does not provide a native way for assigning identifiers to imports unless modified as suggested in annex~\ref{sec:conformance-owl-xml-rdf}.  For example, in an OMS file \textit{cars.owx}, the import \texttt{<Import>http://example.org/engines</Import>} can be referred to by the IRI \url{cars.owx\#xpointer(/owl:Ontology/owl:Import[text()='http://example.org/engines'])} assuming the right binding for the namespace prefix \textit{owl} in scope.
+The same import in the text-based OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} could be referred to as \url{cars.omn\#line=27} according to \nref{text/plain-URI} if it is on line 27 of the document.)}
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
-Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a document may employ RDF annotations that use XPointer or \nisref{IETF/RFC 5147} as means of non-destructively referencing pieces of XML or text by IRI, as specified above. (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of sentences in the XCL serialization of Common Logic.) 
+Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a document may employ RDF annotations that use XPointer or \nref{text/plain-URI} as means of non-destructively referencing pieces of XML or text by IRI, as specified above. (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of sentences in the XCL serialization of Common Logic.) 
 
 \clause{\DOL Semantics}\label{c:semantics}
 
@@ -7538,10 +7538,10 @@ If the set fails to be a singleton, the semantics of $r$ is undefined.
 %OMS.}:\hspace{-2cm}
 %\begin{algorithmic}
 %  \REQUIRE $e$ is a non-logical symbol (identified by an IRI; \cf \cref{c:identifiers})
-%  \IF[production \syntax{ifragment} in \nisref{IETF/RFC 3987:2005}]{$e$ has a fragment $f$}
+%  \IF[production \syntax{ifragment} in \nref{IRI}]{$e$ has a fragment $f$}
 %    \RETURN $f$
 %  \ELSE
-%    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nisref{W3C/TR REC-xml:2008}
+%    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nref{XML}
 %    \RETURN $n$
 %  \ENDIF
 %\end{algorithmic}
@@ -8823,14 +8823,14 @@ The canonical namespace IRI for the \DOL Ontology is \url{http://www.omg.org/spe
 Normative snapshots of the implementation are published there.
 The IRI for the version of the \DOL Ontology that corresponds to this version of the OMG standard is \url{http://www.omg.org/spec/DOL/20150801/dol-language/}.
 
-The \DOL Ontology is currently implemented in OWL 2 (\nisref{W3C/TR REC-owl2-syntax:2012}).
-The normative snapshots are encoded in RDF/XML using the OWL 2 mapping to RDF graphs (\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}).
+The \DOL Ontology is currently implemented in OWL 2 (\nref{OWL2}).
+The normative snapshots are encoded in RDF/XML using the OWL 2 mapping to RDF graphs (\nref{OWL2RDF}).
 
 The ontology makes use of the following standard ontologies and vocabularies:
 \begin{itemize}
-\item DCMI Metadata Terms (\nisref{DCMI Metadata Terms:2012})
-\item OMG Specification Metadata (SM) Vocabulary (\nisref{OMG Specification Metadata:2014})
-\item SKOS (\nisref{W3C/TR REC-skos-reference:2009})
+\item DCMI Metadata Terms (\nref{DCMI})
+\item OMG Specification Metadata (SM) Vocabulary (\nref{OMG-SM})
+\item SKOS (\nref{SKOS})
 \end{itemize}
 
 %The sources of the \DOL ontology are being maintained in OWL Manchester
@@ -8968,14 +8968,14 @@ to that of the top-level classes, see Fig.~\ref{fig:dol-onto-properties}.
 
 \CLnote{Is it correct that ``With'' and ``of'' use different capitalizations?}%
 \CLnote{Why refer to this external paper when \SROIQ is actually formalized as an institution below?  Maybe cut this sentence and replace it by a general introduction?  Or at least rephrase ``is established'' into ``has originally been established''.}%
-The semantic conformance of OWL 2 DL (as specified in \nisref{W3C/TR REC-owl2-syntax:2012}) with \DOL
+The semantic conformance of OWL 2 DL (as specified in \nref{OWL2}) with \DOL
 is established in \cite{OntoGraph}.
 
 \section{Abstract Syntax Conformance of OWL 2 With \DOL}
 
-The metaclass \syntax{OWL Ontology} is a subclass (in the sense of SMOF
+The metaclass \syntax{OWL Ontology} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{OWL Universe} is a subclass (in the sense of SMOF
+The metaclass \syntax{OWL Universe} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
 
@@ -8989,7 +8989,7 @@ The OWL 2 Manchester syntax satisfies the criteria for text conformance establis
 
 \subsubsection{General Issues}
 
-With minor modifications detailed below, the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211} satisfies the criteria for XML conformance and the serialization of OWL in RDF (\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}) satisfies RDF the criteria for RDF conformance. %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
+With minor modifications detailed below, the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211} satisfies the criteria for XML conformance and the serialization of OWL in RDF (\nref{OWL2RDF}) satisfies RDF the criteria for RDF conformance. %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 Both modifications define a super-language of the respective OWL serialization.
 Any OWL ontology serialization $S'$ in one of these two super-languages can be translated into an OWL ontology serialization $S$ that fully conforms to the original specification OWL/XML or ``OWL serialized in RDF'' and is semantically equivalent to the extended serialization $S'$ with regard to the semantics of OWL.
 Without these modifications, neither OWL/XML nor ``OWL serialized in RDF'' satisfies the XML or RDF conformance requirements, respectively.
@@ -9008,10 +9008,10 @@ The serialization of OWL in RDF (regardless of the concrete \emph{RDF} serializa
 Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as an RDF resource.
 However, only resources can have identifiers in RDF.
 RDF reification would allow for turning the statement $O_1$ \texttt{owl:imports} $O_2$ into a resource and thus giving it an identifier. 
-However, the RDF triples required for expressing this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}, section 3}. 
-They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}}.
+However, the RDF triples required for expressing this reification, including, e.g., the triple \texttt{:import\_id rdf:predicate owl:imports},  would not match the head of any rule in the mapping from RDF graphs to the OWL structural specification\footnote{\nref{OWL2RDF}, section 3}. 
+They would thus remain left over in the RDF graph that is attempted to be parsed into an OWL ontology, and thus violate the requirement that at the end of this parsing process, the RDF graph must be empty\footnote{See the last sentence of section 3.2.5 of \nref{OWL2RDF}}.
 
-After extending the specification of the serialization of OWL in RDF in the following way, it satisfies the RDF conformance criteria: if the input RDF graph $G$ considered in section 3 of \nisref{W3C/TR REC-owl2-mapping-to-rdf:2012} contains the pattern
+After extending the specification of the serialization of OWL in RDF in the following way, it satisfies the RDF conformance criteria: if the input RDF graph $G$ considered in section 3 of \nref{OWL2RDF} contains the pattern
 
 \begin{lstlisting}[basicstyle=\small\ttfamily,language=N3,mathescape]
 $i$ rdf:subject $s$ .
@@ -9372,14 +9372,14 @@ We distinguish three cases.
 
 \section{Abstract Syntax Conformance of Common Logic With \DOL}
 
-The metaclass \syntax{Text} is a subclass (in the sense of SMOF
+The metaclass \syntax{Text} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{Sentence} is a subclass (in the sense of SMOF
+The metaclass \syntax{Sentence} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
 \section{Serialization Conformance of Common Logic With \DOL}
 
-The semantic conformance of Common Logic (as specified in \nisref{ISO/IEC 24707:2007}) with \DOL is established in \cite{OntoGraph}.
+The semantic conformance of Common Logic (as specified in \nref{CL}) with \DOL is established in \cite{OntoGraph}.
 
 The XCF dialect of Common Logic has a serialization that satisfies the criteria for XML conformance.  The CLIF dialect of Common Logic has a serialization that satisfies the criteria for text conformance.
 
@@ -9455,9 +9455,9 @@ in order to obtain a theory in the \CL institution.
 
 \section{Abstract Syntax Conformance of RDF and RDF Schema  With \DOL}
 
-The metaclass \syntax{Document} is a subclass (in the sense of SMOF
+The metaclass \syntax{Document} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{Triple} is a subclass (in the sense of SMOF
+The metaclass \syntax{Triple} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
 \section{Serialization Conformance of RDF and RDF Schema  With \DOL}
@@ -9467,8 +9467,8 @@ the criteria for RDF conformance.
 
 \section{Semantic Conformance of RDF and RDF Schema  With \DOL}
 
-The semantic conformance of RDF Schema (as specified in \nisref{W3C/TR
-  REC-rdf-schema:2014}) with \DOL is established in \cite{OntoGraph}.
+The semantic conformance of RDF Schema (as specified in \nref{RDFS}) 
+with \DOL is established in \cite{OntoGraph}.
 
 \begin{definition}[\RDF and RDF Schema]
 The institutions for the Resource Description Framework (\RDF) and \RDF
@@ -9542,15 +9542,15 @@ operations are query operations.
 
 \section{Abstract Syntax Conformance of UML With \DOL}
 
-The metaclass \syntax{OWL Model} is a subclass (in the sense of SMOF
+The metaclass \syntax{OWL Model} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{OWL PackageableElement} is a subclass (in the sense of SMOF
+The metaclass \syntax{OWL PackageableElement} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
 \section{Serialization Conformance of UML With \DOL}
 
-The XMI serialization, derived from the MOF metamodel, is widely used
-fpr UML. Hence, UML is serialization conformant with \DOL.
+The XMI \nref{XMI} serialization, derived from the MOF metamodel, is widely used
+for UML. Hence, UML is serialization conformant with \DOL.
 
 \section{Semantic Conformance of UML With \DOL}
 
@@ -10539,9 +10539,9 @@ The underlying logic is unsorted first-order logic.
 
 \section{Abstract Syntax Conformance of TPTP With \DOL}
 
-The metaclass \syntax{TPTP\_file} is a subclass (in the sense of SMOF
+The metaclass \syntax{TPTP\_file} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{annotated\_formula} is a subclass (in the sense of SMOF
+The metaclass \syntax{annotated\_formula} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
 \section{Serialization Conformance of TPTP With \DOL}
@@ -10565,9 +10565,9 @@ sentences, expressing the (free) generation of datatypes.
 
 \section{Abstract Syntax Conformance of CASL With \DOL}
 
-The metaclass \syntax{LIBRARY} is a subclass (in the sense of SMOF
+The metaclass \syntax{LIBRARY} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{BASIC\_SPEC} is a subclass (in the sense of SMOF
+The metaclass \syntax{BASIC\_SPEC} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
 \section{Serialization Conformance of CASL With \DOL}
@@ -10654,12 +10654,12 @@ logic graph is shown in \fref{fig:ontograph-standards}; the language
 graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes
 refer to the following OMS languages and profiles:
 \begin{itemize}
-\item RDF \nisref{W3C/TR REC-rdf11-concepts:2014}
-\item RDF Schema \nisref{W3C/TR REC-rdf11-schema:2014}
-\item EL, QL, RL (all being profiles of OWL) \nisref{W3C/TR REC-owl2-profiles:2012}
-\item OWL \nisref{W3C/TR REC-owl2-syntax:2012}
-\item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
-\item UML class models \nisref{OMG Unified Modeling Language (UML) specification 2.5}
+\item RDF \nref{RDF}
+\item RDF Schema \nref{RDFS}
+\item EL, QL, RL (all being profiles of OWL) \nref{OWL2-profiles}
+\item OWL \nref{OWL2}
+\item CL (Common Logic) \nref{CL}
+\item UML class models \nref{UML}, version 2.5
 \item \CASL \cite{CASL-RM} and its sublanguage classical first-order logic (FOL)
 \item TPTP
 \end{itemize}
@@ -10802,7 +10802,7 @@ The following syntaxes are part of the heterogeneous logical environments:
 
 \EL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
 syntactic restriction according to the definition of \EL, see
-\nisref{W3C/TR REC-owl2-profiles:2012}. Since by definition, $\ELDL{+}{+}$
+\nref{OWL2-profiles}. Since by definition, $\ELDL{+}{+}$
 is a syntactic restriction of $\SROIQ(D)$, $\ELDL{+}{+}$ $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
@@ -10810,7 +10810,7 @@ is the corresponding sublogic inclusion.
 
 \QL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
 syntactic restriction according to the definition of \QL, see
-\nisref{W3C/TR REC-owl2-profiles:2012}. Since by definition, \DLLiteR
+\nref{OWL2-profiles}. Since by definition, \DLLiteR
 is a syntactic restriction of $\SROIQ(D)$, \DLLiteR $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
@@ -10818,7 +10818,7 @@ is the corresponding sublogic inclusion.
 
 \RL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
 syntactic restriction according to the definition of \RL, see
-\nisref{W3C/TR REC-owl2-profiles:2012}. Since by definition, $\RL$
+\nref{OWL2-profiles}. Since by definition, $\RL$
 is a syntactic restriction of $\SROIQ(D)$, $\RL$ $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
@@ -11077,14 +11077,14 @@ mentioned in \aref{a:graph}):
 \item PL (propositional logic)
 \item SimpleRDF (RDF triples without a reserved vocabulary)
 \item OBO\textsuperscript{OWL} and OBO1.4
-\item RIF (Rule Interchange Format)
+\item RIF \nref{RIF} (Rule Interchange Format)
 \item EER (Enhanced Entity-Relationship Models) % see Talheim Thalheim, B. (2009). Extended entity relationship model. In L. Liu and M. T. Ozsu, editors, En- cyclopedia of Database Systems, volume 1, pages 1083-1091. Springer.
 \item Datalog
 \item ORM (object role modeling)
 \item the meta model of schema.org
 \item different model types of the UML (Unified Modeling Language), with possibly different logics according to different
 UML semantics
-\item SKOS (Simple Knowledge Organization System; \nisref{W3C/TR REC-skos-reference:2009})
+\item SKOS (Simple Knowledge Organization System; \nref{SKOS})
 \item FOL\textsuperscript{=} (untyped first-order logic, as used for the
 TPTP format)
 \item F-logic
@@ -11104,8 +11104,8 @@ The actual translations are specified in \cite{OntoGraph}.
 
 
 The following subclauses specify the abstract syntax of \DOL in EBNF. Note that it deviates from the EBNF specification in
- \nisref{ISO/IEC 14977:1996} in favor of a more concise
-EBNF syntax. More precisely, \nisref{ISO/IEC 14977:1996} requires commas between the (non-)terminals of a right-hand side, which are omitted 
+ \nref{EBNF} in favor of a more concise
+EBNF syntax. More precisely, \nref{EBNF} requires commas between the (non-)terminals of a right-hand side, which are omitted 
 for the sake of better readability. Also, the separator \syntax{=}
 between left and right hand-side of a rule is replaced with \syntax{::=}, and 
  the notation \syntax{N+} is used 
@@ -11389,7 +11389,7 @@ Double ::= ($<$ a number $\in [0,1]$ $>$)
 
 IRI    ::= FullIRI | CurieIRI(\footnote{Specified below in \cref{c:curies}.})
 CurieIRI ::= curie CURIE
-FullIRI ::= ($<$ as defined by the IRI production in \nisref{IETF/RFC 3987:2005} $>$) 
+FullIRI ::= ($<$ as defined by the IRI production in \nref{IRI} $>$) 
 CURIE  ::= String
 \end{lstlisting}
 
