@@ -1323,7 +1323,8 @@ semantics for \DOL.
 \index{conformance|(}
 This clause defines conformance criteria for languages and logics that can be used with \DOL, as well as conformance criteria for
 serializations, translations and applications. The conformance of a
-number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, UML Class Diagrams, TPTP, CASL) as well as translations among
+number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, 
+UML class models, TPTP, CASL) as well as translations among
 these is discussed in informative annexes of this \IS.
 
 
@@ -1760,7 +1761,7 @@ For the purposes of this document, the following terms and definitions apply.
 \termdefinition{native OMS}{
 collection of expressions (like non-logical symbols\index{non-logical symbol}, sentences\index{sentence} and structuring elements) from a given \termref{OMS language}.}
   \begin{example}
-     A UML class diagram, an ontology written in OWL 2 EL, and  a specification written in CASL are three different native OMS. 
+     A UML class model, an ontology written in OWL 2 EL, and  a specification written in CASL are three different native OMS. 
   \end{example}
 	\begin{note}
 	An \termref{OMS} can be written in different \termref{OMS language} 	\termref{serializations}.\index{serialization}
@@ -1777,7 +1778,7 @@ collection of expressions (like non-logical symbols\index{non-logical symbol}, s
 \termdefinition{OMS language}{language equipped with a formal, declarative, logic-based semantics,
 plus non-logical annotations\index{annotation}.}
   \begin{example}
-    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class diagrams, RDF Schema, and OBO.
+    OMS languages include OWL 2 DL, Common Logic, F-logic, UML class models, RDF Schema, and OBO.
   \end{example}
   \begin{note}
   An OMS language is used for the formal specification of \termref{native OMS}.
@@ -2928,7 +2929,7 @@ translation that conform with \DOL  (\emph{informative}).
 \medskip \noindent Various languages are shown to  conform to \DOL in
 informative annexes: OWL2 (annex \ref{a:owl}), Common Logic
 (annex~\ref{a:cl}), RDF and RDF Schema (annex~\ref{a:rdfs}), UML class
-diagrams (annex~\ref{a:uml-class}), TPTP (annex~\ref{a:TPTP}), and
+models (annex~\ref{a:uml-class}), TPTP (annex~\ref{a:TPTP}), and
 \CASL (annex \ref{a:casl}).
 
 \medskip \noindent 
@@ -3080,7 +3081,7 @@ The following people contributed directly to the development of this specificati
 Often, engineering tasks require the use of several different OMS, which represent knowledge about 
 a given domain or specify a given system from different perspectives or for different purposes.
 (E.g., a software engineer will typically use different OMS to model different aspects of a software
- system,  including its behavior, its components, and its interactions with other systems.)  Further, the OMS are often represented in different OMS languages (e.g., UML class diagrams, OWL, or Common Logic), which may differ in style, expressivity, and different computational properties. 
+ system,  including its behavior, its components, and its interactions with other systems.)  Further, the OMS are often represented in different OMS languages (e.g., UML class models, OWL, or Common Logic), which may differ in style, expressivity, and different computational properties. 
 
 The use of different OMS within the same context leads to  several 
 challenges in the design and deployment of OMS, which have been addressed by current research in 
@@ -3618,25 +3619,25 @@ refinement R3''' = R1 refined to R2
 
 
 
-\section{Use Case Model-1: Consistency Among UML Diagrams of Different Types}
+\section{Use Case Model-1: Consistency Among UML Models of Different Types}
 \label{model-1}
 
-A typical UML model involves diagrams of different types. Such UML models may have intrinsic errors because diagrams of different types may specify conflicting 
+A typical UML model involves models of different types. Such UML models may have intrinsic errors because models of different types may specify conflicting 
 requirements. Typical questions that arise in this context are ask for
 semantic consistency, e.g.,
 
 \begin{itemize}
-\item whether the multiplicities in a class diagram are semantically consistent with each other;
+\item whether the multiplicities in a class model are semantically consistent with each other;
 %\item whether the attributes and operations in a state machine are
 %available in a class diagram;
 \item	  whether the sequential composition of actions in an interaction diagram is justified by an accompanying OCL specification;
 \item 	whether cooperating state machines comply with pre-/post-conditions and invariants;
-\item 	whether the behavior prescribed in an interaction diagram is realizable by several state machines cooperating according to a composite structure diagram.
+\item 	whether the behavior prescribed in an interaction model is realizable by several state machines cooperating according to a composite structure model.
 \end{itemize}
 Such questions are currently hard to answer in a systematic manner. One method to answer these questions and find such errors is a check for semantic 
 consistency. Under some restrictions, the proof of semantic consistency can be (at least partially) performed using model-checking tools like Hugo/RT \cite{knapp-wuttke:models06wsh:2007}. 
-Once a formal semantics for the different diagram types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use \DOL to specify in which 
-sense the diagrams need to be consistent, and check this by suitable tools.
+Once a formal semantics for the different model types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use \DOL to specify in which 
+sense the models need to be consistent, and check this by suitable tools.
 
 
 \ssclause{The ATM Example}
@@ -3688,7 +3689,7 @@ number combination is valid, in the first case the \uml{bank} requests
 to reenter the PIN, in the second case the verification is successful.
 This interaction presumes that the system has an \uml{atm} and a
 \uml{bank} as objects. This can, e.g., be ensured by a \emph{composite
-  structure diagram}, see Fig.~\ref{fig:system}, which -- among other
+  structure model}, see Fig.~\ref{fig:system}, which -- among other
 things -- specifies the objects in the initial system state.
 Furthermore, it specifies that the communication between \uml{atm} and
 \uml{bank} goes through the two ports \uml{bankCom} and \uml{atmCom}
@@ -3701,8 +3702,8 @@ provides structural information in form of interfaces specifying what is
 provided and required at the \uml{userCom} port and the \uml{bankCom}
 port of the \uml{atm} instance.  An interface is a set of operations
 that other MDE model elements have to implement. In our case, the
-interfaces are described in a \emph{class diagram}. In this class
-diagram also the component type \uml{ATM} is enriched with the OCL
+interfaces are described in a \emph{class model}. Its component type 
+\uml{ATM} is further enriched with the OCL
 constraint \uml{trialsNum <= 3}, which refines its semantics requiring
 that \uml{trialsNum} must not exceed three.
 
@@ -3731,7 +3732,7 @@ expressed as its consistency.  It is assumed that XMI representations of
 the relevant UML models have been stored at
 \url{http://www.example.org/uml/} in a single xmi-file \url{http://www.example.org/uml/atm.xmi} that contains a
 \texttt{uml:Model} element for each UML model whose \texttt{xmi:id} has
-a prefix \texttt{xxx} followed by an underscore. \texttt{xxx} is determined
+a prefix \texttt{xxx} followed by an underscore. \texttt{xxx} is determined 
 as follows:\medskip
 
 \begin{tabular}{|l|l|l|}\hline
@@ -3764,13 +3765,13 @@ entailment e = Some_refined_ATM_network entails ATM_network
 Here, \texttt{abstract\_to\_concrete\_atm} is defined in the next
 section, and \texttt{stm2cd} and \texttt{psm2cd} are suitable logic
 projections extracting the classes, attributes and operations from a
-(protocol) state machine, delivering a class diagram.
+(protocol) state machine, delivering a class model.
 
 \section{Use Case Model-2: Refinements Between UML Models of Different Types, and Their Reuse}
 \label{model-2}
 
 A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
-sequence diagrams and OCL constraints. Assume further that this UML model is not directly implemented, but first refined to a UML behavior state machine (which then 
+sequence models and OCL constraints. Assume further that this UML model is not directly implemented, but first refined to a UML behavior state machine (which then 
 can be automatically or semi-automatically transformed into some implementation using standard UML tools). However, there is no standardized language to 
 express, document and maintain the refinement relation itself (UML only allows very simple refinements, namely between state machines). This hinders both the 
 reuse of such refinements in different contexts, as well as the interoperability of tools proving such refinements to be correct. \DOL  
@@ -3812,7 +3813,7 @@ provides a number of syntactic transformations between such languages.
 One example is the OMG Date-Time Vocabulary (DTV). DTV has been formulated in different languages, each of which addresses different audiences:
 \begin{itemize}
 \item	 SBVR: business users
-\item 	UML (class diagrams and OCL): software implementors
+\item 	UML (class models and OCL): software implementors
 \item 	OWL: ontology developers and users
 \item 	Common Logic: (foundational) ontology developers and users
 \end{itemize}
@@ -5767,7 +5768,7 @@ either via a proof system, or as the logical consequence relation for
 some model theory.  This specification follows the model-theoretic approach, since
 this is needed for many of the \DOL constructs, and moreover, ontology,
 modeling and specification languages like OWL, Common Logic, or \CASL
-come with a model-theoretic semantics, or (like UML class diagrams)
+come with a model-theoretic semantics, or (like UML class models)
 can be equipped with one.
 
  An abstract notion of logical system is given by  the notion of
@@ -9391,13 +9392,13 @@ such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the represen
 \qed\end{definition}
 
 
-\infannex{Conformance of UML class and object diagrams with \DOL}\label{a:uml-class}
+\infannex{Conformance of UML class and object models with \DOL}\label{a:uml-class}
 
 \noindent%
 This informative annex demonstrates conformance of a subset of UML
-class and object diagrams with \DOL by defining an institution for
+class and object models with \DOL by defining an institution for
 both.  The subset is restricted to the static aspects of class
-diagrams; that is, change of state is ignored. This means that all
+models; that is, change of state is ignored. This means that all
 operations are query operations.
 
 
@@ -9415,8 +9416,8 @@ fpr UML. Hence, UML is serialization conformant with \DOL.
 
 \section{Semantic Conformance of UML With \DOL}
 
-The institution of UML class and object diagrams is defined using a
-translation of UML class diagrams to Common Logic, following the fUML
+The institution of UML class and object models is defined using a
+translation of UML class models to Common Logic, following the fUML
 specification and \cite{Seidewitz08}.
 
 \subsection{Preliminaries}
@@ -9432,7 +9433,7 @@ e.g.\ \texttt{buml:Boolean}, \texttt{form:Number},
 
 The following infrastructure, consisting off a number of predicates
 axiomatized in Common Logic, provides a foundation for an institution
-for UML class diagrams described in the later sections of this Annex.
+for UML class models described in the later sections of this Annex.
 %
 \begin{lstlisting}[language=clif, basicstyle={\ttfamily\fontsize{8pt}{9pt}\selectfont},
                    morekeywords={then, with, logic, oms, end},
@@ -9986,14 +9987,14 @@ Here all member ends are owned by class/data types.
 \draw (LinearLine-2) node[right] {L2L};
 \end{tikzpicture}
 \end{center}
-\caption{Sample UML class diagram.}
+\caption{Sample UML class model}
 \label{fig:bjoerners_dsl}
 \end{figure}
 
 \subsection{Models}\label{a:UML-CD-models}
 
 As stated above, models (in the sense of the term \termref{model} defined in
-clause~\ref{terms-and-defs}) of UML class diagrams are obtained 
+clause~\ref{terms-and-defs}) of UML class models are obtained 
 via a translation to Common Logic.
 
 For a classifier net $\Sigma = ((C, {\leq_C}), P, O, A)$,
@@ -10198,8 +10199,8 @@ It is straightforward to extend $\CL$
 from signatures to signature morphisms.
 
 \medskip\noindent\textbf{Models.}
-A $\Sigma$-model of the UML class diagram institution is just a
-$\CL(\Sigma)$-model in Common Logic. That is, the UML class diagram
+A $\Sigma$-model of the UML class model institution is just a
+$\CL(\Sigma)$-model in Common Logic. That is, the UML class model
 institution inherits models from Common Logic. Moreover, model reducts
 are inherited as well, using the action of $\CL$ on signature morphisms.
 
@@ -10296,7 +10297,7 @@ abbreviation for the two inequations ``$x\leq y$'' and ``$y\leq x$''.
 
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
-That is, given a UML class and object diagram $\Sigma$, a
+That is, given a UML class and object model $\Sigma$, a
 multiplicity formula $\varphi$ and a $\Sigma$-model $M$ (the
 latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic): 
 %
@@ -10386,9 +10387,9 @@ equal.
 
 %% \infannex{Conformance of Essential MOF with \DOL}\label{a:EMOF}
 
-%% Since essential MOF (EMOF) is a sublanguage of UML class diagrams,
+%% Since essential MOF (EMOF) is a sublanguage of UML class models,
 %% we can define a corresponding institution that is a subinstitution
-%% of that for UML class diagrams (see annex~\ref{a:uml-class}).
+%% of that for UML class models (see annex~\ref{a:uml-class}).
 
 
 \infannex{Conformance of TPTP with \DOL}\label{a:TPTP}
@@ -10510,7 +10511,7 @@ semantics of \DOL as defined in Sec.~\ref{c:semantics}.
 The selected OMS languages are those whose conformance with \DOL is
 established in the preceding annexes (OWL 2 DL in \aref{a:owl}, Common
 Logic in \aref{a:cl}, RDFS in \aref{a:rdfs}, \CASL in \aref{a:casl}, UML
-class diagrams in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The
+class models in \aref{a:uml-class} and TPTP in \aref{a:TPTP}).  The
 logic graph is shown in \fref{fig:ontograph-standards}; the language
 graph and supports relation in \fref{f:DOL-threelayers}.  Its nodes
 refer to the following OMS languages and profiles:
@@ -10520,7 +10521,7 @@ refer to the following OMS languages and profiles:
 \item EL, QL, RL (all being profiles of OWL) \nisref{W3C/TR REC-owl2-profiles:2012}
 \item OWL \nisref{W3C/TR REC-owl2-syntax:2012}
 \item CL (Common Logic) \nisref{ISO/IEC 24707:2007}
-\item UML class diagrams \nisref{OMG Unified Modeling Language (UML) specification 2.5}
+\item UML class models \nisref{OMG Unified Modeling Language (UML) specification 2.5}
 \item \CASL \cite{CASL-RM} and its sublanguage classical first-order logic (FOL)
 \item TPTP
 \end{itemize}
@@ -10820,7 +10821,7 @@ and model-expansiveness of the comorphism are straightforward.
 This comorphism is the composition of the comorphisms described in the previous
 two sections.
 
-\ssclause{UML class diagrams $\to \CL$}
+\ssclause{UML class models $\to \CL$}
 This translation has been described in annex~\ref{a:uml-class}. 
 Translation of signatures is detailed in section~\ref{a:UML-CD-models},
 translation of sentences in section~\ref{a:UML-CD-sat}.
@@ -10831,8 +10832,9 @@ This is an obvious sublogic.
 
  
 
-\ssclause{UML class diagrams $to \OWL$}
-Let $\Sigma = ((C, {\leq_C}), P, O, A, M)$ be a \emph{class/data type net} representing a UML class diagram as described in annex~\ref{a:uml-class}. This net can be translated to OWL2 using the approach described in \cite{zedlitz2012uml}.
+\ssclause{UML class model to \OWL}
+Let $\Sigma = ((C, {\leq_C}), P, O, A, M)$ be a \emph{class/data type net} representing a UML 
+class model as described in annex~\ref{a:uml-class}. This net can be translated to OWL2 using the approach described in \cite{zedlitz2012uml}.
 The ontology is extended by translating parts of this net and its multiplicity constraints $\mathit{Mult}(\Sigma)$:
 \begin{itemize}
 \item For each class $c \in C$ with superclasses $c_1,c_2,\ldots,c_n \in C$ (i.e.\ $c \leq_C c_i$ for $i=1,\ldots,n$):
@@ -10938,11 +10940,11 @@ mentioned in \aref{a:graph}):
 \item SimpleRDF (RDF triples without a reserved vocabulary)
 \item OBO\textsuperscript{OWL} and OBO1.4
 \item RIF (Rule Interchange Format)
-\item EER (Enhanced Entity-Relationship Diagrams) % see Talheim Thalheim, B. (2009). Extended entity relationship model. In L. Liu and M. T. Ozsu, editors, En- cyclopedia of Database Systems, volume 1, pages 1083-1091. Springer.
+\item EER (Enhanced Entity-Relationship Models) % see Talheim Thalheim, B. (2009). Extended entity relationship model. In L. Liu and M. T. Ozsu, editors, En- cyclopedia of Database Systems, volume 1, pages 1083-1091. Springer.
 \item Datalog
 \item ORM (object role modeling)
 \item the meta model of schema.org
-\item different diagram types of the UML (Unified Modeling Language), with possibly different logics according to different
+\item different model types of the UML (Unified Modeling Language), with possibly different logics according to different
 UML semantics
 \item SKOS (Simple Knowledge Organization System; \nisref{W3C/TR REC-skos-reference:2009})
 \item FOL\textsuperscript{=} (untyped first-order logic, as used for the
@@ -12364,7 +12366,7 @@ Heterogeneous Tool Set (Hets) is  an implementation  of
 for OMS, OMS networks and OMS mappings written in \DOL and
 \DOL-conforming languages.  It supports a wide range of OMS languages
 and language translations, in particular OWL, RDF, Common Logic,
-first-order logic and CASL. Support for MOF, UML class diagrams and
+first-order logic and CASL. Support for MOF, UML class models and
 state machines is in preparation.  Hets has been co-developed together
 with the \DOL language presented in this standard, and has been used to
 test the examples. Hets has been connected to a considerable number of
