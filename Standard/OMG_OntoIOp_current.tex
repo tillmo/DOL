@@ -11103,6 +11103,27 @@ between left and right hand-side of a rule is replaced with \syntax{::=}, and
 for one or more repetitions of \syntax{N}.
 %Note that ISO EBNF lacks an operator for ``at least one repetition''.  This \IS therefore adopts the following convention: Whenever some sequence \syntax{S} is repeated at least once, we give it a non-terminal identifier of its own (\syntax{RepeatedS = S \{ S \} ;}), or group it as in \syntax{LongerExpression = Foo Bar ( S \{ S \} ) ;}.
 
+Note that the EBNF abstract syntax is constructor-based.
+E.g. \syntax{translation} is a constructor that can be used to build
+more complex OMS from smaller OMS (and in general, the constructors
+can be used to form syntax trees). By contrast, the MOF-based abstract
+syntax in clause~\ref{c:abstract-syntax} is selector-based, i.e.\ it
+features selectors that, given a complex OMS, extract the simpler OMS
+that are its building blocks. While the metaclasses of the MOF
+metamodel largely match the non-terminal symbols of the EBNF abstract
+syntax, there is no such direct match between selectors and
+constructors.
+
+The non-terminals of the EBNF abstract syntax largely match those of
+the concrete syntax given in clause~\ref{c:abstract-syntax}. Some
+non-terminals of the concrete syntax have been omitted in the abstract 
+syntax, because they serve merely syntactical purposes and do not
+contribute to a useful syntax tree. Otherwise, the productions of
+the concrete syntax match those of the abstract syntax, but the
+abstract syntax constructors are replaced with specific strings
+(possibly interspersed at different positions) expressing the
+concrete syntax.
+
 
 \sclause{Documents}\label{e:libraries}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
