@@ -4818,10 +4818,9 @@ Extraction         ::= 'extract' InterfaceSignature
 Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
                      | 'keep' InterfaceSignature ['keep' LogicRef]
                      | 'keep' LogicRef
-Filtering          ::= 'select' SymbolList
-                     | 'select' '{' BasicOMS '}'
-                     | 'reject' SymbolList
-                     | 'reject' '{' BasicOMS '}'
+Filtering          ::= RemovalKind BasicOMSOrSymbolList
+RemovalKind        ::= 'reject' | 'select'
+BasicOMSOrSymbolList ::= '{' BasicOMS '}' | SymbolList
 ExtensionOMS       ::= [ExtConservativityStrength]
                        [ExtensionName]
                        ExtendingOMS
@@ -5030,36 +5029,32 @@ to the \syntax{InterfaceSignature}.
 
 \vspace{-2em}
 \index{alignment}
-\begin{lstlisting}[language=ebnf,mathescape]
+\begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
 
 MappingDefinition  ::= InterpretationDefinition
                      | EntailmentDefinition
                      | EquivalenceDefinition
                      | ConservativeExtensionDefinition
                      | AlignmentDefinition
-InterpretationDefinition ::= InterpretationKeyword
-                             InterpretationName
-                             [Conservative] ':'
-                             InterpretationType 'end'
-                     | InterpretationKeyword
-                             InterpretationName
-                             [Conservative] ':'
-                             InterpretationType '='
-                             LanguageTranslation*
-                             [SymbolMap] 'end'
-                     | InterpretationKeyword
-                             InterpretationName '='
-                             Refinement 'end'
+InterpretationDefinition ::= InlineInterpretation | RefinementDefinition
+InlineInterpretation ::= InterpretationKeyword InterpretationName
+                         [Conservative] ':' InterpretationType
+                         [ '=' LanguageTranslation* [SymbolMap] ]
+                         'end'
+RefinementDefinition ::= InterpretationKeyword InterpretationName '='
+                         Refinement
+                         'end'
 InterpretationKeyword ::= 'interpretation' | 'view' | 'refinement'
 InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
 Refinement         ::= GroupOMS
                      | NetworkName
-                     | Refinment 'refined' [RefMap] 'to' Refinement
-                     | Refinment 'interpreted' [RefMap] 'by' Refinement
-RefMap             ::= 'via' LanguageTranslation [SymbolMap]
-                     | 'via' [LanguageTranslation] SymbolMap
-                     | 'via' Refinement ( ',' Refinement )*
+                     | Refinement 'refined' [RefMap] 'to' Refinement
+                     | Refinement 'interpreted' [RefMap] 'by' Refinement
+RefMap             ::= 'via' ( OMSRefinementMap | NetworkRefinementMap )
+OMSRefinementMap   ::= LanguageTranslation [SymbolMap]
+                     | [LanguageTranslation] SymbolMap
+NetworkRefinementMap ::= Refinement ( ',' Refinement )*
 EntailmentDefinition ::= 'entailment' EntailmentName '='
                          EntailmentType 'end'
 EntailmentName     ::= IRI
@@ -5095,13 +5090,13 @@ SingleCorrespondence ::= Symbol [Relation] [Confidence]
 CorrespondenceId   ::= '%(' IRI ')%'
 Symbol          ::= IRI
 GeneralizedTerm    ::= Symbol
-Relation           ::= '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI
+Relation           ::= RelationReference | StandardRelation
+RelationReference  ::= IRI
+StandardRelation   ::= '>' | '<' | '=' | '%' | 'ni' | 'in'
+                       *@$<$ \rm No keyword corresponding to @*default-relation*@ \rm as this is just the default if@*
+                       *@\phantom{$<$ }@*Relation*@ \rm is omitted$>$@*
 Confidence         ::= Double
-\end{lstlisting}
-
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
-
-Double ::= ($<$ a number $\in [0,1]$ $>$) 
+Double             ::= *@$<$ a number $\in [0,1]$ $>$@*
 \end{lstlisting}
 
 
