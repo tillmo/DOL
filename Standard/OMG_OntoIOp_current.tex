@@ -6172,6 +6172,9 @@ $(\C,|\_|)$ is a concrete category.} that preserves
 inclusions.
 \end{definition}
 
+Moreover, if $\sigma:\Sigma\to\Sigma'$ is a signature morphism,
+it uniquely determines a map $|\sigma|:|\Sigma|\to|\Sigma'|$.
+
 After these preliminaries, we can now list the assumptions made about the
 institutions in a heterogeneous logical environment.
 It is required that for each institution in the heterogeneous logical environment there is a trivial signature
@@ -7310,9 +7313,44 @@ sem(\Gamma,\Sigma, \syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 \end{array}
 }
 
+If $r$ is a \syntax{SymbolMap} such that for every 
+\syntax{SymbolMapItem} $gItem$ in $r.\syntax{generalSymbolMapItem}$
+we have that $gItem.\syntax{source}$ is a symbol in $|\Sigma|$ 
+and
+for every 
+\syntax{Symbol} $s$ in $r.\syntax{generalSymbolMapItem}$
+we have that $s$ is a symbol in $|\Sigma|$,
+$$sem(\Gamma,\Sigma,r) = \sigma: \Sigma\to\Sigma'$$
+\noindent where 
+$\sigma$ must be the unique signature morphism with the properties
+\begin{enumerate}
+\item $\sigma$ matches $r$: for each \syntax{SymbolMapItem} 
+$r.\syntax{generalSymbolMapItem}$ $gItem$ in 
+$r.\syntax{generalSymbolMapItem}$, we have that
+$|\sigma|(gItem.\syntax{source}) = gItem.\syntax{target}$ and for each 
+\syntax{Symbol} $s$ in $r.\syntax{generalSymbolMapItem}$,
+$|\sigma|(s) = s$,
+\item $\sigma$ is the identity outside the domain of $r$:
+for each symbol $s\in|Sigma|$ such that there is no \syntax{SymbolMapItem}
+$gItem$ in $r.\syntax{generalSymbolMapItem}$ with $gItem.source = s$,
+$|\sigma|(s) = s$,
+\item $\sigma$ is surjective on $|\Sigma'|$: for each $y\in|\Sigma'|$,
+there is $x\in |\Sigma|$ such that $|\sigma|(x) = y$,
+\item $\sigma$ is final: for each signature $\Sigma''$ and each
+map of symbols $r':|\Sigma'|\times|\Sigma''|$, $r'$ determines a signature
+morphism $\sigma'':\Sigma'\to\Sigma''$ whenever
+$|\sigma|;r'$ determines a signature morphism
+$\sigma_{r'}:\Sigma\to\Sigma''$.
+\end{enumerate}
+
+If $\sigma$ does not exist or is not uniquely determined, the semantics of
+$r$ is undefined.
+
 \ednote{This is needed for translations, same as induced\_from vs. induced\_from\_to
 in CASL. How to deal with this? TM: couldn't we use the same notions as in
-the CASL reference manual p. 198/199? I have packed the sources into sem.tgz}
+the CASL reference manual p. 198/199? I have packed the sources into sem.tgz
+MC: I have replaced the condition that $\sigma$ should be generative - institution dependent - with the property ensured by generativity, namely finality. I would prefer
+here not to introduce another concept. But: is this sufficient or we must introduce generativity?}
 
 \semdom{
 \begin{array}{ll}
@@ -7321,55 +7359,69 @@ sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 \end{array}
 }
 
-If $m$ is a \syntax{SymbolMap},
+If $r$ is a \syntax{SymbolMap} such that for each 
+\syntax{SymbolMapItem}  $gItem$ in $r.\syntax{generalSymbolMapItem}$ we have that
+$gItem.\syntax{source} \in |\Sigma|$ and
+$gItem.\syntax{target} \in |\Sigma'|$
+and for each
+\syntax{Symbol}  $s$ in $r.\syntax{generalSymbolMapItem}$ we have that
+$s$ is an element both of $|\Sigma|$ and $|\Sigma'|$,
+$$sem(\Gamma,\Sigma,\Sigma',m) = \sigma:\Sigma\to\Sigma'$$
+\noindent where $\sigma$ must be the unique element of the set
+$\{ \varphi : \Sigma\to\Sigma' \mid \text{ there is a set } S \subseteq |\Sigma|
+\text{ such that } \varphi \text{ matches } r \text{ and is the identity on } S\\
+\text{ and } S \text{ is maximal with the property that such morphism exists} \}$.
+If the set fails to be a singleton, the semantics of $r$ is undefined.
 
- $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma$$
-
-where 
-$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$ 
-and \\
-$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2, \allowbreak m.\syntax{generalSymbolMapItem})$.
-
-Applications \shall 
-implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
-given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely 
-defined – in detail:
-
-\begin{algorithmic}
-  \REQUIRE $O_s, O_t$ are OMS
-  \REQUIRE $M\subseteq |\Sig(O_s)|\times|\Sig(O_t)|$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
-  \FORALL{$e_s\in|\Sig(O_s)|$ not covered by $M$}
-    \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
-    \STATE $N_t\leftarrow\{\operatorname{ e\in|\Sig(O_t)|  \mid localname}(e) = n_s\}$
-    \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
-      \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
-    \ENDIF
-  \ENDFOR
-  \ENSURE $M$ completely covers $|\Sigma(O_s)|$
-\end{algorithmic}
-\ednote{We need institutions with a symbol functor, otherwise signatures
-do not have symbols. The ``unique target'' method does not cover cases
-where the target is unique because the target has a unique symbol
-of the required kind and type. It does not cover the case where just
-the symbol with the same name is used. But maybe all this should be
-made institution-specific? TM: I think my answer to the previous
-ednote should solve this.}
-
-The local name of a non-logical symbol $e$ is determined as follows\footnote{In practice, this can 
-often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
-respective OMS (\cf \cref{c:identifiers}).  In general, however, functions that turn abbreviations 
-into IRIs are not invertible.  For this reason, the implicit mapping of non-logical symbols is 
-specified independently from IRI abbreviation mechanisms possibly employed in the 
-OMS.}:\hspace{-2cm}
-\begin{algorithmic}
-  \REQUIRE $e$ is a non-logical symbol (identified by an IRI; \cf \cref{c:identifiers})
-  \IF[production \syntax{ifragment} in \nisref{IETF/RFC 3987:2005}]{$e$ has a fragment $f$}
-    \RETURN $f$
-  \ELSE
-    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nisref{W3C/TR REC-xml:2008}
-    \RETURN $n$
-  \ENDIF
-\end{algorithmic}
+%If $m$ is a \syntax{SymbolMap}, 
+%
+% $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma$$
+%
+%where 
+%$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$ 
+%and \\
+%$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2, \allowbreak m.\syntax{generalSymbolMapItem})$.
+%
+%Applications \shall 
+%implicitly map those non-logical symbols of the source OMS, for which an explicit mapping is not 
+%given, to non-logical symbols of the same (local) name in the target OMS, wherever this is uniquely 
+%defined – in detail:
+%
+%\begin{algorithmic}
+%  \REQUIRE $O_s, O_t$ are OMS
+%  \REQUIRE $M\subseteq |\Sig(O_s)|\times|\Sig(O_t)|$ maps non-logical symbols (\ie elements of the signature) of $O_s$ to non-logical symbols of $O_t$
+%  \FORALL{$e_s\in|\Sig(O_s)|$ not covered by $M$}
+%    \STATE $n_s\leftarrow\operatorname{localname}(e_s)$
+%    \STATE $N_t\leftarrow\{\operatorname{ e\in|\Sig(O_t)|  \mid localname}(e) = n_s\}$
+%    \IF[\ie if there is a unique target]{$N_t = \{ e_t \}$}
+%      \STATE $M\leftarrow M\cup\{(e_s, e_t)\}$
+%    \ENDIF
+%  \ENDFOR
+%  \ENSURE $M$ completely covers $|\Sigma(O_s)|$
+%\end{algorithmic}
+%\ednote{We need institutions with a symbol functor, otherwise signatures
+%do not have symbols. The ``unique target'' method does not cover cases
+%where the target is unique because the target has a unique symbol
+%of the required kind and type. It does not cover the case where just
+%the symbol with the same name is used. But maybe all this should be
+%made institution-specific? TM: I think my answer to the previous
+%ednote should solve this.}
+%
+%The local name of a non-logical symbol $e$ is determined as follows\footnote{In practice, this can 
+%often have the effect of undoing an IRI abbreviation mechanism that was used when writing the 
+%respective OMS (\cf \cref{c:identifiers}).  In general, however, functions that turn abbreviations 
+%into IRIs are not invertible.  For this reason, the implicit mapping of non-logical symbols is 
+%specified independently from IRI abbreviation mechanisms possibly employed in the 
+%OMS.}:\hspace{-2cm}
+%\begin{algorithmic}
+%  \REQUIRE $e$ is a non-logical symbol (identified by an IRI; \cf \cref{c:identifiers})
+%  \IF[production \syntax{ifragment} in \nisref{IETF/RFC 3987:2005}]{$e$ has a fragment $f$}
+%    \RETURN $f$
+%  \ELSE
+%    \STATE $n\leftarrow$ the longest suffix of $e$ that matches the \syntax{Nmtoken} production of XML \nisref{W3C/TR REC-xml:2008}
+%    \RETURN $n$
+%  \ENDIF
+%\end{algorithmic}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
