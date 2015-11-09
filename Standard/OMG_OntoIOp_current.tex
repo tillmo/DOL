@@ -5221,14 +5221,18 @@ NetworkRefinementMap ::= Refinement ( ',' Refinement )*
 EntailmentDefinition ::= 'entailment' EntailmentName '='
                          EntailmentType 'end'
 EntailmentName     ::= IRI
-EntailmentType     ::= GroupOMS 'entails' GroupOMS
-                     | OMSName 'in' Network 'entails' GroupOMS
-                     | Network 'entails' Network
-EquivalenceDefinition ::= 'equivalence' EquivalenceName ':'
-                          EquivalenceType 'end'
+EntailmentType     ::= OMSOMSEntailment
+                     | NetworkOMSEntailment
+                     | NetworkNetworkEntailment
+OMSOMSEntailment         ::= GroupOMS 'entails' GroupOMS
+NetworkOMSEntailment     ::= OMSName 'in' Network 'entails' GroupOMS
+NetworkNetworkEntailment ::= Network 'entails' Network
+EquivalenceDefinition    ::= 'equivalence' EquivalenceName ':'
+                             EquivalenceType 'end'
 EquivalenceName    ::= IRI
-EquivalenceType    ::= GroupOMS '<->' GroupOMS ['=' OMS]
-                     | Network '<->' Network ['=' Network]
+EquivalenceType    ::= OMSEquivalence | NetworkEquivalence
+OMSEquivlence      ::= GroupOMS '<->' GroupOMS ['=' OMS]
+NetworkEquivalence ::= Network '<->' Network ['=' Network]
 ConservativeExtensionDefinition ::= 'cons-ext' ConservativeExtensionName [Conservative] ':'
                         ConservativeExtensionType 'for' InterfaceSignature
 ConservativeExtensionName       ::= IRI
