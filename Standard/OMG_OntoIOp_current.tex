@@ -7493,7 +7493,8 @@ $f.\syntax{removalKind} = keep$,
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
 (keep, \cI',\Sigma', \Delta')$$
 \noindent
-where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) = 
+(\cI', \Sigma',\cM',\Delta')$.
 %and $(\Sigma', \Delta')$ is the smallest sub-theory of $(\Sigma, \Delta)$ that 
 %includes $(\Sigma'',\Delta'')$. \ednote{TODO: update}
 
@@ -7501,11 +7502,30 @@ If $f$ is a \syntax{Filtering} such that
 $f.\syntax{removalKind} = remove$,
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f) = 
 (remove,\cI',\Sigma', \Delta')$$
-where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMS}) = (\cI', \Sigma', \Delta')$.
+where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) = 
+(\cI', \Sigma',\cM', \Delta')$.
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
 %%%%%%%%%%%%%%%%%%%%%
+
+\semdom{
+\begin{array}{ll}
+ sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{BasicOMSOrSymbolList})& = 
+     (\cI',\Sigma',\cM',\Delta')\\
+ & : (Institution,Signature,Sentences)
+\end{array}
+}
+
+If $O$ is a \syntax{BasicOMS}, we have defined
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta), O) = (Gamma,(\cI',\Sigma',\cM',\Delta'))$
+and the semantics of $O$ as a \syntax{BasicOMSOrSymbolList} is 
+$(\cI',\Sigma',\cM',\Delta')$.
+
+If $s$ is a set of symbols,
+$sem(\Gamma,(\cI,\Sigma,\cM,\Delta), s) = (\cI, sem(\Gamma,\Sigma,s), \emptyset,\emptyset)$.
+
+%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of extension}
 
