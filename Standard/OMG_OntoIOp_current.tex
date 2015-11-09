@@ -4,99 +4,99 @@
 
 \newcommand{\version}{0.99}
 
-
-%todo
-% language/logic/mapping registration process - maybe in a different document
-
-% more useful EBNF (see CASL RefMan)
-
 % This file was initially converted to LaTeX by Writer2LaTeX ver. 1.1.8
 % (see http://writer2latex.sourceforge.net for more info)
 % 
 % Further formatting was done using the isov2 LaTeX package
 
 %% Global switches
-% Do we pretend that this is a final version?
+%% Do we pretend that this is a final version?
 \newif\ifpretendfinal
-\pretendfinaltrue 
-
-% Real PDF comments, or "paper" margin notes (using todonotes package)?
-\newif\ifpdfcomment
-%\pdfcommenttrue
-\pdfcommentfalse
-%
-% \documentclass[10pt,fleqn,%
-% \ifpretendfinal
-% final%
-% \else
-% draft%
-% \fi,
-% %final,
-% ]{scrreprt}
+\pretendfinalfalse 
+%% Real PDF comments, or "paper" margin notes (using todonotes package)?
+%%\newif\ifpdfcomment
+%%\pdfcommenttrue
+%%\pdfcommentfalse
 
 
-\documentclass[10pt,fleqn,final]{scrreprt}
-% \documentclass[10pt,fleqn,draft]{scrreprt}
+\documentclass[10pt, a4paper, wd]{isov2} 
+
+%% Cleaning up things that isov2 gets wrong
+\makeatletter
+%% Other packages define a more modern variant of \ifpdf
+\let\ifpdf\@undefined
+%% Need to use the mathematical \begin{definition}âŠ\end{definition} environment; that's incompatible with \definition from isov2; therefore we rename the latter
+\let\termdefinition\definition
+\let\definition\@undefined
+%% manipulate the section counter, so that AMS-style theorems work
+\def\c@section{0}
+\makeatother
+
+
 \textwidth 17.5cm
-\hoffset -2cm
+\hoffset -0.7cm
 \textheight 24cm
-\voffset -1cm
+%\voffset 1cm
 
 
-\setcounter{secnumdepth}{3
-\setcounter{tocdepth}{3}
-\def\toclevel@subsubsection{3}}
-
+\setcounter{secnumdepth}{4
+\setcounter{tocdepth}{4}
+\def\toclevel@subsubsection{4}}
+ 
 \usepackage{changebar}
- %
-   \newcommand{\cbs}[0]{\xspace}
-   \newcommand{\cbe}[0]{\xspace}
-% \newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace} %
-% \newcommand{\cbe}[0]{\cbend{}\color{black}\xspace} %
 
+\newcommand{\cbs}[0]{\xspace}
+\newcommand{\cbe}[0]{\xspace}
+%% \newcommand{\cbs}[0]{\cbstart{}\color{red}\xspace} %
+%% \newcommand{\cbe}[0]{\cbend{}\color{black}\xspace} %
 
+\usepackage{isobib} 
 \usepackage{pdflscape}
 
-\usepackage[show]{ed}
-%\usepackage[hide]{ed}
+%%\usepackage[show]{ed}
+\usepackage[hide]{ed}
 
-%color highlight, for editing
+%%color highlight, for editing
 \usepackage{color}
 \newcommand{\red}[1]{#1} %{\color{red}{#1}}} % currently, no color highlighting
 
-
 %% Hacks
-%\usepackage{savesym}
+%%\usepackage{savesym}
 
 %% Font and language
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{textcomp}
-%\usepackage{lmodern} % FN: commented out since OMG wants its own fonts
-%\usepackage[scaled=.8]{beramono} % FN: commented out since OMG wants its own fonts
+
+%%\usepackage{lmodern} % FN: commented out since OMG wants its own fonts
+%%\usepackage[scaled=.8]{beramono} % FN: commented out since OMG wants its own fonts
 \usepackage{courier}
 \usepackage[scaled=.9]{helvet}
 
-% set up Unicode symbols
+
+
+%%\usepackage{lmodern} %DIF > 
+%%\usepackage[scaled=.8]{beramono} %DIF > 
+%% set up Unicode symbols
 \DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
 
-
-% Keyword Index 
+%% Keyword Index 
 \usepackage{makeidx}
 \makeindex
-% used in definition of \termref, \termdefinition  
 
+%% used in definition of \termref, \termdefinition  
 \newcommand{\dolindex}{Distributed Ontology Modeling and Specification Language (DOL)}
 
 %% Math
-% \usepackage{mathtools}
-% reintroducing a math-style \begin{definition}…\end{definition} environment
-% \usepackage{amsthm}
-% \theoremstyle{definition}
-% \newtheorem{definition}{Definition}
+%% \usepackage{mathtools}
+%% reintroducing a math-style \begin{definition}...\end{definition} environment %DIF > 
+
+%% \usepackage{amsthm}
+%% \theoremstyle{definition}
+%% \newtheorem{definition}{Definition}
 \usepackage{hetonto-subset}
-% \usepackage{diagrams}
+%% \usepackage{diagrams}
 
 %% Utilities
 \usepackage{etoolbox}
@@ -105,9 +105,10 @@
 \usepackage{stmaryrd}
 \usepackage[inline]{enumitem}
 
+
 %% Graphics
 \usepackage{standalone}
-\usepackage[final]{graphicx}
+\usepackage[pdftex]{graphicx}
 \usepackage{tikz}
 \usepackage{rotating}
 \usetikzlibrary{matrix,shapes,arrows,calc}
@@ -123,22 +124,23 @@
 
 %% linguistics
 \usepackage{xspace}
-% English
+%% English
 \newcommand*{\cf}{cf.\@\xspace}
 \newcommand*{\eg}{e.g.\@\xspace}
 \newcommand*{\etal}{et al.\@\xspace}
 \newcommand*{\ie}{i.e.\@\xspace}
 \newcommand*{\vs}{vs.\@\xspace}
 \newcommand*{\wrt}{w.r.t.\@\xspace}
-% Quotes
-\usepackage[babel]{csquotes} 
+%% Quotes
+\usepackage[babel]{csquotes}
+%%\MakeAutoQuote{â}{â}
+%%\MakeAutoQuote*{â}{â}
 \MakeAutoQuote{“}{”}
 \MakeAutoQuote*{‘}{’}
-% FN: can we remove that? the quotation marks lead to errors in my editor, so I removed them in the source code anyway. 
 
 %% Hyperref
 \usepackage[
-          % we want hyperlinks even in draft mode
+          %% we want hyperlinks even in draft mode
           final,
           plainpages=false,
           pdfpagelabels,
@@ -147,28 +149,28 @@
          ]{hyperref}
 
 %% To-do notes and/or comments
-% \savesymbol{todo}
-% \restoresymbol{ed}{todo}
+%% \savesymbol{todo}
+%% \restoresymbol{ed}{todo}
 
 \usepackage{xkeyval}
 \makeatletter
-% author
+%% author
 \newcommand*\CommentAuthor{}
 \define@key{Comment}{author}{%
 \renewcommand*\CommentAuthor{#1}}
-% date
+%% date
 \newcommand*\CommentDate{}
 \define@key{Comment}{date}{%
 \renewcommand*\CommentDate{#1}}
-% id
+%% id
 \newcommand*\CommentId{}
 \define@key{Comment}{id}{%
 \renewcommand*\CommentId{#1}}
-% replyto
+%% replyto
 \newcommand*\CommentReplyTo{}
 \define@key{Comment}{replyto}{%
 \renewcommand*\CommentReplyTo{#1}}
-% type (currently represented as color and text prefix)
+%% type (currently represented as color and text prefix)
 \newcommand*\CommentType{}
 \define@key{Comment}{type}{%
 \renewcommand*\CommentType{#1}}
@@ -177,7 +179,7 @@
 author=,date=,id=,replyto=,type=}{}%
 
 \newcommand*{\SetCommentColorByType}[1]{%
-% http://tex.stackexchange.com/questions/24922/comparing-an-argument-to-a-string-when-argument-is-a-result-of-a-command-with-et
+%% http://tex.stackexchange.com/questions/24922/comparing-an-argument-to-a-string-when-argument-is-a-result-of-a-command-with-et
 \edef\localType{{#1}}% enforce expansion of #1
 \expandafter\ifstrequal\localType{q-aut}{\colorlet{CommentColor}{red}}{%
 \expandafter\ifstrequal\localType{q-all}{\colorlet{CommentColor}{orange}}{%
@@ -204,8 +206,8 @@ author=,date=,id=,replyto=,type=}{}%
 }
 
 \makeatletter
-\ifpdfcomment
-% forward class options "draft" or "final" into document
+%%\ifpdfcomment
+%% forward class options "draft" or "final" into document
 \ifdr@ftd@c
 \usepackage[draft]{pdfcomment}
 \else
@@ -213,101 +215,105 @@ author=,date=,id=,replyto=,type=}{}%
 \fi
 
 
-
 \newcommand*{\todonote}[2][]{%
 \initComment{#1}%
 \pdfcomment[author=\CommentAuthor,color=CommentColor,date=\CommentDate,id=\CommentId]{%
 \CommentPrefix
-%\usebox{CommentPrefix}
+%%\usebox{CommentPrefix}
 #2}}
 
 
 \newcommand*{\reply}[2][]{%
 \initComment{#1}%
 \pdfreply[author=\CommentAuthor,color=CommentColor,date=\CommentDate,id=\CommentId,replyto=\CommentReplyTo]{%
-%\usebox{CommentPrefix}
+%%\usebox{CommentPrefix}
 #2}}
 
 \newcommand*{\markupcomment}[3][]{%
 \initComment{#1}%
 \pdfmarkupcomment[author=\CommentAuthor,color=CommentColor,date=\CommentDate,id=\CommentId]{#2}{%
-%\usebox{CommentPrefix}
+%%\usebox{CommentPrefix}
 #3}}
 
-% Hyperlinks don't work inside pdfcomment's PDF comments :-(
+%% Hyperlinks don't work inside pdfcomment's PDF comments :-(
 \newcommand*{\todonoteURL}[1]{#1}
-%\else % \ifpdfcomment
-%\ifdr@ftd@c
-%\usepackage[show]{ed}
-%\else
-%\usepackage[hide]{ed}
-%\fi
-% \usepackage[obeyDraft,textsize=tiny]{todonotes} % must load after tikz
-
-%FN I commented the above out, because I could not get it to work, instead I include
- 
 
 
+%%\else % \ifpdfcomment 
+%%\ifdr@ftd@c  
+%%\usepackage[show]{ed} 
+%%\else  
+%%\usepackage[hide]{ed} 
+%%\fi 
+%% \usepackage[obeyDraft,textsize=tiny]{todonotes} % must load after tikz
+
+
+%%FN I commented the above out, because I could not get it to work, instead I include
 
 \renewcommand*{\todonote}[2][]{% FN: Changed newcommand to renewcommand
+%%\newcommand*{\todonote}[2][]{% %DIF > 
 \initComment{#1}%
-% TODO set color according to type
-% TODO display author (unless empty)
-% TODO display date (unless empty)
+%% TODO set color according to type
+%% TODO display author (unless empty)
+%% TODO display date (unless empty)
 \ednote{\CommentPrefix #2}}
 
+
 \renewcommand*{\reply}[2][]{% FN: Changed newcommand to renewcommand
+%%\newcommand*{\reply}[2][]{% %DIF > 
 \initComment{#1}%
-% TODO set color according to type
-% TODO display author (unless empty)
-% TODO display date (unless empty)
+%% TODO set color according to type
+%% TODO display author (unless empty)
+%% TODO display date (unless empty)
 \ednote{Reply: \CommentPrefix #2}}
 
+
 \renewcommand*{\markupcomment}[3][]{% FN: Changed newcommand to renewcommand
+%%\newcommand*{\markupcomment}[3][]{% %DIF > 
 \initComment{#1}%
-% TODO set color according to type
-% TODO display author (unless empty)
-% TODO display date (unless empty)
+%% TODO set color according to type
+%% TODO display author (unless empty)
+%% TODO display date (unless empty)
 \ednote{\CommentPrefix #3}#2}
 
-% dummy versions of some pdfcomment commands
+%% dummy versions of some pdfcomment commands
 \renewcommand*{\textLF}{\\}
 
-\renewcommand*{\todonoteURL}[1]{\url{#1}}
-%\fi % \ifpdfcomment FN: commented this out
+
+\renewcommand*{\todonoteURL}[1]{\url{#1}} %DIF > 
+%%\fi % \ifpdfcomment %DIF > 
+
 \makeatother
 \newcommand*{\ticket}[1]{\todonoteURL{http://trac.informatik.uni-bremen.de:8080/OntoIOp/ticket/#1}}
 
-% comment commands for frequent users
+%% comment commands for frequent users
 \newcommand*{\CLnote}[2][author=Christoph Lange]{%
-\todonote[author=Christoph Lange,#1]{#2} 
-}
+\todonote[author=Christoph Lange,#1]{#2}}
 
 \newcommand{\toleft}{\noindent$x\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$}
-
 \newcommand*{\lessthan}{<}
 \newcommand*{\greaterthan}{>}
 
 
-
 %% ISO structures not defined by isov2.cls, and additional semantic macros
-% cross-reference to a normative reference
+%% cross-reference to a normative reference
 \newcommand*{\nitem}[1]{[#1]}
-% reference from the definition of one term to another defined term
+
+%%\newcommand*{\nisref}[1]{[#1]} %DIF > 
+
+%% reference from the definition of one term to another defined term
 \newcommand*{\termref}[1]{\index{#1}#1\xspace}
-% subject field restriction of a term
+%%\newcommand*{\termref}[1]{\textit{#1}} %DIF > 
+%% subject field restriction of a term
 \newcommand*{\subjectfield}[1]{ {\textlangle}#1{\textrangle}}
-% synonym of a term
-\newcommand*{\synonym}{; }
-% MIME type
+%% synonym of a term
+
+\newcommand*{\synonym}{\\} %DIF > 
 \newcommand*{\mimetype}[1]{\textit{#1}}
-% Font style for syntactic features only supported with institutions
 \newcommand*{\institutionsOnly}{\bfseries\itshape}
-% Font style for syntactic features
 \newcommand*{\syntax}[1]{\texttt{#1}}
 
-
-% requirements (as per Annex H of ISO/IEC Directives, Part 2)
+%% requirements (as per Annex H of ISO/IEC Directives, Part 2)
 \newcommand*{\notallowed}{\textbf{not allowed}\xspace}
 \newcommand*{\notrequired}{\textbf{not required}\xspace}
 \newcommand*{\required}{\textbf{required}\xspace}
@@ -319,13 +325,19 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand*{\may}{\textbf{may}\xspace}
 \newcommand*{\hasto}{\textbf{must}\xspace}
 
-% abbreviations
+%%\newcommand*{\hasto}{\textbf{has to}\xspace} %DIF > 
+
+
+%% abbreviations
 \newcommand*{\IS}{OMG Specification\xspace}
 
+%%\newcommand*{\IS}{OMG Standard\xspace} %DIF > 
+
+
 %% Math macros
-%\newcommand{\Mod}{\ensuremath{\mathrm{Mod}}}
-%\newcommand{\Sen}{\ensuremath{\mathrm{Sen}}}
-%\newcommand{\Sign}{\ensuremath{\mathrm{Sign}}}
+%%\newcommand{\Mod}{\ensuremath{\mathrm{Mod}}}
+%%\newcommand{\Sen}{\ensuremath{\mathrm{Sen}}}
+%%\newcommand{\Sign}{\ensuremath{\mathrm{Sign}}}
 \newcommand{\conjclause}{\ensuremath{p_1 \wedge \dots \wedge p_n}}
 \newcommand{\id}{\ensuremath{\operatorname{id}}}
 \newcommand{\powerset}[1]{\mathcal{P}(#1)}
@@ -336,18 +348,17 @@ author=,date=,id=,replyto=,type=}{}%
 %% from HetCASL summary
 \newcommand{\Si}{\Sigma}
 \newcommand{\al}{\alpha}
-%\newcommand{\sen}{\mathbf {Sen}}
 \newcommand{\ModFunctor}{\mathbf{Mod}}
 \newcommand{\SenFunctor}{\mathbf{Sen}}
 \newcommand{\Sig}{\mathsf{Sig}}
 \renewcommand{\Th}{\mathsf{Th}}
 \newcommand{\Mor}{\mathsf{Mor}}
+%%\newcommand{\Sig}{\mathbf{Sig}} %DIF > 
 \newcommand{\PF}{\mathit{PF}}
 \newcommand{\TF}{\mathit{TF}}
 
 \newcommand{\Inst}{\ensuremath{\mathbf{Inst}}}
 \newcommand{\Name}{\ensuremath{\mathbf{Name}}}
-
 %\newcommand{\map}[2]{\colon#1\!\longrightarrow\!#2}
 
 \newcommand{\Gram}[1]{\texttt{#1}}
@@ -384,6 +395,8 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand*{\meta}{\ensuremath{\operatorname{meta}}\xspace}
 
 \newcommand{\BASICOMS}{\ensuremath{\langle\Sigma,\Delta\rangle}\xspace}
+%%\newcommand{\BASICONTO}{\ensuremath{\langle\Sigma,\Delta\rangle}\xspace} %DIF > 
+
 
 \newcommand{\semdom}[1]{
 \begin{center}
@@ -407,17 +420,13 @@ author=,date=,id=,replyto=,type=}{}%
   #5,&\mBox{otherwise}
 \end{array}\right.}
 
-
-
-
-
-% Logics
+%% Logics
 \newcommand{\ELDL}{\ensuremath{\mathcal{EL}}\xspace}
 \newcommand*{\DOL}{\ensuremath{\mathsf{DOL}}\xspace}
 \newcommand*{\PL}{\ensuremath{\mathit{PL}}\xspace}
 \newcommand{\CLminus}{\ensuremath{{\CL}^{-}}\xspace} 
 
-% translations
+%% translations
 \newcommand{\translate}[2]{\ensuremath{{#1}{\to}{#2}}\xspace}
 \newcommand{\PropToOWL}{\translate\Prop\OWL}
 \newcommand{\PropToFOL}{\translate\Prop\FOL}
@@ -426,43 +435,29 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\OWLToCL}{\translate\OWL\CL}
 \newcommand{\FOLToCL}{\translate\FOL\CL}
 
-%% Common Logic
-
-
 \newcommand{\holds}[1]{\ensuremath\mathtt{Holds}_{#1}\xspace}
 \newcommand{\apply}[1]{\ensuremath\mathtt{App}_{#1}\xspace}
-
-
-% FN: Latex Hacks by Fabian 
-
-% Sourcecode from isov2.cls
-\newcommand{\outofscopename}{The following are outside the scope of this }
-\newcommand{\pagename}{Page}
-%\newcommand{\tablename}{Table}
-\newcommand{\tbpname}{To be published.}
-\newcommand{\annexrefname}{annex}
-\newcommand{\clauserefname}{clause}
-\newcommand{\examplerefname}{example}
-\newcommand{\figurerefname}{Figure}
-\newcommand{\noterefname}{note}
-\newcommand{\tablerefname}{Table}
-\newcommand{\pagerefname}{page}
-%\newcommand{\abstractname}{}
-%\newcommand{\appendixname}{}
-%\newcommand{\chaptername}{}
-%\newcommand{\partname}{}
-\newcommand{\refname}{}
-\newcommand{\isourl}[1]{\texttt{<}\url{#1}\texttt{>}}
-\newcommand{\aref}[1]{\annexrefname~\ref{#1}}
-\newcommand{\bref}[1]{[\ref{#1}]}
-\newcommand{\cref}[1]{\clauserefname~\ref{#1}}
-\newcommand{\eref}[1]{\examplerefname~\ref{#1}}
-\newcommand{\fref}[1]{\figurerefname~\ref{#1}}
-\newcommand{\nref}[1]{\noterefname~\ref{#1}}
-\newcommand{\tref}[1]{\tablerefname~\ref{#1}}
-\newcommand{\pref}[1]{\pagerefname~\pageref{#1}}
-
-
+%% renewing the command since it is already part of isov2 style
+%\renewcommand{\outofscopename}{The following are outside the scope of this }
+%\renewcommand{\pagename}{Page}
+%\renewcommand{\tbpname}{To be published.}
+\renewcommand{\annexrefname}{annex}
+\renewcommand{\clauserefname}{clause}
+\renewcommand{\examplerefname}{example}
+\renewcommand{\figurerefname}{Figure}
+\renewcommand{\noterefname}{note}
+\renewcommand{\tablerefname}{Table}
+\renewcommand{\pagerefname}{page}
+\renewcommand{\refname}{}
+%\renewcommand{\isourl}[1]{\texttt{<}\url{#1}\texttt{>}}
+\renewcommand{\aref}[1]{\annexrefname~\ref{#1}}
+%\renewcommand{\bref}[1]{\cite{#1}}
+\renewcommand{\cref}[1]{\clauserefname~\ref{#1}}
+\renewcommand{\eref}[1]{\examplerefname~\ref{#1}}
+\renewcommand{\fref}[1]{\figurerefname~\ref{#1}}
+\renewcommand{\nref}[1]{\noterefname~\ref{#1}}
+\renewcommand{\tref}[1]{\tablerefname~\ref{#1}}
+\renewcommand{\pref}[1]{\pagerefname~\pageref{#1}}
 \newcommand{\rtm}[0]{\small{\textregistered\xspace}}
 \newcommand{\OMGparagraph}[1]{
 \vspace{3pt}
@@ -470,84 +465,66 @@ author=,date=,id=,replyto=,type=}{}%
 \vspace{3pt}
 }
 
-%%%% Code which is used to produce minipages with border
 \usepackage{xparse}
 \newlength{\currentindent}
 \newsavebox{\fminipagebox}
 \setlength{\currentindent}{\parindent}
 \NewDocumentEnvironment{fminipage}{m O{\fboxsep}}
- {
+  {
   \par\kern#2\noindent\begin{lrbox}{\fminipagebox}
   \begin{minipage}{#1}\ignorespaces  \setlength{\parindent}{\currentindent}}
- {\end{minipage}\end{lrbox}%
-  \makebox[#1]{%
+  {\end{minipage}\end{lrbox}%
+   \makebox[#1]{%
     \kern\dimexpr-\fboxsep-\fboxrule\relax
-    \fbox{\usebox{\fminipagebox}}%
-    \kern\dimexpr-\fboxsep-\fboxrule\relax
-  }\par\kern#2
- }
-
-%%%% 
-
-
-\newenvironment{symbols}[0]{\begin{longtable}{p{.15\textwidth}p{.84\textwidth}}}{\end{longtable}}
-\newcommand{\symboldef}[2]{ #1 & #2 \\}
-
-%\renewcommand{\termref}[1]{#1} 
+      \fbox{\usebox{\fminipagebox}}%
+      \kern\dimexpr-\fboxsep-\fboxrule\relax
+    }\par\kern#2
+   }
+\renewenvironment{symbols}[0]{\begin{longtable}{p{.15\textwidth}p{.84\textwidth}}}{\end{longtable}}
+\renewcommand{\symboldef}[2]{ #1 & #2 \\}
 \usepackage{textcomp}
-
 \usepackage{longtable}
-
-
 \newcommand{\normative}[0]{{\begin{center}{\Large{(Normative})}\end{center}} \bigskip}
 \newcommand{\informative}[0]{{\begin{center}{\Large{(Informative})}\end{center}} \bigskip}
 
-\newcommand{\sectionWN}[1]{ \section*{#1}   \addcontentsline{toc}{section}{#1}  } 
+%\newcommand{\sectionWN}[1]{\sclause{#1}\addcontentsline{toc}{section}{#1}} 
 
-%semantics
+
 \newcommand{\prefix}{\mathit{prefix}}
 \newcommand{\current}{\mathit{current}}
 \newcommand{\PMap}{\mathit{PMap}}
-
 % Temporary Hacks (to be removed later or cleaned up) 
-\newcommand{\clause}[1]{\chapter{#1}}
-\newcommand{\clauseN}[1]{\chapter{#1} \normative}
 
-\newcommand{\clauseI}[1]{\chapter{#1} \informative }
-
-\newcommand{\sclause}[1]{\section{#1}}
-\newcommand{\ssclause}[1]{\subsection{#1}}
-\newcommand{\sssclause}[1]{\subsubsection{#1}}
-\newcommand{\termdefinition}[2]{\index{#1}\paragraph{#1} #2}
-\newcommand{\termdefinitionLight}[2]{\paragraph{#1} #2}
 \renewcommand{\nref}[1]{\ref{nref-#1}}
+%% Commented out to remove the redundancy. and wrong use of \chapter command, since \chapter command is not part of isov2.
 
-
+%\renewcommand{\clause}[1]{\chapter{#1}}
+%\newcommand{\clauseN}[1]{\chapter{#1} \normative}
+\newcommand{\clauseI}[1]{\clause{#1} \informative}
+%\renewcommand{\sclause}[1]{\section{#1}}
+%\renewcommand{\ssclause}[1]{\subsection{#1}}
+%\renewcommand{\sssclause}[1]{\subsubsection{#1}}
+\renewcommand{\termdefinition}[2]{\index{#1}\textbf{#1} #2}
+%\newcommand{\termdefinitionLight}[2]{\paragraph{#1} #2}
+\newcommand{\termdefinitionLight}[2]{\textbf{#1} #2}
+\newcommand{\nisref}[1]{#1}
 \renewcommand{\subjectfield}[1]{} % {#1}
-%\renewcommand{\bref}[1]{#1}
+\renewcommand{\normannex}[1]{ \sclause{Annex: #1} \normative}
+%\renewcommand{\infannex}[1]{\sclause{Annex: #1}  \informative }
+\renewenvironment{definitions}[0]{\medskip }{}
+\renewenvironment{note}[0]{\ \\ \textsc{Note} \quad}{}
+\renewenvironment{example}[0]{\ \newline \textsc{Example}\quad }{}
 
-\newcommand{\normannex}[1]{ \chapter{Annex: #1} \normative}
-\newcommand{\infannex}[1]{ \chapter{Annex: #1}  \informative }
-\newenvironment{definitions}[0]{\medskip }{}
-\newenvironment{note}[0]{\ \\ \textsc{Note} \quad}{}
-\newenvironment{example}[0]{\ \newline \textsc{Example}\quad }{}
-%\newenvironment{symbols}[0]{\medskip
-%	 \begin{tabbing} 
-%	OWL 2 Full XXXX  \= Text \kill
-%}{\end{tabbing}}
 
-%\usepackage{cleveref}
-%\renewcommand*{\todonote}[2][]{}
 
-%the afterpage is used to introduce a blank page
 \usepackage{afterpage}
-\newcommand\blankpage{%
-    \null
-    \thispagestyle{empty}%
-    \addtocounter{page}{-1}%
-    \newpage}
 
-%% UML
+\newcommand\blankpage{%
+      \null
+      \thispagestyle{empty}%
+      \addtocounter{page}{-1}%
+      \newpage}
+
 \newcommand{\uml}[1]{\textsf{#1}}
 \newcommand{\stereotype}[1]{\uml{\flqq#1\frqq}}
 \newcommand{\aggregation}{\raisebox{0.2pt}{\begin{sideways}\fontsize{6pt}{6pt}\selectfont$\lozenge$\end{sideways}}}
@@ -556,56 +533,51 @@ author=,date=,id=,replyto=,type=}{}%
 \newcommand{\NZ}{\mathbb{Z}}
 \newcommand{\ZZ}{\mathbb{Z}}
 \newcommand{\sem}[1]{\mathopen\llbracket#1\mathclose\rrbracket}
-
-
-% colors
 \newcommand{\white}[1]{{\color{white}{#1}}}
 \newcommand{\qqquad}{\white{x}\qquad}
+
 
 \allowdisplaybreaks
 
 
-%\usepackage{comment}
-%\includecomment{versiona}
 
 \begin{document}
 
 \nocite{OM2014,JYB-Festschrift2015-DOL,womo13,DOL-TKE2012,DOL-3semantics,blendingc3gi12,hyper2010}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  FRONTMATTER:
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\frontmatter
 
-% own memoir pagestyle
-
-\pagestyle{headings}  % switches on printing of running heads
+\pagestyle{headings}  %%% switches on printing of running heads
 
 \begin{flushright}
-Date: \today
+  Date: \today
+
 \end{flushright}
+
 \begin{flushleft}
-\begin{figure}
+  \begin{figure}
     \includegraphics{omglogo.jpeg}
-    \label{fig:omglogo} 
-\end{figure}
-
-
+ \end{figure}
+ 
+\bigskip\bigskip
 
 \bigskip\bigskip
-\bigskip\bigskip
+
 \bigskip
-%\HUGE{a}
 {\fontsize{30}{36}\selectfont The Distributed Ontology, Modeling, and Specification Language (DOL)}
 
+
 \bigskip
-Version \version
+
+Version \version %DIFDELCMD < 
+
 
 \bigskip\bigskip\bigskip\bigskip\bigskip\bigskip\
 
-\vskip\medskipamount % or other desired dimension
-\leaders\vrule width \textwidth\vskip2pt % or other desired thickness
-\vskip 12pt 
+
+
+\vskip\medskipamount %%% or other desired dimension
+\leaders\vrule width \textwidth\vskip2pt %%% or other desired thickness
+\vskip 6pt 
 \nointerlineskip
 
 OMG Document Number: ad/2015-10-01   \\  %ad/2015-08-01 ad/2015-05-03 ad/15-06-04
@@ -615,18 +587,20 @@ Normative:  ad/2015-10-02\\
 Informative: ad/2015-10-03\\
  
 
-\vskip 12pt
+\vskip 28pt
 \leaders\vrule width \textwidth\vskip2pt % or other desired thickness
 \vskip\medskipamount % ditto
 \nointerlineskip
 \end{flushleft}
+
+
 
 \pagenumbering{gobble}% Remove page numbers (and reset to 1)
 \thispagestyle{empty}
 \clearpage
 
 \pagenumbering{roman} 
-		
+  
 
 \noindent Copyright \copyright 2014-15, Object Management Group, Inc.\\
 Copyright \copyright 2014-15, Fraunhofer FOKUS\\
@@ -637,13 +611,13 @@ Copyright \copyright 2014-15, Athan Services \\
 
 
 
-
 \OMGparagraph{USE OF SPECIFICATION - TERMS, CONDITIONS \& NOTICES}
 The material in this document details an Object Management Group specification
  in accordance with the terms, conditions and notices set forth below. This
   document does not represent a commitment to implement any portion of this
    specification in any company's products. The information contained in this
    document is subject to change without notice.
+
 
 \OMGparagraph{LICENSES}
 The companies listed above have granted to the Object Management Group, Inc.
@@ -666,7 +640,8 @@ posted on any network computer or broadcast in any media and will not be
 otherwise resold or transferred for commercial purposes; and (3) no modifications are made to this
 specification. This limited permission automatically terminates without notice if you breach any of
 these terms or conditions. Upon termination, you will destroy immediately any copies of the
-specifications in your possession or control. 
+specifications in your possession or control.
+
 
 \OMGparagraph{PATENTS}
 The attention of adopters is directed to the possibility that compliance with or adoption of OMG specifications may require use of an invention covered by patent rights. OMG shall not be responsible for identifying patents for which a
@@ -679,8 +654,6 @@ part of this work covered by copyright herein may be reproduced or used in any f
  photocopying, recording, taping, or information storage and retrieval systems--without permission of the copyright owner.
 
 
-
-
 \OMGparagraph{DISCLAIMER OF WARRANTY}
 WHILE THIS PUBLICATION IS BELIEVED TO BE ACCURATE, IT IS PROVIDED ``AS IS'' AND MAY CONTAIN ERRORS OR MISPRINTS. THE OBJECT MANAGEMENT GROUP AND THE COMPANIES LISTED ABOVE MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS PUBLICATION, INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF TITLE OR OWNERSHIP, IMPLIED WARRANTY OF MERCHANTABILITY OR WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE OR USE. 
 IN NO EVENT SHALL THE OBJECT MANAGEMENT GROUP OR ANY OF THE COMPANIES LISTED ABOVE BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELI\-ANCE OR COVER DAMAGES, INCLUDING LOSS
@@ -689,10 +662,13 @@ IN NO EVENT SHALL THE OBJECT MANAGEMENT GROUP OR ANY OF THE COMPANIES LISTED ABO
 The entire risk as to the quality and performance of software developed using this specification is borne by you. This disclaimer of warranty constitutes an
  essential part of the license granted to you to use this specification.
 
+
 \OMGparagraph{RESTRICTED RIGHTS LEGEND}
 Use, duplication or disclosure by the U.S. Government  is subject to the restrictions set forth in subparagraph (c) (1) (ii) of The Rights in Technical Data and Computer Software Clause at DFARS 252.227-7013 or in subparagraph
  (c)(1) and (2) of the Commercial Computer Software - Restricted Rights clauses at 48 C.F.R. 52.227-19 or as specified in 48 C.F.R. 227-7202-2 of the DoD F.A.R. Supplement and its successors, or as specified in 48 C.F.R. 12.212 of
   the Federal Acquisition Regulations and its successors, as applicable. The specification copyright owners are as indicated above and may be contacted through the Object Management Group, 140 Kendrick Street, Needham, MA 02494, U.S.A.
+  
+
 
 \OMGparagraph{TRADEMARKS}
 MDA\rtm, Model Driven Architecture\rtm, UML\rtm, UML Cube logo\rtm, OMG Logo\rtm, COR\-BA\rtm\ and XMI\rtm\ are registered trademarks of the Object Management Group, Inc., and Object Management Group\texttrademark\xspace, OMG\texttrademark\xspace , Unified Modeling Language\texttrademark\xspace, Model Driven Architecture Logo\texttrademark\xspace, Model Driven Architecture Diagram\texttrademark\xspace, CORBA logos\texttrademark\xspace, XMI Logo\texttrademark\xspace, CWM\texttrademark\xspace, CWM Logo\texttrademark\xspace, IIOP\texttrademark\xspace , IMM\texttrademark\xspace , MOF\texttrademark\xspace , OMG Interface Definition Language (IDL)\texttrademark\xspace , and OMG  SysML\texttrademark\xspace\   are trademarks of the Object Management Group. All other products or company names mentioned are used for identification purposes only, and may be trademarks of their respective owners.
@@ -705,6 +681,7 @@ Software developed under the terms of this license may claim compliance or confo
   specification. In the event that testing suites are implemented or approved by Object Management Group, Inc., software developed using this specification may claim compliance or conformance with the specification only if the software
    satisfactorily completes the testing suites.
 
+
 \newpage 
 \OMGparagraph{\large{\textbf{OMG's Issue Reporting Procedure}}}
 All OMG specifications are subject to continuous review and improvement. As part of this process 
@@ -712,24 +689,25 @@ we encourage readers to report any ambiguities, inconsistencies, or inaccuracies
 they may find by completing the Issue Reporting Form listed on the main web page
 \url{http://www.omg.org}, under Documents, Report a Bug/Issue (\url{http://www.omg.org/technology/agreement.htm}).
 
-\renewcommand{\contentsname}{Table of Contents}
 
+\renewcommand{\contentsname}{Table of Contents}
 \tableofcontents
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   MAINMATTER --
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\mainmatter
-%\addtocmark{Introduction} % additional mark in the TOC
-%:MM
+\newpage
+\clause*{Preface}
+\addcontentsline{toc}{clause}{Preface}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\sclause*{OMG}
+\addcontentsline{toc}{sclause}{OMG}
 
-\chapter*{Preface}
-\addcontentsline{toc}{chapter}{Preface}
-
-\sectionWN{OMG}
 
 Founded in 1989, the Object Management Group, Inc. (OMG) is an open membership, not-for-profit computer industry standards consortium that produces and maintains computer industry specifications for interoperable, portable, and
  reusable enterprise applications in distributed, heterogeneous environments. Membership includes Information Technology vendors, end users, government agencies, and academia. 
@@ -738,8 +716,13 @@ OMG member companies write, adopt, and maintain its specifications following a m
 
 More information on the OMG is available at http://www.omg.org/.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\sectionWN{OMG Specifications}	
+
+\sclause*{OMG Specifications}
+\addcontentsline{toc}{sclause}{OMG Specifications}
+
 
 As noted, OMG specifications address middleware, modeling and vertical domain frameworks. All OMG Specifications are available from the OMG website at:
 
@@ -773,12 +756,16 @@ As noted, OMG specifications address middleware, modeling and vertical domain fr
 
 \bigskip 
 \noindent
+
 All of OMG's formal specifications may be downloaded without charge from our website. (Products implementing OMG specifications are available from
  individual suppliers.) Copies of specifications, available in PostScript and
  PDF format, may be obtained from the Specifications Catalog cited above or by contacting the Object Management Group, Inc. at:
 
+
+
 \bigskip
 \noindent 
+
 OMG Headquarters \\
 140 Kendrick Street \\
 Building A, Suite 300 \\
@@ -790,24 +777,27 @@ Email: \url{pubs@omg.org}\\
 
 \noindent Certain OMG specifications are also available as ISO standards. Please consult \url{http://www.iso.org}.
 
-  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\sclause*{Typographical Conventions}
+\addcontentsline{toc}{sclause}{Typographical Conventions}
 
-
-\sectionWN{Typographical Conventions}
 The type styles shown below are used in this document to distinguish
  programming statements from ordinary English. However, these conventions are
  not used in tables or section headings where no distinction is necessary.
 
+
+
 \medskip \noindent
 Times/Times New Roman - 10 pt.:  Standard body text
+
 
 \medskip \noindent
 {\fontencoding{T1}\fontfamily{phv}\fontseries{b}\fontshape{n}\selectfont
 Helvetica/Arial - 10 pt. Bold: } OMG Interface Definition Language (OMG IDL)
 and syntax elements.
-
 
 \medskip \noindent
 \texttt{\textbf {Courier - 10 pt. Bold:}}  Programming language elements.
@@ -818,18 +808,37 @@ Helvetica/Arial - 10 pt.: } Exceptions
 
 \medskip\noindent
 NOTE: Italic text represents names defined in the specification or the name of
- a document, specification, or other publication.  
-\sectionWN{Issues}	
+ a document, specification, or other publication. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+
+\sclause*{Issues}
+\addcontentsline{toc}{sclause}{Issues}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The reader is encouraged to report any technical or editing issues/problems
  with this specification to \url{http://www.omg.org/report_issue.htm}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{-1}
-\chapter{Submission-Specific Material}
-\section{Submission Preface}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+
+\setcounter{clause}{-1}
+\clause{Submission-Specific Material}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Submission Preface}
 Fraunhofer FOKUS, MITRE, and Thematix Partners LLC are pleased  to submit this joint proposal in response to the Ontology, Modeling and Specification Integration and Interoperability (OntoIOp) RFP  (OMG document ad/2013-12-02). The joint proposal is supported by Athan Services  and the Otto-von-Guericke University Magdeburg. The contacts for this submission are:
 \begin{itemize}
 	\item Fraunhofer FOKUS, Andreas Hoffmann, andreas.hoffmann@fokus.fraunhofer.de
@@ -841,11 +850,10 @@ Fraunhofer FOKUS, MITRE, and Thematix Partners LLC are pleased  to submit this j
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-
-\section{Mandatory Requirements}
+\sclause{Mandatory Requirements}
 
 
 \begin{center}
@@ -1031,7 +1039,9 @@ as documents written in some conforming language). See \ref{c:iris}.
 \end{longtable}
 \end{center}
 
-\section{Optional Requirements}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\sclause{Optional Requirements}
 
 \begin{center}
 \begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
@@ -1074,7 +1084,10 @@ This is left for future work.
 
 \clearpage
 
-\section{Issues to be Discussed}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Issues to be Discussed}
 
 \begin{center}
 \begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
@@ -1150,7 +1163,12 @@ A registry is discussed in  annex \ref{a:registry}.
 
 \clearpage
 
-\section{Evaluation Criteria}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\sclause{Evaluation Criteria}
 
 \begin{center}
 \begin{longtable}{|p{0.09\textwidth}|p{0.42\textwidth}|p{0.42\textwidth}|}
@@ -1191,19 +1209,29 @@ The conformance of OWL 2 (annex \ref{a:owl}), Common Logic (annex \ref{a:cl}), R
 \end{longtable}
 \end{center}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Proof of Concept}
+\sclause{Proof of Concept}
 Prototypical open source tools for \DOL are already available, see
 annex \ref{a:tools}. It is expected that they will reach industrial
 strength within two or three years.
 
-\section{Changes to Adopted OMG Specifications}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\sclause{Changes to Adopted OMG Specifications}
 This specification proposes no changes to adopted OMG specifications.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
 \clause{Scope}
 \pagenumbering{arabic} 
 This \IS specifies the Distributed Ontology, Modeling and Specification
@@ -1217,7 +1245,11 @@ This \IS responds to the
 OntoIOp Request for Proposals \cite{RFP}.
 
 
-\section{Background Information}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\sclause{Background Information}
 Logical languages are used in several fields of computing for the development of formal, 
 machine-processable texts that carry a formal semantics. Among those fields are 1) 
 \textbf{O}ntologies 
@@ -1256,33 +1288,11 @@ Thus, \DOL gives interoperability a formal grounding and makes heterogeneous OMS
 on them amenable to checking of coherence (\eg consistency, conservativity, intended consequences,
 and compliance).
 
-%\ednote{this could be put in section 1 (if possible with OMG), or turned into informative
-%  notes, or deleted}
-%An ontology is a formal description of the concepts and relationships
-%that are of interest to an agent or a community of agents. Today,
-%ontologies are applied in eBusiness, eHealth, eGovernment, eInclusion,
-%eLearning, smart environments, ambient assisted living (AAL), and
-%virtually all other information-rich endeavours. Ontologies have been
-%used initially and principally for data and database integration
-%through providing a common representation of the subject domain onto
-%which the data sources can be mapped meaningfully. Over the years, the
-%purpose has broadened beyond data and services interoperability to
-%include a wide range of tasks and ontologies are used in information
-%systems at run-time, such as being a component in \emph{in silico}
-%scientific workflows, used for natural language processing, in
-%ontology-driven querying of digital libraries, user profiling in
-%recommender systems, adaptive e-Learning tools, and
-%more.\todonote[author=Terry
-%Longstreth,date=D:201110060000+02'00']{Terry Longstreth:
-%  Interoperability in this context seems to be mutual consistency?
-%  Fostering Mutual Consistency among disjoint ontological formalisms
-%  (intensions) and their realisations (extensions). TM: yes, but more
-%  than that: also interfacability, such that the joint use in a common
-%  application scenario is enabled.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-\section{Features Within Scope}\index{\dolindex ! scope}
+\sclause{Features Within Scope}\index{\dolindex ! scope}
 % Can't use \begin{inscope}, as that creates an itemize environment
 The following are within the scope of this \IS:
 \begin{enumerate}
@@ -1318,16 +1328,22 @@ This \IS describes the syntax and the semantics of the Distributed Ontology, Mod
 Specification Language (\DOL) by defining an abstract syntax and an associated model-theoretic
 semantics for \DOL. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
 \clause{Conformance}\label{c:conformance}
 \index{conformance|(}
+
 This clause defines conformance criteria for languages and logics that can be used with \DOL, as well as conformance criteria for
 serializations, translations and applications. The conformance of a
 number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, 
 UML class models, TPTP, CASL) as well as translations among
 these is discussed in informative annexes of this \IS.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Conformance of an OMS Language/a Logic with \DOL}\label{c:conform:logic}
 
@@ -1343,15 +1359,6 @@ mechanisms
  Several conformance levels are defined. They differ with respect to the usage of IRIs as identifiers for all kinds 
 of entities that the OMS language supports.
 \end{fminipage}
-
-
-%
-%\begin{description}
-%\item[Entailment conformance] An OMS language is entailment conformant with \DOL if
-%its logic is presented as a (not necessarily monotonic) entailment system.\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{if we want belief revision, we need to talk about "lists of sentences" (i.e. something ordered)}\footnote{Text that goes into ``terms and definitions'': an entailment system consists of a set of sentences $\Sen(\Sigma)$ and a relation $\operatorname{\vdash}\subseteq \mathcal{P}(\Sen(\Sigma))\times \Sen(\Sigma)$, indexed by signatures $\Sigma$ and compatible with signature morphisms.}
-%
-%\item[Semantic conformance] 
-%\end{description}
 
 An OMS language is conforming with \DOL if it satisfies the following conditions:
 \begin{enumerate}
@@ -1402,6 +1409,7 @@ languages above, the following levels of conformance of the abstract
 syntax of an OMS language with \DOL are defined,\ 
 listed from highest to lowest:
 
+
 \begin{description}
 \item[Full IRI conformance] The abstract syntax specifies that IRIs be used for
  identifying all symbols and entities.
@@ -1423,10 +1431,7 @@ translation between these logics.  Translations should break neither structuring
 
 A logic translation is conforming with \DOL if it is presented either as an institution morphism or
 as an institution comorphism.  
-%If the
-%languages are presented additionally as institutions, the translations
-%\may also be presented as an institution morphism or an institution
-%comorphism.
+
 
 A language translation \shall provide a mapping between
 the abstract syntaxes (it \may also provide mappings between concrete
@@ -1451,6 +1456,10 @@ comments and annotations.  All comments attached to a sentence (or
 symbol) in the source \should be attached to its translation in the
 target (if there are more than one sentences (respectively symbols)
 expressing the translation, to at least one of them).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Conformance of a Serialization of an OMS Language With \DOL}\label{c:conform:serialization}
 \begin{fminipage}{\textwidth}
@@ -1481,7 +1490,7 @@ Independently from these criteria,   several levels of conformance of a
 serialization are distinguished. They differ with respect to their means of conveniently abbreviating long IRI identifiers. 
 \end{fminipage}
 
- There are seven levels of conformance of a serialization of an OMS language with \DOL{}.
+There are seven levels of conformance of a serialization of an OMS language with \DOL{}.
 
 
 \begin{description}
@@ -1562,7 +1571,10 @@ Independently from the conformance levels given above, there is the following hi
 
 Any conforming serialization of an OMS language shall have a machine-processable description as detailed in \cref{c:conform:description}.
 
-%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Machine-Processable Description of Conforming Languages, Logics, and Serializations}\label{c:conform:description}
 
 \begin{fminipage}{\textwidth}
@@ -1594,6 +1606,9 @@ content types, may be provided.%\CLnote[type=fyi]{that opens the door for, \eg, 
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Conformance of a Document With \DOL}\label{c:conform:document}
 \begin{fminipage}{\textwidth}
 \textbf{Rationale}: for exchanging \DOL documents with other users/tools, nothing that has a formal semantics
@@ -1613,6 +1628,10 @@ grammar.  That means, in particular, that any information related to logics must
 However, details about aspects of an OMS that do not have a formal, logic-based semantics, may be
 left implicit.  For example, a conforming document may omit explicit references to matching
 algorithms that have been employed in obtaining an alignment.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Conformance of an Application With \DOL}\label{c:conform:application}
 
@@ -1688,6 +1707,11 @@ be able to expand CURIEs into IRIs when requested.
 
 \index{conformance|)}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
 \clause{Normative References}
 \begin{enumerate}[label=\bfseries NR\arabic*]
 % OLD text
@@ -1741,30 +1765,38 @@ Reference.  W3C Recommendation, 18 August 2009\\ \url{http://www.w3.org/TR/2009/
 \end{enumerate}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\newpage
 \clause{Terms and Definitions}\label{terms-and-defs}
 %\ednote{OMG specifications shall not contain glossaries, hence always
 %refer to this section if definitions of terms are needed.}
 
 For the purposes of this document, the following terms and definitions apply.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Distributed Ontology, Modeling and Specification Language}
 
 \begin{definitions}
-  \termdefinitionLight{Distributed Ontology, Modeling and Specification Language\synonym
-  \DOL}\index{\dolindex ! definition}{ unified metalanguage for the structured and heterogeneous expression of ontologies, specifications, and MDE models, using  \termref{DOL libraries}\index{library} of \termref{OMS}, OMS mappings and OMS networks\index{OMS network}, 
+  \termdefinitionLight{Distributed Ontology, Modeling and Specification Language \synonym\DOL} \index{\dolindex ! definition}{unified metalanguage for the structured and heterogeneous expression of ontologies, specifications, and MDE models, using  \termref{DOL libraries}\index{library} of \termref{OMS}, OMS mappings and OMS networks\index{OMS network}, 
   whose syntax and semantics are specified in this \IS{}.}
 %
+
 % \begin{note}
 %  When viewed as an \termref{OMS language}, \DOL has \termref{OMS} as its
 % non-logical symbols\index{non-logical symbol}, and OMS mappings\index{OMS mapping} as its sentences\index{sentence}.
 % \end{note}
 
-  \termdefinition{DOL library}{collection of named \termref{OMS} and OMS networks\index{OMS network}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}.}
-
+\termdefinition{DOL library}{collection of named \termref{OMS} and OMS networks\index{OMS network}, possibly written in different OMS languages\index{OMS language}, linked by named OMS mappings\index{OMS mapping}.}
 
 \end{definitions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \sclause{Native OMS, OMS, and OMS Languages}\label{c:native-oms}
@@ -1839,7 +1871,7 @@ systems}
 \begin{note}
 	An OMS has a single signature and model class over that signature as its model-theoretic semantics.
 \end{note}
-
+\end{definitions}
 
 
 \begin{definitions}
@@ -1988,12 +2020,15 @@ demonstrated to be a \termref{logical consequence} of the axioms.}
 \termdefinition{theorem proving}{process of demonstraing that a \termref{sentence} (or \termref{OMS}) is the \termref{logical consequence} of some OMS.}
 
   \termdefinition{theorem prover}{\termref{tool} implementing \termref{theorem proving}.}
+\end{definitions}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
+  
 \sclause{Structured OMS}\label{s:structuredOMS}
 
+\begin{definitions}
 \termdefinition{structured OMS}
 {\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{OMS translation}, \termref{OMS reduction} or other structuring operations.}
 \begin{note}
@@ -2258,6 +2293,8 @@ If a symbol is removed, all axioms containing that symbol are removed, too.
     lists, trees, bags etc. In order to specify e.g.\ lists over some elements,
     the specification of the elements should be in the local environment.
   \end{note}
+  
+  
 \termdefinition{cofreeness}{special type of closure, restriction of \termref{models} to those that are cofree (with respect to the local environment).}
   \begin{note}
     In first-order logic (and similar logics), cofreeness means maximal
@@ -2284,9 +2321,15 @@ along the alignment, there is only one concept, representing both
   can share with respect to one OMS network, and not share with respect to some
   other OMS network.
  \end{note}
+\end{definitions}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ 
 \sclause{Mappings Between OMS}\label{c:mappings}
 
+\begin{definitions}
    \termdefinitionLight{\termref{OMS mapping}\synonym link\subjectfield{OMS}}{relationship between two \termref{OMS}.}
   
 %%   \termdefinition{logical OMS mapping}{\termref{OMS mapping} that has a formal, logic-based semantics}
@@ -2373,7 +2416,7 @@ relation has been explicitly specified; when $c$ is omitted, it defaults to $1$.
 
   \termdefinition{matching}{algorithmic procedure that generates an \termref{alignment} for two given \termref{OMS}.}
   \begin{note}
-    For both matching and alignment, see \cite{DBLP:books/daglib/0032976,KhanKeet13}.
+    For both matching and alignment, see \cite{DBLP:books/daglib/0032976} \cite{KhanKeet13}.
   \end{note}
 
 
@@ -2416,10 +2459,11 @@ relevant, i.e.\ preserved by morphisms. Hence, objects can be seen as
 maps''.  However note that not all categories can be obtained in this
 way.
 \end{note}
-
-
-
 \end{definitions}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Features of OMS Languages}\label{c:terms-features}
  
@@ -2516,6 +2560,9 @@ that targets specific applications or reasoning methods.}
   \end{note}
   
 \end{definitions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Logic}\label{c:term-logic}
 
@@ -2661,7 +2708,12 @@ See section~\ref{dist-het-onto}.
 
 
 \end{definitions}
-  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \sclause{Interoperability}
 
 %~\todonote[author=Christoph Lange,type=todo]{possibly define some notion of ``interoperability''
@@ -2702,6 +2754,8 @@ which are logically interoperable.}
 
 \end{definitions}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Abstract and Concrete Syntax}\label{c:term-serializations}
 
@@ -2737,6 +2791,8 @@ An abstract syntax can be specified as a MOF metamodel \nref{MOF}. Then abstract
 \end{definitions}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \sclause{Semantics}
 
 \begin{definitions}
@@ -2764,6 +2820,9 @@ global knowledge about OMS.}
 
 \end{definitions}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%
 \sclause{Semantic Web}\label{c:terms-semantic-web}
@@ -2808,6 +2867,9 @@ values (\eg, zero, one, and infinity). See \nref{URI}, Section 1.1.
     Using HTTP content negotiation \cite{rfc2616} it is possible to serve representations in different formats from the same URL. 
   \end{note}
 \end{definitions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{OMS Annotation and Documentation}\label{c:terms-annotation}
  
@@ -2859,7 +2921,11 @@ not considered sentences of that OMS.
   \end{note}
 \end{definitions}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
 \clause{Symbols}
 
 As listed below, these symbols and abbreviations are generally for the main clauses of the \IS. Some annexes may introduce their own symbols and abbreviations which will be grouped together within that annex.
@@ -2905,13 +2971,23 @@ using the OWL 2 RDF-Based Semantics \cite{W3C:REC-owl2-rdf-based-semantics-20091
 \symboldef{XML}{eXtensible Markup Language}
 \end{symbols}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
 \clauseI{Additional Information}
 
-\section{Changes to Adopted OMG Specifications}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Changes to Adopted OMG Specifications}
 This specification does not require or request any change to any other OMG specification. 
 
-\section{How to Read This Specification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{How to Read This Specification}
 
 The initial five clauses of this specification describe the scope of the specification, determine conformance criteria, provide normative references, define terms and definitions, and introduce symbols that are used in the specification. 
 The next three clauses are \emph{informative}. This clause provides some background information, the next two provide a high-level
@@ -2975,12 +3051,18 @@ The bibliography contains \ref{a:bibliography} references to the literature that
 (\emph{informative}).
 
 
+%\sclause{About this Specification}
 
 
-%\section{About this Specification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Acknowledgments}
-\subsection{Submitting and supporting organizations}
+\sclause{Acknowledgments}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{Submitting and supporting organizations}
 The following  OMG  members are submitting this specification:
 	\begin{itemize}
 		\item Fraunhofer FOKUS
@@ -2994,9 +3076,10 @@ The following organizations are supporting this specification:
 	\end{itemize}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Participants}
+\ssclause{Participants}
 The following people contributed directly to the development of this specification. 
 	\begin{itemize}
 	\item Tara Athan, Athan Services, USA 
@@ -3079,15 +3162,16 @@ The following people contributed directly to the development of this specificati
 %	\end{itemize}
 %		
 
-
-
-
-
-
 %%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%% 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
 \clauseI{Goals and Usage Scenarios} \label{c:goal}
 
 
@@ -3126,7 +3210,7 @@ syntax of which is not described in this standard, but in other
 standard documents.
 
 
-%\section{Problem Statement}	
+%\sclause{Problem Statement}	
 %Logical languages are used in several fields of computing for the development of formal, machine-processable texts that carry a formal semantics. Among those fields are 1) ontologies formalizing domain knowledge, 2) formal models of systems, and 3) the formal specification of systems. Relevant languages include, but are not limited to:
 %?	the ontology languages OWL [OWL2], RDF [RDF, RDF-Semantics, RDF Semantic [RDFS],
 %?	the modeling language UML [UML] (fUML [FUML] equips part of UML with a formal semantics)
@@ -3160,7 +3244,11 @@ standard documents.
 %
 %These challenges can be illustrated by the following set of use cases:
 
-\section{Use Case Onto-1: Interoperability Between OWL and FOL Ontologies}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Use Case Onto-1: Interoperability Between OWL and FOL Ontologies}
 \label{onto-1}
 
 In order to achieve interoperability during ontology development it is often necessary to describe 
@@ -3216,7 +3304,11 @@ then language lang:CommonLogic :
 \end{lstlisting}
 \OWL can express transitivity, but not together with asymmetry.
 
-\section{Use Case Onto-2: Ontology Integration by Means of a Foundational Ontology}\label{onto-2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Use Case Onto-2: Ontology Integration by Means of a Foundational Ontology}\label{onto-2}
 One major use case for ontologies in industry is to achieve interoperability and data integration. 
 However if ontologies are developed independently and used  within the same domain, the 
 differences between the ontologies may actually impede interoperability. One strategy to avoid this 
@@ -3233,12 +3325,12 @@ sample interplay between  foundational and domain ontologies in various
 languages is depicted in Figure \ref{f:DOL-mapping} below.
 
 DOL  provides the framework for integrating different domain ontologies, aligning these to 
-foundational ontologies \cite{DBLP:books/daglib/0032976,AlignmentAPI} and combining the aligned ontologies into a coherent 
+foundational ontologies \cite{DBLP:books/daglib/0032976},\cite{AlignmentAPI} and combining the aligned ontologies into a coherent 
 integrated ontology -- even across different ontology languages. Thus, \DOL  enables ontology 
 developers to utilize the complete, and most expressive, foundational ontologies for ontology 
 integration and validation purposes. 
 
-The foundational ontology (FO) repository Repository of Ontologies for MULtiple USes (ROMULUS)\footnote{See \url{http://www.thezfiles.co.za/ROMULUS/home.html}}
+The foundational ontology (FO) repository Repository of Ontologies for MULtiple USes (ROMULUS) \footnote{See \url{http://www.thezfiles.co.za/ROMULUS/home.html}}
 contains alignments\index{alignment} between a number of foundational ontologies, expressing semantic relations between the aligned
 entities.  For this use-case three such ontologies are considered, containing spatial and temporal concepts: DOLCE\footnote{See \url{http://www.loa.istc.cnr.it/DOLCE.html}}, GFO\footnote{See \url{http://www.onto-med.de/ontologies/gfo/}} and BFO\footnote{See \url{http://www.ifomis.org/bfo/}}, and present alignments between them 
 using \DOL syntax:
@@ -3291,7 +3383,12 @@ ontology Space =
  combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
 \end{lstlisting} 
 
-\section{Use Case Onto-3: Module Extraction From Large Ontologies}\label{onto-3}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Use Case Onto-3: Module Extraction From Large Ontologies}\label{onto-3}
 Especially in the biomedical domain, ontologies tend to become very large (e.g., SNOMED CT, FMA) 
 with over 100000 concepts and relationships. Yet, none of these ontologies covers all aspects of a 
 domain, and frequently provide coverage at various levels of specificity, with excessive detail in 
@@ -3330,9 +3427,10 @@ cons-ext myGalenIsAModule : <http://purl.bioontology.org/ontology/GALEN>
 end
 \end{lstlisting}
  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-\section{Use Case Onto-4: Interoperability Between Closed-World Data and Open-World Metadata}
+\sclause{Use Case Onto-4: Interoperability Between Closed-World Data and Open-World Metadata}
 Data collection has become easier and much more widespread over the years. This data has to be 
 assigned a meaning somehow, which occurs traditionally in the  form of metadata annotations. For 
 instance, consider geographical datasets derived from satellite data and raw sensor readings. 
@@ -3358,8 +3456,10 @@ sciences.
 
 \DOL  provides the framework for expressing such bridge rules in a systematic way, maintaining these, and building tools for them. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Use Case Onto-5: Verification of Rules Translating Dublin Core Into PROV}
+\sclause{Use Case Onto-5: Verification of Rules Translating Dublin Core Into PROV}
 The Dublin Core Metadata terms, which have been formalized as an RDF Schema vocabulary, developed initially by the digital library community, are less 
 comprehensive but more widely used than PROV (cf.\ subclause~\ref{onto-1}). The rules for translating Dublin Core to the OWL subset of PROV (and, with restrictions, 
 vice versa) are not known to yield valid instances of the PROV data model, i.e.\ they are not known to yield OWL ontologies consistent with respect to the OWL axioms that 
@@ -3379,8 +3479,10 @@ of the FOL translation rules in a sufficiently expressive ontology language, e.g
 and thus enable formal verification of the translation from Dublin Core to PROV.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Use Case Onto-6: Maintaining Different Versions of an Ontology 
+\sclause{Use Case Onto-6: Maintaining Different Versions of an Ontology 
 in Languages with Different Expressivity}
 Often is useful to maintain different versions of an ontology within languages, which differ in 
  their expressivity. 
@@ -3410,7 +3512,10 @@ component of such predicates:
 checking tools, DOL enables the analysis of  whether any such view satisfies all further
  axioms that the  first-order DOLCE states about temporal parthood.
 
-\section{Use Case Onto-7: Metadata within OMS Repositories}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Use Case Onto-7: Metadata within OMS Repositories}
 DOL provides a language for the metadata within OMS Repositories. 
 For example, the Common Logic Repository (COLORE) \footnote{\url{http://stl.mie.utoronto.ca/colore/}} is an open 
 repository of more than 150 ontologies as of December 2011, all formalized in Common Logic. 
@@ -3434,11 +3539,10 @@ metadata vocabulary as an ontology, reusing suitable existing metadata vocabular
 and it supports the implementation of one or multiple Common Logic ontologies plus their 
 annotations as one coherent \DOL library.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-
-\section{Use Case Spec-1: Modularity of Specifications}\label{spec-1}
+\sclause{Use Case Spec-1: Modularity of Specifications}\label{spec-1}
 Often specifications become so large that it is necessary to structure
 them in a modular way, for human readability and maintainability, and for more efficient tool support. The lack of a standard for such
 modular structuring hinders interoperability among different
@@ -3509,7 +3613,10 @@ restrict the specification to an export interface:
 are only auxiliary and need not be implemented.
 
 
-\section{Use Case Spec-2: Specification Refinements}\label{spec-2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Use Case Spec-2: Specification Refinements}\label{spec-2}
 Formal software and hardware development methods are often used to
 ensure the correct function of systems which have safety-critical
 requirements or which may not be easily accessible for repair or
@@ -3707,8 +3814,11 @@ $$\xymatrix{
 \label{fig:simple-network-refinement}}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Use Case Model-1: Consistency Among UML Models of Different Types}
+
+\sclause{Use Case Model-1: Consistency Among UML Models of Different Types}
 \label{model-1}
 
 A typical UML model involves models of different types. Such UML models may have intrinsic errors because models of different types may specify conflicting 
@@ -3728,6 +3838,7 @@ consistency. Under some restrictions, the proof of semantic consistency can be (
 Once a formal semantics for the different model types has been chosen (see, e.g. \cite{knapp-mossakowski-roggenbach:corr:2014}), it is possible to use \DOL to specify in which 
 sense the models need to be consistent, and check this by suitable tools.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{The ATM Example}
 \label{sec:atm-example}
@@ -3856,7 +3967,11 @@ section, and \texttt{stm2cd} and \texttt{psm2cd} are suitable logic
 projections extracting the classes, attributes and operations from a
 (protocol) state machine, delivering a class model.
 
-\section{Use Case Model-2: Refinements Between UML Models of Different Types, and Their Reuse}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Use Case Model-2: Refinements Between UML Models of Different Types, and Their Reuse}
 \label{model-2}
 
 A problem is a lack of reusability of refinements: Consider a controller for an elevator, which is specified with a UML protocol state machine, enriched with UML 
@@ -3886,7 +4001,10 @@ translation via symbol map \texttt{Idle |-> Idle, CardEntered |-> Idle, PINEnter
 \syntax{hide}. Then, the protocol state machine can be refined to
 the thus abstracted \uml{atm}.
 
-\section{Use Case Model-3: Coherent Semantics for Multi-Language Models}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Use Case Model-3: Coherent Semantics for Multi-Language Models}
 \label{model-3}
 	
 Often a single problem area within a given domain must be represented using several formalisms, e.g., because of user community requirements, expressiveness or tool support 
@@ -3981,7 +4099,10 @@ oms JointModel = clStateModel and
 end
 \end{lstlisting}
 
-\section{Conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Conclusion}
 
 In this section, several use cases have been introduced. They illustrate many aspects of DOL and its usefulness in many situations in which different OMS artifacts might be leveraged and augmented to produce broader or more tractable MDE models, ontologies, and specifications.
 
@@ -3994,8 +4115,11 @@ The next sections present the metalanguage \DOL{}; in particular, the syntax and
 specification, and model-driven development.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\newpage
 \clauseI{Design Overview} \label{c:design}
 
 %\ednote{replace this section by saying how we respond to the RFP}
@@ -4012,13 +4136,13 @@ The purpose of this clause is to briefly describe the
 %
 %\todonote{add ref to annex K}
 %
-%\section{\DOL requirements}\label{c:req:overview}
+%\sclause{\DOL requirements}\label{c:req:overview}
 %
 %\DOL has been designed and developed with several requirements in mind, all arising from its intended role of enabling OMS interoperability. The use of ``{\should}'' in the rest of clause 5 indicates a desired goal but is not required of \DOL (in accordance with Annex H of ISO/IEC Directives -- Part 2).
 %
 %\CLnote[type=todo]{give quick overview here.  Create clause 5.2 for requirements, and 5.3 for design overview. TM: done}
 %
-%\subsection{\DOL is free, generally applicable, open, and extensible.}\label{c:req:extensible}
+%\ssclause{\DOL is free, generally applicable, open, and extensible.}\label{c:req:extensible}
 %
 %\DOL \should be
 %\begin{description}
@@ -4035,7 +4159,7 @@ The purpose of this clause is to briefly describe the
 %\item[informative] F-logic,  UML class diagrams, OBO (see appendix~\ref{a:ext-graph} for a longer list)
 %\end{description}
 %
-%\subsection{\DOL is a logic-agnostic metalanguage, in the sense that its constructs can be used for many different logics.}\label{c:req:agnostic}
+%\ssclause{\DOL is a logic-agnostic metalanguage, in the sense that its constructs can be used for many different logics.}\label{c:req:agnostic}
 %
 %\CLnote{here and elsewhere: remove ``shall'' from section headers}
 %
@@ -4054,7 +4178,7 @@ The purpose of this clause is to briefly describe the
 %
 %\DOL \shallnot provide an annotation vocabulary, i.e.\ it \shall neither provide annotation properties nor datatypes to be used with literal annotation objects. Instead, an informative annex \shall recommend existing annotation vocabularies for use with \DOL.
 %
-%\subsection{\DOL has user- and machine-readable serializations.}
+%\ssclause{\DOL has user- and machine-readable serializations.}
 %
 %\CLnote[type=q-all]{We need to revise this following the agreement to drop the XML and RDF serializations.}In the interest of wide applicability and tool support, \DOL \should support multiple alternative serializations.  In particular, there \should be a text serialization targeting human readers and writers, as well as serializations optimized for machine processability.
 %
@@ -4075,7 +4199,7 @@ The purpose of this clause is to briefly describe the
 %
 %Existing OMS in existing XML serializations (\eg XCL) or text serializations (\eg OWL Manchester Syntax) \should validate as \DOL OMS with a minimum amount of syntactic adaptation. Existing OMS files/documents \should be usable in a \DOL context without the need for modification.
 %
-%\subsection{\DOL has a well-defined formal, logic-based semantics.}\label{c:req:semantics}
+%\ssclause{\DOL has a well-defined formal, logic-based semantics.}\label{c:req:semantics}
 %
 %The structural elements and structural mappings of \DOL \should have a formal, logic-based semantics.
 %
@@ -4105,14 +4229,18 @@ The purpose of this clause is to briefly describe the
 %
 %\todonote[author=Christoph Lange,date=D:201110060000+02'00',type=todo]{provide example of integrating two OMS in a single-sorted logic by translating into many-sorted logic, where only many-sorted logic would guarantee consistency}
 %
-%\section{\DOL design}
+%\sclause{\DOL design}
 \label{c:design:overview}
 %
 %
  It provides an overview of  the most important and innovative language
 constructs of \DOL. Details can be found in clause~\ref{c:abstract-syntax}.
 
-\section{\DOL in a Nutshell}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{\DOL in a Nutshell}
 
 As the usage scenarios in clause \ref{c:goal} illustrate, the use of multiple OMS may lead to lack 
  of interoperability. The goal of \DOL is to enable users to overcome these interoperability issues by providing a language for representing 
@@ -4148,14 +4276,10 @@ The major functions of \DOL are the following:
 %The syntax of \DOL roughly follows these functions.
 %Native OMS, the various kind of structured OMS, OMS mappings, and OMS networks are the most important metaclasses   of \DOL. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- 
-
-
-
-
-
-\section{Features of \DOL}\label{c:req:overview}
+\sclause{Features of \DOL}\label{c:req:overview}
 
 \DOL is a language enabling OMS interoperability. 
 \DOL is
@@ -4207,8 +4331,10 @@ Since \DOL is a meta-language,  it \textit{inherits} the logical language aspect
 %
 %
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{OMS Languages}
+\sclause{OMS Languages}
 %\DOL gives interoperability a formal grounding and makes heterogeneous OMS and OMS networks and services based on them amenable to checking of coherence (e.g. consistency, conservativity, intended consequences, and compliance).
  OMS languages are declarative languages for making ontological distinctions formally precise, for modeling a domain in an unambiguous way, or for expressing algebraic specifications of software.   OMS languages are distinguished by the following features:
 
@@ -4225,7 +4351,11 @@ General annotation of OMS and their parts works in a similar way.  Here, \DOL do
 \ednote{Till, is this standoff markup remark up to date? TM: we promise standoff markup at various places, but we never are specific how this can be written in \DOL.\\
 CL: I have now emphasized that \DOL itself doesn't do annotation but only identification, whereas annotation is left to RDF.}
 
-\section{\DOL in the Metamodeling Hierarchy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{\DOL in the Metamodeling Hierarchy}
 
 \DOL uses the metamodeling hierarchy known from model-driven engineering:
 $$\xymatrix{
@@ -4258,7 +4388,11 @@ theory.
   LF itself, this  would close the loop already at
   M3 also for the semantics.}
 
-\section{Semantic Foundations of \DOL}\label{sem-foundations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Semantic Foundations of \DOL}\label{sem-foundations}
 
 
 A large variety of OMS languages in use can be captured at an abstract level using the concept of 
@@ -4290,8 +4424,11 @@ the semantics of basic OMS is presented in a uniform way.  The semantics of stru
 OMS mappings, OMS networks, and other \DOL expressions is defined using model-theoretic constructions
 on top of institutions. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{\DOL Enables Expression of Logically Heterogeneous OMS and Literal Reuse of Existing OMS}
+
+\sclause{\DOL Enables Expression of Logically Heterogeneous OMS and Literal Reuse of Existing OMS}
 \DOL is a mechanism for expressing logically heterogeneous OMS. It can be used to combine sentences and structured OMS expressed in different conforming OMS languages
 and logics into single documents or modules. With \DOL, sentences or structured OMS of previously existing OMS in
 conforming languages can be reused by literally including them into a \DOL OMS. A minimum of wrapping constructs and other annotations (e.g., for identifying the language of a sentence) are provided. 
@@ -4312,7 +4449,11 @@ be necessary to employ a different translation.  Authors can express
 which one to employ.   However, \DOL provides default translations, which are 
 applied unless the user specifies a translation that deviates from the default. Both default and non-default translations may be combined to multi-step translations. 
 
-\section{\DOL Includes Provisions for Expressing Mappings Between OMS}\label{c:req:links}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{\DOL Includes Provisions for Expressing Mappings Between OMS}\label{c:req:links}
 
 \DOL provides a syntax for expressing mappings between OMS.  One use case illustrating both is sketched in  \fref{f:DOL-mapping}.  OMS mappings supported by \DOL include:
 \begin{itemize}
@@ -4347,17 +4488,21 @@ the rule for \syntax{combination} for the  MOF metaclass
 \label{f:DOL-mapping}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-\section{\DOL Provides a Mechanism for Rich Annotation and Documentation of OMS}\label{c:req:annotation}
+\sclause{\DOL Provides a Mechanism for Rich Annotation and Documentation of OMS}\label{c:req:annotation}
 
 \DOL provides a mechanism for identifying anything of relevance in OMS by assigning an IRI to it.  With RDF there is a standard mechanism for annotating things identified by IRIs.  Thus, \DOL supports  annotations in the full generality specified in \cref{c:terms-annotation}.
 
 %A list of recommended RDF vocabularies for annotating OMS is presented in annex \ref{a:dol-onto}.
 
-%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
 \clause{\DOL  Syntax}\label{c:abstract-syntax}%\label{a:text-syntax}
 
 
@@ -4383,6 +4528,8 @@ The \DOL document types are as follows
 			\item[Filename extension] .dol
 		\end{description}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{MOF Metaclasses}
 \label{s:mof-metaclasses}
@@ -4427,11 +4574,13 @@ See the informative annexes~\ref{a:owl} to~\ref{a:casl} for details.
    \label{fig:basic_oms}
 \end{figure}
 
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Documents}\label{c:libraries}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Abstract Syntax}
 
 The DOL metamodel for documents and libraries is shown in Fig.~\ref{fig:libraries}.
@@ -4468,14 +4617,13 @@ At the beginning of a \DOL library, one can declare a \syntax{PrefixMap} for abb
   \label{fig:libraries}
 \end{figure}
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{Concrete Syntax}
-
-	\sssclause{Documents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sssclause{Documents}
 \vspace{-2em}
+
 \begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
 
 Document           ::= DOLLibrary | NativeDocument
@@ -4517,13 +4665,15 @@ SeparatorChar  ::= ipchar | gen-delims - '#'+$<$\rm as defined in \nref{IRI}$>$+
 \vspace{1em}
 	
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{OMS Networks}\label{c:networks}
-\ssclause{Abstract Syntax}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{Abstract Syntax}
 The DOL metamodel for documents and libraries is shown in Fig.~\ref{fig:libraries}.
 Inside a \DOL library, with a \syntax{NetworkDefinition}, one can
 define OMS networks (also called distributed OMS). OMS networks are
@@ -4558,7 +4708,8 @@ and Appendix~\ref{ex:alignment} for an example network and of the use of \syntax
 \end{figure}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Concrete Syntax}
 
 \vspace{-1.4em}
@@ -4577,10 +4728,13 @@ ElementRef      ::= IRI
 Id              ::= Letter LetterOrDigit*
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 \sclause{OMS}\label{c:OMS}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Abstract Syntax}
 
 The DOL metamodel for OMS is shown in Fig.~\ref{fig:oms}.
@@ -4645,7 +4799,6 @@ model (see Appendix~\ref{ex:definedconcepts} for an example); this may be intere
 models.
 
 \newpage
-\voffset -2cm
 \begin{figure}
   \centering
     \includegraphics[scale=0.43]{mof/oms.png}
@@ -4655,7 +4808,6 @@ models.
 
 \newpage
 
-\voffset -1cm
 
 The DOL metamodel for extension OMS is shown in Fig.~\ref{fig:extension&closure}.
 \syntax{ExtendingOMS} is a subclass of \syntax{OMS}, containing
@@ -4749,10 +4901,8 @@ OMS in Fig.~\ref{fig:translations&reduction}.
 %or a logic
 %translation. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ssclause{Concrete Syntax} \label{a:dol-text:OMS}
 
 
@@ -4886,12 +5036,13 @@ manner. In all other cases operators on the same precedence level are not
 implicitly grouped and have to be grouped explicitly. Omitting such an explicit
 grouping results in a parse error.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{OMS Mappings}\label{c:oms-mappings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Abstract Syntax}
 
 
@@ -4978,9 +5129,6 @@ models of the OMS.
 \end{figure}
 
 
-
-
-
 The DOL metamodel for alignments is shown in 
 Fig.~\ref{fig:alignment}.
 Signature morphisms used in interpretations and refinements use
@@ -5026,11 +5174,9 @@ to the \syntax{InterfaceSignature}.
 \end{figure}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ssclause{Concrete Syntax}\label{a:dol-text:mappings}
 
 \vspace{-2em}
@@ -5105,14 +5251,11 @@ Confidence         ::= Double
 Double             ::= *@$<$ a number $\in [0,1]$ $>$@*
 \end{lstlisting}
 
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %~\CLnote{some text that was left over here, but I don't recall what we meant by it: recommendations for dealing with OMS language dialects}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Identifiers}\label{c:identifiers}
 This section specifies the abstract syntax of identifiers of \DOL OMS and their elements. Further, 
@@ -5175,9 +5318,9 @@ usually ending with \syntax{\#} or \syntax{/}. ({See annex~\ref{a:loc/id} for a 
   \label{fig:prefixes}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-%
 \ssclause{Abbreviating IRIs using CURIEs}\label{c:curies}
 
 As IRIs tend to be long, and as syntactic mechanisms for abbreviating them have been standardized, 
@@ -5319,9 +5462,9 @@ sugar, the prefix map for a basic OMS is essential to determining the semantics 
 within the \DOL library. 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ssclause{Concrete Syntax}\label{c:curie-syntax}
 
 \vspace{-1.4em}
@@ -5652,13 +5795,23 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %
 % In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the \DOL syntax (cf.\ clause \label{c:keywords}).
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Lexical Symbols}
 
 The character set for the \DOL text serialization is the UTF-8 encoding of Unicode \nref{UCS}.  However, OMS can always be input in the Basic Latin subset, also known as US-ASCII.\footnote{In this case, IRIs will have to be mapped to URIs following section 3.1 of \nref{IRI}.}  For enhanced readability of OMS, the \DOL text serialization particularly supports the native Unicode glyphs that represent common mathematical symbols (e.g.\ Greek letters)  or operators (e.g.\ $\partial$ for partial derivatives). %\todonote[author=Christoph Lange,type=q-aut]{@Till: I took part of that from the CASL reference manual.  I don't think we want/need to specify more than that.  I wouldn't say anything about ``display formats of lexical symbols'', for example.}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Key words and signs}\label{c:keywords}
 
 The lexical symbols of the \DOL text serialization include various key words and signs that occur as terminal symbols in the context-free grammar in \aref{a:EBNF}.   Key words and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Key words}
 
@@ -5738,6 +5891,9 @@ with
 \end{lstlisting}
 %}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Key signs}
 
 Table~\ref{tab:key-signs} following key signs are reserved, and are not available for use as complete identifiers.  Key signs that are outside of the Basic Latin subset of Unicode may alternatively be encoded as a sequence of Basic Latin characters.
@@ -5757,6 +5913,9 @@ Table~\ref{tab:key-signs} following key signs are reserved, and are not availabl
   \rmfamily ↦ & U+21A6 RIGHTWARDS ARROW FROM BAR & |-> \NN
   \rmfamily → & U+2192 RIGHTWARDS ARROW & -> \NN
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Integration of Serializations of Conforming Languages}
 \label{sec:existing-serialization}
@@ -5782,6 +5941,12 @@ The same import in the text-based OWL Manchester syntax~\cite{W3C:NOTE-owl2-manc
 
 Where the given OMS language does not provide a way of assigning IRIs to a desired subject of an annotation (\eg if one wants to annotate an import in OWL), a document may employ RDF annotations that use XPointer or \nref{text/plain-URI} as means of non-destructively referencing pieces of XML or text by IRI, as specified above. (The extensibility of the XPointer framework may be utilized by developing additional XPointer schemes, \eg for pointing to subterms of sentences in the XCL serialization of Common Logic.) 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
 \clause{\DOL Semantics}\label{c:semantics}
 
 %We pursue a threefold approach of assigning a semantics to the \DOL
@@ -5848,6 +6013,9 @@ values for the semantics. Additionally, \emph{semantic rules} are
 presented, mapping abstract syntax trees to some suitable semantic
 domain.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \sclause{Theoretical Foundations of the \DOL Semantics}
 \label{s:foundations}
 
@@ -5921,7 +6089,7 @@ An
 consisting of the following:
 %
 \begin{itemize}
-\item a category\footnote{See \cite{AHS,MacLane} for an introduction into category theory.} $\Sig$ of \emph{signatures} and \emph{signature morphisms},
+\item a category\footnote{See \cite{AHS}\cite{MacLane} for an introduction into category theory.} $\Sig$ of \emph{signatures} and \emph{signature morphisms},
 \item a functor $\sen\map{\Sig}{\Set}$  giving, for each signature $\Sigma$, the set of
 \emph{sentences} $\sen(\Sigma)$, and for each signature morphism
 $\sigma:{\Sigma}\to{\Sigma'}$, the \emph{sentence translation map}
@@ -6214,6 +6382,9 @@ returning the selected weakly amalgamable cocone for the network and
 a function $\oplus$ taking as argument a family of models compatible with a network
 and returning its selected amalgamation.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Semantics of \DOL Language Constructs}\label{c:direct-sematics}
 
 The semantics of \DOL is based on a fixed (but in principle arbitrary) heterogeneous logical 
@@ -6469,6 +6640,9 @@ $semNative_{(L,L',S)}(D)$ denotes the language-specific semantics of $D$.
 %the context of previous declarations, which is denoted 
 %$sem^{(\cI,\Sigma,\cM,\Delta)}_{(L,L',S)}(O)$.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Semantics of Documents}
  In this section the semantics of \DOL constructs regarding documents and \DOL libraries is defined. 
 
@@ -6500,6 +6674,8 @@ $sem(nativeDocument)$ will be undefined.
 
 The rule for \syntax{DOLLibrary} is given below.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of libraries}
 
 \semdom{
@@ -6527,7 +6703,7 @@ Note  that $dolLibrary$.\syntax{libraryName} is just discarded here.
   compliance''. Tools can issue a warning (not an error), if a
   \syntax{Document} does not follow this practice.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of lists of library items}
 
@@ -6547,7 +6723,8 @@ $sem(\Gamma, libItem_1)= \Gamma_1$,\\
 $sem(\Gamma_1, libItem_2)= \Gamma_2$, \ldots\\
 $sem(\Gamma_{n-1}, libItem_n)= \Gamma'$.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of library items}
 
@@ -6568,7 +6745,8 @@ A \syntax{LibraryItem} can also be an \syntax{OMSDefinition}, \syntax{NetworkDef
 are given in the next sections. (Annex~\ref{a:queries} also introduces
  \syntax{QueryRelatedDefinition}.)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of a list of qualifications}
 
@@ -6627,6 +6805,10 @@ $$sem(\Gamma,q)=\Gamma'$$
 $\Gamma'  = \Gamma.\{\current = (lang, logic, q.\syntax{syntaxRef})\}$. 
 The semantics is defined only if $\mathit{lang}$ supports q.\syntax{syntaxRef}.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Semantics of Networks}
 
 The semantics of networks of OMS is given with the help of a directed graph. Its nodes
@@ -6684,6 +6866,9 @@ Finally, the operation $addImports(\Gamma, G, [iri_1, \ldots, iri_n])$ adds to G
 all import edges in $\Gamma.imports$ between nodes which appear 
 in the subgraph determined by  $\Gamma(iri_1), \ldots, \Gamma(iri_n)$. 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of network definitions}
 
 \semdom{
@@ -6722,6 +6907,9 @@ defined if the class of families of models compatible with the graph $sem(\Gamma
 If $n.$\syntax{ConservativityStrength} is \syntax{not-consequence-conservative}, the semantics is 
  defined only if not all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of networks}
 
 \semdom{
@@ -6735,6 +6923,9 @@ If $n$ is a network,
 $$sem(\Gamma, n)= G'$$
 \noindent where $sem(\Gamma, n.\syntax{networkElement}) = G$ and 
 $sem(\Gamma, G, n.\syntax{excludedElement}) = G'$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of sets of network elements}
 
@@ -6755,6 +6946,9 @@ $$sem(\Gamma, Set\{elem_1, \ldots, elem_n\}) = G$$
  $G_n = sem(\Gamma, G_{n-1}, elem_n)$,\\
  $G = addImports(\Gamma, G_n, [elem_1, \ldots, elem_n])$.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of network elements}
 
 \semdom{
@@ -6766,6 +6960,9 @@ $$sem(\Gamma, Set\{elem_1, \ldots, elem_n\}) = G$$
 
 If $networkElement$ is a \syntax{NetworkElement},
 $$sem(\Gamma, G, networkElement) = insert(G, \Gamma, networkElement.\syntax{elementRef}.\syntax{iri}, networkElement.\syntax{id})$$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of sets of excluded elements}
 
@@ -6783,6 +6980,9 @@ $$sem(\Gamma, G, Set\{elem_1, \ldots, elem_n\}) = G'$$
  $G_2 = sem(\Gamma, G_1, elem_2)$\\
   $\ldots$ \\
  $G' = sem(\Gamma, G_{n-1}, elem_n)$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of excluded elements}
 
@@ -6812,6 +7012,8 @@ such that
 $sem(\Gamma, O) = (\Gamma', (\cI,\Sigma,\cM,\Delta))$.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of basic OMS}
 
 \semdom{
@@ -6835,6 +7037,9 @@ $$sem(\Gamma, O)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'$.
 \end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of basic OMS in a local environment}
 
@@ -6863,7 +7068,8 @@ $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'$.
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of closable OMS}
 
@@ -6894,8 +7100,10 @@ and
          $locId$ to $O$, named $O.\syntax{importName}$ 
          and labeled with the identity on $\Sig(\Gamma(locId))$.  
  \end{itemize}
- 
- 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of closable OMS in a local environment}
 
 \semdom{
@@ -6927,7 +7135,8 @@ $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)= (\Gamma',(\cI',\Sigma',\cM', \Delt
          and labeled with the inclusion of $\Sigma$ in $\Sigma'$.  
  \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of ExtendingOMS} 
  \semdom{
@@ -6975,7 +7184,9 @@ $\cM =
 \end{itemize}
 Here, initial and terminal models are defined as in
 category theory, see \ref{sec:colimits}. 
- 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of ExtendingOMS in a local environment} 
  
 \semdom{
@@ -7031,7 +7242,8 @@ $\cM'' =
         \{ M \in  \cM \mid  M \text{ is terminal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of OMS}
 
@@ -7286,7 +7498,10 @@ $$sem(\Gamma, O) = (\Gamma'',(\cI',\Sigma',\cM',\Delta'))$$
   a new node for $O$ labeled as in the items above and with edges from each node in
   $G$ to this new node labeled with the morphisms $\mu_i$ for each $i\in |G|$.
 \end{itemize}
-%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of \syntax{CircClosure}}
 \semdom{
 \begin{array}{ll}
@@ -7307,7 +7522,9 @@ $$sem(\Gamma,\Sigma, c) = sem(\Gamma, \Sigma, c.symbol)$$
 If $c$ is a \syntax{CircVar},
 $$sem(\Gamma,\Sigma, c) = sem(\Gamma, \Sigma, c.symbol)$$
 
-%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of OMS translations}
 
 \semdom{
@@ -7329,7 +7546,8 @@ $lang'$ and $ser'$ are the default language and serialization for logic $logic'$
 If $O.\syntax{omsLanguageTranslation}$ is missing, 
 it defaults to the identity comorphism of the current logic.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of OMS language translations}
 
@@ -7369,7 +7587,8 @@ $sem(\Gamma, t_i) = \rho_i$ for
 $i=1,\ldots, n$ and
  $(\Phi,\alpha,\beta) = \rho_1;\rho_2;\ldots;\rho_n$. 
 
-%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of reductions}
 
@@ -7418,6 +7637,8 @@ is
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of sets of symbols}
 
 \semdom{
@@ -7433,7 +7654,8 @@ where $\Sigma'$ is the smallest sub-signature of $\Sigma$ containing
 $sem(\Gamma, \Sigma,s_1), \ldots, 
 sem(\Gamma,\Sigma,s_n)$, if such a sub-signature exists and is otherwise undefined.
 
-%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of symbol maps}
 
@@ -7549,7 +7771,8 @@ If the set fails to be a singleton, the semantics of $r$ is undefined.
 %  \ENDIF
 %\end{algorithmic}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of extractions}
 
@@ -7583,7 +7806,8 @@ $$\begin{array}{ll}
 \cite{DBLP:journals/ai/KontchakovWZ10} defines the concept of smallest depleting $\Sigma$-module in a description logic context and shows that the smallest depleting $\Sigma''$-module exists in description logics. 
 \cite{IbanezEtAl15} generalizes both the definition of smallest depleting $\Sigma''$-module and the mentioned result to arbitrary institutions.
 
-%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of approximations}
 
@@ -7604,6 +7828,7 @@ $$sem(\Gamma, (\cI, \Sigma), a) =
   $\cI$ to $\allowbreak sem(\Gamma, a.\syntax{logicRef}) = \cI'$, when $a.\syntax{logicRef}$ is present and
   the identity institution morphism on $\cI$, when $a.\syntax{logicRef}$ is missing.
 %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of filtering}
 
@@ -7633,7 +7858,8 @@ where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) 
 %$\iota: \Sigma'\rightarrow\Sigma$ is the inclusion morphism 
 %and  $\Delta' = Sen(\iota)^{-1}(\Delta) \setminus \Delta''$.
 
-%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \semdom{
 \begin{array}{ll}
@@ -7686,7 +7912,8 @@ model in $\cM'$.
 
 If $e.\syntax{extensionName}$ is present, the inclusion link is labeled with this name.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of interface signatures}
 
@@ -7706,7 +7933,8 @@ $$\Sigma'= \begin{cases}  \Sigma \cap sem(\Gamma, \Sigma, s.\syntax{symbolList})
 \end{cases}$$
 %$sem(\Sigma, \syntax{`remove-signature', InterfaceSignature})$
 
-%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of OMS definitions}
 
@@ -7754,7 +7982,9 @@ defined if $\cM$ is empty or a singleton.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{definitional}, the semantics is only
 defined if $\cM$ is a singleton.
 
-%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of OMS references} 
 \semdom{
 \begin{array}{ll}
@@ -7768,7 +7998,8 @@ defined if $\cM$ is a singleton.
 The rule for \syntax{OMSReference}s has been given above, as
 \syntax{OMSReference}s are a particular case of \syntax{ClosableOMS}. 
 
-%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of symbols}
 
@@ -7799,6 +8030,9 @@ $$sem(\Gamma, \Sigma_1,\Sigma_2, smi) = (s_1,s_2)$$
 \noindent where $sem(\Gamma,\Sigma_1,smi.\syntax{source}) = s_1$
 and $sem(\Gamma,\Sigma_2,smi.\syntax{target}) = s_2$.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of general symbol map items}
 
 \semdom{
@@ -7822,6 +8056,9 @@ where $sem(\Gamma,\Sigma_1, gsmi) = s$
 %If $sen$ is a \syntax{Sentence},
 %$$sem(\Gamma, \Sigma, sen) = \varphi$$
 %\noindent where $\varphi\in Sen(\Sigma)$ and the analysis is done in a logic-specific way.\ednote{This should be added to the heterogeneous logical env.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of references}
 
@@ -7857,6 +8094,8 @@ $S$ is the serialization from the heterogeneous logical environment named by
 $L$ is the institution from the heterogeneous logical environment named by
 \syntax{LogicRef}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{Semantics of OMS Mappings}\label{sec:oms-mappings}
 
@@ -7934,6 +8173,9 @@ $L$ is the institution from the heterogeneous logical environment named by
 %\todonote{Here, we need to introduce institution morphisms and
 %require $\Phi(\Sigma)\leq\Sigma$ in the Grothendieck institution!}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of mapping definitions}
 
 \semdom{
@@ -7943,6 +8185,9 @@ $L$ is the institution from the heterogeneous logical environment named by
 \end{array}
 }
 See equations for \syntax{InterpretationDefinition},  \syntax{EntailmentDefinition}, \syntax{EquivalenceDefinition}, \\\syntax{ConservativeExtensionDefinition} and \syntax{AlignmentDefinition}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of interpretation definitions}
 
@@ -7990,6 +8235,9 @@ there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha
 $\cM_1\not\models \varphi$.
 \end{itemize}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of refinement definitions}
 
 \semdom{
@@ -8003,6 +8251,9 @@ If $d$ is a \syntax{RefinementDefinition},
 $$sem(\Gamma, d) = \Gamma'$$
 \noindent
 where $ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto sem(\Gamma, d.\syntax{refinement})]$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of interpretation types}
 
@@ -8029,7 +8280,9 @@ $$sem(\Gamma,  t) = (L_1, L_2)$$
          \Th(L_2)) = sem(\Gamma, t.\syntax{target})$,
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \sssclause{Semantics of refinements}
 
@@ -8172,7 +8425,8 @@ where\\
  The refinement is correct only if for each $(F_2,F_3) \in \cM_2$,
  there is a $(F_1,F_2\forget{\sigma}) \in \cM_1$.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of a set of refinements}
 
@@ -8198,6 +8452,9 @@ is defined by $\sigma^G(n) = \sigma_i^G(n)$ if the node $n$ comes from $G^i_1$
 and similarly for such a node $n$ of $G$ coming from $G^i_1$,
 we have that $\sigma^M_n = \sigma_i^M(n)$.
 Moreover, $\sigma$ must be total on the nodes of $G_1$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of refinement maps}
 
@@ -8314,7 +8571,9 @@ $sem(\Gamma,G_1,G_2, m.refinements) = \sigma$.
 %$lang'$ and $ser'$ are the default language and serialization for $logic'$
 %and $\Gamma' = \Gamma.\current=(lang', logic',ser')$.
 %
-%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of entailment definitions}
 
@@ -8330,7 +8589,8 @@ $$sem(\Gamma, e) = \Gamma'$$
 
 where $\Gamma' = \Gamma[e.\syntax{entailmentName} \mapsto sem(\Gamma, e.\syntax{entailmentType})]$.
 
-%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of entailment types}
 
@@ -8390,7 +8650,8 @@ with a theorem link
 from $i_1$ to $i_2$ labeled with the identity
 on $\Sig(i_1)$. 
 
-%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of equivalence definitions}
 
@@ -8407,7 +8668,10 @@ $$sem(\Gamma,d)=\Gamma'$$
 \noindent where 
  $\Gamma' = \Gamma[d.\syntax{equivalenceName} \mapsto 
                   sem(\Gamma, d.\syntax{equivalenceType})]$.
-                  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of OMS equivalences}
 
 \semdom{
@@ -8450,6 +8714,9 @@ such that $M\forget{\Sig(O_i)} = M_i$.
 \end{enumerate}
 %
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of network equivalences}
 
 \semdom{
@@ -8473,7 +8740,8 @@ and for each $i = 1,2$ and each family of models $\cM_i$ compatible with
 $G_i$ there is a unique family of models $\cM$ compatible with $G_3$ such that
 the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$.
 
-%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of conservative extension definitions}
 
@@ -8506,7 +8774,8 @@ $M'\forget{\Sigma} = M\forget{\Sigma}$,
 or if $c=\syntax{consequence-conservative}$ and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
 implies $O_2\models\varphi$.
 
-%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of alignment definitions}
 
@@ -8532,6 +8801,9 @@ $aSem = d.\syntax{alignmentSemantics}$ or, when this is missing,
 $aSem = \syntax{single-domain}$,\\
 and $G = sem(\Gamma_0, L'_1, L'_2, card, aSem, d.\syntax{correspondence})$.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Semantics of alignment types}
 
 \semdom{
@@ -8548,6 +8820,8 @@ $sem(\Gamma,t.\syntax{source}) = (\Gamma', (\cI_1,\Sigma_1,\cM_1,\Delta_1))$,
 $sem(\Gamma',t.\syntax{target}) = (\Gamma'', (\cI_2,\Sigma_2,\cM_2,\Delta_2) )$,
 $L_1$ and $L_2$ are the labels of the nodes of $t.\syntax{source}$
 and $t.\syntax{target}$ in $\Gamma'.imports$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of alignments}
 
@@ -8598,7 +8872,7 @@ $L_t = (alignName++"\_target", \Inst(L_2) ,\Sigma_t,\Mod(\Sigma_t),\emptyset)$
 and
 $L_B = (alignName++"\_bridge", \cI ,\Sigma,\Mod((\Sigma,\Delta)),\Delta)$.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of sets of correspondences}
 \semdom{
@@ -8617,6 +8891,9 @@ $cvalues = \lor_{i=1,\ldots,n}cvalues_i$,\\
 $smap = \{s^1_i\mapsto s^2_i\}$,\\
 $(\cI, \Sigma,\Delta, \phi_s:\Sigma_s\to\Sigma,\phi_t:\Sigma_t\to\Sigma) = \mathit{theoryOfCorrespondences}_{\Gamma.logic}(
 aSem, \Sigma_1,\Sigma_2,clist_1 ++ \ldots ++ clist_n)$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of  correspondences}
 \semdom{
@@ -8780,15 +9057,23 @@ $name_2 = 'relativized'++aName'$.
 %% special cases to be described
 
 
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-\part*{Annex}
-\addcontentsline{toc}{part}{Annex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\appendix
+\newpage
+
+% \clearpage
+% \vspace*{\fill}
+% \begin{center}
+% \begin{minipage}{0.3\textwidth}
+% \listannexname
+% \end{minipage}
+% \end{center}
+% \vfill % equivalent to \vspace{\fill}
+% \clearpage
+% \addcontentsline{toc}{clause}{Annex}
+
 
 
 \normannex{\DOL Registry}
@@ -8805,6 +9090,12 @@ OMG maintains the registry as an informative resource governed by the standard. 
 
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 %\chapter[LoLa RDF Vocabulary]{Annex (normative): LoLa, an RDF vocabulary that implements the \DOL terminology}
 \infannex{\DOL Ontology}
 \label{a:dol-onto}
@@ -8815,7 +9106,7 @@ clause~\ref{terms-and-defs}. While the ontology itself is informative, it is req
 forthcoming Application Programming Interfaces (APIs) for Knowledge Platforms (API4KP) 
 specification, and so every effort has been made to provide a good foundation for that purpose.  
 
-\section{Namespace Definitions}
+\sclause{Namespace Definitions}
 The namespaces and prefixes corresponding to external elements required for use by the DOL ontology
 are provided below.  Table \ref{tab:namespace} lists the prefixes and namespaces on which DOL depends.
  
@@ -8901,7 +9192,16 @@ specification may provide complete documentation, including machine-readable, OD
 XMI, ODM XMI, and additional content such as “about” files, if usage of the ontology is more 
 widespread than anticipated and thus such documentation is warranted.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%\sclause{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\sclause{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
 
 %
 % %\begin{figure}
@@ -8914,7 +9214,7 @@ widespread than anticipated and thus such documentation is warranted.
 % This annex specifies the \DOL Ontology, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
 % Part of the background and design considerations of the \DOL Ontology can be found in~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
 %
-% \section{Normative State and Normative References}\label{a:dol-onto-norm}
+% \sclause{Normative State and Normative References}\label{a:dol-onto-norm}
 %
 %
 % The canonical namespace IRI for the \DOL Ontology is \url{http://www.omg.org/spec/DOL/dol-language/}.
@@ -8937,7 +9237,7 @@ widespread than anticipated and thus such documentation is warranted.
 %
 % It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
 %
-% \section{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
+% \sclause{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
 %
 % Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} of \DOL-conforming languages and translations
 % (see annex~\ref{a:registry}).
@@ -8946,7 +9246,7 @@ widespread than anticipated and thus such documentation is warranted.
 % (API4KP) OMG standardization initiative, see
 % \url{http://www.omgwiki.org/API4KB}, as part of their larger ontology.
 %
-% \section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
+% \sclause{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
 %
 %
 % The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. This includes most of the classes used in the \DOL metamodel, but also terms used in the \DOL semantics.
@@ -9069,7 +9369,7 @@ widespread than anticipated and thus such documentation is warranted.
 The semantic conformance of OWL 2 DL (as specified in \nref{OWL2}) with \DOL
 is established in \cite{OntoGraph}.
 
-\section{Abstract Syntax Conformance of OWL 2 With \DOL}
+\sclause{Abstract Syntax Conformance of OWL 2 With \DOL}
 
 The metaclass \syntax{OWL Ontology} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
@@ -9077,15 +9377,123 @@ The metaclass \syntax{OWL Universe} is a subclass (in the sense of SMOF \nref{SM
 multiple classification) of \syntax{BasicOMS}.
 
 
-\section{Conformance of the OWL Serializations With \DOL}\label{a:owl-serializations}
+\sclause{Conformance of the OWL Serializations With \DOL}\label{a:owl-serializations}
 
-\subsection{Text Conformance of the OWL 2 Manchester Syntax With \DOL}
+\begin{figure}
+  \centering
+    \includegraphics[width=0.4\textwidth]{illustrations/web-entity.png}
+  \caption{DOL term ontology: web entities}
+  \label{fig:web-entity}
+\end{figure}
+
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.4\textwidth]{illustrations/process.png}
+  \caption{DOL term ontology: processes}
+  \label{fig:process}
+\end{figure}
+
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.4\textwidth]{illustrations/tool.png}
+  \caption{DOL term ontology: tools}
+  \label{fig:tool}
+\end{figure}
+
+
+
+
+The top level object properties are structured in a way similar 
+to that of the top-level classes, see Fig.~\ref{fig:dol-onto-properties}.
+\medskip
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.4\textwidth]{illustrations/dol-onto-properties.png}
+  \caption{DOL term ontology: properties}
+  \label{fig:dol-onto-properties}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{\DOL Registry}\label{a:registry}
+
+OMG hosts a registry for DOL-conforming languages and translations. This registry will enable the 
+ use of other DOL-conforming languages than the ones that are discussed in this OMG Specification. 
+The registry also includes descriptions of DOL-conforming languages and translations (as well as 
+ other information needed by implementors and users) in both human-readable and 
+machine-processable form.
+
+OMG maintains the registry as an informative resource governed by the standard. The registry 
+ contents itself is informative. 
+
+% %  \ednote{This paragraph has merely been moved.}
+% It is expected that \DOL will be used for other languages than the  set of \DOL-conforming
+% languages that are discussed in this \IS. OMG hosts a
+% \textbf{\termref{registry} for
+%  \DOL-conforming languages and translations}.
+% %
+% %There is a  \textbf{\termref{registry} for
+% %\DOL-conforming languages and translations} hosted
+% %at \url{http://purl.net/DOL/registry}.
+% The registry  also includes descriptions of
+% \DOL-conforming languages and translations (as well as other information needed by implementors
+% and users) in both human-readable and machine-processable form.
+%
+% %There will be Maintenance Authority (MA) {or, depending on advisability, a Registration
+% %Authority} established to
+%
+% OMG maintains the registry as an informative resource governed by the
+% standard.  The registry contents itself is informative.
+% %will not be normative; however, it is
+% %expected to become the basis for normative activities.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\infannex{Conformance of OWL 2 DL With \DOL}\label{a:owl}
+
+\CLnote{Is it correct that ``With'' and ``of'' use different capitalizations?}%
+\CLnote{Why refer to this external paper when \SROIQ is actually formalized as an institution below?  Maybe cut this sentence and replace it by a general introduction?  Or at least rephrase ``is established'' into ``has originally been established''.}%
+The semantic conformance of OWL 2 DL (as specified in \nisref{W3C/TR REC-owl2-syntax:2012}) with \DOL
+is established in \cite{OntoGraph}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Abstract Syntax Conformance of OWL 2 With \DOL}
+
+The metaclass \syntax{OWL Ontology} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{NativeDocument}.
+The metaclass \syntax{OWL Universe} is a subclass (in the sense of SMOF
+multiple classification) of \syntax{BasicOMS}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Conformance of the OWL Serializations With \DOL}\label{a:owl-serializations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\ssclause{Text Conformance of the OWL 2 Manchester Syntax With \DOL}
 
 The OWL 2 Manchester syntax satisfies the criteria for text conformance established in clause~\ref{c:conform:serialization} in a straightforward way thanks to its line-based comment syntax (comments starting with \texttt{\#}) and its flexible handling of line breaks.
 
-\subsection{Conformance of the XML and RDF Serializations of OWL With \DOL}\label{sec:conformance-owl-xml-rdf}
 
-\subsubsection{General Issues}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{Conformance of the XML and RDF Serializations of OWL With \DOL}\label{sec:conformance-owl-xml-rdf}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{General Issues}
 
 With minor modifications detailed below, the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211} satisfies the criteria for XML conformance and the serialization of OWL in RDF (\nref{OWL2RDF}) satisfies RDF the criteria for RDF conformance. %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 Both modifications define a super-language of the respective OWL serialization.
@@ -9093,14 +9501,18 @@ Any OWL ontology serialization $S'$ in one of these two super-languages can be t
 Without these modifications, neither OWL/XML nor ``OWL serialized in RDF'' satisfies the XML or RDF conformance requirements, respectively.
 The reason is that with imports there is a structural element supported by OWL that cannot have identifiers nor carry annotations, and that these two OWL serializations do not permit the use of XML or RDF constructs that would enable assigning identifiers to imports.
 
-\subsubsection{XML Conformance of a Modified OWL/XML With \DOL}\label{sec:xml-conf-modif}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{XML Conformance of a Modified OWL/XML With \DOL}\label{sec:xml-conf-modif}
 
 In the OWL/XML serialization, the \textit{Import} element does not have annotations and is only allowed to carry the attributes \textit{xml:base}, \textit{xml:lang} and \textit{xml:space}, but no further attributes or child elements from foreign namespaces (requirement (\ref{it:foreign-xml-namespaces})), and therefore in particularly not a \textit{dol:id} attribute or child elements, as would be required for adding identifiers (cf.\ clause~\ref{sec:existing-serialization}).
 
 An extended specification of OWL/XML that does allow the \textit{dol:id} attribute on \textit{Import} satisfies the XML conformance criteria.
 From an ontology serialized in this super-language of OWL/XML, one can obtain a semantically equivalent ontology (with regard to the semantics of OWL) by stripping all \textit{dol:id} attributes.
 
-\subsubsection{RDF Conformance of a Modified Serialization of OWL in RDF With \DOL}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sssclause{RDF Conformance of a Modified Serialization of OWL in RDF With \DOL}
 
 The serialization of OWL in RDF (regardless of the concrete \emph{RDF} serialization employed to serialize the RDF graph that represents the OWL ontology) does not satisfy requirement (\ref{it:ids-for-structure}) for RDF conformance because there is an \texttt{owl:imports} property but no class representing imports. 
 Therefore, it is not possible to represent a concrete import, of an ontology $O_1$ importing an ontology $O_2$, as an RDF resource.
@@ -9120,7 +9532,12 @@ $i$ rdf:object $o$ .
 and thus introduces a resource $i$ to represent that the ontology $s$ imports the ontology $o$, these three triples are removed from $G$.
 From an ontology serialized in this super-language of the serialization of OWL in RDF, one can obtain semantically equivalent ontologies (with regard to the semantics of OWL) by stripping all triples whose predicate is \textit{rdf:subject}, \textit{rdf:predicate} or \textit{rdf:object}, or by adding triples that declare these three properties to be \emph{annotation properties}.
 
-\section{Semantic Conformance of OWL 2 With \DOL}\label{a:owl-logic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Semantic Conformance of OWL 2 With \DOL}\label{a:owl-logic}
+
 
  The logic \SROIQ underlying 
 OWL can be formalized as an institution as follows:
@@ -9302,9 +9719,6 @@ looking up the interpretation in the model to be reduced.
 \qed\end{definition}
 
 
-
-
-
 Remark: strictly speaking, the institution defined above is
 \emph{{OWL} 2 DL without restrictions} in the sense of
 \cite{DBLP:conf/owled/SchneiderRS13}. The reason is that in an
@@ -9315,6 +9729,8 @@ modeled \emph{inside} this institution, as a constraint on OMS.  This
 constraint is generally not preserved under unions or
 extensions. \DOL's multi-logic capability allows the clean distinction
 between ordinary OWL 2 DL and {OWL} 2 DL without restrictions.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{Relativization in \OWL}
 
@@ -9357,6 +9773,8 @@ If $T = ((C,R,I),\Delta)$ is an \OWL theory, $M'$ is a $\tilde{T}$-model and
 $e$ is a $(C,R,I)$-sentence, we have that $M'\models \alpha(e)$ if and only if
 $\beta(M')\models e$.
 \end{note}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{Translating correspondences to a bridge theory in \OWL}
 
@@ -9465,23 +9883,34 @@ We distinguish three cases.
           and $\varphi_t$  maps each symbol $t$ to $2_t$ and $\top_t$ to itself.
  \end{itemize}
 \end{enumerate}
- 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \infannex{Conformance of Common Logic with \DOL}\label{a:cl}
 
-\section{Abstract Syntax Conformance of Common Logic With \DOL}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Abstract Syntax Conformance of Common Logic With \DOL}
 
 The metaclass \syntax{Text} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{Sentence} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Serialization Conformance of Common Logic With \DOL}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Serialization Conformance of Common Logic With \DOL}
 
 The semantic conformance of Common Logic (as specified in \nref{CL}) with \DOL is established in \cite{OntoGraph}.
 
 The XCF dialect of Common Logic has a serialization that satisfies the criteria for XML conformance.  The CLIF dialect of Common Logic has a serialization that satisfies the criteria for text conformance.
 
-\section{Semantic Conformance of Common Logic With \DOL}
+\sclause{Semantic Conformance of Common Logic With \DOL}
 
 Common Logic can be defined as an institution as follows:
 
@@ -9548,22 +9977,34 @@ language. They have been omitted from the institution, because
 they must not occur in basic OMS. They can occur in
 structured native OMS, however, and need to be flattened out
 in order to obtain a theory in the \CL institution.
- 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \infannex{Conformance of RDF and RDF Schema with \DOL}\label{a:rdfs}
 
-\section{Abstract Syntax Conformance of RDF and RDF Schema  With \DOL}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Abstract Syntax Conformance of RDF and RDF Schema  With \DOL}
 
 The metaclass \syntax{Document} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{Triple} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Serialization Conformance of RDF and RDF Schema  With \DOL}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Serialization Conformance of RDF and RDF Schema  With \DOL}
 
 The way of representing RDF Schema ontologies as RDF graphs satisfies
 the criteria for RDF conformance.
 
-\section{Semantic Conformance of RDF and RDF Schema  With \DOL}
+\sclause{Semantic Conformance of RDF and RDF Schema  With \DOL}
 
 The semantic conformance of RDF Schema (as specified in \nref{RDFS}) 
 with \DOL is established in \cite{OntoGraph}.
@@ -9627,6 +10068,9 @@ such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the represen
 \OWL~\cite{W3C:REC-owl2-rdf-based-semantics-20091027}.
 \qed\end{definition}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Conformance of UML class and object models with \DOL}\label{a:uml-class}
 
@@ -9638,25 +10082,29 @@ models; that is, change of state is ignored. This means that all
 operations are query operations.
 
 
-\section{Abstract Syntax Conformance of UML With \DOL}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Abstract Syntax Conformance of UML With \DOL}
 
 The metaclass \syntax{OWL Model} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{OWL PackageableElement} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Serialization Conformance of UML With \DOL}
+\sclause{Serialization Conformance of UML With \DOL}
 
 The XMI \nref{XMI} serialization, derived from the MOF metamodel, is widely used
 for UML. Hence, UML is serialization conformant with \DOL.
 
-\section{Semantic Conformance of UML With \DOL}
+\sclause{Semantic Conformance of UML With \DOL}
 
 The institution of UML class and object models is defined using a
 translation of UML class models to Common Logic, following the fUML
 specification and \cite{Seidewitz08}.
 
-\subsection{Preliminaries}
+\ssclause{Preliminaries}
+
 
  The axioms for primitive types
 are imported from the fUML specification, section 10.3.1:
@@ -9953,8 +10401,11 @@ oms uml-cd-preliminaries =
 end
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Signatures}
+
+\ssclause{Signatures}
 
 \textbf{Class/data type hierarchies.}  A \emph{class/data type
   hierarchy} $(C, {\leq_C})$
@@ -10227,7 +10678,12 @@ Here all member ends are owned by class/data types.
 \label{fig:bjoerners_dsl}
 \end{figure}
 
-\subsection{Models}\label{a:UML-CD-models}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{Models}\label{a:UML-CD-models}
 
 As stated above, models (in the sense of the term \termref{model} defined in
 clause~\ref{terms-and-defs}) of UML class models are obtained 
@@ -10441,7 +10897,12 @@ institution inherits models from Common Logic. Moreover, model reducts
 are inherited as well, using the action of $\CL$ on signature morphisms.
 
 
-\subsection{Sentences}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{Sentences}
 
 The set of \emph{multiplicity formulae} $\mathit{Frm}$ is given by
 the following grammar:
@@ -10529,8 +10990,12 @@ abbreviation for the two inequations ``$x\leq y$'' and ``$y\leq x$''.
 \end{example}
 
 
-\subsection{Satisfaction Relation}\label{a:UML-CD-sat}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{Satisfaction Relation}\label{a:UML-CD-sat}
 The satisfaction relation is inherited from Common Logic, using
 a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
 That is, given a UML class and object model $\Sigma$, a
@@ -10627,6 +11092,9 @@ equal.
 %% we can define a corresponding institution that is a subinstitution
 %% of that for UML class models (see annex~\ref{a:uml-class}).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Conformance of TPTP with \DOL}\label{a:TPTP}
 
@@ -10635,23 +11103,30 @@ is a language spoken by dozens of first-order theorem provers,
 and large libraries have been formalized in TPTP.
 The underlying logic is unsorted first-order logic. 
 
-\section{Abstract Syntax Conformance of TPTP With \DOL}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Abstract Syntax Conformance of TPTP With \DOL}
 
 The metaclass \syntax{TPTP\_file} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{annotated\_formula} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Serialization Conformance of TPTP With \DOL}
+\sclause{Serialization Conformance of TPTP With \DOL}
 
 The TPTP text syntax is text conformant with \DOL.
 
-\section{Semantic Conformance of TPTP With \DOL}
+\sclause{Semantic Conformance of TPTP With \DOL}
 
 In \cite{GoguenBurstall92}, many-sorted first has been formalized as
 an institution; the single-sorted sublogic (using only a fixed set of
 sorts $\{s\}$ is isomorphic to unsorted first-order logic).
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Conformance of CASL with \DOL}\label{a:casl}
 
@@ -10660,19 +11135,25 @@ sorts $\{s\}$ is isomorphic to unsorted first-order logic).
 partial functions and subsorting.  It also provides induction
 sentences, expressing the (free) generation of datatypes. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Abstract Syntax Conformance of CASL With \DOL}
+\sclause{Abstract Syntax Conformance of CASL With \DOL}
 
 The metaclass \syntax{LIBRARY} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
 The metaclass \syntax{BASIC\_SPEC} is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
 
-\section{Serialization Conformance of CASL With \DOL}
+\sclause{Serialization Conformance of CASL With \DOL}
 
 The \CASL text syntax is text conformant with \DOL.
 
-\section{Semantic Conformance of CASL With \DOL}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Semantic Conformance of CASL With \DOL}
  \CASL has
 been presented as an institution in \cite{Mossakowski02,CASL-RM}. This section presents
 a sketch of this institution.
@@ -10718,6 +11199,11 @@ The satisfaction relation is the expected one for partial first-order sentences.
 constraint $(S', F', \sigma')$ holds in a model $M$ if the carriers of the reduct of $M$ along $\sigma'$ 
 of the sorts in $S'$ are generated by function symbols in $F'$.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \infannex{A Core Logic Graph}\label{a:graph}
 
 \ednote{Instantiate the whole heterogeneous environment, that is, error
@@ -10741,6 +11227,10 @@ logic, unions, etc.}
 
 This annex provides a core heterogeneous environment that could be used as a basis for 
 semantics of \DOL as defined in Sec.~\ref{c:semantics}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Languages}
  
@@ -10784,10 +11274,14 @@ interoperability:
   \item $\mathit{UML\textit{-}CD} \to \CL$.
 \end{itemize}
 
-The translations are specified in \cite{OntoGraph,MossakowskiEtAl14b}.
+The translations are specified in \cite{OntoGraph},\cite{MossakowskiEtAl14b}.
 %~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper)}
 Properties of translations have been introduced in section~\ref{s:foundations}.
 All translations are marked as default translations. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Logics}
 
@@ -10879,6 +11373,10 @@ UML\mbox{-}CD & \CL & \CL & $\bot$ & UML\mbox{-}CD & \CL\\
 The other assumptions on the logics in the heterogeneous logical environment hold in
 the expected way.\ednote{@Till: rephrase if need be. TM: I think it is OK, even if quite vague.}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Serializations}
 
 The following syntaxes are part of the heterogeneous logical environments:
@@ -10894,7 +11392,13 @@ The following syntaxes are part of the heterogeneous logical environments:
  \item CLIF, supported by \CL 
 \end{itemize}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Language and Logic Translations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{\EL $\to$ $\OWL$ and $\ELDL{+}{+}$ $\to$ $\SROIQ(D)$}
 
@@ -10904,6 +11408,8 @@ syntactic restriction according to the definition of \EL, see
 is a syntactic restriction of $\SROIQ(D)$, $\ELDL{+}{+}$ $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{\QL $\to$ $\OWL$ and \DLLiteR $\to$ $\SROIQ(D)$}
 
 \QL $\to$ $\OWL$ is the sublanguage inclusion obtained by the
@@ -10911,6 +11417,8 @@ syntactic restriction according to the definition of \QL, see
 \nref{OWL2-profiles}. Since by definition, \DLLiteR
 is a syntactic restriction of $\SROIQ(D)$, \DLLiteR $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{\RL $\to$ $\OWL$ and $\RL$ $\to$ $\SROIQ(D)$}
 
@@ -10920,6 +11428,8 @@ syntactic restriction according to the definition of \RL, see
 is a syntactic restriction of $\SROIQ(D)$, $\RL$ $\to$ $\SROIQ(D)$
 is the corresponding sublogic inclusion.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{$\SimpleRDF \rightarrow \RDF$}
 
 $\SimpleRDF \rightarrow \RDF$ is an obvious inclusion, except that
@@ -10928,9 +11438,13 @@ meaning in \RDF. The model translation needs to forget the fixed parts
 of \RDF models. Since this part can always reconstructed in a unique
 way, the result is  an isomorphic model translation. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{$\RDF \rightarrow \RDFS$}
 
 This is entirely analogous to $\SimpleRDF \rightarrow \RDF$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{$\SimpleRDF \rightarrow \SROIQ(D)$}
 
@@ -10954,7 +11468,11 @@ $(s,p,o)$ is translated to the $\SROIQ(D)$ sentence
   This ensures that the model translation can add the built-ins.
 %\Til{What if the OWL model satisfies more triples than the built-ins?}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{$\OWL \rightarrow FOL$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Translation of signatures}
 
@@ -10964,6 +11482,7 @@ $(s,p,o)$ is translated to the $\SROIQ(D)$ sentence
 	\item predicate symbols $P = \{A^{(1)} \vert A \in \category{C} \} \cup \{ R^{(2)} \vert R \in \category{R}\}$
 \end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Translation of sentences}
 
@@ -11004,9 +11523,7 @@ $ \forall x,y . (\exists z_1,\ldots, z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \w
  \item $\alpha_\Sigma (\text{Tra}(R)) = \forall x,y,z . R(x,y) \wedge R(y,z) \rightarrow R(x,z)$
 \end{itemize}
 
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Translation of models}
 
@@ -11027,6 +11544,8 @@ $C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (
 	\end{proof}
 
 	The satisfaction condition holds as well.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{$FOL \rightarrow \CL$}
 
@@ -11052,21 +11571,28 @@ by using $rel^M(int^M(P))$ and restricting to the arity of $P$;
 similarly for function symbols (using $fun^M$). Both the satisfaction condition
 and model-expansiveness of the comorphism are straightforward.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{$\OWL \rightarrow \CL$}
 
 This comorphism is the composition of the comorphisms described in the previous
 two sections.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ssclause{UML class models $\to \CL$}
+
+
 This translation has been described in annex~\ref{a:uml-class}. 
 Translation of signatures is detailed in section~\ref{a:UML-CD-models},
 translation of sentences in section~\ref{a:UML-CD-sat}.
 Models are translated identically.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{$FOL \to \CASL$}
 This is an obvious sublogic.
 
- 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{UML class model to \OWL}
 Let $\Sigma = ((C, {\leq_C}), P, O, A, M)$ be a \emph{class/data type net} representing a UML 
@@ -11143,6 +11669,8 @@ The ontology is extended by translating parts of this net and its multiplicity c
 \end{lstlisting}
 \end{itemize}
  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Formal Representation of Language and Logic Translations}
 \label{sec:repr-trans}
@@ -11156,6 +11684,9 @@ with suitable representations of languages and logics in a
 logical framework. See \cite{CodescuEtAl2011d} for some work
 in this direction.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Extended Logic Graph}\label{a:ext-graph}
 
@@ -11193,9 +11724,9 @@ The actual translations are specified in \cite{OntoGraph}.
 
 %~\todonote[author=Christoph Lange,type=todo]{Provide linear syntax here (as in the paper). TM: what do you mean by this?}
 
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{\DOL Abstract Syntax in EBNF}
 \label{a:EBNF}
@@ -11233,6 +11764,11 @@ concrete syntax.
 
 
 % Corresponds to image mof/libraries.png and mof/prefixes.png
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \sclause{Documents}\label{e:libraries}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
@@ -11270,6 +11806,8 @@ OMSSymbolSeparator ::= String
 %%   • lib-version (to be replaced by metadata annotations, \eg OMV)\textLF
 %%   • indirect-mapping (will always use full IRIs, and abbreviate them by syntactic namespaces)}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Corresponds to image mof/networks.png
 \sclause{OMS Networks}\label{a:networks}
@@ -11286,6 +11824,8 @@ ExcludedElementRef  ::= IRI
 \end{lstlisting}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{OMS}
 
@@ -11350,6 +11890,8 @@ OMSRef             ::= IRI
 %% and \syntax{Approximation}. This would be a bit more verbose, but a bit
 %% more coherent with position of non-terminals in the concrete syntax.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Corresponds to image mof/translation&reduction.png
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
@@ -11373,6 +11915,10 @@ RemovalKind        ::= keep | remove
 OMSLanguageTranslationRef ::= IRI
 Symbol             ::= IRI
 \end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{OMS Mappings}
 
@@ -11481,10 +12027,11 @@ ConservativeExtensionName         ::= IRI
 ConservativeExtensionType         ::= cons-ext-type OMS OMS
 \end{lstlisting}
 
-
-
 %\includegraphics[scale=0.6]{mof/dia/dia5.png}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{IRIs and Prefixes}
 % Corresponds to image mof/prefixes.png
@@ -11496,19 +12043,22 @@ FullIRI ::= ($<$ as defined by the IRI production in \nref{IRI} $>$)
 CURIE  ::= String
 \end{lstlisting}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Extension of \DOL with Queries}\label{a:queries}
-
-
 
 This annex describes the syntax of queries. A semantics still needs to
 be developed.  \DOL's metaclass \syntax{LibraryItem} is extended with a
 new subclass \syntax{QueryRelatedDefinition} for definitions related to
 queries.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Terms and Definitions}
+\begin{definitions}
   \termdefinition{query language}{\termref{OMS language} specifically dedicated to queries\index{query}.}
 \begin{example}
 SPARQL, Prolog
@@ -11550,6 +12100,10 @@ There are also general purpose OMS languages, which can express both \termref{OM
    given \termref{OMS}.}
 \end{definitions}  
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{MOF Abstract Syntax}
 Queries are a means to extract information from an OMS.  \DOL's \syntax{QueryDefinition}s cover 
 ``select''-type queries that deliver an answer substitution for the query variables. (Answer) 
@@ -11568,6 +12122,10 @@ in Fig.~\ref{fig:queries}.
      \caption{Extension of DOL metamodel with queries}
     \label{fig:queries} 
 \end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{EBNF Concrete Syntax}
 
@@ -11595,6 +12153,8 @@ ResultName         ::= IRI
 Vars               ::= Symbol ( ',' Symbol )*
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{EBNF Abstract Syntax}
 
@@ -11622,6 +12182,8 @@ Vars               ::= Symbol*
 Complete           ::= complete
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Semantics of Queries}\label{s:sem-queries}
 
@@ -11655,6 +12217,9 @@ elided, and left for a later version of \DOL.
 %$$sem(\Gamma, \Sigma, \syntax{Term}) = t$$
 %\noindent where $t$ is a $\Sigma$-term and the analysis is done in a logic-specific way.\ednote{This should be added to the heterogeneous logical env. We here need derived siganture morphisms.}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Example Uses of all \DOL Constructs}\label{a:uses}
 
@@ -11768,6 +12333,9 @@ combine NetworkElements  & Alignments, Publications \\\hline
 %combine NetworkElements excluding IRIs  &  \\\hline
 \end{tabular}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Simple Examples in Propositional Logic}\label{ex:prop}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=prop,escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/prop#>
@@ -11814,6 +12382,9 @@ ontology Taxonomy = %consistent
   . T $\wedge$ AR $\longrightarrow$ $\bot$                   %% and so on
 end
 \end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Engine Diagnosis and Repair}\label{ex:engine}
 
@@ -11898,6 +12469,8 @@ interpretation repair3 : Repair to MyRepair = %cons
 %% is the required action
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
 \label{dist-het-onto}
@@ -11974,6 +12547,9 @@ then
                              (exists (c) (and (Set c) (overlaps c a)))))))
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Defined Concepts}\label{ex:definedconcepts}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
@@ -11989,6 +12565,8 @@ then %def
 end
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Blocks World: Minimization}\label{ex:blocks}
 \CLnote[type=q-aut]{Here we need the prefixes for registry entries (e.g.\ logics) once more; they should be reused across examples.  Or we need to specify a mechanism that gets rid of \emph{these} prefixes altogether.  @TM, could you please comment on my specification enhancement request \texttt{http://trac.informatik.uni-bremen.de:8080/hets/ticket/1020\#comment:33}?}
@@ -12066,6 +12644,9 @@ then %implied
 end
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{Alignments}\label{ex:alignment}
 \index{alignment}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
@@ -12127,6 +12708,9 @@ end
 
 \end{lstlisting}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Distributed Description Logics}\label{ex:DDL}
 
@@ -12215,6 +12799,8 @@ end
 
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Algebra}\label{ex:algebra}
 
@@ -12290,7 +12876,11 @@ entailment ent = InterpolatedGroup
 end
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Groups specified with different forms of hiding and forgetting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Groups and hiding}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
@@ -12329,6 +12919,8 @@ spec Group_in_second_order_logic =
 end
 \end{lstlisting}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Groups and module extraction}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
@@ -12362,6 +12954,8 @@ The semantics of \syntax{Group\_via\_module\_extraction\_2} is just
 is conservative.
 \medskip
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sssclause{Groups via interpolation}
 
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
@@ -12377,6 +12971,8 @@ Both specifications are equivalent, and they
 are equivalent to \syntax{Group\_with\_implicit\_inverse}.
 %Computing interpolants can be hard, even undecidable.
 \medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Groups and filtering}\label{ex:reject}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
@@ -12563,7 +13159,8 @@ end
 \end{lstlisting}
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Datatypes}\label{ex:datatypes}
 
@@ -12621,7 +13218,14 @@ result MyResult = MySubst for MyQuery
 %\infannex{Use cases}\label{a:use-cases}
 % This annex has been removed. Some of the use cases have been moved to section \ref{c:goal}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \infannex{Tools for \DOL}\label{a:tools}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{The Heterogeneous Tool Set (Hets)}\label{a:hets} The
 Heterogeneous Tool Set (Hets) is  an implementation  of
@@ -12645,6 +13249,8 @@ indirectly, through a logic mapping into a tool-supported logic.
 Hets  is open source, licensed under GPLv2 or higher. The sources are
 available at the following URL \url{https://github.com/spechub/hets}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Ontohub, Modelhub, Spechub}\label{a:ontohub}
 
@@ -12727,6 +13333,9 @@ on the MIME type of the request, under this URL, the raw OMS file
 will be available, but also a HTML version for display in a browser, 
 an XML and a JSON version for processing with tools.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \sclause{APIs}\label{c:APIs}
 
 Both Hets and Ontohub/Modelhub/Spechub provide APIs for the interchange
@@ -12737,6 +13346,9 @@ can exchange information about available repositories and their OMS.
 In the future, these APIs shall be aligned with OMG's standardization
 effort API4KP.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Ontohub loc/id v2}\label{a:loc/id}
 
@@ -12785,7 +13397,10 @@ suggested that other tools supporting \DOL should adopt the same or a
 similar scheme for IRIs.
 
 
-\section{Concept}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Concept}
 
 Generally an Ontohub loc/id (locator/identifier) is just an IRI of a
 \DOL library (contained in a document), an OMS
@@ -12804,7 +13419,10 @@ will more often want to use the IRI instead of just searching or even browsing
 for something.  This is further intensified if the IRI-schema follows a schema
 that is easily understood by a user.
 
-\section{Ontohub-Style}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Ontohub-Style}
 
 Identifying OMS and their members in Ontohub is a hierarchical
 task. A \DOL document belongs to a repository. An OMS may belong
@@ -12821,7 +13439,10 @@ instance, represented by the set of their schema-fqdn-port tuples, and the
 actual identifying portion beginning with the hierarchical forward slash
 (\emph{/}).
 
-\subsection{qualified loc/id structure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{qualified loc/id structure}
 
 \begin{enumerate}
   \item Set of Schema + FQDNs + Port for an instance: \emph{INSTANCE}, e.g.\\
@@ -12844,7 +13465,9 @@ actual identifying portion beginning with the hierarchical forward slash
   \end{itemize}
 \end{enumerate}
 
-\subsection{Examples}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{Examples}
 
 \begin{tabularx}{\textwidth}{p{.2\textwidth}p{.8\textwidth}}
   \multicolumn{2}{c}{\emph{\DOL document}} \\
@@ -12867,7 +13490,10 @@ actual identifying portion beginning with the hierarchical forward slash
 Fully qualified symbols (e.g.\ $+:Nat \times Nat\mapsto Nat$) will need to be escaped
 but will be supported.
 
-\section{Specification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Specification}
 
  A qualified loc/id IRI can be specified as a special case of RFC 3987 (IRI,
 \cite{rfc3987}). Code-excerpt \ref{lst:loc-id-spec} on page
@@ -12903,7 +13529,12 @@ RFC 3986 \cite{rfc3986}, which defines the URI.
 \end{figure}
 
 \clearpage
-\section{ref/ special form loc/ids}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{ref/ special form loc/ids}
 
 There is one additional syntax-element that has not been covered yet. One of the
 main features that Ontohub provides in its role as an \emph{Open OMS Repository}
@@ -12934,7 +13565,9 @@ unqualified loc/id, or in short: loc/id.
     \end{itemize}
 \end{itemize}
 
-\subsection{References inside of the tree}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ssclause{References inside of the tree}
 
  It is important to provide a way to reference files inside a repository,
 This especially applies to files that do not represent OMS. This
@@ -12954,7 +13587,10 @@ a specific version of a files using the \emph{Commit}, \emph{Branch} and
     \end{itemize}
 \end{itemize}
 
-\section{Disambiguation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Disambiguation}
 
 If the \url{path/to/an-OMS} can actually also be a path to a directory --
 which would be possible if there were a directory named \textbf{pizza} and an
@@ -12973,10 +13609,16 @@ the MIME-type that was chosen to always return the textual content of an
 OMS (the raw file), one needs  to serve that, even if the loc/id would
 be ambiguous in a normal request.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \infannex{Introduction to Category Theory}\label{a:categories}
 
-\section{Categories}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Categories}
 
 \begin{definition}
 A category $C$ consists of 
@@ -13115,6 +13757,9 @@ In $\Set$, the empty set is the initial object and each singleton set is a
 terminal object.
 \end{example}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \ssclause{Limits and colimits}\label{sec:colimits}
 
 \begin{definition}
@@ -13169,7 +13814,10 @@ called  \emph{pullbacks}.
  When $G$ is a discrete category,
  $G$-limits are called \emph{products}.
 
-\section{Functors}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Functors}
 
 \begin{definition}
 Let $C$ and $D$ be two categories. A \emph{functor} $F: C \to D $ is a mapping that 
@@ -13208,7 +13856,11 @@ to the function that takes a subset $X$ of $A$ to the set $\{f(x) \mid x\in X\}$
 which is a subset of $B$. 
 \end{example}
  
-\section{Natural transformations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sclause{Natural transformations}
 
 \begin{definition}
 Let $C, D$ be two categories and let $F$ and $G$ be two functors between $C$ and $D$.
@@ -13231,20 +13883,26 @@ function (each finite subset of a set is also a subset of the set).
 \end{example}
 
 %\infannex{Bibliography}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \newpage
 
 \clearpage
 
-\bibliographystyle{plain} 
-\renewcommand{\bibname}{References}
-\label{a:bibliography}
-\bibliography{dol,rfc,tptp,dol-papers}
-\addcontentsline{toc}{chapter}{References}
+% \bibliographystyle{plain} 
+% \renewcommand{\bibname}{References}
+% \label{a:bibliography}
+% \bibliography{dol,rfc,tptp,dol-papers}
+% \addcontentsline{toc}{chapter}{References}
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
-
 
 %%%
 %%% Index of Keywords, taken out 
@@ -13258,37 +13916,31 @@ function (each finite subset of a set is also a subset of the set).
 % \addcontentsline{toc}{chapter}{Keyword index}
 % \blankpage
 %
-\end{document}
 
 
 
-\begin{references}
-\end{references}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \begin{references}
+% \end{references}
 
 ~\todonote[author=Christoph Lange,date=D:201108220027+02'00',type=fyi]{Up to this line, all entries are sorted in the order of their appearance in the text.}
 
 \begin{center}\hrule\end{center}
 
-\begin{references}
-  \reference{EUZENAT, J., and SHVAIKO, P.,}{Ontology Matching,}{Springer, Heidelberg, 2007.}
-  \reference{GOGUEN, J. A.,}{Data, Schema, Ontology and Logic Integration,}{Logic Journal of the IGPL, Vol. 13: 685-715, 2005.}
-  \reference{KALFOGLOU, Y. (ed.),}{Cases on Semantic Interoperability for Information Systems Integration: Practices and
-Applications,}{IGI Global, 2010.}
-  \reference{KUTZ, O., HOIS, J., BAO, J., and CUENCA GRAU, B. (eds.),}{Modular Ontologies,}{Proc. of the Fourth International
-Workshop (WoMO 2010), Frontiers in Artificial Intelligence and Applications, Volume 210, IOS Press, 2010.}
-  \reference{KUTZ, O., MOSSAKOWSKI, T., and LÜCKE, D.,}{Carnap, Goguen, and the Hyperontologies: Logical Pluralism and
-Heterogeneous Structuring in Ontology Design,}{Logica Universalis, 4(2): 255-333, Special Issue on `Is Logic
-Universal?', 2010.}
-  \reference{NEON PROJECT,}{NeOn Book - NeON Methodology in a Nutshell,}{European Commission's Sixth Framework Programme, 2010.  \url{http://www.neon-project.org/nw/NeOn_Book}.}
-  \reference{STUCKENSCHMIDT, H., PARENT, C., and SPACCAPIETRA, S. (eds.),}{Modular Ontologies: Concepts, Theories and Techniques for Knowledge Modularization,}{Springer, LNCS 5445, 2009.}
-\end{references}
+\bibliographystyle{plain} 
+\renewcommand{\bibname}{References}
+\label{a:bibliography}
+\bibliography{dol,rfc,tptp,dol-papers}
+\addcontentsline{toc}{chapter}{References}
 
-
-
-
-
-
- 
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{$\FOL^{=}\to\FOL^{ms =}$}
 Sublogic obtained by the syntactic restriction according to
@@ -13478,4 +14130,24 @@ Translations from SROIQ(D) to \Flogic are discussed in \cite{Bruijn:2008}.
 
 
 
+
+
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
