@@ -610,7 +610,7 @@ Version \version
 
 OMG Document Number: ad/2015-10-01   \\  %ad/2015-08-01 ad/2015-05-03 ad/15-06-04
 %Normative reference: \\
-Machine readable files: \\ %%ad/2015-08-03, ad-2015-07-02\\
+Machine readable files: \\ 
 Normative:  ad/2015-10-02\\
 Informative: ad/2015-10-03\\
  
@@ -4818,10 +4818,9 @@ Extraction         ::= 'extract' InterfaceSignature
 Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
                      | 'keep' InterfaceSignature ['keep' LogicRef]
                      | 'keep' LogicRef
-Filtering          ::= 'select' SymbolList
-                     | 'select' '{' BasicOMS '}'
-                     | 'reject' SymbolList
-                     | 'reject' '{' BasicOMS '}'
+Filtering          ::= RemovalKind BasicOMSOrSymbolList
+RemovalKind        ::= 'reject' | 'select'
+BasicOMSOrSymbolList ::= '{' BasicOMS '}' | SymbolList
 ExtensionOMS       ::= [ExtConservativityStrength]
                        [ExtensionName]
                        ExtendingOMS
@@ -5030,36 +5029,32 @@ to the \syntax{InterfaceSignature}.
 
 \vspace{-2em}
 \index{alignment}
-\begin{lstlisting}[language=ebnf,mathescape]
+\begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
 
 MappingDefinition  ::= InterpretationDefinition
                      | EntailmentDefinition
                      | EquivalenceDefinition
                      | ConservativeExtensionDefinition
                      | AlignmentDefinition
-InterpretationDefinition ::= InterpretationKeyword
-                             InterpretationName
-                             [Conservative] ':'
-                             InterpretationType 'end'
-                     | InterpretationKeyword
-                             InterpretationName
-                             [Conservative] ':'
-                             InterpretationType '='
-                             LanguageTranslation*
-                             [SymbolMap] 'end'
-                     | InterpretationKeyword
-                             InterpretationName '='
-                             Refinement 'end'
+InterpretationDefinition ::= InlineInterpretation | RefinementDefinition
+InlineInterpretation ::= InterpretationKeyword InterpretationName
+                         [Conservative] ':' InterpretationType
+                         [ '=' LanguageTranslation* [SymbolMap] ]
+                         'end'
+RefinementDefinition ::= InterpretationKeyword InterpretationName '='
+                         Refinement
+                         'end'
 InterpretationKeyword ::= 'interpretation' | 'view' | 'refinement'
 InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
 Refinement         ::= GroupOMS
                      | NetworkName
-                     | Refinment 'refined' [RefMap] 'to' Refinement
-                     | Refinment 'interpreted' [RefMap] 'by' Refinement
-RefMap             ::= 'via' LanguageTranslation [SymbolMap]
-                     | 'via' [LanguageTranslation] SymbolMap
-                     | 'via' Refinement ( ',' Refinement )*
+                     | Refinement 'refined' [RefMap] 'to' Refinement
+                     | Refinement 'interpreted' [RefMap] 'by' Refinement
+RefMap             ::= 'via' ( OMSRefinementMap | NetworkRefinementMap )
+OMSRefinementMap   ::= LanguageTranslation [SymbolMap]
+                     | [LanguageTranslation] SymbolMap
+NetworkRefinementMap ::= Refinement ( ',' Refinement )*
 EntailmentDefinition ::= 'entailment' EntailmentName '='
                          EntailmentType 'end'
 EntailmentName     ::= IRI
@@ -5095,13 +5090,13 @@ SingleCorrespondence ::= Symbol [Relation] [Confidence]
 CorrespondenceId   ::= '%(' IRI ')%'
 Symbol          ::= IRI
 GeneralizedTerm    ::= Symbol
-Relation           ::= '>' | '<' | '=' | '%' | 'ni' | 'in' | IRI
+Relation           ::= RelationReference | StandardRelation
+RelationReference  ::= IRI
+StandardRelation   ::= '>' | '<' | '=' | '%' | 'ni' | 'in'
+                       *@$<$ \rm No keyword corresponding to @*default-relation*@ \rm as this is just the default if@*
+                       *@\phantom{$<$ }@*Relation*@ \rm is omitted$>$@*
 Confidence         ::= Double
-\end{lstlisting}
-
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
-
-Double ::= ($<$ a number $\in [0,1]$ $>$) 
+Double             ::= *@$<$ a number $\in [0,1]$ $>$@*
 \end{lstlisting}
 
 
@@ -6907,7 +6902,8 @@ and
 The semantics of a \syntax{BasicOMS} has been defined above.
 
 The semantics of an \syntax{OMSReference} $O$
-is defined only if $\Inst(\Gamma(locId)) = \cI$, where
+is defined only if $\Inst(\Gamma(locId)) = \cI$,\\
+ where
 $locId = postfixLogicIRI(O.\syntax{omsRef},name(\Gamma.logic))$, as follows:
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)= (\Gamma',(\cI',\Sigma',\cM', \Delta'))$$
 \noindent where
@@ -6991,7 +6987,7 @@ local environment (= fixed non-logical symbols, in the terminology of circumscri
 
 Formally, if $O$ is a \syntax{RelativeClosureOMS},
 $O.\syntax{closureType} = \syntax{minimize}$
-and $O'= O.\syntax{closableOMS}$, and
+and $O'= O.\syntax{closableOMS}$, and\\
 $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O') = 
 (\Gamma', (\cI', \Sigma',\cM',\Delta'))$ then
 $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)) = (\Gamma'',(\cI'',\Sigma'',\cM'', \Delta''))$$
@@ -7482,17 +7478,18 @@ sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 \end{array}
 }
 
-If $r$ is a \syntax{SymbolMap} such that for each 
-\syntax{SymbolMapItem}  $gItem$ in $r.\syntax{generalSymbolMapItem}$ we have that
+\noindent If $r$ is a \syntax{SymbolMap} such that
+ for each 
+\syntax{SymbolMapItem}  $gItem$ in $r.\syntax{generalSymbolMapItem}$ we have that\\
 $gItem.\syntax{source} \in |\Sigma|$ and
-$gItem.\syntax{target} \in |\Sigma'|$
+$gItem.\syntax{target} \in |\Sigma'|$\\
 and for each
 \syntax{Symbol}  $s$ in $r.\syntax{generalSymbolMapItem}$ we have that
 $s$ is an element both of $|\Sigma|$ and $|\Sigma'|$,
 $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma:\Sigma\to\Sigma'$$
 \noindent where $\sigma$ must be the unique element of the set
 $\{ \varphi : \Sigma\to\Sigma' \mid \text{ there is a set } S \subseteq |\Sigma|
-\text{ such that } \varphi \text{ matches } r \text{ and is the identity on } S\\
+\text{ such that } \varphi \text{ matches } r$ and is the identity on $S
 \text{ and } S \text{ is maximal with the property that such morphism exists} \}$.
 If the set fails to be a singleton, the semantics of $r$ is undefined.
 
@@ -7722,14 +7719,14 @@ sem(\Gamma,O) = \Gamma''$$
 where for each of the institutions $\cI_1,\ldots,\cI_n$ supported by $\Gamma.{lang}$,
 we have \\
 $\Gamma_1=\Gamma'_1[
-postfixLogicIRI(O.\syntax{omsName},\cI_1)\mapsto (\cI_1,\Sigma_1,\cM_1,\Delta_1)]$
+postfixLogicIRI(O.\syntax{omsName},\cI_1)\mapsto (\cI_1,\Sigma_1,\cM_1,\Delta_1)]$\\
 where $sem(\Gamma.{logic=\cI_1},O.\syntax{oms}) = (\Gamma'_1,(\cI_1,\Sigma_1,\cM_1,\Delta_1))$,\\ 
 $\Gamma_2=\Gamma'_2[
-postfixLogicIRI(O.\syntax{omsName},\cI_2)\mapsto (\cI_2,\Sigma_2,\cM_2,\Delta_2)]$
+postfixLogicIRI(O.\syntax{omsName},\cI_2)\mapsto (\cI_2,\Sigma_2,\cM_2,\Delta_2)]$\\
 where $sem(\Gamma'_1.{logic=\cI_2},O.\syntax{oms}) = (\Gamma'_2,(\cI_2,\Sigma_2,\cM_2,\Delta_2))$,
 $\ldots$,\\
 $\Gamma''=\Gamma'_n[
-postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)]$
+postfixLogicIRI(O.\syntax{omsName},\cI_n)\mapsto (\cI_n,\Sigma_n,\cM_n,\Delta_n)]$\\
 where $sem(\Gamma'_{n-1}.{logic=\cI_n},O.\syntax{oms}) = (\Gamma'_{n},(\cI_n,\Sigma_n,\cM_n,\Delta_n))$
 
 
@@ -7973,14 +7970,14 @@ The semantics is only defined if $\beta_{\Sig(L_1)}(M_2\forget\sigma) \in \Mod(L
 If the optional argument $d.\syntax{conservativityStrength}$ is
 \begin{itemize}
 \item \syntax{model-conservative}, for
-each model  $M_1\in\Mod(L_1)$ there must exist a model $M_2\in\Mod(L_2)$ such that
+each model  $M_1\in |\Mod(L_1)|$ there must exist a model $M_2\in|\Mod(L_2)|$ such that
 $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. 
 \item \syntax{consequence-conservative}, 
 for each $\Sig(L_1)$-sentence $\varphi$, if $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ then
 $\cM_1\models \varphi$.
 \item \syntax{not-model-conservative}, 
-there must exist a model  $M_1\in\Mod(L_1)$ such that there is no 
-model $M_2\in\Mod(L_2)$ such that
+there must exist a model  $M_1\in|\Mod(L_1)|$ such that there is no 
+model $M_2\in|\Mod(L_2)|$ such that
 $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$.
 \item \syntax{not-consequence-conservative}, 
 there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ and
@@ -8356,9 +8353,10 @@ If $t$ is a \syntax{NetworkOMSEntailment},
 $sem(\Gamma,t) = G$
 
 \noindent where $sem(\Gamma, t.\syntax{network}) = G'$ such that $G'$ contains a node $n$ labeled with 
-$\Name(t.\syntax{premise})$,
-$sem(\Gamma,t.\syntax{oms}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and 
-$\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. Then 
+$\Name(t.\syntax{premise})$,\\
+$sem(\Gamma,t.\syntax{oms}) = (\cI,\Sigma,\cM_2,\Delta_2)$ and \\
+$\{ \cM_n \mid \cM \text{ is compatible with } G' \} \subseteq \cM_2$. 
+Then 
 $G$ extends G' with a new node whose label has 
 the name $\Name(t.\syntax{oms})$ and the other 
 components given by $sem(\Gamma,t.\syntax{oms})$ and with
@@ -8806,139 +8804,233 @@ OMG maintains the registry as an informative resource governed by the standard. 
 \label{a:dol-onto}
 
 
-%\begin{figure}
-%  \centering
-%   \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG} 
-%  \caption{Subset of the OntoIOp registry, shown as an RDF graph}
-%\label{f:DOL-threelayers}
-%\end{figure}
+This annex describes the DOL ontology, which implements the terms and definitions from
+clause~\ref{terms-and-defs}. While the ontology itself is informative, it is required for the 
+forthcoming Application Programming Interfaces (APIs) for Knowledge Platforms (API4KP) 
+specification, and so every effort has been made to provide a good foundation for that purpose.  
 
-This annex specifies the \DOL Ontology, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
-Part of the background and design considerations of the \DOL Ontology can be found in~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
-
-\section{Normative State and Normative References}\label{a:dol-onto-norm}
-
-
-The canonical namespace IRI for the \DOL Ontology is \url{http://www.omg.org/spec/DOL/dol-language/}.
-Normative snapshots of the implementation are published there.
-The IRI for the version of the \DOL Ontology that corresponds to this version of the OMG standard is \url{http://www.omg.org/spec/DOL/20150801/dol-language/}.
-
-The \DOL Ontology is currently implemented in OWL 2 (\nref{OWL2}).
-The normative snapshots are encoded in RDF/XML using the OWL 2 mapping to RDF graphs (\nref{OWL2RDF}).
-
-The ontology makes use of the following standard ontologies and vocabularies:
-\begin{itemize}
-\item DCMI Metadata Terms (\nref{DCMI})
-\item OMG Specification Metadata (SM) Vocabulary (\nref{OMG-SM})
-\item SKOS (\nref{SKOS})
-\end{itemize}
-
-%The sources of the \DOL ontology are being maintained in OWL Manchester
-% syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at 
-% \url{https://ontohub.org/meta/dol-ontology.omn}.
-
-It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
-
-\section{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
-
-Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} of \DOL-conforming languages and translations 
-(see annex~\ref{a:registry}).
-
-The DOL ontology will also be used by the API for Knowledge Platforms
-(API4KP) OMG standardization initiative, see
-\url{http://www.omgwiki.org/API4KB}, as part of their larger ontology.
-
-\section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
-
-
-The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. This includes most of the classes used in the \DOL metamodel, but also terms used in the \DOL semantics. 
- Classes that are reifications of relations also have been introduced as object properties.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise. 
-The \DOL Ontology additionally contains some top-level abstract classes
-as shown in Fig.~\ref{fig:dol-onto-classes}.
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.8\textwidth]{illustrations/dol-onto-classes.png}
-  \caption{DOL term ontology: top-level classes}
-  \label{fig:dol-onto-classes}
-\end{figure}
-
-
-
-This reflects central issues in the structure of \DOL:
-while \DOL, as a language, is a linguistic entity, it is
-related to mathematical entities like logics, signatures and models
-through its semantics. That is, semantic entities provide the
-bridge bewteen linguistic and mathematical entities.
-Moreover, processes (like theorem proving) provide algorithmic
-procedcures for manipulating DOL librares, and tools implement
-these in software.
-
-Below the top-level classes, the class structure is as shown
-in Figs.~\ref{fig:linguistic-entity}--\ref{fig:tool}.
+\section{Namespace Definitions}
+The namespaces and prefixes corresponding to external elements required for use by the DOL ontology
+are provided below.  Table \ref{tab:namespace} lists the prefixes and namespaces on which DOL depends.
  
-%\includegraphics[width=0.8\textwidth]{illustrations/linguistic-entity2.png}
+ 
+ \begin{table}[htbp]
+ \begin{center}
+ \begin{longtable}{|p{0.1\textwidth}|p{0.8\textwidth}|}
+ %\caption{Optional Requirements}\\
+ \hline
+  \textbf{Prefix} & \textbf{Namespace}\\
+ \hline
+ \endfirsthead
+ \multicolumn{2}{l}%
+ {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+ \hline
+ \textbf{Prefix} & \textbf{Namespace}\\ \hline
+ \endhead
+ 
+ \hline \multicolumn{2}{l}{\textit{Continued on next page}} \\
+ \endfoot
+ \hline
+ \endlastfoot
+ 
+rdf & \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#}\\ 
+rdfs & \url{http://www.w3.org/2000/01/rdf-schema#} \\ 
+owl & \url{http://www.w3.org/2002/07/owl#} \\   
+ xsd	& \url{http://www.w3.org/2001/XMLSchema#} \\   
+dct	 & \url{http://purl.org/dc/terms/} \\   
+skos & \url{http://www.w3.org/2004/02/skos/core#} \\   
+sm	& \url{http://www.omg.org/techprocess/ab/SpecificationMetadata/} \\   \hline
+ %	
+ \end{longtable}
+ \caption{Prefix and Namespaces for referenced/external vocabularies}
+ \label{tab:namespace}
+ \end{center}
+ \end{table}
 
-\begin{figure}
-  \centering
-    \includegraphics[width=1\textwidth]{illustrations/linguistic-entity.png}
-  \caption{DOL term ontology: linguistic entities}
-  \label{fig:linguistic-entity}
-\end{figure}
+The namespace approach taken for DOL is based on OMG guidelines and is constructed as follows:
+\begin{itemize}
+	\item A standard prefix \url{http://www.omg.org/spec/}
+	\item The abbreviation for the specification: in this case DOL
+	\item The ontology name
+\end{itemize}
+ Note that the URI/IRI strategy for the ontology takes a “slash” rather than “hash” approach, in 
+ order to accommodate server-side applications.   Table \ref{tab:dolnamespace} provides the namespace definition for 
+ the DOL ontology.  While the prefixes given in Tables \ref{tab:namespace} and \ref{tab:dolnamespace} are informative, their use is 
+ required in any extension, including API4KP.
 
-\begin{figure}
-  \centering
-    \includegraphics[width=1\textwidth]{illustrations/mathematical-entity.png}
-  \caption{DOL term ontology: mathematical entities}
-  \label{fig:mathematical-entity}
-\end{figure}
+ 
+ \begin{table}[htbp]
+ \begin{center}
+ \begin{longtable}{|p{0.1\textwidth}|p{0.8\textwidth}|}
+ %\caption{Optional Requirements}\\
+ \hline
+  \textbf{Prefix} & \textbf{Namespace}\\
+ \hline
+ \endfirsthead
+ \multicolumn{2}{l}%
+ {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+ \hline
+ \textbf{Prefix} & \textbf{Namespace}\\ \hline
+ \endhead
+ 
+ \hline \multicolumn{2}{l}{\textit{Continued on next page}} \\
+ \endfoot
+ \hline
+ \endlastfoot
+dol & \url{http://www.omg.org/spec/DOL/DOL-terms/}\\    \hline
+ %	
+ \end{longtable}
+ \caption{Prefix and Namespaces for the DOL ontology}
+ \label{tab:dolnamespace}
+ \end{center}
+ \end{table}
 
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/semantic-entity.png}
-  \caption{DOL term ontology: semantic entities}
-  \label{fig:semantic-entity}
-\end{figure}
+ 
+ 
 
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/web-entity.png}
-  \caption{DOL term ontology: web entities}
-  \label{fig:web-entity}
-\end{figure}
-
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/process.png}
-  \caption{DOL term ontology: processes}
-  \label{fig:process}
-\end{figure}
-
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/tool.png}
-  \caption{DOL term ontology: tools}
-  \label{fig:tool}
-\end{figure}
-
-
-
-
-The top level object properties are structured in a way similar 
-to that of the top-level classes, see Fig.~\ref{fig:dol-onto-properties}.
-\medskip
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.4\textwidth]{illustrations/dol-onto-properties.png}
-  \caption{DOL term ontology: properties}
-  \label{fig:dol-onto-properties}
-\end{figure}
+The ontology itself is not documented here, as it is informative, and the bulk of the ontology is 
+documented in clause~\ref{terms-and-defs}, Terms and Definitions, as stated above.  
+Later versions of this 
+specification may provide complete documentation, including machine-readable, ODM-compliant UML 
+XMI, ODM XMI, and additional content such as “about” files, if usage of the ontology is more 
+widespread than anticipated and thus such documentation is warranted.
 
 
+
+%
+% %\begin{figure}
+% %  \centering
+% %   \includegraphics[width=\textwidth]{illustrations/DOL-ontograph-layers-OMG}
+% %  \caption{Subset of the OntoIOp registry, shown as an RDF graph}
+% %\label{f:DOL-threelayers}
+% %\end{figure}
+%
+% This annex specifies the \DOL Ontology, an RDF vocabulary that implements the terms and definitions from \cref{terms-and-defs}.
+% Part of the background and design considerations of the \DOL Ontology can be found in~\cite{LMK:LoLaModularOntologyLogLangTrans12}.
+%
+% \section{Normative State and Normative References}\label{a:dol-onto-norm}
+%
+%
+% The canonical namespace IRI for the \DOL Ontology is \url{http://www.omg.org/spec/DOL/dol-language/}.
+% Normative snapshots of the implementation are published there.
+% The IRI for the version of the \DOL Ontology that corresponds to this version of the OMG standard is \url{http://www.omg.org/spec/DOL/20150801/dol-language/}.
+%
+% The \DOL Ontology is currently implemented in OWL 2 (\nisref{W3C/TR REC-owl2-syntax:2012}).
+% The normative snapshots are encoded in RDF/XML using the OWL 2 mapping to RDF graphs (\nisref{W3C/TR REC-owl2-mapping-to-rdf:2012}).
+%
+% The ontology makes use of the following standard ontologies and vocabularies:
+% \begin{itemize}
+% \item DCMI Metadata Terms (\nisref{DCMI Metadata Terms:2012})
+% \item OMG Specification Metadata (SM) Vocabulary (\nisref{OMG Specification Metadata:2014})
+% \item SKOS (\nisref{W3C/TR REC-skos-reference:2009})
+% \end{itemize}
+%
+% %The sources of the \DOL ontology are being maintained in OWL Manchester
+% % syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at
+% % \url{https://ontohub.org/meta/dol-ontology.omn}.
+%
+% It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
+%
+% \section{Intended Applications of the \DOL Ontology}\label{a:dol-onto-app}
+%
+% Applications of the \DOL Ontology include modeling statements about OMS in RDF, e.g., when annotating OMS, or when describing new conforming logics, OMS languages, serializations, translations, etc., in the \termref{registry} of \DOL-conforming languages and translations
+% (see annex~\ref{a:registry}).
+%
+% The DOL ontology will also be used by the API for Knowledge Platforms
+% (API4KP) OMG standardization initiative, see
+% \url{http://www.omgwiki.org/API4KB}, as part of their larger ontology.
+%
+% \section{Classes and Object Properties of the \DOL Ontology}\label{a:dol-onto-tables}
+%
+%
+% The classes in the \DOL Ontology (and their annotations) correspond to the terms (and their definitions) in \cref{terms-and-defs}. This includes most of the classes used in the \DOL metamodel, but also terms used in the \DOL semantics.
+%  Classes that are reifications of relations also have been introduced as object properties.  All classes and object properties are assumed to be in the \DOL Ontology namespace unless stated otherwise.
+% The \DOL Ontology additionally contains some top-level abstract classes
+% as shown in Fig.~\ref{fig:dol-onto-classes}.
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.8\textwidth]{illustrations/dol-onto-classes.png}
+%   \caption{DOL term ontology: top-level classes}
+%   \label{fig:dol-onto-classes}
+% \end{figure}
+%
+%
+%
+% This reflects central issues in the structure of \DOL:
+% while \DOL, as a language, is a linguistic entity, it is
+% related to mathematical entities like logics, signatures and models
+% through its semantics. That is, semantic entities provide the
+% bridge bewteen linguistic and mathematical entities.
+% Moreover, processes (like theorem proving) provide algorithmic
+% procedcures for manipulating DOL librares, and tools implement
+% these in software.
+%
+% Below the top-level classes, the class structure is as shown
+% in Figs.~\ref{fig:linguistic-entity}--\ref{fig:tool}.
+%
+% %\includegraphics[width=0.8\textwidth]{illustrations/linguistic-entity2.png}
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=1\textwidth]{illustrations/linguistic-entity.png}
+%   \caption{DOL term ontology: linguistic entities}
+%   \label{fig:linguistic-entity}
+% \end{figure}
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=1\textwidth]{illustrations/mathematical-entity.png}
+%   \caption{DOL term ontology: mathematical entities}
+%   \label{fig:mathematical-entity}
+% \end{figure}
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/semantic-entity.png}
+%   \caption{DOL term ontology: semantic entities}
+%   \label{fig:semantic-entity}
+% \end{figure}
+%
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/web-entity.png}
+%   \caption{DOL term ontology: web entities}
+%   \label{fig:web-entity}
+% \end{figure}
+%
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/process.png}
+%   \caption{DOL term ontology: processes}
+%   \label{fig:process}
+% \end{figure}
+%
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/tool.png}
+%   \caption{DOL term ontology: tools}
+%   \label{fig:tool}
+% \end{figure}
+%
+%
+%
+%
+% The top level object properties are structured in a way similar
+% to that of the top-level classes, see Fig.~\ref{fig:dol-onto-properties}.
+% \medskip
+%
+% \begin{figure}
+%   \centering
+%     \includegraphics[width=0.4\textwidth]{illustrations/dol-onto-properties.png}
+%   \caption{DOL term ontology: properties}
+%   \label{fig:dol-onto-properties}
+% \end{figure}
+%
+%
 
 
 
