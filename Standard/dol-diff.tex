@@ -3387,11 +3387,8 @@ checking and theorem proving. Hence, all available information can be used in th
 For example, the ontology below extends the \OWL definition of \texttt{isProperPartOf} as an asymmetric relation
 with a first-order axiom (in Common Logic) asserting that the relation is also transitive.
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,morekeywords={logic,ontology,props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,alsolanguage=clif,alsolanguage=owl2Manchester,escapechar=@,mathescape]
-\DIFaddend @*  %prefix( lang:  <http://purl.net/DOL/languages/>
+\begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,alsolanguage=clif,alsolanguage=owl2Manchester,escapechar=@,mathescape]
+	 %prefix( lang:  <http://purl.net/DOL/languages/>
                 %% descriptions of languages ...
          trans: <http://purl.net/DOL/translations/> )%
                 %% ... and translations
@@ -3485,11 +3482,8 @@ alignment BFO2GFO :
  \DOL can be used to combine ontologies, while taking into account the semantic dependencies given by the alignments. In the following example the ontology \lstinline{Space} is defined as a combination of three different ontologies (BFO, GFO, DolceLite) along three alignments. 
 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,from},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,escapechar=@,mathescape]
-\DIFaddend @*  ontology Space =
+ \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,escapechar=@,mathescape]
+      ontology Space =
  combine BFO2GFO, DolceLite2GFO, DolceLite2BFO
 \end{lstlisting} 
 
@@ -3519,11 +3513,8 @@ integration.
 
 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,extract},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
-\DIFaddend @*  %prefix( lang:  <http://purl.net/DOL/languages/> )%
+ \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
+  %prefix( lang:  <http://purl.net/DOL/languages/> )%
 library GalenModule
 language lang:OWL
 ontology myGalen = 
@@ -3869,10 +3860,10 @@ These three specifications form a network, see Fig.~\ref{fig:simple-network}.
 The network expresses the distributed character of the development:
 some people might use only }\syntax{Int}\DIFadd{, others only }\syntax{List}\DIFadd{,
 so there is no necessity to unite all specifications into one
-large specification. 
-\lstset{escapeinside = {*@}{@*}}
+large specification.} \DIFaddend 
+\lstset{escapeinside = {*@}{@*}
 }\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
-\DIFadd{spec Int = %DIF > mono
+*@ \DIFaddbegin \DIFadd{spec Int = %DIF > mono
   Nat
 then %DIF > mono
      generated type Int ::= __ - __(Nat;Nat)
@@ -3897,26 +3888,26 @@ end
 
 \DIFadd{network NatIntList = Nat, Int, List
 end
-}\end{lstlisting}
+}\DIFaddend @* \end{lstlisting}
 
 \begin{figure}
-$$\DIFaddFL{\xymatrix{
+$$\DIFaddbeginFL \DIFaddFL{\xymatrix{
 \Text{Int} && \Text{List}\\
 & \Text{Nat} \ar[ru] \ar[lu]
 }}$$
 \caption{\DIFaddFL{An OMS network consisting of three specifications
-}\label{fig:simple-network}}
+} \DIFaddendFL \label{fig:simple-network}}
 \end{figure}
 
-\DIFadd{The network in Fig.~\ref{fig:simple-network} can be refined
+\DIFaddbegin \DIFadd{The network in Fig.~\ref{fig:simple-network} can be refined
 to a network that is closer to implementation.
 This amounts to refining the specifications of the network
 individually, see Fig.~\ref{fig:simple-network-refinement}.
 This needs to be done in such a way that both the refinement of }\syntax{Int} 
-\DIFadd{and that of }\syntax{List} \DIFadd{are to built over the refinement of }\syntax{Nat}\DIFadd{.
+\DIFadd{and that of }\syntax{List} \DIFadd{are to built over the refinement of }\syntax{Nat}} \DIFaddend
 \lstset{escapeinside = {*@}{@*}}
-}\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
-\DIFadd{spec IntBin = NatBin then ...
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
+*@ \DIFaddbegin \DIFadd{spec IntBin = NatBin then ...
 end
 spec ArrayWithPointer = NatBin then ...
 end
@@ -3929,22 +3920,23 @@ refinement NetworkRefinement =
       List via sort List |-> Array to ArrayWithPointer
     to NatIntListImpl
 end
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 
 \begin{figure}
-$$\DIFaddFL{\xymatrix{
+$$\DIFaddbeginFL \DIFaddFL{\xymatrix{
 \Text{Int}\ar@/^2.0pc/@[red][rrrrr] && \Text{List}\ar@/^2.0pc/@[red][rrrrr] &&& \Text{BinInt} && \Text{ArrayWithPointer}\\
 & \Text{Nat}\ar@/_2.0pc/@[red][rrrrr] \ar[ru] \ar[lu] &&&&& \text{Bin}\ar[ru] \ar[lu] & \\
 &&\\
 &\Text{NatIntList}\ar@[red][rrrrr] &&&&& \Text{NatIntListImpl}
 }}$$
 \caption{\DIFaddFL{A refinement between OMS networks
-}\label{fig:simple-network-refinement}}
+} \DIFaddendFL \label{fig:simple-network-refinement}}
 \end{figure}
 
 
 \section{Use Case Model-1: Consistency Among UML Models of Different Types}
-\DIFaddend \label{model-1}
+\label{model-1}
 
 A typical UML model involves \DIFdelbegin \DIFdel{diagrams }\DIFdelend \DIFaddbegin \DIFadd{models }\DIFaddend of different types. Such UML models may have intrinsic errors because \DIFdelbegin \DIFdel{diagrams }\DIFdelend \DIFaddbegin \DIFadd{models }\DIFaddend of different types may specify conflicting 
 requirements. Typical questions that arise in this context are \DIFaddbegin \DIFadd{ask for
@@ -4125,8 +4117,7 @@ e.g.\ \url{http://www.example.org/uml/atm.xmi} }
 \lstset{escapeinside = {*@}{@*}}
  *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed,refinement,library,via},escapechar=@,mathescape]
 %DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
+\DIFdelend @*   \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
 refinement abstract_to_concrete_atm =
   psm refined via translation psm2sm to { atm and bank  }
 end
@@ -4170,9 +4161,6 @@ it is desirable to relate the model to the ontology. Consider
 the following financial ontology fragment:
 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, Irreflexive, Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
 ontology myTaxonomy =
   ObjectProperty: owns
@@ -4201,11 +4189,8 @@ various aspects need to be taken care of:
 \end{itemize}
 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,DisjointWith, OMS, Characteristics,Transitive,Asymmetric,translation,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,oms,model},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
-\DIFaddend @*  model xmiStateModel = <https://ontohub.org/ATM/state.xmi>  *@ \DIFaddbegin \DIFadd{end
+\begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
+  model xmiStateModel = <https://ontohub.org/ATM/state.xmi>  *@ \DIFaddbegin \DIFadd{end
 }\DIFaddend @*  
 
 model clStateModel = xmiStateModel with
@@ -4805,7 +4790,7 @@ IRIBoundToPrefix ::= '<' FullIRI '>'
 Separators     ::= 'separators' SeparatorString SeparatorString
 SeparatorString ::= SeparatorChar SeparatorChar*
 SeparatorChar  ::= ipchar | gen-delims - '#'+$<$\rm as defined in  *@ \DIFdelbegin %DIFDELCMD < \nisref{IETF/RFC 3987}%%%
-\DIFdelend @*   *@ \DIFaddbegin \DIFadd{\nref{IRI}}\DIFaddend @*  $>$+
+	      *@ \DIFaddbegin \DIFadd{\nref{IRI}}\DIFaddend @*  $>$+
 \end{lstlisting}
 
 
@@ -5411,11 +5396,8 @@ to the \syntax{InterfaceSignature}.
 \vspace{-2em}
 \index{alignment}
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[language=ebnf,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
-\DIFaddend @*  
+ \begin{lstlisting}[language=ebnf,mathescape]
+  
 
 MappingDefinition  ::= InterpretationDefinition
                      | EntailmentDefinition
@@ -5501,7 +5483,8 @@ StandardRelation   ::= }\DIFaddend @*  '>' | '<' | '=' | '%DIF < ' | 'ni' | 'in'
 Confidence         ::= Double
 Double             ::=  ( \DIFdelbegin \DIFdel{(}\DIFdelend )   ( \DIFaddbegin \DIFadd{*}\DIFaddend )  $<$ a number $\in [0,1]$ $>$ ( \DIFdelbegin \DIFdel{) 
 }\DIFdelend )   ( \DIFaddbegin \DIFadd{@*
-}\DIFaddend \end{lstlisting}
+}\DIFaddend ) 
+\end{lstlisting}
 
 
 
@@ -5822,7 +5805,6 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 % LibraryName             = IRI ;
 % \end{lstlisting}
 %
-\lstset{escapeinside = {*@}{@*}}
 % \begin{lstlisting}[language=ebnf,escapechar=+,morecomment={[l]{\%\%\ }}]
 % PrefixMap                = '%prefix(' , { PrefixBinding } , ')%' ;
 % PrefixBinding            = BoundPrefix , IRIBoundToPrefix , [ Separators ] ;
@@ -5961,7 +5943,6 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %                      | LogicRef ;
 % \end{lstlisting}
 %
-\lstset{escapeinside = {*@}{@*}}
 % \begin{lstlisting}[language=ebnf,mathescape]
 % OMSLanguageTranslation        = OMSLanguageTranslationRef
 %                      | '->' , LoLaRef ;
@@ -5991,7 +5972,6 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %
 % \ssclause{OMS Mappings}\label{a:dol-text:mappings}
 % \index{alignment}
-\lstset{escapeinside = {*@}{@*}}
 % \begin{lstlisting}[language=ebnf,mathescape]
 %DIF <  MappingDefinition             = InterpretationDefinition | EntailmentDefinition | EquivalenceDefinition | ModuleRelDefinition | AlignmentDefinition ;
 %DIF >  MappingDefinition             = InterpretationDefinition | EntailmentDefinition | EquivalenceDefinition | ConservativeExtensionDefinition | AlignmentDefinition ;
@@ -11421,7 +11401,8 @@ end
  *@ \DIFdelbegin %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdelend \end{lstlisting}
+\DIFdelend @*
+\end{lstlisting}
 
 
 \DIFdelbegin %DIFDELCMD < \section{Signatures}
@@ -11849,12 +11830,14 @@ In this case, additionally, the Common Logic theory is augmented by
 }\texttt{\DIFdel{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))}}%DIFAUXCMD
 \DIFdel{,
 }\DIFdelend %DIF > 
+
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape, escapechar=@]
-\DIFadd{(not (= $k_i$ $k_j$)) @}\normalfont\quad \DIFadd{for $i \neq j$@
+  \begin{lstlisting}[language=clif, mathescape, escapechar=@]
+*@ \DIFaddbegin \DIFadd{(not (= $k_i$ $k_j$)) @}\normalfont\quad \DIFadd{for $i \neq j$@
 (forall (x) (if ($\CL(c)$ x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))
-}\end{lstlisting}
-\DIFaddend %\ednote{Ed Seidewitz:
+} \DIFaddend @* 
+\end{lstlisting}
+ %\ednote{Ed Seidewitz:
 %enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \DIFaddbegin 
 
@@ -11932,13 +11915,13 @@ and axioms stating type-correctness and functionality:
 %DIFDELCMD <   %%%
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape, escapechar=@]
-  \DIFadd{(forall (x y) (if ($\CL(c.p)$ x y) ($\CL(c)$ x)))
+  \begin{lstlisting}[language=clif, mathescape, escapechar=@]
+ *@ \DIFaddbegin \DIFadd{(forall (x y) (if ($\CL(c.p)$ x y) ($\CL(c)$ x)))
   (forall (x y) (if ($\CL(c.p)$ x y) ($\tau[c']$ y)))@ }\footnotemark\DIFadd{@
   (forall (x) (if ($\CL(c)$ x) (exists (y) ($\CL(c.p)$ x y))))
   (forall (x y z) (if (and ($\CL(c.p)$ x y) ($\CL(c.p)$ x z)) (= y z)))
-}\end{lstlisting}%DIF > 
-\DIFaddend
+} \DIFaddend @*
+\end{lstlisting}%DIF > 
 \footnotetext{{\lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!($\tau[c^\prime]\ $ y)! is an abbreviation of either
 \lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!(and ($\mathsf{CL}(\tau)\ $ y) (forall (m) (if (from:$\mathsf{CL}(\tau)$-member m y) ($\mathsf{CL}(c^\prime)\ $ m))))! (if $\tau$ is present)
 or just \lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!($c^\prime\ $ y)! (if $\tau$ is omitted).}}
@@ -11981,15 +11964,17 @@ and axioms stating type-correctness and functionality:
 %DIFDELCMD < {%%%
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape, escapechar=@]
-  \DIFadd{(forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c)$ x)))
+ \begin{lstlisting}[language=clif, mathescape, escapechar=@]
+ *@ \DIFaddbegin \DIFadd{(forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c)$ x)))
   (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\tau_i[c_i]$ x$_i$))) @}\normalfont\quad \DIFadd{for each $i = 1, \ldots, n$ }\footnotemark\DIFadd{@
   (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\tau[c']$ $y$)))
   (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y z)
           (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ z))
               (= y z)))
-}\end{lstlisting}%DIF > 
-\footnotetext{\DIFadd{Note that the $\cdots$
+} \DIFaddend @*
+
+\end{lstlisting}%DIF > 
+\footnotetext{\DIFaddbegin \DIFadd{Note that the $\cdots$
   here is meta notation, not a sequence marker.}}
 %DIF > 
 \DIFaddend Query operations are modeled as partial functions: they may be undefined
@@ -12028,8 +12013,9 @@ sequences)}\footnote{\DIFadd{ignoring the annotations $\tau_i$
   using sequences of tuples.}}\DIFadd{:
 %DIF > 
 \lstset{escapeinside = {*@}{@*}}
-}\begin{lstlisting}[language=clif, mathescape]
-\DIFaddend @*  (from:Sequence  *@ \DIFdelbegin \DIFdel{m}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{$\CL(a)$}\DIFaddend @*  )
+
+\begin{lstlisting}[language=clif, mathescape]
+(from:Sequence  *@ \DIFdelbegin \DIFdel{m}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{$\CL(a)$}\DIFaddend @*  )
 (forall ( *@ \DIFdelbegin \DIFdel{p}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{t}\DIFaddend @*  )
         (if (form:sequence-member  *@ \DIFdelbegin \DIFdel{p m)
             (}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{t $\CL(a)$)
@@ -12037,18 +12023,20 @@ sequences)}\footnote{\DIFadd{ignoring the annotations $\tau_i$
                     (}\DIFaddend @*  and ( *@ \DIFdelbegin \DIFdel{form:Pair p)
                     (c1 (form:first p) ) }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{$\CL(c_1)$ $x_1$) $\cdots$ }\DIFaddend @*  ( *@ \DIFdelbegin \DIFdel{c2 }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{$\CL(c_r)$ x$_r$)
                          (= t }\DIFaddend @*  (form: *@ \DIFdelbegin \DIFdel{second p))))
-}%DIFDELCMD < \end{lstlisting}
+} \DIFdelend @*
+%DIFDELCMD 
+\end{lstlisting}
 %DIFDELCMD < %%%
-\DIFdel{In case $\tau_2$ is not present or $\tau_2=\mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:}%DIFDELCMD < \\
+\DIFdelbegin \DIFdel{In case $\tau_2$ is not present or $\tau_2=\mathsf{Set}$, this is simplified to a binary relation directly represented as a binary predicate:}%DIFDELCMD < \\
 %DIFDELCMD < %%%
 \texttt{\DIFdel{(forall (x y) (if (m x y) (and ($c_1$ x) ($c_2$ y))))}}%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD <   \item 
 %DIFDELCMD < %%%
 \DIFdel{for any pair of composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
-at most one owner'':
+at most one owner'':}
 \lstset{escapeinside = {*@}{@*}}
-}%DIFDELCMD < \begin{lstlisting}[language=clif,morekeywords={then,with}]
+%DIFDELCMD < \begin{lstlisting}[language=clif,morekeywords={then,with}]
 %DIFDELCMD < %%%
 \DIFdel{(forall (o o' i)
         (if (and }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{sequence-insert x$_1$ ($\cdots$
@@ -12090,12 +12078,13 @@ $\mathsf{Set}$), the representation is simplified to an \DIFdelbegin \DIFdel{$n$
 %DIFAUXCMD
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{(forall (x$_1$ x$_2$ $\cdots$ x$_r$)
+ \begin{lstlisting}[language=clif, mathescape]
+*@ \DIFaddbegin \DIFadd{(forall (x$_1$ x$_2$ $\cdots$ x$_r$)
         (if ($\CL(a)$ x$_1$ x$_2$ $\cdots$ x$_r$) (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_r)$ $x_r$))))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 %DIF > 
-  \DIFaddend \item the interpretation of a member end of a binary association
+   \item the interpretation of a member end of a binary association
 declaration owned by a class/data type coincides with the interpretation
 of the attribute: if for $i\in\{1,2\}$,
 $\mathbf{a}.p_i : \tau_i[c_i]$
@@ -12110,13 +12099,14 @@ is owned by $c \in C$ with $c.p_i : \tau_i[c_i] \in P$, then
 %DIFDELCMD < %%%
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{(forall (o s)
+ \begin{lstlisting}[language=clif, mathescape]
+*@ \DIFaddbegin \DIFadd{(forall (o s)
         (if ($\CL(c.p)$ o s)
             (= s (form:seq2$\CL(\tau_i)$ (form:select$i$ o $\CL(a)$)))))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 %DIF > 
-\DIFaddend If $\mathbf{a}$ is represented in simplified form, then instead the
+ If $\mathbf{a}$ is represented in simplified form, then instead the
 following is used
 \DIFdelbegin %DIFDELCMD < \\
 %DIFDELCMD < %%%
@@ -12126,13 +12116,14 @@ following is used
 %DIFAUXCMD
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{(forall (o s)
+ \begin{lstlisting}[language=clif, mathescape]
+*@ \DIFaddbegin \DIFadd{(forall (o s)
         (if ($\CL(c.p)$ o s)
             (forall (x) (iff (member x s) ($\CL(a)$ o x)))))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 
-  \DIFaddend \item \DIFdelbegin \DIFdel{the interpretation of a member end of a composition declaration
+  \item \DIFdelbegin \DIFdel{the interpretation of a member end of a composition declaration
 owned by a class/data type coincides with the interpretation of the attribute:if for $i\in\{1,2\}$, $\mathbf{m}.p : \tau_i[c_i]$ for $\mathbf{m}=m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]) \in M$ is owned
 by $c \in C$ with $c.p : \tau_i[c_i] \in P$, then
 }\texttt{\DIFdel{(forall (o s)}%DIFDELCMD < \\
@@ -12158,28 +12149,30 @@ all the composite attributes in $P$ and $\mathbf{a}^{1} = a^{1}(p_1^{1} :
 \tau_2^{(1)}[c_2^{1}]), \ldots, \mathbf{a}^{l} = a^{(l)}(p_1^{l} :
 \mathsf{Set}[c_1^{l}], \composition p_2^{l} :
 \tau_2^{(1)}[c_2^{l}])$ all
-the composite binary associations in $A$.  Abbreviate
+the composite binary associations in $A$.  Abbreviate } \DIFaddend
 %DIF > 
 \lstset{escapeinside = {*@}{@*}}
-}\begin{lstlisting}[language=clif, mathescape]
-\DIFadd{(or ($\CL(c^{1}.p^{1})$ o x) $\cdots$ ($\CL(c^{k}.p^{k})$ o x)
+\begin{lstlisting}[language=clif, mathescape]
+*@ \DIFaddbegin \DIFadd{(or ($\CL(c^{1}.p^{1})$ o x) $\cdots$ ($\CL(c^{k}.p^{k})$ o x)
     (form:sequence-member (form:pair o x) $\CL(a^{1})$) $\cdots$
       (form:sequence-member (form:pair o x) $\CL(a^{l})$)))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 %DIF > 
-\DIFadd{by }\lstinline[language=clif]{(owner o x)}\DIFadd{, where, for each binary
+\DIFaddbegin \DIFadd{by }\lstinline[language=clif]{(owner o x)}\DIFadd{, where, for each binary
 association $a^{j}$ represented
-in the simplified way, }\lstinline[language=clif, mathescape]!($\CL(a^{j})$ o i)!
+in the simplified way, } \DIFaddend \lstinline[language=clif, mathescape]!($\CL(a^{j})$ o i)!
 replaces
 \lstinline[language=clif, mathescape]!(form:sequence-member (form:pair o x) $\CL(a^{j})$)!.
 Then
 %DIF > 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{(forall (o1 o2 x)
+ *@ \DIFaddbegin \DIFadd{(forall (o1 o2 x)
         (if (and (owner o1 x) (owner o2 x))
             (= o1 o2)))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 %DIF > 
 %DIF >    \item \ednote{todo: define ownership by a big disjuction over all
 %DIF >    composition delcarations and composite attributes.  each instance has
@@ -12199,7 +12192,6 @@ Then
 %DIF >  \mathsf{set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in m$, an axiom
 %DIF >  stating ``each instance has at most one owner'':
 %DIF >  %
-\lstset{escapeinside = {*@}{@*}}
 %DIF >  \begin{lstlisting}[language=clif, mathescape]
 %DIF >  (forall (o o' i)
 %DIF >          (if (and (form:sequence-member (form:pair o i) $m$)
@@ -12210,7 +12202,7 @@ Then
 %DIF >  in case $m$ is represented in the simplified way,
 %DIF >  \lstinline[language=clif, mathescape]!(form:sequence-member (form:pair o i) $m$)!
 %DIF >  is replaced by \lstinline[language=clif, mathescape]!($m$ o i)!, and analogously for $m'$.
-\DIFaddend \end{itemize}
+\end{itemize}
 
 It is straightforward to extend $\CL$
 from signatures to signature morphisms.
@@ -12409,25 +12401,27 @@ The translation of multiplicity formulas to Common Logic is as follows:
 \DIFdel{(buml:leq $\sem{\ell}$ n)))}}%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin 
+\DIFdelend 
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{$\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) = \CL(\ell \leq \mathsf{\#}c\composition p \mathrel{\mathsf{:}} \tau[c']) ={}$
+*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) = \CL(\ell \leq \mathsf{\#}c\composition p \mathrel{\mathsf{:}} \tau[c']) ={}$
   (forall (x y n)
           (if (and ($\CL(c.p)$ x y) (form:$\CL(\tau)$-size y n)) (buml:leq $\sem{\ell}$ n))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
+*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
   (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$ n)
           (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$)
                    (form:sequence-size (form:n-select a $i$ }[\DIFadd{x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$}]\DIFadd{) n))
               (buml:leq $\sem{\ell}$ n)))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 
-\noindent \DIFaddend If $a$ is represented in simplified form, the following is used instead:
+\noindent If $a$ is represented in simplified form, the following is used instead:
 \DIFdelbegin %DIFDELCMD < \\
 %DIFDELCMD < %%%
 \DIFdel{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$}%DIFDELCMD < \\
@@ -12457,26 +12451,29 @@ The translation of multiplicity formulas to Common Logic is as follows:
 \DIFdel{(buml:leq $\sem{\ell}$ n))}}%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < %%%
+\DIFdel{If $m$ }\DIFdelend 
 \lstset{escapeinside = {*@}{@*}}
-\DIFdel{If $m$ }\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
+\begin{lstlisting}[language=clif, mathescape]
+*@ \DIFaddbegin  \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
   (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$)
           (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$))
               (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
                       (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
                            ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_1$ x$_{i+1}$ $\cdots$ x$_r$) $\cdots$
                            ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_{\sem{\ell}}$ x$_{i+1}$ $\cdots$ x$_r$)))))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i) ={}$
+*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i) ={}$
   (forall (x n)
           (if (and ($\CL(c_{3-i})$ x) (form:$\CL(\tau)$-size (form:select$i$ x $\CL(a)$) n))
               (buml:leq $\sem{\ell}$ n)))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 
-\noindent \DIFadd{If $a$
+\noindent \DIFaddbegin \DIFadd{If $a$
 }\DIFaddend is represented in simplified form, the following is used instead:
 \DIFdelbegin %DIFDELCMD < \\
 %DIFDELCMD < %%%
@@ -12548,8 +12545,8 @@ The translation of multiplicity formulas to Common Logic is as follows:
 %DIFDELCMD < %%%
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFaddbegin \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1) ={}$
+ \begin{lstlisting}[language=clif, mathescape]
+*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1) ={}$
   (forall (x)
           (if ($\CL(c_2)$ x)
               (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
@@ -12561,11 +12558,12 @@ $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}
               (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
                       (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
                            ($\CL(a)$ x y$_1$) $\cdots$ ($\CL(a)$ x y$_{\sem{\ell}}$)))))
-}\end{lstlisting}
+} \DIFaddend @*
+\end{lstlisting}
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
-\DIFadd{$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$
+*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$
   (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)
           (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y)
                    (form:$\CL(\tau)$-size x$_1$ n$_1$) $\cdots$ (form:$\CL(\tau)$-size $x_k$ $n_k$)
@@ -12573,8 +12571,9 @@ $\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}
                    (buml:leq $\sem{\ell_1}$ n$_1$) (buml:leq n$_1$ $\sem{\ell'_1}$) $\cdots$
                    (buml:leq $\sem{\ell_k}$ n$_k$) (buml:leq n$_k$ $\sem{\ell'_k}$))
                    (buml:leq $\sem{\ell}$ n)))
-}\end{lstlisting}
-\DIFaddend %
+} \DIFaddend @*
+\end{lstlisting}
+%
 where $\sem{-} : \mathit{NumLit} \to \ZZ$
 maps a numerical literal to an integer, and $[x_1\cdots x_n]$
 abbreviates \texttt{(form:sequence-insert $x_1$
@@ -13083,64 +13082,48 @@ This is an obvious sublogic.
 class \DIFdelbegin \DIFdel{diagram }\DIFdelend \DIFaddbegin \DIFadd{model }\DIFaddend as described in annex~\ref{a:uml-class}. This net can be translated to OWL2 using the approach described in \cite{zedlitz2012uml}.
 The ontology is extended by translating parts of this net and its multiplicity constraints $\mathit{Mult}(\Sigma)$:
 \begin{itemize}
-\item For each class $c \in C$ with superclasses \DIFdelbegin \DIFdel{$c_1,c_2,...,c_n \in C$ }\DIFdelend \DIFaddbegin \DIFadd{$c_1,c_2,\ldots,c_n \in C$ }\DIFaddend (i.e.\ $c \leq_C c_i$ for \DIFdelbegin \DIFdel{$i=1,...,n$):
-\lstset{escapeinside = {*@}{@*}}
-}%DIFDELCMD < \begin{lstlisting} 
+\item For each class $c \in C$ with superclasses \DIFdelbegin \DIFdel{$c_1,c_2,...,c_n \in C$ }\DIFdelend \DIFaddbegin \DIFadd{$c_1,c_2,\ldots,c_n \in C$ }\DIFaddend (i.e.\ $c \leq_C c_i$ for \DIFdelbegin \DIFdel{$i=1,...,n$):} \DIFdelend
+%DIFDELCMD < \begin{lstlisting} 
 %DIFDELCMD < 	%%%
-\DIFdelend @*   *@ \DIFaddbegin \DIFadd{$i=1,\ldots,n$):
+\DIFaddbegin \DIFadd{$i=1,\ldots,n$):} \DIFaddend
 \lstset{escapeinside = {*@}{@*}}
-}\begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  Class: c
+\begin{lstlisting}[language=owl2Manchester]
+		    Class: c
 		SubClassOf: c1
 		...
 		SubClassOf: cn
 \end{lstlisting}
 \item For each attribute declaration $c.p:c'$ in $P$
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  ObjectProperty: p
+\begin{lstlisting}[language=owl2Manchester]
+	*@ \DIFaddbegin \DIFaddend @*  ObjectProperty: p
 		Domain: c
-		Range: c'
+		Range: c' } \DIFaddend @*
 \end{lstlisting}
 
 \item For each attribute multiplicity $n\ \mathsf{\leq}\ c.p:\tau[c']$ in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  SubClassOf: p min n c'
+\begin{lstlisting}[language=owl2Manchester]
+	*@ \DIFaddbegin   \DIFadd{SubClassOf: p min n c'} \DIFaddend @*
 \end{lstlisting}
 
 \item For each attribute multiplicity $ c.p:\tau[c'] \ \mathsf{\leq}\ n$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  SubClassOf: p max n c'
+ \begin{lstlisting}[language=owl2Manchester]
+	*@ \DIFaddbegin \DIFadd{SubClassOf: p max n c'} \DIFaddend @*
 \end{lstlisting}
 
 \item For each unidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  ObjectProperty: p
+ \begin{lstlisting}[language=owl2Manchester]
+	*@ \DIFaddbegin  \DIFadd{ ObjectProperty: p
 		Domain: c1
-		Range: c2
+		Range: c2} \DIFaddend @* 
 \end{lstlisting}
 \item For each bidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  ObjectProperty: p1
+ \begin{lstlisting}[language=owl2Manchester]
+	ObjectProperty: p1
 		Domain: c
 		Range: c'
 
@@ -13152,28 +13135,18 @@ The ontology is extended by translating parts of this net and its multiplicity c
 \end{lstlisting}
 \item For each binary association $n \leq a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$ in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  SubClassOf: pi min n ci
+ \begin{lstlisting}[language=owl2Manchester]
+	SubClassOf: pi min n ci
 \end{lstlisting}
 \item For each binary association $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  SubClassOf: pi max n ci
+ \begin{lstlisting}[language=owl2Manchester]
+	SubClassOf: pi max n ci
 \end{lstlisting}
 \item For each composition declaration $m(\mathsf{Set}[c_1], \composition p_2 :
 \tau_2[c_2])$ in $M$:
-\lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  ObjectProperty: p
+\begin{lstlisting}[language=owl2Manchester]
+	ObjectProperty: p
 		Characteristics:
 			Functional, 
 			Irreflexive
@@ -13181,20 +13154,12 @@ The ontology is extended by translating parts of this net and its multiplicity c
 		Range: c2
 \end{lstlisting}
 \item For each binary association $n \leq a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$  extend the description of class $c_j$ by:
-\lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  SubClassOf: pi min n ci
+\begin{lstlisting}[language=owl2Manchester]
+	SubClassOf: pi min n ci
 \end{lstlisting}
 \item For each binary association $a(p_1:\tau_1[c_1], \composition p_2:\tau_2[c_2]).p_i \leq n$, with $i \neq j\in\{1,2\}$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c_j$ by:
-\lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}
-%DIFDELCMD < 	%%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=owl2Manchester]
-	\DIFaddend @*  SubClassOf: pi max n ci
+\begin{lstlisting}[language=owl2Manchester]
+	SubClassOf: pi max n ci
 \end{lstlisting}
 \end{itemize}
 
@@ -13293,7 +13258,8 @@ concrete syntax.
 
 
 %DIF >  Corresponds to image mof/libraries.png and mof/prefixes.png
-\DIFaddend \sclause{Documents}\label{e:libraries}
+\DIFaddend 
+\sclause{Documents}\label{e:libraries}
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 Document           ::= DOLLibrary | NativeDocument
@@ -13399,11 +13365,12 @@ ConservativityStrength ::= consequence-conservative
                      | definitional
 OMSName            ::= IRI
 SubstName          ::= IRI
-}\end{lstlisting}
+} \DIFaddend )
+\end{lstlisting}
 
 %DIF >  Corresponds to image mof/extension&closure.png
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  %DIF >  abstract syntax
-\DIFadd{ClosableOMS        ::= BasicOMS | OMSReference
+( \DIFaddbegin \DIFadd{ClosableOMS        ::= BasicOMS | OMSReference
 OMSReference       ::= oms-reference OMSRef }[\DIFadd{ImportName}]
 \DIFadd{Extension          ::= extension }[\DIFadd{ConservativityStrength}]
                                  [\DIFadd{ExtensionName}] \DIFadd{ExtendingOMS
@@ -13416,7 +13383,8 @@ CircVars           ::= Symbol*
  ( \DIFaddbegin \DIFadd{ExtensionName      ::= IRI
 ImportName         ::= IRI
 OMSRef             ::= IRI
-}\end{lstlisting}
+} \DIFaddend )
+\end{lstlisting}
 %DIF > % \ednote{Alternatively, we could use one type of \syntax{InterfaceSignature}
 %DIF > % only, and instead use different constructors for \syntax{Extraction}
 %DIF > % and \syntax{Approximation}. This would be a bit more verbose, but a bit
@@ -13425,7 +13393,7 @@ OMSRef             ::= IRI
 
 %DIF >  Corresponds to image mof/translation&reduction.png
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  %DIF >  abstract syntax
-\DIFaddend )  OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
+OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
 Reduction          ::= reduction RemovalKind OMSLanguageTranslation*
                                  [SymbolList]
 SymbolList         ::= Symbol Symbol*
@@ -13454,7 +13422,9 @@ BasicOMSOrSymbolList }\DIFaddend )  ::=  ( \DIFdelbegin \DIFdel{consequence-cons
  ( \DIFdelbegin \DIFdel{ImportName         ::= IRI
 ExtensionName      ::= IRI
 SubstName          ::= IRI
-}%DIFDELCMD < \end{lstlisting}
+} \DIFdelend )
+%DIFDELCMD < 
+\end{lstlisting}
 %DIFDELCMD < 
 
 %DIFDELCMD < %%%
@@ -13472,7 +13442,7 @@ SubstName          ::= IRI
 %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdel{OMSDefinition      ::= oms-definition OMSName }%DIFDELCMD < [%%%
+\DIF\DIFdel{OMSDefinition      ::= oms-definition OMSName }%DIFDELCMD < [%%%
 \DIFdel{ConservativityStrength}%DIFDELCMD < ] %%%
 \DIFdel{OMS
 Symbol             ::= IRI
@@ -13530,11 +13500,12 @@ SimpleNetworkRefinement ::= simple-network-ref  < \DIFdelbegin \DIFdel{Network
 OMSRefinementMap   ::= oms-refmap [OMSLanguageTranslation] [SymbolMap]
 NetworkRefinementMap ::= network-refmap  < \DIFdelbegin \DIFdel{NodeMap*
 NodeMap            }\DIFdelend >   < \DIFaddbegin \DIFadd{Refinement*
-}\end{lstlisting}
+} \DIFaddend >
+\end{lstlisting}
 
 %DIF >  Corresponds to image mof/entailment&equivalence.png
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  %DIF >  abstract syntax
-\DIFadd{MappingDefinition  }\DIFaddend >  ::=  < \DIFdelbegin \DIFdel{node-map OMSName OMSName
+< \DIFaddbegin \DIFadd{MappingDefinition  }\DIFaddend >  ::=  < \DIFdelbegin \DIFdel{node-map OMSName OMSName
                                 OMSLanguageTranslation* }%DIFDELCMD < [%%%
 \DIFdel{SymbolMap}%DIFDELCMD < ]
 %DIFDELCMD < %%%
@@ -13566,11 +13537,11 @@ ModuleRelDefinition ::= module-definition ModuleName
                                           InterfaceSignature
 ModuleName         ::= IRI
 ModuleType         ::= module-type OMS OMS
-}\DIFdelend \DIFaddbegin \end{lstlisting}
+}\DIFdelend > \end{lstlisting}
 
 %DIF >  Corresponds to image mof/alignment.png
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  %DIF >  abstract syntax
-\DIFaddend )  AlignmentDefinition ::= alignment-definition AlignmentName
+AlignmentDefinition ::= alignment-definition AlignmentName
                               [ ( \DIFdelbegin \DIFdel{AlignmentCardinalityPair}\DIFdelend )   ( \DIFaddbegin \DIFadd{AlignmentCardinality}] [\DIFadd{AlignmentCardinality}\DIFaddend )  ]
                               AlignmentType Correspondence*
                               [AlignmentSemantics]<\footnote{%
@@ -13620,7 +13591,7 @@ StandardRelationValues ::= subsumes
                      | default-relation
 RelationReference  ::= relation-ref IRI
 Confidence         ::= Double
-\DIFdelbegin %DIFDELCMD < \end{lstlisting}
+\end{lstlisting}
 %DIFDELCMD < 
 
 %DIFDELCMD < \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  %%%
@@ -13628,21 +13599,19 @@ Confidence         ::= Double
 %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdelend )  Double             ::= ($<$ a number $\in [0,1]$ $>$) 
+Double             ::= ($<$ a number $\in [0,1]$ $>$) 
 \end{lstlisting}
 
 %DIF >  Corresponds to image mof/modules.png
- ( \DIFaddbegin \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  %DIF >  abstract syntax
-\DIFadd{ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName
+ \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  %DIF >  abstract syntax
+( \DIFaddbegin \DIFadd{ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName
                                           }[\DIFadd{ConservativityStrength}] \DIFadd{ConservativeExtensionType
                                           InterfaceSignature
 ConservativeExtensionName         ::= IRI
 ConservativeExtensionType         ::= cons-ext-type OMS OMS
-}\end{lstlisting}
+} \DIFaddend )
+\end{lstlisting}
 
-
-
-\DIFaddend %\includegraphics[scale=0.6]{mof/dia/dia5.png}
 
 
 \sclause{IRIs and Prefixes}
@@ -13941,13 +13910,12 @@ combine NetworkElements  & Alignments, Publications \\\hline
 %combine NetworkElements excluding IRIs  &  \\\hline
 \end{tabular}
 
-\lstset{escapeinside = {*@}{@*}}
-\sclause{Simple Examples in Propositional Logic} *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\DIFdelend @*   *@ \DIFaddbegin \label{ex:prop}
+
+\sclause{Simple Examples in Propositional Logic} 
+\label{ex:prop}
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=prop,escapechar=@,mathescape]
-\DIFaddend @*  %prefix( :      <http://www.example.org/prop#>
+ %prefix( :      <http://www.example.org/prop#>
          log:   <http://purl.net/DOL/logics/>
                 %% descriptions of logics ...
          ser:   <http://purl.net/DOL/serializations/> )%
@@ -14005,11 +13973,8 @@ end
 \DIFaddend 
 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=prop,escapechar=@,mathescape]
-\DIFaddend @*  %prefix( log: <http://purl.net/DOL/logics/> )%
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=prop,escapechar=@,mathescape]
+%prefix( log: <http://purl.net/DOL/logics/> )%
 
 library Engine
 
@@ -14093,11 +14058,8 @@ interpretation repair3 : Repair to MyRepair = %cons
 \sclause{Mereology: Distributed and Heterogeneous Ontologies}
 \label{dist-het-onto}
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,import},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=owl2Manchester,alsolanguage=clif,escapechar=@,mathescape]
-\DIFaddend @*  %prefix( :      <http://www.example.org/mereology#>
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=owl2Manchester,alsolanguage=clif,escapechar=@,mathescape]
+%prefix( :      <http://www.example.org/mereology#>
          owl:   <http://www.w3.org/2002/07/owl#>
          lang:  <http://purl.net/DOL/languages/>
                 %% definitions of conforming languages ...
@@ -14174,15 +14136,15 @@ then
                              (exists (c) (and (Set c) (overlaps c a)))))))
  *@ \DIFdelbegin %DIFDELCMD < }
 %DIFDELCMD < %%%
-\DIFdelend \end{lstlisting}
+\DIFdelend @*
+\end{lstlisting}
+
+
+\sclause{Defined Concepts} \label{ex:definedconcepts}
 
 \lstset{escapeinside = {*@}{@*}}
-\sclause{Defined Concepts} *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\DIFdelend @*   *@ \DIFaddbegin \label{ex:definedconcepts}
-\lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
-\DIFaddend @*  %prefix( lang:  <http://purl.net/DOL/languages/> )%
+%prefix( lang:  <http://purl.net/DOL/languages/> )%
 
 library Persons
 language lang:OWL
@@ -14199,12 +14161,10 @@ end
 
 \sclause{Blocks World: Minimization}\DIFaddbegin \label{ex:blocks}
 \DIFaddend \CLnote[type=q-aut]{Here we need the prefixes for registry entries (e.g.\ logics) once more; they should be reused across examples.  Or we need to specify a mechanism that gets rid of \emph{these} prefixes altogether.  @TM, could you please comment on my specification enhancement request \texttt{http://trac.informatik.uni-bremen.de:8080/hets/ticket/1020\#comment:33}?}
+
 \lstset{escapeinside = {*@}{@*}}
-   *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[language=dolText,morekeywords={forall,if,not,Class,Individual,Types,EquivalentTo,SubClassOf,and}]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=dolText,alsolanguage=OWL2manchester]
-\DIFaddend @*  %prefix( lang:  <http://purl.net/DOL/languages/>)%
+\begin{lstlisting}[language=dolText,alsolanguage=OWL2manchester]
+%prefix( lang:  <http://purl.net/DOL/languages/>)%
 
 library BlocksWithCircumscription
 language lang:OWL
@@ -14240,11 +14200,8 @@ end
   circumscription to axiomatize that ontology.}
 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[language=dolText,morekeywords={forall,if,not,circ,var,Class,Individual,EquivalentTo,and,SubClassOf}]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[language=dolText,alsolanguage=OWL2manchester]
-\DIFaddend @*  ontology Blocks_Alternative =
+\begin{lstlisting}[language=dolText,alsolanguage=OWL2manchester]
+ontology Blocks_Alternative =
   Class: Block
   Class: Abnormal
   Individual: B1 Types: Block, Abnormal
@@ -14285,14 +14242,11 @@ end
 %DIFDELCMD < %%%
 \DIFdelend \DIFaddbegin \sclause{Alignments}\label{ex:alignment}
 \DIFaddend \index{alignment}
+
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,distributed},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-%DIF < prefix( :      <http://www.example.org/alignment#>
-\lstset{escapeinside = {*@}{@*}}
-         \DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
 %DIF > prefix( :      <http://www.example.org/@alignment@#>
-         \DIFaddend @*  owl:   <http://www.w3.org/2002/07/owl#>
+         owl:   <http://www.w3.org/2002/07/owl#>
          lang:  <http://purl.net/DOL/languages/>
                 %% definitions of conforming languages ...
          ser:   <http://purl.net/DOL/serializations/>
@@ -14496,11 +14450,8 @@ end
 \end{lstlisting}
 
 \lstset{escapeinside = {*@}{@*}}
- *@ \DIFdelbegin %DIFDELCMD < \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,morekeywords={props,ObjectProperty,Class,DisjointUnionOf,SubClassOf,Characteristics,Transitive,Asymmetric,SubPropertyOf,DisjointClasses,EquivalentTo,inverse,only,forall,iff,if,or,exists,sort,ops,in,approximate,extract,equivalence,spec},escapechar=@,mathescape]
-%DIFDELCMD < %%%
-\lstset{escapeinside = {*@}{@*}}
-\DIFdelend @*   *@ \DIFaddbegin \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=clif,escapechar=@,mathescape]
-\DIFadd{language lang:CASL
+ \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=clif,escapechar=@,mathescape]
+*@ \DIFaddbegin \DIFadd{language lang:CASL
 }
 
 \DIFaddend @*  equivalence e : algebra:BooleanAlgebra  *@ \DIFdelbegin \DIFdel{$\leftrightarrow$ }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{<-> }\DIFaddend @*  algebra:BooleanRing =
@@ -14654,7 +14605,7 @@ end
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
-\DIFadd{library MetricSpaces
+*@ \DIFaddbegin \DIFadd{library MetricSpaces
 }
 
 \DIFaddend @*  language lang:CASL
@@ -14835,7 +14786,8 @@ then
 end
 }
 
-\DIFaddend \end{lstlisting}
+\DIFaddend @* 
+\end{lstlisting}
 
 
 
@@ -15041,11 +14993,11 @@ temporal conceptual data modeling }%DIFDELCMD < [%%%
 $\mathcal{DLR_{US}}$ combines the propositional temporal logic with
 the }%DIFDELCMD < {\em %%%
 \DIFdel{Since}%DIFDELCMD < } %%%
-\DIFdel{and }\DIFdelend \DIFaddbegin \sclause{Queries}\label{ex:queries}
+\DIFdel{and }\DIFdelend \sclause{Queries}\label{ex:queries}
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %DIF > prefix( lang:  <http://purl.net/DOL/languages/> )%
-\DIFadd{library MyQuery
+*@ \DIFaddbegin \DIFadd{library MyQuery
 language lang:CASL
 spec Person =
   sort s
@@ -15138,8 +15090,9 @@ to the term }%DIFDELCMD < \termref{structured OMS} %%%
 \DIFdelend @*   *@ \DIFaddbegin \DIFadd{to Person = x |-> max
 end
 result MyResult = MySubst for MyQuery
-}\end{lstlisting}
-\DIFaddend 
+} \DIFaddend @*
+\end{lstlisting}
+ 
 
 %DIF < % ~\todonote[author=Christoph Lange,date=D:201204131320+02'00',type=todo]{ModuleRelDefinition combined with approximation and RDF-based querying of annotation/metadata dimensions}
 %DIF < % ~\todonote[author=Christoph Lange,date=D:201108212129+02'00',type=todo]{Maybe have an(other?) appendix that refers to the usage of \DOL within ontology engineering methodologies, or at least to some good practices of using \DOL}
