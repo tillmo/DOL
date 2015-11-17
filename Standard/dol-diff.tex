@@ -2084,10 +2084,12 @@ demonstrated to be a \termref{logical consequence} of the axioms.}
 
   \termdefinition{theorem prover}{\termref{tool} implementing \termref{theorem proving}.}
 
+\end{definitions}
 
 
 
 \sclause{Structured OMS}\label{s:structuredOMS}
+
 
 \termdefinition{structured OMS}
 {\termref{OMS} that results from other (basic and structured) \termref{OMS} by \termref{import}, \termref{union}, \termref{combination}, \termref{OMS translation}, \termref{OMS reduction} or other structuring operations.}
@@ -3862,34 +3864,32 @@ some people might use only }\syntax{Int}\DIFadd{, others only }\syntax{List}\DIF
 so there is no necessity to unite all specifications into one
 large specification.} \DIFaddend 
 \lstset{escapeinside = {*@}{@*}}
+{\color{blue}
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
-*@ \DIFaddbegin \DIFadd{spec Int = 
+spec Int = 
   Nat
 then 
-     generated type Int ::= \_\_ - \_\_(Nat;Nat)
+     generated type Int ::= __ - __(Nat;Nat)
      forall a,b,c,d: Nat
      .  a - b = c - d <=> a + d = c + b    
      sort  Nat < Int
      forall a: Nat . a = a - 0             
 end
-} \DIFaddend @* 
 
-*@ \DIFaddbegin \DIFadd{spec List = 
+spec List = 
   Nat 
 then 
   sort Elem
-  free type List ::=  } \DIFaddend @* [] *@ \DIFaddbegin \DIFadd{|  \_\_ :: \_\_ (Elem; List)
-     op   $\#$\_\_: List -> Nat;
+  free type List ::=  [] |  __ :: __ (Elem; List)
+     op   #__: List -> Nat;
      forall x,: Elem; L: List
-     . $\#$ }[] \DIFadd{= 0                              %DIF > (numberOf_nil_List)%
-     . $\#$ (x :: L) = suc( $\#$ L )               %DIF > (numberOf_NeList_List)%
+     . # [] = 0                              %DIF > (numberOf_nil_List)%
+     . # (x :: L) = suc( # L )               %DIF > (numberOf_NeList_List)%
 end
-} \DIFaddend @*
- *@ \DIFaddbegin \DIFadd{network NatIntList = Nat, Int, List
+network NatIntList = Nat, Int, List
 end
-} \DIFaddend @* 
 \end{lstlisting}
-
+}
 \begin{figure}
 $$\DIFaddbeginFL \DIFaddFL{\xymatrix{
 \Text{Int} && \Text{List}\\
