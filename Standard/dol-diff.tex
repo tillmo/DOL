@@ -3904,7 +3904,7 @@ to a network that is closer to implementation.
 This amounts to refining the specifications of the network
 individually, see Fig.~\ref{fig:simple-network-refinement}.
 This needs to be done in such a way that both the refinement of }\syntax{Int} 
-\DIFadd{and that of }\syntax{List} \DIFadd{are to built over the refinement of }\syntax{Nat}} \DIFaddend
+\DIFadd{and that of }\syntax{List} \DIFadd{are to built over the refinement of }\syntax{Nat} \DIFaddend
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 *@ \DIFaddbegin \DIFadd{spec IntBin = NatBin then ...
@@ -11828,13 +11828,13 @@ In this case, additionally, the Common Logic theory is augmented by
 }\texttt{\DIFdel{(forall (x) (if (c x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))}}%DIFAUXCMD
 \DIFdel{,
 }\DIFdelend %DIF > 
-
+{\color{blue}
 \lstset{escapeinside = {*@}{@*}}
   \begin{lstlisting}[language=clif, mathescape, escapechar=@]
-*@ \DIFaddbegin \DIFadd{(not (= $k_i$ $k_j$)) @}\normalfont\quad \DIFadd{for $i \neq j$@
-(forall (x) (if ($\CL(c)$ x) (or (= x $k_1$) $\cdots$ (= x $k_n$))))
-} \DIFaddend @* 
+(not (= $k_i$ $k_j$)) @\normalfont\quad for $i \neq j$@
+(forall (x) (if ($\CL(c)$ x) (or (= x $k_1$) $\cdots$ (= x $k_n$)))) 
 \end{lstlisting}
+}
  %\ednote{Ed Seidewitz:
 %enumerations are specializable, but this is type-unsafe, so maybe omit it}
 \DIFaddbegin 
@@ -11913,13 +11913,14 @@ and axioms stating type-correctness and functionality:
 %DIFDELCMD <   %%%
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
+{\color{blue}
   \begin{lstlisting}[language=clif, mathescape, escapechar=@]
- *@ \DIFaddbegin \DIFadd{(forall (x y) (if ($\CL(c.p)$ x y) ($\CL(c)$ x)))
-  (forall (x y) (if ($\CL(c.p)$ x y) ($\tau[c']$ y)))@ }\footnotemark\DIFadd{@
+ (forall (x y) (if ($\CL(c.p)$ x y) ($\CL(c)$ x)))
+  (forall (x y) (if ($\CL(c.p)$ x y) ($\tau[c']$ y)))@ \footnotemark @
   (forall (x) (if ($\CL(c)$ x) (exists (y) ($\CL(c.p)$ x y))))
   (forall (x y z) (if (and ($\CL(c.p)$ x y) ($\CL(c.p)$ x z)) (= y z)))
-} \DIFaddend @*
 \end{lstlisting}%DIF > 
+}
 \footnotetext{{\lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!($\tau[c^\prime]\ $ y)! is an abbreviation of either
 \lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!(and ($\mathsf{CL}(\tau)\ $ y) (forall (m) (if (from:$\mathsf{CL}(\tau)$-member m y) ($\mathsf{CL}(c^\prime)\ $ m))))! (if $\tau$ is present)
 or just \lstinline[language=clif, mathescape, basicstyle={\ttfamily\footnotesize}]!($c^\prime\ $ y)! (if $\tau$ is omitted).}}
@@ -11962,16 +11963,16 @@ and axioms stating type-correctness and functionality:
 %DIFDELCMD < {%%%
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
+ {\color{blue}
  \begin{lstlisting}[language=clif, mathescape, escapechar=@]
- *@ \DIFaddbegin \DIFadd{(forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c)$ x)))
-  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\tau_i[c_i]$ x$_i$))) @}\normalfont\quad \DIFadd{for each $i = 1, \ldots, n$ }\footnotemark\DIFadd{@
+(forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c)$ x)))
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\tau_i[c_i]$ x$_i$))) @}\normalfont\quad for each $i = 1, \ldots, n$ \footnotemark @
   (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y) (if ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\tau[c']$ $y$)))
   (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ y z)
           (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ z))
               (= y z)))
-} \DIFaddend @*
-
 \end{lstlisting}%DIF > 
+}
 \footnotetext{\DIFaddbegin \DIFadd{Note that the $\cdots$
   here is meta notation, not a sequence marker.}}
 %DIF > 
@@ -12008,7 +12009,7 @@ sequences)}\footnote{\DIFadd{ignoring the annotations $\tau_i$
   from their end values.  When one or more ends of the Association are
   ordered, links carry ordering information in addition to their end
   values.'' The additional information required for links is covered by
-  using sequences of tuples.}}\DIFadd{:
+  using sequences of tuples.}}:
 %DIF > 
 \lstset{escapeinside = {*@}{@*}}
 
@@ -13096,31 +13097,39 @@ The ontology is extended by translating parts of this net and its multiplicity c
 \end{lstlisting}
 \item For each attribute declaration $c.p:c'$ in $P$
 \lstset{escapeinside = {*@}{@*}}
+{\color{blue}
 \begin{lstlisting}[language=owl2Manchester]
-	*@ \DIFaddbegin \DIFaddend @*  ObjectProperty: p
-		Domain: c
-		Range: c' } \DIFaddend @*
+	ObjectProperty: p
+	Domain: c
+	Range: c'
 \end{lstlisting}
+}
 
 \item For each attribute multiplicity $n\ \mathsf{\leq}\ c.p:\tau[c']$ in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
 \lstset{escapeinside = {*@}{@*}}
+{\color{blue}
 \begin{lstlisting}[language=owl2Manchester]
-	*@ \DIFaddbegin   \DIFadd{SubClassOf: p min n c'} \DIFaddend @*
+	SubClassOf: p min n c'
 \end{lstlisting}
+}
 
 \item For each attribute multiplicity $ c.p:\tau[c'] \ \mathsf{\leq}\ n$  in $\mathit{Mult}(\Sigma)$ extend the description of class $c$ by:
 \lstset{escapeinside = {*@}{@*}}
+{\color{blue}
  \begin{lstlisting}[language=owl2Manchester]
-	*@ \DIFaddbegin \DIFadd{SubClassOf: p max n c'} \DIFaddend @*
+	SubClassOf: p max n c'
 \end{lstlisting}
+}
 
 \item For each unidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
 \lstset{escapeinside = {*@}{@*}}
+{\color{blue}
  \begin{lstlisting}[language=owl2Manchester]
-	*@ \DIFaddbegin  \DIFadd{ ObjectProperty: p
-		Domain: c1
-		Range: c2} \DIFaddend @* 
+	ObjectProperty: p
+	Domain: c1
+	Range: c2
 \end{lstlisting}
+}
 \item For each bidirectional binary association declaration $a(p_1:\tau_1[c_1],p_2:\tau_2[c_2])$ in $A$:
 \lstset{escapeinside = {*@}{@*}}
  \begin{lstlisting}[language=owl2Manchester]
@@ -13649,6 +13658,8 @@ queries.
 
 
 \sclause{Terms and Definitions}
+
+\begin{definitions}
   \termdefinition{query language}{\termref{OMS language} specifically dedicated to queries\index{query}.}
 \begin{example}
 SPARQL, Prolog
@@ -13760,8 +13771,8 @@ SubstitutionDefinition ::= substitution-definition
 ResultDefinition   ::= result-definition ResultName
                                          SubstitutionName SubstitutionName*
                                          QueryName [Complete]
- ( \DIFaddbegin \DIFadd{Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
-}\DIFaddend )  OMS                ::= ($...$) | application  OMS  SubstitutionName 
+ ( {\color{blue}{Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
+})  OMS                ::= ($...$) | application  OMS  SubstitutionName 
 QueryName          ::= IRI
 SubstitutionName   ::= IRI
 ResultName         ::= IRI
@@ -14623,14 +14634,14 @@ end
 end
 query MyQuery }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Elem
      ops  e:       Elem;
-          __ * __: Elem * Elem -> Elem, assoc, unit e
+          \_\_ * \_\_: Elem * Elem -> Elem, assoc, unit e
 end
 }
 
 \DIFadd{spec CommutativeMonoid }\DIFaddend @*  =
       *@ \DIFdelbegin \DIFdel{select xwhere Person(x }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Monoid
 then
-     op __ * __: Elem * Elem -> Elem, comm
+     op \_\_ * \_\_: Elem * Elem -> Elem, comm
 end
 }
 
@@ -14651,30 +14662,30 @@ end
 
 \DIFadd{spec Ring =
      AbelianGroup with sort Elem,
-                       ops __ * __ |-> __ + __,
+                       ops \_\_ * \_\_ |-> \_\_ + \_\_,
                            e       |-> 0
 and
-     Monoid with ops e, __*__
+     Monoid with ops e, \_\_*\_\_
 then
      forall x,y,z:Elem
-     . (x + y) * z = (x * z) + (y * z)          %DIF > (distr1_Ring)%
+     . (x + y) * z = (x * z) + (y * z)          %DIF > (distr1\_Ring)%
      . z * ( x + y ) = (z * x}\DIFaddend @*  )  *@ \DIFdelbegin \DIFdel{in Person
 end
-substitution MySubst : }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{+ (z * y)        %DIF > (distr2_Ring)%
+substitution MySubst : }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{+ (z * y)        %DIF > (distr2\_Ring)%
 end
 }
 
-\DIFadd{view AbelianGroup_in_Ring_add:
+\DIFadd{view AbelianGroup\_in\_Ring\_add:
      AbelianGroup to Ring =
      ops e |-> 0,
-         __ * __ |-> __ + __
+         \_\_ * \_\_ |-> \_\_ + \_\_
 end
 }
 
 \DIFadd{spec CommutativeRing =
-     Ring with ops 0,  __ + __, e, __ * __
+     Ring with ops 0,  \_\_ + \_\_, e, \_\_ * \_\_
 and
-     CommutativeMonoid with ops e, __ * __
+     CommutativeMonoid with ops e, \_\_ * \_\_
 end
 }
 
@@ -14685,7 +14696,7 @@ then
      sort NonZeroElem = }{ \DIFadd{x: Elem . not x = 0 }} %DIF > (NonZeroElem_def)%
 }
 \DIFadd{and
-     }{\DIFadd{Group with sort Elem |-> NonZeroElem, ops e, __*__}}
+     }{\DIFadd{Group with sort Elem |-> NonZeroElem, ops e, \_\_*\_\_}}
 \DIFadd{end
 }
 
@@ -14697,7 +14708,7 @@ end
 \DIFadd{spec Field =
      BasicField with op e |-> 1
 then %DIF > def
-     op -__: Elem -> Elem
+     op -\_\_: Elem -> Elem
      forall x}\DIFaddend @*  :  *@ \DIFdelbegin \DIFdel{Person }%DIFDELCMD < } %%%
 \DIFdel{to Person }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Elem
      . -x + x }\DIFaddend @*  =  *@ \DIFaddbegin \DIFadd{0       %DIF > (Field_unary_minus_idef)%
@@ -14735,8 +14746,8 @@ end
   OrderedField 
 then %DIF > def
   ops min, max: Elem * Elem -> Elem, comm,assoc %DIF > implied
-  preds __ <= __, __ < __,
-           __ >= __, __ > __: Elem * Elem;
+  preds \_\_ <= \_\_, \_\_ < \_\_,
+           \_\_ >= \_\_, \_\_ > \_\_: Elem * Elem;
   forall x,y:Elem
      . }\DIFaddend @*  x  *@ \DIFaddbegin \DIFadd{>= y <=> y <= x                   %DIF > (geq_def_ExtPartialOrder)%
      . x < y <=> (x <= y /}\ \DIFadd{not (x=y))     %DIF > (less_def_ExtPartialOrder)%
@@ -14758,8 +14769,8 @@ result MyResult }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Real
 then
   free type Nat ::}\DIFaddend @*  =  *@ \DIFdelbegin \DIFdel{MySubst for MyQuery
 }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{0 | suc Nat
-  ops __<=__ :     Pred(Real * Pred(Real));
-      __<=__ :     Pred(Pred(Real) * Real);
+  ops \_\_<=\_\_ :     Pred(Real * Pred(Real));
+      \_\_<=\_\_ :     Pred(Pred(Real) * Real);
       isBounded : Pred(Pred(Real));
       inf,sup :   Pred(Real) ->? Real;
       inj:        Nat -> Real
@@ -14939,8 +14950,7 @@ end
 \DIFdel{DOLCE is a foundational ontology that has primarily been formalized in the first-order logic ontology language KIF (a predecessor of Common Logic) , but also in OWL (``DOLCE Lite'')\mbox{%DIFAUXCMD
 \cite{dolce}
 }%DIFAUXCMD
-. This ‘OWLized’ version was targeting use in semantic web services and domain ontology interoperability, and to provide the generic categories and relationships to aid domain ontology development. DOLCE has been used also for semantic middleware, and in OWL-formalized ontologies of neuroimaging, computing, ecology, and data mining and optimization. Given the differences in expressivity, DOLCE Lite had to simplify certain notions. For example, the DOLCE Lite formalization of ``temporary parthood'' (something is part of something else at a certain point or interval in time) omits any information about the time, as OWL only supports binary predicates (a. k. a. }%DIFDELCMD < \ %%%
-\DIFdel{``properties'').  That leaves ambiguities for modeling a view from DOLCE Lite to the first-order DOLCE, as such a view would have to reintroduce the third (temporal) component of such predicates:}%DIFDELCMD < \begin{itemize}
+This 'OWLized' version was targeting use in semantic web services and domain ontology interoperability, and to provide the generic categories and relationships to aid domain ontology development. DOLCE has been used also for semantic middleware, and in OWL-formalized ontologies of neuroimaging, computing, ecology, and data mining and optimization. Given the differences in expressivity, DOLCE Lite had to simplify certain notions. For example, the DOLCE Lite formalization of ``temporary parthood'' (something is part of something else at a certain point or interval in time) omits any information about the time, as OWL only supports binary predicates (a. k. a. ``properties'').  That leaves ambiguities for modeling a view from DOLCE Lite to the first-order DOLCE, as such a view would have to reintroduce the third (temporal) component of such predicates: }%DIFDELCMD < \begin{itemize}
 %DIFDELCMD <   \item %%%
 \DIFdel{Should a relation asserted in terms of DOLCE Lite be assumed to hold for }\emph{\DIFdel{all}} %DIFAUXCMD
 \DIFdel{possible points/intervals in time, }%DIFDELCMD < \ie %%%
@@ -15658,8 +15668,8 @@ $\gamma\map{c}{d}$ such that $\gamma;\alpha_i = \beta_i$.
  \DIFadd{When $G$ is the category $\xymatrix{\bullet \ar[r]& \bullet & \bullet \ar[l] }$, $G$-limits are
 called  }\emph{\DIFadd{pullbacks}}\DIFadd{.
  When $G$ is a discrete category,
- $G$-limits are called }\emph{\DIFadd{products}}\DIFadd{.
-}
+ $G$-limits are called }\emph{\DIFadd{products}}.
+
 
 \section{Functors}
 
@@ -15720,8 +15730,9 @@ $F(f);\eta_d = \eta_c;G(c)$, which means that the following diagram commutes
 \DIFadd{There is an inclusion natural transformation $\iota:\mathcal{P}_{\mathit{fin}}\to\mathcal{P}$,
 i.e. for each set $A$, $\iota : \mathcal{P}_{\mathit{fin}}(A)\to\mathcal{P}(A)$ is the inclusion
 function (each finite subset of a set is also a subset of the set).
-}\end{example}
-\DIFaddend 
+}\DIFaddend
+\end{example}
+ 
 
 %\infannex{Bibliography}
 \newpage
