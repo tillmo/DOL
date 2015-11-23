@@ -3520,12 +3520,14 @@ integration.
 library GalenModule
 language lang:OWL
 ontology myGalen = 
-   *@ \DIFaddbegin \DIFadd{<}\DIFaddend @*  http://purl.bioontology.org/ontology/GALEN *@ \DIFaddbegin \DIFadd{> }\DIFaddend @*  extract Drugs, Joints, Bodyparts
+   <http://purl.bioontology.org/ontology/GALEN>  extract Drugs, Joints, Bodyparts
 end
 
- *@ \DIFdelbegin \DIFdel{module myGalenIsAModule : myGalen of }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{cons-ext myGalenIsAModule : <}\DIFaddend @*  http://purl.bioontology.org/ontology/GALEN *@ \DIFaddbegin \DIFadd{>
+ @ \DIFdelbegin \DIFdel{module myGalenIsAModule : myGalen of }\DIFdelend @  
+ @ \DIFaddbegin \DIFadd{cons-ext myGalenIsAModule : <}\DIFaddend @http://purl.bioontology.org/ontology/GALEN@\DIFaddbegin \DIFadd{>
   of  myGalen 
-  }\DIFaddend @*  for Drugs, Joints, Bodyparts
+  }\DIFaddend @  
+  for Drugs, Joints, Bodyparts
 end
 \end{lstlisting}
 
@@ -3906,8 +3908,9 @@ individually, see Fig.~\ref{fig:simple-network-refinement}.
 This needs to be done in such a way that both the refinement of }\syntax{Int} 
 \DIFadd{and that of }\syntax{List} \DIFadd{are to built over the refinement of }\syntax{Nat} \DIFaddend
 \lstset{escapeinside = {*@}{@*}}
+{\color{blue}
 \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
-*@ \DIFaddbegin \DIFadd{spec IntBin = NatBin then ...
+spec IntBin = NatBin then ...
 end
 spec ArrayWithPointer = NatBin then ...
 end
@@ -3920,9 +3923,8 @@ refinement NetworkRefinement =
       List via sort List |-> Array to ArrayWithPointer
     to NatIntListImpl
 end
-} \DIFaddend @*
 \end{lstlisting}
-
+}
 \begin{figure}
 $$\DIFaddbeginFL \DIFaddFL{\xymatrix{
 \Text{Int}\ar@/^2.0pc/@[red][rrrrr] && \Text{List}\ar@/^2.0pc/@[red][rrrrr] &&& \Text{BinInt} && \Text{ArrayWithPointer}\\
@@ -4077,8 +4079,8 @@ Fig.~\ref{fig:state-machine} & stm & state machine\\\hline
                 %% descriptions of logics ...
 library ATM
 
-view cd2stm = cd  *@ \DIFaddbegin \DIFadd{refined }\DIFaddend @*  to { atm hide along stm2cd} end
-view cd2psm = cd  *@ \DIFaddbegin \DIFadd{refined }\DIFaddend @*  to { psm hide along psm2cd} end
+view cd2stm = cd@ \DIFaddbegin \DIFadd{refined }\DIFaddend @to { atm hide along stm2cd} end
+view cd2psm = cd@ \DIFaddbegin \DIFadd{refined }\DIFaddend @to { psm hide along psm2cd} end
 network ATM_network = %consistent
                       cd, stm, psm, cmp,
                       cd2stm, cd2psm, abstract_to_concrete_atm
@@ -4188,32 +4190,32 @@ various aspects need to be taken care of:
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily\small,language=dolText,alsolanguage=owl2Manchester,escapechar=@,mathescape]
-  model xmiStateModel = <https://ontohub.org/ATM/state.xmi>  *@ \DIFaddbegin \DIFadd{end
-}\DIFaddend @*  
+  model xmiStateModel = <https://ontohub.org/ATM/state.xmi>@ \DIFaddbegin \DIFadd{end
+}\DIFaddend @  
 
 model clStateModel = xmiStateModel with
                      translation UMLState2CL
- *@ \DIFaddbegin \DIFadd{end
-}\DIFaddend @*  
+ @ \DIFaddbegin \DIFadd{end
+}\DIFaddend @  
 
-model xmiClassModel = <https://ontohub.org/ATM/class.xmi>  *@ \DIFaddbegin \DIFadd{end
-}\DIFaddend @*  
+model xmiClassModel = <https://ontohub.org/ATM/class.xmi>@ \DIFaddbegin \DIFadd{end
+}\DIFaddend @  
 
 model clClassModel = xmiClassModel with
             translation UMLClass2CL
             Bank |-> FinancialIntermediary
- *@ \DIFaddbegin \DIFadd{end
-}\DIFaddend @*  
+ @ \DIFaddbegin \DIFadd{end
+}\DIFaddend @  
 
-ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>  *@ \DIFaddbegin \DIFadd{end
-}\DIFaddend @*  
+ontology BigTaxonomy = <https://ontohub.org/ATM/mytaxonmy.owl>@ \DIFaddbegin \DIFadd{end
+}\DIFaddend @  
 
-ontology NoLivestockTaxonomy = BigTaxonomy reject
-                                *@ \DIFaddbegin { \DIFaddend @*  Class: Livestock  *@ \DIFaddbegin }
-\DIFaddend @*  end
+ontology NoLivestockTaxonomy = 
+    BigTaxonomy reject @ \DIFaddbegin \DIFadd{\{} \DIFaddend @  Class: Livestock @  \DIFaddbegin \DIFadd{\}}
+\DIFaddend @  end
 
 ontology ExtendedTaxonomy = NoLivestockTaxonomy then
-         ObjectProperty *@ \DIFaddbegin \DIFadd{: }\DIFaddend @*  FinancialIntermediary.owns.ATM
+         ObjectProperty @ \DIFaddbegin \DIFadd{: }\DIFaddend @  FinancialIntermediary.owns.ATM
            SubPropertyOf: owns
            Domain: FinancialIntermediary
            Range: ATM
@@ -5133,11 +5135,11 @@ CircVars           ::= 'vars' (Symbol Symbol*)
 GroupOMS           ::= '{' OMS '}' | OMSRef
 OMSTranslation     ::= 'with' LanguageTranslation* SymbolMap
                      | 'with' LanguageTranslation ( \DIFdelbegin \DIFdel{LanguageTranslation*
-}\DIFdelend )   ( \DIFaddbegin \DIFadd{+
+}\DIFdelend )
+( \DIFaddbegin \DIFadd{+
 }\DIFaddend )  LanguageTranslation ::= 'translation' OMSLanguageTranslation
 Reduction          ::= 'hide' LogicReduction* SymbolList
-                     | 'hide' LogicReduction ( \DIFdelbegin \DIFdel{LogicReduction*
-                     }\DIFdelend )   ( \DIFaddbegin \DIFadd{+
+                     | 'hide' LogicReduction ( \DIFdelbegin \DIFdel{LogicReduction*}\DIFdelend )(\DIFaddbegin \DIFadd{+
                      }\DIFaddend )  | 'reveal' SymbolList
 LogicReduction     ::= 'along' OMSLanguageTranslation
 SymbolList         ::= Symbol ( ',' Symbol )*
@@ -5148,18 +5150,17 @@ Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
                      | 'keep' InterfaceSignature ['keep' LogicRef]
                      | 'keep' LogicRef
 Filtering          ::=  ( \DIFdelbegin \DIFdel{'select' SymbolList
-                     }\DIFdelend )   ( \DIFaddbegin \DIFadd{RemovalKind BasicOMSOrSymbolList
-RemovalKind        ::= 'reject' }\DIFaddend )  | 'select'
- ( \DIFdelbegin \DIFdel{BasicOMS
-                     | 'reject' }\DIFdelend )   ( \DIFaddbegin \DIFadd{BasicOMSOrSymbolList ::= '}{\DIFadd{' BasicOMS '}}\DIFadd{' | }\DIFaddend )  SymbolList
- ( \DIFdelbegin \DIFdel{| 'reject' BasicOMS
-}\DIFdelend )  ExtensionOMS       ::= [ExtConservativityStrength]
+                     }\DIFdelend )(\DIFaddbegin \DIFadd{ RemovalKind BasicOMSOrSymbolList}\\
+\DIFadd{RemovalKind        ::= 'reject' }\DIFaddend )  | 'select' ( \DIFdelbegin \DIFdel{BasicOMS
+                     | 'reject' }\DIFdelend )   
+(\DIFaddbegin \DIFadd{BasicOMSOrSymbolList ::= '\{' BasicOMS '\}'}\DIFadd{ | }\DIFaddend )  SymbolList ( \DIFdelbegin \DIFdel{| 'reject' BasicOMS }\DIFdelend )  
+ExtensionOMS       ::= [ExtConservativityStrength]
                        [ExtensionName]
                        ExtendingOMS
 ConservativityStrength ::= Conservative | '%mono' | '%wdef' | '%def'
 ExtConservativityStrength ::= ConservativityStrength | '%implied'
-Conservative       ::= '%DIF > cons'
-                      ( \DIFaddbegin \DIFadd{| '}\DIFaddend )  %ccons'
+Conservative       ::= ( \DIFaddbegin \DIFadd{'\%cons'}\DIFaddend )
+                     | '%ccons'
                      | '%mcons'
                      | '%notccons'
                      | '%notmcons'
