@@ -3424,7 +3424,7 @@ sample \DIFdelbegin \DIFdel{orchestration of interactions between  the }\DIFdele
 languages is depicted in Figure \ref{f:DOL-mapping} below.
 
 DOL  provides the framework for integrating different domain ontologies, aligning these to 
-foundational ontologies \DIFdelbegin %DIFDELCMD < [%%%
+foundational ontologies \\ \DIFdelbegin %DIFDELCMD < [%%%
 \DIFdel{Alignment1-2}%DIFDELCMD < ] %%%
 \DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
 \cite{DBLP:books/daglib/0032976,AlignmentAPI}
@@ -3775,7 +3775,7 @@ then
  hide insert
 end
 
-%DIF > % refinement from abstract sorting to insert sort
+% refinement from abstract sorting to insert sort
 refinement InsertSortCorrectness =
    Sorting refined via sorter |-> insert_sort to InsertSort
 end
@@ -4576,7 +4576,7 @@ clause~\ref{c:abstract-syntax}.
  MOF metaclass   \syntax{AlignmentDefinition} in
 clause~\ref{c:abstract-syntax}.
 \item \DIFaddbegin \DIFadd{conservative extensions, e.g.}\ \DIFaddend mappings between OMS and their modules, see the
- MOF metaclass   \DIFdelbegin %DIFDELCMD < \syntax{ModuleRelDefinition} %%%
+ MOF metaclass   \\ \DIFdelbegin %DIFDELCMD < \syntax{ModuleRelDefinition} %%%
 \DIFdelend \DIFaddbegin \syntax{ConservativeExtensionDefinition} \DIFaddend in
 clause~\ref{c:abstract-syntax}.
 \end{itemize}
@@ -5403,14 +5403,15 @@ MappingDefinition  ::= InterpretationDefinition
                      | EquivalenceDefinition
                      |  *@ \DIFdelbegin \DIFdel{ModuleRelDefinition
                      }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{ConservativeExtensionDefinition
-                     }\DIFaddend @*  | AlignmentDefinition
-InterpretationDefinition ::=  *@ \DIFdelbegin \DIFdel{InterpretationKeyword
-                             InterpretationName
+                     }\DIFaddend @*  
+                     | AlignmentDefinition
+InterpretationDefinition ::=  *@ \DIFdelbegin \DIFdel{InterpretationKeyword \\
+                             InterpretationName \\
                              }%DIFDELCMD < [%%%
-\DIFdel{Conservative}%DIFDELCMD < ] %%%
+\DIFdel{Conservative}%DIFDELCMD < ] %%% \\
 \DIFdel{':'
-                             InterpretationType 'end'
-                     }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{InlineInterpretation }\DIFaddend @*  |  *@ \DIFaddbegin \DIFadd{RefinementDefinition
+                             InterpretationType 'end' \\
+                     }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{InlineInterpretation }\DIFaddend @*  |  *@ \DIFaddbegin \DIFadd{RefinementDefinition \\
 InlineInterpretation ::= }\DIFaddend @*  InterpretationKeyword InterpretationName
                          [Conservative] ':' InterpretationType
                           *@ \DIFaddbegin [ \DIFaddend @*  '=' LanguageTranslation* [SymbolMap]  *@ \DIFaddbegin ]
@@ -5423,18 +5424,18 @@ InterpretationName ::= IRI
 InterpretationType ::= GroupOMS 'to' GroupOMS
 Refinement         ::= GroupOMS
                      | NetworkName
-                     | Refinement ' *@ \DIFdelbegin \DIFdel{then' Refinement
+                     | Refinement ' *@ \DIFdelbegin \DIFdel{then' Refinement \\	
                      | GroupOMS '}\DIFdelend @*  refined' [RefMap] 'to' Refinement
                      |  *@ \DIFdelbegin \DIFdel{NetworkName 'refined}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Refinement 'interpreted}\DIFaddend @*  ' [RefMap] ' *@ \DIFdelbegin \DIFdel{to}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{by}\DIFaddend @*  ' Refinement
 RefMap             ::= 'via'  *@ \DIFaddbegin \DIFadd{( OMSRefinementMap | NetworkRefinementMap )
-OMSRefinementMap   ::= }\DIFaddend @*  LanguageTranslation [SymbolMap]
+\\ OMSRefinementMap   ::= }\DIFaddend @*  LanguageTranslation [SymbolMap]
                      |  *@ \DIFdelbegin \DIFdel{'via' }\DIFdelend @*  [LanguageTranslation] SymbolMap
- *@ \DIFdelbegin \DIFdel{| 'via' NodeMap }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{NetworkRefinementMap ::= Refinement }\DIFaddend @*  ( ','  *@ \DIFdelbegin \DIFdel{NodeMap }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Refinement }\DIFaddend @*  )*
+ *@ \DIFdelbegin \DIFdel{| 'via' NodeMap }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{\\ NetworkRefinementMap ::= Refinement }\DIFaddend @*  ( ','  *@ \DIFdelbegin \DIFdel{NodeMap }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Refinement }\DIFaddend @*  )*
  *@ \DIFdelbegin \DIFdel{NodeMap            ::= OMSName '|->' OMSName
                        }%DIFDELCMD < [%%%
 \DIFdel{'using' LanguageTranslation* }%DIFDELCMD < [%%%
-\DIFdel{SymbolMap}%DIFDELCMD < ]]
-%DIFDELCMD < %%%
+\DIFdel{SymbolMap \\ }%DIFDELCMD < ]]
+%DIFDELCMD < %%% 
 \DIFdelend @*  EntailmentDefinition ::= 'entailment' EntailmentName '='
                          EntailmentType 'end'
 EntailmentName     ::= IRI
@@ -5456,16 +5457,16 @@ AlignmentDefinition ::= 'alignment' AlignmentName
                         ['=' Correspondence ( ',' Correspondence )*]
                         ['assuming' AlignmentSemantics] 'end'
 AlignmentName      ::= IRI
- *@ \DIFdelbegin \DIFdel{AlignmentCardinalityPair ::= AlignmentCardinalityForward
-                             AlignmentCardinalityBackward
-AlignmentCardinalityForward ::= AlignmentCardinality
-AlignmentCardinalityBackward ::= AlignmentCardinality
+ *@ \DIFdelbegin \DIFdel{AlignmentCardinalityPair ::= AlignmentCardinalityForward \\
+                             AlignmentCardinalityBackward \\
+AlignmentCardinalityForward ::= AlignmentCardinality \\
+AlignmentCardinalityBackward ::= AlignmentCardinality \\
 }\DIFdelend @*  AlignmentCardinality ::= '1' | '?' | '+' | '*'
 AlignmentType      ::= GroupOMS 'to' GroupOMS
 AlignmentSemantics ::= 'SingleDomain'
                      | 'GlobalDomain'
                      | 'ContextualizedDomain'
-Correspondence     ::= CorrespondenceBlock | SingleCorrespondence |  *@ \DIFaddbegin \DIFadd{DefaultCorrespondence
+Correspondence     ::= CorrespondenceBlock | SingleCorrespondence |  *@ \DIFaddbegin \DIFadd{DefaultCorrespondence \\
 DefaultCorrespondence ::= }\DIFaddend @*  '*' 
 CorrespondenceBlock ::= 'relation' [Relation] [Confidence] '{'
                         Correspondence ( ',' Correspondence )* '}'
@@ -5474,17 +5475,16 @@ SingleCorrespondence ::=  *@ \DIFdelbegin \DIFdel{SymbolRef }\DIFdelend @*   *@ 
 CorrespondenceId   ::= '%(' IRI ')%'
  *@ \DIFdelbegin \DIFdel{SymbolRef          }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Symbol          }\DIFaddend @*  ::= IRI
 GeneralizedTerm    ::=  *@ \DIFdelbegin \DIFdel{SymbolRef
-}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Symbol
-}\DIFaddend @*  Relation           ::=  *@ \DIFaddbegin \DIFadd{RelationReference | StandardRelation
-RelationReference  ::= IRI
+}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Symbol \\
+}\DIFaddend @*  Relation           ::=  *@ \DIFaddbegin \DIFadd{RelationReference | StandardRelation \\
+RelationReference  ::= IRI \\
 StandardRelation   ::= }\DIFaddend @*  '>' | '<' | '=' | '%DIF < ' | 'ni' | 'in' | IRI
 %DIF > ' | 'ni' | 'in'
 Confidence         ::= Double
-Double             ::=  ( \DIFdelbegin \DIFdel{(}\DIFdelend )   ( \DIFaddbegin \DIFadd{*}\DIFaddend )  $<$ a number $\in [0,1]$ $>$ ( \DIFdelbegin \DIFdel{) 
-}\DIFdelend )   ( \DIFaddbegin \DIFadd{@*
-}\DIFaddend ) 
+Double             ::=  *@ \DIFdelbegin \DIFdel{(}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{*}\DIFaddend @*  $<$ a number $\in [0,1]$ $>$ *@ \DIFdelbegin \DIFdel{) 
+}\DIFdelend @*   
 \end{lstlisting}
-
+%*@ \DIFaddbegin \DIFadd{@*}\DIFaddend @* 
 
 
 
@@ -7651,7 +7651,7 @@ is interpreted in the pre-order defined by $M_1\leq M_2$
 if there is a model homomorphism $\M_1\to\M_2$.
  }\item \DIFadd{$\Delta = \bot$ 
  }\item \DIFadd{$\Gamma'$ is obtained from $\Gamma''=Env(\Gamma, O')$ by adding to $\Gamma''.imports$ a new
-node labeled with $(Name(O), \Inst(O),\allowbreak \Sig(O), \Mod(O), \Th(O))$ and
+node labeled with \\ $(Name(O), \Inst(O),\allowbreak \Sig(O), \Mod(O), \Th(O))$ and
 an edge from the node of $O'$ to the node of $O$ labeled with the identity
 morphism on $\Sig(O')$.
 }\end{itemize}
@@ -7728,7 +7728,7 @@ is interpreted in the pre-order defined by \DIFdelbegin \DIFdel{$\Sigma_1\leq\Si
 \DIFdel{$Env(\Gamma, O')$ }\DIFdelend \DIFaddbegin \DIFadd{model homomorphism $\M_1\to\M_2$
  }\item \DIFadd{$\Delta'' = \bot$ 
  }\item \DIFadd{$\Gamma''$ }\DIFaddend is obtained from \DIFdelbegin \DIFdel{$\Gamma$ }\DIFdelend \DIFaddbegin \DIFadd{$\Gamma'$ }\DIFaddend by adding to \DIFdelbegin \DIFdel{$\Gamma.imports$ }\DIFdelend \DIFaddbegin \DIFadd{$\Gamma'.imports$ }\DIFaddend a new
-node labeled with \DIFdelbegin \DIFdel{$(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O'))$ }\DIFdelend \DIFaddbegin \DIFadd{$(Name(O), \Inst(O),\allowbreak \Sig(O), \Mod(O), \Th(O))$ }\DIFaddend and
+node labeled with \\ \DIFdelbegin \DIFdel{$(Name(O'), \Inst(O'),\allowbreak \Sig(O'), \Mod(O'), \Th(O'))$ }\DIFdelend \DIFaddbegin \DIFadd{$(Name(O), \Inst(O),\allowbreak \Sig(O), \Mod(O), \Th(O))$ }\DIFaddend and
 an edge from the node of \DIFdelbegin \DIFdel{$O$ }\DIFdelend \DIFaddbegin \DIFadd{$O'$ }\DIFaddend to the node of \DIFdelbegin \DIFdel{$O'$ }\DIFdelend \DIFaddbegin \DIFadd{$O$ }\DIFaddend labeled with the identity
 morphism on \DIFdelbegin \DIFdel{$\Sig(O')$}\DIFdelend \DIFaddbegin \DIFadd{$\Sigma''$.
 }\end{itemize}
@@ -7751,13 +7751,13 @@ $\cM'' =
 }\DIFaddend \item if \DIFdelbegin \DIFdel{$O'.\syntax{closureType} = \syntax{free}$,
 $\Mod(O') = 
         \{ M \in  \Mod(O) \mid  M \text{ is initial in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
-}\DIFdelend \DIFaddbegin \DIFadd{$O.\syntax{closureType} = \syntax{free}$,
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$O.\syntax{closureType} = \syntax{free}$,
 $\cM'' = 
         \{ M \in  \cM \mid  M \text{ is initial in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 }\DIFaddend \item if \DIFdelbegin \DIFdel{$O'.\syntax{closureType} = \syntax{cofree}$,
 $\Mod(O') = 
         \{ M \in  \Mod(O) \mid  M \text{ is terminal in } \{M' \in \Mod(O) \mid M'\forget\Sigma = M\forget\Sigma\}\}$
-}\DIFdelend \DIFaddbegin \DIFadd{$O.\syntax{closureType} = \syntax{cofree}$,
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$O.\syntax{closureType} = \syntax{cofree}$,
 $\cM'' = 
         \{ M \in  \cM \mid  M \text{ is terminal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$
 }\DIFaddend \end{itemize}
@@ -7806,24 +7806,24 @@ and
 \item if \DIFdelbegin \DIFdel{$o.\syntax{closure}.\syntax{closureType} = \syntax{minimize}$}\DIFdelend \DIFaddbegin \DIFadd{$O.\syntax{closure}.\syntax{closureType} = \syntax{minimize}$}\DIFaddend , then\\
 \DIFdelbegin \DIFdel{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-}\DIFdelend \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is minimal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 }\DIFaddend \item if \DIFdelbegin \DIFdel{$o.\syntax{closure}.\syntax{closureType} = \syntax{maximize}$}\DIFdelend \DIFaddbegin \DIFadd{$O.\syntax{closure}.\syntax{closureType} = \syntax{maximize}$}\DIFaddend , then\\
 \DIFdelbegin \DIFdel{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is maximal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-}\DIFdelend \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is maximal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is maximal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 }\DIFaddend \item
 if \DIFdelbegin \DIFdel{$o.\syntax{closure}.\syntax{closureType} = \syntax{free}$}\DIFdelend \DIFaddbegin \DIFadd{$O.\syntax{closure}.\syntax{closureType} = \syntax{free}$}\DIFaddend , then\\
 \DIFdelbegin \DIFdel{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is initial in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-}\DIFdelend \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is initial in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is initial in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 }\DIFaddend \item
 if \DIFdelbegin \DIFdel{$o.\syntax{closure}.\syntax{closureType} = \syntax{cofree}$}\DIFdelend \DIFaddbegin \DIFadd{$O.\syntax{closure}.\syntax{closureType} = \syntax{cofree}$}\DIFaddend , then\\
 \DIFdelbegin \DIFdel{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \text{ is terminal in }    \{M' \in \cM\forget{\Sigma_{\mathit{min}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
-}\DIFdelend \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is terminal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM' = \{ M \in \cM \mid  M\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \text{ is terminal in }    \{M' \in \cM\forget{\Sigma_{\mathit{closure}}\cup\Sigma_{\mathit{fixed}}} \mid M'\forget{\Sigma_{\mathit{fixed}}}=M\forget{\Sigma_{\mathit{fixed}}}\} \}
 $
 }\DIFaddend \end{itemize}
 
@@ -7846,7 +7846,7 @@ The semantics of a \syntax{TranslationOMS} \DIFdelbegin \DIFdel{$O'$ }\DIFdelend
  }\DIFdelend \DIFaddbegin \DIFadd{$\cI = J$,
  }\DIFaddend \item \DIFdelbegin \DIFdel{$\Sig(O') = \Sigma'$, when 
  $\Mor_{\Sig(O'.\syntax{oms})}(O'.\syntax{omsTranslation}) = \sigma:\Phi(\Sig(O'.\syntax{oms}))\to \Sigma'$
- }\DIFdelend \DIFaddbegin \DIFadd{$\Sigma = \Sigma'$, when 
+ }\DIFdelend \\ \DIFaddbegin \DIFadd{$\Sigma = \Sigma'$, when 
  $sem(\Gamma, \Sig(O.\syntax{oms}), O.\syntax{omsTranslation}) = ((\Phi, \alpha, \beta) : \Inst(O.\syntax{oms}) \to J, \sigma:\Phi(\Sig(O.\syntax{oms}))\to \Sigma') $,
  }\DIFaddend \item \DIFdelbegin \DIFdel{$\Mod(O') = \{M \in \Mod(\Sigma') \,|\, \beta_\Sigma(M\forget\sigma)\in \Mod(O'.\syntax{oms})\}$
  }\DIFdelend \DIFaddbegin \DIFadd{$\cM = \{M \in \Mod(\Sigma') \,|\, \beta_{\Sig(O.\syntax{oms})}(M\forget\sigma)\in \Mod(O.\syntax{oms})\}$
@@ -7878,7 +7878,7 @@ The semantics of a \syntax{ReductionOMS} \DIFdelbegin \DIFdel{$O'$ is
   }\DIFaddend \item \DIFdelbegin \DIFdel{$\Sig(O') = \Sigma'$, when
    $\Mor_{\Sig(O'.\syntax{oms})}(O'.\syntax{reduction}) = \sigma:\Sigma'\to
     \Phi(\Sig(O'.\syntax{oms}))$
-  }\DIFdelend \DIFaddbegin \DIFadd{$\Sigma = \Sigma'$, when
+  }\DIFdelend \\ \DIFaddbegin \DIFadd{$\Sigma = \Sigma'$, when
    $sem(\Gamma, \Sig(O.\syntax{oms}), O.\syntax{reduction}) = ((\Phi, \alpha, \beta) : \Inst(O.\syntax{oms}) \to J,\sigma:\Sigma'\to \Phi(\Sig(O.\syntax{oms})))$,
   }\DIFaddend \item \DIFdelbegin \DIFdel{$\Mod(O') = \{\beta_\Sigma(M)\forget{\sigma} \,|\, M\in \Mod(O'.\syntax{oms})\}$
   }\DIFdelend \DIFaddbegin \DIFadd{$\cM = \{\beta_\Sigma(M)\forget{\sigma} \mid M\in \Mod(O.\syntax{oms})\}$
@@ -7922,7 +7922,7 @@ is
 }\DIFaddend \end{itemize}
 where 
 \DIFdelbegin \DIFdel{$sem(\Gamma, (\Sig(O'.\syntax{oms}), \Th(O'.\syntax{oms})), O'.\syntax{extraction}) = 
-(\Sigma',\Delta')$}\DIFdelend \DIFaddbegin \DIFadd{$sem(\Gamma, (\Sig(O.\syntax{oms}), \Th(O.\syntax{oms})), O.\syntax{extraction}) = 
+(\Sigma',\Delta')$}\DIFdelend \\ \DIFaddbegin \DIFadd{$sem(\Gamma, (\Sig(O.\syntax{oms}), \Th(O.\syntax{oms})), O.\syntax{extraction}) = 
 (\Sigma',\Delta')$}\DIFaddend .
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
 %of a $\Mod(\Sig(O))$-model can be expanded to a $\Mod(\Sig(O))$-model
@@ -7960,7 +7960,8 @@ The semantics of an \syntax{ApproximationOMS} \DIFdelbegin \DIFdel{$O'$ is
 \DIFdelbegin %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdelend \noindent where \DIFdelbegin \DIFdel{$(\cI,\Sigma) = sem(\Gamma, (\Inst(O'.\syntax{oms}), \Sig(O'.\syntax{oms})), O'.\syntax{approximation})$}\DIFdelend \DIFaddbegin \DIFadd{$(\rho = (\Phi,\alpha,\beta):\cI\to\cI',\Sigma) = sem(\Gamma, (\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms})), O.\syntax{approximation})$}\DIFaddend .
+\DIFdelend \noindent where \DIFdelbegin \DIFdel{$(\cI,\Sigma) = sem(\Gamma, (\Inst(O'.\syntax{oms}), \Sig(O'.\syntax{oms})), O'.\syntax{approximation})$}\DIFdelend \\
+\DIFaddbegin \DIFadd{$(\rho = (\Phi,\alpha,\beta):\cI\to\cI',\Sigma) = sem(\Gamma, (\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms})), O.\syntax{approximation})$}\DIFaddend .
 
 %Filtering
 The semantics of a \syntax{FilteringOMS} $O$
@@ -7973,7 +7974,8 @@ Let
 Two cases are distinguished based on the value of $O.\syntax{filtering}.\syntax{removalKind}$.
  }%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdel{If $O.\syntax{filtering}.\syntax{removalKind} = keep$}\DIFdelend \DIFaddbegin \DIFadd{$(c, \cI',\Sigma',\Delta') = sem(\Gamma', (\cI, \Sigma, \cM, \Delta), O.\syntax{filtering})$.
+\DIFdel{If $O.\syntax{filtering}.\syntax{removalKind} = keep$}\DIFdelend \\
+\DIFaddbegin \DIFadd{$(c, \cI',\Sigma',\Delta') = sem(\Gamma', (\cI, \Sigma, \cM, \Delta), O.\syntax{filtering})$.
  }
 
 \DIFadd{If $c = keep$}\DIFaddend , 
@@ -8036,8 +8038,8 @@ The semantics of an \syntax{UnionOMS} $O$ is
   }\DIFaddend \item \DIFdelbegin \DIFdel{$\Sig(O) = \Phi_1(\Sig(O_1)) \cup \Phi_2(\Sig(O_2))$
   }\DIFdelend \DIFaddbegin \DIFadd{$\Sigma' = \Phi_1(\Sig(O_1)) \cup \Phi_2(\Sig(O_2))$
   }\DIFaddend \item \DIFdelbegin \DIFdel{$\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(O_i))}) \in \Mod(O_i), \text{ for } i=1,2 \}$
-  }\DIFdelend \DIFaddbegin \DIFadd{$\cM' = \{ M\in \Mod^\cI(\Sigma') \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(O_i))}) \in \Mod(O_i), \text{ for } i=1,2 \}$
-  }\DIFaddend \item \DIFdelbegin \DIFdel{$\Th(O) = \alpha_1(\Th(O_1)) \cup \alpha_2(\Th(O_2))$}\DIFdelend \DIFaddbegin \DIFadd{$\Delta' = \alpha_1(\Th(O_1)) \cup \alpha_2(\Th(O_2))$}\DIFaddend .
+  }\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM' = \{ M\in \Mod^\cI(\Sigma') \mid \beta_{\Sigma_i}(M\forget{\Phi_i(\Sig(O_i))}) \in \Mod(O_i), \text{ for } i=1,2 \}$
+  }\DIFaddend \item \DIFdelbegin \DIFdel{$\Th(O) = \alpha_1(\Th(O_1)) \cup \alpha_2(\Th(O_2))$}\DIFdelend \\ \DIFaddbegin \DIFadd{$\Delta' = \alpha_1(\Th(O_1)) \cup \alpha_2(\Th(O_2))$}\DIFaddend .
     \item 
         \DIFdelbegin \DIFdel{$Env(\Gamma, O')$ }\DIFdelend \DIFaddbegin \DIFadd{$\Gamma''$ }\DIFaddend is obtained from 
        \DIFdelbegin \DIFdel{$\Gamma'' = Env(Env(\Gamma,O_1), O_2)$
@@ -8069,14 +8071,14 @@ The semantics of an \syntax{ExtensionOMS} $O$ is
   \item \DIFdelbegin \DIFdel{$\Sig(O) = \Sig(O.\syntax{oms}) \cup 
   \Sig((\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms}), \Mod(O.\syntax{oms}), \Th(O.\syntax{oms})),
   O.\syntax{extension})$
-  }\DIFdelend \DIFaddbegin \DIFadd{$\Sigma' = \Sig(O.\syntax{oms}) \cup 
+  }\DIFdelend \\ \DIFaddbegin \DIFadd{$\Sigma' = \Sig(O.\syntax{oms}) \cup 
   \Sig(sem(\Gamma, 
        (\Inst(O.\syntax{oms}), \Sig(O.\syntax{oms}), \Mod(O.\syntax{oms}), \Th(O.\syntax{oms}) ),
   O.\syntax{extension})$
   }\DIFaddend \item \DIFdelbegin \DIFdel{$\Mod(O) = \{ M\in \Mod(\Sig(O)) \mid M\forget{\Sig(O.\syntax{oms})} \in \Mod(O.\syntax{oms})
   \text{ and }
   M \forget{\Sig(O.\syntax{extension})} \in \Mod(O.\syntax{extension})\}$
-  }\DIFdelend \DIFaddbegin \DIFadd{$\cM' = \{ M\in \Mod(\Sigma') \mid M\forget{\Sig(O.\syntax{oms})} \in \Mod(O.\syntax{oms})
+  }\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM' = \{ M\in \Mod(\Sigma') \mid M\forget{\Sig(O.\syntax{oms})} \in \Mod(O.\syntax{oms})
   \text{ and }
   M \forget{\Sig(O.\syntax{extension})} \in \Mod(O.\syntax{extension})\}$
   }\DIFaddend \item \DIFdelbegin \DIFdel{$\Th(O) = \Th(O.\syntax{oms}) \cup \Th(O.\syntax{extension})$
@@ -8161,9 +8163,9 @@ $O=$
 is given by
 \begin{itemize}
  \item \DIFdelbegin \DIFdel{$\Inst(O) = sem(O.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
- }\DIFdelend \DIFaddbegin \DIFadd{$\rho= sem(O.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
+ }\DIFdelend \\ \DIFaddbegin \DIFadd{$\rho= sem(O.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
  }\DIFaddend \item \DIFdelbegin \DIFdel{$\Mor(O) = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{symbolMap})$
-}\DIFdelend \DIFaddbegin \DIFadd{$\sigma = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{symbolMap})$
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$\sigma = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{symbolMap})$
 }\DIFaddend \end{itemize}
 \noindent where
 $lang'$ and $ser'$ are the default language and serialization for logic $logic'$.
@@ -8222,7 +8224,7 @@ $sem(\Gamma, t_i) = (\Phi_i,\alpha_i,\beta_i)$ }\DIFdelend \DIFaddbegin \DIFadd{
 where
 $sem(\Gamma, t_i) = \rho_i$ }\DIFaddend for 
 $i=1,\ldots, n$ and
- \DIFdelbegin \DIFdel{$(\Phi,\alpha,\beta) = (\Phi_1,\alpha_1,\beta_1); \ldots ; (\Phi_n,\alpha_n,\beta_n)$}\DIFdelend \DIFaddbegin \DIFadd{$(\Phi,\alpha,\beta) = \rho_1;\rho_2;\ldots;\rho_n$}\DIFaddend . 
+ \DIFdelbegin \DIFdel{$(\Phi,\alpha,\beta) = (\Phi_1,\alpha_1,\beta_1); \ldots ; (\Phi_n,\alpha_n,\beta_n)$}\DIFdelend 	\\ \DIFaddbegin \DIFadd{$(\Phi,\alpha,\beta) = \rho_1;\rho_2;\ldots;\rho_n$}\DIFaddend . 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -8243,11 +8245,11 @@ $O=$ with $O.\syntax{reduction}.\syntax{removalKind} = remove$
 is given by
 \begin{itemize}
  \item \DIFdelbegin \DIFdel{$\Inst(O) = sem(O.\syntax{reduction}.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
- }\DIFdelend \DIFaddbegin \DIFadd{$\rho = sem(O.\syntax{reduction}.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
+ }\DIFdelend \\ \DIFaddbegin \DIFadd{$\rho = sem(O.\syntax{reduction}.\syntax{omsLanguageTranslation}) : \Gamma.logic \to logic'$
  }\DIFaddend \item 
 \DIFdelbegin \DIFdel{$\Mor(O) = 
 \iota: \Sigma' \to \Phi(\Sigma)$}\DIFdelend \DIFaddbegin \DIFadd{$\sigma = 
-\iota: \Sigma' \to \Phi(\Sigma)$}\DIFaddend , where 
+\iota: \Sigma' \to \Phi(\Sigma)$}\DIFaddend , where \\
 $\Sigma' = sem(\Gamma.\{\current=(lang', logic', ser')\}, \Phi(\Sigma), O.\syntax{reduction}.\syntax{symbolList})$,
 $lang'$ and $ser'$ are the default language and serialization for logic $logic'$
 and $\iota$ is the inclusion morphism.
@@ -8331,14 +8333,14 @@ for every
 }\syntax{Symbol} \DIFadd{$s$ in $r.\syntax{generalSymbolMapItem}$
 we have that $s$ is a symbol in $|\Sigma|$,
 }$$\DIFadd{sem(\Gamma,\Sigma,r) = \sigma: \Sigma\to\Sigma'}$$
-\noindent \DIFaddend where 
+\noindent \DIFaddend where \\
 \DIFdelbegin \DIFdel{$\sigma = makeMorphism_{logic(\Gamma.current)}((s_1, t_1),\ldots, (s_n,t_n))$}%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdel{and
+\DIFdel{and \\
 $(s,t) = sem(\Gamma, \Sigma_1,\Sigma_2, m.\syntax{generalSymbolMapItem})$,
 }%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdel{$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2,m.\syntax{generalSymbolMapItem2})$}\DIFdelend \DIFaddbegin \DIFadd{$\sigma$ must be the unique signature morphism with the properties
+\DIFdel{$Set\{(s_1,t_1), \ldots, (s_n, t_n)\} = sem(\Gamma, \Sigma_1,\Sigma_2,m.\syntax{generalSymbolMapItem2})$}\DIFdelend \\ \DIFaddbegin \DIFadd{$\sigma$ must be the unique signature morphism with the properties
 }\begin{enumerate}
 \item \DIFadd{$\sigma$ matches $r$: for each }\syntax{SymbolMapItem} 
 \DIFadd{$r.\syntax{generalSymbolMapItem}$ $gItem$ in 
@@ -8819,7 +8821,7 @@ the semantics is undefined.
 If $smi$ is a \syntax{SymbolMapItem},
 $$sem(\Gamma, \Sigma_1,\Sigma_2, smi) = (s_1,s_2)$$
 \noindent where \DIFdelbegin \DIFdel{$sem(\Gamma,\Sigma_1,smi.\syntax{symbol}) = s_1$
-and $sem(\Gamma,\Sigma_2,smi.\syntax{symbol2}) = s_2$}\DIFdelend \DIFaddbegin \DIFadd{$sem(\Gamma,\Sigma_1,smi.\syntax{source}) = s_1$
+and $sem(\Gamma,\Sigma_2,smi.\syntax{symbol2}) = s_2$}\DIFdelend \\ \DIFaddbegin \DIFadd{$sem(\Gamma,\Sigma_1,smi.\syntax{source}) = s_1$
 and $sem(\Gamma,\Sigma_2,smi.\syntax{target}) = s_2$}\DIFaddend .
 
 \DIFdelbegin %DIFDELCMD < \semdom{sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{GeneralSymbolMapItem}) = (s,t)}
@@ -9045,8 +9047,8 @@ $$
    \item $\rho = (\Phi,\alpha,\beta):
              \Inst(L_1) \to \Inst(L_2)$ is the comorphism given by $sem(\Gamma, d.\syntax{omsLanguageTranslation})$.\\ If $d.\syntax{OMSLanguageTranslation}$ is missing, the default translations between the logics is selected. 
    \item    \DIFdelbegin \DIFdel{$sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), d.\syntax{symbolMap}) = \sigma,$
-}\DIFdelend \DIFaddbegin \DIFadd{$\sigma = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), d.\syntax{symbolMap})$,
-}\DIFaddend where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$\DIFaddbegin \DIFadd{, or, 
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$\sigma = sem(\Gamma.\{\current=(lang, logic', ser)\}, \Phi(\Sig(L_1)), \Sig(L_2), d.\syntax{symbolMap})$,
+}\DIFaddend where $\Gamma.\current=(lang, logic,ser)$ and $logic'$ is the target logic of $\rho$ \\ \DIFaddbegin \DIFadd{, or, 
 if $d.\syntax{symbolMap}$ is missing, $\sigma$ is the identity signature 
 morphism on $\Phi(\Sig(L_1))$ which must be equal with $\Sig(L_2)$}\DIFaddend .
   \end{itemize}
@@ -9086,7 +9088,7 @@ $$sem(\Gamma, d) = \Gamma'$$
 \noindent
 where \DIFdelbegin \DIFdel{$ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto (G,\sigma, N_1, N_2)]$
 and 
-$sem(\Gamma, d.\syntax{refinement}) = (G,\sigma, N_1, N_2)$}\DIFdelend \DIFaddbegin \DIFadd{$ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto sem(\Gamma, d.\syntax{refinement})]$}\DIFaddend .
+$sem(\Gamma, d.\syntax{refinement}) = (G,\sigma, N_1, N_2)$}\DIFdelend \\ \DIFaddbegin \DIFadd{$ \Gamma' =\Gamma[d.\syntax{interpretationName} \mapsto sem(\Gamma, d.\syntax{refinement})]$}\DIFaddend .
 
 \DIFdelbegin %DIFDELCMD < \semdom{sem(\Gamma, \syntax{InterpretationType}) = ((N_1,\cI_1,\Sigma_1,\cM_1,\Delta_1),(N_2,\cI_2,\Sigma_2,\cM_2,\Delta_2))}
 %DIFDELCMD < %%%
@@ -9105,7 +9107,7 @@ $$sem(\Gamma,  t) = (L_1, L_2)$$
 \noindent where
 \begin{itemize}
  \item \DIFdelbegin \DIFdel{$\Name(L_1) = \Name(t.\syntax{oms})$ and
-       $\Name(L_2) = \Name(t.\syntax{oms2})$}\DIFdelend \DIFaddbegin \DIFadd{$\Name(L_1) = \Name(t.\syntax{source})$ and
+       $\Name(L_2) = \Name(t.\syntax{oms2})$}\DIFdelend \\ \DIFaddbegin \DIFadd{$\Name(L_1) = \Name(t.\syntax{source})$ and
        $\Name(L_2) = \Name(t.\syntax{target})$}\DIFaddend ,
  \item \DIFdelbegin \DIFdel{$(\Inst(L_1), 
          \Sig(L_1),
@@ -9261,19 +9263,19 @@ where\\
  \DIFdelbegin \DIFdel{$sem(\Gamma,  r.\syntax{refinement}) = 
  ((G_1, G_2), (\rho_2,\sigma_2), \cM')$ 
  such that $G_1$ consists of an isolated node labeled with 
- $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$}\DIFdelend \DIFaddbegin \DIFadd{$sem(\Gamma,  r.\syntax{refinement2}) = ((G_2, G'_2),\sigma_2, \cM_2)$}\DIFaddend ,\\ 
+ $(\cI_2, \Sigma_2, \cM_2, \Delta_2)$}\DIFdelend \\ \DIFaddbegin \DIFadd{$sem(\Gamma,  r.\syntax{refinement2}) = ((G_2, G'_2),\sigma_2, \cM_2)$}\DIFaddend ,\\ 
  \DIFdelbegin \DIFdel{$sem(\Gamma,  (\cI_1,\Sigma_1), (\cI_2,\Sigma_2), r.\syntax{omsRefinementMap}) = (\rho_1 = (\Phi, \alpha,\beta):\cI_1\to\cI_2, \sigma_1:\Phi(\Sigma_1)\to\Sigma_2)$, }%DIFDELCMD < \\
 %DIFDELCMD <  %%%
-\DIFdel{for each $(M_1, M_2) \in \cM'$,
+\DIFdel{\\ for each $(M_1, M_2) \in \cM'$, 
  $\beta_{\Sigma_1}(M_1\forget{\sigma_1}) \in \cM_1$}\DIFdelend \DIFaddbegin \DIFadd{$G'_1$ and $G_2$ are both graphs with one isolated node, labeled
  $(name1,\cI_1,\Sigma_1,\cM_1,\Delta_1)$
  and respectively
  $(name2,\cI_2,\Sigma_2,\cM_2,\Delta_2)$,
  $sem(\Gamma, \Sigma_1, \Sigma_2, r.\syntax{omsRefinementMap}) = (\rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2,\sigma:\Phi(\Sigma_1)\to\Sigma_2)$}\DIFaddend ,\\
- \DIFdelbegin \DIFdel{G consists of an isolated node labeled with $sem^M(\Gamma,  r.\syntax{oms})$}\DIFdelend \DIFaddbegin \DIFadd{$\sigma'$ maps the node $n$ of $G_1$ to the node of $G_3$ and 
+ \DIFdelbegin \DIFdel{G consists of an isolated node labeled with $sem^M(\Gamma,  r.\syntax{oms})$}\DIFdelend \\ \DIFaddbegin \DIFadd{$\sigma'$ maps the node $n$ of $G_1$ to the node of $G_3$ and 
  $(\sigma')^M_n = (\sigma_1)^M_n;(\rho;\sigma);(\sigma_2)^M_{\sigma_1^G(n)}$}\DIFaddend ,\\
  \DIFdelbegin \DIFdel{$\sigma = (\rho_1,\sigma_1);(\rho_2,\sigma_2)$ and $\cM = \{ (\beta_{\Sigma_1}(M_1\forget{\sigma_1}), M_2) \mid
-(M_1, M_2) \in \cM' \}$}\DIFdelend \DIFaddbegin \DIFadd{and $\cM = \{ (M_1, M_3)\mid \exists M_2 such that (M_2,M_3) \in \cM_2 and
+(M_1, M_2) \in \cM' \}$}\DIFdelend \\ \DIFaddbegin \DIFadd{and $\cM = \{ (M_1, M_3)\mid \exists M_2 such that (M_2,M_3) \in \cM_2 and
   (M_1,M_2\forget{(\rho,\sigma)}) \in \cM_1 \}$.}\\
  \DIFadd{The refinement is correct only if
  for each $(M,N)\in\cM_2$, 
@@ -9315,7 +9317,7 @@ such that $\cI'_1 = \cI_1$ and
  and 
  \DIFdelbegin \DIFdel{$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1),\Sigma_2, m.\syntax{symbolMap}) = \sigma : \Phi(\Sigma_1) \to \Sigma_2$
 where $\Gamma.\current=(lang, logic,ser)$, $logic'$ is the target logic of $(\Phi,\alpha,\beta)$, and $lang'$ and 
-$ser'$ are the default language and serializations for $logic'$ }\DIFdelend \DIFaddbegin \DIFadd{$\cM = \{(F_1,F_3) \mid \exists F_2 \text{ such that } 
+$ser'$ are the default language and serializations for $logic'$ }\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM = \{(F_1,F_3) \mid \exists F_2 \text{ such that } 
                          (F_1, F_2\forget{\sigma}) \in \cM_1       
                          \text{ and } (F_2, F_3) \in \cM_2 \}$.}\\
  \DIFadd{The refinement is correct only if for each $(F_2,F_3) \in \cM_2$,
@@ -9393,7 +9395,8 @@ labeled $(name_2,\cI_2,\Sigma_2,\cM_2,\Delta_2)$}\DIFaddend ,\\
 }\DIFdelend \DIFaddbegin \DIFadd{$sem(\Gamma,m.\syntax{translation}) = \rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2$,
 or if $m.\syntax{translation}$ is missing, the default comorphism 
 between $\cI_1$ and $\cI_2$,}\DIFaddend \\
-\DIFdelbegin \DIFdel{$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$, }\DIFdelend \DIFaddbegin \DIFadd{$sem(\Gamma', \Phi(\Sigma_1),\Sigma_2,m.\syntax{symbolMap}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$   
+\DIFdelbegin \DIFdel{$sem(\Gamma.\current=(lang', logic',ser'), \Phi(\Sigma_1), \Sigma_2,m. \syntax{symbolMap}) = \sigma:\Phi(\Sigma_1)\to\Sigma_2$, }\DIFdelend \\
+\DIFaddbegin \DIFadd{$sem(\Gamma', \Phi(\Sigma_1),\Sigma_2,m.\syntax{symbolMap}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$   
 }\DIFaddend where $\Gamma.\current=(lang, logic,ser)$,
 $logic'$ is the target logic of $(\Phi,\alpha,\beta)$\DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{,
 }\DIFaddend $lang'$ and $ser'$ are the default language and serialization for $logic'$
@@ -9529,13 +9532,15 @@ $$sem(\Gamma, t) = L_2 \stackrel{\id}{\to} L_1$$
 
 \noindent where 
 \DIFdelbegin \DIFdel{$\Name(L_1) = \Name(t.\syntax{oms})$,
-$\Name(L_2) = \Name(t.\syntax{oms2})$}\DIFdelend \DIFaddbegin \DIFadd{$\Name(L_1) = \Name(t.\syntax{premise})$,
+$\Name(L_2) = \Name(t.\syntax{oms2})$}\DIFdelend \\
+\DIFaddbegin \DIFadd{$\Name(L_1) = \Name(t.\syntax{premise})$,
 $\Name(L_2) = \Name(t.\syntax{conclusion})$}\DIFaddend ,\\
 \DIFdelbegin \DIFdel{$(\Inst(L_1),\Sig(L_1),\Mod(L_1),\Th(L_1)) = 
 sem(\Gamma, t.\syntax{oms})$,
 $(\Inst(L_2),\Sig(L_2),\Mod(L_2),\Th(L_2)) = 
 sem(\Gamma, t.\syntax{oms2})$ 
-}\DIFdelend \DIFaddbegin \DIFadd{$(\Inst(L_1),\Sig(L_1),\Mod(L_1),\Th(L_1)) = 
+}\DIFdelend \\
+\DIFaddbegin \DIFadd{$(\Inst(L_1),\Sig(L_1),\Mod(L_1),\Th(L_1)) = 
 sem(\Gamma, t.\syntax{premise})$,
 $(\Inst(L_2),\Sig(L_2),\Mod(L_2),\Th(L_2)) = 
 sem(\Gamma, t.\syntax{conclusion})$ 
@@ -9620,7 +9625,8 @@ If $t$ is an \syntax{OMSEquivalence},
 $$ sem(\Gamma,t) = 
 (G, N_1, N_2)$$
 \noindent where $O_1 = t.\syntax{oms}$, $O_2 = t.\syntax{oms2}$, \DIFdelbegin \DIFdel{$O_3 = t.\syntax{oms3}$,$sem^{(\Sig(O_1)\cup\Sig(O_2),\emptyset)}_{\Gamma.lang,\Gamma.logic,\Gamma.ser}(O_3)
-= (\cI, \Sigma, \cM,\Delta)$}\DIFdelend \DIFaddbegin \DIFadd{$O_3 = t.\syntax{mediatingOMS}$,}\\
+= (\cI, \Sigma, \cM,\Delta)$}\DIFdelend \\
+\DIFaddbegin \DIFadd{$O_3 = t.\syntax{mediatingOMS}$,}\\
 \DIFadd{$
 sem(\Gamma, (\cI, \Sig(O_1)\cup\Sig(O_2), \Mod^{\cI}(\Sig(O_1)\cup\Sig(O_2)), \emptyset),
 O_3)
@@ -9743,12 +9749,13 @@ where
 \DIFdelbegin \DIFdel{$sem(\Gamma,d.\syntax{alignmentType}) = (L_1, L_2)$
 and 
 $\Gamma'=\Gamma[d.\syntax{AlignmentName} \mapsto (G,id,L_1,L_2)]
-$}\DIFdelend \DIFaddbegin \DIFadd{$sem(\Gamma,d.\syntax{alignmentType}) = (\Gamma_0,L_1, L_2)$
+$}\DIFdelend \\ \DIFaddbegin \DIFadd{$sem(\Gamma,d.\syntax{alignmentType}) = (\Gamma_0,L_1, L_2)$
 and 
 $\Gamma'=\Gamma_0[d.\syntax{AlignmentName} \mapsto (G,L'_1,L'_2)]
 $}\DIFaddend ,\\
 where $(L'_1,L'_2) = sem(\Gamma, L_1, L_2, d.\syntax{alignmentSemantics})$\DIFdelbegin \DIFdel{and}\DIFdelend \DIFaddbegin \DIFadd{,}\DIFaddend \\
-\DIFdelbegin \DIFdel{$G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$}\DIFdelend \DIFaddbegin \DIFadd{$card=d.\syntax{alignmentCardinality}$ or, when this is missing, 
+\DIFdelbegin \DIFdel{$G = sem(\Gamma, L'_1, L'_2, d.\syntax{alignmentCardinalityPair}, d.\syntax{alignmentSemantics}, d.\syntax{correspondence})$}\DIFdelend \\
+\DIFaddbegin \DIFadd{$card=d.\syntax{alignmentCardinality}$ or, when this is missing, 
 $card=('1','1')$,}\\
 \DIFadd{$aSem = d.\syntax{alignmentSemantics}$ or, when this is missing,
 $aSem = \syntax{single-domain}$,}\\
@@ -9785,7 +9792,7 @@ and $t.\syntax{target}$ in $\Gamma'.imports$}\DIFaddend .
 
 \semdom{
 \begin{array}{ll}
-sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))& = G\\
+sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality}, \\ \syntax{AlignmentCardinality}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))& = G\\
  & : OMSGraph
 \end{array}
 }
@@ -9845,7 +9852,8 @@ $C_1,\ldots, C_n$ taking into account $sem$.
 \cite{OM2014}
 }%DIFAUXCMD
 illustrates how this construction works in the case of OWL,
-in a way that can be generalized to other logics}\DIFdelend \DIFaddbegin \DIFadd{$L_s = (alignName++"\_source", \Inst(L_1) ,\Sigma_s,\Mod(\Sigma_s),\emptyset)$,
+in a way that can be generalized to other logics}\DIFdelend \\
+\DIFaddbegin \DIFadd{$L_s = (alignName++"\_source", \Inst(L_1) ,\Sigma_s,\Mod(\Sigma_s),\emptyset)$,
 $L_t = (alignName++"\_target", \Inst(L_2) ,\Sigma_t,\Mod(\Sigma_t),\emptyset)$
 and
 $L_B = (alignName++"\_bridge", \cI ,\Sigma,\Mod((\Sigma,\Delta)),\Delta)$.
@@ -9857,7 +9865,7 @@ $L_B = (alignName++"\_bridge", \cI ,\Sigma,\Mod((\Sigma,\Delta)),\Delta)$.
 \semdom{
 \begin{array}{ll}
 sem(\Gamma, \Sigma_1,\Sigma_2, \syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))& = (\Sigma_s,\Sigma_t,(\cI,\Sigma,\Delta),\phi_s:\Sigma_s\to\Sigma,\phi_t:\Sigma_t\to\Sigma, smap, cvalues)\\
- & : (Signature,Signature,(Institution,Signature,Sentences),SignatureMorphism,SignatureMorphism,MapOfSymbols,Bool)
+ & : (Signature,Signature,(Institution,Signature,Sentences),\\ & SignatureMorphism,SignatureMorphism, \\ & MapOfSymbols,Bool)
 \end{array}
  }
 
@@ -9964,7 +9972,8 @@ $$sem(\Gamma, L_1, L_2, s) = (rel(L_1), rel(L_2))$$
 \DIFdelbegin \DIFdel{where the relativization procedure is logic-specific. An example of this is done for OWL can be found in \mbox{%DIFAUXCMD
 \cite{OM2014}
 }%DIFAUXCMD
-}\DIFdelend \DIFaddbegin \DIFadd{$relativize_{\cI_1}(\Sigma_1,\Delta_1) = (\Sigma'_1,\Delta'_1)$,
+}\DIFdelend \\
+\DIFaddbegin \DIFadd{$relativize_{\cI_1}(\Sigma_1,\Delta_1) = (\Sigma'_1,\Delta'_1)$,
 $\cM'_1$ is the class of $\Delta'_1$-models,
 $name_1 = 'relativized' ++ aName$,}\\
 \DIFadd{$relativize_{\cI_2}(\Sigma_2,\Delta_2) = (\Sigma'_2,\Delta'_2)$,
@@ -11034,12 +11043,13 @@ of \RDF, it contains e.g.\ resources \texttt{rdf:type} and
 \DIFaddend 
 
 In the models, the standard vocabulary is interpreted with a fixed
-model.  Moreover, for each $\RDF$-model
+model.  Moreover, for each $\RDF$-model \\
 \DIFdelbegin \DIFdel{$M = \langle R_m, P_m, S_m,
-EXT_m \rangle$}\DIFdelend \DIFaddbegin \DIFadd{$M = \langle R_m, P_m, S_m,\allowbreak \mathit{EXT}_m\rangle$}\DIFaddend ,
+EXT_m \rangle$}\DIFdelend \\ \DIFaddbegin \DIFadd{$M = \langle R_m, P_m, S_m,\allowbreak \mathit{EXT}_m\rangle$}\DIFaddend ,
 if $p\in P_m$,
 then it must hold
-\DIFdelbegin \DIFdel{$(p,S_m(\texttt{rdf:Property}))\in EXT_m(\texttt{rdf:type})$}\DIFdelend \DIFaddbegin \DIFadd{$(p, S_m(\texttt{rdf:Property})) \in \mathit{EXT}_m(\texttt{rdf:type})$}\DIFaddend .
+\DIFdelbegin \DIFdel{$(p,S_m(\texttt{rdf:Property}))\in EXT_m(\texttt{rdf:type})$}\DIFdelend \\
+\DIFaddbegin \DIFadd{$(p, S_m(\texttt{rdf:Property})) \in \mathit{EXT}_m(\texttt{rdf:type})$}\DIFaddend .
 For \RDFS, similar conditions are formulated (here, for example also the
 subclass relation is fixed).
 
@@ -11047,7 +11057,7 @@ In the case of \RDFS, the standard vocabulary contains more elements,
 like \texttt{rdfs:domain}, \texttt{rdfs:range}, \texttt{rdfs:Resource},
 \texttt{rdfs:Literal}, \texttt{rdfs:Datatype}, \texttt{rdfs:Class},
 \texttt{rdfs:subClassOf}, \texttt{rdfs:subPropertyOf},
-\texttt{rdfs:member}, \texttt{rdfs:\DIFdelbegin \DIFdel{Container}\DIFdelend } \DIFaddbegin \texttt{\DIFadd{Container}}\DIFaddend ,
+\texttt{rdfs:member}, \\ \texttt{rdfs:\DIFdelbegin \DIFdel{Container}\DIFdelend } \DIFaddbegin \texttt{\DIFadd{Container}}\DIFaddend ,
 \texttt{rdfs:ContainerMembershipProperty}.
 
 There is also \OWL Full, an extension of \RDFS with resources
@@ -11120,7 +11130,7 @@ end
 oms sequences =
   fuml:sequences.clif and pairs
 then
-  //  *@ \DIFdelbegin \DIFdel{fuml:sequence - membership }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Membership }\DIFaddend @*  of an element in a sequence
+    *@ \DIFdelbegin \DIFdel{fuml:sequence - membership }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Membership }\DIFaddend @*  of an element in a sequence
   (forall (x s)
           (if (form:sequence-member x s)
               (form:Sequence s)))
@@ -11133,7 +11143,7 @@ then
                        (and (form:in-sequence s  *@ \DIFdelbegin \DIFdel{pt}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{p}\DIFaddend @*  )
                             (form:in-position  *@ \DIFdelbegin \DIFdel{pt }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{p }\DIFaddend @*  x)))))
 
-  //  *@ \DIFdelbegin \DIFdel{selection }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Selection }\DIFaddend @*  of elements
+    *@ \DIFdelbegin \DIFdel{selection }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Selection }\DIFaddend @*  of elements
   (forall (o)
           (= (form:select1 o form:empty-sequence) form:empty-sequence))
   (forall (o y s)
@@ -11167,7 +11177,7 @@ then
               (= (form:n-select (form:sequence-insert s a) i t)
                  (form:n-select a i t))))
 
-  //  *@ \DIFdelbegin \DIFdel{insert }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Insert }\DIFaddend @*  element at i-th position
+    *@ \DIFdelbegin \DIFdel{insert }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Insert }\DIFaddend @*  element at i-th position
   (forall (x s)
           (= (insert-i form:0 x s) (form:sequence-insert x s)))
   (forall (i j x y s)
@@ -11179,19 +11189,19 @@ end
 oms sequences-insert =
   sequences
 then
-  //  *@ \DIFdelbegin \DIFdel{insertion }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Insertion }\DIFaddend @*  of elements
+    *@ \DIFdelbegin \DIFdel{insertion }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Insertion }\DIFaddend @*  of elements
   (forall (x s1 s2)
-           *@ \DIFdelbegin \DIFdel{// inserting an element means...
+           *@ \DIFdelbegin \DIFdel{inserting an element means...
     }\DIFdelend @*  (if (= (form:sequence-insert x s1) s2)
               (and (form:Sequence s1) (form:Sequence s2)
-                   //  *@ \DIFdelbegin \DIFdel{the }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{The }\DIFaddend @*  new element is at the first position  *@ \DIFaddbegin \DIFadd{...
-                   }\DIFaddend @*  (form:in-position-count s2 form:1 x)
-                   //  *@ \DIFaddbegin \DIFadd{.. }\DIFaddend @*  and all other elements are shifted by one
+                     *@ \DIFdelbegin \DIFdel{the }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{The }\DIFaddend @*  new element is at the first position  *@ \DIFaddbegin \DIFadd{...
+                   \\ }\DIFaddend @*  		(form:in-position-count s2 form:1 x)
+                     *@ \DIFaddbegin \DIFadd{.. }\DIFaddend @*  and all other elements are shifted by one
                    (forall (n1 n2 y)
                            (if (form:add-one n1 n2)
                                (iff (form:in-position-count s1 n1 y)
                                     (form:in-position-count s2 n2 y)))))))
-  //  *@ \DIFdelbegin \DIFdel{synonym
+   *@ \DIFdelbegin \DIFdel{synonym
  }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Synonym
   }\DIFaddend @*  (forall (s) (= (form:sequence-length s) (form:sequence-size s)))
 end
@@ -11209,31 +11219,31 @@ with
   form:position-count |-> form:ordered-set-position-count,
   form:in-position-count |-> form:in-ordered-set-position-count
 then
-  // Different positions contain different elements
+  Different positions contain different elements
   (forall (s x1 x2 n1 n2)
           (if (and (form:in-ordered-set-position-count s n1 x1)
                    (form:in-ordered-set-position-count s n2 x2)
                    (= x1 x2))
               (= n1 n2)))
-  //  *@ \DIFdelbegin \DIFdel{insertion }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Insertion }\DIFaddend @*  of elements
+  *@ \DIFdelbegin \DIFdel{insertion }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Insertion }\DIFaddend @*  of elements
   (forall (x s1 s2)
           (if (= (form:ordered-set-insert x s1) s2)
                  (and (form:Ordererd-Set s1)
-                      (form:Ordererd-Set s2) *@ \DIFaddbegin \DIFadd{)))
-  (forall (x s1 s2)
-          (iff (= (form:ordered-set-insert x s1) s2)
-               (and }\DIFaddend @*  //  *@ \DIFdelbegin \DIFdel{no }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{No }\DIFaddend @*  element can be inserted twice
-                    ( *@ \DIFdelbegin \DIFdel{forall (x s)
-    (}\DIFdelend @*  if (from:ordered-set-member x  *@ \DIFdelbegin \DIFdel{s)
-                        (= (form:ordered-set-insert x s) s)}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{s1)
+                      (form:Ordererd-Set s2) *@ \DIFaddbegin \DIFadd{)))} \\ \DIFaddend @*
+ *@ \DIFaddbegin \DIFadd{(forall (x s1 s2)} \DIFaddend @*
+          *@ \DIFaddbegin \DIFadd{(iff (= (form:ordered-set-insert x s1) s2)} \DIFaddend @*
+               *@ \DIFaddbegin \DIFadd{(and }\DIFaddend @*    *@ \DIFdelbegin \DIFdel{no }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{No }\DIFaddend @*  element can be inserted twice
+                    ( *@ \DIFdelbegin \DIFdel{forall (x s)}\DIFdelend @*
+    *@ \DIFdelbegin \DIFdel{(}\DIFdelend @*  if (from:ordered-set-member x  *@ \DIFdelbegin \DIFdel{s)
+                        \\ (= (form:ordered-set-insert x s) s)}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{s1)
                         (form:same-ordered-set s1 s2}\DIFaddend @*  ))
-                    //  *@ \DIFdelbegin \DIFdel{inserting }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Inserting }\DIFaddend @*  a new element
+                      *@ \DIFdelbegin \DIFdel{inserting }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Inserting }\DIFaddend @*  a new element
                     ( *@ \DIFdelbegin \DIFdel{forall (x s)
     (}\DIFdelend @*  if (not (from:ordered-set-member x s1))
                         ( *@ \DIFdelbegin \DIFdel{exists (s2)
           (and (= (form:ordered-set-insert x s1) s2)     
-               }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{and }\DIFaddend @*  //  *@ \DIFdelbegin \DIFdel{the }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{The }\DIFaddend @*  new element is at the first position  *@ \DIFaddbegin \DIFadd{...
-                             }\DIFaddend @*  (form:in-ordered-set-position-count s2 form:1 x)
+               }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{and }\DIFaddend @*    *@ \DIFdelbegin \DIFdel{\\ the }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{The }\DIFaddend @*  new element is at the first position  *@ \DIFaddbegin \DIFadd{...
+                             \\ }\DIFaddend @*  (form:in-ordered-set-position-count s2 form:1 x)
                              //  *@ \DIFaddbegin \DIFadd{... }\DIFaddend @*  and all other elements are shifted by one
                              (forall (n1 n2 y)
                                      (if (form:add-one n1 n2)
@@ -11653,7 +11663,8 @@ $c_0\composition p_2 : \tau_2[c_2]$}\DIFaddend .
 A \emph{class/data type net morphism}
 \DIFdelbegin \DIFdel{$\sigma = (\gamma, \varphi, \alpha, \mu) : \Sigma = ((C,
 {\leq}_C), P, A, M) \to \Tau = ((D, {\leq}_D),\allowbreak
-Q,\allowbreak B, N)$ }\DIFdelend \DIFaddbegin \DIFadd{$\sigma = (\gamma, \varphi, \alpha) : \Sigma = ((C,
+Q,\allowbreak B, N)$ }\DIFdelend \\
+\DIFaddbegin \DIFadd{$\sigma = (\gamma, \varphi, \alpha) : \Sigma = ((C,
 {\leq}_C), P, A) \to \Tau = ((D, {\leq}_D),\allowbreak
 Q,\allowbreak B)$ }\DIFaddend is given by
 %
@@ -11708,7 +11719,7 @@ For the example in Fig. \ref{fig:bjoerners_dsl} the class/data type net is
 \\[-.5ex]
   \phantom{\text{Properties: }}\DIFdelbegin \DIFdel{\mathsf{Net.station : Set[Station]}}\DIFdelend \DIFaddbegin \DIFadd{\mathsf{Net\composition station : Set[Station]}}\DIFaddend , \DIFdelbegin \DIFdel{\mathsf{Net.line : Set[Line]}}\DIFdelend \DIFaddbegin \DIFadd{\mathsf{Net\composition line : Set[Line]}}\DIFaddend ,
 \\[-.5ex]
-  \phantom{\text{Properties: }}\mathsf{Station.net : Set[Net]}, \DIFdelbegin \DIFdel{\mathsf{Station.unit : Set[Unit]}}\DIFdelend \DIFaddbegin \DIFadd{\mathsf{Station\composition unit : Set[Unit]}}\DIFaddend , \DIFdelbegin \DIFdel{\mathsf{Station.track : Set[Track]}}\DIFdelend \DIFaddbegin \DIFadd{\mathsf{Station\composition track : Set[Track]}}\DIFaddend ,
+  \phantom{\text{Properties: }}\mathsf{Station.net : Set[Net]}, \DIFdelbegin \DIFdel{\mathsf{Station.unit : Set[Unit]}}\DIFdelend \DIFaddbegin \DIFadd{\mathsf{Station\composition unit : Set[Unit]}}\DIFaddend , \\ \DIFdelbegin \DIFdel{\mathsf{Station.track : Set[Track]}}\DIFdelend \DIFaddbegin \DIFadd{\mathsf{Station\composition track : Set[Track]}}\DIFaddend ,
 \\[-.5ex]
   \phantom{\text{Properties: }}\mathsf{Line.net : Set[Net]}, \mathsf{Line.linear : Set[Linear]},
 \\[-.5ex]
@@ -11727,7 +11738,7 @@ For the example in Fig. \ref{fig:bjoerners_dsl} the class/data type net is
   \phantom{\text{Associations: }}\DIFdelbegin \DIFdel{\mathsf{c2u(connector : Set[Connector], unit : Set[Unit])}
 }%DIFDELCMD < \\
 %DIFDELCMD <   %%%
-\DIFdel{\text{Compositions: }\mathsf{n2s(net : Set[Net], \composition station : Set[Station])}}\DIFdelend \DIFaddbegin \DIFadd{\mathsf{C2U(connector : Set[Connector], unit : Set[Unit])}
+\DIFdel{\text{Compositions: }\mathsf{n2s(net : Set[Net], \composition station : Set[Station])}}\DIFdelend \\ \DIFaddbegin \DIFadd{\mathsf{C2U(connector : Set[Connector], unit : Set[Unit])}
 }\\[-.5ex]
   \phantom{\text{Associations: }}\DIFadd{\mathsf{N2S(net : Set[Net], \composition station : Set[Station])}}\DIFaddend ,
 \\[-.5ex]
@@ -11994,7 +12005,7 @@ to a predicate $\CL(a)$
 \lstset{escapeinside = {*@}{@*}}
 }%DIFDELCMD < \begin{lstlisting}[language=clif,morekeywords={then,with}]
 %DIFDELCMD < %%%
-\DIFdelend @*   *@ \DIFaddbegin \DIFadd{types (the latter again being represented as
+\DIFdelend \DIFaddbegin \DIFadd{types (the latter again being represented as
 sequences)}\footnote{\DIFadd{ignoring the annotations $\tau_i$
   in the interpretation of an association is
   intentional~\mbox{%DIFAUXCMD
@@ -12033,7 +12044,7 @@ sequences)}\footnote{\DIFadd{ignoring the annotations $\tau_i$
 %DIFDELCMD < \\
 %DIFDELCMD <   \item 
 %DIFDELCMD < %%%
-\DIFdel{for any pair of composition declarations $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
+\DIFdel{for any pair of composition declarations \\ $m(p_1 : \mathsf{Set}[c_1], \composition p_2 : \tau_2[c_2]), m'(p'_1 : \mathsf{Set}[c'_1], \composition p'_2 : \tau'_2[c'_2]) \in M$, an axiom stating ``each instance has
 at most one owner'':} \DIFdelend
 
 \lstset{escapeinside = {*@}{@*}}
@@ -12041,8 +12052,8 @@ at most one owner'':} \DIFdelend
 \begin{lstlisting}[language=clif,morekeywords={then,with}]
 %DIFDELCMD < %%%
 *@ \DIFdelbegin \DIFdel{(forall (o o' i)
-        (if (and }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{sequence-insert x$_1$ ($\cdots$
-                              }\DIFaddend @*  (form: *@ \DIFdelbegin \DIFdel{sequence-member (form:pair o i)m)(form:sequence-member (form:pair o' i)m'))(= o o'}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{sequence-insert x$_r$ form:empty-sequence))$\cdots$)))}\DIFaddend @*  )))
+        (if (and }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{ \\ sequence-insert x$_1$ ($\cdots$
+                              }\DIFaddend @*  (form: *@ \DIFdelbegin \DIFdel{\\sequence-member (form:pair o i)m)(\\ form:sequence-member (form:pair o' i)m'))(= o o'}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{\\sequence-insert x$_r$ form:empty-sequence))$\cdots$)))}\DIFaddend @*  )))
 \end{lstlisting}
 
 \DIFdelbegin \DIFdel{In case }\texttt{\DIFdel{m}} %DIFAUXCMD
@@ -12056,20 +12067,21 @@ being represented as sequences)}\footnote{\DIFdel{Ignoring the annotations $\tau
 instances. In such a case, links carry an additional identifier apart from their end values.
 When one or more ends of the Association are ordered, links carry ordering information in addition to their end values.'' Similarly in UML Superstructure Specification 2.4.1, p.~37.  The additional information required for links is covered by using sequences of tuples.}}%DIFAUXCMD
 \addtocounter{footnote}{-1}%DIFAUXCMD
-\DIFdel{:}%DIFDELCMD < \\
+\DIFdel{:} \\
+%DIFDELCMD < \\ 
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(from:Sequence a)}}%DIFAUXCMD
+\texttt{\DIFdel{(from:Sequence a)}}\\%DIFAUXCMD 
 %DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall (t) (if (form:sequence-member t a)}%DIFDELCMD < \\
+\texttt{\DIFdel{(forall (t) (if (form:sequence-member t a)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad  %%%
-\DIFdel{(exists ($x_1$ $\cdots$ $x_r$)}%DIFDELCMD < \\
+\DIFdel{(exists ($x_1$ $\cdots$ $x_r$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\ \  %%%
-\DIFdel{(and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)}%DIFDELCMD < \\
+\DIFdel{(and ($c_1$ $x_1$) $\cdots$ ($c_r$ $x_r$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \ \ \  %%%
-\DIFdel{(= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert}%DIFDELCMD < \\
+\DIFdel{(= t (form:sequence-insert $x_1$ ($\cdots$ (form:sequence-insert}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\ \  %%%
-\DIFdel{$x_r$ form:empty-sequence))))))))}}
+\DIFdel{$x_r$ form:empty-sequence))))))))}}\\
 %DIFAUXCMD
 \DIFdelend 
 
@@ -12147,7 +12159,7 @@ in simplified form, then the following is used}%DIFDELCMD < \\
 %DIF < % Superstructure Specification 2.4.1, p.~37.}
 \DIFdelend \DIFaddbegin \DIFadd{For the compositions, let $c^{1}\composition p^{1} :
 \tau[{c'}^{1}], \ldots, c^{k}\composition p^{k} : \tau[{c'}^{k}]$ be
-all the composite attributes in $P$ and $\mathbf{a}^{1} = a^{1}(p_1^{1} :
+all the composite attributes in $P$ \\ and $\mathbf{a}^{1} = a^{1}(p_1^{1} :
 \mathsf{Set}[c_1^{1}], \composition p_2^{1} :
 \tau_2^{(1)}[c_2^{1}]), \ldots, \mathbf{a}^{l} = a^{(l)}(p_1^{l} :
 \mathsf{Set}[c_1^{l}], \composition p_2^{l} :
@@ -12157,7 +12169,7 @@ the composite binary associations in $A$.  Abbreviate } \DIFaddend
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
 *@ \DIFaddbegin \DIFadd{(or ($\CL(c^{1}.p^{1})$ o x) $\cdots$ ($\CL(c^{k}.p^{k})$ o x)
-    (form:sequence-member (form:pair o x) $\CL(a^{1})$) $\cdots$
+    (form:sequence-member (form:pair o x) \\ $\CL(a^{1})$) $\cdots$
       (form:sequence-member (form:pair o x) $\CL(a^{l})$)))
 } \DIFaddend @*
 \end{lstlisting}
@@ -12260,7 +12272,8 @@ the following grammar:
 \\
   \mathit{NumLiteral} & ::= & \mathsf{0} \mid \mathsf{1} \mid \cdots
 \end{array}
-}\DIFdelend \DIFaddbegin \DIFadd{
+}\DIFdelend 
+\DIFaddbegin \DIFadd{
 \begin{array}{@{}r@{\ }r@{\ }l@{}}
   \mathit{Frm} & ::= & \mathit{NumLiteral}\ \mathsf{\leq}\ \mathit{FunExpr}\\
                &   | & \mathit{FunExpr}\ \mathsf{\leq}\ \mathit{NumLiteral}
@@ -12380,28 +12393,28 @@ latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic):
 The translation of multiplicity formulas to Common Logic is as follows:
 \DIFdelbegin %DIFDELCMD < \begin{itemize}
 %DIFDELCMD <   \item  %%%
-\DIFdel{$\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) =$}%DIFDELCMD < \\
+\DIFdel{$\CL(\ell \leq \mathsf{\#}c\mathsf{.}p \mathrel{\mathsf{:}} \tau[c']) =$}\\%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall (x y n)}}%DIFAUXCMD
+\texttt{\DIFdel{(forall (x y n)}}\\%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < \qqquad%%%
-\texttt{\DIFdel{(if (and (c.p x y) (form:$\tau$-size y n)) (buml:leq $\sem{\ell}$ n))}}
+\texttt{\DIFdel{(if (and (c.p x y) (form:$\tau$-size y n)) (buml:leq $\sem{\ell}$ n))}}\\
   %DIFAUXCMD
 %DIFDELCMD < \item %%%
-\DIFdel{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$}%DIFDELCMD < \\
+\DIFdel{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$}\\%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)}}%DIFAUXCMD
+\texttt{\DIFdel{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)}}\\%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < \qqquad%%%
-\texttt{\DIFdel{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$)}%DIFDELCMD < \\
+\texttt{\DIFdel{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad  %%%
-\DIFdel{(form:sequence-size }%DIFDELCMD < \\
+\DIFdel{(form:sequence-size }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad%%%
-\DIFdel{(form:n-select a $i$ }%DIFDELCMD < [%%%
-\DIFdel{$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$}%DIFDELCMD < ]%%%
-\DIFdel{) n))}%DIFDELCMD < \\
+\DIFdel{(form:n-select a $i$ }\\%DIFDELCMD < [%%%
+\DIFdel{$x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$}\\%DIFDELCMD < ]%%%
+\DIFdel{) n))}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad %%%
-\DIFdel{(buml:leq $\sem{\ell}$ n)))}}%DIFAUXCMD
+\DIFdel{(buml:leq $\sem{\ell}$ n)))}}\\%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < %%%
 \DIFdelend 
@@ -12424,45 +12437,45 @@ The translation of multiplicity formulas to Common Logic is as follows:
 } \DIFaddend @*
 \end{lstlisting}
 
-\noindent If $a$ is represented in simplified form, the following is used instead:
+\noindent If $a$ is represented in simplified form, the following is used instead:\\
 \DIFdelbegin %DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdel{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$}%DIFDELCMD < \\
+\DIFdel{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i=$}\\%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)}%DIFDELCMD < \\
+\texttt{\DIFdel{(forall ($x_1$ $\cdots$ $x_{i-1}$ $x_{i+1}$ $\cdots$ $x_r$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad%%%
-\DIFdel{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$))}%DIFDELCMD < \\
+\DIFdel{(if (and ($c_1$ $x_1$) $\cdots$ ($c_{i-1}$ $x_{i-1}$) ($c_{i+1}$ $x_{i+1}$) $\cdots$ ($c_r$ $x_r$))}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad  %%%
-\DIFdel{(exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)}%DIFDELCMD < \\
+\DIFdel{(exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad\qquad %%%
-\DIFdel{(and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) }%DIFDELCMD < \\
+\DIFdel{(and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{(a $x_1$ $\cdots$ $x_{i-1}$ $y_1$ $x_{i+1}$ $\cdots$ $x_r$)}%DIFDELCMD < \\
+\DIFdel{(a $x_1$ $\cdots$ $x_{i-1}$ $y_1$ $x_{i+1}$ $\cdots$ $x_r$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{$\cdots$}%DIFDELCMD < \\
+\DIFdel{$\cdots$}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{(a $x_1$ $\cdots$ $x_{i-1}$ $y_{\sem{\ell}}$ $x_{i+1}$ $\cdots$ $x_r$) ))))}}
+\DIFdel{(a $x_1$ $\cdots$ $x_{i-1}$ $y_{\sem{\ell}}$ $x_{i+1}$ $\cdots$ $x_r$) ))))}}\\
   %DIFAUXCMD
 %DIFDELCMD < \item  %%%
-\DIFdel{$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i)=$}%DIFDELCMD < \\
+\DIFdel{$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_i)=$}\\%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall (x)}}%DIFAUXCMD
+\texttt{\DIFdel{(forall (x)}}\\%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < \qqquad%%%
-\texttt{\DIFdel{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))}%DIFDELCMD < \\
+\texttt{\DIFdel{(if (and (c$_{3-i}$ x) (form:$\tau$-size (form:select$i$ x m) n))}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad %%%
-\DIFdel{(buml:leq $\sem{\ell}$ n))}}%DIFAUXCMD
+\DIFdel{(buml:leq $\sem{\ell}$ n))}}\\%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdel{If $m$ }\DIFdelend 
+\DIFdel{If $m$ }\DIFdelend \\ 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
-*@ \DIFaddbegin  \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$
-  (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$)
-          (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$))
-              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
-                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
-                           ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_1$ x$_{i+1}$ $\cdots$ x$_r$) $\cdots$
+*@ \DIFaddbegin  \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \tau_1[c_1]\mathsf{,}\, \dots\mathsf{,}\, p_r \mathrel{\mathsf{:}} \tau_r[c_r])\mathsf{.}p_i ={}$ \\
+  (forall (x$_1$ $\cdots$ x$_{i-1}$ x$_{i+1}$ $\cdots$ x$_r$) \\
+          (if (and ($\CL(c_1)$ x$_1$) $\cdots$ ($\CL(c_{i-1})$ x$_{i-1}$) ($\CL(c_{i+1})$ x$_{i+1}$) $\cdots$ ($\CL(c_r)$ x$_r$)) \\
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$) \\
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$))) \\
+                           ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_1$ x$_{i+1}$ $\cdots$ x$_r$) $\cdots$ \\
                            ($\CL(a)$ x$_1$ $\cdots$ x$_{i-1}$ y$_{\sem{\ell}}$ x$_{i+1}$ $\cdots$ x$_r$)))))
 } \DIFaddend @*
 \end{lstlisting}
@@ -12477,69 +12490,69 @@ The translation of multiplicity formulas to Common Logic is as follows:
 \end{lstlisting}
 
 \noindent \DIFaddbegin \DIFadd{If $a$
-}\DIFaddend is represented in simplified form, the following is used instead:
+}\DIFaddend is represented in simplified form, the following is used instead:\\
 \DIFdelbegin %DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdel{$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1)=$}%DIFDELCMD < \\
+\DIFdel{$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1)=$}\\%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall (x)}%DIFDELCMD < \\
+\texttt{\DIFdel{(forall (x)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad%%%
-\DIFdel{(if ($c_2$ $x$) }%DIFDELCMD < \\
+\DIFdel{(if ($c_2$ $x$) } \\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad  %%%
-\DIFdel{(exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)}%DIFDELCMD < \\
+\DIFdel{(exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad\qquad %%%
-\DIFdel{(and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) }%DIFDELCMD < \\
+\DIFdel{(and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{(m $y_1$ x)}%DIFDELCMD < \\
+\DIFdel{(m $y_1$ x)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{$\cdots$}%DIFDELCMD < \\
+\DIFdel{$\cdots$}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{(m $y_{\sem{\ell}}$ x) ))))}}%DIFAUXCMD
+\DIFdel{(m $y_{\sem{\ell}}$ x) ))))}}\\%DIFAUXCMD
 %DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdel{$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2)=$}%DIFDELCMD < \\
+\DIFdel{$\CL(\ell \leq \mathsf{\#}m(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2)=$}\\%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall (x)}%DIFDELCMD < \\
+\texttt{\DIFdel{(forall (x)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad%%%
-\DIFdel{(if ($c_1$ $x$) }%DIFDELCMD < \\
+\DIFdel{(if ($c_1$ $x$) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad  %%%
-\DIFdel{(exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)}%DIFDELCMD < \\
+\DIFdel{(exists ($y_1$ $\cdots$ $y_{\sem{\ell}}$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad\qquad %%%
-\DIFdel{(and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) }%DIFDELCMD < \\
+\DIFdel{(and (not (= ($y_1$ $y_2$))) $\cdots$  (not (= ($y_{\sem{\ell}-1}$ $y_{\sem{\ell}}$))) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{(m x  $y_1$)}%DIFDELCMD < \\
+\DIFdel{(m x  $y_1$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{$\cdots$}%DIFDELCMD < \\
+\DIFdel{$\cdots$}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qqquad\qqquad\qquad%%%
-\DIFdel{(m x $y_{\sem{\ell}}$) ))))}}
+\DIFdel{(m x $y_{\sem{\ell}}$) ))))}}\\
 %DIFAUXCMD
 %DIFDELCMD < \item
 %DIFDELCMD < %%%
-\DIFdel{$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c'])=$}%DIFDELCMD < \\
+\DIFdel{$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c'])=$}\\%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\texttt{\DIFdel{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)}%DIFDELCMD < \\
+\texttt{\DIFdel{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad  %%%
-\DIFdel{(if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) }%DIFDELCMD < \\
+\DIFdel{(if (and (c.q x $x_1$ $x_2$ $\cdots$  $x_n$ y) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad %%%
-\DIFdel{(form:$\tau$-size $x_1$ $n_1$) }%DIFDELCMD < \\
+\DIFdel{(form:$\tau$-size $x_1$ $n_1$) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad%%%
-\DIFdel{\ldots}%DIFDELCMD < \\
+\DIFdel{\ldots}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad %%%
-\DIFdel{(form:$\tau$-size $x_k$ $n_k$) }%DIFDELCMD < \\
+\DIFdel{(form:$\tau$-size $x_k$ $n_k$) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad %%%
-\DIFdel{(form:$\tau$-size $y$ $n$) }%DIFDELCMD < \\
+\DIFdel{(form:$\tau$-size $y$ $n$) }\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad %%%
-\DIFdel{(buml:leq $\sem{\ell_1}$ $n_1$)}%DIFDELCMD < \\
+\DIFdel{(buml:leq $\sem{\ell_1}$ $n_1$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad %%%
-\DIFdel{(buml:leq $n_1$ $\sem{\ell'_1}$)}%DIFDELCMD < \\
+\DIFdel{(buml:leq $n_1$ $\sem{\ell'_1}$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad%%%
-\DIFdel{\ldots}%DIFDELCMD < \\
+\DIFdel{\ldots}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad %%%
-\DIFdel{(buml:leq $\sem{\ell_k}$ $n_k$)}%DIFDELCMD < \\
+\DIFdel{(buml:leq $\sem{\ell_k}$ $n_k$)}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad\qquad %%%
-\DIFdel{(buml:leq $n_k$ $\sem{\ell'_k}$) )}%DIFDELCMD < \\
+\DIFdel{(buml:leq $n_k$ $\sem{\ell'_k}$) )}\\%DIFDELCMD < \\
 %DIFDELCMD < \qqquad\qqquad %%%
-\DIFdel{(buml:leq $\sem{\ell}$ n)))}}
+\DIFdel{(buml:leq $\sem{\ell}$ n)))}}\\
 %DIFAUXCMD
 %DIF < \texttt{(forall (x $x_1$ $x_2$ $\cdots$  $x_n$)\\
 %DIF < \qqquad  (if (and (c x) ($\tau_1[c_1]$ $x_1$) $\cdots$ ($\tau_n[c_n]$ $x_n$))\\
@@ -12549,31 +12562,31 @@ The translation of multiplicity formulas to Common Logic is as follows:
 \DIFdelend %DIF > 
 \lstset{escapeinside = {*@}{@*}}
  \begin{lstlisting}[language=clif, mathescape]
-*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1) ={}$
-  (forall (x)
-          (if ($\CL(c_2)$ x)
-              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
-                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
-                           ($\CL(a)$ y$_1$ x) $\cdots$ ($\CL(m)$ y$_{\sem{\ell}}$ x)))))
-$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2) ={}$
-  (forall (x)
-          (if ($\CL(c_1)$ x)
-              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$)
-                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$)))
-                           ($\CL(a)$ x y$_1$) $\cdots$ ($\CL(a)$ x y$_{\sem{\ell}}$)))))
+*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_1) ={}$ \\
+  (forall (x) \\
+          (if ($\CL(c_2)$ x) \\
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$) \\
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$))) \\
+                           ($\CL(a)$ y$_1$ x) $\cdots$ ($\CL(m)$ y$_{\sem{\ell}}$ x))))) \\
+$\CL(\ell \leq \mathsf{\#}a(p_1 \mathrel{\mathsf{:}} \mathsf{Set}[c_1]\mathsf{,}\, \composition p_2 \mathrel{\mathsf{:}} \tau_2[c_2])\mathsf{.}p_2) ={}$ \\
+  (forall (x) \\
+          (if ($\CL(c_1)$ x) \\
+              (exists (y$_1$ $\cdots$ y$_{\sem{\ell}}$) \\
+                      (and (not (= (y$_1$ y$_2$))) $\cdots$ (not (= (y$_{\sem{\ell}-1}$ y$_{\sem{\ell}}$))) \\
+                           ($\CL(a)$ x y$_1$) $\cdots$ ($\CL(a)$ x y$_{\sem{\ell}}$))))) \\
 } \DIFaddend @*
 \end{lstlisting}
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=clif, mathescape]
-*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$
-  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n)
-          (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y)
-                   (form:$\CL(\tau)$-size x$_1$ n$_1$) $\cdots$ (form:$\CL(\tau)$-size $x_k$ $n_k$)
-                   (form:$\CL(\tau)$-size $y$ n)
-                   (buml:leq $\sem{\ell_1}$ n$_1$) (buml:leq n$_1$ $\sem{\ell'_1}$) $\cdots$
-                   (buml:leq $\sem{\ell_k}$ n$_k$) (buml:leq n$_k$ $\sem{\ell'_k}$))
-                   (buml:leq $\sem{\ell}$ n)))
+*@ \DIFaddbegin \DIFadd{$\CL(\ell \leq \mathsf{\#}c.q(\ell_1 \leq f_1 \leq \ell'_1: \tau_1[c_1], \ldots, \ell_k\leq f_k \leq \ell'_k: \tau_k[c_k]) : \tau[c']) ={}$ \\
+  (forall (x x$_1$ x$_2$ $\cdots$ x$_n$ n$_1$ $\cdots$ n$_k$ n) \\
+          (if (and ($\CL(c.q)$ x x$_1$ x$_2$ $\cdots$ x$_n$ y) \\
+                   (form:$\CL(\tau)$-size x$_1$ n$_1$) $\cdots$ (form:$\CL(\tau)$-size $x_k$ $n_k$) \\
+                   (form:$\CL(\tau)$-size $y$ n) \\
+                   (buml:leq $\sem{\ell_1}$ n$_1$) (buml:leq n$_1$ $\sem{\ell'_1}$) $\cdots$ \\
+                   (buml:leq $\sem{\ell_k}$ n$_k$) (buml:leq n$_k$ $\sem{\ell'_k}$)) \\
+                   (buml:leq $\sem{\ell}$ n))) \\
 } \DIFaddend @*
 \end{lstlisting}
 %
@@ -13004,7 +13017,7 @@ Sentences are translated as follows:
  \item $\alpha_\Sigma (R \sqsubseteq S) = \forall x, y. R(x,y) \rightarrow S(x,y) $
  \item $\alpha_\Sigma (R_1; \ldots; R_n \sqsubseteq R) =$\\
 \DIFdelbegin \DIFdel{$ \forall x,y . (\exists z_1,\ldots z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \wedge \ldots \wedge R_n(z_{n-1},y)) \rightarrow R(x,y) $
- }\DIFdelend \DIFaddbegin \DIFadd{$ \forall x,y . (\exists z_1,\ldots, z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \wedge \ldots \wedge R_n(z_{n-1},y)) \rightarrow R(x,y) $
+ }\DIFdelend \\ \DIFaddbegin \DIFadd{$ \forall x,y . (\exists z_1,\ldots, z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \wedge \ldots \wedge R_n(z_{n-1},y)) \rightarrow R(x,y) $
  }\DIFaddend \item $\alpha_\Sigma (\text{Dis}(R_1,R_2)) = \neg\exists x,y . R_1(x,y)\wedge R_2(x,y)$	
  \item $\alpha_\Sigma (\text{Ref}(R)) = \forall x. R(x,x)$
  \item $\alpha_\Sigma (\text{Irr}(R)) = \forall x. \neg R(x,x)$
@@ -13321,11 +13334,13 @@ NetworkName         ::= IRI
 Network             ::= network NetworkElement* ExcludedElement*
 NetworkElement      ::= network-element [Id]  ( \DIFdelbegin \DIFdel{ElementRef
 }\DIFdelend )   ( \DIFaddbegin \DIFadd{IRI
-}\DIFaddend )  ExcludedElement     ::= PathReference |  ( \DIFdelbegin \DIFdel{OMSOrMappingorNetworkRef
+}\DIFaddend )  
+ExcludedElement     ::= PathReference |  ( \DIFdelbegin \DIFdel{OMSOrMappingorNetworkRef
 }\DIFdelend )   ( \DIFaddbegin \DIFadd{ExcludedElementRef
-}\DIFaddend )  PathReference       ::= path  ( \DIFdelbegin \DIFdel{OMSOrMappingorNetworkRef OMSOrMappingorNetworkRef
+}\DIFaddend )  
+PathReference       ::= path  ( \DIFdelbegin \DIFdel{OMSOrMappingorNetworkRef OMSOrMappingorNetworkRef
 ElementRef      }\DIFdelend )   ( \DIFaddbegin \DIFadd{IRI IRI
-ExcludedElementRef  }\DIFaddend )  ::= IRI
+\\ ExcludedElementRef  }\DIFaddend )  ::= IRI
 \end{lstlisting}
 
 
@@ -13336,13 +13351,14 @@ ExcludedElementRef  }\DIFaddend )  ::= IRI
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
 
 BasicOMS           ::= ($<$)language specific($>$) 
- ( \DIFdelbegin \DIFdel{ClosableOMS        ::= BasicOMS | OMSReference
+ ( \DIFdelbegin \DIFdel{ClosableOMS        ::= BasicOMS | OMSReference \\
 OMSReference       ::= oms-reference OMSRef }%DIFDELCMD < [%%%
 \DIFdel{ImportName}%DIFDELCMD < ]
 %DIFDELCMD < %%%
-\DIFdel{ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
-RelativeClosureOMS ::= relative-closure ClosureType ClosableOMS
-}\DIFdelend )  OMS                ::= ExtendingOMS
+\DIFdel{\\ ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
+\\ RelativeClosureOMS ::= relative-closure ClosureType ClosableOMS
+}\DIFdelend )  
+OMS                ::= ExtendingOMS
                      | ClosureOMS
                      | TranslationOMS
                      | ReductionOMS
@@ -13364,37 +13380,40 @@ UnionOMS           ::= union OMS [ConservativityStrength] OMS
 ExtensionOMS       ::= extension OMS Extension
 QualifiedOMS       ::= qualified-oms  ( \DIFaddbegin \DIFadd{Qualification }\DIFaddend )  Qualification* OMS
 CombinationOMS     ::= combination Network
-ApplicationOMS     ::= application OMS SubstName
+ApplicationOMS     ::= application OMS SubstName 
  ( \DIFaddbegin \DIFadd{OMSDefinition      ::= oms-definition OMSName }[\DIFadd{ConservativityStrength}] \DIFadd{OMS
-ConservativityStrength ::= consequence-conservative
-                     | model-conservative
-                     | not-consequence-conservative
-                     | not-model-conservative
-                     | implied
-                     | monomorphic
-                     | weak-definitional
-                     | definitional
-OMSName            ::= IRI
-SubstName          ::= IRI
+\\ ConservativityStrength ::= consequence-conservative \\
+                     | model-conservative \\
+                     | not-consequence-conservative \\
+                     | not-model-conservative \\
+                     | implied \\
+                     | monomorphic \\
+                     | weak-definitional \\
+                     | definitional \\
+OMSName            ::= IRI \\
+SubstName          ::= IRI \\
 } \DIFaddend )
 \end{lstlisting}
 
 %DIF >  Corresponds to image mof/extension&closure.png
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  %DIF >  abstract syntax
-( \DIFaddbegin \DIFadd{ClosableOMS        ::= BasicOMS | OMSReference
-OMSReference       ::= oms-reference OMSRef }[\DIFadd{ImportName}]
+\begin{lstlisting}[language=ebnf,escapeinside={*@}{@*}]  %DIF >  abstract syntax
+
+*@ \DIFaddbegin 
+\DIFadd{ClosableOMS ::= BasicOMS | OMSReference \\
+OMSReference       ::= oms-reference OMSRef }[\DIFadd{\\ ImportName}]
 \DIFadd{Extension          ::= extension }[\DIFadd{ConservativityStrength}]
-                                 [\DIFadd{ExtensionName}] \DIFadd{ExtendingOMS
-ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
-RelativeClosureOMS ::= relative-closure ClosureType ClosableOMS
-}\DIFaddend )  Closure            ::= ClosureType CircClosure CircVars
+                                 [\DIFadd{ExtensionName}] \DIFadd{ExtendingOMS \\
+ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS \\
+RelativeClosureOMS ::= relative-closure ClosureType ClosableOMS \\
+}\DIFaddend @*  
+Closure            ::= ClosureType CircClosure CircVars
 ClosureType        ::= minimize | maximize | free | cofree
 CircClosure        ::= Symbol Symbol*
 CircVars           ::= Symbol*
- ( \DIFaddbegin \DIFadd{ExtensionName      ::= IRI
-ImportName         ::= IRI
-OMSRef             ::= IRI
-} \DIFaddend )
+ *@ \DIFaddbegin \DIFadd{ExtensionName      ::= IRI \\
+ImportName         ::= IRI \\
+OMSRef             ::= IRI \\
+} \DIFaddend @*
 \end{lstlisting}
 %DIF > % \ednote{Alternatively, we could use one type of \syntax{InterfaceSignature}
 %DIF > % only, and instead use different constructors for \syntax{Extraction}
@@ -13412,27 +13431,33 @@ SymbolMap          ::= symbol-map GeneralSymbolMapItem
                                   GeneralSymbolMapItem*
 Extraction         ::= extraction RemovalKind InterfaceSignature
 Approximation      ::= approx RemovalKind [InterfaceSignature] [LogicRef]
-Filtering          ::= filter RemovalKind  ( \DIFdelbegin \DIFdel{BasicOMS
+Filtering          ::= filter RemovalKind  
+( \DIFdelbegin \DIFdel{BasicOMS
 Extension          ::= extension }%DIFDELCMD < [%%%
-\DIFdel{ConservativityStrength}%DIFDELCMD < ]
+\DIFdel{ConservativityStrength \\}%DIFDELCMD < ]
 %DIFDELCMD <                                  [%%%
-\DIFdel{ExtensionName}%DIFDELCMD < ] %%%
-\DIFdel{ExtendingOMS
+\DIFdel{ExtensionName\\}%DIFDELCMD < ] %%%
+\DIFdel{ExtendingOMS \\
 RemovalKind        ::= keep | remove
-ConservativityStrength }\DIFdelend )   ( \DIFaddbegin \DIFadd{BasicOMSOrSymbolList
-BasicOMSOrSymbolList }\DIFaddend )  ::=  ( \DIFdelbegin \DIFdel{consequence-conservative
-                     | model-conservative
-                     | not-consequence-conservative
-                     | not-model-conservative
-                     | implied
-                     | monomorphic
-                     | weak-definitional
-                     }\DIFdelend )   ( \DIFaddbegin \DIFadd{BasicOMS }\DIFaddend )  |  ( \DIFdelbegin \DIFdel{definitional
-}\DIFdelend )   ( \DIFaddbegin \DIFadd{SymbolList
-}\DIFaddend )  InterfaceSignature ::= SymbolList
- ( \DIFdelbegin \DIFdel{ImportName         ::= IRI
-ExtensionName      ::= IRI
-SubstName          ::= IRI
+ConservativityStrength \\}\DIFdelend )   
+( \DIFaddbegin \DIFadd{BasicOMSOrSymbolList \\
+BasicOMSOrSymbolList }\DIFaddend )  ::=  ( \DIFdelbegin \DIFdel{consequence-conservative \\
+                     | model-conservative \\
+                     | not-consequence-conservative \\
+                     | not-model-conservative \\
+                     | implied \\
+                     | monomorphic \\
+                     | weak-definitional \\
+                     }\DIFdelend )   
+                     ( \DIFaddbegin \DIFadd{BasicOMS }\DIFaddend )  
+                     |  ( \DIFdelbegin \DIFdel{definitional
+}\DIFdelend )   
+( \DIFaddbegin \DIFadd{SymbolList
+}\DIFaddend )  
+InterfaceSignature ::= SymbolList
+ ( \DIFdelbegin \DIFdel{ImportName         ::= IRI \\
+ExtensionName      ::= IRI \\
+SubstName          ::= IRI \\
 } \DIFdelend )
 %DIFDELCMD < 
 \end{lstlisting}
@@ -13449,17 +13474,14 @@ SubstName          ::= IRI
 %DIFDELCMD < 
 
 %DIFDELCMD < 
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  %%%
-%DIF <  abstract syntax
-%DIFDELCMD < 
+\begin{lstlisting}[language=ebnf,escapeinside={()}]  %%%%DIF <  abstract syntax
 
-%DIFDELCMD < %%%
-%\DIF
 ( \DIFdelbegin \DIFdel{OMSDefinition      ::= oms-definition OMSName }%DIFDELCMD < [%%%
-\DIFdel{ConservativityStrength}%DIFDELCMD < ] %%%
+\DIFdel{ConservativityStrength \\}%DIFDELCMD < ] %%%
 \DIFdel{OMS
 Symbol             ::= IRI
-}\DIFdelend )  SymbolMapItem      ::= symbol-map-item Symbol Symbol
+}\DIFdelend )  
+SymbolMapItem      ::= symbol-map-item Symbol Symbol
 GeneralSymbolMapItem ::= Symbol | SymbolMapItem
 Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
 OMSName            ::= IRI
@@ -13481,16 +13503,16 @@ DefaultTranslation ::= default-trans LanguageRef
 
 %DIF >  Corresponds to image mof/interpretation&refinement.png
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  % abstract syntax
- < \DIFdelbegin %DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdel{MappingDefinition  ::= InterpretationDefinition
-                     | RefinementDefinition
-                     | EntailmentDefinition
-                     | EquivalenceDefinition
-                     | ModuleRelDefinition
-                     | AlignmentDefinition
-}\DIFdelend >  InterpretationDefinition ::= interpretation-definition
+ 
+ < \DIFdelbegin 
+\DIFdel{MappingDefinition  ::= InterpretationDefinition \\
+                     | RefinementDefinition \\
+                     | EntailmentDefinition \\
+                     | EquivalenceDefinition \\
+                     | ModuleRelDefinition \\
+                     | AlignmentDefinition \\
+}\DIFdelend >  
+InterpretationDefinition ::= interpretation-definition
                                                        InterpretationName
                                                        [ConservativityStrength]
                                                        InterpretationType
@@ -13501,35 +13523,47 @@ InterpretationName ::= IRI
 InterpretationType ::= interpretation-type OMS OMS
 Refinement         ::= RefinementOMS
                      | RefinementNetwork
-                     |  < \DIFdelbegin \DIFdel{RefinementComposition
+                     |  < \DIFdelbegin \DIFdel{RefinementComposition 
                      | }\DIFdelend >  SimpleOMSRefinement
                      | SimpleNetworkRefinement
 RefinementOMS      ::= refinement-oms OMS
 RefinementNetwork  ::= refinement-network Network
  < \DIFdelbegin \DIFdel{RefinementComposition ::= refinement-composition Refinement Refinement
-}\DIFdelend >  SimpleOMSRefinement ::= simple-oms-ref  < \DIFdelbegin \DIFdel{OMS }\DIFdelend >   < \DIFaddbegin \DIFadd{Refinement }\DIFaddend >  OMSRefinementMap Refinement
-SimpleNetworkRefinement ::= simple-network-ref  < \DIFdelbegin \DIFdel{Network
-                                               }\DIFdelend >   < \DIFaddbegin \DIFadd{Refinement
-                                               }\DIFaddend >  NetworkRefinementMap Refinement
+}\DIFdelend > 
+SimpleOMSRefinement ::= simple-oms-ref  
+< \DIFdelbegin \DIFdel{OMS }\DIFdelend >   
+< \DIFaddbegin \DIFadd{Refinement }\DIFaddend >  
+OMSRefinementMap Refinement
+SimpleNetworkRefinement ::= simple-network-ref  
+< \DIFdelbegin \DIFdel{Network
+                                               }\DIFdelend >   
+                                               < \DIFaddbegin \DIFadd{Refinement
+                                               }\DIFaddend >  
+                                               NetworkRefinementMap Refinement
 OMSRefinementMap   ::= oms-refmap [OMSLanguageTranslation] [SymbolMap]
-NetworkRefinementMap ::= network-refmap  < \DIFdelbegin \DIFdel{NodeMap*
-NodeMap            }\DIFdelend >   < \DIFaddbegin \DIFadd{Refinement*
+NetworkRefinementMap ::= network-refmap  
+< \DIFdelbegin \DIFdel{NodeMap*
+NodeMap            }\DIFdelend >   
+< \DIFaddbegin \DIFadd{Refinement*
 } \DIFaddend >
 \end{lstlisting}
 
 %DIF >  Corresponds to image mof/entailment&equivalence.png
 \begin{lstlisting}[language=ebnf,escapeinside={<>},mathescape]  %DIF >  abstract syntax
-< \DIFaddbegin \DIFadd{MappingDefinition  }\DIFaddend >  ::=  < \DIFdelbegin \DIFdel{node-map OMSName OMSName
+
+< \DIFaddbegin \DIFadd{MappingDefinition  }\DIFaddend >  ::=  < \DIFdelbegin \DIFdel{node-map OMSName OMSName \\
                                 OMSLanguageTranslation* }%DIFDELCMD < [%%%
 \DIFdel{SymbolMap}%DIFDELCMD < ]
 %DIFDELCMD < %%%
-\DIFdelend >   < \DIFaddbegin \DIFadd{InterpretationDefinition
-                     | RefinementDefinition
-                     | EntailmentDefinition
-                     | EquivalenceDefinition
-                     | ConservativeExtensionDefinition
-                     | AlignmentDefinition
-}\DIFaddend >  EntailmentDefinition ::= entailment EntailmentName EntailmentType
+\DIFdelend >   
+< \DIFaddbegin \DIFadd{InterpretationDefinition \\
+                     | RefinementDefinition \\
+                     | EntailmentDefinition \\
+                     | EquivalenceDefinition \\
+                     | ConservativeExtensionDefinition \\
+                     | AlignmentDefinition \\
+}\DIFaddend >  
+EntailmentDefinition ::= entailment EntailmentName EntailmentType
 OMSOMSEntailment   ::= oms-oms-entailment OMS OMS
 NetworkOMSEntailment ::= network-oms-entailment Network OMSName OMS
 NetworkNetworkEntailment ::= network-network-entailment Network Network
@@ -13542,21 +13576,29 @@ EquivalenceDefinition ::= equivalence-definition
                                                  EquivalenceType
 EquivalenceName    ::= IRI
 EquivalenceType    ::= OMSEquivalence | NetworkEquivalence
-OMSEquivalence     ::= oms-equivalence OMS OMS  < \DIFdelbegin \DIFdel{OMS
-}\DIFdelend >   < \DIFaddbegin [\DIFadd{OMS}]
-\DIFaddend >  NetworkEquivalence ::= network-equivalence Network Network  < \DIFdelbegin \DIFdel{Network
-ModuleRelDefinition ::= module-definition ModuleName
-                                          }\DIFdelend >  [ < \DIFdelbegin \DIFdel{ConservativityStrength}\DIFdelend >   < \DIFaddbegin \DIFadd{Network}\DIFaddend >  ]
- < \DIFdelbegin \DIFdel{ModuleType
-                                          InterfaceSignature
-ModuleName         ::= IRI
+OMSEquivalence     ::= oms-equivalence OMS OMS  
+< \DIFdelbegin \DIFdel{OMS
+}\DIFdelend >   
+< \DIFaddbegin [\DIFadd{OMS}]
+\DIFaddend >  
+NetworkEquivalence ::= network-equivalence Network Network  
+< \DIFdelbegin \DIFdel{Network \\
+ModuleRelDefinition ::= module-definition ModuleName \\
+                                          }\DIFdelend >  [ 
+                                          < \DIFdelbegin \DIFdel{ConservativityStrength}\DIFdelend >   
+                                          < \DIFaddbegin \DIFadd{Network}\DIFaddend >  ]
+ < \DIFdelbegin \DIFdel{ModuleType \\
+                                          InterfaceSignature\\
+ModuleName         ::= IRI \\
 ModuleType         ::= module-type OMS OMS
-}\DIFdelend > \end{lstlisting}
+}\DIFdelend > 
+\end{lstlisting}
 
 %DIF >  Corresponds to image mof/alignment.png
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  %DIF >  abstract syntax
 AlignmentDefinition ::= alignment-definition AlignmentName
-                              [ ( \DIFdelbegin \DIFdel{AlignmentCardinalityPair}\DIFdelend )   ( \DIFaddbegin \DIFadd{AlignmentCardinality}] [\DIFadd{AlignmentCardinality}\DIFaddend )  ]
+                              [ ( \DIFdelbegin \DIFdel{AlignmentCardinalityPair}\DIFdelend )   
+                              ( \DIFaddbegin \DIFadd{AlignmentCardinality}] [\DIFadd{AlignmentCardinality}\DIFaddend )  ]
                               AlignmentType Correspondence*
                               [AlignmentSemantics]<\footnote{%
                         Note that this grammar uses ``type'' as in
@@ -13565,13 +13607,14 @@ AlignmentDefinition ::= alignment-definition AlignmentName
                         totality/injectivity of the relation/function.  For the
                         latter, this grammar uses ``cardinality''.}>
 AlignmentName      ::= IRI
- ( \DIFdelbegin \DIFdel{AlignmentCardinalityPair ::= AlignmentCardinalityForward
-                                                         AlignmentCardinalityBackward
-AlignmentCardinalityForward ::= alignment-cardinality-forward
-                                                              AlignmentCardinality
-AlignmentCardinalityBackward ::= alignment-cardinality-backward
-                                                                AlignmentCardinality
-}\DIFdelend )  AlignmentCardinality ::= injective-and-total
+ ( \DIFdelbegin \DIFdel{AlignmentCardinalityPair ::= AlignmentCardinalityForward \\
+                                                         AlignmentCardinalityBackward \\
+AlignmentCardinalityForward ::= alignment-cardinality-forward \\
+                                                              AlignmentCardinality \\
+AlignmentCardinalityBackward ::= alignment-cardinality-backward \\
+                                                                AlignmentCardinality \\
+}\DIFdelend )  
+AlignmentCardinality ::= injective-and-total
                      | injective
                      | total
                      | neither-injective-nor-total
@@ -13586,15 +13629,21 @@ DefaultCorrespondence ::= default-correspondence
 CorrespondenceBlock ::= correspondence-block [Relation]
                                              [Confidence] Correspondence
                                              Correspondence*
-SingleCorrespondence ::= correspondence  ( \DIFdelbegin \DIFdel{SymbolRef }\DIFdelend )   ( \DIFaddbegin \DIFadd{Symbol }\DIFaddend )  [Relation]
+SingleCorrespondence ::= correspondence  
+( \DIFdelbegin \DIFdel{SymbolRef }\DIFdelend )   
+( \DIFaddbegin \DIFadd{Symbol }\DIFaddend )  [Relation]
                                         [Confidence] GeneralizedTerm
                                         [CorrespondenceID]
 CorrespondenceID   ::= IRI
- ( \DIFdelbegin \DIFdel{SymbolRef          }\DIFdelend )   ( \DIFaddbegin \DIFadd{GeneralizedTerm    }\DIFaddend )  ::=  ( \DIFdelbegin \DIFdel{IRI
-GeneralizedTerm    }\DIFdelend )   ( \DIFaddbegin \DIFadd{Symbol
+ ( \DIFdelbegin \DIFdel{SymbolRef          }\DIFdelend )   
+ ( \DIFaddbegin \DIFadd{GeneralizedTerm    }\DIFaddend )  ::=  ( \DIFdelbegin \DIFdel{IRI
+GeneralizedTerm    }\DIFdelend )   
+( \DIFaddbegin \DIFadd{Symbol \\
 Symbol             }\DIFaddend )  ::=  ( \DIFdelbegin \DIFdel{SymbolRef
-}\DIFdelend )   ( \DIFaddbegin \DIFadd{IRI
-}\DIFaddend )  Relation           ::= RelationReference | StandardRelation
+}\DIFdelend )   
+( \DIFaddbegin \DIFadd{IRI
+}\DIFaddend )  
+Relation           ::= RelationReference | StandardRelation
 StandardRelation   ::= StandardRelationValues
 StandardRelationValues ::= subsumes
                      | is-subsumed
@@ -13611,19 +13660,18 @@ Confidence         ::= Double
 %DIFDELCMD < 
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  %%%
 %DIF <  abstract syntax
-%DIFDELCMD < 
 
-%DIFDELCMD < %%%
 Double             ::= ($<$ a number $\in [0,1]$ $>$) 
 \end{lstlisting}
 
 %DIF >  Corresponds to image mof/modules.png
  \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  %DIF >  abstract syntax
-( \DIFaddbegin \DIFadd{ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName
-                                          }[\DIFadd{ConservativityStrength}] \DIFadd{ConservativeExtensionType
-                                          InterfaceSignature
-ConservativeExtensionName         ::= IRI
-ConservativeExtensionType         ::= cons-ext-type OMS OMS
+
+ ( \DIFaddbegin \DIFadd{ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName \\
+                                          }[\DIFadd{ConservativityStrength \\ }] \DIFadd{ConservativeExtensionType \\
+                                          InterfaceSignature \\
+ConservativeExtensionName         ::= IRI \\
+ConservativeExtensionType         ::= cons-ext-type OMS OMS \\
 } \DIFaddend )
 \end{lstlisting}
 
@@ -13635,14 +13683,19 @@ ConservativeExtensionType         ::= cons-ext-type OMS OMS
 %DIFDELCMD < %%%
 \DIFdelend %DIF >  Corresponds to image mof/prefixes.png
 \begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+ 
  ( \DIFdelbegin %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdelend )   ( \DIFaddbegin \DIFadd{PrefixBinding      ::= prefix-binding Prefix FullIRI }[\DIFadd{Separators}]
-\DIFaddend )  IRI    ::= FullIRI | CurieIRI(\footnote{Specified below in \cref{c:curies}.})
+\DIFdelend )   
+( \DIFaddbegin \DIFadd{PrefixBinding      ::= prefix-binding Prefix FullIRI }[\DIFadd{Separators}]
+\DIFaddend )  
+IRI    ::= FullIRI | CurieIRI(\footnote{Specified below in \cref{c:curies}.})
 CurieIRI ::= curie CURIE
-FullIRI ::= ($<$ as defined by the IRI production in  ( \DIFdelbegin %DIFDELCMD < \nisref{IETF/RFC 3987:2005} %%%
-\DIFdelend )   ( \DIFaddbegin \DIFadd{\nref{IRI} }\DIFaddend )  $>$) 
+FullIRI ::= ($<$ as defined by the IRI production in  
+( \DIFdelbegin %DIFDELCMD < \nisref{IETF/RFC 3987:2005} %%%
+\DIFdelend )   
+( \DIFaddbegin \DIFadd{\nref{IRI} }\DIFaddend )  $>$) 
 CURIE  ::= String
 \end{lstlisting}
 
@@ -14092,7 +14145,7 @@ library Mereology
 import PropositionalMereology
 
 %% OWL Manchester syntax declaration: 
-language lang:OWL2 logic log:SROIQ  *@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @*  ser:OWL2/Manchester           
+language lang:OWL2 logic log:SROIQ  @ \DIFdelbegin \DIFdel{syntax }\DIFdelend @   @ \DIFaddbegin \DIFadd{serialization }\DIFaddend @  ser:OWL2/Manchester           
 
 %% Parthood in SROIQ, as far as easily expressible:
 ontology BasicParthood =                             
@@ -14113,12 +14166,22 @@ end             %% an atom has no proper parts
 %% translate the logic, then rename the entities
 interpretation TaxonomyToParthood : Taxonomy to BasicParthood =
   translation trans:PropositionalToSROIQ,
-  PT  *@ \DIFdelbegin \DIFdel{$\mapsto$ }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{|-> }\DIFaddend @*  Particular,   S  *@ \DIFdelbegin \DIFdel{$\mapsto$ }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{|-> }\DIFaddend @*  SpaceRegion,
-  T   *@ \DIFdelbegin \DIFdel{$\mapsto$ }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{|-> }\DIFaddend @*  TimeInterval, A  *@ \DIFdelbegin \DIFdel{$\mapsto$ AbstractRegion , }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{|-> AbstractRegion }\DIFaddend @*  %[ and so on ]%
- *@ \DIFaddbegin \DIFadd{end
-}\DIFaddend @*  
+  PT  
+  @ \DIFdelbegin \DIFdel{$\mapsto$ }\DIFdelend @   
+  @ \DIFaddbegin \DIFadd{|-> }\DIFaddend @  Particular,   S  
+  @ \DIFdelbegin \DIFdel{$\mapsto$ }\DIFdelend @   
+  @ \DIFaddbegin \DIFadd{|-> }\DIFaddend @  SpaceRegion,
+  T   
+  @ \DIFdelbegin \DIFdel{$\mapsto$ }\DIFdelend @   
+  @ \DIFaddbegin \DIFadd{|-> }\DIFaddend @  TimeInterval, A  
+  @ \DIFdelbegin \DIFdel{$\mapsto$ AbstractRegion , }\DIFdelend @   
+  @ \DIFaddbegin \DIFadd{|-> AbstractRegion }\DIFaddend @  %[ and so on ]%
+  @ \DIFaddbegin \DIFadd{end
+}\DIFaddend @
 
-logic log:CommonLogic  *@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @*  ser:CommonLogic/CLIF
+logic log:CommonLogic  
+@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @   
+@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @  ser:CommonLogic/CLIF
                 %% syntax: the Lisp-like CLIF dialect of Common Logic
 
 %% ClassicalExtensionalParthood imports the OWL ontology from above, 
@@ -14129,31 +14192,34 @@ then
   . (forall (X) (if (or (= X S) (= X T) (= X AR) (= X PD))
                     (forall (x y z) (if (and (X x) (X y) (X z))
                                         (and                          
-%DIF < % now list all the axioms: 
-	%DIF < % antisymmetry:
-       *@ \DIFaddbegin \DIFadd{// now list all the axioms: 
+  % now list all the axioms: 
+	 % antisymmetry:
+       @ \DIFaddbegin \DIFadd{// now list all the axioms: 
 	// antisymmetry:
-      }\DIFaddend @*  (if (and (isPartOf x y) (isPartOf y x)) (= x y)) 
-	%DIF < % transitivity; not combinable with asymmetry in OWL DL:
-       *@ \DIFaddbegin \DIFadd{// transitivity; not combinable with asymmetry in OWL DL:
-      }\DIFaddend @*  (if (and (isProperPartOf x y) (isProperPartOf y z)) (isProperPartOf x z))
+      }\DIFaddend @  
+      (if (and (isPartOf x y) (isPartOf y x)) (= x y)) 
+	 % transitivity; not combinable with asymmetry in OWL DL:
+       @ \DIFaddbegin \DIFadd{// transitivity; not combinable with asymmetry in OWL DL:
+      }\DIFaddend @  
+      (if (and (isProperPartOf x y) (isProperPartOf y z)) (isProperPartOf x z))
       (iff (overlaps x y) (exists (pt) (and (isPartOf pt x) (isPartOf pt y))))
       (iff (isAtomicPartOf x y) (and (isPartOf x y) (Atom x)))
       (iff (sum z x y)
            (forall (w) (iff 
 		   	  (overlaps w z) 
 			  (and (overlaps w x) (overlaps w y)))))
- %DIF < % existence of the sum:
-       *@ \DIFaddbegin \DIFadd{// existence of the sum:
-      }\DIFaddend @*  (exists (s) (sum s x y))                                          
+  % existence of the sum:
+       @ \DIFaddbegin \DIFadd{// existence of the sum:
+      }\DIFaddend @  
+      (exists (s) (sum s x y))                                          
       )))))
 %% definition of fusion	  
   . (forall (Set a) (iff (fusion Set a)                                  
             (forall (b) (iff (overlaps b a)
                              (exists (c) (and (Set c) (overlaps c a)))))))
- *@ \DIFdelbegin %DIFDELCMD < }
+ @ \DIFdelbegin %DIFDELCMD < }
 %DIFDELCMD < %%%
-\DIFdelend @*
+\DIFdelend @
 \end{lstlisting}
 
 
@@ -14167,10 +14233,12 @@ library Persons
 language lang:OWL
 
 ontology Persons =
-  Class *@ \DIFdelbegin \DIFdel{Person
-  Class }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{: Person
-  Class: }\DIFaddend @*  Female
-then %def
+  Class @ \DIFdelbegin \DIFdel{Person
+  Class }\DIFdelend @   
+  @ \DIFaddbegin \DIFadd{: Person
+  Class: }\DIFaddend @  
+  Female
+then 
   Class: Woman  EquivalentTo: Person and Female
 end
 \end{lstlisting}
@@ -14262,7 +14330,7 @@ end
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=OWL2manchester,escapechar=@,mathescape]
-%DIF > prefix( :      <http://www.example.org/@alignment@#>
+prefix( :      <http://www.example.org/@alignment@#>
          owl:   <http://www.w3.org/2002/07/owl#>
          lang:  <http://purl.net/DOL/languages/>
                 %% definitions of conforming languages ...
@@ -14275,7 +14343,9 @@ end
 
 library Alignments
 
-language lang:OWL2 logic log:SROIQ  *@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @*  ser:OWL2/Manchester
+language lang:OWL2 logic log:SROIQ  
+@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @   
+@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @  ser:OWL2/Manchester
 
 alignment Alignment1 : { Class: Woman } to { Class: Person } =
   Woman < Person
@@ -14339,7 +14409,7 @@ end
 
 library Publications
 
-language lang:OWL2 logic log:SROIQ  *@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @*  ser:OWL2/Manchester
+language lang:OWL2 logic log:SROIQ  @ \DIFdelbegin \DIFdel{syntax }\DIFdelend @   @ \DIFaddbegin \DIFadd{serialization }\DIFaddend @  ser:OWL2/Manchester
 
 ontology Publications1 =
   Class: Publication
@@ -14385,30 +14455,35 @@ end
 %DIF > % repeat prefix declarations from above
 library Market
 
-language lang:OWL2 logic log:SROIQ  *@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @*  ser:OWL2/Manchester
- *@ \DIFdelbegin \DIFdel{ontology Purchases }\DIFdelend @*   *@ \DIFaddbegin 
-
-\DIFadd{ontology One }\DIFaddend @*  =  *@ \DIFdelbegin \DIFdel{combine
+language lang:OWL2 logic log:SROIQ  @ \DIFdelbegin \DIFdel{syntax }\DIFdelend @   @ \DIFaddbegin \DIFadd{serialization }\DIFaddend @  ser:OWL2/Manchester
+ @ \DIFdelbegin \DIFdel{ontology Purchases }\DIFdelend @
+ *@ \DIFaddbegin 
+\DIFadd{ontology One }\DIFaddend @  =  @ \DIFdelbegin \DIFdel{combine
   1 : }%DIFDELCMD < { %%%
-\DIFdelend @*  Class: PurchaseOrder  *@ \DIFdelbegin %DIFDELCMD < }%%%
+\DIFdelend @  
+Class: PurchaseOrder  @ \DIFdelbegin %DIFDELCMD < }%%%
 \DIFdel{,
   2 : }%DIFDELCMD < { %%%
-\DIFdelend @*   *@ \DIFaddbegin \DIFadd{end
-ontology Two =
-  }\DIFaddend @*  ObjectProperty: Buyer
+\DIFdelend @   
+@ \DIFaddbegin \DIFadd{end \\
+ontology Two = \\
+  }\DIFaddend @
+  ObjectProperty: Buyer
   ObjectProperty: Good
   ObjectProperty: BoughtBy
- *@ \DIFdelbegin %DIFDELCMD < }
+ @ \DIFdelbegin %DIFDELCMD < }
 %DIFDELCMD <   %%%
-\DIFdelend @*   *@ \DIFaddbegin \DIFadd{end
+\DIFdelend @   
+@ \DIFaddbegin \DIFadd{end
 }
 
 
-\DIFadd{ontology Purchases =
-combine
-  1:One,
-  2:Two
-  }\DIFaddend @*  with translation OWL2DDLwithRoles
+\DIFadd{ontology Purchases = \\
+combine \\
+  1:One, \\
+  2:Two \\
+  }\DIFaddend @  
+  with translation OWL2DDLwithRoles
 then
   1:PurchaseOrder -into-> 2:BoughtBy
 %% means in FOL: 
@@ -14425,7 +14500,7 @@ end
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=clif,escapechar=@,mathescape]
-%DIF > prefix( :      <http://www.example.org/algebra#>
+prefix( :      <http://www.example.org/algebra#>
          lang:  <http://purl.net/DOL/languages/>
                 %% descriptions of languages ...
          ser:   <http://purl.net/DOL/serializations/>
@@ -14435,7 +14510,7 @@ end
 
 library Algebra
 
-language lang:CommonLogic  *@ \DIFdelbegin \DIFdel{syntax }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{serialization }\DIFaddend @*  ser:CommonLogic/CLIF
+language lang:CommonLogic  @ \DIFdelbegin \DIFdel{syntax }\DIFdelend @   @ \DIFaddbegin \DIFadd{serialization }\DIFaddend @  ser:CommonLogic/CLIF
 
 spec implicit_group =
 (forall (x y z)
@@ -14455,12 +14530,14 @@ spec explicit_group =
         (= (op x (op y z)) (op (op x y) z)))
 (forall (x)     (and    (= x (op e x))
                         (= x (op x e))))
- *@ \DIFdelbegin \DIFdel{)
-}\DIFdelend @*  (forall (x)
+ @ \DIFdelbegin \DIFdel{)
+}\DIFdelend @  
+(forall (x)
                 (and    (= x (op x (op x (inv x))))
                         (= x (op x (op (inv x) x)))))
- *@ \DIFdelbegin \DIFdel{)
-}\DIFdelend @*  end
+ @ \DIFdelbegin \DIFdel{)
+}\DIFdelend @  
+end
 
 equivalence groups_equiv : implicit_group <-> { explicit_group hide e, inv }
 end
@@ -14468,17 +14545,21 @@ end
 
 \lstset{escapeinside = {*@}{@*}}
  \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=clif,escapechar=@,mathescape]
-*@ \DIFaddbegin \DIFadd{language lang:CASL
+
+ @ \DIFaddbegin \DIFadd{language lang:CASL
 }
 
-\DIFaddend @*  equivalence e : algebra:BooleanAlgebra  *@ \DIFdelbegin \DIFdel{$\leftrightarrow$ }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{<-> }\DIFaddend @*  algebra:BooleanRing =
-   *@ \DIFaddbegin \DIFadd{sort E
+\DIFaddend @  
+equivalence e : algebra:BooleanAlgebra  @ \DIFdelbegin \DIFdel{$\leftrightarrow$ }\DIFdelend @   @ \DIFaddbegin \DIFadd{<-> }\DIFaddend @  
+algebra:BooleanRing =
+   @ \DIFaddbegin \DIFadd{sort E
   forall x,y:E
-  . }\DIFaddend @*  x $\wedge$ y = x $\cdot$ y
-   *@ \DIFaddbegin \DIFadd{. }\DIFaddend @*  x $\vee$ y = x + y + x $\cdot$ y
-   *@ \DIFaddbegin \DIFadd{. }\DIFaddend @*  $\neg$ x = 1 + x
-   *@ \DIFaddbegin \DIFadd{. }\DIFaddend @*  x $\cdot$ y = x $\wedge$ y
-   *@ \DIFaddbegin \DIFadd{. }\DIFaddend @*  x + y = (x $\vee$ y) $\wedge$ $\neg$(x $\wedge$ y)
+  . }\DIFaddend @  
+  x $\wedge$ y = x $\cdot$ y
+   @ \DIFaddbegin \DIFadd{. }\DIFaddend @  x $\vee$ y = x + y + x $\cdot$ y
+   @ \DIFaddbegin \DIFadd{. }\DIFaddend @  $\neg$ x = 1 + x
+   @ \DIFaddbegin \DIFadd{. }\DIFaddend @  x $\cdot$ y = x $\wedge$ y
+   @ \DIFaddbegin \DIFadd{. }\DIFaddend @  x + y = (x $\vee$ y) $\wedge$ $\neg$(x $\wedge$ y)
 end
 \end{lstlisting}
 
@@ -14496,7 +14577,7 @@ spec InterpolatedGroup =
 end
 
 entailment ent = InterpolatedGroup
-  entails { . forall x:Elem . exists y  *@ \DIFdelbegin \DIFdel{. }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{: }\DIFaddend @*  Elem . x+y=0 }
+  entails { . forall x:Elem . exists y  @ \DIFdelbegin \DIFdel{. }\DIFdelend @   @ \DIFaddbegin \DIFadd{: }\DIFaddend @  Elem . x+y=0 }
 end
 \end{lstlisting}
 
@@ -14534,7 +14615,7 @@ language lang:HasCASL
 spec Group_in_second_order_logic =
   sort Elem
   ops 0:Elem; __+__:Elem*Elem->Elem; 
-   *@ \DIFaddbegin \DIFadd{. }\DIFaddend @*  exists inv:Elem->Elem .
+   @ \DIFaddbegin \DIFadd{. }\DIFaddend @  exists inv:Elem->Elem .
       forall x,y,z:elem . x+0=x
                           /\ x+(y+z) = (x+y)+z
                           /\ x+inv(x)=0
@@ -14622,188 +14703,205 @@ end
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
-*@ \DIFaddbegin \DIFadd{library MetricSpaces
+@ \DIFaddbegin \DIFadd{library MetricSpaces
 }
 
-\DIFaddend @*  language lang:CASL
- *@ \DIFdelbegin \DIFdel{spec Person }\DIFdelend @*   *@ \DIFaddbegin 
+\DIFaddend @  language lang:CASL
+ @ \DIFdelbegin \DIFdel{spec Person }\DIFdelend @   
+ @ \DIFaddbegin 
 
-\DIFadd{spec Monoid }\DIFaddend @*  =
-     sort  *@ \DIFdelbegin \DIFdel{s
-  pred Person:       s 
-  op max, peter: Person
+\DIFadd{spec Monoid }\DIFaddend @  =
+     sort  
+     @ \DIFdelbegin \DIFdel{s \\
+  pred Person:       s  \\
+  op max, peter: Person \\
 end
-query MyQuery }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Elem
-     ops  e:       Elem;
-          \_\_ * \_\_: Elem * Elem -> Elem, assoc, unit e
-end
+query MyQuery }\DIFdelend @   
+@ \DIFaddbegin \DIFadd{Elem \\
+     ops  e:       Elem; \\
+          \_\_ * \_\_: Elem * Elem -> Elem, assoc, unit e \\
+end \\
 }
 
-\DIFadd{spec CommutativeMonoid }\DIFaddend @*  =
-      *@ \DIFdelbegin \DIFdel{select xwhere Person(x }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Monoid
-then
-     op \_\_ * \_\_: Elem * Elem -> Elem, comm
-end
+\DIFadd{spec CommutativeMonoid }\DIFaddend @  =
+      @ \DIFdelbegin \DIFdel{select xwhere Person(x }\DIFdelend @   
+      @ \DIFaddbegin \DIFadd{Monoid \\
+then \\
+     op \_\_ * \_\_: Elem * Elem -> Elem, comm \\
+end \\
 }
 
-\DIFadd{spec Group =
-     Monoid
-then
-     forall x: Elem
-     . exists x': Elem . x' * x = e   %DIF > (inv_Group)%
-end
+\DIFadd{spec Group = \\
+     Monoid \\
+then \\
+     forall x: Elem \\
+     . exists x': Elem . x' * x = e   \\ %DIF > (inv_Group)% 
+end \\
 }
 
-\DIFadd{spec AbelianGroup =
-     Group
-and
-     CommutativeMonoid
-end
+\DIFadd{spec AbelianGroup = \\
+     Group \\
+and \\
+     CommutativeMonoid \\
+end \\
 }
 
-\DIFadd{spec Ring =
-     AbelianGroup with sort Elem,
-                       ops \_\_ * \_\_ |-> \_\_ + \_\_,
-                           e       |-> 0
-and
-     Monoid with ops e, \_\_*\_\_
-then
-     forall x,y,z:Elem
-     . (x + y) * z = (x * z) + (y * z)          %DIF > (distr1\_Ring)%
-     . z * ( x + y ) = (z * x}\DIFaddend @*  )  *@ \DIFdelbegin \DIFdel{in Person
-end
-substitution MySubst : }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{+ (z * y)        %DIF > (distr2\_Ring)%
-end
+\DIFadd{spec Ring = \\
+     AbelianGroup with sort Elem, \\
+                       ops \_\_ * \_\_ |-> \_\_ + \_\_, \\
+                           e       |-> 0 \\
+and \\
+     Monoid with ops e, \_\_*\_\_ \\
+then \\
+     forall x,y,z:Elem \\
+     . (x + y) * z = (x * z) + (y * z) \\          %DIF > (distr1\_Ring)%
+     . z * ( x + y ) = (z * x}\DIFaddend @  )  
+     @ \DIFdelbegin \DIFdel{in Person \\
+end \\
+substitution MySubst : }\DIFdelend @   
+@ \DIFaddbegin \DIFadd{+ (z * y) \\        %DIF > (distr2\_Ring)%
+end \\
 }
 
-\DIFadd{view AbelianGroup\_in\_Ring\_add:
-     AbelianGroup to Ring =
-     ops e |-> 0,
-         \_\_ * \_\_ |-> \_\_ + \_\_
-end
+\DIFadd{view AbelianGroup\_in\_Ring\_add: \\
+     AbelianGroup to Ring = \\
+     ops e |-> 0, \\
+         \_\_ * \_\_ |-> \_\_ + \_\_ \\
+end \\
 }
 
-\DIFadd{spec CommutativeRing =
-     Ring with ops 0,  \_\_ + \_\_, e, \_\_ * \_\_
-and
-     CommutativeMonoid with ops e, \_\_ * \_\_
-end
+\DIFadd{spec CommutativeRing = \\
+     Ring with ops 0,  \_\_ + \_\_, e, \_\_ * \_\_ \\
+and \\
+     CommutativeMonoid with ops e, \_\_ * \_\_ \\
+end \\
 }
 
-\DIFadd{spec ConstructField =
-}\DIFaddend @*  {      *@ \DIFdelbegin \DIFdel{Person then op x}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{CommutativeRing
-then
-     . not e = 0 %DIF > (zeroNeqOne_Field)%
-     sort NonZeroElem = }{ \DIFadd{x: Elem . not x = 0 }} %DIF > (NonZeroElem_def)%
+\DIFadd{spec ConstructField = \\
+}\DIFaddend @  
+{      @ \DIFdelbegin \DIFdel{Person then op x}\DIFdelend @  
+@ \DIFaddbegin \DIFadd{CommutativeRing \\
+then \\
+     . not e = 0 \\ %DIF > (zeroNeqOne_Field)%
+     sort NonZeroElem = }{ \DIFadd{x: Elem . not x = 0 }} \\ %DIF > (NonZeroElem_def)%
 }
-\DIFadd{and
-     }{\DIFadd{Group with sort Elem |-> NonZeroElem, ops e, \_\_*\_\_}}
-\DIFadd{end
-}
-
-\DIFadd{spec BasicField =
-     ConstructField hide sort NonZeroElem
-end
+\DIFadd{and \\
+     }{\DIFadd{Group with sort Elem |-> NonZeroElem, ops e, \_\_*\_\_ \\}}
+\DIFadd{end \\
 }
 
-\DIFadd{spec Field =
-     BasicField with op e |-> 1
-then %DIF > def
-     op -\_\_: Elem -> Elem
-     forall x}\DIFaddend @*  :  *@ \DIFdelbegin \DIFdel{Person }%DIFDELCMD < } %%%
-\DIFdel{to Person }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Elem
-     . -x + x }\DIFaddend @*  =  *@ \DIFaddbegin \DIFadd{0       %DIF > (Field_unary_minus_idef)%
-end
+\DIFadd{spec BasicField = \\
+     ConstructField hide sort NonZeroElem \\
+end \\
 }
 
-\DIFadd{spec FieldWithOrdering =
-     Field and TotalOrder
-then
-    vars a, b, c:Elem
-    . (a + c) <= (b + c) if a <= b              %DIF > (FWO_plus_left)%
-    . (a * c) <= (b * c) if a <= b /}\ \DIFadd{0 <= c;   %DIF > (FWO_times_left)%
-then %DIF > implies
-    vars a, b, c, d: Elem
-    . (a + b) <= (a + c) if b <= c              %DIF > (FWO_plus_right)%
-    . (a * b) <= (a * c) if b <= c /}\ \DIFadd{0 <= a    %DIF > (FWO_times_right)%
-    . (a + b) <= (c + d) if a <= c /}\ \DIFadd{b <= d    %DIF > (FWO_plus)%
-end
+\DIFadd{spec Field = \\
+     BasicField with op e |-> 1 \\
+then \\ %DIF > def
+     op -\_\_: Elem -> Elem \\
+     forall x} \DIFaddend   :  \\
+      \DIFdelbegin \DIFdel{Person  }%DIFDELCMD < } %%%
+\DIFdel{to Person \\}\DIFdelend  
+
+ \DIFaddbegin \DIFadd{Elem
+     . -x + x }\DIFaddend   =  
+      \DIFaddbegin \DIFadd{0       %DIF > (Field_unary_minus_idef)%
+end \\
+}
+
+\DIFadd{spec FieldWithOrdering = \\
+     Field and TotalOrder \\
+then \\
+    vars a, b, c:Elem \\
+    . (a + c) <= (b + c) if a <= b   \\           %DIF > (FWO_plus_left)%
+    . (a * c) <= (b * c) if a <= b / \\}\ 
+    \DIFadd{0 <= c;  \\ %DIF > (FWO_times_left)%
+then \\ %DIF > implies 
+    vars a, b, c, d: Elem \\
+    . (a + b) <= (a + c) if b <= c \\              %DIF > (FWO_plus_right)%
+    . (a * b) <= (a * c) if b <= c / \\}\ 
+    \DIFadd{0 <= a \\   %DIF > (FWO_times_right)%
+    . (a + b) <= (c + d) if a <= c / \\}\ 
+    \DIFadd{b <= d \\    %DIF > (FWO_plus)%
+end \\
 }
 
 
-\DIFadd{spec OrderedField =
-     Field
-then
-     pred Pos: Elem
-     forall x,y: Elem
-     . Pos(x) /}\ \DIFadd{Pos(y) => Pos(x*y)             %DIF > (OF_plus)%
-     . Pos(x) /}\ \DIFadd{Pos(y) => Pos(x+y)             %DIF > (OF_times)%
-     . Pos(x) /}\ \DIFadd{Pos(-x) => x = 0               %DIF > (OF_mutex)%
-     . Pos(x) }\/ \DIFadd{Pos(-x)                        %DIF > (OF_exhaust)%
-end
+\DIFadd{spec OrderedField = \\
+     Field \\
+then \\
+     pred Pos: Elem \\
+     forall x,y: Elem \\
+     . Pos(x) /}\ \DIFadd{Pos(y) => Pos(x*y) \\             %DIF > (OF_plus)%
+     . Pos(x) /}\ \DIFadd{Pos(y) => Pos(x+y)  \\           %DIF > (OF_times)%
+     . Pos(x) /}\ \DIFadd{Pos(-x) => x = 0   \\            %DIF > (OF_mutex)%
+     . Pos(x) }\/ \DIFadd{Pos(-x) \\                       %DIF > (OF_exhaust)%
+end\\
 }
 
-\DIFadd{spec RichOrderedField =
-  OrderedField 
-then %DIF > def
-  ops min, max: Elem * Elem -> Elem, comm,assoc %DIF > implied
-  preds \_\_ <= \_\_, \_\_ < \_\_,
-           \_\_ >= \_\_, \_\_ > \_\_: Elem * Elem;
-  forall x,y:Elem
-     . }\DIFaddend @*  x  *@ \DIFaddbegin \DIFadd{>= y <=> y <= x                   %DIF > (geq_def_ExtPartialOrder)%
+\DIFadd{spec RichOrderedField = \\
+  OrderedField \\
+then \\ %DIF > def
+  ops min, max: Elem * Elem -> Elem, comm,assoc \\ %DIF > implied
+  preds \_\_ <= \_\_, \_\_ < \_\_, \\
+           \_\_ >= \_\_, \_\_ > \_\_: Elem * Elem; \\
+  forall x,y:Elem \\
+     . }
+     \DIFaddend @  x  @ \DIFaddbegin \DIFadd{>= y <=> y <= x  \\                 %DIF > (geq_def_ExtPartialOrder)%
      . x < y <=> (x <= y /}\ \DIFadd{not (x=y))     %DIF > (less_def_ExtPartialOrder)%
-     . x > y <=> y < x                     %DIF > (greater_def_ExtPartialOrder)%
-  forall x,y: Elem
-    . min(x,y) = x when x <= y else y      %DIF > (min_def_ExtTotalOrder)%
-    . max(x,y) = y when x <= y else x      %DIF > (max_def_ExtTotalOrder)%
-  forall x,y: Elem
-       . x <= y  <=> Pos(y + -x)
-end
+     . x > y <=> y < x    \\                 %DIF > (greater_def_ExtPartialOrder)%
+  forall x,y: Elem \\
+    . min(x,y) = x when x <= y else y \\     %DIF > (min_def_ExtTotalOrder)%
+    . max(x,y) = y when x <= y else x   \\   %DIF > (max_def_ExtTotalOrder)%
+  forall x,y: Elem \\
+       . x <= y  <=> Pos(y + -x) \\
+end \\
 }
 
 %DIF > % real numbers, using a specification of fields
-\DIFadd{language lang:HasCASL
-spec Real =
-     RichOrderedField with Elem }\DIFaddend @*  |->  *@ \DIFdelbegin \DIFdel{max
-end
-result MyResult }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Real
-then
-  free type Nat ::}\DIFaddend @*  =  *@ \DIFdelbegin \DIFdel{MySubst for MyQuery
-}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{0 | suc Nat
-  ops \_\_<=\_\_ :     Pred(Real * Pred(Real));
-      \_\_<=\_\_ :     Pred(Pred(Real) * Real);
-      isBounded : Pred(Pred(Real));
-      inf,sup :   Pred(Real) ->? Real;
-      inj:        Nat -> Real
-   forall r,s:Real; M:Pred(Real); n: Nat
-   . M <= r <=> forall s:Real . M(s) => s <= r          %DIF > (Real_ub_def)%
-   . r <= M <=> forall s:Real . M(s) => r <= s          %DIF > (Real_lb_def)%
-   . inf(M)=r <=> r <= M /}\ \DIFadd{forall s:Real . s <= M => s <= r  %DIF > (Real_inf_def)%
-   . sup(M)=r <=> M <= r /}\ \DIFadd{forall s:Real . M <= s => r <= s  %DIF > (Real_sup_def)%
-   . isBounded(M) <=> exists ub,lb:Real . lb <= M /}\ \DIFadd{M <= ub
-                %DIF > (Real_isBounded_def)%  %% this is the single higher-order axiom
-   . isBounded(M) => def inf(M) /}\ \DIFadd{def sup(M)  %DIF > (completeness)%
-   . inj 0 = 0                                          %DIF > (Real_inj_0)%
-   . inj (suc n) = 1 + inj n                    %DIF > (Real_inj_suc)%
-   . exists n: Nat. r <= inj n                  %DIF > (Real_archimedian)%
-end
+\DIFadd{language lang:HasCASL \\
+spec Real = \\
+     RichOrderedField with Elem }\DIFaddend @  |->  @ \DIFdelbegin \DIFdel{max
+end \\
+result MyResult }\DIFdelend @   @ \DIFaddbegin \DIFadd{Real
+then \\
+  free type Nat ::}\DIFaddend @  =  @ \DIFdelbegin \DIFdel{MySubst for MyQuery
+}\DIFdelend @   
+@ \DIFaddbegin \DIFadd{0 | suc Nat \\
+  ops \_\_<=\_\_ :     Pred(Real * Pred(Real)); \\
+      \_\_<=\_\_ :     Pred(Pred(Real) * Real); \\
+      isBounded : Pred(Pred(Real)); \\
+      inf,sup :   Pred(Real) ->? Real; \\
+      inj:        Nat -> Real \\
+   forall r,s:Real; M:Pred(Real); n: Nat \\
+   . M <= r <=> forall s:Real . M(s) => s <= r \\          %DIF > (Real_ub_def)%
+   . r <= M <=> forall s:Real . M(s) => r <= s  \\       %DIF > (Real_lb_def)%
+   . inf(M)=r <=> r <= M /}\ \DIFadd{forall s:Real . s <= M => s <= r \\ %DIF > (Real_inf_def)%
+   . sup(M)=r <=> M <= r /}\ \DIFadd{forall s:Real . M <= s => r <= s  \\ %DIF > (Real_sup_def)%
+   . isBounded(M) <=> exists ub,lb:Real . lb <= M /}\ \DIFadd{M <= ub \\
+                %DIF > (Real_isBounded_def)%  %% this is the single higher-order axiom 
+   . \\ isBounded(M) => def inf(M) /}\ \DIFadd{def sup(M)  %DIF > (completeness)%
+   . inj 0 = 0 \\                                         %DIF > (Real_inj_0)%
+   . inj (suc n) = 1 + inj n \\                    %DIF > (Real_inj_suc)%
+   . exists n: Nat. r <= inj n  \\                 %DIF > (Real_archimedian)%
+end \\
 }
 
 %DIF > % metric spaces in a first-order setting
-\DIFadd{language lang:CASL
-spec MetricSpace =
-     Real hide along HasCASL2CASL
-then
-     sort S
-     op d:S*S->Real
-     var x,y,z:S
-     . d(x,y) = 0 <=> x = y
-     . d(x,y) = d(y,x)
-     . d(x,z) <= d(x,y) + d(y,z)
-end
+\DIFadd{language lang:CASL \\
+spec MetricSpace = \\
+     Real hide along HasCASL2CASL \\
+then \\
+     sort S \\
+     op d:S*S->Real \\
+     var x,y,z:S \\
+     . d(x,y) = 0 <=> x = y \\
+     . d(x,y) = d(y,x) \\
+     . d(x,z) <= d(x,y) + d(y,z) \\
+end \\
 }
 
-\DIFaddend @* 
+\DIFaddend @ 
 \end{lstlisting}
 
 
@@ -15012,20 +15110,27 @@ the }%DIFDELCMD < {\em %%%
 \DIFdel{and }\DIFdelend \sclause{Queries}\label{ex:queries}
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
-%DIF > prefix( lang:  <http://purl.net/DOL/languages/> )%
-*@ \DIFaddbegin \DIFadd{library MyQuery
-language lang:CASL
-spec Person =
-  sort s
-  pred Person:s 
-  op max,peter:Person
-end
-query MyQuery = select x where Person(x) in Person
-end
-substitution MySubst : }\DIFaddend @*  {  *@ \DIFdelbegin %DIFDELCMD < \em %%%
-\DIFdel{Until}\DIFdelend @*   *@ \DIFaddbegin \DIFadd{Person then op x:Person }\DIFaddend @*  }  *@ \DIFdelbegin \DIFdel{operators and the (non-temporal)
-  description logic $\mathcal{DLR}$ and can be regarded as an expressive
-fragment of the first-order temporal logic $L^{since, until}$. Within
+prefix( lang:  <http://purl.net/DOL/languages/> )%
+
+@ \DIFaddbegin \DIFadd{library MyQuery \\
+language lang:CASL \\
+spec Person = \\
+  sort s \\
+  pred Person:s  \\
+  op max,peter:Person \\
+end \\
+query MyQuery = select x where Person(x) in Person \\
+end \\
+substitution MySubst : }\DIFaddend @  
+
+{  @ \DIFdelbegin %DIFDELCMD < \em %%%
+\DIFdel{Until}\DIFdelend @   
+
+@ \DIFaddbegin \DIFadd{Person then op x:Person }\DIFaddend @  }  
+
+@ \DIFdelbegin \DIFdel{operators and the (non-temporal)
+  description logic $\mathcal{DLR}$ and can be regarded as an expressive \\
+fragment of the first-order temporal logic $L^{since, until}$. \\ Within	
 }%DIFDELCMD < \DOL%%%
 \DIFdel{, this would enable one to have `lightweight' time aspects with OWL
 Time, which are then properly formalized with $\mathcal{DLR_{US}}$ or
@@ -15064,10 +15169,10 @@ he is a boxer }%DIFDELCMD < [%%%
 
 %DIFDELCMD < \begin{usecase}{Metadata in COLORE (Common Logic Repository)}{exists (but not yet \DOL-based)}{Annotation, Metadata vocabularies}
 %DIFDELCMD <   %%%
-\DIFdel{COLORE, the Common Logic Repository}\footnote{%DIFDELCMD < \url{http://stl.mie.utoronto.ca/colore/}%%%
+\DIFdel{\\COLORE, the Common Logic Repository}\footnote{%DIFDELCMD < \url{http://stl.mie.utoronto.ca/colore/}%%%
 } %DIFAUXCMD
 \addtocounter{footnote}{-1}%DIFAUXCMD
-\DIFdel{is an open repository of more than 150 ontologies as of December 2011, all formalized in Common Logic.  COLORE stores metadata about its ontologies, which are represented using a custom XML schema that covers the following aspects}\footnote{%DIFDELCMD < \url{http://stl.mie.utoronto.ca/colore/metadata.html}%%%
+\DIFdel{is an open repository of more than 150 ontologies as of \\ December 2011, all formalized in Common Logic.  COLORE stores metadata about its ontologies, which are represented using a custom XML schema that covers the following aspects}\footnote{%DIFDELCMD < \url{http://stl.mie.utoronto.ca/colore/metadata.html}%%%
 }%DIFAUXCMD
 \addtocounter{footnote}{-1}%DIFAUXCMD
 \DIFdel{, without specifying a formal semantics for them:}%DIFDELCMD < \begin{description}
@@ -15085,12 +15190,12 @@ to the term }%DIFDELCMD < \termref{structured OMS} %%%
   %DIFAUXCMD
 \addtocounter{footnote}{-1}%DIFAUXCMD
 %DIFDELCMD < \item[direct relations] %%%
-\DIFdel{maps (signature morphisms) , definitional extension, conservative extension, inconsistency between ontologies, imports, relative interpretation, faithful interpretation, definable equivalence
+\DIFdel{maps (signature morphisms) , definitional extension, conservative extension, \\ inconsistency between ontologies, imports, relative interpretation, faithful interpretation, \\ definable equivalence
   }%DIFDELCMD < \end{description}
 %DIFDELCMD < 
 
 %DIFDELCMD <   \DOL %%%
-\DIFdel{provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV, and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent }%DIFDELCMD < \DOL %%%
+\DIFdel{ provides built-in support for a subset of the ``direct relations'' and specifies a formal semantics for them.  In addition, it supports the implementation of  the remainder of the COLORE metadata vocabulary as an ontology, reusing suitable existing metadata vocabularies such as OMV, and it supports the implementation of one or multiple Common Logic ontologies plus their annotations as one coherent }%DIFDELCMD < \DOL %%%
 \DIFdel{library.
 }%DIFDELCMD < \end{usecase}
 %DIFDELCMD < 
@@ -15103,10 +15208,11 @@ to the term }%DIFDELCMD < \termref{structured OMS} %%%
 %DIF < %   \item CASL can specify syntax (but not quite in the same way as XML Schema) \emph{and} semantics of datatypes
 %DIF < %   \end{itemize}
 %DIF < % \end{usecase}
-\DIFdelend @*   *@ \DIFaddbegin \DIFadd{to Person = x |-> max
+\DIFdelend @   
+@ \DIFaddbegin \DIFadd{to Person = x |-> max
 end
 result MyResult = MySubst for MyQuery
-} \DIFaddend @*
+} \DIFaddend @
 \end{lstlisting}
  
 
