@@ -35,6 +35,18 @@
 \makeatother
 
 
+% % In isov2 the footer is reserved for the copyrightstatement.
+% % OMG wants a footer, so we just overwrite the iso copyright for that purpose.
+% \newcommand{\DOLfooter}[0]{
+% \renewcommand{\copyrighthead}{\mbox{\scriptsize{\textsf{Distributed Ontology, Model, and Specification Language (DOL), v1.0 Beta}}}}
+% 	}
+% \newcommand{\onlypagenumberfooter}[0]{
+% \renewcommand{\copyrighthead}{\mbox{}}
+% 	}
+%
+%
+
+
 \textwidth 17.5cm
 \hoffset -0.7cm
 \textheight 24cm
@@ -47,6 +59,21 @@
 
 \usepackage{isobib} 
 \usepackage{pdflscape}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%\fancyhead[LO,RE]{}
+%\fancyhead[RO,LE]{}
+\fancyfoot[LO,RE]{\iffloatpage{}{(The Title)}}
+\fancyfoot[RO,LE]{\iffloatpage{}{\thepage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+%\renewcommand{\headrulewidth}{\iffloatpage{0pt}{0.4pt}}
+
+\newcommand{\DOLfooter}[0]{}
+\newcommand{\onlypagenumberfooter}[0]{}
+
 
 %%\usepackage[show]{ed}
 \usepackage[hide]{ed}
@@ -66,8 +93,8 @@
 
 %%\usepackage{lmodern} % FN: commented out since OMG wants its own fonts
 %%\usepackage[scaled=.8]{beramono} % FN: commented out since OMG wants its own fonts
-\usepackage{courier}
-\usepackage[scaled=.9]{helvet}
+%\usepackage{courier}
+%\usepackage[scaled=.9]{helvet}
 
 
 
@@ -545,6 +572,7 @@ author=,date=,id=,replyto=,type=}{}%
 
 \pagestyle{headings}  %%% switches on printing of running heads
 
+
 \begin{flushright}
   \textbf{Date:} January 2016 
 \end{flushright}
@@ -866,9 +894,11 @@ The reader is encouraged to report any technical or editing issues/problems
 
 
 
-
+\pagestyle{nohead}
+\pagestyle{fancy}
 \clause{Scope}
 \pagenumbering{arabic} 
+\sclause{General}
 This \IS specifies the Distributed Ontology, Modeling and Specification
  Language (\DOL)\index{\dolindex ! definition}.  \DOL is designed to achieve integration  
 and interoperability of
@@ -970,7 +1000,7 @@ semantics for \DOL.
 \newpage
 \clause{Conformance}\label{c:conformance}
 \index{conformance|(}
-
+\sclause{General}
 This clause defines conformance criteria for languages and logics that can be used with \DOL, as well as conformance criteria for
 serializations, translations and applications. The conformance of a
 number of OMS languages (namely OWL 2, Common Logic, RDF and RDF Schema, 
@@ -1076,6 +1106,7 @@ $I_1$) to language $L_2$ (based on institution $I_2$) is conforming
 with \DOL if it is based on a logic translation such that the following
 diagram commutes (i.e.\ following both possible paths from 
 $L_1$ to $I_2$ leads to the same result):
+\begin{figure}[h]
 $$\xymatrix{
 L_1 \ar[rrrrrr]^{\Text{\normalsize mapping between abstract syntaxes}} \ar[ddd]_{\Text{\normalsize abstract syntax\\\normalsize  to institution}}
 &&&&&& L_2 \ar[ddd]^{\Text{\normalsize abstract syntax\\\normalsize to institution}}\\
@@ -1083,7 +1114,9 @@ L_1 \ar[rrrrrr]^{\Text{\normalsize mapping between abstract syntaxes}} \ar[ddd]_
 &&&&&&\\
 I_1\ar[rrrrrr]^{\Text{\normalsize institution (co)morphism}} &&&&&& I_2
 }$$
-Language
+\caption{Language Translation}
+\end{figure}\newline
+\noindent Language
 translations \may also translate the structuring language aspect, in
 this case, they \shall preserve the semantics of the structuring
 language aspect.  Furthermore, language translations \should preserve
@@ -1409,7 +1442,7 @@ Reference.  W3C Recommendation, 18 August 2009\\ \url{http://www.w3.org/TR/2009/
 %\ednote{OMG specifications shall not contain glossaries, hence always
 %refer to this section if definitions of terms are needed.}
 
-For the purposes of this document, the following terms and definitions apply.
+%For the purposes of this document, the following terms and definitions apply.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2809,7 +2842,7 @@ The following people contributed directly to the development of this specificati
 \newpage
 \clauseI{Goals and Usage Scenarios} \label{c:goal}
 
-
+\sclause{General}
 Often, engineering tasks require the use of several different OMS, which represent knowledge about 
 a given domain or specify a given system from different perspectives or for different purposes.
 (E.g., a software engineer will typically use different OMS to model different aspects of a software
@@ -3756,7 +3789,7 @@ specification, and model-driven development.
 
 \newpage
 \clauseI{Design Overview} \label{c:design}
-
+\sclause{General}
 %\ednote{replace this section by saying how we respond to the RFP}
 %
 %\CLnote[type=todo]{Get rid of formal \should/\shall language (e.g.\ in clause headers: \should/\shall applies to conforming implementations anyway, rather than to this standard itself!) – not necessary in an informative clause. TM: I did this in the clause headings, and for the design part also in the clause texts.}
@@ -4139,7 +4172,7 @@ the rule for \syntax{combination} for the  MOF metaclass
 
 \newpage
 \clause{\DOL  Syntax}\label{c:abstract-syntax}%\label{a:text-syntax}
-
+\sclause{General}
 
 This clause specifies the \DOL abstract syntax as a MOF \nref{MOF} metamodel.
 In annex~\ref{a:EBNF}, the same abstract syntax is specified using EBNF.
@@ -4444,18 +4477,21 @@ model (see Appendix~\ref{ex:definedconcepts} for an example); this may be intere
 (e.g.\ returned by model finders) that are used to describe single
 models.
 
+
 \newpage
 \begin{figure}
   \centering
+
     \includegraphics[scale=0.43]{mof/oms.png}
   \caption{DOL metamodel: OMS}
   \label{fig:oms}
 \end{figure}
-
+	\onlypagenumberfooter
 \newpage
 
 
 The DOL metamodel for extension OMS is shown in Fig.~\ref{fig:extension&closure}.
+\DOLfooter
 \syntax{ExtendingOMS} is a subclass of \syntax{OMS}, containing
 those OMS that may be used to extend a given OMS within an \syntax{ExtensionOMS}.
 An \syntax{ExtendingOMS} can be one of the following:
