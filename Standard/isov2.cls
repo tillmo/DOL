@@ -436,8 +436,8 @@
     \setcounter{sclause}{0}
     \zerocounters
     \refstepcounter{annex}
-    \ifnum 9=\value{annex} \refstepcounter{annex}\fi
-    \ifnum 15=\value{annex} \refstepcounter{annex}\fi
+%    \ifnum 9=\value{annex} \refstepcounter{annex}\fi
+ %   \ifnum 15=\value{annex} \refstepcounter{annex}\fi
 %%%    \ifnum 1=\value{annex}
        \renewcommand{\clause}{%
          \ClassWarning{iso}{%
