@@ -741,10 +741,11 @@
 \skip\@mpfootins = \skip\footins
 \setlength\fboxsep{3\p@}
 \setlength\fboxrule{.4\p@}
-
-\renewcommand{\theequation}{\arabic{equation}}
-\newcounter{figure}
-\renewcommand{\thefigure}{\@arabic\c@figure}
+\renewcommand\theequation
+  {\ifnum \c@clause>\z@ \theclause.\fi \@arabic\c@equation}
+\newcounter{figure}[clause]
+\renewcommand \thefigure
+     {\ifnum \c@clause>\z@ \theclause.\fi \@arabic\c@figure}
 \def\fps@figure{tbp}
 \def\ftype@figure{1}
 \def\ext@figure{lof}
