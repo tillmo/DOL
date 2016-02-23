@@ -65,8 +65,8 @@
 \pagestyle{fancy}
 %\fancyhead[LO,RE]{}
 %\fancyhead[RO,LE]{}
-\fancyfoot[LO,RE]{\iffloatpage{}{(\scriptsize{\textsf{Distributed Ontology, Model, and Specification Language (DOL), v1.0 Beta})}}}
-\fancyfoot[RO,LE]{\iffloatpage{}{\thepage}}
+\fancyfoot[LO,RE]{\iffloatpage{}{\scriptsize{\textsf{Distributed Ontology, Model, and Specification Language (DOL), v1.0 Beta}}}}
+\fancyfoot[RO,LE]{\iffloatpage{\thepage}{\thepage}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 %\renewcommand{\headrulewidth}{\iffloatpage{0pt}{0.4pt}}
@@ -515,22 +515,31 @@ author=,date=,id=,replyto=,type=}{}%
 }
 
 \usepackage{xparse}
-\newlength{\currentindent}
-\newsavebox{\fminipagebox}
-\setlength{\currentindent}{\parindent}
-\NewDocumentEnvironment{fminipage}{m O{\fboxsep}}
-  {
-  \par\kern#2\noindent\begin{lrbox}{\fminipagebox}
-  \begin{minipage}{#1}\ignorespaces  \setlength{\parindent}{\currentindent}}
-  {\end{minipage}\end{lrbox}%
-   \makebox[#1]{%
-    \kern\dimexpr-\fboxsep-\fboxrule\relax
-      \fbox{\usebox{\fminipagebox}}%
-      \kern\dimexpr-\fboxsep-\fboxrule\relax
-    }\par\kern#2
-   }
+%\newlength{\currentindent}
+% \newsavebox{\fminipagebox}
+% \setlength{\currentindent}{\parindent}
+% \NewDocumentEnvironment{fminipage}{m O{\fboxsep}}
+%   {
+%   \par\kern#2\noindent\begin{lrbox}{\fminipagebox}
+%   \begin{minipage}{#1}\ignorespaces  \setlength{\parindent}{\currentindent}}
+%   {\end{minipage}\end{lrbox}%
+%    \makebox[#1]{%
+%     \kern\dimexpr-\fboxsep-\fboxrule\relax
+%       \fbox{\usebox{\fminipagebox}}%
+%       \kern\dimexpr-\fboxsep-\fboxrule\relax
+%     }\par\kern#2
+%    }
+%
+
+\usepackage{mdframed}
+
+
+
+
 \renewenvironment{symbols}[0]{\begin{longtable}{p{.15\textwidth}p{.84\textwidth}}}{\end{longtable}}
 \renewcommand{\symboldef}[2]{ #1 & #2 \\}
+
+
 \usepackage{textcomp}
 \usepackage{longtable}
 \newcommand{\normative}[0]{{\begin{center}{\Large{(Normative})}\end{center}} \bigskip}
@@ -751,7 +760,7 @@ Software developed under the terms of this license may claim compliance or confo
 
 \newpage 
 \OMGparagraph{OMG's Issue Reporting }
-All OMG specifications are subject to continuous review and improvement. As part of this process we encourage readers to report any ambiguities, inconsistencies, or inaccuracies they may find by completing the Issue Reporting Form listed on the main web page \url{http://www.omg.org}, under Documents, Report a Bug/Issue \newline(\url{http://www.omg.org/report_issue.htm}).
+All OMG specifications are subject to continuous review and improvement. As part of this process we encourage readers to report any ambiguities, inconsistencies, or inaccuracies they may find by completing the Issue Reporting Form listed on the main web page \url{http://www.omg.org}, under Documents, Report a Bug/Issue. % \newline(\url{http://www.omg.org/report_issue.htm})
 
 % \newpage
 % $ $
@@ -767,7 +776,7 @@ All OMG specifications are subject to continuous review and improvement. As part
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clause*{Preface}
 \addcontentsline{toc}{clause}{Preface}
 
@@ -905,7 +914,7 @@ Computer Modern Roman: Standard body text
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 The reader is encouraged to report any technical or editing issues/problems
- with this specification to \url{http://www.omg.org/report_issue.htm}.
+ with this specification by completing the Issue Reporting Form listed on the main web page \url{http://www.omg.org}, under Documents, Report a Bug/Issue.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -1024,7 +1033,7 @@ semantics for \DOL.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clause{Conformance}\label{c:conformance}
 \index{conformance|(}
 \sclause{General}
@@ -1039,7 +1048,7 @@ these is discussed in informative annexes of this \IS.
 
 \sclause{Conformance of an OMS Language/a Logic with \DOL}\label{c:conform:logic}
 
-\begin{fminipage}{\textwidth}
+\begin{mdframed}
 \textbf{Rationale}: for an OMS language to conform with \DOL,
 \begin{itemize}
 \item its logical language aspect\index{language aspect ! logical} either needs to satisfy certain criteria  related to its own abstract syntax and formal semantics, or there must be a translation (again satisfying certain
@@ -1050,7 +1059,7 @@ mechanisms
 \end{itemize}
  Several conformance levels are defined. They differ with respect to the usage of IRIs as identifiers for all kinds 
 of entities that the OMS language supports.
-\end{fminipage}
+\end{mdframed}
 
 An OMS language is conforming with \DOL if it satisfies the following conditions:
 \begin{enumerate}
@@ -1115,11 +1124,11 @@ Any conforming language and logic shall have a machine-processable description
  as detailed in \cref{c:conform:description}.
 
 \ssclause{Conformance of language/logic translations with \DOL}\label{c:conform:translation}
-\begin{fminipage}{\textwidth}
+\begin{mdframed}
 \textbf{Rationale}: a translation between logics must satisfy certain criteria in order to conform with \DOL.
 Also, a translation between OMS languages based on such logics must be consistent with the
 translation between these logics.  Translations should break neither structuring language aspects nor comments/annotations\index{language aspect ! (general)}.
-\end{fminipage}
+\end{mdframed}
 
 A logic translation is conforming with \DOL if it is presented either as an institution morphism or
 as an institution comorphism.  
@@ -1156,8 +1165,9 @@ expressing the translation, to at least one of them).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \sclause{Conformance of a Serialization of an OMS Language With \DOL}\label{c:conform:serialization}
-\begin{fminipage}{\textwidth}
+\begin{mdframed}
 \textbf{Rationale}: The main reason for the following specifications is identifier injection. \DOL is capable
 of assigning identifiers to entities (symbols, axioms, modules, etc.) inside fragments of OMS
 languages that occur in a \DOL document, even if that OMS language does not support such identifiers
@@ -1183,7 +1193,7 @@ verbatim fragments of OMS language inside a \DOL document.
 
 Independently from these criteria,   several levels of conformance of a
 serialization are distinguished. They differ with respect to their means of conveniently abbreviating long IRI identifiers. 
-\end{fminipage}
+\end{mdframed}
 
 There are seven levels of conformance of a serialization of an OMS language with \DOL{}.
 
@@ -1272,10 +1282,10 @@ Any conforming serialization of an OMS language shall have a machine-processable
 
 \sclause{Machine-Processable Description of Conforming Languages, Logics, and Serializations}\label{c:conform:description}
 
-\begin{fminipage}{\textwidth}
+\begin{mdframed}
 \textbf{Rationale}: When a parser processes a \DOL OMS found somewhere that refers to modules in OMS languages, or includes them verbatim, the parser needs to know what language to expect; further \DOL-supporting software needs to know, e.g., what other \DOL-conforming languages the module in the given OMS language can be translated to.  Therefore,   all languages/logics/serializations that conform with \DOL are required to describe themselves in a machine-processable way and to be 
 registered in the \DOL registry.
-\end{fminipage}
+\end{mdframed}
 
 For any conforming OMS language, logic, and serialization of an OMS language, it is required that 
 it be assigned an HTTP IRI, by which it can be identified.  It is also required that a 
@@ -1305,13 +1315,13 @@ content types, may be provided.%\CLnote[type=fyi]{that opens the door for, \eg, 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sclause{Conformance of a Document With \DOL}\label{c:conform:document}
-\begin{fminipage}{\textwidth}
+\begin{mdframed}
 \textbf{Rationale}: for exchanging \DOL documents with other users/tools, nothing that has a formal semantics
 must be left implicit.  One \DOL tool may assume that by default any OMS fragments inside a \DOL
 document are in some fixed OMS language unless specified otherwise, but another \DOL tool can't be
 assumed to understand such \DOL documents.  Defaults are, however, practically convenient, which is
 the reason for having the following section about the conformance of an \emph{application}.
-\end{fminipage}
+\end{mdframed}
 
 A document conforms with \DOL if it contains a \DOL text that is well-formed according to the
 grammar.  That means, in particular, that any information related to logics must be made explicit
@@ -1406,7 +1416,7 @@ be able to expand CURIEs into IRIs when requested.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clause{Normative References}
 \begin{enumerate}[label=\bfseries NR\arabic*]
 % OLD text
@@ -1464,7 +1474,7 @@ Reference.  W3C Recommendation, 18 August 2009\\ \url{http://www.w3.org/TR/2009/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clause{Terms and Definitions}\label{terms-and-defs}
 %\ednote{OMG specifications shall not contain glossaries, hence always
 %refer to this section if definitions of terms are needed.}
@@ -2620,7 +2630,7 @@ not considered sentences of that OMS.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clause{Symbols}
 
 As listed below, these symbols and abbreviations are generally for the main clauses of the \IS. Some annexes may introduce their own symbols and abbreviations which will be grouped together within that annex.
@@ -2670,7 +2680,7 @@ using the OWL 2 RDF-Based Semantics \cite{W3C:REC-owl2-rdf-based-semantics-20091
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clauseI{Additional Information}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2866,7 +2876,7 @@ The following people contributed directly to the development of this specificati
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clauseI{Goals and Usage Scenarios} \label{c:goal}
 
 \sclause{General}
@@ -3814,7 +3824,7 @@ specification, and model-driven development.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clauseI{Design Overview} \label{c:design}
 \sclause{General}
 %\ednote{replace this section by saying how we respond to the RFP}
@@ -4202,7 +4212,7 @@ the rule for \syntax{combination} for the  MOF metaclass
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clause{\DOL  Syntax}\label{c:abstract-syntax}%\label{a:text-syntax}
 \sclause{General}
 
@@ -5664,7 +5674,7 @@ Where the given OMS language does not provide a way of assigning IRIs to a desir
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\cleardoublepage
 \clause{\DOL Semantics}\label{c:semantics}
 
 \sclause{General}
@@ -9083,6 +9093,10 @@ widespread than anticipated and thus such documentation is warranted.
 % standard.  The registry contents itself is informative.
 % %will not be normative; however, it is
 % %
+
+
+
+\cleardoublepage
 
 \infannex{Conformance of OWL 2 DL With \DOL}\label{a:owl}
 \sclause{General}
@@ -13573,6 +13587,7 @@ function (each finite subset of a set is also a subset of the set).
 \infannex{References}
 \bibliographystyle{plain} 
 \renewcommand{\bibname}{}
+\renewcommand{\refname}{}
 \label{a:bibliography}
 \bibliography{dol,rfc,tptp,dol-papers}
 %\addcontentsline{toc}{chapter}{References}
