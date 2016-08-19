@@ -11102,6 +11102,8 @@ $(s,p,o)$ is translated to the $\SROIQ(D)$ sentence
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\ednote{If this is unsorted FOL, then $M_\Thing$ below does not make sense.}
+
 \sssclause{Translation of signatures}
 
  $\Phi((\Concepts, \Roles, \Individuals)) =  (F, P)$ with
@@ -11115,6 +11117,7 @@ $(s,p,o)$ is translated to the $\SROIQ(D)$ sentence
 \sssclause{Translation of sentences}
 
 Concepts are translated as follows:
+\ednote{$\top$ and $\bot$ are missing!}
 \begin{itemize}
  \item $\alpha_x(A) = A(x)$
  \item $\alpha_x(\lnot C) = \lnot \alpha_x (C)$
@@ -11156,22 +11159,25 @@ $ \forall x,y . (\exists z_1,\ldots, z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \w
 \sssclause{Translation of models}
 
 \begin{itemize}
-	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define $\beta_\Sigma(M') := (\Delta, \cdot^I)$
-	with $\Delta = |M'|$ and $A^I = M'_A, a^I = M'_a, R^I = M'_R$.
+	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define $\beta_\Sigma(M') := \I := (\Delta, \cdot^\I)$
+	with $\Delta = |M'|$ and $A^\I = M'_A, a^\I = M'_a, R^\I = M'_R$.
 \end{itemize}
 
 	\begin{proposition}
 $C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (C) \right\}$
 	\end{proposition}
+%\ednote{$\I$ has not been introduced. Sometimes, $I$ is used.}
 	
-	\begin{proof} By Induction over the structure of $C$.
+	\begin{proof} By induction over the structure of $C$.
 \begin{itemize}
 	\item $A^\I = M'_A = \left \{m \in M'_{\Thing} \vert M' + \{x \mapsto m \} \models A(x)  \right\}$
 	\item $(\lnot C)^\I = \Delta \setminus C^\I =^{I.H.} \Delta \setminus \{m \in M'_\Thing \lvert M' + \{x \mapsto m\} \models \alpha_x(C)\} = \{m \in M'_\Thing \vert M' + \{x \mapsto m\} \models \lnot \alpha_x(C)\}$
+        \item The other cases are similar.
 \end{itemize}
 	\end{proof}
 
-	The satisfaction condition holds as well.
+	The satisfaction condition now follows easily.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
