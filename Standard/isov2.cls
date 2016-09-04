@@ -513,8 +513,8 @@
 \@beginparpenalty -\@lowpenalty
 \@endparpenalty   -\@lowpenalty
 \@itempenalty     -\@lowpenalty
-\renewcommand{\theenumi}{\alph{enumi}}
-\renewcommand{\theenumii}{\arabic{enumii}}
+\renewcommand{\theenumi}{\arabic{enumi}}
+\renewcommand{\theenumii}{\alph{enumii}}
 \renewcommand{\theenumiii}{\roman{enumiii}}
 \renewcommand{\theenumiv}{\Roman{enumiv}}
 \newcommand{\labelenumi}{\theenumi)}
