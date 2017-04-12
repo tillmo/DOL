@@ -2,3 +2,17 @@ DOL
 ===
 
 The Distributed Ontology, Modeling and Specification Language (DOL) - an answer to the OMG RFP OntoIOp
+
+
+If you file a BUG REPORT: All bug reports are manually translated into the OMG bug tracker, which is used to automatically generate reports that are used for voting on the changes. Hence, the following information is required: 
+- Summary
+- Description of Issue
+- Chapter/Section Number
+- Page Number 
+
+
+If you FIX a BUG in the specification: 
+- Create your own GIT branch
+- Include a short descripiton of how you fixed the bug and branch ID of your git branch
+- Provide the revised text 
+- Include a DIF file which highlights your changes in the text. 
