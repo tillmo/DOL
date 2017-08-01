@@ -4,13 +4,13 @@ BRANCH=$(git branch | grep "*" |cut -b 3-)
 OUT=OMG_OntoIOp_current-diff-$BRANCH.tex
 DIFF=OMG_OntoIOp_current-diff$LASTREV.tex
 latexdiff-git -r $LASTREV --force --exclude-textcmd="section,subsection" OMG_OntoIOp_current.tex 
+echo "working on problematic environments"
+python listing_highlight.py $DIFF $OUT
 mv $DIFF $OUT
 echo "generated $OUT"
 exit 0
 
 #sed -i 's/\\DIFadd{\\begin{array}/{\\begin{array}/;s/\\DIFadd{\(.*\)\\begin{cases}/{\1\\begin{cases}/;s/\\DIFadd{\(.*\)\\verb/{\1\\verb/' $DIFF
-#echo "worked on problematic environments"
-#python listing_highlight.py $DIFF dol-diff.tex
 #echo "worked on problematic environments"
 #echo "generated dol-diff.tex"
 # pdflatex dol-diff
