@@ -19,3 +19,5 @@ Thus, when you FIX a BUG in the specification:
 - Include a DIF file which highlights your changes in the text. This can be produced with the script Standard/makepdf (see there for its usage)
 - Merge your branch into the branch develop
 - Reassign your issue to Fabian 
+
+Note: branches are merged into the master branch only after approval through OMG.
