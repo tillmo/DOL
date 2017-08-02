@@ -13,8 +13,9 @@ If you file a BUG REPORT: All bug reports are manually translated into the OMG b
 Every change to the standard needs to be kept track of and be voted on. Fabian will manage the OMG documents, but he needs your support in filling out the paperwork. 
 
 Thus, when you FIX a BUG in the specification: 
-- Create a special GIT branch for the bug. Its name should start with the number of the github issue
+- Create a special GIT branch for the bug, based on the master branch. Its name should start with the number of the github issue
 - Include a short description of how you fixed the bug and branch ID of the bug-related git branch
 - Provide the revised text 
 - Include a DIF file which highlights your changes in the text. This can be produced with the script Standard/makepdf (see there for its usage)
+- Merge your branch into the branch develop
 - Reassign your issue to Fabian 
