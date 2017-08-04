@@ -1,22 +1,30 @@
-#latest submitted revision
-LASTREV=2e94c79
+# script for generating pdf with diff from baseline
+# useage:
+# makepdf                 # select all pages from diff
+# makepdf 3 4-11 15       # select some pages from diff
 
+#baseline for FTF
+LASTREV=7f584ed0
+
+BRANCH=$(git branch | grep "*" |cut -b 3-)
+OUT=OMG_OntoIOp_current-diff-$BRANCH
 DIFF=OMG_OntoIOp_current-diff$LASTREV.tex
-latexdiff-git -r $LASTREV --force --exclude-textcmd="section,subsection" OMG_OntoIOp_current.tex 
-sed -i 's/\\DIFadd{\\begin{array}/{\\begin{array}/;s/\\DIFadd{\(.*\)\\begin{cases}/{\1\\begin{cases}/;s/\\DIFadd{\(.*\)\\verb/{\1\\verb/' $DIFF
-echo "worked on problematic environments"
-python listing_highlight.py $DIFF dol-diff.tex
-echo "worked on problematic environments"
-echo "generated dol-diff.tex"
-# pdflatex dol-diff
-# bibtex 
-# pdflatex dol-diff
-# pdflatex dol-diff
-# pdflatex OMG_OntoIOp_current.tex
-# bibtex OMG_OntoIOp_current
-# pdflatex OMG_OntoIOp_current.tex
-# pdflatex OMG_OntoIOp_current.tex
-# cp OMG_OntoIOp_current.pdf dol.pdf
-# git commit -m "makepdf" dol.pdf dol-diff.pdf
-# git push
+if [ "x"$1 = "x" ]
+    then RANGE=1-end
+    else RANGE=$*
+fi
+echo "latexdifffing, output see latexdiff.log"
+latexdiff-git -r $LASTREV --force --exclude-textcmd="section,subsection" OMG_OntoIOp_current.tex > latexdiff.log 2>&1
+echo "working on problematic environments"
+python listing_highlight.py $DIFF $OUT.tex
+echo "LaTeXing"
+pdflatex $OUT > /dev/null
+bibtex $OUT > /dev/null
+pdflatex $OUT > /dev/null
+pdflatex $OUT > /dev/null
+echo "Selecting specified pages"
+pdftk $OUT.pdf cat $RANGE output $OUT-pages.pdf
+echo "generated $OUT.pdf and $OUT-pages.pdf"
+exit 0
 
+#sed -i 's/\\DIFadd{\\begin{array}/{\\begin{array}/;s/\\DIFadd{\(.*\)\\begin{cases}/{\1\\begin{cases}/;s/\\DIFadd{\(.*\)\\verb/{\1\\verb/' $DIFF
