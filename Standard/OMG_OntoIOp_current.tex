@@ -4541,7 +4541,10 @@ An \syntax{ExtendingOMS} can be one of the following:
 \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
 language (which is defined outside this standard; practically every example uses basic OMS)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
 However, \DOL's module sublanguage should be used instead of the module sublanguage of 
-the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.};
+the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.}.
+Note that a basic OMS used inside a DOL document may not use any of the DOL
+keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in curly braces\footnote{This restriction applies to DOL documents only,
+ not to native documents.};
 \item a reference (through an IRI) to an OMS (\syntax{OMSReference}, many examples illustrate this); or
 \item a \syntax{RelativeClosureOMS}, applying a closure operator to a
   basic OMS or OMS reference (these two are hence joined into
@@ -4657,7 +4660,7 @@ constraints via the EBNF grammar.
 \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 
 BasicOMS           ::= ($<$)language and serialization specific($>$) 
-ClosableOMS        ::= BasicOMS | OMSRef [ImportName]
+ClosableOMS        ::= BasicOMS | '{' BasicOMS '}' | OMSRef [ImportName]
 ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
 RelativeClosureOMS ::= ClosureType '{' ClosableOMS '}'
 OMS                ::= ExtendingOMS
