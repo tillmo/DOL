@@ -2997,15 +2997,20 @@ with a first-order axiom (in Common Logic) asserting that the relation is also t
          trans: <http://purl.net/DOL/translations/> )%
                 %% ... and translations
 
-language lang:CommonLogic
-ontology Parthood =
-ObjectProperty: isProperPartOf  
+language lang:OWL2_DL
+ontology Parthood_OWL =
+  ObjectProperty: isProperPartOf  
   Characteristics: Asymmetric  
-  SubPropertyOf: isPartOf 
-with translation trans:SROIQtoCL
-then language lang:CommonLogic :
-  (if (and (isProperPartOf x y) (isProperPartOf y z)) 
-        (isProperPartOf x z))
+  SubPropertyOf: isPartOf
+end
+language lang:CommonLogic
+ontology Parthood_CL =
+  Parthood_OWL
+  with translation trans:SROIQtoCL
+  then 
+    (if (and (isProperPartOf x y) (isProperPartOf y z)) 
+          (isProperPartOf x z))
+end
 \end{lstlisting}
 \OWL can express transitivity, but not together with asymmetry.
 
