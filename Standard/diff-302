@@ -1,0 +1,1342 @@
+--- OMG_OntoIOp_current-diff-all.tex
++++ OMG_OntoIOp_current-diff-all.tex
+@@ -963,7 +963,7 @@
+ This \IS specifies the Distributed Ontology, Modeling and Specification
+  Language (\DOL)\index{\dolindex ! definition}.  \DOL is designed to achieve integration  
+ and interoperability of
+-ontologies, specifications and MDE models (OMS for short). \DOL is a language for
++ontologies, specifications and \DIFdelbegin \DIFdel{MDE }\DIFdelend models (OMS for short). \DOL is a language for
+ distributed knowledge representation, system specification and 
+ model-driven development across multiple OMS, particularly OMS
+  that have been formalized in different OMS languages.
+@@ -981,15 +981,15 @@
+ \textbf{O}ntologies 
+  formalizing domain knowledge, 2) (formal) \textbf{M}odels of systems, and 3) the formal 
+ \textbf{S}pecification
+-of systems. Ontologies, MDE models  and specifications will (for the purpose of this document) 
++of systems. Ontologies, \DIFdelbegin \DIFdel{MDE }\DIFdelend models  and specifications will (for the purpose of this document) 
+ henceforth be abbreviated as \textbf{OMS}\index{OMS}.
+ 
+ An OMS provides formal descriptions, which range in scope from domain knowledge and activities
+-(ontologies, MDE models) to properties and behaviors of hardware and software systems (MDE models,
++(ontologies, \DIFdelbegin \DIFdel{MDE }\DIFdelend models) to properties and behaviors of hardware and software systems (\DIFdelbegin \DIFdel{MDE }\DIFdelend models,
+ specifications). These formal descriptions can be used for the analysis and verification of domain
+ models, system models and systems themselves, using rigorous and effective reasoning tools.   As 
+ systems increase in complexity, it becomes concomitantly less practical to provide a monolithic 
+-logical cover for all.  Instead various MDE models are developed to represent different viewpoints or 
++logical cover for all.  Instead various \DIFdelbegin \DIFdel{MDE }\DIFdelend models are developed to represent different viewpoints or 
+ perspectives on a domain or system. 
+  Hence, interoperability becomes
+ a crucial issue, in particular, formal interoperability, i.e.\ interoperability that is based on
+@@ -1512,9 +1512,12 @@
+ \sclause{Distributed Ontology, Modeling and Specification Language}
+ 
+ \begin{definitions}
+-  \termdefinitionLight{Distributed Ontology, Modeling and Specification Language \synonym\DOL} \index{\dolindex ! definition}{unified metalanguage for the structured and heterogeneous expression of ontologies, specifications, and MDE models, using  \termref{DOL libraries}\index{library} of \termref{OMS}, OMS mappings and OMS networks\index{OMS network}, 
++  \termdefinitionLight{Distributed Ontology, Modeling and Specification Language \synonym\DOL} \DIFdelbegin %DIFDELCMD < \index{\dolindex ! definition}{unified metalanguage for the structured and heterogeneous expression of ontologies, specifications, and MDE models, using  \termref{DOL libraries}\index{library} of \termref{OMS}, OMS mappings and OMS networks\index{OMS network}, 
++%DIFDELCMD <   whose syntax and semantics are specified in this \IS{}.}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \index{\dolindex ! definition}{unified metalanguage for the structured and heterogeneous expression of ontologies, specifications, and models, using  \termref{DOL libraries}\index{library} of \termref{OMS}, OMS mappings and OMS networks\index{OMS network}, 
+   whose syntax and semantics are specified in this \IS{}.}
+-%
++\DIFaddend %
+ 
+ % \begin{note}
+ %  When viewed as an \termref{OMS language}, \DOL has \termref{OMS} as its
+@@ -1579,20 +1582,25 @@
+ \termdefinition{ontology}{\termref{logical theory} that is used as a
+   shard conceptualization}
+ 
+-\termdefinition{MDE model}{logical theory that is used as an
++\DIFdelbegin %DIFDELCMD < \termdefinition{MDE model}{logical theory that is used as an
++%DIFDELCMD < abstract representation of a domain or of a system, in
++%DIFDELCMD <   the sense of model-driven engineering (MDE)}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{model}{logical theory that is used as an
+ abstract representation of a domain or of a system, in
+   the sense of model-driven engineering (MDE)}
+-\begin{note}
++\DIFaddend \begin{note}
+ Not to be confused with the term \termref{model} in the sense
+-of logic (model theory).
+-\end{note}
++of logic (model theory). \DIFaddbegin \DIFadd{In this document, we use the term }\termref{realisation} \DIFadd{for models in the sense of model theory in logic.
++}\DIFaddend \end{note}
+ 
+ \termdefinition{specification}{logical theory that is used to express formal
+ constraint in mathematical structures, software systems and/or hardware
+ systems}
+ 
+-\termdefinitionLight{OMS (ontology, specification or MDE model)\index{OMS}}
+-{basic OMS or structured OMS.}
++\DIFdelbegin \DIFdel{\termdefinitionLight{OMS (ontology, specification or MDE model)\index{OMS}}
++}\DIFdelend \DIFaddbegin \DIFadd{\termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
++}\DIFaddend {basic OMS or structured OMS.}
+ \begin{note}
+ 
+ 	An OMS is either a basic OMS (which is always a native OMS, and can occur as a text fragment in a \DOL document) or a structured OMS (which can be either a native structured OMS contained in some native document, or a \DOL structured OMS contained in a \DOL document).
+@@ -1621,9 +1629,11 @@
+ 
+ 
+ 
+-  \termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
++  \DIFdelbegin \DIFdel{\termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
+  }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}.}
+-  \begin{note}
++  }\DIFdelend \DIFaddbegin \DIFadd{\termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
++ }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{realisation}.}
++  }\DIFaddend \begin{note}
+   This differs from the notion of ``atomic sentence'': such sentences
+   may involve several non-logical symbols.
+   \end{note}
+@@ -1666,19 +1676,29 @@
+    \end{note}
+ 
+ 
+-\termdefinition{model}{semantic interpretation of all non-logical symbols\index{non-logical symbol} of a \termref{signature}.}
+-  \begin{note}
+-    A model of an OMS is a model of the signature of the OMS
++\DIFdelbegin %DIFDELCMD < \termdefinition{model}{semantic interpretation of all non-logical symbols\index{non-logical symbol} of a \termref{signature}.}
++%DIFDELCMD <   %%%
++\DIFdelend \DIFaddbegin \termdefinition{realisation}{semantic interpretation of all non-logical symbols\index{non-logical symbol} of a \termref{signature}.}
++  \DIFaddend \begin{note}
++    A \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of an OMS is a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of the signature of the OMS
+     that also satisfies all the  additional constraints expressed by the OMS. In case of \termref{flattenable} OMS, these constraints are expressed by the axioms of the OMS.
+   \end{note}
+   \begin{note}
+-  This term refers to \emph{model} in the sense of model theory (a
+-  branch of logic). It is not to be confused with \termref{MDE model} in the
+-  sense of modeling (i.e., the ``M'' in OMS).
+-  \end{note}
+-  \begin{note}
+-  The notion of model depends on the \termref{OMS language} or \termref{logic}. 
+-  \end{note}
++  \DIFdelbegin \DIFdel{This term refers to }\emph{\DIFdel{model}} %DIFAUXCMD
++\DIFdel{in the sense of model theory (a branch of logic). It is not to be confused with }%DIFDELCMD < \termref{MDE model} %%%
++\DIFdel{in the
++  sense of modeling (i.e. , the ``M'' in OMS).
++  }%DIFDELCMD < \end{note}
++%DIFDELCMD <   \begin{note}
++%DIFDELCMD <   %%%
++\DIFdel{The notion of model depends on the }\DIFdelend \DIFaddbegin \DIFadd{The notion of realisation depends on the }\DIFaddend \termref{OMS language} or \termref{logic}. 
++  \end{note}
++  \DIFaddbegin \begin{note}
++    \DIFadd{In logical model theory, a realisation is called ``model''. However, we
++    have reserved the term ``model'' for models in the sense of
++    model-driven engineering.
++  }\end{note}
++\DIFaddend 
+ 
+ 
+ \termdefinition{expression}{a finite combination of symbols that are well-formed according to applicable rules (depending on the language)}
+@@ -1690,9 +1710,12 @@
+   \end{note}
+ 
+   
+-\termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.}
+-  \begin{note}
+-In a \termref{model}, on the one hand, a sentence is always true or false. In an \termref{OMS}, on the
++\DIFdelbegin %DIFDELCMD < \termdefinition{sentence}{term that is either true or false in a given \termref{model}, i.e.\ which is assigned a truth value in this \termref{model}.}
++%DIFDELCMD <   %%%
++\DIFdelend \DIFaddbegin \termdefinition{sentence}{term that is either true or false in a given \termref{realisation}, i.e.\ which is assigned a truth value in this \termref{realisation}.}
++  \DIFaddend \begin{note}
++In a \DIFdelbegin %DIFDELCMD < \termref{model}%%%
++\DIFdelend \DIFaddbegin \termref{realisation}\DIFaddend , on the one hand, a sentence is always true or false. In an \termref{OMS}, on the
+ other hand, a sentence can have several logical statuses. For example, a sentence can be:  an
+ axiom, if postulated to be true;
+ a theorem, if proven from other axioms and theorems; or a conjecture, if expecting to be proven 
+@@ -1713,8 +1736,10 @@
+   The notion of sentence depends on the \termref{OMS language} or \termref{logic}. 
+   \end{note}
+ 
+-  \termdefinition{satisfaction relation}{relation between models and sentences indicating which sentences hold true in the model.}
+-  \begin{note}
++  \DIFdelbegin %DIFDELCMD < \termdefinition{satisfaction relation}{relation between models and sentences indicating which sentences hold true in the model.}
++%DIFDELCMD <   %%%
++\DIFdelend \DIFaddbegin \termdefinition{satisfaction relation}{relation between realisations and sentences indicating which sentences hold true in the realisation.}
++  \DIFaddend \begin{note}
+   The satisfaction relation depends on the \termref{OMS language} or \termref{logic}. 
+   \end{note}
+ 
+@@ -1730,7 +1755,7 @@
+ \termref{sentence}, or two \termref{OMS networks}, or an OMS network and an OMS) 
+ expressing that the second item (the conclusion) is logically implied by the first one (the premise).}
+ \begin{note}
+-Entailment expresses that each model \termref{satisfying} the  premise also 
++Entailment expresses that each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend \termref{satisfying} the  premise also 
+ satisfies the conclusion.
+ \end{note}
+ 
+@@ -1739,7 +1764,10 @@
+ \end{note}
+ 
+ 
+-\termdefinition{axiom}{\termref{sentence} that is  postulated to be valid (i.e.\ true in every \termref{model}).}
++\DIFdelbegin %DIFDELCMD < \termdefinition{axiom}{\termref{sentence} that is  postulated to be valid (i.e.\ true in every \termref{model}).}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{axiom}{\termref{sentence} that is  postulated to be valid (i.e.\ true in every \termref{realisation}).}
++\DIFaddend 
+ 
+ 
+   \termdefinition{theorem}{\termref{sentence} that has been proven from other axioms \index{axiom} and theorems\index{theorem} and therefore has been
+@@ -1857,10 +1885,13 @@
+   \end{note}
+ 
+ 
+-\termdefinitionLight{model-theoretic conservative extension\index{conservative extension ! model-theoretic}}{extension
++\DIFdelbegin \DIFdel{\termdefinitionLight{model-theoretic conservative extension\index{conservative extension ! model-theoretic}}{extension
+    that does not lead to a restriction of class of \termref{models} of an \termref{OMS}.}
+-  \begin{note}
+-    An extension $O_2$ of an OMS $O_1$ is a model-theoretic conservative extension, if each model of $O_1$ can be expanded to a model of $O_2$.
++}\DIFdelend\\
++\DIFaddbegin \DIFadd{\termdefinitionLight{model-theoretic conservative extension\index{conservative extension ! model-theoretic}}{extension
++   that does not lead to a restriction of class of \termref{realisations} of an \termref{OMS}.}
++  }\DIFaddend \begin{note}
++    An extension $O_2$ of an OMS $O_1$ is a model-theoretic conservative extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_1$ can be expanded to a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_2$.
+   \end{note}
+   \begin{note}
+    Each model-theoretic conservative extension is also a consequence-theoretic one, but not vice versa.
+@@ -1871,7 +1902,7 @@
+ \termdefinition{monomorphic extension}{\termref{extension} whose newly introduced
+    non-logical symbols\index{non-logical symbol} are interpreted in a way unique up to isomorphism.}
+   \begin{note}
+-An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a monomorphic extension, if each model of $O_1$ can be expanded to a model of $O_2$ that is unique up to isomorphism.
++An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a monomorphic extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_1$ can be expanded to a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_2$ that is unique up to isomorphism.
+   \end{note}
+   \begin{note}
+     Each monomorphic extension is also a model-theoretic conservative extension but not vice versa.
+@@ -1880,10 +1911,10 @@
+   \termdefinition{definitional extension}{\termref{extension} whose newly introduced
+    non-logical symbols\index{non-logical symbol} are interpreted in a unique way.}
+   \begin{note}
+-An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a definitional extension, if each model of $O_1$ can be uniquely expanded to a model of $O_2$.
++An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a definitional extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_1$ can be uniquely expanded to a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_2$.
+   \end{note}
+   \begin{note}
+-    $O_2$ being a definitional extension of $O_1$ implies a bijective correspondence between the classes of models of $O_2$ and $O_1$.
++    $O_2$ being a definitional extension of $O_1$ implies a bijective correspondence between the classes of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of $O_2$ and $O_1$.
+   \end{note}
+   \begin{note}
+     Each definitional extension is also a monomorphic extension but not vice versa.
+@@ -1892,7 +1923,7 @@
+   \termdefinition{weak definitional extension}{\termref{extension} whose newly introduced
+    non-logical symbols\index{non-logical symbol} can be interpreted in at most one way.}
+   \begin{note}
+-An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional extension, if each model of $O_1$ can be expanded to at most one model of $O_2$.
++An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_1$ can be expanded to at most one \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of $O_2$.
+   \end{note}
+   \begin{note}
+     An extension is definitional if and only if it is both weakly definitional
+@@ -1904,8 +1935,9 @@
+     A conservative extension $O_2$ of an \termref{OMS}
+     $O_1$ is an implied extension, if and only if the signature of
+     $O_2$ is the signature of $O_1$.  $O_2$ is an implied extension of
+-    $O_1$ if and only if the model class of $O_2$ is the model class
+-    of $O_1$.
++    $O_1$ if and only if the \DIFdelbegin \DIFdel{model class of }\DIFdelend \DIFaddbegin \DIFadd{class of realisations of }\DIFaddend $O_2$ is the
++    \DIFdelbegin \DIFdel{model class of }\DIFdelend \DIFaddbegin \DIFadd{class of realisations
++    of }\DIFaddend $O_1$.
+   \end{note}
+   \begin{note}
+     Each implied extension is also a definitional extension but not vice versa.
+@@ -1925,9 +1957,12 @@
+ \end{note}
+ 
+ 
+-   \termdefinition{satisfiability}{property of an \termref{OMS} expressing
+-that it is \termref{satisfied} by least one \termref{model}.}
+-\begin{note}
++   \DIFdelbegin %DIFDELCMD < \termdefinition{satisfiability}{property of an \termref{OMS} expressing
++%DIFDELCMD < that it is \termref{satisfied} by least one \termref{model}.}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{satisfiability}{property of an \termref{OMS} expressing
++that it is \termref{satisfied} by least one \termref{realisation}.}
++\DIFaddend \begin{note}
+ The opposite is unsatisfiability.
+ \end{note}
+ \begin{note}
+@@ -1935,7 +1970,10 @@
+ \termref{logics} where the converse does not hold.
+ \end{note}
+ 
+-\termdefinition{model finding}{process that finds \termref{models} of an \termref{OMS} and thus proves it to be \termref{satisfiable}.}	
++\DIFdelbegin %DIFDELCMD < \termdefinition{model finding}{process that finds \termref{models} of an \termref{OMS} and thus proves it to be \termref{satisfiable}.}	
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{model finding}{process that finds \termref{realisations} (models) of an \termref{OMS} and thus proves it to be \termref{satisfiable}.}	
++\DIFaddend 
+ 
+   \termdefinition{model finder}{\termref{tool} that implements \termref{model finding}.}
+ 
+@@ -1992,7 +2030,8 @@
+ \termdefinition{closed world assumption}{assumption that facts whose status is unknown are true.}
+ 
+ \termdefinitionLight{\termref{closure}\synonym circumscription\index{circumscription|see {closure}}}
+-{structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \termref{models}\index{model} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
++{structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \DIFdelbegin %DIFDELCMD < \termref{models}%%%
++\DIFdelend \DIFaddbegin \termref{realisations}\DIFaddend \index{model} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
+   \begin{note}
+     \termref{Symbols} from the \termref{local environment} are assumed
+     to have a fixed interpretation. Only the symbols newly declared in
+@@ -2009,14 +2048,16 @@
+   \end{note}
+ 
+ 
+-\termdefinitionLight{\termref{minimization}} {form of closure that restricts the models to those that are minimal (with respect to the local environment).}
+-\termdefinitionLight{\termref{maximization}} {form of closure that restricts the models to those that are maximal (with respect to the local environment).}
++\termdefinitionLight{\termref{minimization}} {form of closure that restricts the \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend to those that are minimal (with respect to the local environment).}
++\termdefinitionLight{\termref{maximization}} {form of closure that restricts the \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend to those that are maximal (with respect to the local environment).}
+ 
+ 
+ 
+ 
+-\termdefinition{freeness}{special type of closure, restriction of \termref{models} to those that are free (with respect to the local environment).}
+-  \begin{note}
++\DIFdelbegin %DIFDELCMD < \termdefinition{freeness}{special type of closure, restriction of \termref{models} to those that are free (with respect to the local environment).}
++%DIFDELCMD <   %%%
++\DIFdelend \DIFaddbegin \termdefinition{freeness}{special type of closure, restriction of \termref{realisations} to those that are free (with respect to the local environment).}
++  \DIFaddend \begin{note}
+     In first-order logic (and similar logics), freeness means minimal interpretation
+     of predicates and minimal equality among data values. Freeness can
+     be used for the specification of inductive datatypes like numbers,
+@@ -2025,8 +2066,10 @@
+   \end{note}
+ 
+   
+-\termdefinition{cofreeness}{special type of closure, restriction of \termref{models} to those that are cofree (with respect to the local environment).}
+-  \begin{note}
++\DIFdelbegin %DIFDELCMD < \termdefinition{cofreeness}{special type of closure, restriction of \termref{models} to those that are cofree (with respect to the local environment).}
++%DIFDELCMD <   %%%
++\DIFdelend \DIFaddbegin \termdefinition{cofreeness}{special type of closure, restriction of \termref{realisations} to those that are cofree (with respect to the local environment).}
++  \DIFaddend \begin{note}
+     In first-order logic (and similar logics), cofreeness means maximal
+     interpretation of predicates and equality being observable
+     equivalence. Cofreeness can be used for the specification of
+@@ -2297,11 +2340,16 @@
+ \sclause{Logic}\label{c:term-logic}
+ 
+ \begin{definitions}
+-  \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
+-models \index{model}  (interpretations of these),
+-sentences\index{sentence}  (constraints on models),
+- and a \termref{satisfaction relation} between models and sentences\index{sentence}.}
+-  \begin{note}
++  \DIFdelbegin %DIFDELCMD < \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
++%DIFDELCMD < models \index{model}  (interpretations of these),
++%DIFDELCMD < sentences\index{sentence}  (constraints on models),
++%DIFDELCMD <  and a \termref{satisfaction relation} between models and sentences\index{sentence}.}
++%DIFDELCMD <   %%%
++\DIFdelend \DIFaddbegin \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
++realisations \index{model}  (interpretations of these),
++sentences\index{sentence}  (constraints on realisations),
++ and a \termref{satisfaction relation} between realisations and sentences\index{sentence}.}
++  \DIFaddend \begin{note}
+     Most OMS languages have an underlying logic.
+   \end{note}
+   \begin{example}
+@@ -2325,11 +2373,16 @@
+ supports relation between languages and logics, stating that
+ the language has exactly the expressivity of the logic.}
+ 
+- \termdefinition{institution}{metaframework mathematically formalizing
++ \DIFdelbegin %DIFDELCMD < \termdefinition{institution}{metaframework mathematically formalizing
++%DIFDELCMD < the notion of a \termref{logic} in terms of notions of
++%DIFDELCMD < \termref{signature}, \termref{model}, \termref{sentence}
++%DIFDELCMD < and \termref{satisfaction}.}
++%DIFDELCMD <  %%%
++\DIFdelend \DIFaddbegin \termdefinition{institution}{metaframework mathematically formalizing
+ the notion of a \termref{logic} in terms of notions of
+-\termref{signature}, \termref{model}, \termref{sentence}
++\termref{signature}, \termref{realisation}, \termref{sentence}
+ and \termref{satisfaction}.}
+- \begin{note}
++ \DIFaddend \begin{note}
+ In order to support a broad range of 
+ OMS languages and enable interoperability between them, 
+ the DOL semantics has to abstract from 
+@@ -2339,7 +2392,8 @@
+  \begin{note}
+ The notion of institution uses \termref{category} theory for
+ providing formal interfaces for the notions of
+-\termref{signature}, \termref{model}, \termref{sentence}
++\termref{signature}, \DIFdelbegin %DIFDELCMD < \termref{model}%%%
++\DIFdelend \DIFaddbegin \termref{realisation}\DIFaddend , \termref{sentence}
+ and \termref{satisfaction}.
+ \end{note} 
+ 
+@@ -2355,16 +2409,29 @@
+ \termdefinition{reduction}{\termref{mapping} between languages or \termref{logics} forgetting parts of the structure, projection to a smaller language or logic.}
+ 
+ 
+-  \termdefinition{logic translation}{\termref{translation} of a source
++  \DIFdelbegin %DIFDELCMD < \termdefinition{logic translation}{\termref{translation} of a source
++%DIFDELCMD <     \termref{logic} into a target \termref{logic} (mapping
++%DIFDELCMD <     signatures\index{signature}, sentences\index{sentence} and models\index{model})
++%DIFDELCMD <     that keeps or encodes the logical content of \termref{OMS}.}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{logic translation}{\termref{translation} of a source
+     \termref{logic} into a target \termref{logic} (mapping
+-    signatures\index{signature}, sentences\index{sentence} and models\index{model})
++    signatures\index{signature}, sentences\index{sentence} and realisations\index{model})
+     that keeps or encodes the logical content of \termref{OMS}.}
++\DIFaddend 
+ 
+-  \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
++  \DIFdelbegin %DIFDELCMD < \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
++%DIFDELCMD <     onto a (usually less expressive) target \termref{logic} (mapping
++%DIFDELCMD < 	signatures\index{signature}, sentences\index{sentence} and models\index{model})
++%DIFDELCMD <     that forgets those parts of the logical structure not
++%DIFDELCMD <     fitting the target \termref{logic}.}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
+     onto a (usually less expressive) target \termref{logic} (mapping
+-	signatures\index{signature}, sentences\index{sentence} and models\index{model})
++	signatures\index{signature}, sentences\index{sentence} and realisations\index{model})
+     that forgets those parts of the logical structure not
+     fitting the target \termref{logic}.}
++\DIFaddend 
+ 
+ 
+ \termdefinition{simple theoroidal logic translation}{translation that maps 
+@@ -2413,9 +2480,15 @@
+ \termdefinition{faithful mapping}{\termref{logic mapping} that
+   preserves and reflects \termref{logical consequence}.}
+ 
+-\termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective model translation (ensuring faithfulness of the mapping).}
++\DIFdelbegin %DIFDELCMD < \termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective model translation (ensuring faithfulness of the mapping).}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective translation of realisations (ensuring faithfulness of the mapping).}
++\DIFaddend 
+ 
+-\termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of models.}
++\DIFdelbegin %DIFDELCMD < \termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of models.}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of realisations.}
++\DIFaddend 
+ 
+ \termdefinition{exact mapping}{\termref{logic mapping} that is
+   compatible with certain \DOL structuring constructs, e.g.\ \termref{union},
+@@ -2424,17 +2497,29 @@
+ \termdefinition{weakly exact mapping}{\termref{logic mapping} that is weakly compatible with certain \DOL structuring constructs, e.g.\ \termref{union},
+   \termref{OMS translation} and \termref{OMS reduction}.}
+ 
+-\termdefinition{embedding}{\termref{logic mapping} that embeds the
++\DIFdelbegin %DIFDELCMD < \termdefinition{embedding}{\termref{logic mapping} that embeds the
++%DIFDELCMD <   source into the target logic, using components that are embeddings
++%DIFDELCMD <   and (in the case of model translations) isomorphism.}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{embedding}{\termref{logic mapping} that embeds the
+   source into the target logic, using components that are embeddings
+-  and (in the case of model translations) isomorphism.}
++  and (in the case of translations of realisations) isomorphism.}
++\DIFaddend 
+ 
+ \termdefinition{sublogic}{\termref{logic embedding} that is ``syntactic'' in the sense that \termref{signature} and \termref{sentence} translations are inclusions.}
+ 
+-\termdefinition{adjointness}{relation between a \termref{logic
++\DIFdelbegin %DIFDELCMD < \termdefinition{adjointness}{relation between a \termref{logic
++%DIFDELCMD <     translation} and a \termref{logic reduction}, expressing that
++%DIFDELCMD <   they share their \termref{sentence} and \termref{model}
++%DIFDELCMD <   translations, while the signature translations are adjoint to each
++%DIFDELCMD <   other (in the sense of \termref{category} theory).}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \termdefinition{adjointness}{relation between a \termref{logic
+     translation} and a \termref{logic reduction}, expressing that
+-  they share their \termref{sentence} and \termref{model}
+-  translations, while the signature translations are adjoint to each
++  they share their \termref{sentence} and 
++  translations of \termref{realisations}, while the signature translations are adjoint to each
+   other (in the sense of \termref{category} theory).}
++\DIFaddend 
+ 
+ 
+ \end{definitions}
+@@ -2462,10 +2547,10 @@
+ \begin{note}
+ Within ISO 19763 and ISO 20943, metamodel interoperability is
+ equivalent to the existence of mapping, which are statements that the
+-domains represented by two MDE models intersect and there is a need to
++domains represented by two \DIFdelbegin \DIFdel{MDE }\DIFdelend models intersect and there is a need to
+ register details of the correspondence between the structures in the
+-MDE models that semantically represent this overlap. Within these
+-standards, an MDE model is a representation of some aspect of a domain of
++\DIFdelbegin \DIFdel{MDE }\DIFdelend models that semantically represent this overlap. Within these
++standards, an \DIFdelbegin \DIFdel{MDE }\DIFdelend model is a representation of some aspect of a domain of
+ interest using a normative modeling facility and modeling
+ constructs.
+ 
+@@ -3177,7 +3262,7 @@
+ analysis. 
+ 
+ The data is usually represented in a database or RDF triple store, which work with a \termref{closed world assumption} on the dataset, and are not expressive enough to 
+-incorporate the metadata `background knowledge', such as the conditions for validity of the physical laws in the MDE model of the object of observation. These metadata 
++incorporate the metadata `background knowledge', such as the conditions for validity of the physical laws in the \DIFdelbegin \DIFdel{MDE }\DIFdelend model of the object of observation. These metadata 
+ require a more expressive language, such as OWL or Common Logic, which operate under an open-world semantics. However, it is unfeasible to translate the 
+ whole large dataset into OWL or first-order logic. To `meet in the middle', it is possible to declare bridge rules (i.e., a mapping layer) that can link the metadata to 
+ the data. This approach can be used for intelligent data analysis that combines the data and metadata through querying the system. It enables the analysis of the 
+@@ -3640,7 +3725,7 @@
+ provides structural information in form of interfaces specifying what is
+ provided and required at the \uml{userCom} port and the \uml{bankCom}
+ port of the \uml{atm} instance.  An interface is a set of operations
+-that other MDE model elements have to implement. In our case, the
++that other \DIFdelbegin \DIFdel{MDE }\DIFdelend model elements have to implement. In our case, the
+ interfaces are described in a \emph{class model}. Its component type 
+ \uml{ATM} is further enriched with the OCL
+ constraint \uml{trialsNum <= 3}, which refines its semantics requiring
+@@ -3847,7 +3932,7 @@
+ 
+ \sclause{Conclusion}
+ 
+-In this section, several use cases have been introduced. They illustrate many aspects of DOL and its usefulness in many situations in which different OMS artifacts might be leveraged and augmented to produce broader or more tractable MDE models, ontologies, and specifications.
++In this section, several use cases have been introduced. They illustrate many aspects of DOL and its usefulness in many situations in which different OMS artifacts might be leveraged and augmented to produce broader or more tractable \DIFdelbegin \DIFdel{MDE }\DIFdelend models, ontologies, and specifications.
+ 
+  \DOL has been designed to support of a wide range of formalisms and
+ provides the ability to specify the basis for formal interoperability even among heterogeneous OMS and OMS networks. \DOL enables the solutions of the problems described in the use cases above. It also enables the development of DOL documents, tools and workflows that 
+@@ -4151,7 +4236,7 @@
+ symbols of the language in signatures and to assign to each signature the set of sentences that can be formed with its symbols. 
+ For each signature, \DOL provides means for extracting the symbols it consists of, together with their kind.
+ Institutions also provide a model theory, which introduces semantics for
+-the language and gives a satisfaction relation between the models and
++the language and gives a satisfaction relation between the \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend and
+ the sentences of a signature.   
+ % The only restriction imposed is the
+ % satisfaction condition, which captures the idea that truth is
+@@ -4547,16 +4632,16 @@
+ 
+ An OMS definition \syntax{OMSDefinition} names an OMS.  It can be
+ optionally marked as inconsistent, consistent, monomorphic or having a
+-unique model using \syntax{ConservativityStrength}. More precisely,
++unique \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend using \syntax{ConservativityStrength}. More precisely,
+ \syntax{'consequence-conservative'} here requires the OMS to have only
+ tautologies as signature-free logical consequences, while
+ \syntax{'not\-consequence-conservative'} expresses that this is not
+ the case.  \syntax{'model-conservative'} requires satisfiability of
+ the OMS, \syntax{'not-model-conservative'} its unsatisfiability.
+ \syntax{'de\-fi\-nitional'} expresses that the OMS has a unique
+-model (see Appendix~\ref{ex:definedconcepts} for an example); this may be interesting for characterizing OMS
++\DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend (see Appendix~\ref{ex:definedconcepts} for an example); this may be interesting for characterizing OMS
+ (e.g.\ returned by model finders) that are used to describe single
+-models.
++\DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend .
+ 
+ 
+ 
+@@ -4629,7 +4714,8 @@
+   the current OMS);
+ \item a \syntax{Reduction} of an OMS to a smaller signature and/or
+   less expressive logic (that is, some non-logical symbols and/or some
+-  parts of the model structure are hidden, but the semantic effect of
++  parts of the \DIFdelbegin \DIFdel{model structure }\DIFdelend \DIFaddbegin \DIFadd{structure of the realisation }\DIFaddend are hidden, 
++  but the semantic effect of
+   sentences involving these is kept). The former is done using a
+   \syntax{SymbolList}, which is a list of non-logical symbols that are
+   to be hidden. The latter uses an \syntax{OMSLanguageTranslation}
+@@ -4876,14 +4962,14 @@
+ The DOL metamodel for entailments and equivalences is shown in 
+ Fig.~\ref{fig:entailment&equivalence}.
+ An entailment is a variant of an interpretation where all symbols are
+-mapped identically, while an equivalence states that the model classes
+-of two OMS are in bijective correspondence. As for refinements,
++mapped identically, while an equivalence states that the \DIFdelbegin \DIFdel{model classes of }\DIFdelend \DIFaddbegin \DIFadd{classes of realisations
++of }\DIFaddend two OMS are in bijective correspondence. As for refinements,
+ entailments and equivalences are also possible between networks
+ (\syntax{NetworkNetworkEntailment} and \syntax{NetworkEquivalence}).
+ An entailment between a network as premise and an OMS as conclusion
+-(\syntax{NetworkOMSEntailment}) specifies that all models of the
++(\syntax{NetworkOMSEntailment}) specifies that all \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of the
+ network, when restricted to a given node (given by an IRI), are
+-models of the OMS.
++\DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of the OMS.
+ 
+ \begin{figure}
+   \centering
+@@ -5871,7 +5957,8 @@
+ $\sen(\sigma):{\sen(\Sigma)}\to{\sen(\Sigma')}$, where often
+ $\sen(\sigma)(\varphi)$ is written as $\sigma(\varphi)$, \item a
+ functor $\IMod:{\Sig^{op}}\to{\Cat}$ giving, for each signature
+-$\Sigma$, the category of \emph{models} $\IMod(\Sigma)$, and for each
++$\Sigma$, the category of \emph{\DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend }\DIFaddbegin \footnote{\DIFadd{To avoid confusion 
++with models in the sense of model-driven engineering, we use `realisation` instead of  the commonly used term `model` in logic.}} \DIFaddend $\IMod(\Sigma)$, and for each
+ signature morphism $\sigma\map{\Sigma}{\Sigma'}$, the \emph{reduct
+ functor\/} $\IMod(\sigma):{\IMod(\Sigma')}\to {\IMod(\Sigma)}$, where
+ often $\IMod(\sigma)(M')$ is written as $M'\forget{\sigma}$, and
+@@ -5899,9 +5986,9 @@
+ \begin{definition}[Propositional Logic]\label{Prop}
+ The signatures of propositional logic are sets $\Sigma$ of propositional symbols, and signature morphisms are just
+ functions $\sigma:{\Sigma_1}\to{\Sigma_2}$ between these sets. 
+-A $\Sigma$-model is a function $M : {\Sigma}\to{\{True, False\}}$, and the reduct of a 
+-$\Sigma_2$-model $M_2$ along a signature morphism $\sigma:{\Sigma_1}\to{\Sigma_2}$ is 
+-the $\Sigma_1$-model given by the composition of $\sigma$ with $M_2$. $\Sigma$-sentences are built from the
++A $\Sigma$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend is a function $M : {\Sigma}\to{\{True, False\}}$, and the reduct of a 
++$\Sigma_2$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $M_2$ along a signature morphism $\sigma:{\Sigma_1}\to{\Sigma_2}$ is 
++the $\Sigma_1$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend given by the composition of $\sigma$ with $M_2$. $\Sigma$-sentences are built from the
+ propositional symbols with the usual connectives, and sentence translation is replacing the propositional
+ symbols in $\Sigma$ along the morphism. Finally, the satisfaction relation is defined by the standard truth-tables
+ semantics. It is straightforward to see that the satisfaction condition holds.\quad\qed
+@@ -5912,7 +5999,7 @@
+ $\Sigma$ (called vocabulary in Common Logic terminology) consists of a
+ set of names, with a subset called the set of discourse names, and a
+ set of sequence markers.
+-A $\Sigma$-model consists of a set $\UR$,
++A $\Sigma$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend consists of a set $\UR$,
+ the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
+ the universe of discourse, and four mappings:
+    \begin{itemize} 
+@@ -5945,15 +6032,16 @@
+ consists of two maps between the sets of names and of sequence markers, such that the property of 
+ being a discourse name is preserved and reflected.\footnote{That  is, a name is a discourse
+ name if and only if its image under the signature morphism is.}
+-  Model reducts leave $\UR$, $\UD$, 
++  \DIFdelbegin \DIFdel{Model reducts }\DIFdelend \DIFaddbegin \DIFadd{Reducts }\DIFaddend leave $\UR$, $\UD$, 
+ $\rel$ and $\fun$ untouched, while $\intCL$ and $\seq$ are composed with the appropriate
+ signature morphism component.\quad\qed
+ \end{definition}
+ %
+ 
+ Further examples of institutions are: $\mathcal{SROIQ}(D)$, unsorted first-order logic, 
+-many-sorted first-order logic, and many others.  Note that the reduct of a model 
+-is generally given by forgetting some of its parts.
++many-sorted first-order logic, and many others.  Note that the reduct of a \DIFdelbegin \DIFdel{model 
++}\DIFdelend \DIFaddbegin \DIFadd{realisation 
++}\DIFaddend is generally given by forgetting some of its parts.
+ 
+ For the rest of the section, an arbitrary institution is considered. 
+ 
+@@ -5961,12 +6049,15 @@
+ A \defsty{theory} is a pair $(\Sigma,\Delta)$ where $\Sigma$ is a signature and $\Delta$ is a set of $\Sigma$-sentences.
+ \end{definition}
+ 
+-Given a theory $T=(\Sigma, \Delta)$, the class of $T$-models is the class of all
+-$\Sigma$-models $M$ such that $M\models \delta$, for each sentence $\delta \in \Delta$.
++Given a theory $T=(\Sigma, \Delta)$, the class of $T$\DIFdelbegin \DIFdel{-models }\DIFdelend \DIFaddbegin \DIFadd{-realisation 
++}\DIFaddend is the class of all
++$\Sigma$\DIFdelbegin \DIFdel{-models }\DIFdelend \DIFaddbegin \DIFadd{-realisations }\DIFaddend $M$ such that $M\models \delta$, 
++for each sentence $\delta \in \Delta$.
+ A theory $(\Sigma, \Delta)$ is \defsty{consistent\/} if at least one 
+- $\Sigma$-model exists. \defsty{Semantic entailment} is defined as usual: 
+-for  a theory $\Delta\subseteq \sen(\Sigma)$ and 
+-$\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, written $\Delta\models\varphi$, if all models satisfying all sentences in
++ \DIFdelbegin \DIFdel{$\Sigma$-model }\DIFdelend \DIFaddbegin \DIFadd{$(\Sigma, \Delta)$-realisation }\DIFaddend exists. 
++ \defsty{Semantic entailment} is defined as usual: 
++for  a theory \DIFdelbegin \DIFdel{$\Delta\subseteq \sen(\Sigma)$ }\DIFdelend \DIFaddbegin \DIFadd{$(\Sigma, \Delta)$ }\DIFaddend and 
++$\varphi\in \sen(\Sigma)$, $\Delta$ entails $\varphi$, written $\Delta\models\varphi$, if all \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend satisfying all sentences in
+ $\Delta$ also satisfy $\varphi$. For a theory $(\Sigma, \Delta)$, we write $\Delta^\bullet$ for the set of all $\Sigma$-sentences $\varphi$ such that $\Delta \models \varphi$. 
+ 
+ \begin{definition}[Theory morphism]
+@@ -5980,7 +6071,7 @@
+ \begin{definition}[Institution Comorphism] An \defsty{institution comorphism} from an institution $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ to an institution $J=(\Sig^J, \Mod^J,\Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and
+ two natural transformations $\beta: \Mod^J \circ \Phi^{op} \Longrightarrow \Mod^I$
+ and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
+-for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^I(\Sigma)$ and each model $M'\in|\Mod^J(\Phi(\Sigma))|$
++for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^I(\Sigma)$ and each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M'\in|\Mod^J(\Phi(\Sigma))|$
+ %
+ \begin{equation*}
+   M'\models^{J}_{\Phi(\Sigma)}\alpha_{\Sigma}(\varphi)
+@@ -5996,8 +6087,8 @@
+ institution $I$ to institution $J$, $\alpha_{\Sigma}(\varphi)$ is the
+ translation of the $\Sigma$-sentence $\varphi$ to a
+ $\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
+-(or perhaps better: reduction) of the $\Phi(\Sigma)$-model $M'$ to a
+-$\Sigma$-model. Naturality of $\alpha$ and $\beta$ means that for each
++(or perhaps better: reduction) of the $\Phi(\Sigma)$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $M'$ to a
++$\Sigma$\DIFdelbegin \DIFdel{-model}\DIFdelend \DIFaddbegin \DIFadd{-realisation}\DIFaddend . Naturality of $\alpha$ and $\beta$ means that for each
+ signature morphism $\sigma:\Sigma_1\rightarrow\Sigma_2$ in $I$ the following 
+ squares commute:
+ %
+@@ -6037,7 +6128,7 @@
+ \end{equation*}
+ %
+ admits (weak) amalgamation, i.e.\
+-any for any two models $M_2\in|\Mod^I(\Sigma_2)|$
++any for any two \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend $M_2\in|\Mod^I(\Sigma_2)|$
+ and $M'_1\in|\Mod^J(\Phi(\Sigma_1))|$
+ with $M_2\forget{\sigma}=\beta_{\Sigma_1}(M'_1)$,
+ there is a unique (not necessarily unique) 
+@@ -6047,7 +6138,7 @@
+ 
+  \item a \emph{subinstitution comorphism} if $\Phi$ is
+ an embedding, each $\alpha_\Sigma$ is injective and each $\beta_\Sigma$
+-is bijective\footnote{An isomorphism if model morphisms are taken into
++is bijective\footnote{An isomorphism if \DIFdelbegin \DIFdel{model }\DIFdelend morphisms \DIFaddbegin \DIFadd{of realisations }\DIFaddend are taken into
+ account.};
+ 
+ \item an \emph{inclusion comorphism} if 
+@@ -6072,8 +6163,8 @@
+    institution of its theories, denoted $I^{th}$, can be defined as follows. The category of signatures of $I^{th}$ is the category
+    of $I$-theories and $I$-theory morphisms, denoted $\Th^I$.
+    For each theory $(\Sigma, \Delta)$, its sentences are just $\Sigma$-sentences in $I$, and
+-   its models are just $\Sigma$-models in $I$ that satisfy the sentences in $\Delta$, while the
+-   $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in models of $I$.
++   its \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend are just $\Sigma$\DIFdelbegin \DIFdel{-models }\DIFdelend \DIFaddbegin \DIFadd{-realisations }\DIFaddend in $I$ that satisfy the sentences in $\Delta$, while the
++   $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of $I$.
+ \qed \end{definition}
+ 
+ Using this notion, logic translations can be defined that include axiomatization of parts of the
+@@ -6095,7 +6186,7 @@
+ an institution $J = (\Sig^J, \Mod^J,
+ \Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and two
+ natural transformations $\beta: \Mod^I \Longrightarrow \Mod^J \circ \Phi^{op}$
+-and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^J(\Phi(\Sigma))$ and each model $M\in\Mod^I(\Sigma)$
++and $\alpha:  \Sen^J \circ \Phi \Longrightarrow \Sen^I $, such that for each $I$-signature $\Sigma$, each sentence $\varphi\in\Sen^J(\Phi(\Sigma))$ and each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M\in\Mod^I(\Sigma)$
+ %
+ \begin{equation*}
+   M\models^{I}_{\Sigma}\alpha_{\Sigma}(\varphi)
+@@ -6114,9 +6205,9 @@
+ 
+ 
+ A major property of colimits of specifications is \emph{amalgamation} (also related to `exactness' \cite{DGS91}). It can be intuitively explained as 
+-stating that models of given
+-specifications can be combined to yield a uniquely determined model of
+-a colimit specification, provided that the original models coincide on
++stating that \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of given
++specifications can be combined to yield a uniquely determined \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend of
++a colimit specification, provided that the original \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend coincide on
+ common components. Amalgamation is a common technical assumption in the 
+ study of specification semantics
+ \cite{STbook}.
+@@ -6126,19 +6217,20 @@
+ 
+ \begin{definition}
+ Given a network $D\map{J}{\Sig^I}$, 
+-a family of models $\mathcal{M} = \{M_p\}_{j\in |J|}$ is
++a family of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend $\mathcal{M} = \{M_p\}_{j\in |J|}$ is
+ \emph{consistent with} $D$ (or sometimes compatible with $D$) 
+ if for each node $p$ of $D$, $M_p \in Mod(D(p))$ and
+ for each edge $e:p\rightarrow q$, $M_p = M_q\forget{D(e)}$.
+   A cocone
+ $(\Sigma,(\mu_j)_{j\in|J|})$ over the network $D\map{J}{\Sig^I}$ is
+ called \emph{weakly amalgamable} if it is mapped to a weak limit by $\Mod$.
+-For models, this means that for each $D$-compatible family of
+-models $(M_j)_{j\in|J|}$, there is a $\Sigma$-model $M$, called an amalgamation of 
++For \DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend , this means that for each $D$-compatible family of
++\DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend $(M_j)_{j\in|J|}$, there is a $\Sigma$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $M$, called an amalgamation of 
+  $(M_j)_{j\in|J|}$,
+ with
+-$M\forget{\mu_j}=M_j$ ($j\in|J|$), and similarly for model morphisms.
+- If this model is unique, the cocone
++$M\forget{\mu_j}=M_j$ ($j\in|J|$), and similarly for \DIFdelbegin \DIFdel{model morphisms }\DIFdelend \DIFaddbegin \DIFadd{morphisms of
++realisations}\DIFaddend .
++ If this \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend is unique, the cocone
+ is called \emph{amalgamable}. 
+ $I$ (or $\Mod$) admits \emph{(finite) (weak)
+ amalgamation} if (finite) colimit cocones are (weakly) amalgamable.
+@@ -6150,11 +6242,11 @@
+ in a heterogeneous setting, where the network consists of signatures (or theories)
+ in different logics. Since a network may admit more than one weakly amalgamable cocone,
+ a selection operation is required both for the weakly amalgamable cocone of a network 
+-and for the (potentially non-unique) amalgamation of a family of models compatible with the
++and for the (potentially non-unique) amalgamation of a family of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with the
+ network. This allows us to define a function
+ $colimit$ taking as argument a network of heterogeneous signatures and
+ returning the selected weakly amalgamable cocone for the network and
+-a function $\oplus$ taking as argument a family of models compatible with a network
++a function $\oplus$ taking as argument a family of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with a network
+ and returning its selected amalgamation.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@@ -6216,7 +6308,7 @@
+  \begin{itemize} 
+   \item $\Sig$ is inclusive and has pushouts which preserve inclusions,
+   \item $\Sen$ is inclusive, and
+-  \item each model category has a broad subcategory of inclusions.\quad\qed
++  \item each \DIFdelbegin \DIFdel{model category }\DIFdelend \DIFaddbegin \DIFadd{category of realisations }\DIFaddend has a broad subcategory of inclusions.\quad\qed
+  \end{itemize} 
+ \end{definition}
+ 
+@@ -6232,7 +6324,7 @@
+ We will write $\iota_{A\subseteq B}$ for the inclusion of $A$ in $B$ in an
+ inclusive category, when such an inclusion exists. If $\cI$ is an inclusive institution
+ and $\Sigma\subseteq\Sigma'$ is an inclusion of signatures, we write 
+-$M'\forget{\Sigma}$ for the reduct of a $\Sigma'$-model $M'$ along the inclusion
++$M'\forget{\Sigma}$ for the reduct of a $\Sigma'$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $M'$ along the inclusion
+ $\iota_{\Sigma\subseteq\Sigma'}$.
+ 
+ To be able to talk about the symbols of a signature in a formal way, it
+@@ -6252,7 +6344,8 @@
+ After these preliminaries, we can now list the assumptions made about the
+ institutions in a heterogeneous logical environment.
+ It is required that for each institution in the heterogeneous logical environment there is a trivial signature
+-$\emptyset$ with model class $\cM_\emptyset$ and such that there exists a unique signature morphism
++$\emptyset$ with \DIFdelbegin \DIFdel{model class }\DIFdelend \DIFaddbegin \DIFadd{class of realisations }\DIFaddend $\cM_\emptyset$ and 
++such that there exists a unique signature morphism
+ from $\emptyset$ to any signature of the institution. Moreover, the existence of a partial union operation on institutions is required, denoted $\bigcup$: 
+ $L_1 \bigcup L_2 = (L, \rho_1:L_1 \to L, \rho_2 : L_2 \to L)$, when defined, where
+ $L$ is an institution and $\rho_1$ and
+@@ -6289,17 +6382,18 @@
+ 
+ \medskip
+ 
+-\DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of models 
+-over some signature of an institution. This is called \emph{model-level}  semantics. In some cases, but not in all, one can also define
++\DOL follows a model-theoretic approach on semantics: the semantics of OMS will be defined as a class of \DIFdelbegin \DIFdel{models 
++}\DIFdelend \DIFaddbegin \DIFadd{realisations
++}\DIFaddend over some signature of an institution. This is called \emph{model-level}  semantics. In some cases, but not in all, one can also define
+ a \emph{theory-level} semantics of an OMS as a set of sentences over some signature of an institution. The two semantics are 
+ related by the fact that, when both the model-level and the theory-level semantics of an OMS are defined, they are compatible in the 
+-sense that the class of models given by the model-level semantics is exactly the model class of the theory given by the
++sense that the class of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend given by the model-level semantics is exactly the \DIFdelbegin \DIFdel{model class of }\DIFdelend \DIFaddbegin \DIFadd{class of realisations of }\DIFaddend the theory given by the
+ theory-level semantics. 
+ 
+  The following unifying notation is used for the two semantics of an OMS $O$: \begin{itemize} 
+  \item the institution of $O$ is denoted $\Inst(O)$,
+   \item the signature of $O$ is denoted $\Sig(O)$ (which is a signature in $\Inst(O)$),
+-  \item the class of models of $O$ is denoted $\Mod(O)$ (which is a class of models over $\Sig(O)$),
++  \item the class of models of $O$ is denoted $\Mod(O)$ (which is a class of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend over $\Sig(O)$),
+   \item the set of axioms of $O$ is denoted $\Th(O)$ (which is a set of sentences over $\Sig(O)$).
+  \end{itemize} 
+ \noindent Moreover, the semantics of $O$ is the tuple $sem(O) = (I, \Sigma, \cM,\Delta)$
+@@ -6314,7 +6408,7 @@
+  \item $\Name(N)$, the name of the node
+  \item $\Inst(N)$, the institution of the node
+  \item $\Sig(N)$, the signature of the node
+- \item $\Mod(N)$, the class of $\Sig(N)$-models of the node
++ \item $\Mod(N)$, the class of $\Sig(N)$\DIFdelbegin \DIFdel{-models }\DIFdelend \DIFaddbegin \DIFadd{-realisations }\DIFaddend of the node
+  \item $\Th(N)$, the set of $\Sig(N)$-sentences of the node
+  \end{itemize} 
+ and 
+@@ -6330,7 +6424,7 @@
+ $(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
+ $\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$).
+ The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
+-the class of models of that node is the class of models of $\Th(N)$. 
++the class of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of that node is the class of models of $\Th(N)$. 
+ For brevity,  the label of a node may be written as a tuple. Further, it is required that  any OMS can be assigned a unique name. 
+ 
+ The semantics of a network of OMS is a graph
+@@ -6658,26 +6752,26 @@
+ \noindent where $\Gamma' = \Gamma[n.\syntax{networkName} \mapsto sem(\Gamma, n.\syntax{network})]$.
+ 
+ If $n.$\syntax{ConservativityStrength} is \syntax{model-conservative}, the semantics is only
+-defined if the class of families of models compatible with the graph $sem(\Gamma,n.\syntax{network})$ is not empty.
++defined if the class of families of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with the graph $sem(\Gamma,n.\syntax{network})$ is not empty.
+ 
+ If $n.$\syntax{ConservativityStrength} is \syntax{consequence-conservative}, the semantics is 
+  defined only if all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
+ 
+ If $n.$\syntax{ConservativityStrength} is \syntax{monomorphic}, the semantics is only
+-defined if the class of families of models compatible with the graph 
++defined if the class of families of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with the graph 
+ $sem(\Gamma,n.\syntax{network})$ consist of exactly one isomorphism
+-class of families of models.
++class of families of \DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend .
+ 
+ If $n.$\syntax{ConservativityStrength} is \syntax{weak-definitional}, the semantics is only
+-defined if the class of families of models compatible with the graph 
++defined if the class of families of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with the graph 
+ $sem(\Gamma,n.\syntax{network})$ is at most a singleton.
+ 
+ If $n.$\syntax{ConservativityStrength} is \syntax{definitional}, the semantics is only
+-defined if the class of families of models compatible with the graph 
++defined if the class of families of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with the graph 
+ $sem(\Gamma,n.\syntax{network})$ is a singleton.
+ 
+ If $n.$\syntax{ConservativityStrength} is \syntax{not-model-conservative}, the semantics is only
+-defined if the class of families of models compatible with the graph $sem(\Gamma,n.\syntax{network})$ is the empty set.
++defined if the class of families of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with the graph $sem(\Gamma,n.\syntax{network})$ is the empty set.
+ 
+ If $n.$\syntax{ConservativityStrength} is \syntax{not-consequence-conservative}, the semantics is 
+  defined only if not all signature-free sentences that follow from the network, see entailment of OMS by networks, are tautologies.
+@@ -6935,7 +7029,7 @@
+         \{ M \in  \Mod(O') \mid  M \text{ is minimal in } \Mod(O')\}$ 
+         and ``minimal''
+ is interpreted in the pre-order defined by $M_1\leq M_2$
+-if there is a model homomorphism $\M_1\to\M_2$.
++if there is a \DIFdelbegin \DIFdel{model homomorphism }\DIFdelend \DIFaddbegin \DIFadd{homomorphism of realisations }\DIFaddend $\M_1\to\M_2$.
+  \item $\Delta = \bot$ 
+  \item $\Gamma'$ is obtained from $\Gamma''=Env(\Gamma, O')$ by adding to $\Gamma''.imports$ a new
+ node labeled with $(Name(O), \Inst(O),\allowbreak \Sig(O), \allowbreak \Mod(O), \Th(O))$ and
+@@ -6945,7 +7039,7 @@
+ 
+ The semantics of $O$
+ is defined similarly for the other three alternatives of $O.\syntax{closureType}$, 
+-only the model class differs:
++only the \DIFdelbegin \DIFdel{model class }\DIFdelend \DIFaddbegin \DIFadd{class of realisations }\DIFaddend differs:
+  \begin{itemize} 
+ \item if $O.\syntax{closureType} = \syntax{maximize}$,
+ $\cM = 
+@@ -6957,7 +7051,7 @@
+ $\cM = 
+         \{ M \in  \Mod(O') \mid  M \text{ is terminal in } \Mod(O')\}$
+  \end{itemize} 
+-Here, initial and terminal models are defined as in
++Here, initial and terminal \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend are defined as in
+ category theory, see \ref{sec:colimits}. 
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@@ -6973,8 +7067,8 @@
+ 
+ The semantics for \syntax{ClosableOMS} has been defined above.
+ 
+-The semantics for minimization selects the models that are minimal
+-in the class of all models with the same interpretation for the
++The semantics for minimization selects the \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend that are minimal
++in the class of all \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend with the same interpretation for the
+ local environment (= fixed non-logical symbols, in the terminology of circumscription).
+ 
+ Formally, if $O$ is a \syntax{RelativeClosureOMS},
+@@ -6990,7 +7084,7 @@
+  \item $\cM'' = 
+         \{ M \in  \cM \mid  M \text{ is minimal in } \{M' \in \cM \mid M'\forget\Sigma = M\forget\Sigma\}\}$ and ``minimal''
+ is interpreted in the pre-order defined by $M_1\leq M_2$
+-if there is a model homomorphism $\M_1\to\M_2$
++if there is a \DIFdelbegin \DIFdel{model homomorphism }\DIFdelend \DIFaddbegin \DIFadd{homomorphism of realisations }\DIFaddend $\M_1\to\M_2$
+  \item $\Delta'' = \bot$ 
+  \item $\Gamma''$ is obtained from $\Gamma'$ by adding to $\Gamma'.imports$ a new
+ node labeled with $(Name(O), \Inst(O),\allowbreak \Sig(O), \Mod(O), \Th(O))$ and
+@@ -7116,8 +7210,9 @@
+   \item $\cI = \Inst(O.\syntax{oms})$
+   \item $\Sigma = \Sigma'$,
+   \item $\Delta = \Delta'$
+-  \item $\cM$ is the class of $\Delta$-models
+-  \item $\Gamma''$ is obtained from 
++  \item $\cM$ is the class of $\Delta$\DIFdelbegin \DIFdel{-models
++  }\DIFdelend \DIFaddbegin \DIFadd{-realisations
++  }\DIFaddend \item $\Gamma''$ is obtained from 
+        $\Gamma' = Env(\Gamma, O.\syntax{oms})$
+        by extending $\Gamma'.imports$
+         with a new node for $O$ labeled as in the items above
+@@ -7141,8 +7236,9 @@
+   \item $\Sigma' = \Phi(\Sigma)$
+   \item $\Delta = \alpha^{-1}_{\Sig(O.\syntax{oms})}(\Th(O.\syntax{oms})^\bullet)\cap\Sen^{\cI'}(\Sig(O.\syntax{oms}))$.
+ , i.e.\ that part of $\Th(O.\syntax{oms})$ that can be expressed in the smaller signature and logic . In  practice, one looks for a finite subset that still is logically equivalent to this set.
+-  \item $\cM$ is the class of $\Delta$-models
+-  \item $\Gamma''$ is obtained from 
++  \item $\cM$ is the class of $\Delta$\DIFdelbegin \DIFdel{-models
++  }\DIFdelend \DIFaddbegin \DIFadd{-realisations
++  }\DIFaddend \item $\Gamma''$ is obtained from 
+        $\Gamma' = Env(\Gamma, O.\syntax{oms})$
+        by extending $\Gamma'.imports$
+         with a new node for $O$ labeled as in the items above
+@@ -7167,8 +7263,9 @@
+   \item $\Sigma''$ is the smallest signature
+ with $\Sigma'\subseteq\Sigma''$ and $\Delta'\subseteq\Sen(\Sigma'')$. ({If this smallest signature does not exist, the semantics is undefined.})
+   \item $\Delta'' = (\Delta\cap\Sen(\Sigma''))\cup\Delta'$
+-  \item $\Mod(O)$ is the class of all $\Delta$-models.
+-  \item $\Gamma''$ is obtained from 
++  \item $\Mod(O)$ is the class of all $\Delta$\DIFdelbegin \DIFdel{-models.
++  }\DIFdelend \DIFaddbegin \DIFadd{-realisations
++  }\DIFaddend \item $\Gamma''$ is obtained from 
+        $\Gamma'$
+        by extending $\Gamma'.imports$
+        with a new node for $O$ labeled as in the items above and
+@@ -7185,8 +7282,9 @@
+   \item $\\cI'' = \cI'$
+   \item $\Sigma'' = \Sigma\setminus \Sigma'$ 
+   \item $\Delta'' = \Delta\cap\Sen(\Sigma'')\setminus\Delta'$
+-  \item $\cM''$ is the class of all $\Th(O)$-models.
+-    \item $\Gamma''$ is obtained from 
++  \item $\cM''$ is the class of all $\Th(O)$\DIFdelbegin \DIFdel{-models.
++    }\DIFdelend \DIFaddbegin \DIFadd{-realisations
++    }\DIFaddend \item $\Gamma''$ is obtained from 
+        $\Gamma'$
+        by extending $\Gamma'.imports$
+        with a new node for $O$ labeled as in the items above and
+@@ -7670,8 +7768,8 @@
+ where $(\Gamma',(\cI,\Sigma',\cM',\Delta')) = sem(\Gamma,(\Sigma,\cM),e.\syntax{extendingOMS})$.
+ 
+ If $e.\syntax{conservativityStrength}$ is \syntax{model-conservative} or
+-\syntax{implied}, the semantics is only defined if each model in
+-$\cM$ is the $\Sigma$-reduct of some model in $\cM'$. 
++\syntax{implied}, the semantics is only defined if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend in
++$\cM$ is the $\Sigma$-reduct of some \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend in $\cM'$. 
+ In case that $e.\syntax{conservativityStrength}$ is \syntax{implied},
+ it is furthermore required that $\Sigma=\Sigma'$. 
+ If $e.\syntax{conservativityStrength}$ is \syntax{consequence\-conservative}, the semantics is only defined if for each
+@@ -7682,8 +7780,8 @@
+ %in $\cM'$ that is unique up to isomorphism.  
+ If
+ $e.\syntax{conservativityStrength}$ is \syntax{definitional}, the semantics is only
+-defined if each model in $\cM$ is the $\Sigma$-reduct of a unique
+-model in $\cM'$.
++defined if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend in $\cM$ is the $\Sigma$-reduct of a unique
++\DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend in $\cM'$.
+ 
+ If $e.\syntax{extensionName}$ is present, the inclusion link is labeled with this name.
+ 
+@@ -7751,7 +7849,7 @@
+ defined if $\Delta$ has only tautologies\footnote{A tautology is a sentence holding in every model.} as signature-free\footnote{A signature-free sentence is one over the empty signature.} logical consequences.\\
+ If $O.\syntax{conservativityStrength}$ is \syntax{monomorphic}, the semantics is only
+ defined if $\cM$ consist of exactly one isomorphism
+-class of models.\\
++class of \DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend .\\
+ If $O.\syntax{conservativityStrength}$ is \syntax{weak-definitional}, the semantics is only
+ defined if $\cM$ is empty or a singleton.\\
+ If $O.\syntax{conservativityStrength}$ is \syntax{definitional}, the semantics is only
+@@ -7996,14 +8094,14 @@
+ If the optional argument $d.\syntax{conservativityStrength}$ is
+  \begin{itemize} 
+ \item \syntax{model-conservative}, for
+-each model  $M_1\in |\Mod(L_1)|$ there must exist a model $M_2\in|\Mod(L_2)|$ such that
++each \DIFdelbegin \DIFdel{model  }\DIFdelend \DIFaddbegin \DIFadd{realisation  }\DIFaddend $M_1\in |\Mod(L_1)|$ there must exist a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M_2\in|\Mod(L_2)|$ such that
+ $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$. 
+ \item \syntax{consequence-conservative}, 
+ for each $\Sig(L_1)$-sentence $\varphi$, if $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ then
+ $\cM_1\models \varphi$.
+ \item \syntax{not-model-conservative}, 
+-there must exist a model  $M_1\in|\Mod(L_1)|$ such that there is no 
+-model $M_2\in|\Mod(L_2)|$ such that
++there must exist a \DIFdelbegin \DIFdel{model  }\DIFdelend \DIFaddbegin \DIFadd{realisation  }\DIFaddend $M_1\in|\Mod(L_1)|$ such that there is no 
++\DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M_2\in|\Mod(L_2)|$ such that
+ $\beta_{\Sig(L_1)}(M_2\forget\sigma) = M_1$.
+ \item \syntax{not-consequence-conservative}, 
+ there is a $\Sig(L_1)$-sentence $\varphi$, such that $\cM_2\models \sigma(\alpha_{\Sig(L_1)}(\varphi))$ and
+@@ -8093,18 +8191,19 @@
+  \end{enumerate} 
+ 
+ 
+-A refinement model is a class $\cM$ 
+-of pairs of families of models compatible with the two networks. 
+-Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$ model $F$, 
+- $F\forget\sigma$ is defined as the family of models 
+-$\{M_i\}_{i\in Nodes(G_1)}$ such that
++A refinement \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend is a class $\cM$ 
++of pairs of families of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend compatible with the two networks. 
++Given a network morphism $\sigma:G_1\to G_2$ and a $G_2$\DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $F$, 
++ $F\forget\sigma$ is defined as the family of \DIFdelbegin \DIFdel{models 
++}\DIFdelend \DIFaddbegin \DIFadd{realisations 
++}\DIFaddend $\{M_i\}_{i\in Nodes(G_1)}$ such that
+ $M_i = F_{\sigma^G(i)}\forget{\sigma^M_{i}}$ for each $i\in Nodes(G_1)$.
+ 
+ Thus, the semantics of a \syntax{Refinement} consists of
+  \begin{itemize} 
+  \item a refinement signature $(G_1,G_2)$,
+  \item a network morphism $\sigma$ and
+- \item a refinement model $\cM$.
++ \item a refinement \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $\cM$.
+  \end{itemize} 
+ \medskip
+ 
+@@ -8177,8 +8276,10 @@
+  $sem(\Gamma, \Sigma_1, \Sigma_2, r.\syntax{omsRefinementMap}) = (\rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2,\sigma:\Phi(\Sigma_1)\to\Sigma_2)$,\\
+  $\sigma'$ maps the node $n$ of $G_1$ to the node of $G_3$ and 
+  $(\sigma')^M_n = (\sigma_1)^M_n;(\rho;\sigma);(\sigma_2)^M_{\sigma_1^G(n)}$,\\
+- and $\cM = \{ (M_1, M_3)\mid \exists M_2 such that (M_2,M_3) \in \cM_2 and
+-  (M_1,M_2\forget{(\rho,\sigma)}) \in \cM_1 \}$.\\
++ and \DIFdelbegin \DIFdel{$\cM = \{ (M_1, M_3)\mid \exists M_2 such that (M_2,M_3) \in \cM_2 and
++  (M_1,M_2\forget{(\rho,\sigma)}) \in \cM_1 \}$}\DIFdelend \\ \DIFaddbegin \DIFadd{$\cM = \{ (M_1, M_3)\mid \exists M_2 \text{ such that }
++  (M_2,M_3) \in \cM_2 \text{ and }
++  (M_1,M_2\forget{(\rho,\sigma)}) \in \cM_1 \}$}\DIFaddend .\\
+  The refinement is correct only if
+  for each $(M,N)\in\cM_2$, 
+  there exists
+@@ -8412,11 +8513,13 @@
+ such that $Shape(G_1) = Shape(G_2)$ and, for each node $i\in |Shape(G_1)|$,
+ its names in the networks $G_1$ and $G_2$ are the same,
+ its signatures are the same
+-and the class of models obtained by projecting each family of models
+-compatible with $G_1$ to the component $i$
++and the class of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend obtained by projecting each family of \DIFdelbegin \DIFdel{models
++}\DIFdelend \DIFaddbegin \DIFadd{realisations
++}\DIFaddend compatible with $G_1$ to the component $i$
+ is included in the
+-class of models obtained by projecting each family of models
+-compatible with $G_2$ to the component $i$.
++class of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend obtained by projecting each family of \DIFdelbegin \DIFdel{models
++}\DIFdelend \DIFaddbegin \DIFadd{realisations
++}\DIFaddend compatible with $G_2$ to the component $i$.
+ Then $G$ extends the union of $G_1$ and $G_2$ for each 
+ pair of nodes $(i_1, i_2)$,
+ where $i_1$ and $i_2$ identify the occurrences of the same node $i$
+@@ -8484,7 +8587,8 @@
+ \item 
+ $\cI = \Inst(O_1) = \Inst(O_2)$ and 
+ \item
+-for each $i = 1,2$ and each model $M_i \in \Mod(O_i)$ there exists a unique model $M\in \cM$
++for each $i = 1,2$ and each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M_i \in \Mod(O_i)$ 
++there exists a unique \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M\in \cM$
+ such that $M\forget{\Sig(O_i)} = M_i$. 
+  \end{enumerate} 
+ %
+@@ -8511,8 +8615,9 @@
+ $sem(\Gamma, n_2) = G_2$,
+ $sem(\Gamma, n_3) = G_3$
+ such that $G_1$ and $G_2$ are subgraphs of $G_3$
+-and for each $i = 1,2$ and each family of models $\cM_i$ compatible with 
+-$G_i$ there is a unique family of models $\cM$ compatible with $G_3$ such that
++and for each $i = 1,2$ and each family of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend $\cM_i$ compatible with 
++$G_i$ there is a unique family of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations 
++}\DIFaddend $\cM$ compatible with $G_3$ such that
+ the projection of $\cM$ to the nodes in $G_i$ is $\cM_i$.
+ 
+ 
+@@ -8544,7 +8649,7 @@
+  $(O_2, \Inst(O_2),\Sig(O_2),  \Mod(O_2), \Th(O_2))$, 
+ and $\iota$ is an inclusion, 
+ when $\Sigma \subseteq \Sig(O_2) \subseteq \Sig(O_1)$
+-and if $c= \syntax{model-conservative}$ and for each $M\in\Mod(O_2)$ there is a model $M'\in \Mod(O_1)$ such that
++and if $c= \syntax{model-conservative}$ and for each $M\in\Mod(O_2)$ there is a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M'\in \Mod(O_1)$ such that
+ $M'\forget{\Sigma} = M\forget{\Sigma}$,
+ or if $c=\syntax{consequence-conservative}$ and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
+ implies $O_2\models\varphi$.
+@@ -8755,10 +8860,10 @@
+                                                                                                                   \end{cases}$$
+                                                                                                                   \noindent
+ $relativize_{\cI_1}(\Sigma_1,\Delta_1) = (\Sigma'_1,\Delta'_1)$,
+-$\cM'_1$ is the class of $\Delta'_1$-models,
++$\cM'_1$ is the class of $\Delta'_1$\DIFdelbegin \DIFdel{-models}\DIFdelend \DIFaddbegin \DIFadd{-realisations}\DIFaddend ,
+ $name_1 = 'relativized' ++ aName$,\\
+ $relativize_{\cI_2}(\Sigma_2,\Delta_2) = (\Sigma'_2,\Delta'_2)$,
+-$\cM'_2$ is the class of $\Delta'_2$-models and
++$\cM'_2$ is the class of $\Delta'_2$\DIFdelbegin \DIFdel{-models }\DIFdelend \DIFaddbegin \DIFadd{-realisations }\DIFaddend and
+ $name_2 = 'relativized'++aName'$.
+ 
+ %\sclause{Translational semantics of \DOL language constructs}
+@@ -9238,7 +9343,7 @@
+ atomic concepts, a set ${\mathcal R}$ of roles and a set ${\mathcal
+ I}$ of individual constants. Signature morphisms are tuples of
+ functions, one for each signature component.
+-Models are  first-order structures $I = (\Delta^I, .^I)$ with universe $\Delta^I$
++\DIFdelbegin \DIFdel{Models }\DIFdelend \DIFaddbegin \DIFadd{Realisations }\DIFaddend are  first-order structures $I = (\Delta^I, .^I)$ with universe $\Delta^I$
+ that interpret concepts as unary and roles as binary predicates
+ (using $.^I$). $I_1\leq I_2$ if $\Delta^{I_1}=\Delta^{I_2}$ and all
+ concepts and roles of $I_1$ are subconcepts and subroles of those in $I_2$.
+@@ -9400,9 +9505,9 @@
+  \end{itemize} 
+ \item The sentences for a signature are definded as in
+ the direct model-theoretic semantics of OWL \cite{w3c:owl2-direct-semantics}. Sentence translation is substitution of symbols.
+-\item  $(D,V)$-models are interpretations for $D$ and $V$. 
+-$(D,V)$-model morphisms are maps between the domains $\Delta_I$ preserving membership in classes and properties, where $\Delta_D$ is mapped identically. Model reducts are built by first translating along the signature morphism and then
+-looking up the interpretation in the model to be reduced.  
++\item  $(D,V)$\DIFdelbegin \DIFdel{-models }\DIFdelend \DIFaddbegin \DIFadd{-realisations }\DIFaddend are interpretations for $D$ and $V$. 
++\DIFaddbegin \DIFadd{Morphisms of }\DIFaddend $(D,V)$\DIFdelbegin \DIFdel{-model morphisms }\DIFdelend \DIFaddbegin \DIFadd{-models }\DIFaddend are maps between the domains $\Delta_I$ preserving membership in classes and properties, where $\Delta_D$ is mapped identically. \DIFdelbegin \DIFdel{Model reducts }\DIFdelend \DIFaddbegin \DIFadd{Reducts of realisations }\DIFaddend are built by first translating along the signature morphism and then
++looking up the interpretation in the \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend to be reduced.  
+ \item The satisfaction relation is defined as in direct model-theoretic semantics of OWL \cite{w3c:owl2-direct-semantics}.
+  \end{itemize} 
+ \qed\end{definition}
+@@ -9453,12 +9558,12 @@
+ we define $\beta: Mod^\OWL(\tilde{T}) \to Mod^\OWL(T)$ as follows: 
+ if $M'\in Mod^\OWL(\tilde{T})$, then $M=\beta(M')$ has as universe
+ $\Delta^M$ the set $(\top_T)^{M'}$ and each concept, role and individual are
+-interpreted in $M$ in the same way as in $M'$. Since $M'$ is a $\Delta'$-model,
+-we get that $M$ is indeed a $(C,R,I)$-model and moreover $M\models \Delta$.
++interpreted in $M$ in the same way as in $M'$. Since $M'$ is a $\Delta'$\DIFdelbegin \DIFdel{-model}\DIFdelend \DIFaddbegin \DIFadd{-realisation}\DIFaddend ,
++we get that $M$ is indeed a $(C,R,I)$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend and moreover $M\models \Delta$.
+ \end{definition}
+ 
+ \begin{note}
+-If $T = ((C,R,I),\Delta)$ is an \OWL theory, $M'$ is a $\tilde{T}$-model and
++If $T = ((C,R,I),\Delta)$ is an \OWL theory, $M'$ is a $\tilde{T}$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend and
+ $e$ is a $(C,R,I)$-sentence, we have that $M'\models \alpha(e)$ if and only if
+ $\beta(M')\models e$.
+ \end{note}
+@@ -9610,7 +9715,7 @@
+ set of sequence markers. An signature morphism maps
+ names and sequence markers separately, subject to the requirement
+  that a name is a discourse
+-name in the smaller signature if and only if it is one in the larger signature.  A $\Sigma$-model $I=(\UR,\UD,\rel,\fun,\intCL,\seq)$ consists of a set $\UR$,
++name in the smaller signature if and only if it is one in the larger signature.  A $\Sigma$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $I=(\UR,\UD,\rel,\fun,\intCL,\seq)$ consists of a set $\UR$,
+ the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
+ the universe of discourse, and four mappings:
+    \begin{itemize} 
+@@ -9640,13 +9745,15 @@
+ Note that sequences are essentially a non-first-order feature that
+ can be expressed in second-order logic.
+ 
+-Model reducts are defined in the following way: 
+-Given a signature morphism $\sigma:\Sigma_1\to\Sigma_2$ and a $\Sigma_2$-model
+-$I_2 =$ $(\UR,\UD,$ $\rel,\fun,\intCL,\seq)$, $I\forget{\sigma}=(\UR,\UD,\rel,\fun,\intCL\circ\sigma,\seq\circ\sigma)$. 
++\DIFdelbegin \DIFdel{Model reducts }\DIFdelend \DIFaddbegin \DIFadd{Reducts of realisations }\DIFaddend are defined in the following way: 
++Given a signature morphism $\sigma:\Sigma_1\to\Sigma_2$ and a $\Sigma_2$\DIFdelbegin \DIFdel{-model
++}\DIFdelend \DIFaddbegin \DIFadd{-realisation
++}\DIFaddend $I_2 =$ $(\UR,\UD,$ $\rel,\fun,\intCL,\seq)$, $I\forget{\sigma}=(\UR,\UD,\rel,\fun,\intCL\circ\sigma,\seq\circ\sigma)$. 
+ 
+-Given two \CL models $I_1=(\UR_1,\UD_1,\rel_1,\fun_1,\intCL_1,\seq_1)$
++Given two \CL \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend $I_1=(\UR_1,\UD_1,\rel_1,\fun_1,\intCL_1,\seq_1)$
+ and  $I_2=(\UR_2,\UD_2,\rel_2,\fun_2,\intCL_2,\seq_2)$, a homomorphism
+-$h:I_1\to I_2$ is a function $h:\UR_1\to\UR_2$ such that
++\DIFaddbegin \DIFadd{of realisations
++}\DIFaddend $h:I_1\to I_2$ is a function $h:\UR_1\to\UR_2$ such that
+  \begin{itemize} 
+ \item $h$ restricts to $k:\UD_1\to\UD_2$,
+ \item for each $x\in\UR_1$ and $s\in\UD_1^*$, if $s\in\rel_1(x)$, then $k^*(s)\in\rel_2(h(x))$\footnote{$k^*$ is the extension of $h$ to sequences.},
+@@ -9710,7 +9817,7 @@
+ \textit{resource references}. For $sub, pred, obj \in \mathbf{R_s}$, a
+ triple of the form $(sub, pred, obj)$ is a \textit{sentence} in \SimpleRDF,
+ where $sub$, $pred$, $obj$ represent subject name, predicate name,
+-object name, respectively. An $\mathbf{R_s}$-model $M =
++object name, respectively. An $\mathbf{R_s}$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $M =
+ \langle R_m, P_m, S_m, EXT_m \rangle$ consists of a \textit{set $R_m$
+   of resources}, a set $P_m \subseteq R_m$ of predicates, a
+ \textit{mapping function} $S_m:\mathbf{R_s} \rightarrow R_m$, and an
+@@ -9723,7 +9830,7 @@
+ %%%%%
+ %
+ Both \RDF and \RDFS are built on top of \SimpleRDF by fixing a certain
+-standard vocabulary both as part of each signature and in the models.\ednote{Refer to the RDF standard here.}
++standard vocabulary both as part of each signature and in the \DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend .\ednote{Refer to the RDF standard here.}
+ 
+ Actually, the standard vocabulary is given by a certain theory. In case
+ of \RDF, it contains e.g.\ resources \texttt{rdf:type} and
+@@ -9736,9 +9843,10 @@
+ \ \text{.}
+ \end{gather*}
+ 
+-In the models, the standard vocabulary is interpreted with a fixed
+-model.  Moreover, for each $\RDF$-model
+-$M = \langle R_m, P_m, S_m,\allowbreak \mathit{EXT}_m\rangle$,
++In the \DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend , the standard vocabulary is interpreted with a fixed
++\DIFdelbegin \DIFdel{model}\DIFdelend \DIFaddbegin \DIFadd{realisation}\DIFaddend .  Moreover, for each $\RDF$\DIFdelbegin \DIFdel{-model
++}\DIFdelend \DIFaddbegin \DIFadd{-realisation
++}\DIFaddend $M = \langle R_m, P_m, S_m,\allowbreak \mathit{EXT}_m\rangle$,
+ if $p\in P_m$,
+ then it must hold
+ $(p, S_m(\texttt{rdf:Property})) \in \mathit{EXT}_m(\texttt{rdf:type})$.
+@@ -10404,10 +10512,12 @@
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+-\ssclause{Models}\label{a:UML-CD-models}
++\DIFdelbegin %DIFDELCMD < \ssclause{Models}%%%
++\DIFdelend \DIFaddbegin \ssclause{Realisations}\DIFaddend \label{a:UML-CD-models}
+ 
+-As stated above, models (in the sense of the term \termref{model} defined in
+-clause~\ref{terms-and-defs}) of UML class models are obtained 
++As stated above, \DIFdelbegin \DIFdel{models (in the sense of the term }%DIFDELCMD < \termref{model} %%%
++\DIFdel{defined in
++clause~\ref{terms-and-defs}) }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of UML class models are obtained 
+ via a translation to Common Logic.
+ 
+ For a classifier net $\Sigma = ((C, {\leq_C}), P, O, A)$,
+@@ -10621,11 +10731,13 @@
+ It is straightforward to extend $\CL$
+ from signatures to signature morphisms.
+ 
+-\medskip\noindent\textbf{Models.}
+-A $\Sigma$-model of the UML class model institution is just a
+-$\CL(\Sigma)$-model in Common Logic. That is, the UML class model
+-institution inherits models from Common Logic. Moreover, model reducts
+-are inherited as well, using the action of $\CL$ on signature morphisms.
++\medskip\noindent\textbf{\DIFdelbegin \DIFdel{Models}\DIFdelend \DIFaddbegin \DIFadd{Realisations}\DIFaddend .}
++A $\Sigma$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend of the UML class model institution is just a
++$\CL(\Sigma)$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend in Common Logic. That is, the UML class model
++institution inherits \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend from Common Logic. Moreover, \DIFdelbegin \DIFdel{model reducts
++}\DIFdelend \DIFaddbegin \DIFadd{reducts
++of realisations
++}\DIFaddend are inherited as well, using the action of $\CL$ on signature morphisms.
+ 
+ 
+ 
+@@ -10730,8 +10842,8 @@
+ The satisfaction relation is inherited from Common Logic, using
+ a translation $\CL(\_)$ of multiplicity formulas to Common Logic.
+ That is, given a UML class and object model $\Sigma$, a
+-multiplicity formula $\varphi$ and a $\Sigma$-model $M$ (the
+-latter amounts to a $\CL(\Sigma)$-model $M$ in Common Logic): 
++multiplicity formula $\varphi$ and a $\Sigma$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $M$ (the
++latter amounts to a $\CL(\Sigma)$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realisation }\DIFaddend $M$ in Common Logic): 
+ %
+ \begin{equation*}
+   M \models_\Sigma \varphi
+@@ -10925,7 +11037,7 @@
+ while sort generation constraints are translated by
+ composing the morphism $\sigma'$ in their third component with $\varphi$.
+ 
+-Models interpret sorts as nonempty sets such that subsorts are injected into supersorts,
++\DIFdelbegin \DIFdel{Models }\DIFdelend \DIFaddbegin \DIFadd{Realisations }\DIFaddend interpret sorts as nonempty sets such that subsorts are injected into supersorts,
+ partial/total function symbols as partial/total functions and 
+ predicate symbols as relations,
+  such that the embeddings of subsorts into
+@@ -10935,7 +11047,7 @@
+ %$\keyword{etype}$ (for datatypes). 
+ 
+ The satisfaction relation is the expected one for partial first-order sentences. A sort generation
+-constraint $(S', F', \sigma')$ holds in a model $M$ if the carriers of the reduct of $M$ along $\sigma'$ 
++constraint $(S', F', \sigma')$ holds in a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M$ if the carriers of the reduct of $M$ along $\sigma'$ 
+ of the sorts in $S'$ are generated by function symbols in $F'$.
+ 
+ 
+@@ -11175,7 +11287,7 @@
+ $\SimpleRDF \rightarrow \RDF$ is an obvious inclusion, except that
+ \SimpleRDF resources need to be renamed if they happen to have a predefined
+ meaning in \RDF. The model translation needs to forget the fixed parts
+-of \RDF models. Since this part can always reconstructed in a unique
++of \RDF \DIFdelbegin \DIFdel{models}\DIFdelend \DIFaddbegin \DIFadd{realisations}\DIFaddend . Since this part can always reconstructed in a unique
+ way, the result is  an isomorphic model translation. 
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@@ -11197,7 +11309,7 @@
+ relation), and one individual per $\SimpleRDF$ resource. A $\SimpleRDF$ triple
+ $(s,p,o)$ is translated to the $\SROIQ(D)$ sentence
+    $$\top \sqsubseteq \exists U. (\exists sub. \{s\} \sqcap \exists pred. \{p\} \sqcap  \exists obj. \{o\} ).$$
+-  From an $\SROIQ(D)$ model ${\cal I}$, obtain a \SimpleRDF model by inheriting the universe
++  From an $\SROIQ(D)$ \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend ${\cal I}$, obtain a \SimpleRDF \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend by inheriting the universe
+   and the interpretation of individuals (then turned into resources).
+   The interpretation $P^{\cal I}$ of $P$ gives $P_m$, and $EXT_m$ is obtained
+   by de-reifying,
+@@ -11265,7 +11377,10 @@
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+-\sssclause{Translation of models}
++\DIFdelbegin %DIFDELCMD < \sssclause{Translation of models}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \sssclause{Translation of realisations}
++\DIFaddend 
+ 
+  \begin{itemize} 
+ 	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define $\beta_\Sigma(M') := (\Delta, \cdot^I)$
+@@ -11303,7 +11418,8 @@
+ $$\alpha_\Sigma(P(t_1,\ldots,t_n)) = (P\ \alpha_\Sigma(t_1)\ \ldots\ \alpha_\Sigma(t_n))$$
+ Within terms, function applications are translated similarly:
+ $$\alpha_\Sigma(f(t_1,\ldots,t_n)) = (f\ \alpha_\Sigma(t_1)\ \ldots\ \alpha_\Sigma(t_n))$$
+-A \Clogic.Fol model is translated to a FOL model by using the universe of
++A \Clogic.Fol \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend is translated to a FOL \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation 
++}\DIFaddend by using the universe of
+ discourse as FOL universe. The interpretation of constants is
+ directly given by the interpretation of the corresponding names
+ in \Clogic.Fol. The interpretation of a predicate symbol $P$ is given
+@@ -11325,7 +11441,7 @@
+ This translation has been described in annex~\ref{a:uml-class}. 
+ Translation of signatures is detailed in section~\ref{a:UML-CD-models},
+ translation of sentences in section~\ref{a:UML-CD-sat}.
+-Models are translated identically.
++\DIFdelbegin \DIFdel{Models }\DIFdelend \DIFaddbegin \DIFadd{Realisations }\DIFaddend are translated identically.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+@@ -13479,7 +13595,7 @@
+ 
+ \begin{example}
+ Given an unsorted first-order signature $F$,
+-a model $M$
++a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M$
+ of $F$
+ consists of an universe $M_U$
+ together with an interpretation of each function symbol $f \in F_i$
+@@ -13487,9 +13603,9 @@
+ taking $i$
+ arguments in $M_U$
+ with result in $M_U$.
+-Given two such models $M$
++Given two such \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend $M$
+ and $N$,
+-a model homomorphism $m : M \to N$
++a \DIFdelbegin \DIFdel{model homomorphism }\DIFdelend \DIFaddbegin \DIFadd{homomorphism of realisations }\DIFaddend $m : M \to N$
+ is a function $m: M_U \to N_U$
+ such that for each $i\in \mathbb{N}$
+ and each $f\in F_i$
+@@ -13497,9 +13613,9 @@
+ for every $x_1,\ldots x_n$
+ in $M_U$.
+ The identity function on $M_U$
+-is a model homomorphism on $M$
++is a \DIFdelbegin \DIFdel{model homomorphism }\DIFdelend \DIFaddbegin \DIFadd{homomorphism of realisations }\DIFaddend on $M$
+ and the composition is the usual composition of functions. This gives us
+-the category of first-order models of $F$.
++the category of first-order \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of $F$.
+ \end{example}
+ 
+ \begin{definition}
+@@ -13617,9 +13733,10 @@
+ \end{example}
+ 
+ \begin{example}
+-The forgetful functor $F$ from the category of unsorted first-order models of a 
+-signature $F$ to $Set$ takes each model $M$ to the set $M_U$ and each
+-model morphism $m:M\to N$ to its underlying function $m:M_U \to N_U$.
++The forgetful functor $F$ from the category of unsorted first-order 
++\DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realisations }\DIFaddend of a 
++signature $F$ to $Set$ takes each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realisation }\DIFaddend $M$ to the set $M_U$ and each
++\DIFdelbegin \DIFdel{model morphism }\DIFdelend \DIFaddbegin \DIFadd{morphism of realisations }\DIFaddend $m:M\to N$ to its underlying function $m:M_U \to N_U$.
+ \end{example}
+ 
+ \begin{example}
