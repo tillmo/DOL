@@ -12831,6 +12831,26 @@ spec Bag =
            }
 end
 
+spec Bag_variant =
+  sort Elem
+then minimize { %% select term generated models
+     sort Bag
+     ops mt:Bag;
+         __union__:Bag*Bag->Bag, assoc, comm, unit mt
+           }
+then	   
+  pred __elem__ : Elem * Bag
+  forall x:Elem; b1,b2:Bag
+  . not x elem mt
+  . x elem (b1 union b2) <=> (x elem b1 \/ x elem b2)
+  . b1=b2 <=> forall y:Elem . (y elem b1 <=> y elem b2) %(extensionality)%
+     %% term generatedness and extensionality together
+     %% select the standard bag model
+end
+
+equivalence e : Bag <-> Bag_variant = {}
+end
+
 spec Stream =
   sort Elem
   then cofree {
@@ -12843,6 +12863,11 @@ end
 spec Finite =
   sort Elem
   free type Nat ::= 0 | suc(Nat)
+  pred __<__ : Nat * Nat
+  forall m,n:Nat
+  . 0 < suc(n)
+  . not n < 0
+  . suc(m) < suc(n) <=> m < n
   op f: Nat ->? Elem
   . forall x:Elem . exists n:Nat . f(n)=x           %(f_surjective)%
   . exists n:Nat . forall m:Nat . def f(m) => m<n   %(f_bounded)%
