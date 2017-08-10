@@ -1,0 +1,54 @@
+--- OMG_OntoIOp_current-diff-all.tex
++++ OMG_OntoIOp_current-diff-all.tex
+@@ -11229,7 +11229,9 @@
+ Concepts are translated as follows:
+  \begin{itemize} 
+  \item $\alpha_x(A) = A(x)$
+- \item $\alpha_x(\lnot C) = \lnot \alpha_x (C)$
++ \item \DIFaddbegin \DIFadd{$\alpha_x(\top) = \mathit{true}$
++ }\item \DIFadd{$\alpha_x(\bot) = \mathit{false}$
++ }\item \DIFaddend $\alpha_x(\lnot C) = \lnot \alpha_x (C)$
+  \item $\alpha_x(C \sqcap D) = \alpha_x(C) \land \alpha_x(D)$
+  \item $\alpha_x(C \sqcup D) = \alpha_x(C) \lor \alpha_x(D)$ 
+  \item $\alpha_x(\exists R.C) = \exists y . (R(x,y) \land \alpha_y(C))$
+@@ -11268,22 +11270,29 @@
+ \sssclause{Translation of models}
+ 
+  \begin{itemize} 
+-	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define $\beta_\Sigma(M') := (\Delta, \cdot^I)$
+-	with $\Delta = |M'|$ and $A^I = M'_A, a^I = M'_a, R^I = M'_R$.
++	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define \DIFdelbegin \DIFdel{$\beta_\Sigma(M') := (\Delta, \cdot^I)$
++	}\DIFdelend \DIFaddbegin \DIFadd{$\I=\beta_\Sigma(M') := (\Delta, \cdot^\I)$
++	}\DIFaddend with $\Delta = |M'|$ and\\ \DIFdelbegin \DIFdel{$A^I = M'_A, a^I = M'_a, R^I = M'_R$}\DIFdelend \DIFaddbegin \DIFadd{$A^\I = M'_A, a^\I = M'_a, R^\I = M'_R$}\DIFaddend .
+  \end{itemize} 
+ 
+ 	\begin{proposition}
+-$C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (C) \right\}$
+-	\end{proposition}
+-
+-	\begin{proof} By Induction over the structure of $C$.
+- \begin{itemize} 
+-	\item $A^\I = M'_A = \left \{m \in M'_{\Thing} \vert M' + \{x \mapsto m \} \models A(x)  \right\}$
+-	\item $(\lnot C)^\I = \Delta \setminus C^\I =^{I.H.} \Delta \setminus \{m \in M'_\Thing \lvert M' + \{x \mapsto m\} \models \alpha_x(C)\} = \{m \in M'_\Thing \vert M' + \{x \mapsto m\} \models \lnot \alpha_x(C)\}$
+- \end{itemize} 
++\DIFdelbegin \DIFdel{$C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (C) \right\}$
++	}\DIFdelend \DIFaddbegin \DIFadd{$C^\I = \left\{m \in \Delta \lvert M' + \{x \mapsto m \} \models \alpha_x (C) \right\}$
++	}\DIFaddend \end{proposition}
++
++	\begin{proof} By \DIFdelbegin \DIFdel{Induction }\DIFdelend \DIFaddbegin \DIFadd{induction }\DIFaddend over the structure of $C$.
++ \begin{itemize} 
++	\item \DIFdelbegin \DIFdel{$A^\I = M'_A = \left \{m \in M'_{\Thing} \vert M' + \{x \mapsto m \} \models A(x)  \right\}$
++	}\DIFdelend \DIFaddbegin \DIFadd{$A^\I = M'_A = \left \{m \in \Delta \vert M' + \{x \mapsto m \} \models A(x)  \right\}$
++	}\DIFaddend \item \DIFdelbegin \DIFdel{$(\lnot C)^\I = \Delta \setminus C^\I =^{I.H.} \Delta \setminus \{m \in M'_\Thing \lvert M' + \{x \mapsto m\} \models \alpha_x(C)\} = \{m \in M'_\Thing \vert M' + \{x \mapsto m\} \models \lnot \alpha_x(C)\}$
++}\DIFdelend \\ \DIFaddbegin \DIFadd{$(\lnot C)^\I = \Delta \setminus C^\I =^{I.H.} \Delta \setminus \{m \in \Delta \lvert M' + \{x \mapsto m\} \models \alpha_x(C)\} = \{m \in \Delta  \vert M' + \{x \mapsto m\} \models \lnot \alpha_x(C)\}$
++}\DIFaddend  \end{itemize} 
+ 	\end{proof}
+ 
+-	The satisfaction condition holds as well.
++        The \DIFdelbegin \DIFdel{satisfaction condition holds as well}\DIFdelend \DIFaddbegin \DIFadd{other cases are similar.
++}
++
++	 \DIFadd{The satisfaction condition now follows easily}\DIFaddend .
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
