@@ -4560,7 +4560,11 @@ keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in cu
   \syntax{ClosableOMS}). A closure forces the subsequently declared
   non-logical symbols to be interpreted in a minimal  or
   maximal way, while the non-logical symbols declared  in
-  the local environment are fixed. Variants of closure are
+  the local environment are fixed.\footnote
+  {Note that if applied to algebraic signatures (sorts and operation symbols),
+    minimization can be used to express reachability (i.e. term-generatedness)
+    of algebraic (first-order) models.}
+  Variants of closure are
   minimization, maximization, freeness (minimizing also data
   sets and equalities on these,  which enables the inductive
   definition of relations and datatypes), and cofreeness (enabling the
@@ -12847,6 +12851,26 @@ spec Bag =
            }
 end
 
+spec Bag_variant =
+  sort Elem
+then minimize { %% select term generated models
+     sort Bag
+     ops mt:Bag;
+         __union__:Bag*Bag->Bag, assoc, comm, unit mt
+           }
+then	   
+  pred __elem__ : Elem * Bag
+  forall x:Elem; b1,b2:Bag
+  . not x elem mt
+  . x elem (b1 union b2) <=> (x elem b1 \/ x elem b2)
+  . b1=b2 <=> forall y:Elem . (y elem b1 <=> y elem b2) %(extensionality)%
+     %% term generatedness and extensionality together
+     %% select the standard bag model
+end
+
+equivalence e : Bag <-> Bag_variant = {}
+end
+
 spec Stream =
   sort Elem
   then cofree {
@@ -12859,6 +12883,11 @@ end
 spec Finite =
   sort Elem
   free type Nat ::= 0 | suc(Nat)
+  pred __<__ : Nat * Nat
+  forall m,n:Nat
+  . 0 < suc(n)
+  . not n < 0
+  . suc(m) < suc(n) <=> m < n
   op f: Nat ->? Elem
   . forall x:Elem . exists n:Nat . f(n)=x           %(f_surjective)%
   . exists n:Nat . forall m:Nat . def f(m) => m<n   %(f_bounded)%
