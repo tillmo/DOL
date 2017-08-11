@@ -26,8 +26,8 @@
 %\documentclass[10pt, letterpaper]{isov2} 
 \documentclass[10pt, a4paper]{isov2} 
 \usepackage{changebar}
-\newcommand{\bc}[1]{{\large JIRA #1\\}\cbstart }
-\newcommand{\ec}{\cbend}
+\newcommand{\bc}[1]{{\large \hrulefill {\color{red}{JIRA #1}} \hrulefill\\}  }
+\newcommand{\ec}{~\\{\large\hrulefill end \hrulefill\\}}
 
 %% Cleaning up things that isov2 gets wrong
 \makeatletter
@@ -53,8 +53,8 @@
 %
 
 
-%\textwidth 16.5cm
-%\hoffset -0.1cm
+\textwidth 17.5cm
+\hoffset -0.7cm
 \textheight 24cm
 %\voffset 1cm
 
@@ -1370,7 +1370,6 @@ algorithms that have been employed in obtaining an alignment.
 
 \sclause{Conformance of an Application With \DOL}\label{c:conform:application}
 
-\bc{36}
 In the following, ``\DOL abstract syntax'' means an XMI document that
 conforms to the \DOL metamodel. Optionally, further representations
 (e.g. as JSON) can be supported.
@@ -1389,9 +1388,10 @@ A \emph{printer} is \DOL-conformant if it can read \DOL abstract syntax and prod
 \item \emph{simple analysis}: static analysis of \DOL excluding networks and alignments;
 \item \emph{full analysis}: static analysis of full \DOL.
  \end{itemize} 
-\item a \emph{transformation tool} is \DOL-conformant if it \DIFaddbegin \DIFadd{operates on DOL (abstract) syntax and }\DIFaddend implements
+\item \bc{36}
+a \emph{transformation tool} is \DOL-conformant if it \DIFaddbegin \DIFadd{operates on DOL (abstract) syntax and }\DIFaddend implements
 one (or more) language translations, logic translations, language
-projections and/or logic projections.
+projections and/or logic projections.\ec
 \item
 Software that implements machine \emph{reasoning} about OMS (e.g., theorem proving, approximation)  complies with this specification if and only if it interprets  DOL documents according to the semantics defined in section~\ref{c:semantics}. In more detail, a reasoning tool can have the following capabilities:
  \begin{itemize} 
@@ -1421,7 +1421,7 @@ and logic projections);
   document has a defined semantics.
  \end{itemize} 
  \end{itemize} 
-\ec
+
 
 In practice, \DOL-aware \emph{applications} may also deal with documents that are not conforming 
 with \DOL according to the criteria established in \cref{c:conform:document}.  However, an 
@@ -1672,11 +1672,9 @@ of logic (model theory). \DIFaddbegin \DIFadd{In this document, we use the term 
 
 
 \bc{82}
-  \DIFdelbegin \DIFdel{\termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
- }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{model}.}
-  }\DIFdelend \DIFaddbegin \DIFadd{\termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
- }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \termref{realization}.}
-  }\DIFaddend \begin{note}
+  \termdefinitionLight{\termref{non-logical symbol}\synonym OMS symbol\index{OMS symbol|see {OMS symbol}
+ }}{atomic expression or syntactic constituent of an \termref{OMS} that requires an interpretation through a \DIFdel{\termref{model}}\DIFadd{\termref{realization}}.}
+    \begin{note}
   This differs from the notion of ``atomic sentence'': such sentences
   may involve several non-logical symbols.
   \end{note}
@@ -1819,10 +1817,7 @@ The converse is generalization.
 
 
 \bc{82}
-\DIFdelbegin %DIFDELCMD < \termdefinition{axiom}{\termref{sentence} that is  postulated to be valid (i.e.\ true in every \termref{model}).}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \termdefinition{axiom}{\termref{sentence} that is  postulated to be valid (i.e.\ true in every \termref{realization}).}
-\DIFaddend 
+ \termdefinition{axiom}{\termref{sentence} that is  postulated to be valid (i.e.\ true in every \DIFdel{model}\DIFadd{realization}).}
 \ec
 
   \termdefinition{theorem}{\termref{sentence} that has been proven from other axioms \index{axiom} and theorems\index{theorem} and therefore has been
@@ -2105,8 +2100,8 @@ If a symbol is removed, all axioms containing that symbol are removed, too.
 
 \bc{82}
 \termdefinitionLight{\termref{closure}\synonym circumscription\index{circumscription|see {closure}}}
-{structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \DIFdelbegin %DIFDELCMD < \termref{models}%%%
-\DIFdelend \DIFaddbegin \termref{realizations}\DIFaddend \index{model} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
+{structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \DIFdel{models}%%%
+ \DIFadd{realizations} \index{model} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
 \ec
 
 \begin{note}
@@ -2423,16 +2418,10 @@ that targets specific applications or reasoning methods.}
 
 \begin{definitions}
 \bc{82}
-  \DIFdelbegin %DIFDELCMD < \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
-%DIFDELCMD < models \index{model}  (interpretations of these),
-%DIFDELCMD < sentences\index{sentence}  (constraints on models),
-%DIFDELCMD <  and a \termref{satisfaction relation} between models and sentences\index{sentence}.}
-%DIFDELCMD <   %%%
-\DIFdelend \DIFaddbegin \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
-realizations \index{model}  (interpretations of these),
+ \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
+ \DIFdel{models}\DIFadd{realizations} \index{model}  (interpretations of these),
 sentences\index{sentence}  (constraints on realizations),
  and a \termref{satisfaction relation} between realizations and sentences\index{sentence}.}
-\DIFaddend
 \ec
 
 \begin{note}
@@ -2460,16 +2449,10 @@ supports relation between languages and logics, stating that
 the language has exactly the expressivity of the logic.}
 
 \bc{82}
- \DIFdelbegin %DIFDELCMD < \termdefinition{institution}{metaframework mathematically formalizing
-%DIFDELCMD < the notion of a \termref{logic} in terms of notions of
-%DIFDELCMD < \termref{signature}, \termref{model}, \termref{sentence}
-%DIFDELCMD < and \termref{satisfaction}.}
-%DIFDELCMD <  %%%
-\DIFdelend \DIFaddbegin \termdefinition{institution}{metaframework mathematically formalizing
+\termdefinition{institution}{metaframework mathematically formalizing
 the notion of a \termref{logic} in terms of notions of
-\termref{signature}, \termref{realization}, \termref{sentence}
+\termref{signature}, \DIFdel{model} \DIFadd{realization}, \termref{sentence}
 and \termref{satisfaction}.}
-\DIFaddend
 \ec
 
 \begin{note}
@@ -2483,8 +2466,7 @@ Institutions provide a formal framework that enables this abstraction.
  \begin{note}
 The notion of institution uses \termref{category} theory for
 providing formal interfaces for the notions of
-\termref{signature}, \DIFdelbegin %DIFDELCMD < \termref{model}%%%
-\DIFdelend \DIFaddbegin \termref{realization}\DIFaddend , \termref{sentence}
+\termref{signature},  \DIFdel{model}\DIFadd{realization}, \termref{sentence}
 and \termref{satisfaction}.
 \end{note} 
  \ec
@@ -2502,30 +2484,17 @@ and \termref{satisfaction}.
 
 
 \bc{82}
-  \DIFdelbegin %DIFDELCMD < \termdefinition{logic translation}{\termref{translation} of a source
-%DIFDELCMD <     \termref{logic} into a target \termref{logic} (mapping
-%DIFDELCMD <     signatures\index{signature}, sentences\index{sentence} and models\index{model})
-%DIFDELCMD <     that keeps or encodes the logical content of \termref{OMS}.}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \termdefinition{logic translation}{\termref{translation} of a source
+ \termdefinition{logic translation}{\termref{translation} of a source
     \termref{logic} into a target \termref{logic} (mapping
-    signatures\index{signature}, sentences\index{sentence} and realizations\index{model})
+    signatures\index{signature}, sentences\index{sentence} and \DIFdel{models}\DIFadd{realizations}\index{model})
     that keeps or encodes the logical content of \termref{OMS}.}
-\DIFaddend 
 
-  \DIFdelbegin %DIFDELCMD < \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
-%DIFDELCMD <     onto a (usually less expressive) target \termref{logic} (mapping
-%DIFDELCMD < 	signatures\index{signature}, sentences\index{sentence} and models\index{model})
-%DIFDELCMD <     that forgets those parts of the logical structure not
-%DIFDELCMD <     fitting the target \termref{logic}.}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
+ \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
     onto a (usually less expressive) target \termref{logic} (mapping
-	signatures\index{signature}, sentences\index{sentence} and realizations\index{model})
+	signatures\index{signature}, sentences\index{sentence} and \DIFdel{models}\DIFadd{realizations}\index{model})
     that forgets those parts of the logical structure not
-    fitting the target \termref{logic}.}
-\DIFaddend 
-\bc{82}
+    fitting the target \termref{logic}.} 
+\ec
 
 
 \termdefinition{simple theoroidal logic translation}{translation that maps 
@@ -2575,15 +2544,9 @@ See section~\ref{dist-het-onto}.
   preserves and reflects \termref{logical consequence}.}
 
 \bc{82}
-\DIFdelbegin %DIFDELCMD < \termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective model translation (ensuring faithfulness of the mapping).}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective translation of realizations (ensuring faithfulness of the mapping).}
-\DIFaddend 
+\termdefinition{model-expansive mapping}{\termref{logic mapping} that has a surjective translation of \DIFdel{models}\DIFadd{realizations} (ensuring faithfulness of the mapping).}
 
-\DIFdelbegin %DIFDELCMD < \termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of models.}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of realizations.}
-\DIFaddend 
+\termdefinition{model-bijective mapping}{\termref{logic mapping} that has a bijective mapping of \DIFdel{models}\DIFadd{realizations}.}
 \ec
 
 \termdefinition{exact mapping}{\termref{logic mapping} that is
@@ -2594,31 +2557,19 @@ See section~\ref{dist-het-onto}.
   \termref{OMS translation} and \termref{OMS reduction}.}
 
 \bc{82}
-\DIFdelbegin %DIFDELCMD < \termdefinition{embedding}{\termref{logic mapping} that embeds the
-%DIFDELCMD <   source into the target logic, using components that are embeddings
-%DIFDELCMD <   and (in the case of model translations) isomorphism.}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \termdefinition{embedding}{\termref{logic mapping} that embeds the
+\\termdefinition{embedding}{\termref{logic mapping} that embeds the
   source into the target logic, using components that are embeddings
-  and (in the case of translations of realizations) isomorphism.}
-\DIFaddend 
+  and (in the case of translations of \DIFdel{models}\DIFadd{realizations}) isomorphism.}
 \ec
 
 \termdefinition{sublogic}{\termref{logic embedding} that is ``syntactic'' in the sense that \termref{signature} and \termref{sentence} translations are inclusions.}
 
 \bc{82}
-\DIFdelbegin %DIFDELCMD < \termdefinition{adjointness}{relation between a \termref{logic
-%DIFDELCMD <     translation} and a \termref{logic reduction}, expressing that
-%DIFDELCMD <   they share their \termref{sentence} and \termref{model}
-%DIFDELCMD <   translations, while the signature translations are adjoint to each
-%DIFDELCMD <   other (in the sense of \termref{category} theory).}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \termdefinition{adjointness}{relation between a \termref{logic
+\termdefinition{adjointness}{relation between a \termref{logic
     translation} and a \termref{logic reduction}, expressing that
   they share their \termref{sentence} and 
-  translations of \termref{realizations}, while the signature translations are adjoint to each
+  translations of \DIFdel{models}\DIFadd{realizations}, while the signature translations are adjoint to each
   other (in the sense of \termref{category} theory).}
-\DIFaddend 
 \ec
 
 
@@ -4516,22 +4467,24 @@ see Fig.~\ref{fig:basic_oms}.
 See the informative annexes~\ref{a:owl} to~\ref{a:casl} for details.
 
 
-\bc{39}
 \begin{figure}[b]
+\bc{39}
   \centering
     \includegraphics[scale=0.47]{mof/native_document.png}
    \caption{Informative diagram showing subclasses of \syntax{NativeDocument} \DIFadd{[new figure]}}
    \label{fig:native_document}
+\ec
 \end{figure}
 
 
 \begin{figure}
+\bc{39}
   \centering
     \includegraphics[scale=0.47]{mof/basic_oms.png}
    \caption{Informative diagram showing subclasses of \syntax{BasicOMS} \DIFadd{[new figure]}}
    \label{fig:basic_oms}
-\end{figure}
 \ec
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4795,10 +4748,10 @@ keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in cu
   \syntax{ClosableOMS}). A closure forces the subsequently declared
   non-logical symbols to be interpreted in a minimal  or
   maximal way, while the non-logical symbols declared  in
-  the local environment are fixed.\bc{90}\DIFaddbegin \footnote
-  {\DIFadd{Note that if applied to algebraic signatures (sorts and operation symbols),
+  the local environment are fixed.\DIFaddbegin \footnote
+  {\bc{90}\DIFadd{Note that if applied to algebraic signatures (sorts and operation symbols),
     minimization can be used to express reachability (i.e. term-generatedness)
-    of algebraic (first-order) models.}}\ec
+    of algebraic (first-order) models.}\ec}
   \DIFaddend Variants of closure are
   minimization, maximization, freeness (minimizing also data
   sets and equalities on these,  which enables the inductive
@@ -4908,10 +4861,12 @@ features a more fine-grained structure of non-terminals
 (\syntax{Conservative}, \syntax{ConservativityStrength} and
 \syntax{ExtConservativityStrength}) in order to express the same
 constraints via the EBNF grammar.
+
 \bc{94}
+
 \begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]
 BasicOMS           ::= @$<$@language and serialization specific@$>$@ 
-ClosableOMS        ::= BasicOMS |  ( \DIFaddbegin \DIFadd{'\{}{\DIFadd{' BasicOMS '}}\DIFadd{\}' | }\DIFaddend )  OMSRef [ImportName]
+ClosableOMS        ::= BasicOMS |  @ \DIFaddbegin \DIFadd{'\{}{\DIFadd{' BasicOMS '}}\DIFadd{\}' | }\DIFaddend @  OMSRef [ImportName]
 ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
 RelativeClosureOMS ::= ClosureType '{' ClosableOMS '}'
 OMS                ::= ExtendingOMS
@@ -4935,9 +4890,9 @@ ClosureType        ::= 'minimize'
 \end{lstlisting}
 \ec
 
-\lstset{escapeinside = {*@}{@*}}
-\begin{lstlisting}[language=ebnf,mathescape]
+\lstset{escapeinside = {@}{@}}
 \bc{92}
+\begin{lstlisting}[language=ebnf,mathescape]
 CircMin            ::= Symbol Symbol*
 CircVars           ::= 'vars' @\DIFadd{(}@Symbol Symbol*@\DIFadd{)}@
 GroupOMS           ::= '{' OMS '}' | OMSRef
@@ -5168,7 +5123,6 @@ to the \syntax{InterfaceSignature}.
 \vspace{-2em}
 \index{alignment}
 \lstset{escapeinside = {*@}{@*}}
-\bc{92}
 \begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
 
 MappingDefinition  ::= InterpretationDefinition
@@ -5236,6 +5190,9 @@ Symbol          ::= IRI
 GeneralizedTerm    ::= Symbol
 Relation           ::= RelationReference | StandardRelation
 RelationReference  ::= IRI
+\end{lstlisting}
+\bc{92}
+\begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
 StandardRelation   ::= '>' | '<' | '=' | '%' | 'ni' | 'in'
                        *@$<$ \rm No keyword corresponding to @*default-relation*@ \rm as this is just the default if@*
                        *@\phantom{$<$ }@*Relation*@ \rm is omitted\DIFadd{~}$>$@*
@@ -5809,10 +5766,9 @@ The character set for the \DOL text serialization is the UTF-8 encoding of Unico
 \DIFdelend \DIFaddbegin \ssclause{Keywords and signs}\DIFaddend \label{c:keywords}
 
 The lexical symbols of the \DOL text serialization include various \DIFdelbegin \DIFdel{key words }\DIFdelend \DIFaddbegin \DIFadd{keywords }\DIFaddend and signs that occur as terminal symbols in the context-free grammar in \aref{a:EBNF}.   \DIFdelbegin \DIFdel{Key words }\DIFdelend \DIFaddbegin \DIFadd{Keywords }\DIFaddend and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
-\ec
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\bc{94}
 \DIFdelbegin %DIFDELCMD < \sssclause{Key words}
 %DIFDELCMD < %%%
 \DIFdelend \DIFaddbegin \sssclause{Keywords}
@@ -11635,12 +11591,8 @@ $ \forall x,y . (\exists z_1,\ldots, z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \w
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  \bc{82}
-\DIFdelbegin %DIFDELCMD < \sssclause{Translation of models}
-%DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \sssclause{Translation of realizations}
-\DIFaddend 
-\ec
+  \sssclause{Translation of realizations}
+
 
 \bc{81}
  \begin{itemize} 
@@ -11975,6 +11927,9 @@ ExcludedElementRef  ::= IRI
 \begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 
 BasicOMS           ::= @$<$\DIFadd{~}@language specific@\DIFadd{~}$>$@ 
+\end{lstlisting}
+\ec
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 OMS                ::= ExtendingOMS
                      | ClosureOMS
                      | TranslationOMS
@@ -12010,7 +11965,7 @@ ConservativityStrength ::= consequence-conservative
 OMSName            ::= IRI
 SubstName          ::= IRI
 \end{lstlisting}
-\ec
+
 
 % Corresponds to image mof/extension&closure.png
 \begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
@@ -13348,7 +13303,7 @@ spec Bag =
 end
 \end{lstlisting}
 
-\bc{348}
+\bc{90}
 \DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{spec Bag_variant =}}
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ sort Elem}}
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{then minimize \{ \%\% select term generated models}}
@@ -13387,7 +13342,7 @@ spec Finite =
 \end{lstlisting}
 \vspace{-2em}
 
-\bc{348}
+\bc{90}
   \DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ pred __<__ : Nat * Nat}}
   \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ forall m,n:Nat}}
   \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . 0 < suc(n)}}
