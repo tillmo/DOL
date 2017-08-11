@@ -1,6 +1,14 @@
 --- OMG_OntoIOp_current-diff-all.tex
 +++ OMG_OntoIOp_current-diff-all.tex
-@@ -4587,7 +4587,11 @@
+@@ -4576,6 +4576,7 @@
+ \syntax{ExtendingOMS} is a subclass of \syntax{OMS}, containing
+ those OMS that may be used to extend a given OMS within an \syntax{ExtensionOMS}.
+ An \syntax{ExtendingOMS} can be one of the following:
++\bc{348}
+  \begin{itemize} 
+ \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
+ language (which is defined outside this standard; practically every example uses basic OMS)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
+@@ -4587,7 +4588,11 @@
    \syntax{ClosableOMS}). A closure forces the subsequently declared
    non-logical symbols to be interpreted in a minimal  or
    maximal way, while the non-logical symbols declared  in
@@ -13,12 +21,21 @@
    minimization, maximization, freeness (minimizing also data
    sets and equalities on these,  which enables the inductive
    definition of relations and datatypes), and cofreeness (enabling the
-@@ -12952,7 +12956,30 @@
+@@ -4595,6 +4600,7 @@
+   See Annex~\ref{ex:blocks} for examples of the former two, and
+   Annex~\ref{ex:datatypes} for examples of the latter two.
+  \end{itemize} 
++ \ec
+ Recall that the local environment is the OMS built from all
+ previously-declared symbols and axioms.
+ 
+@@ -12952,7 +12958,31 @@
           __union__:Bag*Bag->Bag, assoc, comm, unit mt
             }
  end
 +\end{lstlisting}
-+
+ 
++\bc{348}
 +\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{spec Bag_variant =}}
 +\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ sort Elem}}
 +\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{then minimize \{ \%\% select term generated models}}
@@ -39,22 +56,24 @@
 +\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{equivalence e : Bag <-> Bag_variant = \{\}}}
 +\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{end}}
 +\\
- 
++\ec
 +\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
  spec Stream =
    sort Elem
    then cofree {
-@@ -12965,6 +12992,15 @@
+@@ -12965,6 +12995,17 @@
  spec Finite =
    sort Elem
    free type Nat ::= 0 | suc(Nat)
 +\end{lstlisting}
 +\vspace{-2em}
++\bc{348}
 +  \DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ pred __<__ : Nat * Nat}}
 +  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ forall m,n:Nat}}
 +  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . 0 < suc(n)}}
 +  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . not n < 0}}
 +  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . suc(m) < suc(n) <=> m < n}}
++\ec
 +\vspace{-1em}
 +\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
    op f: Nat ->? Elem

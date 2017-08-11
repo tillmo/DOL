@@ -7,11 +7,12 @@
  LibraryItem        ::= LibraryImport | Definition | Qualification
  Definition         ::= OMSDefinition
                       | NetworkDefinition
-@@ -4473,15 +4473,15 @@
+@@ -4473,21 +4473,22 @@
  \ssclause{Concrete Syntax}
  
  \vspace{-1.4em}
 -\begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
++\bc{92}
 +\begin{lstlisting}[language=ebnf,escapeinside={@@},morecomment={[l]{\%\%\ }}]
  
  NetworkDefinition ::= 'network' NetworkName '='
@@ -26,7 +27,14 @@
  ExcludedElement ::= PathReference | ElementRef
  PathReference   ::= IRI '->' IRI
  ElementRef      ::= IRI
-@@ -4692,10 +4692,8 @@
+ Id              ::= Letter LetterOrDigit*
+ \end{lstlisting}
+-
++\ec
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+@@ -4692,10 +4693,9 @@
  (\syntax{Conservative}, \syntax{ConservativityStrength} and
  \syntax{ExtConservativityStrength}) in order to express the same
  constraints via the EBNF grammar.
@@ -34,12 +42,13 @@
 -\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
 -
 -BasicOMS           ::= ($<$)language and serialization specific($>$) 
++\bc{92}
 +\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]
 +BasicOMS           ::= @$<$@language and serialization specific@$>$@ 
  ClosableOMS        ::= BasicOMS | OMSRef [ImportName]
  ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
  RelativeClosureOMS ::= ClosureType '{' ClosableOMS '}'
-@@ -4718,7 +4716,7 @@
+@@ -4718,7 +4718,7 @@
                       | 'free'
                       | 'cofree'
  CircMin            ::= Symbol Symbol*
@@ -48,7 +57,7 @@
  GroupOMS           ::= '{' OMS '}' | OMSRef
  OMSTranslation     ::= 'with' LanguageTranslation* SymbolMap
                       | 'with' LanguageTranslation+
-@@ -4727,8 +4725,8 @@
+@@ -4727,8 +4727,8 @@
                       | 'hide' LogicReduction+
                       | 'reveal' SymbolList
  LogicReduction     ::= 'along' OMSLanguageTranslation
@@ -59,7 +68,7 @@
  Extraction         ::= 'extract' InterfaceSignature
                       | 'remove' InterfaceSignature
  Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
-@@ -4752,8 +4750,8 @@
+@@ -4752,8 +4752,8 @@
                       | '%satifsiable'
                       | '%unsatisfiable'
  InterfaceSignature ::= SymbolList
@@ -70,7 +79,7 @@
  OMSkeyword         ::= 'ontology'
                       | 'onto'
                       | 'specification'
-@@ -4765,7 +4763,7 @@
+@@ -4765,12 +4765,12 @@
  Symbol             ::= IRI
  SymbolMapItem      ::= Symbol '|->' Symbol
  GeneralSymbolMapItem ::= Symbol | SymbolMapItem
@@ -79,7 +88,21 @@
  OMSName            ::= IRI
  OMSRef             ::= IRI
  LoLaRef            ::= LanguageRef | LogicRef
-@@ -5015,7 +5013,7 @@
+ \end{lstlisting}
+-
++\ec
+ 
+ \lstset{escapeinside = {*@}{@*}}
+ \begin{lstlisting}[language=ebnf,mathescape]
+@@ -4946,6 +4946,7 @@
+ \vspace{-2em}
+ \index{alignment}
+ \lstset{escapeinside = {*@}{@*}}
++\bc{92}
+ \begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
+ 
+ MappingDefinition  ::= InterpretationDefinition
+@@ -5015,11 +5016,11 @@
  RelationReference  ::= IRI
  StandardRelation   ::= '>' | '<' | '=' | '%' | 'ni' | 'in'
                         *@$<$ \rm No keyword corresponding to @*default-relation*@ \rm as this is just the default if@*
@@ -88,7 +111,12 @@
  Confidence         ::= Double
  Double             ::= *@$<$ a number $\in [0,1]$ $>$@*
  \end{lstlisting}
-@@ -5103,7 +5101,7 @@
+-
++\ec
+ %~\CLnote{some text that was left over here, but I don't recall what we meant by it: recommendations for dealing with OMS language dialects}
+ 
+ 
+@@ -5103,7 +5104,7 @@
  prefix, the CURIE is valid and expands into a full IRI, which is created by concatenating the IRI 
  bound to the prefix and the reference.  In the following example that uses \DOL prefix map mechanism, one the prefix \url{lang} is bound to \url{http://purl.net/DOL/languages/}, which
  means that the CURIE \url{lang:OWL2} will be expanded to the IRI
@@ -97,11 +125,12 @@
  
  \lstset{escapeinside = {*@}{@*}}
  \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
-@@ -5238,20 +5236,20 @@
+@@ -5238,22 +5239,23 @@
  \ssclause{Concrete Syntax}\label{c:curie-syntax}
  
  \vspace{-1.4em}
 -\begin{lstlisting}[language=ebnf,escapeinside={()}]
++\bc{92}
 +\begin{lstlisting}[language=ebnf,escapeinside={@@}]
  
  IRI           ::= '<' FullIRI '>' | CURIE
@@ -123,9 +152,12 @@
 +Query         ::= '?' iquery@\DIFadd{~}$<$\rm{} as defined in \nref{IRI} $>$@
 +Fragment      ::= '#' ifragment@\DIFadd{~}$<$\rm{} as defined in \nref{IRI} $>$@
  \end{lstlisting}
+-
++\ec
  
+ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the \DOL syntax (cf.\ clause \ref{c:keywords}).
  
-@@ -11523,12 +11521,12 @@
+@@ -11523,12 +11525,12 @@
  
  
  \sclause{Documents}\label{e:libraries}
@@ -140,7 +172,7 @@
  LibraryItem        ::= LibraryImport | Definition | Qualification
  Definition         ::= OMSDefinition
                       | NetworkDefinition
-@@ -11564,7 +11562,7 @@
+@@ -11564,7 +11566,7 @@
  
  % Corresponds to image mof/networks.png
  \sclause{OMS Networks}\label{a:networks}
@@ -149,11 +181,12 @@
  
  NetworkDefinition ::= network-definition NetworkName
                                           [ConservativityStrength] Network
-@@ -11583,9 +11581,9 @@
+@@ -11583,9 +11585,10 @@
  \sclause{OMS}
  
  % Corresponds to image mof/oms.png and mof/basic_oms.png
 -\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
++\bc{92}
 +\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
  
 -BasicOMS           ::= ($<$)language specific($>$) 
@@ -161,8 +194,11 @@
  OMS                ::= ExtendingOMS
                       | ClosureOMS
                       | TranslationOMS
-@@ -11623,7 +11621,7 @@
+@@ -11621,9 +11624,10 @@
+ OMSName            ::= IRI
+ SubstName          ::= IRI
  \end{lstlisting}
++\ec
  
  % Corresponds to image mof/extension&closure.png
 -\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
@@ -170,7 +206,7 @@
  ClosableOMS        ::= BasicOMS | OMSReference
  OMSReference       ::= oms-reference OMSRef [ImportName]
  Extension          ::= extension [ConservativityStrength]
-@@ -11647,7 +11645,7 @@
+@@ -11647,7 +11651,7 @@
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
  % Corresponds to image mof/translation&reduction.png
@@ -179,7 +215,7 @@
  OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
  Reduction          ::= reduction RemovalKind OMSLanguageTranslation*
                                   [SymbolList]
-@@ -11725,7 +11723,7 @@
+@@ -11725,7 +11729,7 @@
  \end{lstlisting}
  
  % Corresponds to image mof/alignment.png
@@ -188,7 +224,7 @@
  AlignmentDefinition ::= alignment-definition AlignmentName
                                [AlignmentCardinality] [AlignmentCardinality]
                                AlignmentType Correspondence*
-@@ -11768,11 +11766,11 @@
+@@ -11768,11 +11772,11 @@
                       | default-relation
  RelationReference  ::= relation-ref IRI
  Confidence         ::= Double
@@ -202,7 +238,7 @@
  ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName
                                            [ConservativityStrength] ConservativeExtensionType
                                            InterfaceSignature
-@@ -11788,11 +11786,11 @@
+@@ -11788,11 +11792,11 @@
  
  \sclause{IRIs and Prefixes}
  % Corresponds to image mof/prefixes.png
@@ -217,11 +253,12 @@
  CURIE  ::= String
  \end{lstlisting}
  
-@@ -11884,9 +11882,9 @@
+@@ -11884,9 +11888,10 @@
  \sclause{EBNF Concrete Syntax}
  
  % Corresponds to image mof/queries.png
 -\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
++\bc{92}
 +\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]
  
 -Term               ::= ($<$)an expression specific to an OMS language($>$) 
@@ -229,7 +266,7 @@
  GeneralizedTerm    ::= Term | Symbol
  QueryRelatedDefinition ::= QueryDefinition
                       | SubstitutionDefinition
-@@ -11898,13 +11896,13 @@
+@@ -11898,14 +11903,15 @@
                             GroupOMS 'to' GroupOMS '=' SymbolMap
                             'end'
  ResultDefinition   ::= 'result' ResultName '=' SubstitutionName
@@ -244,18 +281,21 @@
 -Vars               ::= Symbol ( ',' Symbol )*
 +Vars               ::= Symbol @\DIFadd{(}@ ',' Symbol @\DIFadd{)}@*
  \end{lstlisting}
++\ec
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-@@ -11913,7 +11911,7 @@
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@@ -11913,7 +11919,8 @@
  \sclause{EBNF Abstract Syntax}
  
  
 -\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
++\bc{92}
 +\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]  % abstract syntax
  
  QueryRelatedDefinition ::= QueryDefinition
                       | SubstitutionDefinition
-@@ -11927,8 +11925,8 @@
+@@ -11927,14 +11934,15 @@
  ResultDefinition   ::= result-definition ResultName
                                           SubstitutionName SubstitutionName*
                                           QueryName [Complete]
@@ -266,3 +306,10 @@
  QueryName          ::= IRI
  SubstitutionName   ::= IRI
  ResultName         ::= IRI
+ Vars               ::= Symbol*
+ Complete           ::= complete
+ \end{lstlisting}
++\ec
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
