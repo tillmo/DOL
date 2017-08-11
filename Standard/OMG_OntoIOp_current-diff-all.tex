@@ -1390,7 +1390,7 @@ A \emph{printer} is \DOL-conformant if it can read \DOL abstract syntax and prod
 \item \emph{simple analysis}: static analysis of \DOL excluding networks and alignments;
 \item \emph{full analysis}: static analysis of full \DOL.
  \end{itemize} 
-\item a \emph{transformation tool} is \DOL-conformant if it implements
+\item a \emph{transformation tool} is \DOL-conformant if it \DIFaddbegin \DIFadd{operates on DOL (abstract) syntax and }\DIFaddend implements
 one (or more) language translations, logic translations, language
 projections and/or logic projections.
 \item
@@ -1422,7 +1422,7 @@ and logic projections);
   document has a defined semantics.
  \end{itemize} 
  \end{itemize} 
-
+\ec
 
 In practice, \DOL-aware \emph{applications} may also deal with documents that are not conforming 
 with \DOL according to the criteria established in \cref{c:conform:document}.  However, an 
@@ -2696,9 +2696,12 @@ can represent the intended meanings of language constructs.}
 expressions for some meta class in the
 \termref{abstract syntax} to a \termref{semantic domain}.}
 
-\termdefinition{global environment}{mapping from identifiers (IRIs)
-to values in \termref{semantics domains} representing the
-global knowledge about OMS.}
+\bc{21}
+\termdefinition{global environment}{}mapping from identifiers (IRIs)
+  to values in \termref{semantics domains} representing representing
+  \DIFdel{the global knowledge about OMS}
+  \DIFadd{semantic information about a set of \termref{documents} (the latter typically being distributed over the internet).}
+\ec 
 
 \end{definitions}
 
@@ -4479,10 +4482,11 @@ see Fig.~\ref{fig:basic_oms}.
 See the informative annexes~\ref{a:owl} to~\ref{a:casl} for details.
 
 
+\bc{39}
 \begin{figure}[b]
   \centering
     \includegraphics[scale=0.47]{mof/native_document.png}
-   \caption{Informative diagram showing subclasses of \syntax{NativeDocument}}
+   \caption{Informative diagram showing subclasses of \syntax{NativeDocument} \DIFadd{[new figure]}}
    \label{fig:native_document}
 \end{figure}
 
@@ -4490,9 +4494,10 @@ See the informative annexes~\ref{a:owl} to~\ref{a:casl} for details.
 \begin{figure}
   \centering
     \includegraphics[scale=0.47]{mof/basic_oms.png}
-   \caption{Informative diagram showing subclasses of \syntax{BasicOMS}}
+   \caption{Informative diagram showing subclasses of \syntax{BasicOMS} \DIFadd{[new figure]}}
    \label{fig:basic_oms}
 \end{figure}
+\ec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4634,21 +4639,22 @@ and Appendix~\ref{ex:alignment} for an example network and of the use of \syntax
 \ssclause{Concrete Syntax}
 
 \vspace{-1.4em}
-\begin{lstlisting}[language=ebnf,escapeinside={()},morecomment={[l]{\%\%\ }}]
+\bc{92}
+\begin{lstlisting}[language=ebnf,escapeinside={@@},morecomment={[l]{\%\%\ }}]
 
 NetworkDefinition ::= 'network' NetworkName '='
                       [ConservativityStrength] Network
 NetworkName     ::= IRI
 Network         ::= NetworkElements [ExcludedElements]
-NetworkElements ::= NetworkElement ( ',' NetworkElement )*
+NetworkElements ::= NetworkElement @\DIFadd{(}@ ',' NetworkElement @\DIFadd{)}@*
 NetworkElement  ::= [Id ':'] ElementRef
-ExcludedElements ::= 'excluding' ExcludedElement ( ',' ExcludedElement )*
+ExcludedElements ::= 'excluding' ExcludedElement @\DIFadd{(}@ ',' ExcludedElement @\DIFadd{)}@*
 ExcludedElement ::= PathReference | ElementRef
 PathReference   ::= IRI '->' IRI
 ElementRef      ::= IRI
 Id              ::= Letter LetterOrDigit*
 \end{lstlisting}
-
+\ec
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4738,6 +4744,7 @@ The DOL metamodel for extension OMS is shown in Fig.~\ref{fig:extension&closure}
 \syntax{ExtendingOMS} is a subclass of \syntax{OMS}, containing
 those OMS that may be used to extend a given OMS within an \syntax{ExtensionOMS}.
 An \syntax{ExtendingOMS} can be one of the following:
+\bc{348}
  \begin{itemize} 
 \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
 language (which is defined outside this standard; practically every example uses basic OMS)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
@@ -4749,7 +4756,11 @@ the respective conforming OMS language; \eg \DOL's OMS reference and extension c
   \syntax{ClosableOMS}). A closure forces the subsequently declared
   non-logical symbols to be interpreted in a minimal  or
   maximal way, while the non-logical symbols declared  in
-  the local environment are fixed. Variants of closure are
+  the local environment are fixed.\DIFaddbegin \footnote
+  {\DIFadd{Note that if applied to algebraic signatures (sorts and operation symbols),
+    minimization can be used to express reachability (i.e. term-generatedness)
+    of algebraic (first-order) models.}}
+  \DIFaddend Variants of closure are
   minimization, maximization, freeness (minimizing also data
   sets and equalities on these,  which enables the inductive
   definition of relations and datatypes), and cofreeness (enabling the
@@ -4757,6 +4768,7 @@ the respective conforming OMS language; \eg \DOL's OMS reference and extension c
   See Annex~\ref{ex:blocks} for examples of the former two, and
   Annex~\ref{ex:datatypes} for examples of the latter two.
  \end{itemize} 
+ \ec
 Recall that the local environment is the OMS built from all
 previously-declared symbols and axioms.
 
@@ -4857,10 +4869,9 @@ features a more fine-grained structure of non-terminals
 (\syntax{Conservative}, \syntax{ConservativityStrength} and
 \syntax{ExtConservativityStrength}) in order to express the same
 constraints via the EBNF grammar.
-
-\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
-
-BasicOMS           ::= ($<$)language and serialization specific($>$) 
+\bc{92}
+\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]
+BasicOMS           ::= @$<$@language and serialization specific@$>$@ 
 ClosableOMS        ::= BasicOMS | OMSRef [ImportName]
 ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
 RelativeClosureOMS ::= ClosureType '{' ClosableOMS '}'
@@ -4883,7 +4894,7 @@ ClosureType        ::= 'minimize'
                      | 'free'
                      | 'cofree'
 CircMin            ::= Symbol Symbol*
-CircVars           ::= 'vars' (Symbol Symbol*)
+CircVars           ::= 'vars' @\DIFadd{(}@Symbol Symbol*@\DIFadd{)}@
 GroupOMS           ::= '{' OMS '}' | OMSRef
 OMSTranslation     ::= 'with' LanguageTranslation* SymbolMap
                      | 'with' LanguageTranslation+
@@ -4892,8 +4903,8 @@ Reduction          ::= 'hide' LogicReduction* SymbolList
                      | 'hide' LogicReduction+
                      | 'reveal' SymbolList
 LogicReduction     ::= 'along' OMSLanguageTranslation
-SymbolList         ::= Symbol ( ',' Symbol )*
-SymbolMap          ::= GeneralSymbolMapItem ( ',' GeneralSymbolMapItem )*
+SymbolList         ::= Symbol @\DIFadd{(}@ ',' Symbol @\DIFadd{)}@*
+SymbolMap          ::= GeneralSymbolMapItem @\DIFadd{(}@ ',' GeneralSymbolMapItem @\DIFadd{)}@*
 Extraction         ::= 'extract' InterfaceSignature
                      | 'remove' InterfaceSignature
 Approximation      ::= 'forget' InterfaceSignature ['keep' LogicRef]
@@ -4917,8 +4928,8 @@ Conservative       ::= '%cons'
                      | '%satifsiable'
                      | '%unsatisfiable'
 InterfaceSignature ::= SymbolList
-ImportName         ::= '%(' IRI ')%'
-ExtensionName      ::= '%(' IRI ')%'
+ImportName         ::= '%@\DIFadd{(}@' IRI '@\DIFadd{)}@%'
+ExtensionName      ::= '%@\DIFadd{(}@' IRI '@\DIFadd{)}@%'
 OMSkeyword         ::= 'ontology'
                      | 'onto'
                      | 'specification'
@@ -4930,12 +4941,12 @@ OMSDefinition      ::= OMSkeyword OMSName '='
 Symbol             ::= IRI
 SymbolMapItem      ::= Symbol '|->' Symbol
 GeneralSymbolMapItem ::= Symbol | SymbolMapItem
-Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
+Sentence           ::= @$<$@an expression specific to an OMS language@$>$@ 
 OMSName            ::= IRI
 OMSRef             ::= IRI
 LoLaRef            ::= LanguageRef | LogicRef
 \end{lstlisting}
-
+\ec
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[language=ebnf,mathescape]
@@ -4943,7 +4954,7 @@ LoLaRef            ::= LanguageRef | LogicRef
 OMSLanguageTranslation ::= OMSLanguageTranslationRef | '->' LoLaRef
 OMSLanguageTranslationRef ::= IRI
 \end{lstlisting}
-
+\ec
 
 %\ednote{\%safe is more a statement about an import of a module, 
 %and hence should be a statement in an OMS network. Recall:
@@ -5113,6 +5124,7 @@ to the \syntax{InterfaceSignature}.
 \vspace{-2em}
 \index{alignment}
 \lstset{escapeinside = {*@}{@*}}
+\bc{92}
 \begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
 
 MappingDefinition  ::= InterpretationDefinition
@@ -5182,11 +5194,11 @@ Relation           ::= RelationReference | StandardRelation
 RelationReference  ::= IRI
 StandardRelation   ::= '>' | '<' | '=' | '%' | 'ni' | 'in'
                        *@$<$ \rm No keyword corresponding to @*default-relation*@ \rm as this is just the default if@*
-                       *@\phantom{$<$ }@*Relation*@ \rm is omitted$>$@*
+                       *@\phantom{$<$ }@*Relation*@ \rm is omitted\DIFadd{~}$>$@*
 Confidence         ::= Double
 Double             ::= *@$<$ a number $\in [0,1]$ $>$@*
 \end{lstlisting}
-
+\ec
 %~\CLnote{some text that was left over here, but I don't recall what we meant by it: recommendations for dealing with OMS language dialects}
 
 
@@ -5270,7 +5282,7 @@ The CURIE abbreviation mechanism works by binding prefixes to IRIs.  A CURIE con
 prefix, the CURIE is valid and expands into a full IRI, which is created by concatenating the IRI 
 bound to the prefix and the reference.  In the following example that uses \DOL prefix map mechanism, one the prefix \url{lang} is bound to \url{http://purl.net/DOL/languages/}, which
 means that the CURIE \url{lang:OWL2} will be expanded to the IRI
-\url{http://purl.net/DOL/languages/OWL2}.
+\url{http://purl.net/DOL/languages/OWL2}. 
 
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
@@ -5405,22 +5417,23 @@ within the \DOL library.
 \ssclause{Concrete Syntax}\label{c:curie-syntax}
 
 \vspace{-1.4em}
-\begin{lstlisting}[language=ebnf,escapeinside={()}]
+\bc{92}
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]
 
 IRI           ::= '<' FullIRI '>' | CURIE
-FullIRI       ::= ($<$ an IRI as defined in \nref{IRI} $>$) 
+FullIRI       ::= @$<$ an IRI as defined in \nref{IRI} $>$@
 CURIE         ::= MaybeEmptyCURIE -
 MaybeEmptyCURIE ::= [Prefix] RefWithoutComma
 RefWithoutComma ::= Reference - StringWithComma
 StringWithComma ::= UChar* ',' UChar*
-UChar         ::= ($<$ any Unicode \nref{UCS} character $>$) 
-Prefix        ::= NCName ':'($<$ \rm see ``NCName'' in \nref{XMLns}, Section 3 $>$)
+UChar         ::= @$<$ any Unicode \nref{UCS} character $>$@ 
+Prefix        ::= NCName ':'@$<$ \rm see ``NCName'' in \nref{XMLns}, Section 3 $>$@
 Reference     ::= Path [Query] [Fragment]
-Path          ::= ipath-absolute | ipath-rootless | ipath-empty($<$ \rm as defined in \nref{IRI} $>$)
-Query         ::= '?' iquery($<$ \rm as defined in \nref{IRI} $>$)
-Fragment      ::= '#' ifragment($<$ \rm as defined in \nref{IRI} $>$)
+Path          ::= ipath-absolute | ipath-rootless | ipath-empty @$<$\rm{}\DIFadd{~}as defined in \nref{IRI} $>$@
+Query         ::= '?' iquery@\DIFadd{~}$<$\rm{} as defined in \nref{IRI} $>$@
+Fragment      ::= '#' ifragment@\DIFadd{~}$<$\rm{} as defined in \nref{IRI} $>$@
 \end{lstlisting}
-
+\ec
 
 In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match any of the keywords of the \DOL syntax (cf.\ clause \ref{c:keywords}).
 
@@ -5747,16 +5760,24 @@ The character set for the \DOL text serialization is the UTF-8 encoding of Unico
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ssclause{Key words and signs}\label{c:keywords}
+\bc{94}
+\DIFdelbegin %DIFDELCMD < \ssclause{Key words and signs}%%%
+\DIFdelend \DIFaddbegin \ssclause{Keywords and signs}\DIFaddend \label{c:keywords}
 
-The lexical symbols of the \DOL text serialization include various key words and signs that occur as terminal symbols in the context-free grammar in \aref{a:EBNF}.   Key words and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
-
+The lexical symbols of the \DOL text serialization include various \DIFdelbegin \DIFdel{key words }\DIFdelend \DIFaddbegin \DIFadd{keywords }\DIFaddend and signs that occur as terminal symbols in the context-free grammar in \aref{a:EBNF}.   \DIFdelbegin \DIFdel{Key words }\DIFdelend \DIFaddbegin \DIFadd{Keywords }\DIFaddend and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
+\ec
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\sssclause{Key words}
+\bc{94}
+\DIFdelbegin %DIFDELCMD < \sssclause{Key words}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \sssclause{Keywords}
+\DIFaddend 
 
 
-Key words are always written lowercase. The following key words are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  These rewritings do not change the semantics.}, although they can be used as parts of tokens. 
+\DIFdelbegin \DIFdel{Key words }\DIFdelend \DIFaddbegin \DIFadd{Keywords }\DIFaddend are always written lowercase. The following \DIFdelbegin \DIFdel{key words }\DIFdelend \DIFaddbegin \DIFadd{keywords }\DIFaddend are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  These rewritings do not change the semantics.}, although they can be used as parts of tokens.
+\ec
+
 %{\ttfamily %
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}
@@ -9425,11 +9446,14 @@ is established in \cite{OntoGraph}.
 
 \sclause{Abstract Syntax Conformance of OWL 2 With \DOL}
 
-The metaclass \syntax{OWL Ontology} is a subclass (in the sense of SMOF
+\bc{39}
+The metaclass \DIFdelbegin %DIFDELCMD < \syntax{OWL Ontology} %%%
+\DIFdelend \DIFaddbegin \syntax{OWLOntology}\DIFadd{~\nref{ODM}, 11.2 }\DIFaddend is a subclass (in the sense of SMOF
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{OWL Universe} is a subclass (in the sense of SMOF
+The metaclass \DIFdelbegin %DIFDELCMD < \syntax{OWL Universe} %%%
+\DIFdelend \DIFaddbegin \syntax{OWLUniverse}\DIFadd{~\nref{ODM}, 11.7 }\DIFaddend is a subclass (in the sense of SMOF
 multiple classification) of \syntax{BasicOMS}.
-
+\ec
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -9861,10 +9885,12 @@ We distinguish three cases.
 
 \sclause{Abstract Syntax Conformance of Common Logic With \DOL}
 
-The metaclass \syntax{Text} is a subclass (in the sense of SMOF \nref{SMOF}
+\bc{39}
+The metaclass \syntax{Text}\DIFaddbegin \DIFadd{~\nref{ODM}, 12.2 }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{Sentence} is a subclass (in the sense of SMOF \nref{SMOF}
+The metaclass \syntax{Sentence}\DIFaddbegin \DIFadd{~\nref{ODM}, 12.2 }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
+\ec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9961,11 +9987,14 @@ in order to obtain a theory in the \CL institution.
 
 \sclause{Abstract Syntax Conformance of RDF and RDF Schema  With \DOL}
 
-The metaclass \syntax{Document} is a subclass (in the sense of SMOF \nref{SMOF}
+\bc{39}
+The metaclass \DIFdelbegin %DIFDELCMD < \syntax{Document} %%%
+\DIFdelend \DIFaddbegin \syntax{rdfDocument}\DIFadd{~\nref{ODM}, 14.2.2 }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{Triple} is a subclass (in the sense of SMOF \nref{SMOF}
+The metaclass \DIFdelbegin %DIFDELCMD < \syntax{Triple} %%%
+\DIFdelend \DIFaddbegin \syntax{graph}\DIFadd{~\nref{ODM}, 14.2.3 }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
-
+\ec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -10066,10 +10095,14 @@ operations are query operations.
 
 \sclause{Abstract Syntax Conformance of UML With \DOL}
 
-The metaclass \syntax{OWL Model} is a subclass (in the sense of SMOF \nref{SMOF}
+\bc{39}
+The metaclass \DIFdelbegin %DIFDELCMD < \syntax{OWL Model} %%%
+\DIFdelend \DIFaddbegin \syntax{Package}\DIFadd{~\nref{UML} }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{OWL PackageableElement} is a subclass (in the sense of SMOF \nref{SMOF}
+The metaclass \DIFdelbegin %DIFDELCMD < \syntax{OWL PackageableElement} %%%
+\DIFdelend \DIFaddbegin \syntax{PackageableElement}\DIFadd{~\nref{UML} }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
+\ec
 
 \sclause{Serialization Conformance of UML With \DOL}
 
@@ -10623,38 +10656,7 @@ Here all member ends are owned by class/data types.
 \begin{figure}[!th]
 \begin{center}
 \vspace*{1ex}
-\DIFdelbeginFL %DIFDELCMD < \begin{tikzpicture}[transform shape,scale=.8]
-%DIFDELCMD < \def\overallfont{\sffamily\fontsize{10pt}{10pt}\selectfont}
-%DIFDELCMD < \tikzset{every node/.style={font=\overallfont}}
-%DIFDELCMD < %\tikzset{tikzuml class style/.style={inner xsep=32pt}}
-%DIFDELCMD < \tikzumlset{font=\overallfont}
-%DIFDELCMD < \umlemptyclass{Net}
-%DIFDELCMD < \umlemptyclass[x=-2, y=-3]{Station}
-%DIFDELCMD < \umlclass[x=2.5, y=-3]{Line}{linear : Boolean}{}
-%DIFDELCMD < %% \umlcompo[name=NetStation,mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
-%DIFDELCMD < %% \draw (NetStation-4) node[above] {N2S};
-%DIFDELCMD < %% \umlcompo[name=NetLine,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
-%DIFDELCMD < %% \draw (NetLine-4) node[above] {N2L};
-%DIFDELCMD < %% \umlemptyclass[x=-4, y=-6]{Unit}
-%DIFDELCMD < %% \umlclass[x=0, y=-6]{Track}{linear : Boolean}{}
-%DIFDELCMD < %% \umlcompo[name=StationUnit,mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
-%DIFDELCMD < %% \draw (StationUnit-4) node[above] {S2U};
-%DIFDELCMD < %% \umlcompo[name=StationTrack,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
-%DIFDELCMD < %% \draw (StationTrack-4) node[above] {S2T};
-%DIFDELCMD < %% \umlemptyclass[x=-8, y=-6]{Connector}
-%DIFDELCMD < %% \umlassoc[name=ConnectorUnit, mult1=1..4, pos1=0, align1=left, mult2=1, pos2=1, align2=right]{Connector}{Unit}
-%DIFDELCMD < %% \draw (ConnectorUnit-middle) node[above] {c2u};
-%DIFDELCMD < %% \umlemptyclass[x=-6, y=-9]{Point}
-%DIFDELCMD < %% \umlemptyclass[x=-2, y=-9]{Linear}
-%DIFDELCMD < %% \umlinherit[geometry=|-|]{Point}{Unit}
-%DIFDELCMD < %% \umlinherit[geometry=|-|]{Linear}{Unit}
-%DIFDELCMD < %% \umlassoc[name=LinearTrack, mult1=1..*, pos1=0, align1=left, anchor1=20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Track}
-%DIFDELCMD < %% \draw (LinearTrack-2) node[right] {L2T};
-%DIFDELCMD < %% \umlassoc[name=LinearLine, mult1=1..*, pos1=0, align1=left, anchor1=-20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Line}
-%DIFDELCMD < %% \draw (LinearLine-2) node[right] {L2L};
-%DIFDELCMD < \end{tikzpicture}
-%DIFDELCMD < %%%
-\DIFdelendFL \DIFaddbeginFL \begin{tikzpicture}[transform shape,scale=.8]
+\begin{tikzpicture}[transform shape,scale=.8]
 \def\overallfont{\sffamily\fontsize{10pt}{10pt}\selectfont}
 \tikzset{every node/.style={font=\overallfont}}
 %\tikzset{tikzuml class style/.style={inner xsep=32pt}}
@@ -10662,29 +10664,29 @@ Here all member ends are owned by class/data types.
 \umlemptyclass{Net}
 \umlemptyclass[x=-2, y=-3]{Station}
 \umlclass[x=2.5, y=-3]{Line}{linear : Boolean}{}
-\umlcompo[name=NetStation,mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
-\draw (NetStation-4) node[above] {N2S};
-\umlcompo[name=NetLine,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
-\draw (NetLine-4) node[above] {N2L};
-\umlemptyclass[x=-4, y=-6]{Unit}
-\umlclass[x=0, y=-6]{Track}{linear : Boolean}{}
-\umlcompo[name=StationUnit,mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
-\draw (StationUnit-4) node[above] {S2U};
-\umlcompo[name=StationTrack,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
-\draw (StationTrack-4) node[above] {S2T};
-\umlemptyclass[x=-8, y=-6]{Connector}
-\umlassoc[name=ConnectorUnit, mult1=1..4, pos1=0, align1=left, mult2=1, pos2=1, align2=right]{Connector}{Unit}
-\draw (ConnectorUnit-middle) node[above] {c2u};
-\umlemptyclass[x=-6, y=-9]{Point}
-\umlemptyclass[x=-2, y=-9]{Linear}
-\umlinherit[geometry=|-|]{Point}{Unit}
-\umlinherit[geometry=|-|]{Linear}{Unit}
-\umlassoc[name=LinearTrack, mult1=1..*, pos1=0, align1=left, anchor1=20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Track}
-\draw (LinearTrack-2) node[right] {L2T};
-\umlassoc[name=LinearLine, mult1=1..*, pos1=0, align1=left, anchor1=-20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Line}
-\draw (LinearLine-2) node[right] {L2L};
+%% \umlcompo[name=NetStation,mult2=2..*, pos2=2.7, geometry=|-|]{Net}{Station}
+%% \draw (NetStation-4) node[above] {N2S};
+%% \umlcompo[name=NetLine,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Net}{Line}
+%% \draw (NetLine-4) node[above] {N2L};
+%% \umlemptyclass[x=-4, y=-6]{Unit}
+%% \umlclass[x=0, y=-6]{Track}{linear : Boolean}{}
+%% \umlcompo[name=StationUnit,mult2=*, pos2=2.7, geometry=|-|]{Station}{Unit}
+%% \draw (StationUnit-4) node[above] {S2U};
+%% \umlcompo[name=StationTrack,mult1=1, pos1=0.3, mult2=*, pos2=2.7, geometry=|-|]{Station}{Track}
+%% \draw (StationTrack-4) node[above] {S2T};
+%% \umlemptyclass[x=-8, y=-6]{Connector}
+%% \umlassoc[name=ConnectorUnit, mult1=1..4, pos1=0, align1=left, mult2=1, pos2=1, align2=right]{Connector}{Unit}
+%% \draw (ConnectorUnit-middle) node[above] {c2u};
+%% \umlemptyclass[x=-6, y=-9]{Point}
+%% \umlemptyclass[x=-2, y=-9]{Linear}
+%% \umlinherit[geometry=|-|]{Point}{Unit}
+%% \umlinherit[geometry=|-|]{Linear}{Unit}
+%% \umlassoc[name=LinearTrack, mult1=1..*, pos1=0, align1=left, anchor1=20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Track}
+%% \draw (LinearTrack-2) node[right] {L2T};
+%% \umlassoc[name=LinearLine, mult1=1..*, pos1=0, align1=left, anchor1=-20, mult2=1, pos2=2, align2=left, geometry=-|]{Linear}{Line}
+%% \draw (LinearLine-2) node[right] {L2L};
 \end{tikzpicture}
-\DIFaddendFL \end{center}
+\end{center}
 \caption{Sample UML class model}
 \label{fig:bjoerners_dsl}
 \end{figure}
@@ -11145,10 +11147,16 @@ The underlying logic is unsorted first-order logic.
 
 \sclause{Abstract Syntax Conformance of TPTP With \DOL}
 
-The metaclass \syntax{TPTP\_file} is a subclass (in the sense of SMOF \nref{SMOF}
+\bc{39}
+The \DIFdelbegin \DIFdel{metaclass }\DIFdelend \DIFaddbegin \DIFadd{BNF nonterminal }\DIFaddend \syntax{TPTP\_file} \DIFaddbegin \DIFadd{of the TPTP concrete syntax~\mbox{%DIFAUXCMD
+\cite{TPTP-BNF} }%DIFAUXCMD
+is construed as a metaclass, and as such it }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{annotated\_formula} is a subclass (in the sense of SMOF \nref{SMOF}
+The \DIFdelbegin \DIFdel{metaclass }\DIFdelend \DIFaddbegin \DIFadd{BNF nonterminal }\DIFaddend \syntax{annotated\_formula} \DIFaddbegin \DIFadd{of the TPTP concrete syntax~\mbox{%DIFAUXCMD
+\cite{TPTP-BNF} }%DIFAUXCMD
+is construed as a metaclass, and as such }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
+\ec
 
 \sclause{Serialization Conformance of TPTP With \DOL}
 
@@ -11178,10 +11186,16 @@ sentences, expressing the (free) generation of datatypes.
 
 \sclause{Abstract Syntax Conformance of CASL With \DOL}
 
-The metaclass \syntax{LIBRARY} is a subclass (in the sense of SMOF \nref{SMOF}
+\bc{39}
+The \DIFdelbegin \DIFdel{metaclass }\DIFdelend \DIFaddbegin \DIFadd{EBNF nonterminal }\DIFaddend \syntax{LIBRARY} \DIFaddbegin \DIFadd{for the }\CASL \DIFadd{abstract syntax~\mbox{%DIFAUXCMD
+\cite{CASL-RM} }%DIFAUXCMD
+is construed as a metaclass, and as such it }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{NativeDocument}.
-The metaclass \syntax{BASIC\_SPEC} is a subclass (in the sense of SMOF \nref{SMOF}
+The \DIFdelbegin \DIFdel{metaclass }\DIFdelend \DIFaddbegin \DIFadd{EBNF nonterminal }\DIFaddend \syntax{BASIC\_SPEC} \DIFaddbegin \DIFadd{for the }\CASL \DIFadd{abstract syntax~\mbox{%DIFAUXCMD
+\cite{CASL-RM} }%DIFAUXCMD
+is construed as a metaclass, and as such it }\DIFaddend is a subclass (in the sense of SMOF \nref{SMOF}
 multiple classification) of \syntax{BasicOMS}.
+\ec
 
 \sclause{Serialization Conformance of CASL With \DOL}
 
@@ -11850,12 +11864,12 @@ concrete syntax.
 
 
 \sclause{Documents}\label{e:libraries}
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 
 Document           ::= DOLLibrary | NativeDocument
 DOLLibrary         ::= library [PrefixMap] LibraryName Qualification
                                LibraryItem*
-NativeDocument     ::= ($<$)language specific($>$) 
+NativeDocument     ::= @$<$@language specific@$>$@ 
 LibraryItem        ::= LibraryImport | Definition | Qualification
 Definition         ::= OMSDefinition
                      | NetworkDefinition
@@ -11891,7 +11905,7 @@ OMSSymbolSeparator ::= String
 
 % Corresponds to image mof/networks.png
 \sclause{OMS Networks}\label{a:networks}
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 
 NetworkDefinition ::= network-definition NetworkName
                                          [ConservativityStrength] Network
@@ -11910,9 +11924,10 @@ ExcludedElementRef  ::= IRI
 \sclause{OMS}
 
 % Corresponds to image mof/oms.png and mof/basic_oms.png
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\bc{92}
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 
-BasicOMS           ::= ($<$)language specific($>$) 
+BasicOMS           ::= @$<$\DIFadd{~}@language specific@\DIFadd{~}$>$@ 
 OMS                ::= ExtendingOMS
                      | ClosureOMS
                      | TranslationOMS
@@ -11948,9 +11963,10 @@ ConservativityStrength ::= consequence-conservative
 OMSName            ::= IRI
 SubstName          ::= IRI
 \end{lstlisting}
+\ec
 
 % Corresponds to image mof/extension&closure.png
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 ClosableOMS        ::= BasicOMS | OMSReference
 OMSReference       ::= oms-reference OMSRef [ImportName]
 Extension          ::= extension [ConservativityStrength]
@@ -11974,7 +11990,7 @@ OMSRef             ::= IRI
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Corresponds to image mof/translation&reduction.png
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 OMSTranslation     ::= translate OMSLanguageTranslation* [SymbolMap]
 Reduction          ::= reduction RemovalKind OMSLanguageTranslation*
                                  [SymbolList]
@@ -12052,7 +12068,7 @@ NetworkEquivalence ::= network-equivalence Network Network [Network]
 \end{lstlisting}
 
 % Corresponds to image mof/alignment.png
-\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]  % abstract syntax
 AlignmentDefinition ::= alignment-definition AlignmentName
                               [AlignmentCardinality] [AlignmentCardinality]
                               AlignmentType Correspondence*
@@ -12095,11 +12111,11 @@ StandardRelationValues ::= subsumes
                      | default-relation
 RelationReference  ::= relation-ref IRI
 Confidence         ::= Double
-Double             ::= ($<$ a number $\in [0,1]$ $>$) 
+Double             ::= @$<$ a number $\in [0,1]$ $>$@ 
 \end{lstlisting}
 
 % Corresponds to image mof/modules.png
-\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]  % abstract syntax
 ConservativeExtensionDefinition ::= cons-ext-definition ConservativeExtensionName
                                           [ConservativityStrength] ConservativeExtensionType
                                           InterfaceSignature
@@ -12115,11 +12131,11 @@ ConservativeExtensionType         ::= cons-ext-type OMS OMS
 
 \sclause{IRIs and Prefixes}
 % Corresponds to image mof/prefixes.png
-\begin{lstlisting}[language=ebnf,escapeinside={()}]  % abstract syntax
+\begin{lstlisting}[language=ebnf,escapeinside={@@}]  % abstract syntax
 PrefixBinding      ::= prefix-binding Prefix FullIRI [Separators]
-IRI    ::= FullIRI | CurieIRI(\footnote{Specified below in \cref{c:curies}.})
+IRI    ::= FullIRI | CurieIRI@\footnote{Specified below in \cref{c:curies}.}@
 CurieIRI ::= curie CURIE
-FullIRI ::= ($<$ as defined by the IRI production in \nref{IRI} $>$) 
+FullIRI ::= @$<$ as defined by the IRI production in \nref{IRI} $>$@ 
 CURIE  ::= String
 \end{lstlisting}
 
@@ -12211,9 +12227,10 @@ in Fig.~\ref{fig:queries}.
 \sclause{EBNF Concrete Syntax}
 
 % Corresponds to image mof/queries.png
-\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
+\bc{92}
+\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]
 
-Term               ::= ($<$)an expression specific to an OMS language($>$) 
+Term               ::= @$<$\DIFadd{~}@an expression specific to an OMS language@\DIFadd{~}$>$@ 
 GeneralizedTerm    ::= Term | Symbol
 QueryRelatedDefinition ::= QueryDefinition
                      | SubstitutionDefinition
@@ -12225,14 +12242,15 @@ SubstitutionDefinition ::= 'substitution' SubstitutionName ':'
                            GroupOMS 'to' GroupOMS '=' SymbolMap
                            'end'
 ResultDefinition   ::= 'result' ResultName '=' SubstitutionName
-                       ( ',' SubstitutionName )* 'for' QueryName
+                       @\DIFadd{(}@ ',' SubstitutionName @\DIFadd{)}@* 'for' QueryName
                        ['%complete'] 'end'
-OMS                ::= ($...$) | OMS 'with' SubstitutionName 
+OMS                ::= @$\dots$@ | OMS 'with' SubstitutionName 
 QueryName          ::= IRI
 SubstitutionName   ::= IRI
 ResultName         ::= IRI
-Vars               ::= Symbol ( ',' Symbol )*
+Vars               ::= Symbol @\DIFadd{(}@ ',' Symbol @\DIFadd{)}@*
 \end{lstlisting}
+\ec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -12240,7 +12258,8 @@ Vars               ::= Symbol ( ',' Symbol )*
 \sclause{EBNF Abstract Syntax}
 
 
-\begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]  % abstract syntax
+\bc{92}
+\begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]  % abstract syntax
 
 QueryRelatedDefinition ::= QueryDefinition
                      | SubstitutionDefinition
@@ -12254,14 +12273,15 @@ SubstitutionDefinition ::= substitution-definition
 ResultDefinition   ::= result-definition ResultName
                                          SubstitutionName SubstitutionName*
                                          QueryName [Complete]
-Sentence           ::= ($<$)an expression specific to an OMS language($>$) 
-OMS                ::= ($...$) | application  OMS  SubstitutionName 
+Sentence           ::= @$<$\DIFadd{~}@an expression specific to an OMS language@\DIFadd{~}$>$@ 
+OMS                ::= @$\ldots$@ | application  OMS  SubstitutionName 
 QueryName          ::= IRI
 SubstitutionName   ::= IRI
 ResultName         ::= IRI
 Vars               ::= Symbol*
 Complete           ::= complete
 \end{lstlisting}
+\ec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -13279,7 +13299,31 @@ spec Bag =
          __union__:Bag*Bag->Bag, assoc, comm, unit mt
            }
 end
+\end{lstlisting}
 
+\bc{348}
+\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{spec Bag_variant =}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ sort Elem}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{then minimize \{ \%\% select term generated models}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ sort Bag}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \    ops mt:Bag;}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \        __union__:Bag*Bag->Bag, assoc, comm, unit mt}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \ \   \}}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{then}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ pred __elem__ : Elem * Bag}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ forall x:Elem; b1,b2:Bag}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . not x elem mt}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . x elem (b1 union b2) <=> (x elem b1 \/ x elem b2)}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . b1=b2 <=> forall y:Elem . (y elem b1 <=> y elem b2) \%(extensionality)\%}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{ \ \ \ \ \ \%\% term generatedness and extensionality together}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \ \ \%\% select the standard bag model}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{end}}
+\\
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{equivalence e : Bag <-> Bag_variant = \{\}}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{end}}
+\\
+\ec
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 spec Stream =
   sort Elem
   then cofree {
@@ -13292,6 +13336,17 @@ end
 spec Finite =
   sort Elem
   free type Nat ::= 0 | suc(Nat)
+\end{lstlisting}
+\vspace{-2em}
+\bc{348}
+  \DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ pred __<__ : Nat * Nat}}
+  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ forall m,n:Nat}}
+  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . 0 < suc(n)}}
+  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . not n < 0}}
+  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . suc(m) < suc(n) <=> m < n}}
+\ec
+\vspace{-1em}
+\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
   op f: Nat ->? Elem
   . forall x:Elem . exists n:Nat . f(n)=x           %(f_surjective)%
   . exists n:Nat . forall m:Nat . def f(m) => m<n   %(f_bounded)%
