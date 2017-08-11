@@ -26,10 +26,6 @@
 %\documentclass[10pt, letterpaper]{isov2} 
 \documentclass[10pt, a4paper]{isov2} 
 
-\usepackage{changebar}
-\newcommand{\bc}[1]{\cbstart\marginpar{JIRA #1}}
-\newcommand{\ec}[1]{\cbend}
-
 %% Cleaning up things that isov2 gets wrong
 \makeatletter
 %% Other packages define a more modern variant of \ifpdf
@@ -54,8 +50,8 @@
 %
 
 
-\textwidth 17.5cm
-\hoffset -0.7cm
+\textwidth 16.5cm
+\hoffset -0.1cm
 \textheight 24cm
 %\voffset 1cm
 
@@ -627,6 +623,10 @@ author=,date=,id=,replyto=,type=}{}%
 \providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
 \providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
 %DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+\usepackage{xcolor}
+\usepackage{pdfcomment}
+\newcommand{\bc}[1]{\begin{pdfsidelinecomment}[color=red,icolor=yellow,caption=inline,linebegin={/Butt},lineend={/Square},linewidth=2bp,linesep=1cm]{#1}}
+\newcommand{\ec}[1]{\end{pdfsidelinecomment}}
 
 \begin{document}
 
@@ -1371,7 +1371,7 @@ algorithms that have been employed in obtaining an alignment.
 
 \sclause{Conformance of an Application With \DOL}\label{c:conform:application}
 
-
+\bc{36}
 In the following, ``\DOL abstract syntax'' means an XMI document that
 conforms to the \DOL metamodel. Optionally, further representations
 (e.g. as JSON) can be supported.
@@ -1641,9 +1641,11 @@ of logic (model theory). \DIFaddbegin \DIFadd{In this document, we use the term 
 }\DIFdelend \DIFaddbegin \DIFadd{\termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
 }\DIFaddend
 \ec
+
 \bc{4}
 {\DIFdelbegin \DIFdel{basic OMS or structured OMS}\DIFdelend \DIFaddbegin \DIFadd{collection of expressions (like non-logical symbols, sentences and structuring elements) in a given OMS language (or several such languages) and denoting a class of models and, possibly, a logical theory}\DIFaddend .}
 \ec
+
 \begin{note}
 	An OMS is either a basic OMS (which is always a native OMS, and can occur as a text fragment in a \DOL document) or a structured OMS (which can be either a native structured OMS contained in some native document, or a \DOL structured OMS contained in a \DOL document).
 \end{note}
@@ -1767,6 +1769,7 @@ a theorem, if proven from other axioms and theorems; or a conjecture, if expecti
 from  other axioms and theorems.
   \end{note}
   \ec
+
   \begin{note}
   A sentence can conform to one or more signatures (namely those signatures
   containing all non-logical symbols used in the sentence).
@@ -1787,7 +1790,9 @@ from  other axioms and theorems.
 %DIFDELCMD <   %%%
 \DIFdelend \DIFaddbegin \termdefinition{satisfaction relation}{relation between realizations and sentences indicating which sentences hold true in the realization.}
 \DIFaddend
-\ec\begin{note}
+\ec
+
+\begin{note}
   The satisfaction relation depends on the \termref{OMS language} or \termref{logic}. 
   \end{note}
 
@@ -1946,6 +1951,7 @@ first OMS.
     An extension $O_2$ of an OMS $O_1$ is a model-theoretic conservative extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_1$ can be expanded to a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_2$.
   \end{note}
 \ec
+
 \begin{note}
    Each model-theoretic conservative extension is also a consequence-theoretic one, but not vice versa.
   \end{note}
@@ -1954,17 +1960,20 @@ first OMS.
 
 \termdefinition{monomorphic extension}{\termref{extension} whose newly introduced
    non-logical symbols\index{non-logical symbol} are interpreted in a way unique up to isomorphism.}
+
 \bc{82}
   \begin{note}
 An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a monomorphic extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_1$ can be expanded to a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_2$ that is unique up to isomorphism.
   \end{note}
   \ec
+
   \begin{note}
     Each monomorphic extension is also a model-theoretic conservative extension but not vice versa.
   \end{note}
 
   \termdefinition{definitional extension}{\termref{extension} whose newly introduced
-   non-logical symbols\index{non-logical symbol} are interpreted in a unique way.}
+    non-logical symbols\index{non-logical symbol} are interpreted in a unique way.}
+  
 \bc{82}
   \begin{note}
 An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a definitional extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_1$ can be uniquely expanded to a \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_2$.
@@ -1973,6 +1982,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a definitional extensi
     $O_2$ being a definitional extension of $O_1$ implies a bijective correspondence between the classes of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realizations }\DIFaddend of $O_2$ and $O_1$.
   \end{note}
   \ec
+
   \begin{note}
     Each definitional extension is also a monomorphic extension but not vice versa.
   \end{note}
@@ -1984,6 +1994,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a definitional extensi
 An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional extension, if each \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_1$ can be expanded to at most one \DIFdelbegin \DIFdel{model }\DIFdelend \DIFaddbegin \DIFadd{realization }\DIFaddend of $O_2$.
   \end{note}
   \ec
+
   \begin{note}
     An extension is definitional if and only if it is both weakly definitional
    and model-theoretically conservative.
@@ -2000,6 +2011,7 @@ An \termref{extension} $O_2$ of an \termref{OMS} $O_1$ is a weak definitional ex
     of }\DIFaddend $O_1$.
   \end{note}
   \ec
+
   \begin{note}
     Each implied extension is also a definitional extension but not vice versa.
   \end{note}
@@ -2096,7 +2108,9 @@ If a symbol is removed, all axioms containing that symbol are removed, too.
 \termdefinitionLight{\termref{closure}\synonym circumscription\index{circumscription|see {closure}}}
 {structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \DIFdelbegin %DIFDELCMD < \termref{models}%%%
 \DIFdelend \DIFaddbegin \termref{realizations}\DIFaddend \index{model} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
-\ec  \begin{note}
+\ec
+
+\begin{note}
     \termref{Symbols} from the \termref{local environment} are assumed
     to have a fixed interpretation. Only the symbols newly declared in
     the closure are forced to have minimal or maximal interpretation.
@@ -2124,6 +2138,7 @@ If a symbol is removed, all axioms containing that symbol are removed, too.
 \DIFdelend \DIFaddbegin \termdefinition{freeness}{special type of closure, restriction of \termref{realizations} to those that are free (with respect to the local environment).}
 \DIFaddend
 \ec
+
 \begin{note}
     In first-order logic (and similar logics), freeness means minimal interpretation
     of predicates and minimal equality among data values. Freeness can
@@ -2407,8 +2422,8 @@ that targets specific applications or reasoning methods.}
 
 \sclause{Logic}\label{c:term-logic}
 
-\bc{82}
 \begin{definitions}
+\bc{82}
   \DIFdelbegin %DIFDELCMD < \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
 %DIFDELCMD < models \index{model}  (interpretations of these),
 %DIFDELCMD < sentences\index{sentence}  (constraints on models),
@@ -2420,6 +2435,7 @@ sentences\index{sentence}  (constraints on realizations),
  and a \termref{satisfaction relation} between realizations and sentences\index{sentence}.}
 \DIFaddend
 \ec
+
 \begin{note}
     Most OMS languages have an underlying logic.
   \end{note}
@@ -2456,6 +2472,7 @@ the notion of a \termref{logic} in terms of notions of
 and \termref{satisfaction}.}
 \DIFaddend
 \ec
+
 \begin{note}
 In order to support a broad range of 
 OMS languages and enable interoperability between them, 
@@ -2604,6 +2621,7 @@ See section~\ref{dist-het-onto}.
   other (in the sense of \termref{category} theory).}
 \DIFaddend 
 \ec
+
 
 \end{definitions}
 
@@ -4765,10 +4783,13 @@ An \syntax{ExtendingOMS} can be one of the following:
 \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
 language (which is defined outside this standard; practically every example uses basic OMS)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
 However, \DOL's module sublanguage should be used instead of the module sublanguage of 
-the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.}\DIFaddbegin \DIFadd{.
-\bc{94}Note that a basic OMS used inside a DOL document may not use any of the DOL
+the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.}
+\bc{94}
+\DIFaddbegin \DIFadd{.
+Note that a basic OMS used inside a DOL document may not use any of the DOL
 keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in curly braces}\footnote{\DIFadd{This restriction applies to DOL documents only,
  not to native documents.}}\DIFaddend ;\ec
+
 \item a reference (through an IRI) to an OMS (\syntax{OMSReference}, many examples illustrate this); or
 \item a \syntax{RelativeClosureOMS}, applying a closure operator to a
   basic OMS or OMS reference (these two are hence joined into
@@ -4979,7 +5000,6 @@ LoLaRef            ::= LanguageRef | LogicRef
 OMSLanguageTranslation ::= OMSLanguageTranslationRef | '->' LoLaRef
 OMSLanguageTranslationRef ::= IRI
 \end{lstlisting}
-\ec
 
 %\ednote{\%safe is more a statement about an import of a module, 
 %and hence should be a statement in an OMS network. Recall:
@@ -6233,6 +6253,7 @@ $\Sigma$\DIFdelbegin \DIFdel{-model}\DIFdelend \DIFaddbegin \DIFadd{-realization
 signature morphism $\sigma:\Sigma_1\rightarrow\Sigma_2$ in $I$ the following 
 squares commute:
 \ec
+
 %
 \begin{equation*}
 \xymatrix{
@@ -9942,7 +9963,8 @@ name in the smaller signature if and only if it is one in the larger signature. 
 the universe of reference, with a non-empty subset $\UD\subseteq \UR$,
 the universe of discourse, and four mappings:
 \ec
-   \begin{itemize} 
+
+\begin{itemize} 
    \item $\rel$ from $\UR$ to subsets of $\UD^* = \{ \langle x_1,\ldots,x_n\rangle \mid
 x_1,\ldots,x_n \in \UD\}$ (i.e., the set of finite sequences of
 elements of $\UD$);
@@ -11058,6 +11080,7 @@ That is, given a UML class and object model $\Sigma$, a
 multiplicity formula $\varphi$ and a $\Sigma$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realization }\DIFaddend $M$ (the
 latter amounts to a $\CL(\Sigma)$\DIFdelbegin \DIFdel{-model }\DIFdelend \DIFaddbegin \DIFadd{-realization }\DIFaddend $M$ in Common Logic): 
 \ec
+
 %
 \begin{equation*}
   M \models_\Sigma \varphi
@@ -13348,6 +13371,7 @@ end
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{end}}
 \\
 \ec
+
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 spec Stream =
   sort Elem
@@ -13363,6 +13387,7 @@ spec Finite =
   free type Nat ::= 0 | suc(Nat)
 \end{lstlisting}
 \vspace{-2em}
+
 \bc{348}
   \DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ pred __<__ : Nat * Nat}}
   \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ forall m,n:Nat}}
@@ -13370,6 +13395,7 @@ spec Finite =
   \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . not n < 0}}
   \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . suc(m) < suc(n) <=> m < n}}
 \ec
+
 \vspace{-1em}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
   op f: Nat ->? Elem
