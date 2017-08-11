@@ -2566,7 +2566,7 @@ values (\eg, zero, one, and infinity). See \nref{URI}, Section 1.1.
   \end{note}
 
   \begin{note}
-    RDF, serialized as RDF/XML \cite{W3C:REC-rdf-syntax-grammar-20140225}, is the most common format for publishing linked data.  However, its usage is not mandatory.
+    RDF, serialized as RDF/XML \cite{W3C:rdf-syntax-grammar}, is the most common format for publishing linked data.  However, its usage is not mandatory.
   \end{note}
   \begin{note}
     Using HTTP content negotiation \cite{rfc2616} it is possible to serve representations in different formats from the same URL. 
@@ -2654,7 +2654,7 @@ As listed below, these symbols and abbreviations are generally for the main clau
 \symboldef{OWL 2 DL}{description logic profile of OWL 2}
 \symboldef{OWL 2 EL}{a sub-Boolean profile of OWL 2 (used often \eg in medical ontologies)}
 \symboldef{OWL 2 Full}{the language that is determined by RDF graphs being interpreted 
-using the OWL 2 RDF-Based Semantics \cite{W3C:REC-owl2-rdf-based-semantics-20091027}}
+using the OWL 2 RDF-Based Semantics \cite{W3C:owl2-rdf-based-semantics}}
 \symboldef{OWL 2 QL}{profile of OWL 2 designed to support fast query answering over large amounts of data}
 \symboldef{OWL 2 RL}{fragment of OWL 2 designed to support rule-based reasoning}
 \symboldef{OWL/XML}{XML-based serialization of the OWL 2 language}
@@ -4381,7 +4381,7 @@ SeparatorChar  ::= ipchar | gen-delims - '#'+$<$\rm as defined in \nref{IRI}$>$+
 \end{lstlisting}
 
 
- Note that the empty prefix (called ``no prefix'' in \nref{RDFa}, Section 6) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+ Note that the empty prefix (called ``no prefix'' in \nref{RDFa}, Section 6) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:owl2-manchester-syntax} but differs from the RDFa Core 1.1 syntax.
 
 \vspace{1em}
 	
@@ -4995,7 +4995,7 @@ In accordance with best practices for publishing OMS on the Web, identifiers of 
 elements \should not just serve as \emph{names}, but also as \emph{locators}, which, when 
 dereferenced, give access to a concrete representation of an OMS or one of its elements.  (For the 
 specific case of RDF Schema and OWL OMS, these best practices are documented in 
-\cite{W3C:NOTE-swbp-vocab-pub-20080828}.  The latter is a specialization of the linked data 
+\cite{W3C:swbp-vocab-pub}.  The latter is a specialization of the linked data 
 principles, which apply to any machine-processable data published on the Web 
 \cite{BernersLee:LinkedData2006}.)  It is recommended that publicly accessible \DOL OMS be published 
 as linked data.
@@ -5027,11 +5027,11 @@ The DOL metamodel for IRIs and prefixes is shown in Fig.~\ref{fig:prefixes}.
 % It is recommended that these ``\DOL IRIs'' be used whenever an OMS or a module of an OMS is primarily implemented in \DOL.
 
 In accordance with semantic web best practices such as the OWL Manchester Syntax 
-\cite{W3C:NOTE-owl2-manchester-syntax-20091027}, this \IS does not allow relative IRIs, and does 
+\cite{W3C:owl2-manchester-syntax}, this \IS does not allow relative IRIs, and does 
 not offer a mechanism for defining a base IRI, against which relative IRIs could be resolved.
 
 Concerning these languages, note that they allow arbitrary IRIs in principle, but in practice they 
-strongly recommend using IRIs consisting of two components \cite{W3C:NOTE-swbp-vocab-pub-20080828}:
+strongly recommend using IRIs consisting of two components \cite{W3C:swbp-vocab-pub}:
 \begin{description}
 \item[namespace] an IRI that identifies an OMS,
 usually ending with \syntax{\#} or \syntax{/}. ({See annex~\ref{a:loc/id} for a specific linked-data compliant URL scheme for \DOL.})
@@ -5280,7 +5280,7 @@ In a CURIE without a prefix, the \syntax{reference} part is \notallowed to match
 %
 % \end{lstlisting}
 %
-%  Note that the empty prefix (called ``no prefix'' in \nref{RDFa}, Section 6) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:NOTE-owl2-manchester-syntax-20091027} but differs from the RDFa Core 1.1 syntax.
+%  Note that the empty prefix (called ``no prefix'' in \nref{RDFa}, Section 6) is denoted by a colon inside the prefix map, but it is omitted in CURIEs.  This is the style of the OWL Manchester syntax \cite{W3C:owl2-manchester-syntax} but differs from the RDFa Core 1.1 syntax.
 %
 % \vspace{1em}
 %
@@ -5662,8 +5662,8 @@ The following cases apply for injecting identifiers into fragments of OMS langua
 \item[RDF conformance] The RDF data model itself enables the assignment of IRI identifiers to all resources.
 \item[Text conformance] Identifiers are added by inserting a special comment immediately\footnote{The serialization \may allow whitespace between the keyword and the comment.} after the structural OMS element to be annotated, or, if this is not allowed and no ambiguity arises from inserting the comment \emph{before} the structural element, by doing the latter.  The complete comment \shall read \texttt{\%(I)\%} if the language uses the \texttt{\%} character to introduce comments, where \texttt{I} is the identifier IRI.  If the language uses a different comment syntax, the \emph{content} of the comment \shall start with \texttt{\%(I)\%}, possibly preceded by whitespace.
 \item[Standoff markup conformance] If the given OMS serialization conforms with the \mimetype{text/plain} media type as per standoff markup conformance requirement~\ref{it:standoff-text-plain} but not with XML, \nref{text/plain-URI} shall be used as means of non-destructively assigning a URI to pieces of text in the given OMS serialization.
-If the serialization conforms with XML as per requirement~\ref{it:standoff-xpointer}, one of \nref{text/plain-URI} or XPointer (\nref{XPointer}) shall be used. { (As an example, consider the identification of imports in the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211}, which does not provide a native way for assigning identifiers to imports unless modified as suggested in annex~\ref{sec:conformance-owl-xml-rdf}.  For example, in an OMS file \textit{cars.owx}, the import \texttt{<Import>http://example.org/engines</Import>} can be referred to by the IRI \url{cars.owx\#xpointer(/owl:Ontology/owl:Import[text()='http://example.org/engines'])} assuming the right binding for the namespace prefix \textit{owl} in scope.
-The same import in the text-based OWL Manchester syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} could be referred to as \url{cars.omn\#line=27} according to \nref{text/plain-URI} if it is on line 27 of the document.)}
+If the serialization conforms with XML as per requirement~\ref{it:standoff-xpointer}, one of \nref{text/plain-URI} or XPointer (\nref{XPointer}) shall be used. { (As an example, consider the identification of imports in the OWL/XML serialization~\cite{W3C:owl2-xml-serialization}, which does not provide a native way for assigning identifiers to imports unless modified as suggested in annex~\ref{sec:conformance-owl-xml-rdf}.  For example, in an OMS file \textit{cars.owx}, the import \texttt{<Import>http://example.org/engines</Import>} can be referred to by the IRI \url{cars.owx\#xpointer(/owl:Ontology/owl:Import[text()='http://example.org/engines'])} assuming the right binding for the namespace prefix \textit{owl} in scope.
+The same import in the text-based OWL Manchester syntax~\cite{W3C:owl2-manchester-syntax} could be referred to as \url{cars.omn\#line=27} according to \nref{text/plain-URI} if it is on line 27 of the document.)}
 \end{description}
 \ednote{TODO: injection of identifiers addressed, but we also had \%implies etc.  The latter will probably be handled in a similar way, but I don't know how \emph{exactly}.}
 
@@ -8965,7 +8965,7 @@ widespread than anticipated and thus such documentation is warranted.
 % \end{itemize}
 %
 % %The sources of the \DOL ontology are being maintained in OWL Manchester
-% % syntax~\cite{W3C:NOTE-owl2-manchester-syntax-20091027} at
+% % syntax~\cite{W3C:owl2-manchester-syntax} at
 % % \url{https://ontohub.org/meta/dol-ontology.omn}.
 %
 % It is intended to implement future versions of the \DOL ontology as a DOL document in \DOL.
@@ -9137,7 +9137,7 @@ The OWL 2 Manchester syntax satisfies the criteria for text conformance establis
 
 \sssclause{General Issues}
 
-With minor modifications detailed below, the OWL/XML serialization~\cite{W3C:REC-owl2-xml-serialization-20121211} satisfies the criteria for XML conformance and the serialization of OWL in RDF (\nref{OWL2RDF}) satisfies RDF the criteria for RDF conformance. %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
+With minor modifications detailed below, the OWL/XML serialization~\cite{W3C:owl2-xml-serialization} satisfies the criteria for XML conformance and the serialization of OWL in RDF (\nref{OWL2RDF}) satisfies RDF the criteria for RDF conformance. %~\CLnote{also need conformance propositional logic; use PL ``profile'' of the CASL ``IFIP standard''}
 Both modifications define a super-language of the respective OWL serialization.
 Any OWL ontology serialization $S'$ in one of these two super-languages can be translated into an OWL ontology serialization $S$ that fully conforms to the original specification OWL/XML or ``OWL serialized in RDF'' and is semantically equivalent to the extended serialization $S'$ with regard to the semantics of OWL.
 Without these modifications, neither OWL/XML nor ``OWL serialized in RDF'' satisfies the XML or RDF conformance requirements, respectively.
@@ -9707,7 +9707,7 @@ like \texttt{rdfs:domain}, \texttt{rdfs:range}, \texttt{rdfs:Resource},
 
 There is also \OWL Full, an extension of \RDFS with resources
 such as \texttt{owl:Thing} and \texttt{owl:oneOf}, tailored towards the representation of
-\OWL~\cite{W3C:REC-owl2-rdf-based-semantics-20091027}.
+\OWL~\cite{W3C:owl2-rdf-based-semantics}.
 \qed\end{definition}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
