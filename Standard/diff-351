@@ -1,0 +1,48 @@
+--- OMG_OntoIOp_current-diff-all.tex
++++ OMG_OntoIOp_current-diff-all.tex
+@@ -4580,7 +4580,10 @@
+ \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
+ language (which is defined outside this standard; practically every example uses basic OMS)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
+ However, \DOL's module sublanguage should be used instead of the module sublanguage of 
+-the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.};
++the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.}\DIFaddbegin \DIFadd{.
++Note that a basic OMS used inside a DOL document may not use any of the DOL
++keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in curly braces}\footnote{\DIFadd{This restriction applies to DOL documents only,
++ not to native documents.}}\DIFaddend ;
+ \item a reference (through an IRI) to an OMS (\syntax{OMSReference}, many examples illustrate this); or
+ \item a \syntax{RelativeClosureOMS}, applying a closure operator to a
+   basic OMS or OMS reference (these two are hence joined into
+@@ -4696,7 +4699,7 @@
+ \begin{lstlisting}[language=ebnf,escapeinside={()},mathescape]
+ 
+ BasicOMS           ::= ($<$)language and serialization specific($>$) 
+-ClosableOMS        ::= BasicOMS | OMSRef [ImportName]
++ClosableOMS        ::= BasicOMS |  ( \DIFaddbegin \DIFadd{'}{\DIFadd{' BasicOMS '}}\DIFadd{' | }\DIFaddend )  OMSRef [ImportName]
+ ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
+ RelativeClosureOMS ::= ClosureType '{' ClosableOMS '}'
+ OMS                ::= ExtendingOMS
+@@ -5580,16 +5583,20 @@
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+-\ssclause{Key words and signs}\label{c:keywords}
++\DIFdelbegin %DIFDELCMD < \ssclause{Key words and signs}%%%
++\DIFdelend \DIFaddbegin \ssclause{Keywords and signs}\DIFaddend \label{c:keywords}
+ 
+-The lexical symbols of the \DOL text serialization include various key words and signs that occur as terminal symbols in the context-free grammar in \aref{a:EBNF}.   Key words and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
++The lexical symbols of the \DOL text serialization include various \DIFdelbegin \DIFdel{key words }\DIFdelend \DIFaddbegin \DIFadd{keywords }\DIFaddend and signs that occur as terminal symbols in the context-free grammar in \aref{a:EBNF}.   \DIFdelbegin \DIFdel{Key words }\DIFdelend \DIFaddbegin \DIFadd{Keywords }\DIFaddend and signs that represent mathematical signs are displayed as such, when possible, and those signs that are available in the Unicode character set may also be used for input.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+-\sssclause{Key words}
++\DIFdelbegin %DIFDELCMD < \sssclause{Key words}
++%DIFDELCMD < %%%
++\DIFdelend \DIFaddbegin \sssclause{Keywords}
++\DIFaddend 
+ 
+ 
+-Key words are always written lowercase. The following key words are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  These rewritings do not change the semantics.}, although they can be used as parts of tokens. 
++\DIFdelbegin \DIFdel{Key words }\DIFdelend \DIFaddbegin \DIFadd{Keywords }\DIFaddend are always written lowercase. The following \DIFdelbegin \DIFdel{key words }\DIFdelend \DIFaddbegin \DIFadd{keywords }\DIFaddend are reserved, and are not available for use as variables or as CURIEs with no prefix\footnote{In such a case, one can still rename affected variables, or declare a prefix binding for affected CURIEs, or use absolute IRIs instead.  These rewritings do not change the semantics.}, although they can be used as parts of tokens. 
+ %{\ttfamily %
+ \lstset{escapeinside = {*@}{@*}}
+ \begin{lstlisting}

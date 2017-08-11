@@ -1,0 +1,62 @@
+--- OMG_OntoIOp_current-diff-all.tex
++++ OMG_OntoIOp_current-diff-all.tex
+@@ -4587,7 +4587,11 @@
+   \syntax{ClosableOMS}). A closure forces the subsequently declared
+   non-logical symbols to be interpreted in a minimal  or
+   maximal way, while the non-logical symbols declared  in
+-  the local environment are fixed. Variants of closure are
++  the local environment are fixed.\DIFaddbegin \footnote
++  {\DIFadd{Note that if applied to algebraic signatures (sorts and operation symbols),
++    minimization can be used to express reachability (i.e. term-generatedness)
++    of algebraic (first-order) models.}}
++  \DIFaddend Variants of closure are
+   minimization, maximization, freeness (minimizing also data
+   sets and equalities on these,  which enables the inductive
+   definition of relations and datatypes), and cofreeness (enabling the
+@@ -12952,7 +12956,30 @@
+          __union__:Bag*Bag->Bag, assoc, comm, unit mt
+            }
+ end
++\end{lstlisting}
++
++\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{spec Bag_variant =}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ sort Elem}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{then minimize \{ \%\% select term generated models}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ sort Bag}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \    ops mt:Bag;}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \        __union__:Bag*Bag->Bag, assoc, comm, unit mt}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \ \   \}}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{then}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ pred __elem__ : Elem * Bag}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ forall x:Elem; b1,b2:Bag}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . not x elem mt}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . x elem (b1 union b2) <=> (x elem b1 \/ x elem b2)}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . b1=b2 <=> forall y:Elem . (y elem b1 <=> y elem b2) \%(extensionality)\%}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{ \ \ \ \ \ \%\% term generatedness and extensionality together}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \ \ \%\% select the standard bag model}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{end}}
++\\
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{equivalence e : Bag <-> Bag_variant = \{\}}}
++\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{end}}
++\\
+ 
++\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
+ spec Stream =
+   sort Elem
+   then cofree {
+@@ -12965,6 +12992,15 @@
+ spec Finite =
+   sort Elem
+   free type Nat ::= 0 | suc(Nat)
++\end{lstlisting}
++\vspace{-2em}
++  \DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ pred __<__ : Nat * Nat}}
++  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ forall m,n:Nat}}
++  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . 0 < suc(n)}}
++  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . not n < 0}}
++  \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ . suc(m) < suc(n) <=> m < n}}
++\vspace{-1em}
++\begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
+   op f: Nat ->? Elem
+   . forall x:Elem . exists n:Nat . f(n)=x           %(f_surjective)%
+   . exists n:Nat . forall m:Nat . def f(m) => m<n   %(f_bounded)%
