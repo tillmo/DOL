@@ -26,6 +26,9 @@
 %\documentclass[10pt, letterpaper]{isov2} 
 \documentclass[10pt, a4paper]{isov2} 
 
+\usepackage{pdfcomment}
+\newcommand{\bc}[1]{\begin{pdfsidelinecomment}{JIRA #1}}
+\newcommand{\ec}[1]{\end{pdfsidelinecomment}}
 %% Cleaning up things that isov2 gets wrong
 \makeatletter
 %% Other packages define a more modern variant of \ifpdf
@@ -1443,11 +1446,12 @@ be able to expand CURIEs into IRIs when requested.
 
 \cleardoublepage
 \clause{Normative References}
+\bc{288}   
  \begin{enumerate} [label=\bfseries NR\arabic*]
 % OLD text
 % The following referenced documents are indispensable for the application of this document. For dated references, only
 % the edition cited applies. For undated references, the latest edition of the referenced document (including any
-% amendments) applies.
+   % amendments) applies.
   \DIFdelbegin %DIFDELCMD < \item{W3C/TR REC-ldp-20150226:2015} %%%
 \DIFdelend \DIFaddbegin \item{W3C/TR ldp} \DIFaddend {Linked Data Platform\DIFdelbegin \DIFdel{1.0}\DIFdelend . W3C Recommendation, 26 February 2015.\\ \DIFdelbegin %DIFDELCMD < \url{http://www.w3.org/TR/2015/REC-ldp-20150226/}%%%
 \DIFdelend \DIFaddbegin \url{http://www.w3.org/TR/ldp/}\DIFaddend }\label{nref-linked-data}
@@ -1509,7 +1513,7 @@ Reference.  W3C Recommendation, 18 August \DIFdelbegin \DIFdel{2009}\DIFdelend \
 \item{DTV} {Date-Time Vocabulary, August \DIFdelbegin \DIFdel{2013}\DIFdelend \DIFaddbegin \DIFadd{2013.}\DIFaddend } \\ \url{http://www.omg.org/spec/DTV/1.0/}\label{nref-DTV}
 \item{RIF} {Rule Interchange Format, February \DIFdelbegin \DIFdel{2013}\DIFdelend \DIFaddbegin \DIFadd{2013.}\DIFaddend } \\ \url{http://www.w3.org/TR/rif-overview/}\label{nref-RIF}
  \end{enumerate} 
-
+\ec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4587,7 +4591,7 @@ and Appendix~\ref{ex:alignment} for an example network and of the use of \syntax
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{Concrete Syntax}
-
+\marginpar{JIRA 350}
 \vspace{-1.4em}
 \begin{lstlisting}[language=ebnf,escapeinside={@@},morecomment={[l]{\%\%\ }}]
 
@@ -4816,6 +4820,7 @@ features a more fine-grained structure of non-terminals
 (\syntax{Conservative}, \syntax{ConservativityStrength} and
 \syntax{ExtConservativityStrength}) in order to express the same
 constraints via the EBNF grammar.
+\marginpar{JIRA 350}
 \begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]
 BasicOMS           ::= @$<$@language and serialization specific@$>$@ 
 ClosableOMS        ::= BasicOMS |  @ \DIFaddbegin \DIFadd{'\{}{\DIFadd{' BasicOMS '}}\DIFadd{\}' | }\DIFaddend @ OMSRef [ImportName]
@@ -5068,6 +5073,7 @@ to the \syntax{InterfaceSignature}.
 \vspace{-2em}
 \index{alignment}
 \lstset{escapeinside = {*@}{@*}}
+\marginpar{JIRA 350}
 \begin{lstlisting}[language=ebnf,mathescape,escapeinside={*@}{@*}]
 
 MappingDefinition  ::= InterpretationDefinition
