@@ -11520,11 +11520,13 @@ $$\top \sqsubseteq \exists U. (\exists sub. \{s\} \sqcap \exists pred. \{p\} \sq
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Translation of sentences}
-
+\bc{81}
 Concepts are translated as follows:
  \begin{itemize} 
  \item $\alpha_x(A) = A(x)$
- \item $\alpha_x(\lnot C) = \lnot \alpha_x (C)$
+ \item \DIFaddbegin \DIFadd{$\alpha_x(\top) = \mathit{true}$
+ }\item \DIFadd{$\alpha_x(\bot) = \mathit{false}$
+ }\item \DIFaddend $\alpha_x(\lnot C) = \lnot \alpha_x (C)$
  \item $\alpha_x(C \sqcap D) = \alpha_x(C) \land \alpha_x(D)$
  \item $\alpha_x(C \sqcup D) = \alpha_x(C) \lor \alpha_x(D)$ 
  \item $\alpha_x(\exists R.C) = \exists y . (R(x,y) \land \alpha_y(C))$
@@ -11536,7 +11538,7 @@ Concepts are translated as follows:
  \item $\alpha_x(\geq n R. C) = \exists y_1,\ldots,y_n . \bigwedge_{i=1,\ldots,n}(R(x,y_i) \land \alpha_{y_i}(C)) \wedge \bigwedge_{1\leq i<j\leq n}y_i\not= y_j $
  \item $\alpha_x(\{a_1, \ldots a_n \}) = (x=a_1\vee \ldots \vee x=a_n)$
  \end{itemize} 
-
+\ec
 For inverse roles $R^-$, $R^-(x,y)$ has to be replaced by $R(y,x)$, e.g.
  $$\alpha_x(\exists R^-.C) = \exists y . (R(y,x) \land \alpha_y(C))$$
 This rule also applies below.
@@ -11567,24 +11569,32 @@ $ \forall x,y . (\exists z_1,\ldots, z_{n-1} . R_1(x,z_1) \wedge R_2(z_1,z_2) \w
 \DIFaddend 
 \ec
 
+\bc{81}
  \begin{itemize} 
-	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define $\beta_\Sigma(M') := (\Delta, \cdot^I)$
-	with $\Delta = |M'|$ and $A^I = M'_A, a^I = M'_a, R^I = M'_R$.
+	\item For $M' \in \Models^{FOL}(\Phi \Sigma)$ define \DIFdelbegin \DIFdel{$\beta_\Sigma(M') := (\Delta, \cdot^I)$
+	}\DIFdelend \DIFaddbegin \DIFadd{$\I=\beta_\Sigma(M') := (\Delta, \cdot^\I)$
+	}\DIFaddend with $\Delta = |M'|$ and\\ \DIFdelbegin \DIFdel{$A^I = M'_A, a^I = M'_a, R^I = M'_R$}\DIFdelend \DIFaddbegin \DIFadd{$A^\I = M'_A, a^\I = M'_a, R^\I = M'_R$}\DIFaddend .
  \end{itemize} 
-
+\
 	\begin{proposition}
-$C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (C) \right\}$
-	\end{proposition}
+\DIFdelbegin \DIFdel{$C^\I = \left\{m \in M'_{\Thing} \lvert M' + \{x \mapsto m \} \models \alpha_x (C) \right\}$
+	}\DIFdelend \DIFaddbegin \DIFadd{$C^\I = \left\{m \in \Delta \lvert M' + \{x \mapsto m \} \models \alpha_x (C) \right\}$
+	}\DIFaddend \end{proposition}
 
-	\begin{proof} By Induction over the structure of $C$.
+	\begin{proof} By \DIFdelbegin \DIFdel{Induction }\DIFdelend \DIFaddbegin \DIFadd{induction }\DIFaddend over the structure of $C$.
  \begin{itemize} 
-	\item $A^\I = M'_A = \left \{m \in M'_{\Thing} \vert M' + \{x \mapsto m \} \models A(x)  \right\}$
-	\item $(\lnot C)^\I = \Delta \setminus C^\I =^{I.H.} \Delta \setminus \{m \in M'_\Thing \lvert M' + \{x \mapsto m\} \models \alpha_x(C)\} = \{m \in M'_\Thing \vert M' + \{x \mapsto m\} \models \lnot \alpha_x(C)\}$
- \end{itemize} 
+	\item \DIFdelbegin \DIFdel{$A^\I = M'_A = \left \{m \in M'_{\Thing} \vert M' + \{x \mapsto m \} \models A(x)  \right\}$
+	}\DIFdelend \DIFaddbegin \DIFadd{$A^\I = M'_A = \left \{m \in \Delta \vert M' + \{x \mapsto m \} \models A(x)  \right\}$
+	}\DIFaddend \item \DIFdelbegin \DIFdel{$(\lnot C)^\I = \Delta \setminus C^\I =^{I.H.} \Delta \setminus \{m \in M'_\Thing \lvert M' + \{x \mapsto m\} \models \alpha_x(C)\} = \{m \in M'_\Thing \vert M' + \{x \mapsto m\} \models \lnot \alpha_x(C)\}$
+}\DIFdelend \\ \DIFaddbegin \DIFadd{$(\lnot C)^\I = \Delta \setminus C^\I =^{I.H.} \Delta \setminus \{m \in \Delta \lvert M' + \{x \mapsto m\} \models \alpha_x(C)\} = \{m \in \Delta  \vert M' + \{x \mapsto m\} \models \lnot \alpha_x(C)\}$
+}\DIFaddend  \end{itemize} 
 	\end{proof}
 
-	The satisfaction condition holds as well.
+        The \DIFdelbegin \DIFdel{satisfaction condition holds as well}\DIFdelend \DIFaddbegin \DIFadd{other cases are similar.
+}
 
+	 \DIFadd{The satisfaction condition now follows easily}\DIFaddend .
+\ec
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ssclause{$FOL \rightarrow \CL$}
