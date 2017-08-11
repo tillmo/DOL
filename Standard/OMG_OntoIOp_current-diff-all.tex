@@ -4744,22 +4744,24 @@ The DOL metamodel for extension OMS is shown in Fig.~\ref{fig:extension&closure}
 \syntax{ExtendingOMS} is a subclass of \syntax{OMS}, containing
 those OMS that may be used to extend a given OMS within an \syntax{ExtensionOMS}.
 An \syntax{ExtendingOMS} can be one of the following:
-\bc{348}
  \begin{itemize} 
 \item a basic OMS \syntax{BasicOMS} written inline, in a conforming serialization of a conforming OMS 
 language (which is defined outside this standard; practically every example uses basic OMS)\footnote{In this place, any OMS in a conforming serialization of a conforming OMS language is permitted.  
 However, \DOL's module sublanguage should be used instead of the module sublanguage of 
-the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.};
+the respective conforming OMS language; \eg \DOL's OMS reference and extension construct should be preferred over OWL's import construct.}\DIFaddbegin \DIFadd{.
+\bc{94}Note that a basic OMS used inside a DOL document may not use any of the DOL
+keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in curly braces}\footnote{\DIFadd{This restriction applies to DOL documents only,
+ not to native documents.}}\DIFaddend ;\ec
 \item a reference (through an IRI) to an OMS (\syntax{OMSReference}, many examples illustrate this); or
 \item a \syntax{RelativeClosureOMS}, applying a closure operator to a
   basic OMS or OMS reference (these two are hence joined into
   \syntax{ClosableOMS}). A closure forces the subsequently declared
   non-logical symbols to be interpreted in a minimal  or
   maximal way, while the non-logical symbols declared  in
-  the local environment are fixed.\DIFaddbegin \footnote
+  the local environment are fixed.\bc{90}\DIFaddbegin \footnote
   {\DIFadd{Note that if applied to algebraic signatures (sorts and operation symbols),
     minimization can be used to express reachability (i.e. term-generatedness)
-    of algebraic (first-order) models.}}
+    of algebraic (first-order) models.}}\ec
   \DIFaddend Variants of closure are
   minimization, maximization, freeness (minimizing also data
   sets and equalities on these,  which enables the inductive
@@ -4768,7 +4770,7 @@ the respective conforming OMS language; \eg \DOL's OMS reference and extension c
   See Annex~\ref{ex:blocks} for examples of the former two, and
   Annex~\ref{ex:datatypes} for examples of the latter two.
  \end{itemize} 
- \ec
+
 Recall that the local environment is the OMS built from all
 previously-declared symbols and axioms.
 
@@ -4869,10 +4871,10 @@ features a more fine-grained structure of non-terminals
 (\syntax{Conservative}, \syntax{ConservativityStrength} and
 \syntax{ExtConservativityStrength}) in order to express the same
 constraints via the EBNF grammar.
-\bc{92}
+\bc{94}
 \begin{lstlisting}[language=ebnf,escapeinside={@@},mathescape]
 BasicOMS           ::= @$<$@language and serialization specific@$>$@ 
-ClosableOMS        ::= BasicOMS | OMSRef [ImportName]
+ClosableOMS        ::= BasicOMS |  ( \DIFaddbegin \DIFadd{'\{}{\DIFadd{' BasicOMS '}}\DIFadd{\}' | }\DIFaddend )  OMSRef [ImportName]
 ExtendingOMS       ::= ClosableOMS | RelativeClosureOMS
 RelativeClosureOMS ::= ClosureType '{' ClosableOMS '}'
 OMS                ::= ExtendingOMS
@@ -4893,6 +4895,12 @@ ClosureType        ::= 'minimize'
                      | 'maximize'
                      | 'free'
                      | 'cofree'
+\end{lstlisting}
+\ec
+
+\lstset{escapeinside = {*@}{@*}}
+\begin{lstlisting}[language=ebnf,mathescape]
+\bc{92}
 CircMin            ::= Symbol Symbol*
 CircVars           ::= 'vars' @\DIFadd{(}@Symbol Symbol*@\DIFadd{)}@
 GroupOMS           ::= '{' OMS '}' | OMSRef
