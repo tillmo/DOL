@@ -3862,6 +3862,7 @@ Fig.~\ref{fig:class} & cd & class diagram\\\hline
 Fig.~\ref{fig:state-machine} & stm & state machine\\\hline
 \end{tabular}
 
+\bcnew{41}
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,escapechar=@,mathescape]
 %prefix( :      <http://www.example.org/uml/>
@@ -3870,8 +3871,8 @@ Fig.~\ref{fig:state-machine} & stm & state machine\\\hline
                 %% descriptions of logics ...
 library ATM
 
-view cd2stm = cd refined to { atm hide along stm2cd} end
-view cd2psm = cd refined to { psm hide along psm2cd} end
+ *@ \DIFdelbegin \DIFdel{view }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{refinement }\DIFaddend @*  cd2stm = cd refined to { atm hide along stm2cd} end
+ *@ \DIFdelbegin \DIFdel{view }\DIFdelend @*   *@ \DIFaddbegin \DIFadd{refinement }\DIFaddend @*  cd2psm = cd refined to { psm hide along psm2cd} end
 network ATM_network = %consistent
                       cd, stm, psm, cmp,
                       cd2stm, cd2psm, abstract_to_concrete_atm
@@ -3881,6 +3882,7 @@ network Some_refined_ATM_network = ... end
 refinement r = ATM_network refined to Some_refined_ATM_network
 entailment e = Some_refined_ATM_network entails ATM_network
 \end{lstlisting}
+\ecnew
 Here, \texttt{abstract\_to\_concrete\_atm} is defined in the next
 section, and \texttt{stm2cd} and \texttt{psm2cd} are suitable logic
 projections extracting the classes, attributes and operations from a
