@@ -1573,7 +1573,7 @@ of logic (model theory). In this document, we use the term \termref{realization}
 \termdefinition{specification}{formal representation of (requirements of) a data structure, an algorithm or a hardware or software system used in systems analysis, requirements analysis and systems design}
 
 \termdefinitionLight{OMS (ontology, specification or model)\index{OMS}}
-{collection of expressions (like non-logical symbols, sentences and structuring elements) in a given OMS language (or several such languages) and denoting a class of models and, possibly, a logical theory.}
+{collection of expressions (like non-logical symbols, sentences and structuring elements) in a given OMS language (or several such languages) and denoting a class of realisations and, possibly, a logical theory.}
 \begin{note}
 	An OMS is either a basic OMS (which is always a native OMS, and can occur as a text fragment in a \DOL document) or a structured OMS (which can be either a native structured OMS contained in some native document, or a \DOL structured OMS contained in a \DOL document).
 \end{note}
@@ -1973,7 +1973,7 @@ If a symbol is removed, all axioms containing that symbol are removed, too.
 \termdefinition{closed world assumption}{assumption that facts whose status is unknown are true.}
 
 \termdefinitionLight{\termref{closure}\synonym circumscription\index{circumscription|see {closure}}}
-{structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \termref{realizations}\index{model} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
+{structured OMS expressing a variant of the \termref{closed world assumption} by restricting the \termref{realizations}\index{realisation} to those that are minimal, maximal, free or cofree (with respect to the local environment).}
   \begin{note}
     \termref{Symbols} from the \termref{local environment} are assumed
     to have a fixed interpretation. Only the symbols newly declared in
@@ -2279,7 +2279,7 @@ that targets specific applications or reasoning methods.}
 
 \begin{definitions}
   \termdefinition{logic}{specification of valid reasoning that comprises signatures\index{signature}  (user defined vocabularies), 
-realizations \index{model}  (interpretations of these),
+realizations \index{realisation}  (interpretations of these),
 sentences\index{sentence}  (constraints on realizations),
  and a \termref{satisfaction relation} between realizations and sentences\index{sentence}.}
   \begin{note}
@@ -2338,12 +2338,12 @@ and \termref{satisfaction}.
 
   \termdefinition{logic translation}{\termref{translation} of a source
     \termref{logic} into a target \termref{logic} (mapping
-    signatures\index{signature}, sentences\index{sentence} and realizations\index{model})
+    signatures\index{signature}, sentences\index{sentence} and realizations\index{realisation})
     that keeps or encodes the logical content of \termref{OMS}.}
 
   \termdefinition{logic reduction}{\termref{reduction} of a source \termref{logic}
     onto a (usually less expressive) target \termref{logic} (mapping
-	signatures\index{signature}, sentences\index{sentence} and realizations\index{model})
+	signatures\index{signature}, sentences\index{sentence} and realizations\index{realisation})
     that forgets those parts of the logical structure not
     fitting the target \termref{logic}.}
 
@@ -4564,7 +4564,7 @@ keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in cu
   the local environment are fixed.\footnote
   {Note that if applied to algebraic signatures (sorts and operation symbols),
     minimization can be used to express reachability (i.e. term-generatedness)
-    of algebraic (first-order) models.}
+    of algebraic (first-order) realisations.}
   Variants of closure are
   minimization, maximization, freeness (minimizing also data
   sets and equalities on these,  which enables the inductive
@@ -5790,18 +5790,18 @@ can be equipped with one.
  An abstract notion of logical system is given by  the notion of
 satisfaction system \cite{carnielli2008analysis}, called `rooms' in
 the terminology of \cite{CharPar}. They capture the Tarskian notion of
-satisfaction of a sentence in a model in an abstract way.
-%For the semantics of minimization, we assume a pre-order on models.
+satisfaction of a sentence in a realisation in an abstract way.
+%For the semantics of minimization, we assume a pre-order on realisations.
 
 \begin{definition}\label{def:room}
 A triple $\cR=(\mathit{Sen},{\cM,\models)}$  is called a \defsty{satisfaction system}, or \defsty{room}, if $\cR$ consists of
 \begin{itemize}
 \item a set $\mathit{Sen}$ of \defsty{sentences},
 \item a class
-%\footnote{If we want to take model morphisms into account, 
-%a \emph{category} of models needs to be given here. However, this is important only
+%\footnote{If we want to take realisation morphisms into account, 
+%a \emph{category} of realisations needs to be given here. However, this is important only
 %for the \syntax{\%mono} annotation.}
-$\cM$ of \defsty{models}, and
+$\cM$ of \defsty{realisations}, and
 \item a binary relation
 ${\models} \subseteq \cM \times \mathit{Sen}$, called the \defsty{satisfaction relation}.\quad\qed
 \end{itemize}
@@ -5810,7 +5810,7 @@ ${\models} \subseteq \cM \times \mathit{Sen}$, called the \defsty{satisfaction r
 \eat{
 Two sentences are \emph{semantically
 equivalent}, written $\varphi_1\bimodels\varphi_2$, if they are satisfied by
-the same models.  Two models are \emph{elementary equivalent}, written
+the same realisations.  Two realisations are \emph{elementary equivalent}, written
 $M_1\equiv M_2$, if they satisfy the same sentences.  A room is
 \emph{compact\/} iff $\Delta\models_\Sigma\varphi$ implies
 $\Delta'\models_\Sigma\varphi$ for some finite subset $\Delta'$ of $\Delta$.
@@ -5821,9 +5821,9 @@ concepts and definitions found in logics, e.g.\ the notion of a conservative ext
 \emph{vocabulary} or \emph{signature} $\Sigma$ \label{vocabulary} used in sentences.  Signatures 
 can be extended with new non-logical symbols, or some of these symbols can be renamed; abstractly, 
 this is captured using signature morphisms. Moreover,  morphisms
-between models are also needed in order to give a semantics to \syntax{minimize},
+between realisations are also needed in order to give a semantics to \syntax{minimize},
 \syntax{maximize}, \syntax{free} and \syntax{cofree}---these constructs
-use model morphisms to select certain models, e.g.\ the minimal ones.
+use realisation morphisms to select certain realisations, e.g.\ the minimal ones.
 This leads to the notion of \emph{institution}. An institution
 is nothing more than a family of satisfaction systems, indexed by
 signatures, and linked coherently by signature morphisms.
@@ -6281,7 +6281,7 @@ theory-level semantics.
  The following unifying notation is used for the two semantics of an OMS $O$:\begin{itemize}
  \item the institution of $O$ is denoted $\Inst(O)$,
   \item the signature of $O$ is denoted $\Sig(O)$ (which is a signature in $\Inst(O)$),
-  \item the class of models of $O$ is denoted $\Mod(O)$ (which is a class of realizations over $\Sig(O)$),
+  \item the class of realisations of $O$ is denoted $\Mod(O)$ (which is a class of realizations over $\Sig(O)$),
   \item the set of axioms of $O$ is denoted $\Th(O)$ (which is a set of sentences over $\Sig(O)$).
 \end{itemize}
 \noindent Moreover, the semantics of $O$ is the tuple $sem(O) = (I, \Sigma, \cM,\Delta)$
@@ -6312,7 +6312,7 @@ an edge from the node $S$ to the node $T$ is labeled with a pair
 $(\rho, \sigma)$ where $\rho=(\Phi,\alpha,\beta):\Inst(S)\to\Inst(T)$ is an institution comorphism and
 $\sigma:\Phi(\Sig(S))\to\Sig(T)$ is a signature morphism in $\Inst(T)$).
 The theory of a node  may be undefined, as in the case of OMS, and when it is defined, 
-the class of realizations of that node is the class of models of $\Th(N)$. 
+the class of realizations of that node is the class of realisations of $\Th(N)$. 
 For brevity,  the label of a node may be written as a tuple. Further, it is required that  any OMS can be assigned a unique name. 
 
 The semantics of a network of OMS is a graph
@@ -6384,7 +6384,7 @@ updating the current triple of $\Gamma$ to $(lang, logic, ser)$.
 %but possibly also
 %structured) OMS
 %$sem(L,\syntax{NativeDocument})=(\Sigma,\cM)$, where
-%$\Sigma$ is a signature and $\cM$ a class of models over $\Sigma$.
+%$\Sigma$ is a signature and $\cM$ a class of realisations over $\Sigma$.
 
 %Semantics of an OMS declaration/relation is given by a mapping \syntax{IRI}s to semantics of OMS
 % $$\Gamma: \syntax{IRI} \rightarrow (OMS \uplus OMS \times OMS \times SigMor)$$\ednote{notation(?)}
@@ -6776,7 +6776,7 @@ $sem(\Gamma, O) = (\Gamma', (\cI,\Sigma,\cM,\Delta))$.
 \semdom{
 \begin{array}{ll}
  sem(\Gamma, \syntax{BasicOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -6803,7 +6803,7 @@ node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'
 \semdom{
 \begin{array}{ll}
  sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{BasicOMS})& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -6833,7 +6833,7 @@ node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'
 \semdom{
 \begin{array}{ll}
  sem(\Gamma, \syntax{ClosableOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -6866,7 +6866,7 @@ and
 \semdom{
 \begin{array}{ll}
  sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ClosableOMS})& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -6899,7 +6899,7 @@ $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)= (\Gamma',(\cI',\Sigma',\cM', \Delt
  \semdom{
 \begin{array}{ll}
  sem(\Gamma, \syntax{ExtendingOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array} 
 }
  
@@ -6949,7 +6949,7 @@ category theory, see \ref{sec:colimits}.
 \semdom{
 \begin{array}{ll}
  sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ExtendingOMS}))& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -7007,7 +7007,7 @@ $\cM'' =
 \semdom{
 \begin{array}{ll}
  sem(\Gamma,\syntax{OMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -7111,7 +7111,7 @@ where
 $sem(\Gamma, (\Sig(O.\syntax{oms}), \Th(O.\syntax{oms})), O.\syntax{extraction}) = 
 (\Sigma',\Delta')$.
 %which in turn amounts to stating that each $\Sigma' \cup \Sigma$-reduct
-%of a $\Mod(\Sig(O))$-model can be expanded to a $\Mod(\Sig(O))$-model
+%of a $\Mod(\Sig(O))$-realisation can be expanded to a $\Mod(\Sig(O))$-realisation
 %satisfying $\Th(O) \setminus \Delta'$.
 
 %Approximation
@@ -7641,7 +7641,7 @@ $sem(\Gamma,(\cI,\Sigma,\cM,\Delta), s) = (\cI, sem(\Gamma,\Sigma,s), \emptyset,
 \semdom{
 \begin{array}{ll}
  sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{Extension})& = (\Gamma',(\cI,\Sigma',\cM',\Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment, (Institution,Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -7660,7 +7660,7 @@ If $e.\syntax{conservativityStrength}$ is \syntax{consequence\-conservative}, th
 $\Sigma$-sentence $\varphi$, $\cM'\models\varphi$ implies $\cM\models\varphi$.
 % If
 %\syntax{ConservativityStrength} is \syntax{monomorphic}, the semantics is only
-%defined if each model in $\cM$ is the $\Sigma$-reduct of a model
+%defined if each realisation in $\cM$ is the $\Sigma$-reduct of a realisation
 %in $\cM'$ that is unique up to isomorphism.  
 If
 $e.\syntax{conservativityStrength}$ is \syntax{definitional}, the semantics is only
@@ -7730,7 +7730,7 @@ $O.\syntax{oms}$ in the current logic of $\Gamma$. Therefore, let $(\Gamma_0,(\c
 \noindent If $O.\syntax{conservativityStrength}$ is \syntax{model-conservative}, the semantics is only
 defined if $\cM\not=\emptyset$.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{consequence-conservative}, the semantics is only
-defined if $\Delta$ has only tautologies\footnote{A tautology is a sentence holding in every model.} as signature-free\footnote{A signature-free sentence is one over the empty signature.} logical consequences.\\
+defined if $\Delta$ has only tautologies\footnote{A tautology is a sentence holding in every realisation.} as signature-free\footnote{A signature-free sentence is one over the empty signature.} logical consequences.\\
 If $O.\syntax{conservativityStrength}$ is \syntax{monomorphic}, the semantics is only
 defined if $\cM$ consist of exactly one isomorphism
 class of realizations.\\
@@ -7746,7 +7746,7 @@ defined if $\cM$ is a singleton.
 \semdom{
 \begin{array}{ll}
  sem(\Gamma,\syntax{OMSReference})& = (\Gamma',(\cI,\Sigma,\cM,\Delta))\\
- & : (LogicalEnvironment,(Institution, Signature,ModelClass, Sentences))
+ & : (LogicalEnvironment,(Institution, Signature,RealisationClass, Sentences))
 \end{array}
 }
 
@@ -7897,9 +7897,9 @@ $L$ is the institution from the heterogeneous logical environment named by
 %%%%%
 % 13.10.14 YI
 
-%Here, for a $\Sigma$-model $M$ and s supersignature $\Sigma\leq\Sigma'$,
-%$M|^{\Sigma'}$ is the class of all $\Sigma'$-models whose $\Sigma$-reduct is $M$.
-%This naturally extends to classes of models.
+%Here, for a $\Sigma$-realisation $M$ and s supersignature $\Sigma\leq\Sigma'$,
+%$M|^{\Sigma'}$ is the class of all $\Sigma'$-realisations whose $\Sigma$-reduct is $M$.
+%This naturally extends to classes of realisations.
 
 %\semdom{sem(L,\Sigma,\syntax{Reduction})=(\mu=(\Phi,\alpha,\beta),\Sigma') \mbox{ where } \Sigma'\leq\Phi(\Sigma)}
 %
@@ -8046,7 +8046,7 @@ $$sem(\Gamma,  t) = (L_1, L_2)$$
 \semdom{
 \begin{array}{ll}
 sem(\Gamma, \syntax{Refinement})& = (((G_1, G_2), \sigma, \cM)\\
- & : (OMSGraph,OMSGraph,GraphMorphism, ModelClass)
+ & : (OMSGraph,OMSGraph,GraphMorphism, RealisationClass)
 \end{array}
 }
 
@@ -8793,7 +8793,7 @@ $name_2 = 'relativized'++aName'$.
 %conditions for conservativity and relative interpretations. For each
 %logic, one needs to axiomatize a specific partial order of signatures
 %in \CL, plus a set of sentences equipped with a logical consequence
-%relation. In order to avoid the formalization of models and the
+%relation. In order to avoid the formalization of realisations and the
 %satisfaction relation (which would require the inclusion of a set theory
 %like ZFC), a sound and complete calculus is axiomatized for each logic.
 %%\ednote{TM: perhaps state a theorem about the compatibility
@@ -9029,7 +9029,7 @@ widespread than anticipated and thus such documentation is warranted.
 %
 % This reflects central issues in the structure of \DOL:
 % while \DOL, as a language, is a linguistic entity, it is
-% related to mathematical entities like logics, signatures and models
+% related to mathematical entities like logics, signatures and realisations
 % through its semantics. That is, semantic entities provide the
 % bridge bewteen linguistic and mathematical entities.
 % Moreover, processes (like theorem proving) provide algorithmic
@@ -9385,7 +9385,7 @@ on $N_{DT} \cup \{ \textit{rdfs:Literal} \}$,
 \item The sentences for a signature are definded as in
 the direct model-theoretic semantics of OWL \cite{w3c:owl2-direct-semantics}. Sentence translation is substitution of symbols.
 \item  $(D,V)$-realizations are interpretations for $D$ and $V$. 
-Morphisms of $(D,V)$-models are maps between the domains $\Delta_I$ preserving membership in classes and properties, where $\Delta_D$ is mapped identically. Reducts of realizations are built by first translating along the signature morphism and then
+Morphisms of $(D,V)$-realisations are maps between the domains $\Delta_I$ preserving membership in classes and properties, where $\Delta_D$ is mapped identically. Reducts of realizations are built by first translating along the signature morphism and then
 looking up the interpretation in the realization to be reduced.  
 \item The satisfaction relation is defined as in direct model-theoretic semantics of OWL \cite{w3c:owl2-direct-semantics}.
 \end{itemize}
@@ -11110,9 +11110,9 @@ is the corresponding sublogic inclusion.
 
 $\SimpleRDF \rightarrow \RDF$ is an obvious inclusion, except that
 \SimpleRDF resources need to be renamed if they happen to have a predefined
-meaning in \RDF. The model translation needs to forget the fixed parts
+meaning in \RDF. The translation of realisations needs to forget the fixed parts
 of \RDF realizations. Since this part can always reconstructed in a unique
-way, the result is  an isomorphic model translation. 
+way, the result is  an isomorphic translation of realisations. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -11141,8 +11141,8 @@ $(s,p,o)$ is translated to the $\SROIQ(D)$ sentence
   (u,y)\in sub^{\cal I}, (u,z,)\in obj^{\cal I} \}.$$
   $\RDF \rightarrow \SROIQ(D)$ is defined similarly. The theory of \RDF built-ins 
   is (after translation to $\SROIQ(D)$) added to any signature translation.
-  This ensures that the model translation can add the built-ins.
-%\Til{What if the OWL model satisfies more triples than the built-ins?}
+  This ensures that the translation of realisations can add the built-ins.
+%\Til{What if the OWL realisation satisfies more triples than the built-ins?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -11233,7 +11233,7 @@ This comorphism  maps classical first-order logic (FOL) to Common Logic.
 
 %It maps constants to
 %  discourse names and function and predicate symbols to non-discourse
-%  names, with a straightforward sentence and model translation;
+%  names, with a straightforward sentence and translation of realisations;
 
 A FOL signature is translated to \Clogic.Fol by turning all constants
 into discourse names, and all other function symbols and all predicate
@@ -12044,12 +12044,12 @@ oms Inconsistent = %inconsistent
   . A /\ not A
 end
 
-oms SingleModel = %def
+oms SingleRealisation = %def
   props A, B
   . A /\ not B
 end
 
-entailment Ent = SingleModel entails { . not ( A=>B ) }
+entailment Ent = SingleRealisation entails { . not ( A=>B ) }
 end
 
 %% repeat prefix declarations from above
@@ -12865,7 +12865,7 @@ end
 
 spec Bag_variant =
   sort Elem
-then minimize { %% select term generated models
+then minimize { %% select term generated realisations
      sort Bag
      ops mt:Bag;
          __union__:Bag*Bag->Bag, assoc, comm, unit mt
@@ -12877,7 +12877,7 @@ then
   . x elem (b1 union b2) <=> (x elem b1 \/ x elem b2)
   . b1=b2 <=> forall y:Elem . (y elem b1 <=> y elem b2) %(extensionality)%
      %% term generatedness and extensionality together
-     %% select the standard bag model
+     %% select the standard bag realisation
 end
 
 equivalence e : Bag <-> Bag_variant = {}
@@ -13683,7 +13683,7 @@ propositional variables to nullary predicates.
   \ssclause{$\OBOOWL \rightarrow SROIQ(D)$} 
 
   $\OBOOWL \rightarrow SROIQ(D)$: signatures and sentences are
-  translated according to the OBO standard, whereas the model
+  translated according to the OBO standard, whereas the realisation
   translation is the identity (due to borrowing of model theory).
 
 \ssclause{$\mathsf{OBO 1.4} \rightarrow \FOL^{=}$} 
@@ -13700,8 +13700,8 @@ signature $\mathbf{R_s}$ to the $\FOL^{=}$ signature
 $\Phi(\mathbf{R_s})$ which has $\mathbf{R_s}$ as set of constants, and
 moreover is equipped with a unary predicate $P$ and a ternary
 predicate $EXT$.  A \SimpleRDF-sentence $(sub, pred, obj)$ is translated to
-$EXT(sub, pred, obj)$.  Finally, a $\FOL^{=}$-model of
-$\Phi(\mathbf{R_s})$ is translated to the \SimpleRDF which has the model's
+$EXT(sub, pred, obj)$.  Finally, a $\FOL^{=}$-realisation of
+$\Phi(\mathbf{R_s})$ is translated to the \SimpleRDF which has the realisation's
 universe as set of resources $R_m$, while $P_m$ is given by the
 interpretation of $P$ and $S_m$ by the interpretation of the
 constants. $EXT_m$ can be easily constructed from the interpretation
@@ -13736,11 +13736,11 @@ respective component.
 \ssclause{$\RDF \rightarrow \FOL^{=}$} :
 
 This is a straightforward extension of $\SimpleRDF \rightarrow \RDF$,
-axiomatizing explicitly the extra conditions imposed on models. $\RDFS
+axiomatizing explicitly the extra conditions imposed on realisations. $\RDFS
 \rightarrow \FOL^{=}$ and $\RDFSOWL\rightarrow \FOL^{=}$ are
 similar. The theory of the fixed part is (after translation to
 $\FOL^{=}$) added to the translations of
-signatures. %\Til{however: what if a FOL model fulfils more triples for the fixed part than those in its theory?}
+signatures. %\Til{however: what if a FOL realisation fulfils more triples for the fixed part than those in its theory?}
 
 \ssclause{$\FOL^{ms =} \rightarrow \FOL^{=}$} 
 
@@ -13750,7 +13750,7 @@ unary predicate (these are called sort predicates), and each function
 and predicate symbol is translated by erasing its typing information
 in the signature, while turning it into a sentence, using the sort
 predicates. A sentence is translated by erasing the type information
-and relativizing quantifiers to the sort predicates. A model is
+and relativizing quantifiers to the sort predicates. A realisation is
 translated by turning the interpretations of sort predicates into
 carrier sets, and keeping functions and predicates.
 
@@ -13771,7 +13771,7 @@ $I_\rightarrow$ etc.\ over the natural numbers.
 \ssclause{$\Clogic \rightarrow \CASL$} 
 
 This institution comorphism specifies the theory of lists and the
-implicit components of \Clogic models explicitly in \CASL.
+implicit components of \Clogic realisations explicitly in \CASL.
 
 \ssclause{$\CASL\rightarrow \HOL$} 
 
@@ -13786,15 +13786,15 @@ are specified in $\FOL^{=}$\footnote{Strictly speaking, for a complete
   specification of inductive datatypes, second-order logic is needed;
   in this case, the translation ends in $\HOL$.}. Integrity
 constraints are expressible as first-order sentences, and given a
-first-order model, its predicates are construed as database tables.
+first-order realisation, its predicates are construed as database tables.
 
 \ssclause{$\Prop\rightarrow \FOL^{=}$} 
 
 This translates propositional variables to nullary predicates. The
-model translation forgets the universe (and is hence not an
+translation of realisations forgets the universe (and is hence not an
 isomorphism). A theoroidal variant adds (to the signature translation)
 the axiom $\forall x,y\,.\, x=y$ enforcing a singleton universe (then,
-the model translation is at least an equivalence of categories).
+the translation of realisations is at least an equivalence of categories).
 
 \ssclause{$\Prop\rightarrow \Clogic$}
 
@@ -13810,7 +13810,7 @@ that the domain consists of a single point.  A propositional sentence
 membership of $a$ in the corresponding SROIQ(D) class term (i.e.\ a
 Boolean combination of atomic classes)---note that this can be
 expressed either as ABox statement $a:C$ or as TBox statement
-$\{a\}\subseteq C$. In order to translate an SROIQ(D) model, for each
+$\{a\}\subseteq C$. In order to translate an SROIQ(D) realisation, for each
 atomic class $A$ (resulting from a propositional variable $A$), $a:A$
 is evaluated, and the result is assigned to the propositional variable
 $A$.  The satisfaction condition is straightforward.
@@ -13819,7 +13819,7 @@ $A$.  The satisfaction condition is straightforward.
 
 The signature translation maps constants, function symbols and
 predicates to names. Sentences are left untouched. From a
-\Clogic-model, it is possible to extract a $\FOL^{=}$-model by
+\Clogic-realisation, it is possible to extract a $\FOL^{=}$-realisation by
 restricting functions and predicates to those sequences that have the
 length of the arity of the symbol (note that this restriction is the
 reason for not getting an isomorphism).
