@@ -13451,7 +13451,6 @@ end
 
 \sclause{Datatypes}\label{ex:datatypes}
 
-\bcnew{822}
 \lstset{escapeinside = {*@}{@*}}
 \begin{lstlisting}[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/> )%
@@ -13464,32 +13463,9 @@ spec Bag =
      sort Bag
      ops mt:Bag;
          __union__:Bag*Bag->Bag, assoc, comm, unit mt
-            *@ \DIFaddbegin }
-\DIFadd{end
-}
-
-\DIFadd{spec Bag_variant =
-  sort Elem
-then minimize }{ %DIF > % select term generated realizations
-     \DIFadd{sort Bag
-     ops mt:Bag;
-         __union__:Bag*Bag->Bag, assoc, comm, unit mt
-           }}
-\DIFadd{then	   
-  pred __elem__ : Elem * Bag
-  forall x:Elem; b1,b2:Bag
-  . not x elem mt
-  . x elem (b1 union b2) <=> (x elem b1 \/ x elem b2)
-  . b1=b2 <=> forall y:Elem . (y elem b1 <=> y elem b2) %DIF > (extensionality)%
-     %DIF > % term generatedness and extensionality together
-     %DIF > % select the standard bag realization
-end
-}
-
-\DIFadd{equivalence e : Bag <-> Bag_variant = }{\DIFaddend @*  }
+            }
 end
 \end{lstlisting}
-\ecnew
 
 \bc{90}
 \DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{spec Bag_variant =}}
@@ -13506,7 +13482,7 @@ end
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . x elem (b1 union b2) <=> (x elem b1 \/ x elem b2)}}
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ . b1=b2 <=> forall y:Elem . (y elem b1 <=> y elem b2) \%(extensionality)\%}}
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{ \ \ \ \ \ \%\% term generatedness and extensionality together}}
-\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \ \ \%\% select the standard bag model}}
+\\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{\ \ \ \ \ \%\% select the standard bag realization}}
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{end}}
 \\
 \\\DIFadd{\lstinline[basicstyle=\ttfamily,language=dolText,alsolanguage=CASL]{equivalence e : Bag <-> Bag_variant = \{\}}}
