@@ -3170,21 +3170,26 @@ checking and theorem proving. Hence, all available information can be used in th
 For example, the ontology below extends the \OWL definition of \texttt{isProperPartOf} as an asymmetric relation
 with a first-order axiom (in Common Logic) asserting that the relation is also transitive.
 \lstset{escapeinside = {*@}{@*}}
-\begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,alsolanguage=clif,alsolanguage=owl2Manchester,escapechar=@,mathescape]
+  \begin{lstlisting}[basicstyle=\small\ttfamily,language=dolText,alsolanguage=clif,alsolanguage=owl2Manchester,escapechar=@,mathescape]
 %prefix( lang:  <http://purl.net/DOL/languages/>
                 %% descriptions of languages ...
          trans: <http://purl.net/DOL/translations/> )%
                 %% ... and translations
 
+language @\DIFdel{lang:CommonLogic}\DIFadd{lang:OWL2\_DL}@
 language lang:CommonLogic
-ontology Parthood =
-ObjectProperty: isProperPartOf  
-  Characteristics: Asymmetric  
+ontology Parthood@\DIFadd{\_OWL}@ =
+  ObjectProperty: isProperPartOf  
   SubPropertyOf: isPartOf 
-with translation trans:SROIQtoCL
-then language lang:CommonLogic :
+@\DIFadd{end}@
+@\DIFadd{language lang:CommonLogic}@
+@\DIFadd{ontology Parthood\_CL =}@
+  @\DIFadd{Parthood\_OWL}@
+  with translation trans:SROIQtoCL
+then @\DIFdel{language lang:CommonLogic :}@
   (if (and (isProperPartOf x y) (isProperPartOf y z)) 
         (isProperPartOf x z))
+@\DIFadd{end}@
 \end{lstlisting}
 \OWL can express transitivity, but not together with asymmetry.
 
