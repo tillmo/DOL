@@ -44,6 +44,7 @@
 \makeatother
 
 
+
 % % In isov2 the footer is reserved for the copyrightstatement.
 % % OMG wants a footer, so we just overwrite the iso copyright for that purpose.
 % \newcommand{\DOLfooter}[0]{
@@ -130,6 +131,15 @@
 %% \theoremstyle{definition}
 %% \newtheorem{definition}{Definition}
 \usepackage{hetonto-subset}
+%% indicate changes Mod -> Real
+\newcommand{\Realbf}{\text{\DIFdel{$\mathbf{Mod}$}\DIFadd{$\mathbf{Real}$}}}
+\newcommand{\Realsf}{\text{\DIFdel{$\mathsf{Mod}$}\DIFadd{$\mathsf{Real}$}}}
+\renewcommand{\IMod}{\Realbf}
+\renewcommand{\ModFun}[1]{\Realbf(#1)}
+\def\Mod{\Realsf}
+\renewcommand{\Models}{\Realsf\xspace}
+
+
 %% \usepackage{diagrams}
 
 %% section titles
@@ -6235,6 +6245,8 @@ A \defsty{theory morphism} $\phi: (\Sigma, \Delta) \rightarrow (\Sigma',  \Delta
 Institution comorphisms capture the intuition of encoding or embedding a logic into a more expressive one.
 
 \bc{82}
+   [\DIFadd{diff note: in the sequel, only the first few changes }$\Mod$\DIFadd{ are marked with JIRA DOL issue 82. In the rest of the document, we omit
+   these markings for the sake of readability.}]
 \begin{definition}[Institution Comorphism] An \defsty{institution comorphism} from an institution $I = (\Sig^I,$ $ \Mod^I, \Sen^I, \models^I)$ to an institution $J=(\Sig^J, \Mod^J,\Sen^J, \models^J)$ consists of a functor $\Phi : \Sig^I \longrightarrow \Sig^J$, and
 two natural transformations $\beta: \Mod^J \circ \Phi^{op} \Longrightarrow \Mod^I$
 and $\alpha: \Sen^I \Longrightarrow \Sen^J \circ \Phi$, such that 
@@ -6260,7 +6272,6 @@ $\Phi(\Sigma)$-sentence, and $\beta_{\Sigma}(M')$ is the translation
 $\Sigma$\DIFdelbegin \DIFdel{-model}\DIFdelend \DIFaddbegin \DIFadd{-realization}\DIFaddend . Naturality of $\alpha$ and $\beta$ means that for each
 signature morphism $\sigma:\Sigma_1\rightarrow\Sigma_2$ in $I$ the following 
 squares commute:
-\ec
 
 %
 \begin{equation*}
@@ -6271,6 +6282,7 @@ squares commute:
 & \Mod^J(\Phi(\Sigma_1)) \ar[r]_{\beta_{\Sigma_1}} & \Mod^I(\Sigma_1)
 }
 \end{equation*}
+\ec
 
 A comorphism is:
  \begin{itemize} 
@@ -6291,6 +6303,7 @@ if
 for each signature morphism $\sigma\map{\Sigma_1}{\Sigma_2}$,
 the naturality diagram
 %
+\bc{82}
 \begin{equation*}
 \xymatrix{
  \Mod^J(\Phi(\Sigma_2)) \ar[r]^{\beta_{\Sigma_2}}  \ar[d]^{\Mod^J(\Phi(\sigma))}&\Mod^I(\Sigma_2) \ar[d]^{\Mod^I(\sigma)}\\ 
@@ -6298,7 +6311,6 @@ the naturality diagram
 }
 \end{equation*}
 %
-\bc{82}
 admits (weak) amalgamation, i.e.\
 any for any two \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realizations }\DIFaddend $M_2\in|\Mod^I(\Sigma_2)|$
 and $M'_1\in|\Mod^J(\Phi(\Sigma_1))|$
@@ -6343,7 +6355,6 @@ as OMS translation and OMS reduction.
    its \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realizations }\DIFaddend are just $\Sigma$\DIFdelbegin \DIFdel{-models }\DIFdelend \DIFaddbegin \DIFadd{-realizations }\DIFaddend in $I$ that satisfy the sentences in $\Delta$, while the
    $(\Sigma,\Delta)$-satisfaction is the $\Sigma$-satisfaction of sentences in \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realizations }\DIFaddend of $I$.
 \qed \end{definition}
-\ec
 
 Using this notion, logic translations can be defined that include axiomatization of parts of the
 syntax of the source logic into the target logic.
@@ -6354,6 +6365,7 @@ syntax of the source logic into the target logic.
 \Sen^J, \models^J)$ be two institutions. A \defsty{theoroidal institution comorphism} from $I$ to
 $J$ is a institution comorphism from $I$ to $J^{th}$.
 \qed\end{definition}
+\ec
 
 \medskip
 
@@ -6392,11 +6404,11 @@ a colimit specification, provided that the original \DIFdelbegin \DIFdel{models 
 common components. Amalgamation is a common technical assumption in the 
 study of specification semantics
 \cite{STbook}.
-\ec
 
 In the following, fix an arbitrary institution
 $I=(\Sig,\Sen,\Mod,\models)$.  
-
+\ec
+\pagebreak
 \bc{82}
 \begin{definition}
 Given a network $D\map{J}{\Sig^I}$, 
@@ -6591,15 +6603,16 @@ theory-level semantics.
   \item the class of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realizations }\DIFaddend of $O$ is denoted $\Mod(O)$ (which is a class of \DIFdelbegin \DIFdel{models }\DIFdelend \DIFaddbegin \DIFadd{realizations }\DIFaddend over $\Sig(O)$),
   \item the set of axioms of $O$ is denoted $\Th(O)$ (which is a set of sentences over $\Sig(O)$).
  \end{itemize}
- \ec
 \noindent Moreover, the semantics of $O$ is the tuple $sem(O) = (I, \Sigma, \cM,\Delta)$
 where $\Inst(O) = I$, $\Sig(O) = \Sigma$, $\Mod(O) = \cM$ and $\Th(O) = \Delta$.
 In the following, we will freely mix these two equivalent descriptions of the semantics. That is, whenever $sem(O)$ is determined in some the context, then also its components $\Inst(O)$, $\Sig(O)$, $\Mod(O)$ and $\Th(O)$ are determined. Vice versa, if the four components are determined, then so is $sem(O)$.
 
 The theory-level semantics of $O$ can be undefined, and then so is $\Th(O)$. When $\Th(O)$ is defined, $\Mod(O)$ can be obtained as $\Mod(O)=\{M\in\Mod(\Sig(O)) \,|\, M\models\Th(O)\}$.
+ \ec
 
 Intuitively, OMS mappings denote various types of links between two or more OMS. 
-The semantics of OMS mappings can be captured uniformly as a graph whose nodes $N$ are labeled with 
+The semantics of OMS mappings can be captured uniformly as a graph whose nodes $N$ are labeled with
+\pagebreak
 \bc{82}
  \begin{itemize} 
  \item $\Name(N)$, the name of the node
@@ -7106,7 +7119,7 @@ $$sem(\Gamma, O)= (\Gamma',(\Gamma.logic,\Sigma',\cM', \Delta'))$$
 \noindent where 
  \begin{itemize} 
 \item  $(\Sigma',\Delta')=\mathit{semBasic}_{(\Gamma.lang,\Gamma.logic, \Gamma.ser)}(O)$, 
-\item  $\cM'=\{M\in \Mod(\Sigma') \mid M\models\Delta'\}$ 
+\item \bcnew{82}  $\cM'=\{M\in \Mod(\Sigma') \mid M\models\Delta'\}$ \ecnew
 \item
 $\Gamma'$ is obtained from $\Gamma$ by adding to $\Gamma.imports$ a new
 node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'$.
