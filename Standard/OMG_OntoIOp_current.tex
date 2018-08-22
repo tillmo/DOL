@@ -23,6 +23,9 @@
 %\documentclass[10pt, letterpaper]{isov2} 
 \documentclass[10pt, a4paper]{isov2} 
 
+\usepackage{helvet}
+%\renewcommand{\familydefault}{\sfdefault}
+
 %% Cleaning up things that isov2 gets wrong
 \makeatletter
 %% Other packages define a more modern variant of \ifpdf
@@ -508,7 +511,10 @@ author=,date=,id=,replyto=,type=}{}%
 \renewcommand{\nref}[1]{\noterefname~\ref{#1}}
 \renewcommand{\tref}[1]{\tablerefname~\ref{#1}}
 \renewcommand{\pref}[1]{\pagerefname~\pageref{#1}}
-\newcommand{\rtm}[0]{\small{\textregistered\xspace}}
+\usepackage{textcomp}
+\newcommand{\rtm}[0]{\ensuremath{^\textrm{\sffamily\textregistered}}\xspace}
+%\newcommand{\tm}[0]{\ensuremath{^\textrm{\sffamily{{TM}}}}\xspace} 
+\newcommand{\tm}[0]{\texttrademark\xspace}
 \newcommand{\OMGparagraph}[1]{
 \vspace{23pt}
 %\bigskip
@@ -609,10 +615,15 @@ author=,date=,id=,replyto=,type=}{}%
 \pagestyle{headings}  %%% switches on printing of running heads
 
 
-\begin{flushright}
-  \textbf{Date:} November 2017 
-\end{flushright}
+% \begin{flushright}
+%
+% \end{flushright}
 
+\begin{center}
+	  \textbf{An OMG\rtm Distributed Ontology, Modeling, and Specification Language\tm Publication}
+\end{center}
+
+\medskip
 \begin{flushleft}
   \begin{figure}[h]
     \includegraphics[width=196pt]{OMG-logo-2015.pdf}
@@ -623,7 +634,19 @@ author=,date=,id=,replyto=,type=}{}%
 \bigskip\bigskip
 
 \bigskip
-\textsf{\fontsize{20}{20}\selectfont{}The Distributed Ontology, Modeling, and Specification Language (DOL)}
+\begin{flushleft} 
+\sffamily \upshape \fontsize{24}{32}\selectfont \bfseries 
+The Distributed Ontology, Modeling, and Specification Language\tm 
+\end{flushleft}
+
+
+
+
+
+% { \sffamily \upshape \fontsize{24}{96}\selectfont \bfseries
+% The Distributed Ontology, Modeling, and Specification Language\tm }
+
+%\textsf{\fontsize{20}{20}\selectfont{}The Distributed Ontology, Modeling, and Specification Language\tm}
 
 
 \bigskip
@@ -640,25 +663,28 @@ author=,date=,id=,replyto=,type=}{}%
 \leaders\vrule width \textwidth\vskip1pt %%% or other desired thickness
 \vskip 6pt 
 \nointerlineskip
-\begin{onehalfspace}
-\textsf{\textbf{OMG Document Number: ptc/2017-11-08}}    \\  
-\textsf{\textbf{Standard document URL: \ \url{http://www.omg.org/spec/DOL/1.0/PDF}}} \\
-\textsf{\textbf{Machine Consumable File(s): \\ 
-\leftskip2em Normative:  \\
-\url{http://www.omg.org/spec/DOL/20151109/DOL-metamodel.xmi}\\
-Informative: \\
+\begin{doublespace}
+\sffamily 
+\begin{tabbing}
+OMG Document Number: \qquad \= formal/2018-04-01    \\  
+Release Date: \>			TBD \\
+Standard document URL: \> \url{https://www.omg.org/spec/DOL/1.0} \\
+Normative Machine Consumable Files: \\ 
+%\leftskip2em Normative:  \\
+\url{https://www.omg.org/spec/DOL/20151109/DOL-metamodel.xmi}\\
+Informative Machine Consumable Files:\\
 \url{http://www.omg.org/spec/DOL/20171106/DOL-terms.rdf} \\
 \url{http://www.omg.org/spec/DOL/20171106/DOL-terms-ODM-UML.xml} \\
 \url{http://www.omg.org/spec/DOL/20171106/DOL-terms-ODM.xml} \\
-}}
-\end{onehalfspace} 
+
+ \end{tabbing}
+\end{doublespace} 
 
 \vskip 28pt
 \leaders\vrule width \textwidth\vskip1pt % or other desired thickness
 \vskip\medskipamount % ditto
 \nointerlineskip
 
-This OMG document replaces the OMG Adopted Beta specification (ptc/2016-02-37). It contains only minor revisions.  
 %It is an OMG Adopted Beta specification and is currently in the finalization phase. Comments on the content of this document are welcome, and should be directed to \url{issues@omg.org} by March 28, 2016. 
 
 %You may view the pending issues for this specification from the OMG revision issues web page %http://www.omg.org/issues/
@@ -677,7 +703,7 @@ This OMG document replaces the OMG Adopted Beta specification (ptc/2016-02-37). 
 \pagenumbering{roman} 
   
 
-\noindent Copyright \copyright 2014-17, Object Management Group, Inc.\\
+\noindent Copyright \copyright 2014-18, Object Management Group, Inc.\\
 Copyright \copyright 2014-17, Fraunhofer FOKUS\\
 Copyright \copyright 2014-17, MITRE\\
 Copyright \copyright 2014-17, Otto-von-Guericke-Universit{\"a}t Magdeburg  \\
@@ -687,56 +713,31 @@ Copyright \copyright 2014-17, Athan Services \\
 
 
 \OMGparagraph{USE OF SPECIFICATION - TERMS, CONDITIONS \& NOTICES}
-The material in this document details an Object Management Group specification in accordance with
- the terms, conditions and notices set forth below. This document does not represent a commitment
-  to implement any portion of this specification in any company's products. The information
-   contained in this document is subject to change without notice.
+The material in this document details an Object Management Group specification in accordance with the terms, conditions and notices set forth below. This document does not represent a commitment to implement any portion of this specification in any company's products. The information contained in this document is subject to change without notice.
 
 
 \OMGparagraph{LICENSES}
-The companies listed above have granted to the Object Management Group, Inc. (OMG) a nonexclusive,
- royalty-free, paid up, worldwide license to copy and distribute this document and to modify this 
-  document and distribute copies of the modified version. Each of the copyright holders listed 
-   above has agreed that no person shall be deemed to have infringed the copyright in the included 
-    material of any such copyright holder by reason of having used the specification set forth 
-	 herein or having conformed any computer software to the specification.
+The companies listed above have granted to the Object Management Group, Inc. (OMG) a nonexclusive, royalty-free, paid up, worldwide license to copy and distribute this document and to modify this document and distribute copies of the modified version. Each of the copyright holders listed above has agreed that no person shall be deemed to have infringed the copyright in the included material of any such copyright holder by reason of having used the specification set forth herein or having conformed any computer software to the specification.
 
-Subject to all of the terms and conditions below, the owners of the copyright in this specification 
-hereby grant you a fully-paid up, non-exclusive, nontransferable, perpetual, worldwide license 
- (without the right to sublicense), to use this specification to create and distribute software and 
-  special purpose specifications that are based upon this specification, and to use, copy, and 
-distribute this specification as provided under the Copyright Act; provided that: (1) both the 
- copyright notice identified above and this permission notice appear on any copies of this 
-  specification; (2) the use of the specifications is for informational purposes and will not be 
-copied or posted on any network computer or broadcast in any media and will not be otherwise resold 
- or transferred for commercial purposes; and (3) no modifications are made to this specification. 
-This limited permission automatically terminates without notice if you breach any of these terms or 
- conditions. Upon termination, you will destroy immediately any copies of the specifications in 
-  your possession or control.
+\medskip
+Subject to all of the terms and conditions below, the owners of the copyright in this specification hereby grant you a fully-paid up, non-exclusive, nontransferable, perpetual, worldwide license (without the right to sublicense), to use this specification to create and distribute software and special purpose specifications that are based upon this specification, and to use, copy, and distribute this specification as provided under the Copyright Act; provided that: (1) both the copyright notice identified above and this permission notice appear on any copies of this specification; (2) the use of the specifications is for informational purposes and will not be copied or posted on any network computer or broadcast in any media and will not be otherwise resold or transferred for commercial purposes; and (3) no modifications are made to this specification. This limited permission automatically terminates without notice if you breach any of these terms or conditions. Upon termination, you will destroy immediately any copies of the specifications in your possession or control. 
+
 
 
 
 \OMGparagraph{PATENTS}
-The attention of adopters is directed to the possibility that compliance with or adoption of OMG 
- specifications may require use of an invention covered by patent rights. OMG shall not be 
-  responsible for identifying patents for which a license may be required by any OMG specification, 
-   or for conducting legal inquiries into the legal validity or scope of those patents that are 
-    brought to its attention. OMG specifications are prospective and advisory only. Prospective 
-	 users are responsible for protecting themselves against liability for infringement of patents.
+The attention of adopters is directed to the possibility that compliance with or adoption of OMG specifications may require use of an invention covered by patent rights. OMG shall not be responsible for identifying patents for which a license may be required by any OMG specification, or for conducting legal inquiries into the legal validity or scope of those patents that are brought to its attention. OMG specifications are prospective and advisory only. Prospective users are responsible for protecting themselves against liability for infringement of patents.
+
 
 \OMGparagraph{GENERAL USE RESTRICTIONS}
-Any unauthorized use of this specification may violate copyright laws, trademark laws, and 
- communications regulations and statutes. This document contains information which is protected by 
-  copyright. All Rights Reserved. No part of this work covered by copyright herein may be 
-   reproduced or used in any form or by any means--graphic, electronic, or mechanical, including 
-    photocopying, recording, taping, or information storage and retrieval systems--without 
-	 permission of the copyright owner.
+Any unauthorized use of this specification may violate copyright laws, trademark laws, and communications regulations and statutes. This document contains information which is protected by copyright. All Rights Reserved. No part of this work covered by copyright herein may be reproduced or used in any form or by any means--graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems--without permission of the copyright owner.
+
 
 \newpage
 \OMGparagraph{DISCLAIMER OF WARRANTY}
-WHILE THIS PUBLICATION IS BELIEVED TO BE ACCURATE, IT IS PROVIDED "AS IS" AND MAY CONTAIN ERRORS OR MISPRINTS. THE OBJECT MANAGEMENT GROUP AND THE COMPANIES LISTED ABOVE MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS PUBLICATION, INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF TITLE OR OWNERSHIP, IMPLIED WARRANTY OF MERCHANTABILITY OR WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE OR USE. IN NO EVENT SHALL THE OBJECT MANAGEMENT GROUP OR ANY OF THE COMPANIES LISTED ABOVE BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELIANCE OR COVER DAMAGES, INCLUDING LOSS OF PROFITS, REVENUE, DATA OR USE, INCURRED BY ANY USER OR ANY THIRD PARTY IN CONNECTION WITH THE FURNISHING, PERFORMANCE, OR USE OF THIS MATERIAL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+WHILE THIS PUBLICATION IS BELIEVED TO BE ACCURATE, IT IS PROVIDED "AS IS" AND MAY CONTAIN ERRORS OR MISPRINTS. THE OBJECT MANAGEMENT GROUP AND THE COMPANIES LISTED ABOVE MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS PUBLICATION, INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF TITLE OR OWNERSHIP, IMPLIED WARRANTY OF MERCHANTABILITY OR WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE OR USE. IN NO EVENT SHALL THE OBJECT MANAGEMENT GROUP OR ANY OF THE COMPANIES LISTED ABOVE BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELIANCE OR COVER DAMAGES, INCLUDING LOSS OF PROFITS, REVENUE, DATA OR USE, INCURRED BY ANY USER OR ANY THIRD PARTY IN CONNECTION WITH THE FURNISHING, PERFORMANCE, OR USE OF THIS MATERIAL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. 
 
-
+\medskip
 The entire risk as to the quality and performance of software developed using this specification is borne by you. This disclaimer of warranty constitutes an essential part of the license granted to you to use this specification.
 
 
@@ -764,8 +765,9 @@ Software developed under the terms of this license may claim compliance or confo
 
 
 
+
 \newpage 
-\OMGparagraph{OMG's Issue Reporting }
+\OMGparagraph{\textbf{OMG's Issue Reporting Procedure}}
 All OMG specifications are subject to continuous review and improvement. As part of this process we encourage readers to report any ambiguities, inconsistencies, or inaccuracies they may find by completing the Issue Reporting Form listed on the main web page \url{http://www.omg.org}, under Documents, Report a Bug/Issue. % \newline(\url{http://www.omg.org/report_issue.htm})
 
 % \newpage
