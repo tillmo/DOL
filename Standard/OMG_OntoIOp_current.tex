@@ -77,6 +77,27 @@
 %\renewcommand{\headrulewidth}{\iffloatpage{0pt}{0.4pt}}
 
 
+% Include: "This page is intentionally left blank"
+% in pages that cleardoublepage inserts
+
+\makeatletter
+    \def\cleardoublepage{\clearpage%
+        \if@twoside
+            \ifodd\c@page\else
+                \vspace*{\fill}
+                \hfill
+                \begin{center}
+                This page intentionally left blank.
+                \end{center}
+                \vspace{\fill}
+                \thispagestyle{empty}
+                \newpage
+                \if@twocolumn\hbox{}\newpage\fi
+            \fi
+        \fi
+    }
+\makeatother
+
 \usepackage{multicol}
 
 
@@ -800,7 +821,7 @@ All OMG specifications are subject to continuous review and improvement. As part
 % $ $
 % \newpage
 
-\cleardoublepage
+\clearpage
 
 
 \renewcommand{\contentsname}{Table of Contents}
@@ -4828,7 +4849,7 @@ definition is the definition of either a named interpretation
 refinement (\syntax{RefinementDefinition}, see use cases~\ref{spec-2} and~\ref{sec:atm-example} for examples) or equivalence
 (\syntax{EquivalenceDefinition}, see Annex~\ref{ex:engine} for an example), a named declaration of the relation
 between a module of an OMS and the whole OMS
-(\syntax{ConservativeExtensionDefinition}, see use case~\ref{onto-3} for an example), or a named \termref{alignment}
+(\syntax{ConservativeExtension\-Definition}, see use case~\ref{onto-3} for an example), or a named \termref{alignment}
 (\syntax{AlignmentDefinition}, see use case~\ref{onto-2} and Annex~\ref{ex:alignment} for examples).
 
 
@@ -4937,7 +4958,7 @@ or whether several local domains are linked (``contextualized'') by relations.
 
 The DOL metamodel for conservative extension definitions is shown in
 Figure~\ref{fig:modules}.
-A \syntax{ConservativeExtensionDefinition} declares that a certain (``whole) OMS
+A \syntax{ConservativeExtension\-Definition} declares that a certain (``whole) OMS
 actually is a conservative extension some other (``module'') OMS with respect
 to the \syntax{InterfaceSignature}.
 
@@ -6900,7 +6921,7 @@ and
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ClosableOMS})& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
+ sem(\Gamma, (\cI, \Sigma, \cM, \Delta), & \syntax{ClosableOMS}) = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
  & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
@@ -6933,7 +6954,7 @@ $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)= (\Gamma',(\cI',\Sigma',\cM', \Delt
 \sssclause{Semantics of ExtendingOMS}
  \semdom{
 \begin{array}{ll}
- sem(\Gamma, \syntax{ExtendingOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
+ sem(\Gamma, & \syntax{ExtendingOMS})= (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
  & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
@@ -6983,7 +7004,7 @@ category theory, see \ref{sec:colimits}.
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{ExtendingOMS}))& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
+ sem(\Gamma, (\cI, \Sigma, \cM, \Delta),& \syntax{ExtendingOMS})) = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
  & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
@@ -7675,7 +7696,7 @@ $sem(\Gamma,(\cI,\Sigma,\cM,\Delta), s) = (\cI, sem(\Gamma,\Sigma,s), \emptyset,
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{Extension})& = (\Gamma',(\cI,\Sigma',\cM',\Delta'))\\
+ sem(\Gamma,(\cI,\Sigma,\cM,\Delta),&  \syntax{Extension})= (\Gamma',(\cI,\Sigma',\cM',\Delta'))\\
  & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
@@ -8184,19 +8205,19 @@ $\cM = \{ (F, F) \mid F \in \Mod(G)\}$.
 If $r$ is \syntax{SimpleOMSRefinement},
 $$sem(\Gamma, r) =
 ((G_1,G'_2),\sigma', \cM)$$
-where\\
- $sem(\Gamma,  r.\syntax{refinement}) = ((G_1,G'_1), \sigma_1,\cM_1)$,\\
- $sem(\Gamma,  r.\syntax{refinement2}) = ((G_2, G'_2),\sigma_2, \cM_2)$,\\
+where
+ $sem(\Gamma,  r.\syntax{refinement}) = ((G_1,G'_1), \sigma_1,\cM_1)$,
+ $sem(\Gamma,  r.\syntax{refinement2}) = ((G_2, G'_2),\sigma_2, \cM_2)$
  $G'_1$ and $G_2$ are both graphs with one isolated node, labeled
  $(name1,\cI_1,\Sigma_1,\cM_1,\Delta_1)$
- and respectively
+ and, respectively,
  $(name2,\cI_2,\Sigma_2,\cM_2,\Delta_2)$,
  $sem(\Gamma, \Sigma_1, \Sigma_2, r.\syntax{omsRefinementMap}) = (\rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2,\sigma:\Phi(\Sigma_1)\to\Sigma_2)$,\\
  $\sigma'$ maps the node $n$ of $G_1$ to the node of $G_3$ and
- $(\sigma')^M_n = (\sigma_1)^M_n;(\rho;\sigma);(\sigma_2)^M_{\sigma_1^G(n)}$,\\
+ $(\sigma')^M_n = (\sigma_1)^M_n;(\rho;\sigma);(\sigma_2)^M_{\sigma_1^G(n)}$,
  and $\cM = \{ (M_1, M_3)\mid \exists M_2 \text{ such that }
   (M_2,M_3) \in \cM_2 \text{ and }
-  (M_1,M_2\forget{(\rho,\sigma)}) \in \cM_1 \}$.\\
+  (M_1,M_2\forget{(\rho,\sigma)}) \in \cM_1 \}$
  The refinement is correct only if
  for each $(M,N)\in\cM_2$,
  there exists
@@ -8210,7 +8231,7 @@ where\\
  $sem(\Gamma,  r.\syntax{refinement}) = ((G_1,G'_1), \sigma_1,\cM_1)$,\\
  $sem(\Gamma,  r.\syntax{refinement2}) = ((G_2, G'_2),\sigma_2, \cM_2)$,\\
  $sem(\Gamma, G'_1, G_2, r.\syntax{networkRefinementMap}) = \sigma:G'_1\to G_2$,\\
- $\sigma' = \sigma_1;\sigma;\sigma_2$ \\
+ $\sigma' = \sigma_1;\sigma;\sigma_2$
  and
  $\cM = \{(F_1,F_3) \mid \exists F_2 \text{ such that }
                          (F_1, F_2\forget{\sigma}) \in \cM_1
@@ -8232,14 +8253,14 @@ sem(\Gamma, G_1, G_2, Set(\syntax{Refinement}))& = \sigma\\
 
 If $r_1,\ldots, r_n$ are all \syntax{Refinement}s,
 $$sem(\Gamma, G_1, G_2, Set(r_1,\ldots, r_n)) = \sigma$$
-\noindent where\\
-$sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,\\
-$sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$\\
+\noindent where
+$sem(\Gamma, r_1) = ((G^1_1,G^1_2), \sigma_1, \cM_1)$, \ldots,
+$sem(\Gamma, r_n) = ((G^n_1,G^n_2), \sigma_n, \cM_n)$
 such that
 $G_1 = \bigcup_{i=1,\ldots,n} G^i_1$ and no node of $G_1$ appears in two graphs
-$G^i_1$ and $G^j_1$ for some $i\neq j\in 1, \ldots, n$,\\
+$G^i_1$ and $G^j_1$ for some $i\neq j\in 1, \ldots, n$,
 $G_2 = \bigcup_{i=1,\ldots,n} G^i_2$ and no node of $G_2$ appears in two graphs
-$G^i_2$ and $G^j_2$ for some $i\neq j\in 1, \ldots, n$, \\
+$G^i_2$ and $G^j_2$ for some $i\neq j\in 1, \ldots, n$,
 and $\sigma : G_1 \to G_2$
 is defined by $\sigma^G(n) = \sigma_i^G(n)$ if the node $n$ comes from $G^i_1$
 and similarly for such a node $n$ of $G$ coming from $G^i_1$,
@@ -8401,10 +8422,10 @@ $$sem(\Gamma, t) = L_2 \stackrel{\id}{\to} L_1$$
 $\Name(L_1) = \Name(t.\syntax{premise})$,
 $\Name(L_2) = \Name(t.\syntax{conclusion})$,\\
 $(\Inst(L_1),\Sig(L_1),\Mod(L_1),\Th(L_1)) =
-sem(\Gamma, t.\syntax{premise})$,
-$(\Inst(L_2),\Sig(L_2),\Mod(L_2),\Th(L_2)) =
-sem(\Gamma, t.\syntax{conclusion})$
-such that $\Sig(L_1) = \Sig(L_2)$
+sem(\Gamma, t.\syntax{premise})$,\\
+$(\Inst(L_2),\Sig(L_2),\Mod(L_2),\Th(L_2))=
+sem(\Gamma, t.\syntax{conclusion})$ such that \\
+$\Sig(L_1) = \Sig(L_2)$
 and $\Mod(L_1)\subseteq \Mod(L_2)$
 and $id$ is the identity morphism on $\Sig(L_1)$.
 
@@ -8622,7 +8643,7 @@ and $t.\syntax{target}$ in $\Gamma'.imports$.
 
 \semdom{\begin{footnotesize}
 \begin{array}{ll}
-sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}),\syntax{AlignmentSemantics}, Set(\syntax{Correspondence}))& = G\\
+sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}),\syntax{AlignmentSemantics},& Set(\syntax{Correspondence})) = G\\
  & : OMSGraph
 \end{array}
 \end{footnotesize}
@@ -8663,9 +8684,8 @@ L_1 & &  L_B &&L_2 \\
 }
 $$
 where
-$L_s = (alignName++"\_source", \Inst(L_1) ,\Sigma_s,\Mod(\Sigma_s),\emptyset)$,
-$L_t = (alignName++"\_target", \Inst(L_2) ,\Sigma_t,\Mod(\Sigma_t),\emptyset)$
-and
+$L_s = (alignName++"\_source", \Inst(L_1) ,\Sigma_s,\Mod(\Sigma_s),\emptyset)$,\\
+$L_t = (alignName++"\_target", \Inst(L_2) ,\Sigma_t,\Mod(\Sigma_t),\emptyset)$ and\\
 $L_B = (alignName++"\_bridge", \cI ,\Sigma,\Mod((\Sigma,\Delta)),\Delta)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9444,7 +9464,7 @@ between ordinary OWL 2 DL and {OWL} 2 DL without restrictions.
 
 \begin{definition}
 Given an \OWL theory $T = ((C,R,I), \Delta)$,
-the \emph{relativization} of $T$, denoted $\tilde{T}$, is the theory
+the \emph{relativization} of $T$, denoted $\tilde{T}$, is the theory \\
 $((C',R,I),\Delta')$ where
 \begin{itemize}
 \item $C' = C\cup\{\top_T\}$
