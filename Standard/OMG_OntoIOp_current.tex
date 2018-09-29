@@ -680,6 +680,10 @@ author=,date=,id=,replyto=,type=}{}%
  \geometry{paper=a4paper, headheight=17pt,   includeheadfoot,
    left=4.4cm, right=4.4cm, bottom=5cm, top=5cm, bindingoffset=0cm}
 
+
+
+
+
 \begin{document}
 
 \nocite{OM2014,JYB-Festschrift2015-DOL,womo13,DOL-TKE2012,DOL-3semantics,blendingc3gi12,hyper2010}
@@ -4606,7 +4610,7 @@ extended.
 An OMS definition \syntax{OMSDefinition} names an OMS.  It can be
 optionally marked as inconsistent, consistent, monomorphic or having a
 unique realization using \syntax{ConservativityStrength}. More precisely,
-\syntax{'consequence-conservative'} here requires the OMS to have only
+\syntax{'consequence-conser\-va\-tive'} here requires the OMS to have only
 tautologies as signature-free logical consequences, while
 \syntax{'not\-consequence-conservative'} expresses that this is not
 the case.  \syntax{'model-conservative'} requires satisfiability of
@@ -4620,8 +4624,8 @@ realizations.
 
 \begin{figure}
   \centering
-
-    \includegraphics[scale=0.43]{mof/oms.png}
+\vspace{-4cm}
+    \includegraphics[scale=0.4]{mof/oms.png}
   \caption{DOL metamodel: OMS}
   \label{fig:oms}
 
@@ -4663,8 +4667,9 @@ keywords (see clause~\ref{c:keywords}); otherwise, it needs to be enclosed in cu
 Recall that the local environment is the OMS built from all
 previously-declared symbols and axioms.
 
+
 Using \syntax{ExtendingOMS}, extensions of an OMS with an \syntax{ExtendingOMS}
-can be built. The latter can optionally be named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{ConservativityStrength}, see clause~\ref{s:structuredOMS} for details).
+can be built. The latter can optionally be named and/or marked as conservative, monomorphic, definitional, weakly definitional or implied (using a \syntax{Conser\-va\-tiv\-ityStrength}, see clause~\ref{s:structuredOMS} for details).
 Note that an \syntax{ExtendingOMS} used in an extension must
 not be an \syntax{OMSReference}.
 
@@ -4680,7 +4685,7 @@ not be an \syntax{OMSReference}.
 Furthermore, OMS can be constructed using
 \begin{itemize}
 \item  closures of an OMS with a \syntax{Closure}.  This is
-  similar to a \syntax{RelativeClosureOMS}, but the non-logical
+  similar to a \syntax{RelativeClo\-sureOMS}, but the non-logical
   symbols to be  minimized/maximized and to be varied are
   explicitly declared here (while a \syntax{RelativeClosureOMS} takes
   the local environment to be fixed, i.e., not varied);
@@ -4703,7 +4708,7 @@ Furthermore, OMS can be constructed using
   less expressive OMS language.
 \item an \syntax{Approximation} of an OMS, in a subsignature (\syntax{InterfaceSignature}) or sublogic, with the effect that sentences not expressible in the subsignature respectively sublogic are replaced with a suitable approximation,
 \item a \syntax{Filtering} of an OMS, with the effect that some signature symbols and axioms (specified by a \syntax{BasicOMS}) are removed from the OMS,
-\item a module \syntax{Extraction} of an OMS, using a restriction signature (\syntax{InterfaceSignature}).
+\item a module \syntax{Extraction} of an OMS, using a restriction signature (\syntax{Inter\-faceSignature}).
 \end{itemize}
 In all of these cases except for translation, a \syntax{RemovalKind}
 specifies whether the listed symbols are removed from the OMS, or
@@ -4876,12 +4881,12 @@ grouping results in a parse error.
 
 An OMS mapping provides a connection between two OMS. An OMS mapping
 definition is the definition of either a named interpretation
-(\syntax{InterpretationDefinition}, see Annex~\ref{ex:engine} for an example), entailment (\syntax{EntailmentDefinition}, see use case~\ref{sec:atm-example} for an example),
-refinement (\syntax{RefinementDefinition}, see use cases~\ref{spec-2} and~\ref{sec:atm-example} for examples) or equivalence
-(\syntax{EquivalenceDefinition}, see Annex~\ref{ex:engine} for an example), a named declaration of the relation
+(\syntax{Interpretation\-Definition}, see Annex~\ref{ex:engine} for an example), entailment (\syntax{EntailmentDef\-i\-nition}, see use case~\ref{sec:atm-example} for an example),
+refinement (\syntax{RefinementDef\-i\-nition}, see use cases~\ref{spec-2} and~\ref{sec:atm-example} for examples) or equivalence
+(\syntax{Equiva\-lenceDef\-i\-nition}, see Annex~\ref{ex:engine} for an example), a named declaration of the relation
 between a module of an OMS and the whole OMS
-(\syntax{ConservativeExtension\-Definition}, see use case~\ref{onto-3} for an example), or a named \termref{alignment}
-(\syntax{AlignmentDefinition}, see use case~\ref{onto-2} and Annex~\ref{ex:alignment} for examples).
+(\syntax{ConservativeEx\-ten\-sion\-Definition}, see use case~\ref{onto-3} for an example), or a named \termref{alignment}
+(\syntax{Align\-mentDefinition}, see use case~\ref{onto-2} and Annex~\ref{ex:alignment} for examples).
 
 
 The DOL metamodel for  interpretations and refinements is shown in
@@ -4891,11 +4896,11 @@ specialization relation between OMS.\\
  An
 \syntax{InterpretationDefinition} specifies source and target OMS
 (forming the \syntax{InterpretationType}), as well as a
-\syntax{SymbolMap} and/or an \syntax{OMSLanguageTranslation}.  The
+\syntax{SymbolMap} and/or an \syntax{OMSLan\-guage\-Translation}.  The
 \syntax{SymbolMap} in an interpretation always must lead to a
 signature morphism. A proof obligation expressing that the source OMS,
 when translated along the signature morphism and/or the
-\syntax{OMSLanguageTranslation}, logically follows from the target OMS.
+\syntax{OMSLanguageTrans\-lation}, logically follows from the target OMS.
 
 A symbol map in an interpretation is \required to cover all
 non-logical symbols of the source OMS; the semantics specification in
@@ -4932,7 +4937,7 @@ at the end of clause~\ref{spec-2}.
 \medskip
 \begin{figure}
   \centering
-    \includegraphics[scale=0.42]{mof/interpretations&refinements.png}
+    \includegraphics[angle=90,origin=c, scale=0.55]{mof/interpretations&refinements.png}
   \caption{DOL metamodel: Interpretations and refinements}
   \label{fig:interpretations&refinements}
 \end{figure}
@@ -4951,7 +4956,7 @@ realizations of the OMS.
 
 \begin{figure}
   \centering
-    \includegraphics[scale=0.39]{mof/entailment&equivalence.png}
+    \includegraphics[angle=90,origin=c, scale=0.45]{mof/entailment&equivalence.png}
   \caption{DOL metamodel: Entailments and equivalences}
   \label{fig:entailment&equivalence}
 \end{figure}
@@ -4981,7 +4986,8 @@ or whether several local domains are linked (``contextualized'') by relations.
 
 \begin{figure}
   \centering
-    \includegraphics[scale=0.43]{mof/alignment.png}
+\vspace{-2.5cm}
+    \includegraphics[angle=90,origin=c, scale=0.50]{mof/alignment.png}
   \caption{DOL metamodel: Alignments}
   \label{fig:alignment}
 \end{figure}
@@ -6862,8 +6868,8 @@ $sem(\Gamma, O) = (\Gamma', (\cI,\Sigma,\cM,\Delta))$.
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, \syntax{BasicOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
+ sem(\Gamma, \syntax{BasicOMS}) = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
+ \quad : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -6889,8 +6895,8 @@ node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{BasicOMS})& = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
+ sem(\Gamma,(\cI, \Sigma, \cM, \Delta), \syntax{BasicOMS}) = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
+ \quad   : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -6919,8 +6925,8 @@ node labeled with the name of $O$, $\Gamma.logic$,$\Sigma'$, $\cM'$ and $\Delta'
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, \syntax{ClosableOMS})& = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
+ sem(\Gamma, \syntax{ClosableOMS}) = (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
+ \quad : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -6952,8 +6958,8 @@ and
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), & \syntax{ClosableOMS}) = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
+ sem(\Gamma, (\cI, \Sigma, \cM, \Delta),  \syntax{ClosableOMS}) = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
+  \quad  : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -6985,8 +6991,8 @@ $$sem(\Gamma, (\cI, \Sigma, \cM, \Delta), O)= (\Gamma',(\cI',\Sigma',\cM', \Delt
 \sssclause{Semantics of ExtendingOMS}
  \semdom{
 \begin{array}{ll}
- sem(\Gamma, & \syntax{ExtendingOMS})= (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
- & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
+ sem(\Gamma,  \syntax{ExtendingOMS})= (\Gamma',(\cI,\Sigma,\cM, \Delta))\\
+ \quad  : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -7035,8 +7041,8 @@ category theory, see \ref{sec:colimits}.
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta),& \syntax{ExtendingOMS})) = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
+ sem(\Gamma, (\cI, \Sigma, \cM, \Delta),\syntax{ExtendingOMS})) = (\Gamma',(\cI',\Sigma',\cM', \Delta'))\\
+ \quad  : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -7552,7 +7558,7 @@ sem(\Gamma,\Sigma,\Sigma',\syntax{SymbolMap})& = \sigma:\Sigma\to\Sigma'\\
 
 \noindent If $r$ is a \syntax{SymbolMap} such that
  for each
-\syntax{SymbolMapItem}  $gItem$ in $r.\syntax{generalSymbolMapItem}$ we have that\\
+\syntax{SymbolMapItem}  $gItem$ in $r.$ \syntax{general\-Symbol\-MapItem} we have that\\
 $gItem.\syntax{source} \in |\Sigma|$ and
 $gItem.\syntax{target} \in |\Sigma'|$\\
 and for each
@@ -7561,9 +7567,10 @@ $s$ is an element both of $|\Sigma|$ and $|\Sigma'|$,
 $$sem(\Gamma,\Sigma,\Sigma',m) = \sigma:\Sigma\to\Sigma'$$
 \noindent where $\sigma$ must be the unique element of the set
 $\{ \varphi : \Sigma\to\Sigma' \mid \text{ there is a set } S \subseteq |\Sigma|
-\text{ such that } \varphi \text{ matches } r$ and is the identity on $S
-\text{ and } S \text{ is maximal with the property that such morphism exists} \}$.
+\text{ such that } \varphi \text{ matches } r$ and is the identity on $S$
+and  $S$ is maximal with the property that such morphism exists.
 If the set fails to be a singleton, the semantics of $r$ is undefined.
+
 
 %If $m$ is a \syntax{SymbolMap},
 %
@@ -7678,7 +7685,7 @@ $$sem(\Gamma, (\cI, \Sigma), a) =
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma, (\cI, \Sigma, \cM, \Delta), \syntax{Filtering})& = (c,\cI',\Sigma', \Delta')\\
+ sem(\Gamma, (\cI, \Sigma, \cM, \Delta), &\syntax{Filtering}) = (c,\cI',\Sigma', \Delta')\\
  & : ('keep'|'remove',Institution,Signature, Sentences)
 \end{array}
 }
@@ -7707,7 +7714,7 @@ where $sem(\Gamma, (\cI, \Sigma, \cM, \Delta), f.\syntax{basicOMSOrSymbolList}) 
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma,(\cI,\Sigma,\cM,\Delta),\syntax{BasicOMSOrSymbolList})& =
+ sem(\Gamma,(\cI,\Sigma,\cM,\Delta),&\syntax{BasicOMSOrSymbolList}) =
      (\cI',\Sigma',\cM',\Delta')\\
  & : (Institution,Signature,Sentences)
 \end{array}
@@ -7727,8 +7734,8 @@ $sem(\Gamma,(\cI,\Sigma,\cM,\Delta), s) = (\cI, sem(\Gamma,\Sigma,s), \emptyset,
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma,(\cI,\Sigma,\cM,\Delta),&  \syntax{Extension})= (\Gamma',(\cI,\Sigma',\cM',\Delta'))\\
- & : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
+ sem(\Gamma,(\cI,\Sigma,\cM,\Delta),  \syntax{Extension})= (\Gamma',(\cI,\Sigma',\cM',\Delta'))\\
+\quad : (LogicalEnvironment, (Institution,Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -7832,8 +7839,8 @@ defined if $\cM$ is a singleton.
 \sssclause{Semantics of OMS references}
 \semdom{
 \begin{array}{ll}
- sem(\Gamma,\syntax{OMSReference})& = (\Gamma',(\cI,\Sigma,\cM,\Delta))\\
- & : (LogicalEnvironment,(Institution, Signature,RealizationClass, Sentences))
+ sem(\Gamma,\syntax{OMSReference}) = (\Gamma',(\cI,\Sigma,\cM,\Delta))\\
+\quad : (LogicalEnvironment,(Institution, Signature,RealizationClass, Sentences))
 \end{array}
 }
 
@@ -7881,7 +7888,7 @@ and $sem(\Gamma,\Sigma_2,smi.\syntax{target}) = s_2$.
 
 \semdom{
 \begin{array}{ll}
- sem(\Gamma,\Sigma_1,\Sigma_2,\syntax{GeneralSymbolMapItem})& = (s,t)\\
+ sem(\Gamma,\Sigma_1,\Sigma_2,&\syntax{GeneralSymbolMapItem})= (s,t)\\
  & : (LogicalSymbol,LogicalSymbol)
 \end{array}
 }
@@ -8132,8 +8139,8 @@ $$sem(\Gamma,  t) = (L_1, L_2)$$
 
 \semdom{
 \begin{array}{ll}
-sem(\Gamma, \syntax{Refinement})& = (((G_1, G_2), \sigma, \cM)\\
- & : (OMSGraph,OMSGraph,GraphMorphism, RealizationClass)
+sem(\Gamma, \syntax{Refinement}) = (((G_1, G_2), \sigma, \cM)\\
+\quad : (OMSGraph,OMSGraph,GraphMorphism, RealizationClass)
 \end{array}
 }
 
@@ -8242,7 +8249,7 @@ where
  $G'_1$ and $G_2$ are both graphs with one isolated node, labeled
  $(name1,\cI_1,\Sigma_1,\cM_1,\Delta_1)$
  and, respectively,
- $(name2,\cI_2,\Sigma_2,\cM_2,\Delta_2)$,
+ $(name2,\cI_2,\Sigma_2,\cM_2,\Delta_2)$,\\
  $sem(\Gamma, \Sigma_1, \Sigma_2, r.\syntax{omsRefinementMap}) = (\rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2,\sigma:\Phi(\Sigma_1)\to\Sigma_2)$,\\
  $\sigma'$ maps the node $n$ of $G_1$ to the node of $G_3$ and
  $(\sigma')^M_n = (\sigma_1)^M_n;(\rho;\sigma);(\sigma_2)^M_{\sigma_1^G(n)}$,
@@ -8321,7 +8328,7 @@ $sem(\Gamma,m.\syntax{translation}) = \rho = (\Phi,\alpha,\beta):\cI_1\to\cI_2$,
 or if $m.\syntax{translation}$ is missing, the default comorphism
 between $\cI_1$ and $\cI_2$,\\
 $sem(\Gamma', \Phi(\Sigma_1),\Sigma_2,m.\syntax{symbolMap}) = \sigma:\Phi(\Sigma_1) \to \Sigma_2$
-where $\Gamma.\current=(lang, logic,ser)$,
+where $\Gamma.\current= \allowbreak(lang,\allowbreak logic,ser)$,
 $logic'$ is the target logic of $(\Phi,\alpha,\beta)$,
 $lang'$ and $ser'$ are the default language and serialization for $logic'$
 and $\Gamma' = \Gamma.\current=(lang', logic',ser')$,
@@ -8479,7 +8486,7 @@ $$sem(\Gamma,t) = G$$
 
 \noindent where $sem(\Gamma, t.\syntax{premise}) = G_1$,
 $sem(\Gamma, t.\syntax{conclusion}) = G_2$,
-such that $Shape(G_1) = Shape(G_2)$ and, for each node $i\in |Shape(G_1)|$,
+such that $Shape(\allowbreak G_1) = Shape(G_2)$ and, for each node $i\in |Shape(G_1)|$,
 its names in the networks $G_1$ and $G_2$ are the same,
 its signatures are the same
 and the class of realizations obtained by projecting each family of realizations
@@ -8606,26 +8613,25 @@ $$
 sem(\Gamma, d) = \Gamma'
 $$
 \noindent where $O_1 = d.\syntax{moduleType}.\syntax{module}$,
-$O_2 = d.\syntax{moduleType}.\syntax{whole}$, $c = d.\syntax{conservativityType}$,\\ $\Sigma = sem(\Gamma, d.\syntax{interfaceSignature})$,
+$O_2 = d.\syntax{moduleType}.\syntax{whole}$, $c =\\  d.\syntax{conservativityType}$, $\Sigma = sem(\Gamma, d.\syntax{interfaceSignature})$,\\
 $\Gamma' = \Gamma[d.\syntax{moduleName}\mapsto
 (G,\iota, N_2,N_1)]$
 and $G$ is the graph
 $N_1 \stackrel{\iota}{\rightarrow} N_2$
 where $N_1$ is labeled with $(O_1, \Inst(O_1),\Sig(O_1), \Mod(O_1), \Th(O_1))$,
-$N_2$ with
+$N_2$ with \\
  $(O_2, \Inst(O_2),\Sig(O_2),  \Mod(O_2), \Th(O_2))$,
 and $\iota$ is an inclusion,
 when $\Sigma \subseteq \Sig(O_2) \subseteq \Sig(O_1)$
 and if $c= \syntax{model-conservative}$ and for each $M\in\Mod(O_2)$ there is a realization $M'\in \Mod(O_1)$ such that
 $M'\forget{\Sigma} = M\forget{\Sigma}$,
-or if $c=\syntax{consequence-conservative}$ and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
+or if $c=$\syntax{consequence-conser\-vative} and for each $\varphi\in\Sen(\Sigma)$, $O_1\models\varphi$
 implies $O_2\models\varphi$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \sssclause{Semantics of alignment definitions}
-
 \semdom{
 \begin{array}{ll}
 sem(\Gamma,  \syntax{AlignmentDefinition}) & = \Gamma'\\
@@ -8664,7 +8670,7 @@ If $t$ is an \syntax{AlignmentType}
 $$sem(\Gamma, t) = (\Gamma'',L_1, L_2)$$
 \noindent where
 $sem(\Gamma,t.\syntax{source}) = (\Gamma', (\cI_1,\Sigma_1,\cM_1,\Delta_1))$,
-$sem(\Gamma',t.\syntax{target}) = (\Gamma'', (\cI_2,\Sigma_2,\cM_2,\Delta_2) )$,
+$sem(\Gamma',t.\syntax{target}) =$\\  $ (\Gamma'', (\cI_2,\Sigma_2,\cM_2,\Delta_2) )$,
 $L_1$ and $L_2$ are the labels of the nodes of $t.\syntax{source}$
 and $t.\syntax{target}$ in $\Gamma'.imports$.
 
@@ -8674,7 +8680,8 @@ and $t.\syntax{target}$ in $\Gamma'.imports$.
 
 \semdom{\begin{footnotesize}
 \begin{array}{ll}
-sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}),\syntax{AlignmentSemantics},& Set(\syntax{Correspondence})) = G\\
+sem(\Gamma,  L_1, L_2,(\syntax{AlignmentCardinality},\syntax{AlignmentCardinality}), & \\
+\quad \quad \syntax{AlignmentSemantics}, Set(\syntax{Correspondence})) & = G \\
  & : OMSGraph
 \end{array}
 \end{footnotesize}
@@ -8749,7 +8756,7 @@ aSem, \Sigma_1,\Sigma_2,clist_1 ++ \ldots ++ clist_n)$.
 \sssclause{Semantics of  correspondences}
 \semdom{
 \begin{array}{ll}
-sem(\Gamma, \Sigma_1,\Sigma_2, (\mathit{defaultConf}, \mathit{defaultRel}), \syntax{Correspondence})& = (clist,cvalues)\\
+sem(\Gamma, \Sigma_1,\Sigma_2,&  (\mathit{defaultConf}, \mathit{defaultRel}), \syntax{Correspondence})= (clist,cvalues)\\
  & : (Sequence((Relation, Symbol, Symbol)), Bool)
 \end{array}
 }
@@ -8807,9 +8814,9 @@ $cvalues = \lor_{i=1,\ldots,n} cvalues_i$.
 
 \semdom{
 \begin{array}{ll}
-sem(\Gamma, L_1,L_2,\syntax{AlignmentSemantics})& = ((Name_1,\cI'_1,\Sigma'_1,\cM'_1,\Delta'_1),
-(Name_2,cI'_2,\Sigma'_2,\cM'_2,\Delta'_2))\\
- & : (NodeLabel,NodeLabel)
+sem(\Gamma, L_1,L_2,\syntax{AlignmentSemantics})& = ((Name_1,\cI'_1,\Sigma'_1,\cM'_1,\Delta'_1),\\
+& \quad \quad  (Name_2,cI'_2,\Sigma'_2,\cM'_2,\Delta'_2))\\
+ & \quad \quad  : (NodeLabel,NodeLabel)
 \end{array}
 }
 
